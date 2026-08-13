@@ -1,28 +1,3 @@
-اDepartment Of Justice (CID, CIA, Marshal, FBI, Judge, DOA) 
+Department Of Justice (CID, CIA, Marshal, FBI, Judge, DOA) 
 Law Enforcement (Police, Sheriff, MT) 
 Organ Services (Taxi, Mechanic, Medic, Weazel) 
-
-
-جاب سیستم این سرورم کامل کار میکنه بدون باگ یعنی مشکلی نداره یک فکر اومده تو سرم میخوام برای پیاده سازی کنی با منطق سرورم باید فیکسبشه
-
-میخوام جاب ارگان هام این شکلیبشن
-
-یعنی سه اسم ارگان و ارگان داخلی یعنی مثلا باید این شملی بشه
-
-که بقیه ارگانها تو فایلشون باشه فیکس کار کنه 
-
-باس اکشن هاشو فرقث داشتهباشه ولی تو بخش باس اکشن یک اپشن اضافه کن
-
-change CID
-
-change FBI
-
-هر ارگان مربوط به شاخه خودش
-
-لاکر و ارمور و وماشین ها هرکدموشنبا اونیکی فرث میکنه 
-
-esx_doj / Department Of Justice (CID, CIA, Marshal, FBI, Judge, DOA) 
-
-esx_policejob / Law Enforcement (Police, Sheriff, MT) 
-
-esx_organserver / Organ Services (Taxi, Mechanic, Medic, Weazel) 

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Team Menu</title>
+  <link rel="stylesheet" href="styles/style.css" />
+  <link rel="stylesheet" href="styles/quest.css" />
+  <link rel="stylesheet" href="styles/fonts.css" />
+  <link rel="stylesheet" href="styles/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <div class="menu-item" id="personal-info">
+        <i class="fa-solid fa-user icon"></i>
+        <span class="label">Personal Info</span>
+      </div>
+      <div class="menu-item" id="quest">
+        <i class="fa-solid fa-person-circle-question icon"></i>
+        <span class="label">Quests</span>
+      </div>
+      <div class="menu-item" id="admin">
+        <i class="fa-solid fa-user-shield icon"></i>
+        <span class="label">Admin</span>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <h1>Information </h1> <button class="adminDuty" id="adminDuty">Off Duty</button>
+      <p class="name"><i class="fa-solid fa-user"></i> <span class="name_span">Loading...</span></p>
+      <p class="job"><i class="fa-solid fa-house-laptop"></i> <span class="job_span">Loading...</span></p>
+      <p class="gang"><i class="fa-solid fa-people-roof"></i> <span class="gang_span">Loading...</span></p>
+      <p class="cash"><i class="fa-solid fa-money-bill"></i> <span class="cash_span">Loading...</span></p>
+      <p class="bank"><i class="fa-solid fa-landmark"></i> <span class="bank_span">Loading...</span></p>
+      <p class="coin"><i class="fa-solid fa-coins"></i> <span class="coin_span">Loading...</span></p>
+
+      <div class="level-info">
+        <p class="level-text">Level: <span class="level-number">0</span></p>
+        <div class="xp-bar">
+          <div class="xp-fill" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quest -->
+    <div class="quests">
+      <h1>Quests</h1>
+      <div class="quests-grid">
+        <!-- <div class="quest-item">
+          <div class="quest-label">Operation Nightfall</div>
+          <div class="quest-desc">Lead SWAT team in nighttime raid on gang hideout. Gather intel and neutralize threats.</div>
+          <div class="quest-progress">
+            <div class="quest-progress-bar" id="quest4-progress"></div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+
+    <!-- Admin Menu -->
+    <div class="adminMenu">
+      <div class="player-list">
+        <h1>Player List</h1>
+        <div class="players-grid">
+          <!-- Player items will be dynamically inserted here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="scripts/script.js"></script>
+  <script src="scripts/quest.js"></script>
+  <script src="scripts/personal.js"></script>
+  <script src="scripts/admin.js"></script>
+</body>
+</html>

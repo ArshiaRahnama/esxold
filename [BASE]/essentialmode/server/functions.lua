@@ -161,7 +161,9 @@ ESX.GetPlayerFromIdentifier = function(identifier)
 end
 
 ESX.GetPlayerFromPlate = function(Plate)
-    local result = MySQL.Sync.fetchAll('SELECT * FROM `owned_vehicles` WHERE `plate` = "' .. Plate .. '"', {})
+    local result = MySQL.Sync.fetchAll('SELECT * FROM `owned_vehicles` WHERE `plate` = @plate', {
+        ['@plate'] = Plate
+    })
     local owner
     if result[1] then
         owner = result[1].owner

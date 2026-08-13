@@ -22,9 +22,11 @@ Client("Coin-System:PlayerCoin", function(CoinNumber)
 	Coin.Num = CoinNumber
 end)
 
-Client("Coin-System:AddCoin", function(CoinNumber)
-	TriggerServerEvent("Coin-System:AddCoinCL", CoinNumber)
-end)
+-- NOTE: coin rewards are now granted entirely server-side (see
+-- Server/main.lua, Coin-System:ResetCoinTimer). The old handler here used
+-- to bounce the reward amount back to the server via
+-- "Coin-System:AddCoinCL", which had no validation and let any client add
+-- unlimited coin to themselves. That event no longer exists.
 
 Citizen.CreateThread(function()
 	while true do

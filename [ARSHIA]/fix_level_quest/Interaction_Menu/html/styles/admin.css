@@ -1,0 +1,100 @@
+.adminDuty {
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 85%;
+  margin-top: 1.5%;
+  padding: 1%;
+  text-align: center;
+  border-radius: 5px;
+  display: none
+}
+
+.adminDuty.on {
+  background-color: green;
+}
+
+.adminDuty.off {
+  background-color: red;
+}
+
+#admin {
+  display: none;
+}
+
+/* =========== */
+
+.adminMenu {
+  flex: 1;
+  padding: 20px;
+  color: #ccc;
+  display: flex;
+  flex-direction: column;
+  background-color: #2c2c2c;
+  overflow-y: auto;
+}
+
+.adminMenu h1 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #ccc;
+  border-top: 1px solid #555;
+  border-bottom: 1px solid #555;
+  padding: 10px 0;
+  width: 100%;
+  text-align: center;
+}
+
+/* بقیه استایل ها مانند قبل... */
+
+.player-item {
+  background-color: #333;
+  border-left: 4px solid #4CAF50;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.player-info {
+  cursor: pointer;
+}
+
+.player-dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 5px);
+  background-color: #444;
+  border-radius: 4px;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  width: 120px;
+}
+
+.player-dropdown button {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  text-align: left;
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.player-dropdown button:hover {
+  background-color: #555;
+  color: #fff;
+}
+
+.player-item.active .player-dropdown {
+  display: block;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
