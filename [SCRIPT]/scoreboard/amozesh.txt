@@ -1,0 +1,15 @@
+baz nevisi shode tavasot team dev overland : MiLaD#6713
+
+amozesh set kardan cooldown rob ha dar scoreboard : Editor Hae Aziz Lotfan Trigger Hae zir ro dar server side rob hae khod bad az etmam 
+						    rob bezarid ke cooldown score board shoro beshe
+
+TriggerEvent("SetRobberyCoolDown", "jewelery")
+TriggerEvent("SetRobberyCoolDown", "Cargo")
+TriggerEvent("SetRobberyCoolDown", "Bimeh")
+TriggerEvent("SetRobberyCoolDown", "Bank")
+TriggerEvent("SetRobberyCoolDown", "SheriffBank")
+TriggerEvent("SetRobberyCoolDown", "Minibank")
+TriggerEvent("SetRobberyCoolDown", "Feleca")
+TriggerEvent("SetRobberyCoolDown", "JewelerySheriff")
+TriggerEvent("SetRobberyCoolDown", "mythic")
+TriggerEvent("SetRobberyCoolDown", "shop")

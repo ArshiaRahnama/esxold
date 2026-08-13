@@ -1,0 +1,114 @@
+AddEventHandler('onResourceStart', function(resourceName)
+    if resourceName ~= GetCurrentResourceName() then return end
+
+    print('^3--------------------------------------------------^7')
+    print('^2[Chat System]^7 Running Fix -> ^5arshiahub.ir^7')
+    print('^3★^7 This resource is Owner by ^5arshiahub.ir^7')
+    print('^3--------------------------------------------------^7')
+end)
+
+RegisterServerEvent('chat:init')
+RegisterServerEvent('chat:addTemplate')
+RegisterServerEvent('chat:addMessage')
+RegisterServerEvent('chat:addSuggestion')
+RegisterServerEvent('chat:removeSuggestion')
+RegisterServerEvent('_chat:messageEntered')
+RegisterServerEvent('chat:clear')
+RegisterServerEvent('__cfx_internal:commandFallback')
+
+-- Helper: send a message to a specific chat tab.
+-- channel: 'live' | 'system' | 'event' | 'tabligh'
+-- target -1 broadcasts to everyone, or pass a player id
+function SendChannelMessage(target, channel, args, color)
+    TriggerClientEvent('chat:addMessage', target, {
+        channel = channel,
+        color = color or { 170, 102, 204 }, -- purple, matches color-6
+        multiline = true,
+        args = args
+    })
+end
+
+-- Helper: set/replace the pinned banner shown above the messages.
+-- Pass nil to clear it.
+function SetChatPinned(target, author, text)
+    TriggerClientEvent('chat:setPinned', target, author and {
+        author = author,
+        text = text
+    } or nil)
+end
+
+-- Example (staff-only in a real setup): /pin <text>
+RegisterCommand('pin', function(source, args)
+    local text = table.concat(args, ' ')
+    SetChatPinned(-1, GetPlayerName(source), text)
+end, false)
+
+RegisterServerEvent('chat:logMessage')
+AddEventHandler('chat:logMessage', function(message)
+
+TriggerEvent('DiscordBot:ToDiscord', 'chat', GetPlayerName(source), "```cs\nID: [ "..source.." ]\n[ Name : " .. GetPlayerName(source) .. " ]\n[ Message : ]  \n[ " .. message .. " ]```",'user', source, false, false)
+end)
+
+
+-- command suggestions for clients
+local function refreshCommands(player)
+    if GetRegisteredCommands then
+        local registeredCommands = GetRegisteredCommands()
+
+        local suggestions = {}
+
+        for _, command in ipairs(registeredCommands) do
+            if IsPlayerAceAllowed(player, ('command.%s'):format(command.name)) then
+                table.insert(suggestions, {
+                    name = '/' .. command.name,
+                    help = ''
+                })
+            end
+        end
+
+        TriggerClientEvent('chat:addSuggestions', player, suggestions)
+    end
+end
+
+AddEventHandler('chat:init', function()
+    refreshCommands(source)
+end)
+
+AddEventHandler('onServerResourceStart', function(resName)
+    Citizen.Wait(500)
+
+    for _, player in ipairs(GetPlayers()) do
+        refreshCommands(player)
+    end
+end)
+
+RegisterCommand('say', function(source, args, rawCommand)
+    TriggerClientEvent('chatMessage', -1, (source == 0) and '[ System ] : ',{ 255,0,0 }, rawCommand:sub(5))
+end)
+
+-- player join messages
+AddEventHandler('playerConnecting', function()
+--TriggerClientEvent('esx:showNotification', -1,'~w~[ ~b~' .. GetPlayerName(source) .. ' ~w~] ~h~~g~ Vared Server Shod.')
+end)
+ 
+AddEventHandler('playerDropped', function(reason)
+--TriggerClientEvent('esx:showNotification', -1, '~w~[ ~b~' .. GetPlayerName(source) ..' ~w~] ~h~~r~Az Server Kharej Shod.')
+end)
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

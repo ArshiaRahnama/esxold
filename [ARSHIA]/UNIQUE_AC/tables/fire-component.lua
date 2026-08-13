@@ -1,0 +1,15 @@
+-- UNIQUE_AC — customized by Arshia (arshiahub.ir)
+-- Blacklisted weapon components (illegal special-ammo attachments)
+-- Add or remove entries to match your server's weapon config.
+
+BlacklistedComponents = {
+	"COMPONENT_AT_AR_INCENDIARY",
+	"COMPONENT_AT_PI_INCENDIARY",
+	"COMPONENT_AT_SR_INCENDIARY",
+	"COMPONENT_AT_SNS_INCENDIARY",
+	"COMPONENT_AT_MG_INCENDIARY",
+	"COMPONENT_AT_AR_TRACER",
+	"COMPONENT_AT_PI_TRACER",
+	"COMPONENT_RPG_CLIP_02",
+	"COMPONENT_MINIGUN_CLIP_01",
+}

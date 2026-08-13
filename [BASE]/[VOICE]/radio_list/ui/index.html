@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>x-radiolist</title>
+        
+        <style>
+            .radio-list-container {
+                position: absolute;
+                top: 31%;
+                left: 0.2%;
+                text-align: left;
+                padding: 0;
+                font-family: 'Segoe UI', sans-serif;
+                font-weight: 600;
+                letter-spacing: 0.3px;
+                font-size: 0.8vw;
+                line-height: 1.4;
+            }
+
+            .radio-list-container div {
+                color: rgb(255, 255, 255);
+                text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black, 0 0 3px rgba(0,0,0,0.8);
+            }
+
+            .talking {
+                color: rgb(244, 196, 65) !important;
+            }
+        </style>
+        <script type="text/javascript">
+            let revealed = false;
+            let names = {};
+
+            function renderItem(id) {
+                let listItem = document.getElementById("radio-list-item-" + id);
+                if (!listItem) return;
+                listItem.textContent = (revealed && names[id]) ? ("[" + id + "] " + names[id]) : ("[" + id + "]");
+            }
+
+            window.addEventListener("message", function(event) {
+                var item = event.data;
+
+                if (item.reveal != null) {
+                    revealed = item.reveal;
+                    for (let id in names) {
+                        renderItem(id);
+                    }
+                }
+
+                if (item.radioId != null) {
+                    let radioListElem = document.getElementById("radio-list");
+
+                    if (item.radioName != null) {
+                        names[item.radioId] = item.radioName;
+
+                        let listItem = document.createElement("div");
+                        listItem.id = "radio-list-item-" + item.radioId;
+                        radioListElem.appendChild(listItem);
+                        renderItem(item.radioId);
+                    } else if (item.radioTalking != null) {
+                        let listItem = document.getElementById("radio-list-item-" + item.radioId)
+                        
+                        if (item.radioTalking) {
+                            listItem.className = "talking"
+                        } else {
+                            listItem.className = ""
+                        }
+                    } else {
+                        let listItem = document.getElementById("radio-list-item-" + item.radioId)
+                        if (listItem) radioListElem.removeChild(listItem);
+                        delete names[item.radioId];
+                    }
+                }
+
+                if (item.clearRadioList) {
+                    let radioListElem = document.getElementById("radio-list");
+
+                    while (radioListElem.firstChild) {
+                        radioListElem.removeChild(radioListElem.firstChild);
+                    }
+                    names = {};
+                }
+                
+                if (item.changeVisibility) {
+                    if (item.visible == true) {
+                        document.getElementById("radio-list").style.display = "block";
+                    } else if (item.visible == false) {
+                        document.getElementById("radio-list").style.display = "none";
+                    }
+                }
+            });
+        </script>
+    </head>
+    <body>
+        <div class="radio-list-container" id="radio-list"></div>
+    </body>
+</html>

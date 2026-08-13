@@ -1,0 +1,1375 @@
+-- ====================================================================
+-- [HUNT] server
+-- ====================================================================
+ESX = nil 
+local price = {
+  hen =  5000 , 
+  rabbit = 7000 , 
+  gazelle = 4000 , 
+  eagle = 9000 , 
+}
+local time = {}
+
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
+RegisterServerEvent('Hunt:killed')
+AddEventHandler('Hunt:killed', function(Animal)
+  local xPlayer = ESX.GetPlayerFromId(source)
+  local Src = xPlayer.source
+
+  if time[Src] then 
+    if time[Src] >= os.time() then 
+      return
+    end
+  end
+
+  time[Src] = os.time() + 5
+  if Animal == 'a_c_deer' then 
+    if xPlayer.getInventoryItem('lasheaho').limit >= (xPlayer.getInventoryItem('lasheaho').count + 1) then 
+    
+      xPlayer.addInventoryItem('lasheaho', 1)
+    else
+      TriggerClientEvent('esx:showNotification', Src, "Shoma Fazae Kafi Post Nadarid")
+    end
+  elseif Animal == 'a_c_rabbit_01' then 
+    if xPlayer.getInventoryItem('lashekhargush').limit >= (xPlayer.getInventoryItem('lashekhargush').count + 1) then 
+
+      xPlayer.addInventoryItem('lashekhargush', 1)
+    else
+      TriggerClientEvent('esx:showNotification', Src, "Shoma Fazae Kafi Post Nadarid")
+    end
+  elseif Animal == 'a_c_hen' then 
+    if xPlayer.getInventoryItem('lashemorgh').limit >= (xPlayer.getInventoryItem('lashemorgh').count + 1) then 
+
+      xPlayer.addInventoryItem('lashemorgh', 1)
+    else
+      TriggerClientEvent('esx:showNotification', Src, "Shoma Fazae Kafi Post Nadarid")
+    end
+  elseif Animal == 'a_c_chickenhawk' then 
+    if xPlayer.getInventoryItem('lasheoghab').limit >= (xPlayer.getInventoryItem('lasheoghab').count + 1) then 
+
+      xPlayer.addInventoryItem('lasheoghab', 1)
+    else
+      TriggerClientEvent('esx:showNotification', Src, "Shoma Fazae Kafi Post Nadarid")
+    end
+  elseif Animal == 'a_c_chop' then 
+    if xPlayer.getInventoryItem('lasherottweiler').limit >= (xPlayer.getInventoryItem('lasherottweiler').count + 1) then 
+
+      xPlayer.addInventoryItem('lasherottweiler', 1)
+    else
+      TriggerClientEvent('esx:showNotification', Src, "Shoma Fazae Kafi Post Nadarid")
+    end
+  elseif Animal == 'a_c_coyote' then 
+    if xPlayer.getInventoryItem('lashecoyote').limit >= (xPlayer.getInventoryItem('lashecoyote').count + 1) then 
+
+      xPlayer.addInventoryItem('lashecoyote', 1)
+    else
+      TriggerClientEvent('esx:showNotification', Src, "Shoma Fazae Kafi Post Nadarid")
+    end
+  elseif Animal == 'a_c_husky' then 
+    if xPlayer.getInventoryItem('lashehusky').limit >= (xPlayer.getInventoryItem('lashehusky').count + 1) then 
+
+      xPlayer.addInventoryItem('lashehusky', 1)
+    else
+      TriggerClientEvent('esx:showNotification', Src, "Shoma Fazae Kafi Post Nadarid")
+    end
+  elseif Animal == 'a_c_mtlion' then
+    if xPlayer.getInventoryItem('lashecougar').limit >= (xPlayer.getInventoryItem('lashecougar').count + 1) then 
+
+      xPlayer.addInventoryItem('lashecougar', 1)
+    else
+      TriggerClientEvent('esx:showNotification', Src, "Shoma Fazae Kafi Post Nadarid")
+    end 
+  elseif Animal == 'a_c_pig' then 
+    if xPlayer.getInventoryItem('lashepig').limit >= (xPlayer.getInventoryItem('lashepig').count + 1) then 
+
+      xPlayer.addInventoryItem('lashepig', 1)
+    else
+      TriggerClientEvent('esx:showNotification', Src, "Shoma Fazae Kafi Post Nadarid")
+    end 
+  else 
+    -- TriggerClientEvent('esx:showNotification',source, "~r~in heyvan Gosht Monsabi Nadasht !") 
+  end 
+        
+end)
+
+
+RegisterServerEvent('Hunt:slaughterhouse')
+AddEventHandler('Hunt:slaughterhouse', function(Animal2)
+  local xPlayer = ESX.GetPlayerFromId(source)
+  local Animal = Animal2
+  local tekrar = 4
+  local Src = source
+  if Animal == Config_HUNT.ItemsTabdil[Animal].name then   
+    local Aho =  xPlayer.getInventoryItem(Config_HUNT.ItemsTabdil[Animal].name).count
+    local DataItem = xPlayer.getInventoryItem(Config_HUNT.ItemsTabdil[Animal].name)
+    local itemcout = xPlayer.getInventoryItem(Config_HUNT.ItemsTabdil[Animal].name).count
+    
+    if itemcout >= 1 then
+      if Aho == 0 then return end     
+      local kg = math.random(1 , 3)
+      local heads = math.random(0 ,8)
+      local posts = math.random(0 ,4)
+      local All = 1  * kg  - 1 
+      if All == 0 then 
+        All = 1 
+      end 
+      
+      if xPlayer.getInventoryItem(Config_HUNT.ItemsTabdil[Animal].gosht).limit >= (xPlayer.getInventoryItem(Config_HUNT.ItemsTabdil[Animal].gosht).count + tonumber(All)) then 
+        if xPlayer.getInventoryItem(Config_HUNT.ItemsTabdil[Animal].head).limit >= (xPlayer.getInventoryItem(Config_HUNT.ItemsTabdil[Animal].head).count + 1) then 
+
+          if Config_HUNT.ItemsTabdil[Animal].post == "" or xPlayer.getInventoryItem(Config_HUNT.ItemsTabdil[Animal].post).limit >= (xPlayer.getInventoryItem(Config_HUNT.ItemsTabdil[Animal].post).count + 1) then 
+            TriggerClientEvent("HUNT:ChekCraft", Src, false)
+            TriggerClientEvent("mythic_progbar:client:progress", Src, {name = "Hunt",duration = 4000,label = 'Dar Hal Tabdil Kardan ',useWhileDead = true,canCancel = false,controlDisables = {disableMovement = true,disableCarMovement = true,disableMouse = false,disableCombat = true,}})
+
+            SetTimeout(4100, function()
+              xPlayer.addInventoryItem(Config_HUNT.ItemsTabdil[Animal].gosht,  All)
+              xPlayer.removeInventoryItem(Config_HUNT.ItemsTabdil[Animal].name, 1)
+              if heads == 2 and Config_HUNT.ItemsTabdil[Animal].post ~= '' then 
+                xPlayer.addInventoryItem(Config_HUNT.ItemsTabdil[Animal].post,  1)
+              end
+              if posts == 2 and Config_HUNT.ItemsTabdil[Animal].head ~= '' then 
+                xPlayer.addInventoryItem(Config_HUNT.ItemsTabdil[Animal].head,  1)
+              end
+              TriggerClientEvent("HUNT:ChekCraft", Src, true)
+            end)
+          else
+            TriggerClientEvent('esx:showNotification', Src, "Shoma Fazae Kafi Post Nadarid")
+          end
+        else
+          TriggerClientEvent('esx:showNotification', Src, "Shoma Fazae Kafi Head Nadarid")
+        end
+      else
+        TriggerClientEvent('esx:showNotification', Src, "Shoma Fazae Kafi Baraye Gosht Nadarid")
+      end
+    end
+  end
+end)
+
+RegisterServerEvent('Hunt:Sellmeat')
+AddEventHandler('Hunt:Sellmeat', function(Animal)
+  local xPlayer = ESX.GetPlayerFromId(source)
+ if Animal == 'morgh' then 
+    local Oghab =  xPlayer.getInventoryItem('henmeat').count 
+    if Oghab == 0 then return end-- TriggerClientEvent('esx:showNotification',source, "~r~ Shoma  In  Gosht Heyvan Ra Nadarid")   end  
+    local All = Oghab  * price.hen 
+    xPlayer.addMoney(All)
+    xPlayer.removeInventoryItem('henmeat', Oghab)
+    elseif  Animal == 'khargush' then
+        local Oghab =  xPlayer.getInventoryItem('rabbitmeat').count 
+        if Oghab == 0 then return end-- TriggerClientEvent('esx:showNotification',source, "~r~ Shoma  In  Gosht Heyvan Ra Nadarid")   end
+        local All = Oghab  * price.rabbit 
+        xPlayer.addMoney(All)
+        xPlayer.removeInventoryItem('gazellemeet', Oghab)
+   elseif  Animal == 'Aho' then
+    local Oghab =  xPlayer.getInventoryItem('gazellemeet').count 
+    if Oghab == 0 then return end-- TriggerClientEvent('esx:showNotification',source, "~r~ Shoma  In  Gosht Heyvan Ra Nadarid")   end
+    local All = Oghab  * price.gazelle 
+    xPlayer.addMoney(All)
+    xPlayer.removeInventoryItem('gazellemeet', Oghab)
+ elseif  Animal == 'Oghab' then
+    local Oghab =  xPlayer.getInventoryItem('eaglemeet').count 
+    if Oghab == 0 then return end-- TriggerClientEvent('esx:showNotification',source, "~r~ Shoma  In  Gosht Heyvan Ra Nadarid")   end
+    local All = Oghab  * price.eagle 
+    xPlayer.addMoney(All)
+    xPlayer.removeInventoryItem('eaglemeet', Oghab)
+    end 
+
+
+end) 
+
+ESX.RegisterServerCallback("HUNT:GetInventoryKnife", function(source, cb)
+  local xPlayer = ESX.GetPlayerFromId(source)
+  cb(xPlayer.hasWeapon('WEAPON_KNIFE'))
+end)
+
+ESX.RegisterServerCallback("HUNT:GetInventoryKnife&Musket", function(source, cb)
+  local xPlayer = ESX.GetPlayerFromId(source)
+  cb(xPlayer.hasWeapon('WEAPON_KNIFE'))
+end)
+
+ESX.RegisterServerCallback("HUNT:GetInventory", function(source, cb)
+  local xPlayer = ESX.GetPlayerFromId(source)
+
+  if xPlayer then 
+    cb(xPlayer.inventory)
+  else
+    cb(false)
+  end
+
+end)
+
+-- ====================================================================
+-- [Megaphone] server
+-- ====================================================================
+if Config_Megaphone.Framework == 'qb-core' then
+    local QBCore = exports['qb-core']:GetCoreObject()
+    
+    QBCore.Functions.CreateUseableItem('megaphone', function(source)
+        TriggerClientEvent('megaphone:use', source)
+    end)
+elseif Config_Megaphone.Framework == 'esx' then
+    ESX = nil
+    TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
+    ESX.RegisterUsableItem('capsul', function(source)
+        local xPlayer = ESX.GetPlayerFromId(source)
+        if xPlayer then
+            TriggerClientEvent('megaphone:use', source)
+        end
+    end)
+end
+
+RegisterNetEvent('megaphone:applySubmix', function(bool)
+    TriggerClientEvent('megaphone:updateSubmixStatus', -1, bool, source)
+end)
+
+
+RegisterCommand('megaphone', function(source, args)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if xPlayer.permission_level >= 1 then
+        if args[1] then 
+            TriggerClientEvent('Megaphone:UseCommand', tonumber(args[1]))
+        else
+            TriggerClientEvent('chat:addMessage', source, { args = { '^8[SYSTEM]', 'Shoma Dar Ghesmat Id Chizi Vared Nakardi!' } })
+        end
+    else
+        TriggerClientEvent('chat:addMessage', source, { args = { '^8[SYSTEM]', 'Shoma Dasresi Kafi Nadarid' } })
+    end
+end)
+
+-- ====================================================================
+-- [antipg] server (به‌روزرسانی‌شده - antipg_fixed)
+-- ====================================================================
+do
+ESX = nil
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
+local function debugPrint(msg)
+    if GetConvar('sv_environment', 'production') ~= 'production' then
+        print("[EngineSystem] " .. msg)
+    end
+end
+
+ESX.RegisterServerCallback('engine:checkEngineStatus', function(source, cb, plate)
+    exports.oxmysql:execute('SELECT engine FROM owned_vehicles WHERE plate = ?', {
+        plate
+    }, function(result)
+        if not result or #result == 0 then
+            cb(nil) 
+            return
+        end
+
+        local engineValue = result[1].engine
+        local status = false
+
+        -- `engine` is the SAME 0-1000 engine-health column the garage system (Unique_Garage /
+        -- esx_vehicleshop) writes to. It is NOT a 0/1 flag — a healthy car has engine = 1000.
+        -- Only literally 0 (set by engine:removeEngine, i.e. chop-shopped) means "no engine".
+        if type(engineValue) == "number" then
+            status = engineValue > 0
+        elseif type(engineValue) == "string" then
+            status = (tonumber(engineValue) or 0) > 0
+        elseif type(engineValue) == "boolean" then
+            status = engineValue
+        else
+            -- No row / unknown value (e.g. a brand new car whose engine column hasn't been set
+            -- yet) — treat as healthy instead of defaulting to "no engine".
+            status = true
+        end
+
+        cb(status)
+    end)
+end)
+
+ESX.RegisterServerCallback('engine:checkVehicleOwnership', function(source, cb, plate)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if not plate then cb(false) return end
+
+    exports.oxmysql:scalar('SELECT owner FROM owned_vehicles WHERE plate = ?', {
+        plate
+    }, function(owner)
+        if not owner then
+            cb(false)
+        else
+            local isOwner = owner == xPlayer.identifier or (xPlayer.gang and owner == xPlayer.gang.name)
+            cb(isOwner)
+        end
+    end)
+end)
+
+
+ESX.RegisterServerCallback('engine:checkEngineItem', function(source, cb)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    local engineItem = xPlayer.getInventoryItem('engine')
+    cb(engineItem.count > 0)
+end)
+
+
+ESX.RegisterServerCallback('engine:checkMoney', function(source, cb, amount)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    cb(xPlayer.bank >= amount)
+end)
+
+
+RegisterNetEvent('engine:payForRepair')
+AddEventHandler('engine:payForRepair', function()
+    local xPlayer = ESX.GetPlayerFromId(source)
+    xPlayer.removeBank(15000)
+end)
+
+RegisterNetEvent('engine:payForEngine')
+AddEventHandler('engine:payForEngine', function()
+    local xPlayer = ESX.GetPlayerFromId(source)
+    xPlayer.removeBank(30000)
+end)
+
+RegisterNetEvent('engine:removeEngine')
+AddEventHandler('engine:removeEngine', function(plate)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+
+    if not plate then return end
+
+    exports.oxmysql:execute('UPDATE owned_vehicles SET engine = 0 WHERE plate = ?', {
+        plate
+    })
+
+    debugPrint("Engine removed from vehicle: " .. plate)
+    if GetResourceState('Unique_Skills') == 'started' then
+        pcall(function() exports['Unique_Skills']:UpdateSkill(src, "ChopShop", 5.000) end)
+    end
+end)
+
+RegisterNetEvent('engine:giveEngineItemToPlayer')
+AddEventHandler('engine:giveEngineItemToPlayer', function()
+    local xPlayer = ESX.GetPlayerFromId(source)
+    xPlayer.addInventoryItem('engine', 1)
+end)
+
+
+RegisterNetEvent('engine:installEngine')
+AddEventHandler('engine:installEngine', function(plate)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+
+    if not plate then return end
+
+    local engineItem = xPlayer.getInventoryItem('engine')
+    if engineItem.count < 1 then
+        TriggerClientEvent('esx:showNotification', src, "Shoma Item Engine Nadarid!")
+        return
+    end
+
+    exports.oxmysql:execute('UPDATE owned_vehicles SET engine = 1000 WHERE plate = ?', {
+        plate
+    })
+
+    xPlayer.removeInventoryItem('engine', 1)
+    TriggerClientEvent('esx:showNotification', src, "Shoma Engine Mashin ra Nasb Kardid!")
+end)
+
+
+RegisterCommand("addengine", function(source, args, rawCommand)
+    local xPlayer = ESX.GetPlayerFromId(source)
+
+    if xPlayer.permission_level >= 1 then
+
+        local ped = GetPlayerPed(source)
+        local vehicle = GetVehiclePedIsIn(ped, false)
+
+        if vehicle == 0 then
+            TriggerClientEvent('esx:showNotification', source, "❌ شما باید داخل یک ماشین باشید.")
+            return
+        end
+
+        local plate = GetVehicleNumberPlateText(vehicle)
+
+        if not plate or plate == "" then
+            TriggerClientEvent('esx:showNotification', source, "⛔ شماره پلاک نامعتبر است.")
+            return
+        end
+
+        -- بروزرسانی دیتابیس
+        exports.oxmysql:execute('UPDATE owned_vehicles SET engine = 1000 WHERE plate = ?', {
+        plate
+    })
+
+        TriggerClientEvent('esx:showNotification', source, "✅ انجین با موفقیت روی ماشین نصب شد.")
+    else
+        TriggerClientEvent('esx:showNotification', source, "⛔ شما اجازه استفاده از این دستور را ندارید.")
+    end
+end)
+
+
+
+ESX.RegisterServerCallback('engine:isMechanicOnline', function(source, cb)
+    local xPlayers = ESX.GetPlayers()
+    local mechanicOnline = false
+
+    for _, playerId in ipairs(xPlayers) do
+        local xPlayer = ESX.GetPlayerFromId(playerId)
+        if xPlayer and xPlayer.job and xPlayer.job.name == 'mechanic' then
+            mechanicOnline = true
+            break
+        end
+    end
+
+    cb(mechanicOnline)
+end)
+
+RegisterNetEvent('engine:createEngineItemAllClients')
+AddEventHandler('engine:createEngineItemAllClients', function()
+    TriggerClientEvent('engine:createEngineItemClient', -1)
+end)
+end
+
+-- ====================================================================
+-- [esx_fireworks] server
+-- ====================================================================
+ESX = nil
+
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
+ESX.RegisterUsableItem('trailburst', function(source)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	TriggerClientEvent('fireworks:box', source)
+	xPlayer.removeInventoryItem('trailburst', 1)
+end)
+
+ESX.RegisterUsableItem('fountain', function(source)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	TriggerClientEvent('fireworks:cone', source)
+	xPlayer.removeInventoryItem('fountain', 1)
+end)
+
+ESX.RegisterUsableItem('shotburst', function(source)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	TriggerClientEvent('fireworks:cylinder', source)
+	xPlayer.removeInventoryItem('shotburst', 1)
+end)
+
+ESX.RegisterUsableItem('starburst', function(source)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	TriggerClientEvent('fireworks:rocket', source)
+	xPlayer.removeInventoryItem('starburst', 1)
+end)
+
+
+RegisterServerEvent("syncbad1")
+AddEventHandler("syncbad1", function(x, y, z)
+    TriggerClientEvent("syncbad_cl1", -1, x, y, z)
+end)
+RegisterServerEvent("syncbad2")
+AddEventHandler("syncbad2", function(x, y, z)
+    TriggerClientEvent("syncbad_cl2", -1, x, y, z)
+end)
+RegisterServerEvent("syncbad3")
+AddEventHandler("syncbad3", function(x, y, z)
+    TriggerClientEvent("syncbad_cl3", -1, x, y, z)
+end)
+RegisterServerEvent("syncbad4")
+AddEventHandler("syncbad4", function(x, y, z)
+    TriggerClientEvent("syncbad_cl4", -1, x, y, z)
+end)
+-- ====================================================================
+-- [fightban] server
+-- ====================================================================
+ESX = nil
+TriggerEvent("esx:getSharedObject", function(obj) ESX = obj end)
+
+local FightBans = {}
+AddEventHandler("esx:playerLoaded", function(source)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	local BannedAlready = false
+	for a, b in pairs(FightBans) do
+		for c, d in pairs(b) do
+			if d.Steam == xPlayer.identifier then
+				if os.time() < tonumber(d.Expire) then
+					BannedAlready = true
+					break
+				else
+					break
+				end
+			end
+		end
+	end
+	if BannedAlready then
+		FightBan(source)
+	end
+end)
+
+function FightBan(source)
+	TriggerClientEvent("Unique_Scripts_FightBan:Notif", source, true)
+end
+
+function UnFightBan(Steam)
+	local Steam = Steam
+
+    exports.oxmysql:execute("SELECT * FROM fightbans WHERE Steam = ?", {
+        Steam
+    }, function(data)
+        if data[1] then
+            exports.oxmysql:execute("DELETE FROM fightbans WHERE Steam = ?", {
+                Steam
+            })
+
+            SetTimeout(5000, function()
+                ReloadBans()
+            end)
+        end
+end)
+
+if ESX.GetPlayerFromIdentifier(Steam) then
+    TriggerClientEvent("Unique_Scripts_FightBan:Notif", (ESX.GetPlayerFromIdentifier(Steam)).source, false)
+end
+
+end
+
+function CreatheFightBan(target, day, source)
+	local xPlayer = ESX.GetPlayerFromId(tonumber(target))
+	local time = os.time() + day * 86400
+   
+    if xPlayer then
+        exports.oxmysql:execute("INSERT INTO fightbans (Steam, isBnaned, Expire) VALUES (?, ?, ?)", {
+            xPlayer.identifier,
+            1,
+            time
+        }, function(rowsChanged)
+            
+        end)
+        
+        TriggerClientEvent("chat:addMessage", tonumber(target), {
+            args = {
+                "^1SYSTEM",
+                "Shoma Be Modat ^1" .. day .. "^0 Rooz Fight Ban Shodid!"
+            }
+        })
+
+        TriggerClientEvent("chat:addMessage", source, {
+            args = {
+                "^1SYSTEM",
+                "Player: ^1"..xPlayer.name.."^0 Be Modat ^1" .. day .. "^0 Rooz Fight Ban Shod!"
+            }
+        })
+        
+        TriggerClientEvent("Unique_Scripts_FightBan:Notif", tonumber(target), true)
+
+    else
+        exports.oxmysql:execute("INSERT INTO fightbans (Steam, isBnaned, Expire) VALUES (?, ?, ?)", {
+            tostring(target),
+            1,
+            time
+        }, function(rowsChanged)
+            
+        end)
+
+        exports.oxmysql:execute('SELECT playerName FROM users WHERE identifier = ?', {
+            tostring(target)
+        }, function(playerName)
+
+        local targetName = (playerName[1] and playerName[1].playerName) or tostring(target)
+        TriggerClientEvent("chat:addMessage", source, {
+            args = {
+                "^1SYSTEM",
+                "Player: ^1"..targetName.."^0 Be Modat ^1" .. day .. "^0 Rooz Fight Ban Shod!"
+            }
+        })
+    
+        end)
+    end
+end
+
+function ReloadBans()
+	CreateThread(function()
+		FightBans = {}
+		exports.oxmysql:execute("SELECT * FROM fightbans", {}, function(info)
+			for i = 1, #info do
+				if info[i].isBnaned == 1 then
+					Wait(2)
+					table.insert(FightBans, {
+						info[i]
+					})
+				end
+			end
+		end)		
+	end)
+end
+
+ReloadBans()
+TriggerEvent("es:addAdminCommand", "fightban", 7, function(source, args, user)
+	if tostring(args[1]) and tonumber(args[2]) then
+		CreatheFightBan(tostring(args[1]), tonumber(args[2]), source)
+		TriggerClientEvent("chat:addMessage", source, {
+			args = {
+				"^1SYSTEM",
+				"Player Fight Ban Shod."
+			}
+		})
+	end
+end, function(source, args, user)
+	TriggerClientEvent("chat:addMessage", source, {
+		args = {
+			"^1SYSTEM",
+			"Insufficient Permissions."
+		}
+	})
+end, {
+	help = "Fight Ban Player",
+	params = {
+		{
+			name = "Player ID/Hes",
+			help = "ID Ra Vared Konid "
+		},
+		{
+			name = "Day",
+			help = "Teadad Rozi ke Player Fight Ban Shavd"
+		}
+	}
+})
+
+TriggerEvent("es:addAdminCommand", "unfightban", 7, function(source, args, user)
+	if tostring(args[1]) then
+		UnFightBan(tostring(args[1]))
+		TriggerClientEvent("chat:addMessage", source, {
+			args = {
+				"^1SYSTEM",
+				"Player Ba Steam hex : " .. tostring(args[1]) .. " unfight ban shod"
+			}
+		})
+	end
+end, function(source, args, user)
+	TriggerClientEvent("chat:addMessage", source, {
+		args = {
+			"^1SYSTEM",
+			"Insufficient Permissions."
+		}
+	})
+end, {
+	help = "Fight Ban Player",
+	params = {
+		{
+			name = "Steam Hex",
+			help = "Steam Hex Ra Vared Konid "
+		}
+	}
+})
+
+TriggerEvent("es:addAdminCommand", "reloadfightban", 7, function(source, args, user)
+	ReloadBans()
+end, function(source, args, user)
+	TriggerClientEvent("chat:addMessage", source, {
+		args = {
+			"^1SYSTEM",
+			"Insufficient Permissions."
+		}
+	})
+end, {
+	help = " ReloadFight Bans ",
+	params = {}
+})
+
+
+TriggerEvent("es:addCommand", "checkfightban", function(source, args, user)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    local steamIdentifier = xPlayer.identifier
+
+    exports.oxmysql:execute("SELECT Expire FROM fightbans WHERE Steam = ?", {
+        steamIdentifier
+    }, function(data)
+        if data[1] then
+            local remainingTime = tonumber(data[1].Expire) - os.time()
+            if tonumber(remainingTime) > 0 then
+                local days = math.floor(remainingTime / 86400)
+                local hours = math.floor((remainingTime % 86400) / 3600)
+                local minutes = math.floor((remainingTime % 3600) / 60)
+                
+                TriggerClientEvent("chat:addMessage", source, {
+                    args = {
+                        "^1SYSTEM",
+                        "Shoma Fight Ban Hastid. Zaman Baqi Mande: ^1" .. days .. "^0 Ruz, ^1" .. hours .. "^0 Saat, ^1" .. minutes .. "^0 Daghighe"
+                    }
+                })
+            else
+                TriggerClientEvent("chat:addMessage", source, {
+                    args = {
+                        "^1SYSTEM",
+                        "Shoma Fight Ban Nistid ya Fight Ban Shoma Khateme Yafte Ast."
+                    }
+                })
+            end
+        else
+            TriggerClientEvent("chat:addMessage", source, {
+                args = {
+                    "^1SYSTEM",
+                    "Shoma Fight Ban Nistid."
+                }
+            })
+        end
+    end)
+end, {
+    help = "Check Remaining Fight Ban Time",
+    params = {}
+})
+
+
+
+TriggerEvent("es:addAdminCommand", "acheckfightban", 2, function(source, args, user)
+    if args[1] then
+        local steamIdentifier
+        if tonumber(args[1]) then
+            local targetPlayer = ESX.GetPlayerFromId(tonumber(args[1]))
+            if targetPlayer then
+                steamIdentifier = targetPlayer.identifier
+            else
+                TriggerClientEvent("chat:addMessage", source, {
+                    args = {
+                        "^1SYSTEM",
+                        "Player ID Vared Shode Eshtebah Ast."
+                    }
+                })
+                return
+            end
+        else
+            steamIdentifier = tostring(args[1])
+        end
+
+        exports.oxmysql:execute("SELECT Expire FROM fightbans WHERE Steam = ?", {
+            steamIdentifier
+        }, function(data)
+            if data[1] then
+                local remainingTime = tonumber(data[1].Expire) - os.time()
+                if remainingTime > 0 then
+                    local days = math.floor(remainingTime / 86400)
+                    local hours = math.floor((remainingTime % 86400) / 3600)
+                    local minutes = math.floor((remainingTime % 3600) / 60)
+                    
+                    TriggerClientEvent("chat:addMessage", source, {
+                        args = {
+                            "^1SYSTEM",
+                            "Player Ba Steam Hex: " .. steamIdentifier .. " Fight Ban Ast. Zaman Baqi Mande: ^1" .. days .. "^0 Ruz, ^1" .. hours .. "^0 Saat, ^1" .. minutes .. "^0 Daghighe"
+                        }
+                    })
+                else
+                    TriggerClientEvent("chat:addMessage", source, {
+                        args = {
+                            "^1SYSTEM",
+                            "Player Fight Ban Nistid ya Fight Ban Be Payan Resid."
+                        }
+                    })
+                end
+            else
+                TriggerClientEvent("chat:addMessage", source, {
+                    args = {
+                        "^1SYSTEM",
+                        "Player Fight Ban Nist."
+                    }
+                })
+            end
+        end)
+    else
+        TriggerClientEvent("chat:addMessage", source, {
+            args = {
+                "^1SYSTEM",
+                "Lotfan Steam Hex Ra Vared Konid."
+            }
+        })
+    end
+end, {
+    help = "Admin Check Fight Ban Time for a Player",
+    params = {
+        {
+            name = "Steam Hex",
+            help = "Steam Hex Ra Vared Konid."
+        }
+    }
+})
+
+
+-- ====================================================================
+-- [gang_mapings] server
+-- ====================================================================
+ESX = nil
+
+TriggerEvent("esx:getSharedObject",function(obj)
+    ESX = obj
+end)
+
+
+
+-- ====================================================================
+-- [joblist] server
+-- ====================================================================
+
+ESX = nil
+
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
+RegisterCommand('joblist', function(source, args, rawCommand)
+    local zPlayer = ESX.GetPlayerFromId(source)
+    local playerSteamHex = zPlayer.identifier
+    local hasPermission = zPlayer.permission_level > 0
+    local allowedJobs = {}
+    if hasPermission or (zPlayer.job.name == 'fbi' and zPlayer.job.grade > 15) then
+        allowedJobs = {police = {}, mt = {}, ambulance = {}, sheriff = {}, metropolitan = {}, mechanic = {}, weazel = {}, fbi = {},taxi = {}}
+    else
+        TriggerClientEvent('chat:addMessage', source, {args = {"^1[System]", "^3 Perm Nadary !"}})
+        return
+    end
+
+    local Players = GetPlayers()
+    local Jobs = {
+        police = {},
+        mt = {},
+        ambulance = {},
+        sheriff = {},
+        metropolitan = {},
+        mechanic = {},
+        weazel = {},
+        fbi = {},
+        taxi = {},
+    }
+
+    for _, PlayerID in ipairs(Players) do
+        local xPlayer = ESX.GetPlayerFromId(PlayerID)
+        if xPlayer then
+            local job = xPlayer.job
+            if Jobs[job.name] and allowedJobs[job.name] then
+                table.insert(Jobs[job.name], {name = xPlayer.name, grade = job.grade, id = PlayerID})
+            end
+        end
+    end
+
+    for jobName, jobList in pairs(Jobs) do
+        table.sort(jobList, function(a, b) return a.grade > b.grade end)
+    end
+
+    TriggerClientEvent('ArSa:showJobMenu', source, Jobs)
+end, false)
+
+RegisterNetEvent('ArSa:GoToSp')
+AddEventHandler('ArSa:GoToSp', function(TargetID)
+    local _source = source
+    TriggerClientEvent('esx_spectate:spectatexxxx', _source, TargetID)
+end)
+-- ====================================================================
+-- [pedshop] server
+-- ====================================================================
+ESX = nil
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
+RegisterServerEvent('pedshop:buyPed')
+AddEventHandler('pedshop:buyPed', function(pedModel)
+    -- قبل: از global "source" مستقیم داخل callback های async استفاده می‌شد که
+    -- ممکن بود تا زمان اجرای callback، مقدارش عوض یا nil بشه.
+    -- بعد: همون اول یه کپی محلی (local) از source می‌گیریم که هیچ‌وقت عوض نمی‌شه.
+    local _source = source
+
+    local xPlayer = ESX.GetPlayerFromId(_source)
+    local pedExpire, pedPrice = nil, nil
+
+    local found = false
+    for _, ped in ipairs(Config_PedShop.AvailablePedsMale) do
+        if ped.model == pedModel then
+            pedExpire = ped.expire
+            pedPrice = ped.price
+            found = true
+            break
+        end
+    end
+
+    if not found then
+        for _, ped in ipairs(Config_PedShop.AvailablePedsFemale) do
+            if ped.model == pedModel then
+                pedExpire = ped.expire
+                pedPrice = ped.price
+                found = true
+                break
+            end
+        end
+    end
+
+    if not pedExpire or not pedPrice then
+        TriggerClientEvent('esx:showNotification', _source, "Ped Yaft Nashod!")
+        return
+    end
+
+    exports.oxmysql:execute('SELECT ped_model FROM owned_peds WHERE identifier = ?', {
+        xPlayer.identifier
+    }, function(result)
+        for _, ped in ipairs(result) do
+            if ped.ped_model == pedModel then
+                TriggerClientEvent('esx:showNotification', _source, "Shoma In Ped ra Ghablan Kharidari Kardid")
+                return
+            end
+        end
+
+        if xPlayer.bank >= pedPrice then
+            xPlayer.removeBank(pedPrice)
+            local expiryTime = os.time() + (pedExpire * 86400)
+
+            exports.oxmysql:execute('INSERT INTO owned_peds (identifier, ped_model, ped_expiry) VALUES (?, ?, FROM_UNIXTIME(?))', {
+                xPlayer.identifier, pedModel, expiryTime
+            })
+
+            TriggerClientEvent('esx:showNotification', _source, "Shoma Ped Kharidid Expire: " .. pedExpire .. " Day")
+        else
+            TriggerClientEvent('esx:showNotification', _source, "Poul Shoma Kasfi Nist!")
+        end
+    end)
+end)
+
+
+RegisterServerEvent('pedshop:getOwnedPeds')
+AddEventHandler('pedshop:getOwnedPeds', function(source)
+    -- این تابع از قبل چون "source" رو به‌صورت پارامتر محلی می‌گرفت امن بود،
+    -- ولی برای یکدست بودن کد و جلوگیری از سردرگمی با global source، بازم
+    -- یه اسم واضح‌تر بهش می‌دیم.
+    local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
+
+    exports.oxmysql:execute('SELECT ped_model, UNIX_TIMESTAMP(ped_expiry) AS expiry FROM owned_peds WHERE identifier = ?', {
+        xPlayer.identifier
+    }, function(result)
+        local validPeds = {}
+
+        for _, row in ipairs(result) do
+            if os.time() < row.expiry then
+                table.insert(validPeds, {model = row.ped_model})
+            end
+        end
+
+        TriggerClientEvent('pedshop:showOwnedPeds', _source, validPeds)
+    end)
+end)
+
+
+AddEventHandler('onResourceStart', function(resourceName)
+    if resourceName == GetCurrentResourceName() then
+        exports.oxmysql:execute('SELECT identifier, UNIX_TIMESTAMP(ped_expiry) AS expiry FROM owned_peds', {}, function(users)
+            for _, user in ipairs(users) do
+                if os.time() > user.expiry then
+                    exports.oxmysql:execute('DELETE FROM owned_peds WHERE identifier = ? AND UNIX_TIMESTAMP(ped_expiry) = ?', { user.identifier, user.expiry })
+                end
+            end
+        end)
+    end
+end)
+-- ====================================================================
+-- [Unique_Scripts_Badge] server
+-- ====================================================================
+ESX = nil
+
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
+-- فرمان سرور برای نمایش badge
+RegisterServerEvent('badge:showBadge')
+AddEventHandler('badge:showBadge', function()
+    local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
+    
+    -- اطلاعات بازیکن
+    local playerName = string.gsub(xPlayer.get('name'), "_", " ") 
+    local playerJob = xPlayer.job.label
+    local playerJobGrade = xPlayer.job.grade_label
+
+    -- موقعیت بازیکن فعلی
+    local playerPed = GetPlayerPed(_source)
+    local playerCoords = GetEntityCoords(playerPed)
+
+    local xPlayers = ESX.GetPlayers()
+    
+    for i=1, #xPlayers, 1 do
+        local otherPlayerPed = GetPlayerPed(xPlayers[i])
+        local otherPlayerCoords = GetEntityCoords(otherPlayerPed)
+
+        -- محاسبه فاصله بین دو بازیکن
+        local distance = math.sqrt((playerCoords.x - otherPlayerCoords.x) ^ 2 + (playerCoords.y - otherPlayerCoords.y) ^ 2 + (playerCoords.z - otherPlayerCoords.z) ^ 2)
+
+        -- اگر بازیکن در فاصله 15 متری باشد
+        if distance < 15.0 then
+            TriggerClientEvent('chatMessage', xPlayers[i], "", {252, 1, 1}, "Job Badge:\n^5Name: ^0" .. playerName .. "\n^5Job: ^0" .. playerJob .. "\n^5Job Grade: ^0" .. playerJobGrade)
+        end
+    end
+end)
+
+-- ====================================================================
+-- [Unique_Scripts_NPC_Doctors] server
+-- ====================================================================
+ESX = nil
+
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
+ESX.RegisterServerCallback('esx:getPlayerData', function(source, cb)
+    local xPlayer = ESX.GetPlayerFromId(source)
+
+    if xPlayer then
+        local bank = xPlayer.bank 
+        local job = xPlayer.job 
+
+        cb({
+            bank = bank,
+            job = job
+        })
+    else
+        cb(nil)
+    end
+end)
+
+
+RegisterServerEvent("esx:removeBank")
+AddEventHandler("esx:removeBank", function(amount)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    xPlayer.removeBank(amount) 
+end)
+
+RegisterServerEvent("pase:addXP")
+AddEventHandler("pase:addXP", function(playerId, xp)
+   
+end)
+
+RegisterServerEvent("esx_ambulancejob:revivex")
+AddEventHandler("esx_ambulancejob:revivex", function(playerId)
+ 
+end)
+
+
+ESX.RegisterServerCallback('Unique_Scripts_NPC_Doctor:chekmedic', function(source, cb)
+    local Players = GetPlayers()
+    local xPlayer = nil 
+    local dutyambulance = 0
+
+    for i=1, #Players do 
+        xPlayer = ESX.GetPlayerFromId(Players[i])
+        if xPlayer then
+            if xPlayer.job.name == 'ambulance' then
+                dutyambulance = dutyambulance + 1
+            end
+        end
+    end
+
+    if dutyambulance == 0 then 
+        cb(true)
+    else
+        cb(false)
+    end
+
+end)
+
+-- ====================================================================
+-- [Unique_Scripts_Switchjob] server
+-- ====================================================================
+ESX = nil
+
+TriggerEvent('esx:getSharedObject', function(obj) 
+    ESX = obj 
+end)
+
+
+RegisterServerEvent('jobmenu:checkPermission')
+AddEventHandler('jobmenu:checkPermission', function()
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    local identifiers = GetPlayerIdentifiers(src)
+    local steamhex = nil
+
+    for _, identifier in ipairs(identifiers) do
+        if string.find(identifier, 'steam:') then
+            steamhex = identifier
+            break
+        end
+    end
+    
+    if not steamhex then
+        return
+    end
+    
+
+    if Config_Switchjob.AllowedJobs[steamhex] then
+        TriggerClientEvent('jobmenu:openMenu', src, Config_Switchjob.AllowedJobs[steamhex])
+    else
+        xPlayer.showNotification('~r~Shoma Datrasi Kafi Braye in Kar Ra Ndarid!')
+    end
+end)
+
+
+RegisterServerEvent('jobmenu:setJob')
+AddEventHandler('jobmenu:setJob', function(jobData)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    local identifiers = GetPlayerIdentifiers(src)
+    local steamhex = nil
+
+    for _, identifier in ipairs(identifiers) do
+        if string.find(identifier, 'steam:') then
+            steamhex = identifier
+            break
+        end
+    end
+    
+    if not steamhex then
+        return
+    end
+    
+
+    if not Config_Switchjob.AllowedJobs[steamhex] then
+        return
+    end
+    
+
+    local allowed = false
+    for _, job in ipairs(Config_Switchjob.AllowedJobs[steamhex]) do
+        if job.name == jobData.name and job.grade == jobData.grade then
+            allowed = true
+            break
+        end
+    end
+    
+    if not allowed then
+        xPlayer.showNotification('~r~Shoma Datrasi Kafi Braye in Kar Ra Ndarid!')
+        return
+    end
+    
+
+    xPlayer.setJob(jobData.name, jobData.grade)
+    xPlayer.showNotification(('~g~Job Shoma Be ~y~%s~g~ Ba Rank ~b~%s~g~ Taghir Yaft!'):format(jobData.label or jobData.name, jobData.grade))
+end)
+
+
+RegisterCommand(Config_Switchjob.MenuCommand, function(source)
+    TriggerClientEvent('jobmenu:checkPermission', source)
+end, false)
+
+ESX.RegisterServerCallback('jobmenu:getPlayerJob', function(source, cb)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    cb({
+        name = xPlayer.job.name,
+        grade = xPlayer.job.grade
+    })
+end)
+-- ====================================================================
+-- [Unique_Scripts_vehicle_damage] server
+-- ====================================================================
+ESX = nil
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
+ESX.RegisterServerCallback('vehicle:getVehicleDamage', function(source, cb, plate)
+    exports.oxmysql:scalar('SELECT damage FROM owned_vehicles WHERE plate = ?', {
+        plate
+    }, function(damage)
+        if damage then
+            cb(damage)
+        else
+            cb(100)
+        end
+    end)
+end)
+
+-- RegisterNetEvent('vehicle:saveVehicleDamage')
+-- AddEventHandler('vehicle:saveVehicleDamage', function(plate, damage)
+--     exports.oxmysql:execute('INSERT INTO vehicle_damage (plate, damage) VALUES (@plate, @damage) ON DUPLICATE KEY UPDATE damage = @damage', {
+--         ['@plate'] = plate,
+--         ['@damage'] = damage
+--     })
+-- end)
+
+-- ====================================================================
+-- [Unique_Scripts_Washmoney] server
+-- ====================================================================
+ESX = nil
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
+
+ESX.RegisterServerCallback('checkEskenasAmount', function(source, cb)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    local eskenasCount = xPlayer.getInventoryItem('eskenas').count
+
+    if eskenasCount >= 50000 then
+        cb(true)
+    else
+        cb(false)
+    end
+end)
+
+RegisterServerEvent('poolkasif')
+AddEventHandler('poolkasif', function(itemcount)
+    local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
+
+    if xPlayer.getInventoryItem('eskenas').count >= 50000 then
+        xPlayer.removeInventoryItem('eskenas', itemcount)
+        xPlayer.addMoney(30000)
+    else
+        TriggerClientEvent('esx:showNotification', _source, "شما باید 50K پول کثیف داشته باشید!")
+    end
+end)
+
+ESX.RegisterServerCallback('checkJobAndBucket', function(source, cb)
+    local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
+    local forbiddenJobs = {
+        "police", "offpolice",
+        "sheriff", "offsheriff",
+        "mt", "offmt",
+        "fbi", "offfbi",
+        "taxi", "mechanic",
+        "ambulance", "weazel"
+    }
+
+    if xPlayer and xPlayer.job then
+
+        for _, job in ipairs(forbiddenJobs) do
+            if xPlayer.job.name == job then
+                cb(false)
+                return
+            end
+        end
+
+        local playerBucket = GetPlayerRoutingBucket(_source)
+        if playerBucket > 0 then
+            cb(false)
+            return
+        end
+    end
+
+    cb(true)
+end)
+
+RegisterServerEvent('notifyPolice')
+AddEventHandler('notifyPolice', function(location)
+    local _source = source
+    local xPlayers = ESX.GetPlayers()
+
+    for i = 1, #xPlayers, 1 do
+        local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+        if xPlayer.job.name == 'police' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'mt' then
+            TriggerClientEvent('esx:showNotification', xPlayers[i], "یک نفر در حال پول‌شویی است!")
+            TriggerClientEvent('createPoliceBlip', xPlayers[i], location.x, location.y, location.z) 
+        end
+    end
+end)
+
+RegisterServerEvent('removePoliceBlip')
+AddEventHandler('removePoliceBlip', function()
+    local xPlayers = ESX.GetPlayers()
+
+    for i = 1, #xPlayers, 1 do
+        local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+        if xPlayer.job.name == 'police' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'mt' then
+            TriggerClientEvent('removePoliceBlip', xPlayers[i]) 
+        end
+    end
+end)
+
+-- ====================================================================
+-- [Unique_Scripts_item_mc] server
+-- ====================================================================
+ESX = nil
+
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
+ESX.RegisterUsableItem('tires', function(source)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	TriggerClientEvent('Unique_Scripts_item_mc:Use', source)
+end)
+
+RegisterServerEvent('Unique_Scripts_item_mc:Used')
+AddEventHandler('Unique_Scripts_item_mc:Used', function()
+	local xPlayer = ESX.GetPlayerFromId(source)
+	xPlayer.removeInventoryItem('tires', 1)
+end)
+
+------------------ flip -------------
+
+ESX.RegisterUsableItem('carjack', function(source)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	TriggerClientEvent('Unique_Scripts_item_mc:flipp', source)
+end)
+
+RegisterNetEvent('Unique_Scripts_item_mc:removeitemss')
+AddEventHandler('Unique_Scripts_item_mc:removeitemss', function(cant)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	xPlayer.removeInventoryItem('carjack', cant)
+end)
+
+------------------ cleaner ------------------
+
+
+ESX.RegisterUsableItem('cleaner', function(source)
+	local _source = source
+	TriggerClientEvent('Unique_Scripts_item_mc:cleann', _source)
+end)
+
+RegisterNetEvent('Unique_Scripts_item_mc:removeitemssclean')
+AddEventHandler('Unique_Scripts_item_mc:removeitemssclean', function(cant)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	xPlayer.removeInventoryItem('cleaner', cant)
+end)
+-- ====================================================================
+-- [weapons-on-back] server
+-- ====================================================================
+do
+ESX = nil
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
+
+ESX.RegisterServerCallback('Weapon_On_Back:GetBossGang', function(source, cb, gangname, jobname)
+    if gangname ~= 'nogang' and jobname ~= "nojob" then 
+        cb(true)
+        return
+    elseif jobname ~= "nojob" then 
+        cb(true)
+        return
+    elseif jobname == "nojob" and gangname == "nogang" then 
+        cb(false)
+        return
+    elseif gangname ~= 'nogang' then 
+        exports.oxmysql:execute('SELECT boss FROM gangs_data WHERE gang_name = ?', {
+            gangname
+        }, function(result)
+            if result[1] and result[1].boss then
+                local bosscoords = json.decode(result[1].boss)
+                cb(bosscoords)
+            else
+                cb(false)
+            end
+        end)
+    end
+end)
+
+RegisterNetEvent('Weapon_On_back:SaveData')
+AddEventHandler('Weapon_On_back:SaveData', function(steam1, slotsData)
+    -- قبل: فقط یک هش تکی ذخیره می‌شد (insert/delete). الان چون سه اسلات
+    -- (پشت/سینه/کمر) هم‌زمان ممکنه پر باشن، کل جدول اسلات‌ها رو ذخیره می‌کنیم.
+    local LocadData = LoadResourceFile(GetCurrentResourceName(), 'client/SaveData.json')
+    local Data      = json.decode(LocadData) or {}
+    Data[steam1] = slotsData
+    Wait(500)
+    SaveResourceFile(GetCurrentResourceName(), 'client/SaveData.json', json.encode(Data, {indent = true}), -1)
+end)
+
+RegisterNetEvent('WeaponPlayerLoaded')
+AddEventHandler('WeaponPlayerLoaded', function(source)
+    Wait(5000)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    local LocadData = LoadResourceFile(GetCurrentResourceName(), 'client/SaveData.json')
+    local Data      = json.decode(LocadData) or {}
+
+    if Data[xPlayer.identifier] then
+        TriggerClientEvent('Weapon_On_back:PlayerSpawned', source, Data[xPlayer.identifier])
+    end
+end)
+
+ESX.RegisterServerCallback("Weapon_On_Back:GetWeaponComponent", function(source, cb, WeaponName)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    for k,v in pairs(xPlayer.loadout) do 
+        if v.name == WeaponName then 
+            cb(v.components)
+            return
+        end
+    end
+    -- قبل: اگه سلاح پیدا نمی‌شد، cb() اصلاً صدا زده نمی‌شد و کلاینت برای همیشه منتظر می‌موند.
+    cb({})
+end)
+end

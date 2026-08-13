@@ -1,0 +1,141 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap");
+
+:root {
+  --color-symbol: #07bbe7;
+  --color-icon: #07bbe7;
+  --color-iconhover: #07bbe7;
+  --color-iconhove-shine: #1ac9f5b2;
+  --color-text: rgba(255, 255, 255, 0.767);
+  --color-hover: rgba(255, 255, 255, 0.63);
+}
+
+body {
+  visibility: hidden;
+  user-select: none;
+  white-space: nowrap;
+  margin: 0;
+  user-select: none;
+  overflow: hidden;
+}
+
+p {
+  margin: 0;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 40;
+}
+
+#eye {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 22pt;
+  fill: var(--color-icon);
+}
+
+#hex {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 22pt;
+  stroke: var(--color-icon);
+  stroke-width: 6.5;
+  stroke-linecap: round; 
+  stroke-linejoin: round; 
+}
+
+
+#alttakim {
+  stroke: var(--color-icon);
+  stroke-width: 4.5;
+  stroke-linecap: round; 
+  position: absolute;
+  top: 51.7%;
+  left: 50.2%;
+  transform: translateY(-50%) translateX(-50%);
+  width: 3.5vh;
+  height: 5.5vh;
+  transition: all 0.8s;
+  filter: drop-shadow(0vw 0vw .19333vw var(--color-iconhove-shine));
+  text-shadow: 0.25vh 0.25vh 5.05vh var(--color-iconhove-shine);
+  fill: #07bae75d;
+}
+
+
+.eye-hover {
+  fill: var(--color-iconhove);
+  filter: drop-shadow(0vw 0vw .19333vw var(--color-iconhove-shine));
+  text-shadow: 0.25vh 0.25vh 5.05vh var(--color-iconhove-shine);
+
+}
+
+
+.hex-hover {
+  stroke: var(--color-iconhover);
+  stroke-width: 6.5; 
+  stroke-linecap: round; 
+  stroke-linejoin: round; 
+  fill: #07bae75d;
+  filter: drop-shadow(0vw 0vw 1.19333vw var(--color-iconhove-shine));
+  text-shadow: 0.25vh 0.25vh 5.05vh var(--color-iconhove-shine);
+}
+
+#options-wrapper {
+  position: absolute;
+  top: calc(48.4%);
+  left: calc(50% + 18pt);
+}
+
+.option-container {
+  color: var(--color-text);
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  font-family: "Nunito";
+  background: linear-gradient(
+    90deg,
+    rgba(4, 180, 250, 0.205) 0%,
+    rgba(12, 146, 236, 0.315) 66%,
+    rgba(17, 53, 83, 0.24) 100%
+  );
+  font-size: 11pt;
+  line-height: 30pt;
+  vertical-align: middle;
+  margin: 2pt;
+  transition: 300ms;
+  transform-origin: left top;
+  scale: 1;
+  height: 22pt;
+  width: 150pt;
+  top: 0;
+  border-radius: 4px;
+}
+
+.option-container:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(15, 169, 230, 0.534) 0%,
+    rgba(12, 147, 236, 0.6) 66%,
+    rgba(17, 53, 83, 0.24) 100%
+  );
+  transform-origin: left top;
+  color: var(--color-hover);
+  margin-left: 4pt;
+}
+
+.option-icon {
+  font-size: 12pt;
+  line-height: 22pt;
+  width: 14pt;
+  margin: 5pt;
+  color: var(--color-symbol);
+}
+
+.option-label {
+  font-weight: 500;
+}
+
