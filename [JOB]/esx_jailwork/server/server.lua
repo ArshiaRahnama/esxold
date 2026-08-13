@@ -2,6 +2,15 @@
 ESX              = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
+-- Jobs allowed to use the jail system: Law Enforcement (police/sheriff/mt) + all Department Of Justice jobs
+local JailJobs = {
+	police = true, sheriff = true, mt = true,
+	fbi = true, cid = true, cia = true, marshal = true, judge = true, doa = true,
+}
+local function IsJailJob(jobName)
+	return JailJobs[jobName] == true
+end
+
 local limits = {jail = 45, prison = 120, solitary = 30}
 local sentences = {}
 local jails = {}
@@ -134,7 +143,7 @@ end, false)
 
 RegisterCommand('jail', function(source, args)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	if xPlayer.job.name == "police" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "mt" then
+	if IsJailJob(xPlayer.job.name) then
 		if CheckForEntries(source, args[1], args[2], args[3]) then
 			
 			local target = tonumber(args[1])
@@ -164,7 +173,11 @@ end, false)
 RegisterCommand('jjjailpd', function(source, args)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	if xPlayer.job.name == "police" then
+	-- Law Enforcement (police/sheriff/mt) get the "true" cell-assignment flag (they run the PD jail wing).
+	-- Every other Jail-access job (fbi, cid, cia, marshal, judge, doa) gets "false" (same as fbi always had).
+	local isLawEnforcement = xPlayer.job.name == "police" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "mt"
+
+	if isLawEnforcement or IsJailJob(xPlayer.job.name) then
 		if CheckForEntries(source, args[1], args[2], args[3]) then
 
 			local target = tonumber(args[1])
@@ -182,7 +195,7 @@ RegisterCommand('jjjailpd', function(source, args)
 				local cell = isACellFree(jails)
 				if cell then
 					
-					Sentece(source, target, "jail", time, reason, cell.part, true)
+					Sentece(source, target, "jail", time, reason, cell.part, isLawEnforcement)
 
 				else
 					sendMessage(source, "Hich selol khali vojod nadarad!")
@@ -193,100 +206,6 @@ RegisterCommand('jjjailpd', function(source, args)
 			end
 
 		end
-	elseif xPlayer.job.name == "sheriff" then
-		
-		if CheckForEntries(source, args[1], args[2], args[3]) then
-
-			local target = tonumber(args[1])
-			local identifier = GetPlayerIdentifier(target)
-			local time =  tonumber(args[2])
-			local reason = table.concat(args, " ", 3)
-
-			if sentences[identifier] then
-				sendMessage(source, "Player mored nazar ghablan jail shode ast!")
-				return
-			end
-
-			if time <= limits["jail"] then
-
-				local cell = isACellFree(jails)
-				if cell then
-					
-					Sentece(source, target, "jail", time, reason, cell.part, true)
-
-				else
-					sendMessage(source, "Hich selol khali vojod nadarad!")
-				end
-
-			else
-				sendMessage(source, "Time vared shode az hade aksar time jail bishtar ast!")
-			end
-
-		end
-
-	elseif xPlayer.job.name == "mt" then
-		
-		if CheckForEntries(source, args[1], args[2], args[3]) then
-
-			local target = tonumber(args[1])
-			local identifier = GetPlayerIdentifier(target)
-			local time =  tonumber(args[2])
-			local reason = table.concat(args, " ", 3)
-
-			if sentences[identifier] then
-				sendMessage(source, "Player mored nazar ghablan jail shode ast!")
-				return
-			end
-
-			if time <= limits["jail"] then
-
-				local cell = isACellFree(jails)
-				if cell then
-					
-					Sentece(source, target, "jail", time, reason, cell.part, true)
-
-				else
-					sendMessage(source, "Hich selol khali vojod nadarad!")
-				end
-
-			else
-				sendMessage(source, "Time vared shode az hade aksar time jail bishtar ast!")
-			end
-
-		end
-
-
-	elseif xPlayer.job.name == "fbi" then
-		if CheckForEntries(source, args[1], args[2], args[3]) then
-
-			local target = tonumber(args[1])
-			local identifier = GetPlayerIdentifier(target)
-			local time =  tonumber(args[2])
-			local reason = table.concat(args, " ", 3)
-
-			if sentences[identifier] then
-				sendMessage(source, "Player mored nazar ghablan jail shode ast!")
-				return
-			end
-
-			if time <= limits["jail"] then
-
-				local cell = isACellFree(jails)
-				if cell then
-					
-					Sentece(source, target, "jail", time, reason, cell.part, false)
-
-				else
-					sendMessage(source, "Hich selol khali vojod nadarad!")
-				end
-
-			else
-				sendMessage(source, "Time vared shode az hade aksar time jail bishtar ast!")
-			end
-
-		end
-
-
 	else
 		sendMessage(source, "Shoma dastresi kafi baraya estefade az in dastor ra nadarid!")
 	end
@@ -294,7 +213,7 @@ end, false)
 
 RegisterCommand('solitary', function(source, args)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	if xPlayer.job.name == "police" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "mt" then
+	if IsJailJob(xPlayer.job.name) then
 		if CheckForEntries(source, args[1], args[2], args[3]) then
 
 			local target = tonumber(args[1])
@@ -340,7 +259,7 @@ end, false)
 
 RegisterCommand('unjail', function(source, args)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	if (xPlayer.job.name == "police" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "mt") and xPlayer.job.grade >= 4 then
+	if IsJailJob(xPlayer.job.name) and xPlayer.job.grade >= 4 then
 
 		if not args[1] then
 			sendMessage(source, "Shoma dar ghesmat ID chizi vared nakardid")
@@ -382,7 +301,7 @@ end, false)
 
 RegisterCommand('checktime', function(source, args)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	if xPlayer.job.name == "police" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "mt" or xPlayer.permission_level > 0 then
+	if IsJailJob(xPlayer.job.name) or xPlayer.permission_level > 0 then
 
 		if not args[1] then
 			sendMessage(source, "Shoma dar ghesmat ID chizi vared nakardid")
@@ -411,7 +330,7 @@ RegisterCommand('checktime', function(source, args)
 					sendMessage(source, "Player mored nazar admin jail shode ast shoma nemitavanid zaman ra check konid!")
 				end
 			else
-				if xPlayer.job.name == "police" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "mt" then
+				if IsJailJob(xPlayer.job.name) then
 					sendMessage(source, "Zaman zendan ^2" .. getName(target) .. "^3 " .. sentences[identifier].time .. "^0 mah ast!")
 				else
 					sendMessage(source, "Player mored nazar tavasor police jail shode ast shoma nemitavanid zaman ra check konid!")

@@ -66,7 +66,8 @@ end)
 
 RegisterNetEvent("esx_jail:notifications")
 AddEventHandler("esx_jail:notifications", function(message)
-	if PlayerData.job.name == "police" or PlayerData.job.name == "fbi" or PlayerData.job.name == "sheriff" or PlayerData.job.name == "mt" then
+	local jailJobs = { police=true, sheriff=true, mt=true, fbi=true, cid=true, cia=true, marshal=true, judge=true, doa=true }
+	if jailJobs[PlayerData.job.name] then
 		TriggerEvent('chat:addMessage', {color = {0, 95, 254}, multiline = true ,args = {"[DISPATCH] ["..PlayerData.job.name.."]: ", message}})
 	end
 end)
