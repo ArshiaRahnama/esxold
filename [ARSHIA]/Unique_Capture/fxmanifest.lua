@@ -8,7 +8,8 @@ description 'Unique Capture System'
 
 version '1.8'
 
-
+shared_script '@ox_lib/init.lua'
+dependency 'ox_lib'
 
 client_scripts {
     'Config.lua',

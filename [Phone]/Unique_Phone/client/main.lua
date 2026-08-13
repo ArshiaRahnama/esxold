@@ -2370,7 +2370,7 @@ end)
 RegisterNUICallback('SetAlertWaypoint', function(data)
     local coords = data.alert.coords
 
-    TriggerEvent('notification', Lang("GPS_SET") .. data.alert.title)
+    TriggerEvent('esx:showNotification', Lang("GPS_SET") .. data.alert.title)
     SetNewWaypoint(coords.x, coords.y)
 end)
 
@@ -2662,7 +2662,7 @@ RegisterNUICallback('RaceDistanceCheck', function(data, cb)
             end
             cb(true)
         else
-            TriggerEvent('notification', 'You are too far from the race. Your navigation is set to the race.', 2)
+            TriggerEvent('esx:showNotification', 'You are too far from the race. Your navigation is set to the race.')
             SetNewWaypoint(checkpointcoords.x, checkpointcoords.y)
             cb(false)
         end
@@ -2707,7 +2707,7 @@ RegisterNUICallback('SetGPSLocation', function(data, cb)
     local ped = PlayerPedId()
 
     SetNewWaypoint(data.coords.x, data.coords.y)
-    TriggerEvent('notification', 'GPS is set!')
+    TriggerEvent('esx:showNotification', 'GPS is set!')
 end)
 
 RegisterNUICallback('SetApartmentLocation', function(data, cb)
@@ -2715,7 +2715,7 @@ RegisterNUICallback('SetApartmentLocation', function(data, cb)
     local TypeData = Apartments.Locations[ApartmentData.type]
 
     SetNewWaypoint(TypeData.coords.enter.x, TypeData.coords.enter.y)
-    TriggerEvent('notification', 'GPS is set!')
+    TriggerEvent('esx:showNotification', 'GPS is set!')
 end)
 
 RegisterNUICallback('GetCurrentpolices', function(data, cb)

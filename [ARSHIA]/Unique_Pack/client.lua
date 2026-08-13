@@ -680,14 +680,14 @@ end)
 
 
 local data = {
-    ['default'] = 0,
-    ['freq_low'] = 0.0,
-    ['freq_hi'] = 10000.0,
-    ['rm_mod_freq'] = 300.0,
-    ['rm_mix'] = 0.2,
-    ['fudge'] = 0.0,
-    ['o_freq_lo'] = 200.0,
-    ['o_freq_hi'] = 5000.0,
+    [`default`] = 0,
+    [`freq_low`] = 0.0,
+    [`freq_hi`] = 10000.0,
+    [`rm_mod_freq`] = 300.0,
+    [`rm_mix`] = 0.2,
+    [`fudge`] = 0.0,
+    [`o_freq_lo`] = 200.0,
+    [`o_freq_hi`] = 5000.0,
 }
 
 local filter

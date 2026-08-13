@@ -278,3 +278,21 @@ Config.AcademyNPCCount = 4
 Config.AcademyNPCModel = "g_m_y_lost_01"
 Config.AcademyWeapon = "WEAPON_CARBINERIFLE"
 Config.AcademyKillCheckInterval = 500 -- ms between checking if an academy NPC died
+
+-- Difficulty scales with your total (permanent) academy kills
+Config.AcademyDifficultyStep = 5 -- every N kills, NPCs get tougher
+Config.AcademyBaseAccuracy = 20
+Config.AcademyMaxAccuracy = 80
+Config.AcademyBaseArmor = 0
+Config.AcademyMaxArmor = 100
+
+-- Entry is restricted to specific real-world locations only (radius in units).
+-- CHANGE THESE to real coords on your map — the vector4's 4th value is heading.
+Config.AcademyEntryPoints = {
+    vector4(0.0, 0.0, 72.0, 0.0), -- placeholder - replace with real spots
+}
+Config.AcademyEntryRadius = 10.0
+Config.AcademyInstructorPedModel = "s_m_y_cop_01"
+
+-- In-academy practice capture point that teaches the real capture flow
+Config.AcademyTutorialPointOffset = vector3(10.0, 10.0, 0.0) -- relative to Config.AcademyCoord

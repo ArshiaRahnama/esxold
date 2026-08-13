@@ -117,13 +117,13 @@ RegisterCommand('togglebelt', function()
     beltOn = not beltOn
 
     if beltOn then
-        TriggerEvent("pNotify:SendNotification", { text = "!کمربند شما بسته شد", type = "success", timeout = 1400, layout = "centerLeft" })
+        lib.notify({ position = 'center-right', description = "!کمربند شما بسته شد", type = "success", duration = 1400 })
         TriggerServerEvent('InteractSound_SV:PlayWithinDistance', 0.9, 'buckle', 0.9)
         setSeatbeltUI(false)
     else
         speedBuffer = {}
         velBuffer = {}
-        TriggerEvent("pNotify:SendNotification", { text = "!کمربند شما باز شد", type = "error", timeout = 1400, layout = "centerRight" })
+        lib.notify({ position = 'center-right', description = "!کمربند شما باز شد", type = "error", duration = 1400 })
         TriggerServerEvent('InteractSound_SV:PlayWithinDistance', 0.9, 'unbuckle', 0.9)
         setSeatbeltUI(true)
     end
@@ -134,7 +134,7 @@ RegisterNetEvent('seatbelt:beband', function()
     beltOn = true
     isUiOpen = true
     setSeatbeltUI(false)
-    TriggerEvent("pNotify:SendNotification", { text = "!کمربند شما بسته شد", type = "success", timeout = 1400, layout = "centerLeft" })
+    lib.notify({ position = 'center-right', description = "!کمربند شما بسته شد", type = "success", duration = 1400 })
     TriggerServerEvent('InteractSound_SV:PlayWithinDistance', 0.9, 'buckle', 0.9)
 end)
 

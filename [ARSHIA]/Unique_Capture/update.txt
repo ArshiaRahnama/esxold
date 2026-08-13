@@ -344,4 +344,35 @@
     real capture leaderboards, rank, or medals. Killed NPCs respawn 
     a fresh one automatically so training never runs dry.
 
+55- Feature: Academy overhaul (major):
+      • Entry is now restricted to specific real-world locations 
+        (Config.AcademyEntryPoints) — you can't just type the 
+        command from anywhere anymore. An "instructor" NPC stands 
+        at each entry point too; walk up and press E as an 
+        alternative to the command/dashboard button.
+      • Dying in the Academy no longer kicks you out. You get an 
+        on-screen "Press E to respawn" prompt and come right back 
+        in — only /leaveAcademy (or the dashboard button) actually 
+        exits, matching how a dedicated practice mode should work.
+      • Leaving now teleports you back to the exact spot you 
+        entered from, not a random capture-exit coordinate.
+      • NPCs get progressively tougher as your permanent Academy 
+        kill count climbs (accuracy and armor scale up every 
+        Config.AcademyDifficultyStep kills, capped by 
+        Config.AcademyMaxAccuracy/MaxArmor) — real aim training 
+        that actually gets harder as you improve.
+      • A practice capture-point marker inside the Academy area 
+        visually shows what a real capture marker looks like, and 
+        the first time you enter, a full 8-step chat walkthrough 
+        explains exactly how a real capture round works from start 
+        to finish (join, parachute, land, stand in the marker, hold 
+        it, defend it, watch for enemy takeovers, don't rage-quit 
+        mid-defense).
+
+56- Feature: Every notification in this resource now goes through 
+    ox_lib (lib.notify), positioned center-right, instead of the 
+    old ESX notification popups. Requires ox_lib installed and 
+    started before this resource — added as a proper dependency in 
+    fxmanifest.lua.
+
 ========================================================

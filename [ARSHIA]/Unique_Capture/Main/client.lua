@@ -17,6 +17,30 @@ Citizen.CreateThread(function()
     end
 end)
 
+-- ============================================================================
+-- Unified Notifications — every notification in this resource goes through
+-- ox_lib now, positioned center-right.
+-- ============================================================================
+function Notify(message, notifyType, title)
+    local oxType = notifyType
+    if oxType == 'error' then oxType = 'error'
+    elseif oxType == 'success' then oxType = 'success'
+    elseif oxType == 'info' then oxType = 'inform'
+    else oxType = 'inform' end
+
+    lib.notify({
+        title = title or 'Unique Capture',
+        description = message,
+        type = oxType,
+        position = 'center-right',
+    })
+end
+
+RegisterNetEvent("Violet-Capture:OxNotify")
+AddEventHandler("Violet-Capture:OxNotify", function(message, notifyType, title)
+    Notify(message, notifyType, title)
+end)
+
 -- Event Theme (isolated - only read by HandleMarkers, no gameplay impact)
 local ActiveTheme = Config.Themes[Config.ActiveTheme] or Config.Themes.Default
 RegisterNetEvent("Violet-CaptureSystem:SetTheme")
@@ -104,6 +128,9 @@ if Config.EnableAcademy then
     local AcademySessionKills = 0
     local AcademyTotalKills = 0
     local AcademySessionStart = 0
+    local AcademyEntryCoords = nil
+    local AcademyDead = false
+    local TutorialShown = false
 
     Citizen.CreateThread(function()
         AddRelationshipGroup("ACADEMY_ENEMY")
@@ -112,18 +139,94 @@ if Config.EnableAcademy then
         SetRelationshipBetweenGroups(5, GetHashKey("PLAYER"), group)
     end)
 
-    RegisterCommand(Config.AcademyCommand, function()
+    function IsNearAcademyEntry()
+        local playerCoords = GetEntityCoords(PlayerPedId())
+        for _, point in ipairs(Config.AcademyEntryPoints) do
+            if #(playerCoords - vector3(point.x, point.y, point.z)) <= Config.AcademyEntryRadius then
+                return true
+            end
+        end
+        return false
+    end
+
+    function TryEnterAcademy()
         if AcademyActive then
-            ESX.ShowNotification("You Are Already In The Academy !", 'error')
+            Notify("You Are Already In The Academy !", 'error')
             return
         end
         if PlayerCaptureInf.InCapture then
-            ESX.ShowNotification("You Can't Enter The Academy While In A Real Capture !", 'error')
+            Notify("You Can't Enter The Academy While In A Real Capture !", 'error')
             return
         end
+        if not IsNearAcademyEntry() then
+            Notify("You Must Be Near An Academy Entry Point To Enter !", 'error')
+            return
+        end
+        AcademyEntryCoords = GetEntityCoords(PlayerPedId())
         AcademyActive = true
         TriggerServerEvent("Violet-Capture:EnterAcademyWorld")
-    end, false)
+    end
+
+    RegisterCommand(Config.AcademyCommand, TryEnterAcademy, false)
+
+    -- ============ Instructor NPCs at each entry point ============
+    Citizen.CreateThread(function()
+        RequestModel(GetHashKey(Config.AcademyInstructorPedModel))
+        local timeout = 0
+        while not HasModelLoaded(GetHashKey(Config.AcademyInstructorPedModel)) and timeout < 100 do
+            Citizen.Wait(10)
+            timeout = timeout + 1
+        end
+        for _, point in ipairs(Config.AcademyEntryPoints) do
+            local instructor = CreatePed(4, GetHashKey(Config.AcademyInstructorPedModel), point.x, point.y, point.z, point.w, false, true)
+            if DoesEntityExist(instructor) then
+                FreezeEntityPosition(instructor, true)
+                SetEntityInvincible(instructor, true)
+                SetBlockingOfNonTemporaryEvents(instructor, true)
+                TaskStartScenarioInPlace(instructor, "WORLD_HUMAN_COP_IDLES", 0, true)
+            end
+        end
+    end)
+
+    Citizen.CreateThread(function()
+        while true do
+            local sleep = 1000
+            if not AcademyActive then
+                for _, point in ipairs(Config.AcademyEntryPoints) do
+                    local playerCoords = GetEntityCoords(PlayerPedId())
+                    local dist = #(playerCoords - vector3(point.x, point.y, point.z))
+                    if dist <= 2.0 then
+                        sleep = 0
+                        DrawMarker(2, point.x, point.y, point.z + 1.0, 0.0,0.0,0.0, 0.0,0.0,0.0, 0.4,0.4,0.4, 26,188,156,180, false,false,2,false,nil,nil,false)
+                        BeginTextCommandDisplayHelp("STRING")
+                        AddTextComponentSubstringPlayerName("Press ~INPUT_CONTEXT~ to enter the Training Academy")
+                        EndTextCommandDisplayHelp(0, false, true, -1)
+                        if IsControlJustPressed(0, 38) then -- E
+                            TryEnterAcademy()
+                        end
+                    end
+                end
+            end
+            Citizen.Wait(sleep)
+        end
+    end)
+
+    -- ============ Difficulty scaling ============
+    function GetAcademyDifficulty()
+        local tier = math.floor(AcademyTotalKills / Config.AcademyDifficultyStep)
+        local accuracy = math.min(Config.AcademyBaseAccuracy + (tier * 5), Config.AcademyMaxAccuracy)
+        local armor = math.min(Config.AcademyBaseArmor + (tier * 10), Config.AcademyMaxArmor)
+        return accuracy, armor
+    end
+
+    function ApplyAcademyPedSettings(npc)
+        local accuracy, armor = GetAcademyDifficulty()
+        SetPedRelationshipGroupHash(npc, GetHashKey("ACADEMY_ENEMY"))
+        SetPedCombatAttributes(npc, 46, true)
+        SetPedAccuracy(npc, accuracy)
+        SetPedArmour(npc, armor)
+        TaskCombatPed(npc, PlayerPedId(), 0, 16)
+    end
 
     function WatchAcademyPedDeath(npc)
         Citizen.CreateThread(function()
@@ -141,7 +244,6 @@ if Config.EnableAcademy then
                     SetTimeout(3000, function()
                         if DoesEntityExist(npc) then DeleteEntity(npc) end
                     end)
-                    -- respawn a fresh trainee to keep the session going
                     SetTimeout(4000, function()
                         if AcademyActive then
                             SpawnOneAcademyPed()
@@ -166,10 +268,7 @@ if Config.EnableAcademy then
         if DoesEntityExist(npc) then
             table.insert(AcademyPeds, npc)
             GiveWeaponToPed(npc, GetHashKey(Config.AcademyWeapon), 250, false, true)
-            SetPedRelationshipGroupHash(npc, GetHashKey("ACADEMY_ENEMY"))
-            SetPedCombatAttributes(npc, 46, true)
-            SetPedAccuracy(npc, 25)
-            TaskCombatPed(npc, PlayerPedId(), 0, 16)
+            ApplyAcademyPedSettings(npc)
             WatchAcademyPedDeath(npc)
         end
     end
@@ -181,7 +280,7 @@ if Config.EnableAcademy then
         SetEntityCoords(ped, Config.AcademyCoord.x, Config.AcademyCoord.y, Config.AcademyCoord.z, false, false, false, false)
         GiveWeaponToPed(ped, GetHashKey(Config.AcademyWeapon), 250, false, true)
         SetPedArmour(ped, 100)
-        ESX.ShowNotification("Welcome To The Training Academy ! Defeat the NPCs. No real stats are recorded here. Use /"..Config.AcademyLeaveCommand.." to exit.", 'success')
+        Notify("Welcome To The Training Academy ! Defeat the NPCs. No real stats are recorded here. Use /"..Config.AcademyLeaveCommand.." (or the menu) to exit.", 'success')
 
         AcademySessionKills = 0
         AcademyTotalKills = currentKills or 0
@@ -190,6 +289,21 @@ if Config.EnableAcademy then
             action = "academyOpen",
             totalKills = AcademyTotalKills,
         })
+
+        if not TutorialShown then
+            TutorialShown = true
+            TriggerEvent('chat:addMessage', {args = {"^3[Academy Guide]", "This is the Training Academy — practice aim on NPCs, no real stats recorded."}})
+            TriggerEvent('chat:addMessage', {args = {"^3[Academy Guide]", "How a REAL capture round works, step by step:"}})
+            TriggerEvent('chat:addMessage', {args = {"^3[Academy Guide]", "1) An admin starts a round with /startCap — everyone gets a chat alert to /joinCap."}})
+            TriggerEvent('chat:addMessage', {args = {"^3[Academy Guide]", "2) /joinCap opens a zone selector — pick which zone you want to fight for."}})
+            TriggerEvent('chat:addMessage', {args = {"^3[Academy Guide]", "3) You parachute in and land near that zone's capture point (a marked circle)."}})
+            TriggerEvent('chat:addMessage', {args = {"^3[Academy Guide]", "4) Walk INTO the capture point marker and stay there without leaving."}})
+            TriggerEvent('chat:addMessage', {args = {"^3[Academy Guide]", "5) After a few seconds of standing still inside it, the zone flips to your gang."}})
+            TriggerEvent('chat:addMessage', {args = {"^3[Academy Guide]", "6) Keep defending it — every 15s it's yours, your gang scores points."}})
+            TriggerEvent('chat:addMessage', {args = {"^3[Academy Guide]", "7) Enemies can retake it the same way — if they get halfway, your gang gets warned."}})
+            TriggerEvent('chat:addMessage', {args = {"^3[Academy Guide]", "8) Leaving mid-defense with /leaveCap locks you out of that zone for a few minutes — don't rage quit!"}})
+            TriggerEvent('chat:addMessage', {args = {"^3[Academy Guide]", "Go practice your aim here first. Good luck out there !"}})
+        end
 
         AcademyPeds = {}
         for _, netId in ipairs(pedNetIds) do
@@ -202,10 +316,7 @@ if Config.EnableAcademy then
                 local npc = NetworkGetEntityFromNetworkId(netId)
                 if DoesEntityExist(npc) then
                     table.insert(AcademyPeds, npc)
-                    SetPedRelationshipGroupHash(npc, GetHashKey("ACADEMY_ENEMY"))
-                    SetPedCombatAttributes(npc, 46, true)
-                    SetPedAccuracy(npc, 25)
-                    TaskCombatPed(npc, PlayerPedId(), 0, 16)
+                    ApplyAcademyPedSettings(npc)
                     WatchAcademyPedDeath(npc)
                 end
             end)
@@ -220,26 +331,70 @@ if Config.EnableAcademy then
                 SendNUIMessage({action = "academyTimer", time = mins .. ":" .. secs})
             end
         end)
+
+        -- Practice capture point that just explains the mechanic visually - purely decorative marker
+        Citizen.CreateThread(function()
+            local point = Config.AcademyCoord + Config.AcademyTutorialPointOffset
+            local explained = false
+            while AcademyActive do
+                Citizen.Wait(0)
+                local dist = #(GetEntityCoords(PlayerPedId()) - point)
+                if dist <= 15.0 then
+                    DrawMarker(1, point.x, point.y, point.z - 1.0, 0.0,0.0,0.0, 0.0,0.0,0.0, 6.0,6.0,2.0, 0,255,0,80, false,false,2,false,nil,nil,false)
+                    if dist <= 3.0 and not explained then
+                        explained = true
+                        TriggerEvent('chat:addMessage', {args = {"^2[Academy]", "This green circle is a practice capture point — this is EXACTLY what you'll stand in during a real round."}})
+                    end
+                else
+                    Citizen.Wait(500)
+                end
+            end
+        end)
     end)
 
-    RegisterCommand(Config.AcademyLeaveCommand, function()
+    function LeaveAcademyNow()
         if not AcademyActive then return end
         AcademyActive = false
+        AcademyDead = false
         TriggerServerEvent("Violet-Capture:LeaveAcademyWorld")
         AcademyPeds = {}
         RemoveWeaponFromPed(PlayerPedId(), GetHashKey(Config.AcademyWeapon))
-        TpRandomOutCaptureCoord()
+        if AcademyEntryCoords then
+            SetEntityCoords(PlayerPedId(), AcademyEntryCoords.x, AcademyEntryCoords.y, AcademyEntryCoords.z, false, false, false, false)
+        else
+            TpRandomOutCaptureCoord()
+        end
+        AcademyEntryCoords = nil
         SendNUIMessage({action = "academyClose"})
-        ESX.ShowNotification("Training Complete ! Session Kills: "..AcademySessionKills..". No real capture stats were recorded.", 'info')
-    end, false)
+        Notify("Training Complete ! Session Kills: "..AcademySessionKills..". No real capture stats were recorded.", 'info')
+    end
 
-    -- Safety net: if the player dies mid-academy, exit and clean up (server deletes the peds)
+    RegisterCommand(Config.AcademyLeaveCommand, LeaveAcademyNow, false)
+
+    -- Death in academy: DO NOT exit automatically. Revive in place with an on-screen prompt.
+    -- Only /leaveAcademy (or the dashboard button) actually leaves the academy world.
     AddEventHandler('esx:onPlayerDeath', function()
         if AcademyActive then
-            AcademyActive = false
-            TriggerServerEvent("Violet-Capture:LeaveAcademyWorld")
-            AcademyPeds = {}
-            SendNUIMessage({action = "academyClose"})
+            AcademyDead = true
+            Citizen.CreateThread(function()
+                while AcademyDead and AcademyActive do
+                    Citizen.Wait(0)
+                    local coords = GetEntityCoords(PlayerPedId())
+                    BeginTextCommandDisplayHelp("STRING")
+                    AddTextComponentSubstringPlayerName("~r~You died in training.~s~ Press ~INPUT_CONTEXT~ to respawn")
+                    EndTextCommandDisplayHelp(0, false, true, -1)
+                    if IsControlJustPressed(0, 38) then -- E
+                        AcademyDead = false
+                        local ped = PlayerPedId()
+                        NetworkResurrectLocalPlayer(Config.AcademyCoord.x, Config.AcademyCoord.y, Config.AcademyCoord.z, 0.0, true, false)
+                        SetEntityHealth(ped, GetEntityMaxHealth(ped))
+                        SetPedArmour(ped, 100)
+                        ClearPedBloodDamage(ped)
+                        GiveWeaponToPed(ped, GetHashKey(Config.AcademyWeapon), 250, false, true)
+                        Notify("Respawned ! Keep training.", 'success')
+                    end
+                end
+            end)
         end
     end)
 end
@@ -1185,7 +1340,7 @@ function OpenWeaponGroupMenu()
             PlayerCaptureInf.InMenu = nil
             GotoMenu()
         else
-            ESX.ShowNotification("You Dont Have Access To "..data.current.group.." Group Weapons", 'error')
+            Notify("You Dont Have Access To "..data.current.group.." Group Weapons", 'error')
         end
     end, function(data, menu)
         PlayerCaptureInf.InMenu = nil

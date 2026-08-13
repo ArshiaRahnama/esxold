@@ -8,6 +8,17 @@ xPlayer.permission_level > Config.CommandPerm (default: 10).
 If you get "You Don't Have Permissions!", your permission group
 needs adjusting in Config.lua or your ACE/permission setup.
 
+⚠️ REQUIRED DEPENDENCY: this resource now uses ox_lib for all
+notifications. Make sure ox_lib is installed and started BEFORE
+this resource in your server.cfg:
+  ensure ox_lib
+  ensure Unique_Capture
+
+⚠️ REQUIRED SETUP BEFORE GOING LIVE: Config.AcademyEntryPoints in
+Config.lua is a placeholder (a single fake coordinate). You must
+replace it with real, safe locations on your map before enabling
+the Training Academy, or players won't be able to enter it at all.
+
 ────────────────────────────────────────────────────────────────
   1. THE DASHBOARD — TELL YOUR PLAYERS ABOUT THIS ONE
 ────────────────────────────────────────────────────────────────
@@ -243,6 +254,27 @@ Turn off with Config.EnableHallOfFame = false.
   good for newcomers getting a feel for combat before joining a
   real round. Never touches real kills, points, or any leaderboard
   table — genuinely zero risk to your stats.
+
+  ⚠️ Only works if the player is physically near one of
+  Config.AcademyEntryPoints (default radius 10 units) — you MUST
+  fill this in with real coordinates on your map, the shipped
+  value is a placeholder. An "instructor" NPC also stands at each
+  entry point as a walk-up-and-press-E alternative to the command.
+
+  Dying inside the Academy does NOT kick you out — you get an
+  on-screen "Press E to respawn" prompt and continue training in
+  place. Only /leaveAcademy or the dashboard's Leave button
+  actually exits, and it puts you back exactly where you entered
+  from (not a random location).
+
+  NPCs get tougher (accuracy + armor) as your permanent Academy
+  kill count climbs — see Config.AcademyDifficultyStep /
+  Config.AcademyMaxAccuracy / Config.AcademyMaxArmor.
+
+  The first time you enter, a full step-by-step chat guide explains
+  exactly how a real capture round works, and a green practice
+  marker inside the Academy shows what a real capture point looks
+  like.
 
 /leaveAcademy
   Exits the academy and cleans up the NPCs.

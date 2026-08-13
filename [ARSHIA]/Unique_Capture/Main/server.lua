@@ -652,7 +652,7 @@ AddEventHandler("Violet-Capture:CaptureMarkerStatus", function(ZoneName,InMarker
     if InMarker then
         local remaining = GetZoneLeavePenaltyRemaining(xPlayer.identifier, ZoneName)
         if remaining > 0 then
-            TriggerClientEvent("esx:showNotification", source, "Shoma Az In Zone Farar Kardid! "..remaining.." Sanie Digar Nemitavanid Capture Konid.", 'error')
+            TriggerClientEvent("Violet-Capture:OxNotify", source, "Shoma Az In Zone Farar Kardid! "..remaining.." Sanie Digar Nemitavanid Capture Konid.", 'error')
             TriggerClientEvent("Violet-Capture:CancelLocalZoneTimer", source)
             CurrentCapturing.InMarkerPlayers[xPlayer.identifier] = nil
             return
