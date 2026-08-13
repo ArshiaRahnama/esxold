@@ -832,7 +832,8 @@ function CreatePlayer(
     self.Warning = 0
 
     self.ban = function(areason, reason)
-        exports.BanSql:BanTarget(self.source, areason, reason)
+        -- Migrated from BanSql (removed) to UNIQUE_AC. Order is (targetId, reason, issuer).
+        exports.UNIQUE_AC:BanPlayer(self.source, reason, areason)
     end
 
     return self
