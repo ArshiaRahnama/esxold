@@ -66,7 +66,7 @@ end)
 
 
 Citizen.CreateThread(function()
-    for k,v in pairs(Config.sellingLocationShops) do
+    for k,v in pairs(ShopConfig.sellingLocationShops) do
         RequestModel(GetHashKey(v.pedname))
         while not HasModelLoaded(GetHashKey(v.pedname)) do
             Wait(500)
@@ -78,7 +78,7 @@ Citizen.CreateThread(function()
         SetBlockingOfNonTemporaryEvents(Ped, true)
     end
 
-    for k,v in pairs(Config.sellingLocationShops) do 
+    for k,v in pairs(ShopConfig.sellingLocationShops) do 
         exports.ox_target:addBoxZone({
             coords = vec3(v.x, v.y, v.z),
             size = vec3(1.5, 1.5, 1.5),
@@ -158,7 +158,7 @@ end)
 
 
 Citizen.CreateThread(function()
-    for k,v in pairs(Config.sellingLocationMC) do
+    for k,v in pairs(ShopConfig.sellingLocationMC) do
         RequestModel(GetHashKey(v.pedname))
         while not HasModelLoaded(GetHashKey(v.pedname)) do
             Wait(500)
@@ -170,7 +170,7 @@ Citizen.CreateThread(function()
         SetBlockingOfNonTemporaryEvents(Ped, true)
     end
 
-    for k,v in pairs(Config.sellingLocationMC) do 
+    for k,v in pairs(ShopConfig.sellingLocationMC) do 
         exports.ox_target:addBoxZone({
             coords = vec3(v.x, v.y, v.z),
             size = vec3(1.5, 1.5, 1.5),
@@ -249,7 +249,7 @@ end)
 
 
 Citizen.CreateThread(function()
-    for k,v in pairs(Config.sellingLocationNarekshop) do
+    for k,v in pairs(ShopConfig.sellingLocationNarekshop) do
         RequestModel(GetHashKey(v.pedname))
         while not HasModelLoaded(GetHashKey(v.pedname)) do
             Wait(500)
@@ -261,7 +261,7 @@ Citizen.CreateThread(function()
         SetBlockingOfNonTemporaryEvents(Ped, true)
     end
 
-    for k,v in pairs(Config.sellingLocationNarekshop) do 
+    for k,v in pairs(ShopConfig.sellingLocationNarekshop) do 
         exports.ox_target:addBoxZone({
             coords = vec3(v.x, v.y, v.z),
             size = vec3(1.5, 1.5, 1.5),
@@ -287,7 +287,7 @@ end)
 
 
 function CreateShopBlip()
-    for _, v in pairs(Config.sellingLocationNarekshop) do
+    for _, v in pairs(ShopConfig.sellingLocationNarekshop) do
         local blip = AddBlipForCoord(v.x, v.y, v.z)
 
         SetBlipSprite (blip, 110)
@@ -358,7 +358,7 @@ end)
 
 
 Citizen.CreateThread(function()
-    for k,v in pairs(Config.sellingLocationGunshop) do
+    for k,v in pairs(ShopConfig.sellingLocationGunshop) do
         RequestModel(GetHashKey(v.pedname))
         while not HasModelLoaded(GetHashKey(v.pedname)) do
             Wait(500)
@@ -370,7 +370,7 @@ Citizen.CreateThread(function()
         SetBlockingOfNonTemporaryEvents(Ped, true)
     end
 
-    for k,v in pairs(Config.sellingLocationGunshop) do 
+    for k,v in pairs(ShopConfig.sellingLocationGunshop) do 
         exports.ox_target:addBoxZone({
             coords = vec3(v.x, v.y, v.z),
             size = vec3(1.5, 1.5, 1.5),

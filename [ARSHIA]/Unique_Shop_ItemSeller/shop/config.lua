@@ -1,9 +1,8 @@
-Config = {}
-url = 'nui://esx_inventoryhud/html/img/items/'
+ShopConfig = {}
 
 --------------------- Shop ha  --------------------
 
-Config.itemsForSaleShops = {
+ShopConfig.itemsForSaleShops = {
     phone = {price = 5000, image = url.."phone.png"},
     bread = {price = 2000, image = url.."bread.png"},
     water = {price = 2000, image = url.."water.png"},
@@ -12,7 +11,7 @@ Config.itemsForSaleShops = {
 }
 
 
-Config.sellingLocationShops = {
+ShopConfig.sellingLocationShops = {
     {x = 24.50556, y = -1347.96, z = 29.497, h = 271.95, pedname = "mp_m_shopkeep_01", pedtype = 4}, -- Shop 1
     {x = -47.3809, y = -1758.62, z = 29.421, h = 49.5, pedname = "mp_m_shopkeep_01", pedtype = 4}, -- Shop 2
     {x = -1221.44, y = -907.928, z = 12.326, h = 30.24, pedname = "mp_m_shopkeep_01", pedtype = 4}, -- Shop 3
@@ -39,7 +38,7 @@ Config.sellingLocationShops = {
 ---------------------- Narekshop Attachment Gunshop ha  -------------------
 
 
-Config.itemsForSaleNarekshop = {
+ShopConfig.itemsForSaleNarekshop = {
     silencer = {price = 15000, image = url.."silencer.png"},
     radio = {price = 10000, image = url.."radio.png"},
     clip = {price = 2000, image = url.."clip.png"},
@@ -53,7 +52,7 @@ Config.itemsForSaleNarekshop = {
 }
 
 
-Config.sellingLocationNarekshop = {
+ShopConfig.sellingLocationNarekshop = {
         {x = -662.032, y = -933.282, z = 21.829, h = 179.46, pedname = "s_m_y_blackops_01", pedtype = 4, displayBlip = true}, -- 1
         {x = 810.0014, y = -2159.29, z = 29.618, h = 1.01, pedname = "s_m_y_blackops_01", pedtype = 4, displayBlip = true}, -- 2
         {x = 1692.010, y = 3761.218, z = 34.705, h = 227.3, pedname = "s_m_y_blackops_01", pedtype = 4, displayBlip = true}, -- 3
@@ -71,7 +70,7 @@ Config.sellingLocationNarekshop = {
 ---------------------- Gunshop ha  -------------------
 
 
-Config.itemsForSaleGunshop = {
+ShopConfig.itemsForSaleGunshop = {
     weapon_pistol = {price = 90000, image = url.."weapon_pistol.png"},
     -- weapon_smg = {price = 300000, image = url.."weapon_smg.png"},
     weapon_combatpistol = {price = 120000, image = url.."weapon_combatpistol.png"},
@@ -80,7 +79,7 @@ Config.itemsForSaleGunshop = {
 }
 
 
-Config.sellingLocationGunshop = {
+ShopConfig.sellingLocationGunshop = {
   --  {x = 22.73357, y = -1105.60, z = 29.797, h = 152.0, pedname = "s_m_y_blackops_01", pedtype = 4, displayBlip = false}
 }
 
@@ -88,7 +87,7 @@ Config.sellingLocationGunshop = {
 ---------------- MC
 
 
-Config.itemsForSaleMC = {
+ShopConfig.itemsForSaleMC = {
     hotwire = {price = 2000, image = url.."hotwire.png"},
     tires = {price = 7000, image = url.."tires.png"},
     carjack = {price = 5000, image = url.."carjack.png"},
@@ -96,6 +95,6 @@ Config.itemsForSaleMC = {
     engin = {price = 5000, image = url.."engin.png"},
 }
 
-Config.sellingLocationMC = {
+ShopConfig.sellingLocationMC = {
     {x = -352.561, y = -129.197, z = 39.021, h = 251.2, pedname = "s_m_m_gaffer_01", pedtype = 2, displayBlip = false}
   }

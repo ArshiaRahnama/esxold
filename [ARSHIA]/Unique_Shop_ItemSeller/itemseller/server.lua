@@ -14,7 +14,7 @@ ESX.RegisterServerCallback('getInventoryWithImagesTailor', function(source, cb)
         local item = inventory[i]
         if item.count > 0 then
             -- بررسی و دریافت قیمت و تصویر از جدول تعریف شده
-            local itemData = Config.itemsForSaleTailor[item.name]
+            local itemData = SellerConfig.itemsForSaleTailor[item.name]
             if itemData then
                 table.insert(itemsWithImages, {
                     name = item.name,
@@ -37,8 +37,8 @@ AddEventHandler('item_shop_tailor:handleSell', function(itemName, amount)
     local Src = source
 
     -- بررسی اینکه آیا آیتم در لیست برای فروش است
-    if Config.itemsForSaleTailor[itemName] then
-        local pricePerItem = Config.itemsForSaleTailor[itemName].price
+    if SellerConfig.itemsForSaleTailor[itemName] then
+        local pricePerItem = SellerConfig.itemsForSaleTailor[itemName].price
         local totalPrice = pricePerItem * amount
         local itemLabel = xPlayer.getInventoryItem(itemName).label
         
@@ -87,7 +87,7 @@ ESX.RegisterServerCallback('getInventoryWithImagesLumberjack', function(source, 
         local item = inventory[i]
         if item.count > 0 then
             -- بررسی و دریافت قیمت و تصویر از جدول تعریف شده
-            local itemData = Config.itemsForSaleLumberjack[item.name]
+            local itemData = SellerConfig.itemsForSaleLumberjack[item.name]
             if itemData then
                 table.insert(itemsWithImages, {
                     name = item.name,
@@ -109,8 +109,8 @@ AddEventHandler('item_shop_lumberjack:handleSell', function(itemName, amount)
     local xPlayer = ESX.GetPlayerFromId(source)
     local Src = source
 
-    if Config.itemsForSaleLumberjack[itemName] then
-        local pricePerItem = Config.itemsForSaleLumberjack[itemName].price
+    if SellerConfig.itemsForSaleLumberjack[itemName] then
+        local pricePerItem = SellerConfig.itemsForSaleLumberjack[itemName].price
         local totalPrice = pricePerItem * amount
         local itemLabel = xPlayer.getInventoryItem(itemName).label
         
@@ -158,7 +158,7 @@ ESX.RegisterServerCallback('getInventoryWithImagesSlaughterer', function(source,
         local item = inventory[i]
         if item.count > 0 then
             -- بررسی و دریافت قیمت و تصویر از جدول تعریف شده
-            local itemData = Config.itemsForSaleSlaughterer[item.name]
+            local itemData = SellerConfig.itemsForSaleSlaughterer[item.name]
             if itemData then
                 table.insert(itemsWithImages, {
                     name = item.name,
@@ -181,8 +181,8 @@ AddEventHandler('item_shop_slaughterer:handleSell', function(itemName, amount)
     local Src = source
 
     -- بررسی اینکه آیا آیتم در لیست برای فروش است
-    if Config.itemsForSaleSlaughterer[itemName] then
-        local pricePerItem = Config.itemsForSaleSlaughterer[itemName].price
+    if SellerConfig.itemsForSaleSlaughterer[itemName] then
+        local pricePerItem = SellerConfig.itemsForSaleSlaughterer[itemName].price
         local totalPrice = pricePerItem * amount
         local itemLabel = xPlayer.getInventoryItem(itemName).label  -- دریافت لیبل آیتم
         
@@ -230,7 +230,7 @@ ESX.RegisterServerCallback('getInventoryWithImagesFueler', function(source, cb)
         local item = inventory[i]
         if item.count > 0 then
             -- بررسی و دریافت قیمت و تصویر از جدول تعریف شده
-            local itemData = Config.itemsForSaleFueler[item.name]
+            local itemData = SellerConfig.itemsForSaleFueler[item.name]
             if itemData then
                 table.insert(itemsWithImages, {
                     name = item.name,
@@ -253,8 +253,8 @@ AddEventHandler('item_shop_fueler:handleSell', function(itemName, amount)
     local Src = source
 
     -- بررسی اینکه آیا آیتم در لیست برای فروش است
-    if Config.itemsForSaleFueler[itemName] then
-        local pricePerItem = Config.itemsForSaleFueler[itemName].price
+    if SellerConfig.itemsForSaleFueler[itemName] then
+        local pricePerItem = SellerConfig.itemsForSaleFueler[itemName].price
         local totalPrice = pricePerItem * amount
         local itemLabel = xPlayer.getInventoryItem(itemName).label  -- دریافت لیبل آیتم
         
@@ -299,7 +299,7 @@ ESX.RegisterServerCallback('getInventoryWithImagesLaster', function(source, cb)
 
     for _, item in ipairs(inventory) do
         if item.count > 0 then
-            local itemData = Config.itemsForSaleLaster[item.name]
+            local itemData = SellerConfig.itemsForSaleLaster[item.name]
             if itemData then
                 table.insert(itemsWithImages, {
                     name = item.name,
@@ -320,8 +320,8 @@ AddEventHandler('item_shop_laster:handleSell', function(itemName, amount)
     local xPlayer = ESX.GetPlayerFromId(source)
     local Src = source
 
-    if Config.itemsForSaleLaster[itemName] then
-        local pricePerItem = Config.itemsForSaleLaster[itemName].price
+    if SellerConfig.itemsForSaleLaster[itemName] then
+        local pricePerItem = SellerConfig.itemsForSaleLaster[itemName].price
         local totalPrice = pricePerItem * amount
         local itemLabel = xPlayer.getInventoryItem(itemName).label
         local itemCount = xPlayer.getInventoryItem(itemName).count
@@ -364,7 +364,7 @@ ESX.RegisterServerCallback('getInventoryWithImagesMiner', function(source, cb)
         local item = inventory[i]
         if item.count > 0 then
             -- بررسی و دریافت قیمت و تصویر از جدول تعریف شده
-            local itemData = Config.itemsForSaleMiner[item.name]
+            local itemData = SellerConfig.itemsForSaleMiner[item.name]
             if itemData then
                 table.insert(itemsWithImages, {
                     name = item.name,
@@ -387,8 +387,8 @@ AddEventHandler('item_miner:handleSell', function(itemName, amount)
     local Src = source
 
     -- بررسی اینکه آیا آیتم در لیست برای فروش است
-    if Config.itemsForSaleMiner[itemName] then
-        local pricePerItem = Config.itemsForSaleMiner[itemName].price
+    if SellerConfig.itemsForSaleMiner[itemName] then
+        local pricePerItem = SellerConfig.itemsForSaleMiner[itemName].price
         local totalPrice = pricePerItem * amount
         local itemLabel = xPlayer.getInventoryItem(itemName).label  
         
@@ -435,7 +435,7 @@ ESX.RegisterServerCallback('getInventoryWithImagesSeparated', function(source, c
         local item = inventory[i]
         if item.count > 0 then
 
-            local itemData = Config.itemsForSaleSeparated[item.name]
+            local itemData = SellerConfig.itemsForSaleSeparated[item.name]
             if itemData then
                 table.insert(itemsWithImages, {
                     name = item.name,
@@ -458,8 +458,8 @@ AddEventHandler('item_shop_separated:handleSell', function(itemName, amount)
     local Src = source
 
 
-    if Config.itemsForSaleSeparated[itemName] then
-        local pricePerItem = Config.itemsForSaleSeparated[itemName].price
+    if SellerConfig.itemsForSaleSeparated[itemName] then
+        local pricePerItem = SellerConfig.itemsForSaleSeparated[itemName].price
         local totalPrice = pricePerItem * amount
         local itemLabel = xPlayer.getInventoryItem(itemName).label  
         
@@ -508,7 +508,7 @@ ESX.RegisterServerCallback('getInventoryWithImagesdrugdealer2', function(source,
         local item = inventory[i]
         if item.count > 0 then
 
-            local itemData = Config.itemsForSaleDrugdealer2[item.name]
+            local itemData = SellerConfig.itemsForSaleDrugdealer2[item.name]
             if itemData then
                 table.insert(itemsWithImages, {
                     name = item.name,
@@ -531,8 +531,8 @@ AddEventHandler('item_shop_drugdealer2:handleSell', function(itemName, amount)
     local Src = source
 
 
-    if Config.itemsForSaleDrugdealer2[itemName] then
-        local pricePerItem = Config.itemsForSaleDrugdealer2[itemName].price
+    if SellerConfig.itemsForSaleDrugdealer2[itemName] then
+        local pricePerItem = SellerConfig.itemsForSaleDrugdealer2[itemName].price
         local totalPrice = pricePerItem * amount
         local itemLabel = xPlayer.getInventoryItem(itemName).label  
         

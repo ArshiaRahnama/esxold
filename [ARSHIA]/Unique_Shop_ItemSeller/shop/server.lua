@@ -9,7 +9,7 @@ ESX.RegisterServerCallback('getitemsForSaleShops', function(source, cb)
     local itemsForSaleShops = {}
 
   
-    for itemName, itemData in pairs(Config.itemsForSaleShops) do
+    for itemName, itemData in pairs(ShopConfig.itemsForSaleShops) do
         table.insert(itemsForSaleShops, {
             name = itemName,
             label = ESX.GetItemLabel(itemName),
@@ -71,7 +71,7 @@ ESX.RegisterServerCallback('getitemsForSaleMC', function(source, cb)
     local itemsForSaleMC = {}
 
   
-    for itemName, itemData in pairs(Config.itemsForSaleMC) do
+    for itemName, itemData in pairs(ShopConfig.itemsForSaleMC) do
         table.insert(itemsForSaleMC, {
             name = itemName,
             label = ESX.GetItemLabel(itemName),
@@ -134,7 +134,7 @@ ESX.RegisterServerCallback('getitemsForSaleNarekshop', function(source, cb)
     local itemsForSaleNarekshop = {}
 
    
-    for itemName, itemData in pairs(Config.itemsForSaleNarekshop) do
+    for itemName, itemData in pairs(ShopConfig.itemsForSaleNarekshop) do
         table.insert(itemsForSaleNarekshop, {
             name = itemName,
             label = ESX.GetItemLabel(itemName),
@@ -199,7 +199,7 @@ ESX.RegisterServerCallback('getitemsForSaleGunshop', function(source, cb)
     local itemsForSaleGunshop = {}
 
    
-    for itemName, itemData in pairs(Config.itemsForSaleGunshop) do
+    for itemName, itemData in pairs(ShopConfig.itemsForSaleGunshop) do
         table.insert(itemsForSaleGunshop, {
             name = itemName,
             label = ESX.GetWeaponLabel(itemName), 

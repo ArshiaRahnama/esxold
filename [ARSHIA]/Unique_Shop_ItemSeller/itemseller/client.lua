@@ -66,7 +66,7 @@ end)
 
 -- بررسی نزدیک بودن بازیکن به مکان فروش
 Citizen.CreateThread(function()
-    for k,v in pairs(Config.sellingLocationTailor) do
+    for k,v in pairs(SellerConfig.sellingLocationTailor) do
         RequestModel(GetHashKey(v.pedname))
         while not HasModelLoaded(GetHashKey(v.pedname)) do
             Wait(500)
@@ -78,7 +78,7 @@ Citizen.CreateThread(function()
         SetBlockingOfNonTemporaryEvents(Ped, true)
     end
 
-    for k,v in pairs(Config.sellingLocationTailor) do 
+    for k,v in pairs(SellerConfig.sellingLocationTailor) do 
         exports.ox_target:addBoxZone({
             coords = vec3(v.x, v.y, v.z),
             size = vec3(1.5, 1.5, 1.5),
@@ -155,7 +155,7 @@ end)
 
 -- بررسی نزدیک بودن بازیکن به مکان فروش
 Citizen.CreateThread(function()
-    for k,v in pairs(Config.sellingLocationLumberjack) do
+    for k,v in pairs(SellerConfig.sellingLocationLumberjack) do
         RequestModel(GetHashKey(v.pedname))
         while not HasModelLoaded(GetHashKey(v.pedname)) do
             Wait(500)
@@ -167,7 +167,7 @@ Citizen.CreateThread(function()
         SetBlockingOfNonTemporaryEvents(Ped, true)
     end
 
-    for k,v in pairs(Config.sellingLocationLumberjack) do 
+    for k,v in pairs(SellerConfig.sellingLocationLumberjack) do 
         exports.ox_target:addBoxZone({
             coords = vec3(v.x, v.y, v.z),
             size = vec3(1.5, 1.5, 1.5),
@@ -244,7 +244,7 @@ end)
 
 -- بررسی نزدیک بودن بازیکن به مکان فروش
 Citizen.CreateThread(function()
-    for k,v in pairs(Config.sellingLocationSlaughterer) do
+    for k,v in pairs(SellerConfig.sellingLocationSlaughterer) do
         RequestModel(GetHashKey(v.pedname))
         while not HasModelLoaded(GetHashKey(v.pedname)) do
             Wait(500)
@@ -256,7 +256,7 @@ Citizen.CreateThread(function()
         SetBlockingOfNonTemporaryEvents(Ped, true)
     end
 
-    for k,v in pairs(Config.sellingLocationSlaughterer) do 
+    for k,v in pairs(SellerConfig.sellingLocationSlaughterer) do 
         exports.ox_target:addBoxZone({
             coords = vec3(v.x, v.y, v.z),
             size = vec3(1.5, 1.5, 1.5),
@@ -339,7 +339,7 @@ end)
 
 -- بررسی نزدیک بودن بازیکن به مکان فروش
 Citizen.CreateThread(function()
-    for k,v in pairs(Config.sellingLocationFueler) do
+    for k,v in pairs(SellerConfig.sellingLocationFueler) do
         RequestModel(GetHashKey(v.pedname))
         while not HasModelLoaded(GetHashKey(v.pedname)) do
             Wait(500)
@@ -351,7 +351,7 @@ Citizen.CreateThread(function()
         SetBlockingOfNonTemporaryEvents(Ped, true)
     end
 
-    for k,v in pairs(Config.sellingLocationFueler) do 
+    for k,v in pairs(SellerConfig.sellingLocationFueler) do 
         exports.ox_target:addBoxZone({
             coords = vec3(v.x, v.y, v.z),
             size = vec3(1.5, 1.5, 1.5),
@@ -427,7 +427,7 @@ end)
 
 -- ساختن پد و افزودن ox_target zone
 Citizen.CreateThread(function()
-    for _, v in pairs(Config.sellingLocationLaster) do
+    for _, v in pairs(SellerConfig.sellingLocationLaster) do
         RequestModel(GetHashKey(v.pedname))
         while not HasModelLoaded(GetHashKey(v.pedname)) do Wait(500) end
 
@@ -438,7 +438,7 @@ Citizen.CreateThread(function()
         SetBlockingOfNonTemporaryEvents(ped, true)
     end
 
-    for _, v in pairs(Config.sellingLocationLaster) do 
+    for _, v in pairs(SellerConfig.sellingLocationLaster) do 
         exports.ox_target:addBoxZone({
             coords = vec3(v.x, v.y, v.z),
             size = vec3(1.5, 1.5, 1.5),
@@ -458,7 +458,7 @@ end)
 
 -- اضافه کردن blip
 Citizen.CreateThread(function()
-    for _, location in pairs(Config.sellingLocationLaster) do
+    for _, location in pairs(SellerConfig.sellingLocationLaster) do
         if location.enableBlip then
             local blip = AddBlipForCoord(location.x, location.y, location.z)
             SetBlipSprite(blip, 77)
@@ -538,7 +538,7 @@ end)
 
 -- بررسی نزدیک بودن بازیکن به مکان فروش
 Citizen.CreateThread(function()
-    for k,v in pairs(Config.sellingLocationMiner) do
+    for k,v in pairs(SellerConfig.sellingLocationMiner) do
         RequestModel(GetHashKey(v.pedname))
         while not HasModelLoaded(GetHashKey(v.pedname)) do
             Wait(500)
@@ -550,7 +550,7 @@ Citizen.CreateThread(function()
         SetBlockingOfNonTemporaryEvents(Ped, true)
     end
 
-    for k,v in pairs(Config.sellingLocationMiner) do 
+    for k,v in pairs(SellerConfig.sellingLocationMiner) do 
         exports.ox_target:addBoxZone({
             coords = vec3(v.x, v.y, v.z),
             size = vec3(1.5, 1.5, 1.5),
@@ -633,7 +633,7 @@ end)
 
 -- بررسی نزدیک بودن بازیکن به مکان فروش
 Citizen.CreateThread(function()
-    for k,v in pairs(Config.sellingLocationSeparated) do
+    for k,v in pairs(SellerConfig.sellingLocationSeparated) do
         RequestModel(GetHashKey(v.pedname))
         while not HasModelLoaded(GetHashKey(v.pedname)) do
             Wait(500)
@@ -645,7 +645,7 @@ Citizen.CreateThread(function()
         SetBlockingOfNonTemporaryEvents(Ped, true)
     end
 
-    for k,v in pairs(Config.sellingLocationSeparated) do 
+    for k,v in pairs(SellerConfig.sellingLocationSeparated) do 
         exports.ox_target:addBoxZone({
             coords = vec3(v.x, v.y, v.z),
             size = vec3(1.5, 1.5, 1.5),
@@ -727,7 +727,7 @@ end)
 
 -- بررسی نزدیک بودن بازیکن به مکان فروش
 Citizen.CreateThread(function()
-    for k,v in pairs(Config.sellingLocationDrugdealer2) do
+    for k,v in pairs(SellerConfig.sellingLocationDrugdealer2) do
         RequestModel(GetHashKey(v.pedname))
         while not HasModelLoaded(GetHashKey(v.pedname)) do
             Wait(500)
@@ -739,7 +739,7 @@ Citizen.CreateThread(function()
         SetBlockingOfNonTemporaryEvents(Ped, true)
     end
 
-    for k,v in pairs(Config.sellingLocationDrugdealer2) do 
+    for k,v in pairs(SellerConfig.sellingLocationDrugdealer2) do 
         exports.ox_target:addBoxZone({
             coords = vec3(v.x, v.y, v.z),
             size = vec3(1.5, 1.5, 1.5),
@@ -762,7 +762,7 @@ end)
 
 -- تابع برای اضافه کردن Blip
 Citizen.CreateThread(function()
-    for _, location in pairs(Config.sellingLocationDrugdealer2) do
+    for _, location in pairs(SellerConfig.sellingLocationDrugdealer2) do
         if location.enableBlip then -- بررسی فعال بودن Blip
             local blip = AddBlipForCoord(location.x, location.y, location.z)
             SetBlipSprite(blip, 355) -- آیکون Blip
