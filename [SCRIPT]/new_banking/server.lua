@@ -101,7 +101,7 @@ RegisterServerEvent('bank:balance')
 AddEventHandler('bank:balance', function()
     local _source = source
     local xPlayer = ESX.GetPlayerFromId(_source)
-    balance = xPlayer.bank
+    local balance = xPlayer.bank
     
     -- دریافت IBAN از دیتابیس با استفاده از oxmysql
     local identifier = xPlayer.identifier
