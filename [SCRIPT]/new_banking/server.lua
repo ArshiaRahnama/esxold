@@ -11,6 +11,7 @@ AddEventHandler('bank:depositx', function(amount)
 	local _source = source
 	
 	local xPlayer = ESX.GetPlayerFromId(_source)
+	amount = tonumber(amount)
 	if amount == nil or amount <= 0 or amount > xPlayer.money then
 		-- advanced notification with bank icon
 		TriggerClientEvent('esx:showAdvancedNotification', _source, 'Bank', 'Pardakhte Vajh', 'Meqdare Vorodi Eshtebah ast', 'CHAR_BANK_MAZE', 9)
@@ -64,15 +65,6 @@ AddEventHandler('bank:withdrawx', function(amount)
 	end
 end)
 
-RegisterServerEvent('bank:balance')
-AddEventHandler('bank:balance', function()
-	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
-	balance = xPlayer.bank
-	TriggerClientEvent('currentbalance1', _source, balance)
-	
-end)
-
 RegisterServerEvent('bank:transferx')
 AddEventHandler('bank:transferx', function(to, amountt)
 	local _source = source
@@ -82,11 +74,15 @@ AddEventHandler('bank:transferx', function(to, amountt)
 	amountt = tonumber(amountt)
 	if not amountt then
 		TriggerClientEvent('esx:showAdvancedNotification', _source, 'Bank', 'Enteqale Vajh', 'Lotfan Faqat Adad Vared Konid', 'CHAR_BANK_MAZE', 9)
+		return
+	end
+	if not zPlayer then
+		TriggerClientEvent('esx:showAdvancedNotification', _source, 'Bank', 'Enteqale Vajh', 'Shenase Shakhs Morede Nazar Yaft nashod', 'CHAR_BANK_MAZE', 9)
+		return
 	end
 	balance = xPlayer.bank
-	zbalance = zPlayer.bank
 	if tonumber(_source) == tonumber(to) then
-		TriggerClientEvent('esx:showAdvancedNotification', _source, 'Bank', 'Enteqale Vajh', 'Shenase Shakhs Morede Nazar Yaft nashod', 'CHAR_BANK_MAZE', 9)
+		TriggerClientEvent('esx:showAdvancedNotification', _source, 'Bank', 'Enteqale Vajh', 'Nemitavanid Be Khodetan Vajh Enteqal Dahid', 'CHAR_BANK_MAZE', 9)
 	else
 		if balance <= 0 or balance < tonumber(amountt) or tonumber(amountt) <= 0 then
 			TriggerClientEvent('esx:showAdvancedNotification', _source, 'Bank', 'Enteqale Vajh', 'Mojodi Shoma Kafi nist', 'CHAR_BANK_MAZE', 9)
@@ -112,7 +108,13 @@ AddEventHandler('bank:balance', function()
     exports.oxmysql:scalar('SELECT iban FROM users WHERE identifier = ?', {identifier}, function(iban)
         if iban == nil then
             -- اگر IBAN وجود نداشت، یک IBAN تصادفی ایجاد کنید
-            iban = 'IR' .. math.random(1000000000000000000, 9999999999999999999)
+            -- توجه: math.random(1e18, 9.99e18) از سقف عدد صحیح ۶۴بیتی لوا رد میشه و ارور میده،
+            -- به همین خاطر عدد ۱۹ رقمی رو با اتصال ارقام تصادفی می‌سازیم
+            local digits = {tostring(math.random(1, 9))} -- رقم اول نباید صفر باشه
+            for i = 1, 18 do
+                digits[#digits + 1] = tostring(math.random(0, 9))
+            end
+            iban = 'IR' .. table.concat(digits)
             exports.oxmysql:update('UPDATE users SET iban = ? WHERE identifier = ?', {iban, identifier}, function(affectedRows)
                 if affectedRows > 0 then
                     print(('IBAN generated for player %s: %s'):format(xPlayer.name, iban))
