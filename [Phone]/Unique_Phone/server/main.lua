@@ -1267,15 +1267,23 @@ ESX.RegisterServerCallback('Unique_Phone:server:GetGarageVehicles', function(sou
 
 
                 local vehdata = {}
-                
-                if VehicleState == "Garage" and (v.damage ~= "") then
-                    for key, value in pairs(json.decode(v.damage)) do 
-                        if key == 'fuel_health' then
-                            Fuel = value
-                        elseif key == 'body_health' then
-                            Body = value
-                        elseif key == 'engine_health' then
-                            Engin = value
+
+                -- FIX: v.damage can be SQL NULL (Lua nil), not just "". The old
+                -- check only tested against "" so a nil `damage` column slipped
+                -- through to json.decode(nil) -> nil -> pairs(nil) crash. Also
+                -- wrap the decode in pcall in case the JSON is malformed, so one
+                -- bad row can't take down the whole callback for every vehicle.
+                if VehicleState == "Garage" and v.damage ~= nil and v.damage ~= "" then
+                    local ok, damageData = pcall(json.decode, v.damage)
+                    if ok and type(damageData) == "table" then
+                        for key, value in pairs(damageData) do
+                            if key == 'fuel_health' then
+                                Fuel = value
+                            elseif key == 'body_health' then
+                                Body = value
+                            elseif key == 'engine_health' then
+                                Engin = value
+                            end
                         end
                     end
                 end

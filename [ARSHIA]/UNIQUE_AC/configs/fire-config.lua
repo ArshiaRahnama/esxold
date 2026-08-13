@@ -78,7 +78,7 @@ UNIQUE_AC.ConfigBackup = {
 UNIQUE_AC.KnownConflicts = {
     Enable = true,
     Resources = {
-        "esx_aduty", -- contains a remote-code-execution backdoor disguised as "anti-dump" protection
+
     }
 }
 
