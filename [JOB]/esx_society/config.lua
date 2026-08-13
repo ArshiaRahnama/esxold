@@ -755,9 +755,17 @@ Config.LogSystem = {
 -- branch here too.
 -- ---------------------------------------------------------------------------------
 Config.JobGroups = {
-    { id = 'doj',         label = 'Department of Justice', jobs = {'cid', 'cia', 'marshal', 'fbi', 'judge', 'doa'} },
+    { id = 'doj',         label = 'Department Of Justice', jobs = {'cid', 'cia', 'marshal', 'fbi', 'judge', 'doa'} },
     { id = 'policejob',   label = 'Law Enforcement',        jobs = {'police', 'sheriff', 'mt'} },
     { id = 'organserver', label = 'Organ Services',         jobs = {'taxi', 'mechanic', 'ambulance', 'weazel'} },
+}
+
+-- Display labels used ONLY for the boss-menu "Change Job" list (client/main.lua).
+-- Keep in sync with the `jobs` lists above.
+Config.JobDisplayLabels = {
+    cid = 'CID', cia = 'CIA', marshal = 'Marshal', fbi = 'FBI', judge = 'Judge', doa = 'DOA',
+    police = 'Police', sheriff = 'Sheriff', mt = 'MT',
+    taxi = 'Taxi', mechanic = 'Mechanic', ambulance = 'Medic', weazel = 'Weazel',
 }
 
 -- Highest grade that actually exists for each job (needed to scale rank

@@ -209,7 +209,8 @@ function OpenChangeBranchJobMenu(society, close, options)
 
 	local elements = {}
 	for i = 1, #siblings do
-		table.insert(elements, {label = siblings[i], value = siblings[i]})
+		local niceLabel = (Config.JobDisplayLabels and Config.JobDisplayLabels[siblings[i]]) or siblings[i]
+		table.insert(elements, {label = 'Change to ' .. niceLabel, value = siblings[i]})
 	end
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'change_branch_job_' .. society, {
