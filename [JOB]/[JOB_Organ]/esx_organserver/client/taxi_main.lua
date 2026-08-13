@@ -984,20 +984,15 @@ function IsInAuthorizedVehicle_taxi()
 	local playerPed = PlayerPedId()
 	local vehModel  = GetEntityModel(GetVehiclePedIsIn(playerPed, false))
 
-	local vehicles = Config_taxi.AuthorizedVehicles.Shared
-	for i = 1, #vehicles do
-		if vehModel == GetHashKey(vehicles[i].model) then
+	for i=1, #exports["ScriptPack"]:GetVehicles(ESX.PlayerData.job.name), 1 do
+		if vehModel == GetHashKey(Config_taxi.AuthorizedVehicles[i].model) then
+			return true
+		elseif
+			vehModel == GetHashKey(Config_taxi.AuthorizedHelis[i].model) then
 			return true
 		end
 	end
-
-	local helis = Config_taxi.AuthorizedHelis.Shared
-	for i = 1, #helis do
-		if vehModel == GetHashKey(helis[i].model) then
-			return true
-		end
-	end
-
+	
 	return false
 end
 
