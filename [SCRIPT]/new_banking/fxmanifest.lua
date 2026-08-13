@@ -13,3 +13,6 @@ files {
 
 
 }
+
+-- ox_target حالا برای تعامل با خودپردازها لازمه (به‌جای زدن E)
+dependency 'ox_target'

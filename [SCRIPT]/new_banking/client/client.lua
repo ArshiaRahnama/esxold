@@ -4,13 +4,9 @@
 ESX                         = nil
 inMenu                      = false
 local showblips = true
-local atbank = true
-local bankMenu = true
 local anim = "mini@atmenter"
-local condition, blocked = false, false
-local isnearBank = false
+local blocked = false
 local modeltypes = {'prop_fleeca_atm', 'prop_atm_01', 'prop_atm_02', 'prop_atm_03'}
-IsPlayerUsingAtm = false
 
 local banks = {
   {name="Bank", id=108, x=150.266, y=-1040.203, z=29.374},
@@ -21,7 +17,7 @@ local banks = {
   {name="Bank", id=108, x=-351.534, y=-49.529, z=49.042},
   {name="Bank", id=106, x=246.40, y=222.99, z=106.29},
   {name="Bank", id=108, x=1175.0643310547, y=2706.6435546875, z=38.094036102295}
-}	
+}
 --================================================================================================
 --==                                THREADING - DO NOT EDIT                                     ==
 --================================================================================================
@@ -36,6 +32,9 @@ Citizen.CreateThread(function()
   end
 end)
 
+-- یه ATM دزدی شده برای مدتی (پیش‌فرض ۱ ساعت) نزدیکش قفل می‌مونه.
+-- این چک بر اساس مختصات ثابت بانک‌ها (لیست banks) هست، نه یه پرآپ خاص،
+-- چون همه‌ی ATM های اون بانک باید موقتاً غیرفعال بشن.
 RegisterNetEvent('new_banking:disableforhour')
 AddEventHandler('new_banking:disableforhour', function(pos, time)
   local condition = true
@@ -71,128 +70,6 @@ AddEventHandler('currentbalance1', function(balance, iban)
 end)
 
 --===============================================
---==             Core Threading                ==
---===============================================
-Citizen.CreateThread(function()
-	while true do
-	  Citizen.Wait(500)
-
-	  if nearBank() then
-		isnearBank = true
-	  else
-		isnearBank = false
-	  end
-	  
-	  
-
-	end
-end)
-
-Citizen.CreateThread(function()
-	SetNuiFocus(false)
-	SendNUIMessage({type = 'close'})
-
-	while true do
-		Wait(550)
-		playerPed = PlayerPedId()
-		x,y,z = table.unpack(GetEntityCoords(playerPed, true))
-		IsPlayerInVehicle = IsPedInAnyVehicle(playerPed, true)
-
-		if not IsPlayerNearAtm then
-			if not IsPlayerInVehicle then
-				for k,v in pairs(modeltypes) do
-					atm = GetClosestObjectOfType(x, y, z, 0.75, GetHashKey(v), false)
-					if DoesEntityExist(atm) then
-						currentAtm = atm
-						atmX, atmY, atmZ = table.unpack(GetOffsetFromEntityInWorldCoords(currentAtm, 0.0, -0.65, 0.0))
-						IsPlayerNearAtm = true
-						isnearBank = true
-					end
-				end
-			end
-		else
-			if not DoesEntityExist(currentAtm) then
-				IsPlayerNearAtm = false
-			else
-				if GetDistanceBetweenCoords(x,y,z, atmX, atmY, atmZ, true) > 3.0 then
-					IsPlayerNearAtm = false
-				end
-			end
-		end
-	end
-end)
-
-if bankMenu then
-	Citizen.CreateThread(function()
-  while true do
-    Wait(1)
-    playerPed = PlayerPedId()
-    IsPlayerInVehicle = IsPedInAnyVehicle(playerPed, true)
-    if not IsPlayerInVehicle then
-      if IsPlayerNearAtm or isnearBank and not blocked then
-        if not inMenu then
-          DisplayHelpText("Baraye dastresi be Bank ~INPUT_PICKUP~ ro bezanid")
-        else
-          ClearAllHelpMessages()				
-          DisableControlAction(0, 201, true)
-          DisableControlAction(1, 201, true)
-		 DisableAllControlActions(0)
-			FreezeEntityPosition(playerPed, true)		  
-        end
-      
-        if IsControlJustPressed(1, 38) and not isnearBank then
-			FreezeEntityPosition(playerPed, true)
-			DisableAllControlActions(0)
-			SetCurrentPedWeapon(playerPed, GetHashKey("weapon_unarmed"), true)
-          RequestAnimDict("mini@atmbase")		
-          RequestAnimDict(anim)
-          while not HasAnimDictLoaded(anim) do
-            Wait(1)
-          end
-			
-          
-		  Wait(500)
-          TaskLookAtEntity(playerPed, currentAtm, 2000, 2048, 2)
-          Wait(500)
-          TaskGoStraightToCoord(playerPed, atmX, atmY, atmZ, 0.1, 4000, GetEntityHeading(currentAtm), 0.5)
-          Wait(2000)
-          TaskPlayAnim(playerPed, anim, "enter", 8.0, 1.0, -1, 0, 0.0, 0, 0, 0)
-          RemoveAnimDict(animDict)
-          Wait(4000)
-          TaskPlayAnim(playerPed, "mini@atmbase", "base", 8.0, 1.0, -1, 0, 0.0, 0, 0, 0)
-          RemoveAnimDict("mini@atmbase")				
-          Wait(1000)
-          PlaySoundFrontend(-1, "ATM_WINDOW", "HUD_FRONTEND_DEFAULT_SOUNDSET", true)
-          
-			
-          inMenu = true
-          SetNuiFocus(true, true)
-          SendNUIMessage({type = 'openGeneral'})
-          TriggerServerEvent('bank:balance')
-          local ped = PlayerPedId()
-		  
-		elseif IsControlJustPressed(1, 38) then
-		   FreezeEntityPosition(playerPed, true)
-
-          inMenu = true
-          SetNuiFocus(true, true)
-          SendNUIMessage({type = 'openGeneral'})
-          TriggerServerEvent('bank:balance')
-        end
-      end
-            
-        if IsControlJustPressed(1, 322) then
-        inMenu = false
-          SetNuiFocus(false, false)
-          SendNUIMessage({type = 'close'})
-        end
-      end
-    end
-  end)
-end
-
-
---===============================================
 --==             Map Blips	                   ==
 --===============================================
 Citizen.CreateThread(function()
@@ -210,21 +87,77 @@ Citizen.CreateThread(function()
 	end
 end)
 
-
-
 --===============================================
---==           Deposit Event                   ==
+--==     ox_target: ATM interaction ("خفن")    ==
 --===============================================
-RegisterNetEvent('currentbalance1')
-AddEventHandler('currentbalance1', function(balance)
-	local id = PlayerId()
-	local playerName = GetPlayerName(id)
-	SendNUIMessage({
-		type = "balanceHUD",
-		balance = balance,
-		player = playerName
-		})
-end)
+-- به‌جای وایسادن جلوی خودپرداز و زدن E، حالا کافیه با ox_target
+-- روی خودِ مدل ATM (هر جای مپ که باشه) تارگت بگیری و از منوش
+-- "Open Bank" رو بزنی. انیمیشن و صداها دقیقاً مثل قبل حفظ شدن.
+exports.ox_target:addModel(modeltypes, {
+    {
+        name = 'new_banking:open',
+        icon = 'fa-solid fa-building-columns',
+        label = 'استفاده از خودپرداز (Bank)',
+        distance = 2.0,
+        canInteract = function(entity, distance, coords, name)
+            if blocked then return false end
+            local playerPed = PlayerPedId()
+            if IsPedInAnyVehicle(playerPed, true) then return false end
+            return true
+        end,
+        onSelect = function(data)
+            OpenBankAtm(data.entity)
+        end,
+    }
+})
+
+function OpenBankAtm(atmEntity)
+	if inMenu then return end
+
+	local playerPed = PlayerPedId()
+
+	FreezeEntityPosition(playerPed, true)
+	DisableAllControlActions(0)
+	SetCurrentPedWeapon(playerPed, GetHashKey("weapon_unarmed"), true)
+
+	local atmX, atmY, atmZ = table.unpack(GetOffsetFromEntityInWorldCoords(atmEntity, 0.0, -0.65, 0.0))
+
+	RequestAnimDict("mini@atmbase")
+	RequestAnimDict(anim)
+	while not HasAnimDictLoaded(anim) do
+		Wait(1)
+	end
+
+	Wait(500)
+	TaskLookAtEntity(playerPed, atmEntity, 2000, 2048, 2)
+	Wait(500)
+	TaskGoStraightToCoord(playerPed, atmX, atmY, atmZ, 0.1, 4000, GetEntityHeading(atmEntity), 0.5)
+	Wait(2000)
+	TaskPlayAnim(playerPed, anim, "enter", 8.0, 1.0, -1, 0, 0.0, 0, 0, 0)
+	RemoveAnimDict(anim)
+	Wait(4000)
+	TaskPlayAnim(playerPed, "mini@atmbase", "base", 8.0, 1.0, -1, 0, 0.0, 0, 0, 0)
+	RemoveAnimDict("mini@atmbase")
+	Wait(1000)
+	PlaySoundFrontend(-1, "ATM_WINDOW", "HUD_FRONTEND_DEFAULT_SOUNDSET", true)
+
+	inMenu = true
+	SetNuiFocus(true, true)
+	SendNUIMessage({type = 'openGeneral'})
+	TriggerServerEvent('bank:balance')
+
+	-- تا وقتی منو بازه، بازیکن رو قفل نگه دار (مثل قبل)
+	Citizen.CreateThread(function()
+		while inMenu do
+			Wait(0)
+			DisableControlAction(0, 201, true) -- INPUT_FRONTEND_ACCEPT
+			DisableControlAction(1, 201, true)
+			DisableAllControlActions(0)
+			FreezeEntityPosition(PlayerPedId(), true)
+		end
+	end)
+end
+
 --===============================================
 --==           Deposit Event                   ==
 --===============================================
@@ -275,27 +208,3 @@ RegisterNUICallback('NUIFocusOff', function()
   SetNuiFocus(false, false)
   SendNUIMessage({type = 'closeAll'})
 end)
-
-
---===============================================
---==            Capture Bank Distance          ==
---===============================================
-function nearBank()
-	local player = PlayerPedId()
-	local playerloc = GetEntityCoords(player, 0)
-	
-	for _, search in pairs(banks) do
-		local distance = GetDistanceBetweenCoords(search.x, search.y, search.z, playerloc['x'], playerloc['y'], playerloc['z'], true)
-		
-		if distance <= 1.0 then
-			return true
-		end
-	end
-end
-
-
-function DisplayHelpText(str)
-	SetTextComponentFormat("STRING")
-	AddTextComponentString(str)
-	DisplayHelpTextFromStringLabel(0, 0, 1, -1)
-end
