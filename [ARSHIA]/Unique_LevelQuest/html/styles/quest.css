@@ -1,0 +1,68 @@
+  .quests {
+    flex: 1;
+    padding: 20px;
+    color: #ccc;
+    display: none;
+    flex-direction: column;
+    background-color: #2c2c2c;
+    overflow-y: auto;
+  }
+  
+  .quests h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #ccc;
+    border-top: 1px solid #555;
+    border-bottom: 1px solid #555;
+    padding: 10px 0;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .quest-item {
+    background-color: #333;
+    border-left: 4px solid aqua;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+  
+  .quest-item:hover {
+    background-color: #3a3a3a;
+    transform: translateX(5px);
+  }
+  
+  .quest-label {
+    font-size: 16px;
+    color: #fff;
+  }
+  
+  .quest-desc {
+    color: #aaa;
+    font-size: 14px;
+    margin-top: 8px;
+    line-height: 1.5;
+    font-family: 'Yekan';
+  }
+  
+  .quest-progress {
+    height: 4px;
+    background-color: #555;
+    border-radius: 2px;
+    margin-top: 10px;
+    overflow: hidden;
+  }
+  
+.quest-progress-bar {
+    height: 100%;
+    background-color: aqua;
+    width: 0%; /* You'll set this dynamically */
+}
+  
+  /* For 4 quest boxes layout */
+.quests-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}

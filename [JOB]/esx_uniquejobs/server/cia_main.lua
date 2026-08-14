@@ -31,7 +31,7 @@ AddEventHandler('esx_cia_job:confiscatePlayerItem', function(target, itemType, i
 	local targetXPlayer = ESX.GetPlayerFromId(target)
 
 	if sourceXPlayer.job.name ~= 'cia' then
-		print(('esx_cia_job: %s attempted to confiscate!'):format(xPlayer.identifier))
+		print(('esx_cia_job: %s attempted to confiscate!'):format(sourceXPlayer.identifier))
 		return
 	end
 
@@ -52,7 +52,7 @@ AddEventHandler('esx_cia_job:confiscatePlayerItem', function(target, itemType, i
 			if sourceItem.limit ~= -1 and (sourceItem.count + amount) > sourceItem.limit then
 				TriggerClientEvent('esx:showNotification', _source, _U('quantity_invalid'))
 			else
-				targetxPlayer.removeInventoryItem(itemName, amount)
+				targetXPlayer.removeInventoryItem(itemName, amount)
 				sourceXPlayer.addInventoryItem   (itemName, amount)
 				TriggerClientEvent('esx:showNotification', _source, _U('you_confiscated', amount, sourceItem.label, targetXPlayer.name))
 				TriggerClientEvent('esx:showNotification', target,  _U('got_confiscated', amount, sourceItem.label, sourceXPlayer.name))
@@ -188,14 +188,14 @@ ESX.RegisterServerCallback('esx_cia_job:getOtherPlayerData', function(source, cb
 
 		local xPlayer = ESX.GetPlayerFromId(target)
 
-		local result = MySQL.Sync.fetchAll('SELECT firstname, lastname, sex, dateociarth, height FROM users WHERE identifier = @identifier', {
+		local result = MySQL.Sync.fetchAll('SELECT firstname, lastname, sex, dateofbirth, height FROM users WHERE identifier = @identifier', {
 			['@identifier'] = xPlayer.identifier
 		})
 
 		local firstname = result[1].firstname
 		local lastname  = result[1].lastname
 		local sex       = result[1].sex
-		local dob       = result[1].dateociarth
+		local dob       = result[1].dateofbirth
 		local height    = result[1].height
 
 		local data = {
