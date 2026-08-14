@@ -85,13 +85,22 @@ ESX.ShowNotification = function(msg)
         msgedit = string.gsub(msgedit, horof[i], "")
     end
 
-    lib.notify({
-        title = ' ',
-        description = msgedit,
-        type = 'info',
-        position = 'center-right',
-        duration = 5000
-    })
+    if lib and lib.notify then
+        lib.notify({
+            title = ' ',
+            description = msgedit,
+            type = 'info',
+            position = 'center-right',
+            duration = 5000
+        })
+    else
+        -- ox_lib's `lib` isn't loaded in this resource's context (missing
+        -- shared_script '@ox_lib/init.lua' in this resource's own manifest).
+        -- Fall back to the native notification so this never crashes.
+        SetNotificationTextEntry("STRING")
+        AddTextComponentString(msgedit)
+        DrawNotification(false, false)
+    end
 end
 ESX.ShowMissionText = function(tx)
     ClearPrints()
