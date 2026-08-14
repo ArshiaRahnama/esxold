@@ -2359,7 +2359,7 @@ end)
 
 RegisterNetEvent('Unique_Phone:client:addPoliceAlert')
 AddEventHandler('Unique_Phone:client:addPoliceAlert', function(alertData)
-    if PlayerJob.name == 'police' then
+    if PlayerJob.name == 'police' or PlayerJob.name == 'sheriff' or PlayerJob.name == 'mt' or PlayerJob.name == 'fbi' or PlayerJob.name == 'cid' or PlayerJob.name == 'cia' or PlayerJob.name == 'marshal' or PlayerJob.name == 'judge' or PlayerJob.name == 'doa' then
         SendNUIMessage({
             action = "AddPoliceAlert",
             alert = alertData,

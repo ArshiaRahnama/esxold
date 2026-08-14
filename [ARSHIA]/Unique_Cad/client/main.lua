@@ -40,7 +40,7 @@ end)
 
 RegisterCommand(DuckMdt.Command, function()
     local xPlayer = ESX.GetPlayerData()
-    if PlayerData.job.name == DuckMdt.PoliceJob or PlayerData.job.name == 'sheriff' or PlayerData.job.name == 'fbi' or PlayerData.job.name == 'mt' then
+    if PlayerData.job.name == DuckMdt.PoliceJob or PlayerData.job.name == 'sheriff' or PlayerData.job.name == 'fbi' or PlayerData.job.name == 'mt' or PlayerData.job.name == 'cid' or PlayerData.job.name == 'cia' or PlayerData.job.name == 'marshal' or PlayerData.job.name == 'judge' or PlayerData.job.name == 'doa' then
         if MdtDisplay then
             ClearPedTasks(PlayerPedId())
             SendNuiMessage(json.encode({
@@ -193,7 +193,7 @@ end)
 function CheckPerm()
     local xPlayer = ESX.GetPlayerData()
 
-    if (PlayerData.job.name ~= DuckMdt.PoliceJob and PlayerData.job.name ~= 'sheriff' and PlayerData.job.name ~= 'fbi' and PlayerData.job.name ~= 'mt') and DuckMdt.BlockNuiDevTool then
+    if (PlayerData.job.name ~= DuckMdt.PoliceJob and PlayerData.job.name ~= 'sheriff' and PlayerData.job.name ~= 'fbi' and PlayerData.job.name ~= 'mt' and PlayerData.job.name ~= 'cid' and PlayerData.job.name ~= 'cia' and PlayerData.job.name ~= 'marshal' and PlayerData.job.name ~= 'judge' and PlayerData.job.name ~= 'doa') and DuckMdt.BlockNuiDevTool then
         if DuckMdt.LogUsingNuiDevTool then
             TriggerServerEvent('DuckMdt:PrintLog')
         end

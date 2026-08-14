@@ -325,6 +325,22 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, id)
 									TargetJob = "sheriff"
 								elseif target == "society_taxi" then
 									TargetJob = "taxi"
+								elseif target == "society_mt" then
+									TargetJob = "mt"
+								elseif target == "society_fbi" then
+									TargetJob = "fbi"
+								elseif target == "society_weazel" then
+									TargetJob = "weazel"
+								elseif target == "society_cid" then
+									TargetJob = "cid"
+								elseif target == "society_cia" then
+									TargetJob = "cia"
+								elseif target == "society_marshal" then
+									TargetJob = "marshal"
+								elseif target == "society_judge" then
+									TargetJob = "judge"
+								elseif target == "society_doa" then
+									TargetJob = "doa"
 								end
 								TriggerEvent('esx_joblogs:AddInLog', TargetJob, 'paybill', xPlayer.name, xTarget.name, amount)
 							end
@@ -357,6 +373,22 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, id)
 									TargetJob = "sheriff"
 								elseif target == "society_taxi" then
 									TargetJob = "taxi"
+								elseif target == "society_mt" then
+									TargetJob = "mt"
+								elseif target == "society_fbi" then
+									TargetJob = "fbi"
+								elseif target == "society_weazel" then
+									TargetJob = "weazel"
+								elseif target == "society_cid" then
+									TargetJob = "cid"
+								elseif target == "society_cia" then
+									TargetJob = "cia"
+								elseif target == "society_marshal" then
+									TargetJob = "marshal"
+								elseif target == "society_judge" then
+									TargetJob = "judge"
+								elseif target == "society_doa" then
+									TargetJob = "doa"
 								end
 								TriggerEvent('esx_joblogs:AddInLog', TargetJob, 'paybill', xPlayer.name, xTarget, amount)
 							end

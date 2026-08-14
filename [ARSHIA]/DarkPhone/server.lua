@@ -5,6 +5,7 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 local function IsPoliceJob(jobname)
     return jobname == 'police' or jobname == 'sheriff' or jobname == 'fbi' or jobname == 'mt'
+        or jobname == 'cid' or jobname == 'cia' or jobname == 'marshal' or jobname == 'judge' or jobname == 'doa'
 end
 
 ESX.RegisterUsableItem('darkphone', function(source)

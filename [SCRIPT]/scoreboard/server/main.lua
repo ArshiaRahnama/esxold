@@ -10,6 +10,11 @@ local Mechanic = 0
 local Taxi = 0
 local Medic = 0
 local weazel = 0
+local Cid = 0
+local Cia = 0
+local Marshal = 0
+local Judge = 0
+local Doa = 0
 --Robs
 local Bank = 0
 local Feleca = 0
@@ -46,6 +51,13 @@ ESX.RegisterServerCallback("scoreboard:getPlayersJob", function(source, cb)
 	Medic = 0
 	Admins = 0
 	weazel = 0
+    Medic = 0
+	weazel = 0
+	Cid = 0
+	Cia = 0
+	Marshal = 0
+	Judge = 0
+	Doa = 0
     for k, v in pairs(GetPlayers()) do
 		local xPlayer = ESX.GetPlayerFromId(v)
 		if xPlayer then 
@@ -73,6 +85,21 @@ ESX.RegisterServerCallback("scoreboard:getPlayersJob", function(source, cb)
 			if ESX.GetPlayerFromId(v).job.name == "weazel" then
 				weazel = weazel + 1
 			end
+			if ESX.GetPlayerFromId(v).job.name == "cid" then
+				Cid = Cid + 1
+			end
+			if ESX.GetPlayerFromId(v).job.name == "cia" then
+				Cia = Cia + 1
+			end
+			if ESX.GetPlayerFromId(v).job.name == "marshal" then
+				Marshal = Marshal + 1
+			end
+			if ESX.GetPlayerFromId(v).job.name == "judge" then
+				Judge = Judge + 1
+			end
+			if ESX.GetPlayerFromId(v).job.name == "doa" then
+				Doa = Doa + 1
+			end
 			if ESX.GetPlayerFromId(v).permission_level > 0 and ESX.GetPlayerFromId(v).get('aduty') then
 				Admins = Admins + 1
 			end
@@ -88,6 +115,11 @@ ESX.RegisterServerCallback("scoreboard:getPlayersJob", function(source, cb)
 		taxi = Taxi,
 		ambulance = Medic,
 		weazel = weazel,
+		cid = Cid,
+		cia = Cia,
+		marshal = Marshal,
+		judge = Judge,
+		doa = Doa,
 		admins=Admins
     })
 end)

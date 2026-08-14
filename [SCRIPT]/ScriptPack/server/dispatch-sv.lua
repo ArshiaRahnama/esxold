@@ -205,7 +205,7 @@ RegisterCommand('flist', function(source, args)
 
     RegisterCommand("sr", function(source, args)
         local xPlayer = ESX.GetPlayerFromId(source)
-        if xPlayer.job.name == "police" or xPlayer.job.name == "mechanic" or xPlayer.job.name == "ambulance" or xPlayer.job.name == "government" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "artesh"then
+        if xPlayer.job.name == "police" or xPlayer.job.name == "mechanic" or xPlayer.job.name == "ambulance" or xPlayer.job.name == "government" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "mt" or jobToOrgan[xPlayer.job.name] == "doj" then
             if not args[1] then
                 TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma nemitavanid payam khali befrestid!")
                 return
@@ -271,7 +271,7 @@ RegisterCommand('flist', function(source, args)
     RegisterCommand('badge', function(source)
 
         local xPlayer = ESX.GetPlayerFromId(source)
-        if xPlayer.job.name == "police" or xPlayer.job.name == "ambulance" then
+        if xPlayer.job.name == "police" or xPlayer.job.name == "ambulance" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "mt" or jobToOrgan[xPlayer.job.name] == "doj" then
             
                 local identifier = xPlayer.identifier
 
@@ -286,11 +286,13 @@ RegisterCommand('flist', function(source, args)
                     return
                 end
 
-                local color
-                if xPlayer.job.name == "police" then
+                local color = "~w~" -- default fallback so a missing job never crashes badge display
+                if xPlayer.job.name == "police" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "mt" then
                     color = "~b~"
                 elseif xPlayer.job.name == "ambulance" then
-                    color = "~r~" 
+                    color = "~r~"
+                elseif jobToOrgan[xPlayer.job.name] == "doj" then
+                    color = "~p~"
                 end
 
                 local label = {display = color .. "#" .. tostring(badge) .. " " .. xPlayer.job.grade_label, height = 1.15, toggle = false, badge = true}
@@ -307,17 +309,19 @@ RegisterCommand('flist', function(source, args)
     RegisterCommand('tbadge', function(source)
 
         local xPlayer = ESX.GetPlayerFromId(source)
-        if xPlayer.job.name == "police" or xPlayer.job.name == "ambulance" then
+        if xPlayer.job.name == "police" or xPlayer.job.name == "ambulance" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "mt" or jobToOrgan[xPlayer.job.name] == "doj" then
            
             local identifier = xPlayer.identifier
             local badge = badges[identifier]
             if badge.isOn then
 
-                local color
-                if xPlayer.job.name == "police" then
+                local color = "~w~" -- default fallback so a missing job never crashes badge display
+                if xPlayer.job.name == "police" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "mt" then
                     color = "~b~"
                 elseif xPlayer.job.name == "ambulance" then
-                    color = "~r~" 
+                    color = "~r~"
+                elseif jobToOrgan[xPlayer.job.name] == "doj" then
+                    color = "~p~"
                 end
                 
                 if badge.hide then

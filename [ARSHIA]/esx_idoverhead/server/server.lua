@@ -48,7 +48,7 @@ AddEventHandler('esx_idoverhead:modifyLabel', function(id, label)
             DropPlayer(source, "Attempted to modify admin labels")
         end
     elseif label.badge == true then
-        if xPlayer.job.name == "police" or xPlayer.job.name == "ambulance" then
+        if xPlayer.job.name == "police" or xPlayer.job.name == "ambulance" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "mt" or xPlayer.job.name == "fbi" or xPlayer.job.name == "cid" or xPlayer.job.name == "cia" or xPlayer.job.name == "marshal" or xPlayer.job.name == "judge" or xPlayer.job.name == "doa" then
             if not labels[id] then
                 labels[id] = {}
             end
@@ -91,7 +91,7 @@ AddEventHandler('esx_idoverhead:removeLabel', function(id, state)
             DropPlayer(source, "Attempted to remove admin labels")
         end
     elseif state == true then
-        if xPlayer.job.name == "police" or xPlayer.job.name == "ambulance" then
+        if xPlayer.job.name == "police" or xPlayer.job.name == "ambulance" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "mt" or xPlayer.job.name == "fbi" or xPlayer.job.name == "cid" or xPlayer.job.name == "cia" or xPlayer.job.name == "marshal" or xPlayer.job.name == "judge" or xPlayer.job.name == "doa" then
             if DoesTagExist(id, state) then
                 RemoveTag(id, state)
             end

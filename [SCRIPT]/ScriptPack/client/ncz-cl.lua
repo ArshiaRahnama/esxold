@@ -42,6 +42,11 @@ local WhitelistJobs = {
 	 ["sheriff"] = 'sheriff',
 	 ["fbi"] = 'fbi',
 	 ["mt"] = 'mt',
+	 ["cid"] = 'cid',
+	 ["cia"] = 'cia',
+	 ["marshal"] = 'marshal',
+	 ["judge"] = 'judge',
+	 ["doa"] = 'doa',
 }
 
 local function RGBRainbow( frequency )

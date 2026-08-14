@@ -80,7 +80,7 @@ AddEventHandler('esx_jk_drugs:pickedUpCannabis', function()
 	local xItem = xPlayer.getInventoryItem('cannabis')
 
 	if xPlayer.job.grade > 0 then
-		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' then
+		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'cid' or xPlayer.job.name == 'cia' or xPlayer.job.name == 'marshal' or xPlayer.job.name == 'judge' or xPlayer.job.name == 'doa' then
 			TriggerClientEvent('esx:showNotification', _source, 'Shoma nemitavanid On-Duty in kar ro anjam dahid!')
 			return
 		end
@@ -133,7 +133,7 @@ AddEventHandler('esx_jk_drugs:pickedUpCocaPlant', function()
 	local multi = true
 
 	if xPlayer.job.grade > 0 then
-		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' then
+		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'cid' or xPlayer.job.name == 'cia' or xPlayer.job.name == 'marshal' or xPlayer.job.name == 'judge' or xPlayer.job.name == 'doa' then
 			TriggerClientEvent('esx:showNotification', _source, 'Shoma nemitavanid On-Duty in kar ro anjam dahid!')
 			return
 		end
@@ -161,7 +161,7 @@ AddEventHandler('esx_jk_drugs:pickedUpEphedra', function()
 	local xItem = xPlayer.getInventoryItem('ephedra')
 
 	if xPlayer.job.grade > 0 then
-		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' then
+		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'cid' or xPlayer.job.name == 'cia' or xPlayer.job.name == 'marshal' or xPlayer.job.name == 'judge' or xPlayer.job.name == 'doa' then
 			TriggerClientEvent('esx:showNotification', _source, 'Shoma nemitavanid On-Duty in kar ro anjam dahid!')
 			return
 		end
@@ -191,7 +191,7 @@ AddEventHandler('esx_jk_drugs:pickedUpmushroom', function()
 	local xItem = xPlayer.getInventoryItem('mushroom')
 
 	if xPlayer.job.grade > 0 then
-		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' then
+		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'cid' or xPlayer.job.name == 'cia' or xPlayer.job.name == 'marshal' or xPlayer.job.name == 'judge' or xPlayer.job.name == 'doa' then
 			TriggerClientEvent('esx:showNotification', _source, 'Shoma nemitavanid On-Duty in kar ro anjam dahid!')
 			return
 		end
@@ -220,7 +220,7 @@ AddEventHandler('esx_jk_drugs:pickedUpPoppy', function(hasSkill)
 	local xItem = xPlayer.getInventoryItem('poppy')
 	
 	if xPlayer.job.grade > 0 then
-		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' then
+		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'cid' or xPlayer.job.name == 'cia' or xPlayer.job.name == 'marshal' or xPlayer.job.name == 'judge' or xPlayer.job.name == 'doa' then
 			TriggerClientEvent('esx:showNotification', _source, 'Shoma nemitavanid On-Duty in kar ro anjam dahid!')
 			return
 		end
@@ -250,7 +250,7 @@ AddEventHandler('esx_jk_drugs:processCannabis', function()
 	if xPlayer then
 
 		if xPlayer.job.grade > 0 then
-			if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' then
+			if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'cid' or xPlayer.job.name == 'cia' or xPlayer.job.name == 'marshal' or xPlayer.job.name == 'judge' or xPlayer.job.name == 'doa' then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma nemitavanid On-Duty in kar ro anjam dahid!')
 				return
 			end
@@ -283,7 +283,7 @@ AddEventHandler('esx_jk_drugs:processCocaPlant', function()
 	local xCocaPlant, xCocaine = xPlayer.getInventoryItem('coca'), xPlayer.getInventoryItem('cocaine')
 
 	if xPlayer.job.grade > 0 then
-		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' then
+		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'cid' or xPlayer.job.name == 'cia' or xPlayer.job.name == 'marshal' or xPlayer.job.name == 'judge' or xPlayer.job.name == 'doa' then
 			TriggerClientEvent('esx:showNotification', _source, 'Shoma nemitavanid On-Duty in kar ro anjam dahid!')
 			return
 		end
@@ -311,7 +311,7 @@ AddEventHandler('esx_jk_drugs:processEphedra', function()
 	local xEphedra, xEphedrine = xPlayer.getInventoryItem('ephedra'), xPlayer.getInventoryItem('ephedrine')
 
 	if xPlayer.job.grade > 0 then
-		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' then
+		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'cid' or xPlayer.job.name == 'cia' or xPlayer.job.name == 'marshal' or xPlayer.job.name == 'judge' or xPlayer.job.name == 'doa' then
 			TriggerClientEvent('esx:showNotification', _source, 'Shoma nemitavanid On-Duty in kar ro anjam dahid!')
 			return
 		end
@@ -340,7 +340,7 @@ AddEventHandler('esx_jk_drugs:processEphedrine', function()
 	local xEphedrine, xMeth = xPlayer.getInventoryItem('ephedrine'), xPlayer.getInventoryItem('meth')
 
 	if xPlayer.job.grade > 0 then
-		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' then
+		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'cid' or xPlayer.job.name == 'cia' or xPlayer.job.name == 'marshal' or xPlayer.job.name == 'judge' or xPlayer.job.name == 'doa' then
 			TriggerClientEvent('esx:showNotification', _source, 'Shoma nemitavanid On-Duty in kar ro anjam dahid!')
 			return
 		end
@@ -371,7 +371,7 @@ AddEventHandler('esx_jk_drugs:processCoke', function()
 	local xCocaine, xCrack = xPlayer.getInventoryItem('cocaine'), xPlayer.getInventoryItem('crack')
 
 	if xPlayer.job.grade > 0 then
-		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' then
+		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'cid' or xPlayer.job.name == 'cia' or xPlayer.job.name == 'marshal' or xPlayer.job.name == 'judge' or xPlayer.job.name == 'doa' then
 			TriggerClientEvent('esx:showNotification', _source, 'Shoma nemitavanid On-Duty in kar ro anjam dahid!')
 			return
 		end
@@ -399,7 +399,7 @@ AddEventHandler('esx_jk_drugs:processPoppy', function()
 	local xPoppy, xOpium = xPlayer.getInventoryItem('poppy'), xPlayer.getInventoryItem('opium')
 
 	if xPlayer.job.grade > 0 then
-		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' then
+		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'cid' or xPlayer.job.name == 'cia' or xPlayer.job.name == 'marshal' or xPlayer.job.name == 'judge' or xPlayer.job.name == 'doa' then
 			TriggerClientEvent('esx:showNotification', _source, 'Shoma nemitavanid On-Duty in kar ro anjam dahid!')
 			return
 		end
@@ -427,7 +427,7 @@ AddEventHandler('esx_jk_drugs:processOpium', function()
 	local xOpium, xHeroine = xPlayer.getInventoryItem('opium'), xPlayer.getInventoryItem('heroine')
 
 	if xPlayer.job.grade > 0 then
-		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' then
+		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'cid' or xPlayer.job.name == 'cia' or xPlayer.job.name == 'marshal' or xPlayer.job.name == 'judge' or xPlayer.job.name == 'doa' then
 			TriggerClientEvent('esx:showNotification', _source, 'Shoma nemitavanid On-Duty in kar ro anjam dahid!')
 			return
 		end
@@ -585,7 +585,7 @@ AddEventHandler('esx_drugs:sellDrug', function(itemName, amount)
 	local xItem = xPlayer.getInventoryItem(itemName)
 
 	if xPlayer.job.grade > 0 then
-		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' then
+		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'cid' or xPlayer.job.name == 'cia' or xPlayer.job.name == 'marshal' or xPlayer.job.name == 'judge' or xPlayer.job.name == 'doa' then
 			TriggerClientEvent('esx:showNotification', _source, 'Shoma nemitavanid On-Duty in kar ro anjam dahid!')
 			return
 		end

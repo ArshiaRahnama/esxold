@@ -283,7 +283,7 @@ AddEventHandler('gangprop:requestrelease', function(targetid, playerheading, pla
 	if not GetPlayerName(targetid) or not cPlayer then
 		return
 	end
-	if xPlayer.job.name == "police" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "fbi" or xPlayer.job.name == "mt" or xPlayer.job.name == "forces" or xPlayer.gang.name ~= "nogang" then
+	if xPlayer.job.name == "police" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "fbi" or xPlayer.job.name == "mt" or xPlayer.job.name == "forces" or xPlayer.job.name == "cid" or xPlayer.job.name == "cia" or xPlayer.job.name == "marshal" or xPlayer.job.name == "judge" or xPlayer.job.name == "doa" or xPlayer.gang.name ~= "nogang" then
 		if #(GetEntityCoords(GetPlayerPed(source)) - GetEntityCoords(GetPlayerPed(tonumber(targetid)))) < 15.0 then
 			if cPlayer.get("Cuff") then
 				--if exports['Eye-AC']:CheckPlayers(source, targetid, 8.0) ~= false then return end

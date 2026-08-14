@@ -1362,7 +1362,7 @@ ESX.RegisterServerCallback('Unique_Phone:server:GetCurrentpolices', function(sou
         local character = GetCharacter(v)
       
         if Player ~= nil then
-            if (Player.job.name == "ambulance" or Player.job.name == "taxi" or Player.job.name == "mechanic" or Player.job.name == "weazel"  or Player.job.name == "police" or Player.job.name == "sheriff" or Player.job.name == "uwucafe") then
+            if (Player.job.name == "ambulance" or Player.job.name == "taxi" or Player.job.name == "mechanic" or Player.job.name == "weazel" or Player.job.name == "police" or Player.job.name == "sheriff" or Player.job.name == "mt" or Player.job.name == "fbi" or Player.job.name == "cid" or Player.job.name == "cia" or Player.job.name == "marshal" or Player.job.name == "judge" or Player.job.name == "doa" or Player.job.name == "uwucafe") then
                 table.insert(polices, {
                     name = Player.name,
                     phone = character.phone or 0,

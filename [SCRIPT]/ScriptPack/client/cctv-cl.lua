@@ -57,7 +57,7 @@ RegisterCommand("cctv", function (source, args, rawCommand)
 	local xPlayer = ESX.GetPlayerData()
 	local job = xPlayer.job
 	local jobname = xPlayer.job.name
-	if job and jobname == 'police' or jobname == 'food' then
+	if job and (jobname == 'police' or jobname == 'food' or jobname == 'sheriff' or jobname == 'mt' or jobname == 'fbi' or jobname == 'cid' or jobname == 'cia' or jobname == 'marshal') then
 		TriggerEvent('cctv:camera', cam)
 	end
 

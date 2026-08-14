@@ -63,6 +63,21 @@ Citizen.CreateThread(function()
 		elseif PlayerData.job.name == "mt" then
 		name = "MT"
 		ass = "mt"
+		elseif PlayerData.job.name == "cid" then
+		name = "CID"
+		ass = "cid"
+		elseif PlayerData.job.name == "cia" then
+		name = "CIA"
+		ass = "cia"
+		elseif PlayerData.job.name == "marshal" then
+		name = "Marshal"
+		ass = "marshal"
+		elseif PlayerData.job.name == "judge" then
+		name = "Judge"
+		ass = "judge"
+		elseif PlayerData.job.name == "doa" then
+		name = "DOA"
+		ass = "doa"
 		elseif PlayerData.job.name == "coffee" then
 		name = "Coffee"
 		ass = "coffee"

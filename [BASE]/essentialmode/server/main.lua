@@ -21,7 +21,7 @@ local xPlayer = ESX.GetPlayerFromId(source)
 			else
 				if loadout[i].name ~= 'WEAPON_PETROLCAN' then
 					xPlayer.blacklist = true
-						if xPlayer.job.name == 'police' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'mt' then
+						if xPlayer.job.name == 'police' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'mt' or xPlayer.job.name == 'cid' or xPlayer.job.name == 'cia' or xPlayer.job.name == 'marshal' or xPlayer.job.name == 'judge' or xPlayer.job.name == 'doa' then
 							if loadout[i].name ~= 'WEAPON_PUMPSHOTGUN' or loadout[i].name ~= 'WEAPON_SNIPERRIFLE' or loadout[i].name ~= 'WEAPON_CARBINERIFLE' then
 								--TriggerClientEvent("scary:gunhack2", source, loadout[i].name)
 								return

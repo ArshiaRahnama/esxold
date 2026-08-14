@@ -2,7 +2,7 @@ fx_version 'cerulean'
 game 'gta5'
 
 author 'Unique RP'
-description 'Unique_Flat_Bundle - HUNT, Megaphone, antipg, bzzz_addon_props_powerhouse, esx_fireworks, fightban, gang_mapings, joblist, notbad-rockstar-editor, pedshop, pmp_st_sweet, Unique_Scripts_Badge, Unique_Scripts_NPC_Doctors, Unique_Scripts_Switchjob, maket_guns, Unique_Scripts_minimap_healdeleter, Unique_Scripts_vehicle_damage, Unique_Scripts_Washmoney, Unique_Scripts_item_mc, weapons-on-back'
+description 'Unique_Flat_Bundle - HUNT, Megaphone, antipg, bzzz_addon_props_powerhouse, esx_fireworks, fightban, gang_mapings, joblist, notbad-rockstar-editor, pedshop, pmp_st_sweet, Unique_Scripts_Badge, Unique_Boxing, Unique_Scripts_NPC_Doctors, Unique_Scripts_Switchjob, maket_guns, Unique_Scripts_minimap_healdeleter, Unique_Scripts_vehicle_damage, Unique_Scripts_Washmoney, Unique_Scripts_item_mc, weapons-on-back'
 version '1.0.0'
 lua54 'yes'
 
