@@ -192,6 +192,15 @@ function sortItems(raw, isTrunk)
     return rows
 end
 
+local function padInventorySlots(rows, totalSlots)
+    rows = rows or {}
+    totalSlots = totalSlots or 40
+    while #rows < totalSlots do
+        table.insert(rows, 'empty')
+    end
+    return rows
+end
+
 local function buildMainInventoryItems()
     local playerData = ESX.GetPlayerData()
     local items, weapons = {}, {}
@@ -204,16 +213,7 @@ local function buildMainInventoryItems()
         table.insert(weapons, entry)
     end
     local rows = sortItems({ items = items, weapons = weapons })
-
-    -- pad out to a fixed slot count with empty placeholders -- the
-    -- NUI template checks isEmpty(a) per-slot and expects a stable
-    -- number of entries, not just the owned items
-    local totalSlots = Config.MainInventorySlots or 40
-    while #rows < totalSlots do
-        table.insert(rows, {})
-    end
-
-    return rows
+    return padInventorySlots(rows, Config.MainInventorySlots or 40)
 end
 
 local function currentWeight(rows)
@@ -249,14 +249,19 @@ function openMainInventory()
 
     SetNuiFocus(true, true)
     if blurEnabled then TriggerScreenblurFadeIn(0.3) end
+
+    -- verified against the real app.js: these are three separate
+    -- messages, each read as FLAT top-level fields (no nesting), not
+    -- one combined payload
+    SendNUIMessage({ action = 'openInventory', data = {} })
     SendNUIMessage({
-        action = 'openInventory',
-        mainInventory = mainItems,
-        playerStaticData = {
-            name = playerData.name or (playerData.firstName and (playerData.firstName .. ' ' .. playerData.lastName)) or 'Player',
-            maxweight = positiveOrDefault(playerData.maxWeight, 24000),
-            maxWeight = positiveOrDefault(playerData.maxWeight, 24000)
-        },
+        action = 'setPlayerStaticData',
+        maxweight = positiveOrDefault(playerData.maxWeight, 24000),
+        name = playerData.name or (playerData.firstName and (playerData.firstName .. ' ' .. playerData.lastName)) or 'Player'
+    })
+    SendNUIMessage({
+        action = 'updatePlayerInventory',
+        inventory = mainItems,
         money = playerData.money or (playerData.accounts and playerData.accounts[1] and playerData.accounts[1].money) or 0
     })
 end
@@ -303,7 +308,7 @@ function refreshMainInventoryIfOpen()
     local playerData = ESX.GetPlayerData()
     SendNUIMessage({
         action = 'updatePlayerInventory',
-        mainInventory = buildMainInventoryItems(),
+        inventory = buildMainInventoryItems(),
         money = playerData.money or (playerData.accounts and playerData.accounts[1] and playerData.accounts[1].money) or 0
     })
 end
@@ -334,21 +339,23 @@ function openOtherInventory(cfg, callback)
     local playerData = ESX.GetPlayerData()
     SetNuiFocus(true, true)
     if blurEnabled then TriggerScreenblurFadeIn(0.3) end
+
+    SendNUIMessage({
+        action = 'setPlayerStaticData',
+        maxweight = positiveOrDefault(playerData.maxWeight, 24000),
+        name = playerData.name or 'Player'
+    })
+    SendNUIMessage({
+        action = 'updatePlayerInventory',
+        inventory = buildMainInventoryItems(),
+        money = playerData.money or (playerData.accounts and playerData.accounts[1] and playerData.accounts[1].money) or 0
+    })
     SendNUIMessage({
         action = 'secondOpen',
-        mainInventory = buildMainInventoryItems(),
-        playerStaticData = {
-            name = playerData.name or 'Player',
-            maxweight = positiveOrDefault(playerData.maxWeight, 24000),
-            maxWeight = positiveOrDefault(playerData.maxWeight, 24000)
-        },
-        secondInventory = cfg.items or {},
-        secondInventoryStaticData = {
-            label = cfg.label or 'Inventory',
-            maxweight = positiveOrDefault(cfg.maxWeight, 24000),
-            maxWeight = positiveOrDefault(cfg.maxWeight, 24000)
-        },
-        showLimitInSecondInventory = cfg.maxWeight ~= nil
+        inventory = padInventorySlots(cfg.items, Config.SecondInventorySlots or 40),
+        maxWeight = positiveOrDefault(cfg.maxWeight, 24000),
+        label = cfg.label or 'Inventory',
+        type = cfg.type
     })
 end
 
@@ -486,7 +493,7 @@ local function forwardToSecond(kind, data)
     if secondActive and secondCallback then
         local result = secondCallback({ type = kind, data = data })
         if kind == 'update' and result then
-            SendNUIMessage({ action = 'updateSecondInventory', secondInventory = result })
+            SendNUIMessage({ action = 'updateSecondInventory', inventory = padInventorySlots(result, Config.SecondInventorySlots or 40) })
         end
     end
 end
@@ -617,7 +624,7 @@ RegisterNetEvent('esx_inventoryhud:refreshTrunkInventory')
 AddEventHandler('esx_inventoryhud:refreshTrunkInventory', function(data, blackMoney, items, weapons)
     local plate = data and data.plate
     if secondActive then
-        SendNUIMessage({ action = 'updateSecondInventory', secondInventory = sortItems({ items = items or {}, weapons = weapons or {} }, true) })
+        SendNUIMessage({ action = 'updateSecondInventory', inventory = padInventorySlots(sortItems({ items = items or {}, weapons = weapons or {} }, true), Config.SecondInventorySlots or 40) })
         return
     end
     openOtherInventory({

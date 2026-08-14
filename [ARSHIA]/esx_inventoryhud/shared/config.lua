@@ -18,6 +18,7 @@ Config.OpenInventoryKey = 'F2'
 -- variable-length list of only-owned items -- this is how many total
 -- slots to pad it out to
 Config.MainInventorySlots = 40
+Config.SecondInventorySlots = 40
 
 -- how long (seconds) an item thrown on the ground stays before disappearing
 Config.DroppedItemLifetime = 600
