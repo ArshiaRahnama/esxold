@@ -1,21 +1,4 @@
--- ============================================================
--- esx_inventoryhud / server / trunk.lua
---
--- Backs modules/trunk/client/main.lua exactly as written (not
--- modified). That file already does ALL weight-limit checks
--- client-side before ever sending an event here, so this side
--- is intentionally a straightforward, trusting persistence
--- layer keyed by (plate, gloveBox).
---
--- Also provides ESX.getItem / ESX.getItemWeight / ESX.getWeaponWeight,
--- which modules/trunk (and others) call but which aren't part of
--- vanilla ESX Legacy -- these must have been added by the original
--- (escrowed) inventory-client. The weight fallbacks here are a
--- reasonable default (Config.DefaultItemWeight / DefaultWeaponWeight)
--- and can be overridden per-item via Config.ItemWeightOverrides /
--- Config.WeaponWeights -- worth reviewing against the real values
--- your items actually used before.
--- ============================================================
+
 
 if ESX == nil then
     TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)

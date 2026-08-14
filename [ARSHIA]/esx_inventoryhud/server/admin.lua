@@ -1,11 +1,4 @@
--- ============================================================
--- esx_inventoryhud / server / admin.lua
---
--- Backs modules/admin/client/main.lua exactly as written --
--- event names below match that file precisely (it was NOT
--- modified). Requires the "inventory.admin" ACE permission
--- (configurable via Config.AdminInventoryAce).
--- ============================================================
+
 
 if ESX == nil then
     TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)

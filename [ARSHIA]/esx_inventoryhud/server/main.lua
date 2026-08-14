@@ -1,18 +1,4 @@
--- ============================================================
--- esx_inventoryhud / server / main.lua
---
--- This is the CORE server logic for the player's own (main)
--- inventory. It intentionally does NOT reinvent item storage --
--- it uses ESX's native xPlayer.inventory / xPlayer.loadout,
--- exactly like every other resource on this server already
--- assumes (esx_duty, boombox, etc. all use plain ESX Legacy).
---
--- Assumption: this server runs standard ESX Legacy (es_extended)
--- with the usual xPlayer:getInventoryItem / addInventoryItem /
--- removeInventoryItem / canCarryItem / addWeapon / removeWeapon
--- / getWeapon API. If a fork with different method names is in
--- use, these calls will need renaming to match.
--- ============================================================
+
 
 ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)

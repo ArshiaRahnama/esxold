@@ -1,24 +1,4 @@
--- ============================================================
--- esx_inventoryhud / server / compat.lua
---
--- Generic bridge for the 'esx_inventoryhud:put' / ':get' events
--- fired by client/core.lua's compatibility handlers (trunk/uwucafe/
--- gang/property panels opened via the old esx_inventoryhud:* event
--- names other resources on this server already call).
---
--- 'trunk' is fully implemented against the exact pattern already
--- used elsewhere on this server (esx_trunk:getSharedDataStore,
--- 'coffre' key) -- see mining's SellStone/WashStonePieces for the
--- reference this was matched against.
---
--- 'uwucafe' / 'gang' / 'property' are intentionally NOT guessed at
--- here: the code shown only had a READ path for each (getPropertyInventory,
--- getPropertyInventory2, esx_addoninventory:getInventory), no confirmed
--- "add/remove one item" event. Implementing put/get by guessing risks
--- silently destroying items (removed from the player, never actually
--- stored anywhere real). They safely no-op with a clear notification
--- instead -- tell me the real add/remove event for any of these and
--- it can be wired the same way trunk is.
+
 -- ============================================================
 
 if ESX == nil then

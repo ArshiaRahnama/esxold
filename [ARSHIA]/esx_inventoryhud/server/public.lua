@@ -1,16 +1,4 @@
--- ============================================================
--- esx_inventoryhud / server / public.lua
---
--- Backs modules/public-inventory/client/main.lua exactly as
--- written (not modified). modules/recycle also calls into this
--- same `openInventory` with owner = 'delete' as a special mode --
--- so when owner == 'delete', items put in are destroyed rather
--- than stored (that's what a "recycle bin" should do), and there
--- is never anything to take back out.
---
--- Normal public inventories (owner = anything else, e.g. a named
--- shared stash) persist normally, keyed by `name`.
--- ============================================================
+
 
 if ESX == nil then
     TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)

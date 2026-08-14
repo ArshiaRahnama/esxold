@@ -1,12 +1,3 @@
--- ============================================================
--- esx_inventoryhud / server / job.lua
---
--- Backs modules/job/client/main.lua exactly as written (not
--- modified). Permission checks (who can access which items) are
--- handled entirely by that module via the pre-existing external
--- 'esx_society:getInventoryPermission' callback -- this file only
--- persists the stash contents, keyed by job name.
--- ============================================================
 
 if ESX == nil then
     TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)

@@ -1,13 +1,3 @@
--- ============================================================
--- esx_inventoryhud / server / clothe.lua
---
--- NEW file. Replaces the missing 'sunset_clothe' resource that
--- client/clothe.lua was written against. Clothing pieces are
--- ESX inventory items named 'clothe_<type>_<drawable>_<texture>'
--- (e.g. 'clothe_mask_41_2') -- owning one means having it in your
--- inventory. What's currently WORN is tracked here separately so
--- it survives relogs and death/respawn.
--- ============================================================
 
 if ESX == nil then
     TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)

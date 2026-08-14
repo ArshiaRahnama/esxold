@@ -1,21 +1,4 @@
--- ============================================================
--- esx_inventoryhud / client / core.lua
---
--- NEW file. This provides everything modules/bag, modules/trunk,
--- modules/job, modules/public-inventory, modules/admin and
--- modules/recycle actually call into but don't define themselves:
--- sortItems, openOtherInventory, moveInsideHandler, closeInventory,
--- openOtherPlayerInventory, and the ESX.getItem* helpers.
---
--- It also drives the player's OWN (main) inventory panel, wired to
--- the ui/ NUI exactly as its index.html data-binds things (see the
--- notes at the end of this file for the full contract).
---
--- Left alone on purpose: client/main.lua (the sunset_utils loader).
--- This file works alongside it, not instead of it -- if the escrowed
--- inventory-client ALSO defines any of these same globals, whichever
--- loads last wins, so keep an eye on load order if that turns out to
--- be the case on your server.
+
 -- ============================================================
 
 ESX = nil

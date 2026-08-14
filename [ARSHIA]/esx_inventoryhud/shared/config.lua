@@ -1,12 +1,4 @@
--- ============================================================
--- esx_inventoryhud / shared / config.lua
---
--- NEW file. Config settings for the pieces added to make the
--- inventory actually work end to end (core client/server logic
--- + the six modules' server persistence). The pre-existing
--- client/config.lua (lowercase `config`) is untouched and still
--- used by the escrowed inventory-client the same as before.
--- ============================================================
+
 
 Config = {}
 
