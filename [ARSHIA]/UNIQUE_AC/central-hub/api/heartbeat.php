@@ -21,6 +21,10 @@ if (!$license) {
     hub_json(['ok' => false, 'error' => 'Invalid, inactive, or expired license key'], 403);
 }
 
+if (!hub_rate_limit('heartbeat:' . $licenseKey, 10, 60)) {
+    hub_json(['ok' => false, 'error' => 'Rate limit exceeded — heartbeats should be sent about once a minute'], 429);
+}
+
 $serverName = trim((string)($body['server_name'] ?? 'Unnamed Server'));
 $serverName = mb_substr($serverName === '' ? 'Unnamed Server' : $serverName, 0, 128);
 

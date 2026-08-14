@@ -67,3 +67,34 @@ function hub_notify_discord(string $message): void {
     curl_exec($ch);
     curl_close($ch);
 }
+
+// Simple fixed-window rate limiter. $key should already include whatever you're
+// limiting by (e.g. "heartbeat:UAC-XXXX" or "ip:1.2.3.4"). Returns true if the
+// request is allowed, false if the caller should be rejected with 429.
+function hub_rate_limit(string $key, int $maxRequests, int $windowSeconds): bool {
+    $db = hub_db();
+    $now = hub_now();
+    $windowStart = intdiv($now, $windowSeconds) * $windowSeconds;
+
+    $stmt = $db->prepare('SELECT window_start, request_count FROM rate_limits WHERE bucket_key = :k');
+    $stmt->execute([':k' => $key]);
+    $row = $stmt->fetch();
+
+    if (!$row || (int)$row['window_start'] !== $windowStart) {
+        $upsert = $db->prepare('INSERT OR REPLACE INTO rate_limits (bucket_key, window_start, request_count) VALUES (:k, :w, 1)');
+        $upsert->execute([':k' => $key, ':w' => $windowStart]);
+        return true;
+    }
+
+    if ((int)$row['request_count'] >= $maxRequests) {
+        return false;
+    }
+
+    $update = $db->prepare('UPDATE rate_limits SET request_count = request_count + 1 WHERE bucket_key = :k');
+    $update->execute([':k' => $key]);
+    return true;
+}
+
+function hub_client_ip(): string {
+    return $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+}

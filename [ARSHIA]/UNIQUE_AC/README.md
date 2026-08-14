@@ -185,6 +185,18 @@ exports['UNIQUE_AC']:UnbanPlayer(banId, issuer)
 
 ---
 
+### 🛠️ Tools
+
+The `tools/` folder has standalone scripts for operational tasks:
+
+- `migrate.sh` — export/import UNIQUE_AC's own database tables between two MySQL
+  instances (e.g. when moving hosts). Wraps `mysqldump`/`mysql` directly rather than
+  reinventing table copying.
+- `git-tag-version.sh` — tags the repo with `v<VERSION>` whenever VERSION changes.
+  Install as `.git/hooks/post-commit` for it to run automatically, or call it manually.
+
+---
+
 ### 📜 License
 
 UNIQUE_AC - AGPL-3.0 License  

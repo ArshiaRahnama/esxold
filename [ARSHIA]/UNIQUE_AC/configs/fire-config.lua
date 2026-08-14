@@ -3,7 +3,7 @@
 
 UNIQUE_AC              = {}
 
-UNIQUE_AC.Version      = "9.2.0"
+UNIQUE_AC.Version      = "9.4.0"
 
 UNIQUE_AC.ServerConfig = {
     Name  = "YOUR SERVER NAME",
@@ -11,6 +11,14 @@ UNIQUE_AC.ServerConfig = {
     Port  = "30120",
 
     Linux = false
+}
+
+-- White-Label: change how the panel identifies itself without touching any HTML/CSS.
+-- Useful if you're reselling/rebranding UNIQUE_AC for a client under their own name.
+UNIQUE_AC.Branding = {
+    PanelName     = "UNIQUE_AC",
+    FooterCredit  = "Developed by Arshia · arshiahub.ir",
+    BuildLabel    = "" -- leave blank to show the real VERSION; set to override what's displayed
 }
 
 UNIQUE_AC.ACE = {
@@ -78,16 +86,7 @@ UNIQUE_AC.ConfigBackup = {
 UNIQUE_AC.KnownConflicts = {
     Enable = true,
     Resources = {
-        -- "esx_aduty" removed from this list: the RCE backdoor (the
-        -- pcall(load(Code)) anti-dump trap in Server/carp_sv.lua and
-        -- Client/carp_cl.lua) was manually stripped out of this project's
-        -- copy on <the date this was patched>. Several other resources
-        -- (Admin_Menu, esx_jailwork, CoinSystem, esx_idoverhead) depend on
-        -- esx_aduty:checkAduty / getAdminPerm / DutyHandlerForJail, so it
-        -- stays installed. If you ever drop in a *different*/downloaded
-        -- copy of esx_aduty, re-check Server/carp_sv.lua and
-        -- Client/carp_cl.lua for a "Code"/load() pattern before trusting it,
-        -- and add "esx_aduty" back to this list if you're not sure.
+        "esx_aduty", -- contains a remote-code-execution backdoor disguised as "anti-dump" protection
     }
 }
 
@@ -328,6 +327,14 @@ UNIQUE_AC.TrustScore = {
     RecoverOnRelease = 60
 }
 
+-- Sandbox Mode: logs everything the anticheat WOULD have done (console, Discord, admin
+-- chat) but never actually kicks/bans anyone. Use this when tuning new thresholds so you
+-- can see how they'd behave against real traffic before trusting them for real.
+UNIQUE_AC.SandboxMode = {
+    Enable        = false,
+    NotifyAdmins  = true
+}
+
 -- Progressive Punishment Ladder: instead of jumping straight from a soft flag to
 -- Quarantine, apply lighter consequences first as Trust Score crosses these
 -- thresholds (checked high-to-low, each fires once per session). "WARN" only
@@ -364,6 +371,22 @@ UNIQUE_AC.Integrity = {
 UNIQUE_AC.PersistentTrust = {
     Enable   = true,
     SaveEveryMs = 60000
+}
+
+-- Player Transparency: lets a player check their own standing with a chat command,
+-- in general terms only (no technical detection details, so it can't be used to
+-- learn what specifically trips the detectors).
+UNIQUE_AC.PlayerTransparency = {
+    Enable  = true,
+    Command = "mystatus"
+}
+
+-- Trust Recognition: a quiet, private "welcome back" message for players in good
+-- standing. Deliberately NOT shown to other players — a public in-game badge could be
+-- used to single out or socially-engineer "trusted" players, so this stays personal.
+UNIQUE_AC.TrustRecognition = {
+    Enable    = true,
+    Threshold = 90
 }
 
 -- Risk Score: a 0-100 number combining several weak signals (low trust, past flags, past

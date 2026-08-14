@@ -14,7 +14,7 @@
         <div class="brand-lockup">
           <div class="brand-mark"><img src="./assists/logo.png" alt="UNIQUE_AC"></div>
           <div class="brand-copy">
-            <strong>UNIQUE<span>_AC</span></strong>
+            <strong id="brand-name">UNIQUE<span>_AC</span></strong>
             <small>SECURITY OPERATIONS</small>
           </div>
         </div>
@@ -23,6 +23,7 @@
           <h1 id="title">Admin Control Center</h1>
         </div>
         <div class="header-actions">
+          <button class="streamer-toggle" id="streamer-toggle" onclick="toggleStreamerMode()" title="Hide player names/IDs (safe for streaming)">🎥 Streamer Mode</button>
           <div class="status-pill"><i></i><span>Protected</span></div>
           <button class="back-button" id="header-back" onclick="goBack()" style="display:none;">Back</button>
           <button class="close-button" onclick="closeUI()" aria-label="Close UNIQUE_AC menu">×</button>
@@ -222,7 +223,7 @@
         </section>
       </main>
 
-      <footer class="uniqueac-footer"><span>UNIQUE_AC Hardened UI</span><i></i><span>ESC: Back / Close</span><i></i><span class="footer-credit">Developed by Arshia · arshiahub.ir</span><i></i><b>V9.2.0</b></footer>
+      <footer class="uniqueac-footer"><span id="footer-brand">UNIQUE_AC Hardened UI</span><i></i><span>ESC: Back / Close</span><i></i><span class="footer-credit" id="footer-credit">Developed by Arshia · arshiahub.ir</span><i></i><b id="footer-version">V9.4.0</b></footer>
     </div>
   </section>
   <script src="./js/script.js" type="text/javascript"></script>

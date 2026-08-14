@@ -17,6 +17,10 @@ if (!$license) {
     hub_json(['ok' => false, 'error' => 'Invalid, inactive, or expired license key'], 403);
 }
 
+if (!hub_rate_limit('urgent:' . $licenseKey, 20, 60)) {
+    hub_json(['ok' => false, 'error' => 'Rate limit exceeded'], 429);
+}
+
 $serverName = mb_substr(trim((string)($body['server_name'] ?? 'Unnamed Server')) ?: 'Unnamed Server', 0, 128);
 $kind = mb_substr(trim((string)($body['kind'] ?? 'event')), 0, 32);
 $message = mb_substr(trim((string)($body['message'] ?? '')), 0, 500);

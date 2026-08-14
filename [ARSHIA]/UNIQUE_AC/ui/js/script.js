@@ -1,5 +1,15 @@
 const NUI_RESOURCE = typeof GetParentResourceName === "function" ? GetParentResourceName() : "UNIQUE_AC";
 
+let streamerMode = false;
+function toggleStreamerMode() {
+  streamerMode = !streamerMode;
+  $("#streamer-toggle").toggleClass("is-on", streamerMode);
+  if (typeof pageLoaders !== "undefined" && pageLoaders[currentView]) pageLoaders[currentView]();
+}
+function displayName(name, id) {
+  return streamerMode ? `Player #${id ?? "?"}` : (name || `Player ${id ?? "?"}`);
+}
+
 function escapeHtml(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -189,6 +199,7 @@ $(function () {
     else if (data.action === "updateAdminLog") updateAdminLog(data.log || []);
     else if (data.action === "updateAppeals") updateAppeals(data.appeals || []);
     else if (data.action === "updateChangelog") updateChangelog(data.content || "");
+    else if (data.action === "updateBranding") updateBranding(data.branding || {});
     else if (data.action === "updateAccessPlayers") updateAccessPlayers(data.scope, data.players || []);
     else if (data.action === "updateDashboardStats") updateDashboardStats(data.stats || {});
   });
@@ -345,9 +356,9 @@ function updatePlayerList(playersList) {
   if (!Array.isArray(playersList) || playersList.length === 0) { playerList.append(`<div class="empty-state">No online players found.</div>`); return; }
   playersList.forEach((playerData) => {
     const id = safeNumber(playerData.id); if (!Number.isInteger(id) || id <= 0) return;
-    const name = escapeHtml(playerData.name || `Player ${id}`);
-    const identifier = escapeHtml(playerData.identifier || "license not available yet");
-    const initial = escapeHtml(String(playerData.name || "?").trim().charAt(0).toUpperCase() || "?");
+    const name = escapeHtml(displayName(playerData.name, id));
+    const identifier = streamerMode ? "hidden" : escapeHtml(playerData.identifier || "license not available yet");
+    const initial = streamerMode ? "P" : escapeHtml(String(playerData.name || "?").trim().charAt(0).toUpperCase() || "?");
     const tags = `${playerData.isAdmin ? "ADMIN" : "PLAYER"}${playerData.isWhitelist ? " · WL" : ""}`;
     const risk = safeNumber(playerData.risk);
     const riskClass = risk >= 60 ? "risk-high" : risk >= 30 ? "risk-mid" : "risk-low";
@@ -362,7 +373,7 @@ function openPlayerActionMenu(data) {
   const playerId = Number(data?.id); if (!Number.isInteger(playerId) || playerId <= 0) return;
   selectedPlayer = playerId;
   $(".playerList").fadeOut(120, function () {
-    $("#playerName").text(data.name || "Player"); $("#playerId").text(playerId); $("#armourCount").text(safeNumber(data.armour)); $("#heartCount").text(safeNumber(data.health)); $(".playerAction").fadeIn(120);
+    $("#playerName").text(displayName(data.name, playerId)); $("#playerId").text(playerId); $("#armourCount").text(safeNumber(data.armour)); $("#heartCount").text(safeNumber(data.health)); $(".playerAction").fadeIn(120);
     $("#moderation-reason").val(""); $("#moderation-confirm-name").val("").removeClass("input-error");
     $("#new-note-text").val("");
     $("#profile-notes-list").html(`<div class="empty-state small">Loading...</div>`);
@@ -389,7 +400,7 @@ function updatePlayerProfile(profile) {
     notesList.append(`<div class="empty-state small">No notes yet.</div>`);
   } else {
     profile.notes.forEach((n) => {
-      notesList.append(`<div class="note-row"><b>${escapeHtml(n.author_name || "Unknown")}</b> <span>${formatTimeAgo(n.at)}</span>${escapeHtml(n.note || "")}</div>`);
+      notesList.append(`<div class="note-row"><b>${escapeHtml(streamerMode ? "Staff" : (n.author_name || "Unknown"))}</b> <span>${formatTimeAgo(n.at)}</span>${escapeHtml(n.note || "")}</div>`);
     });
   }
 
@@ -449,8 +460,8 @@ function updateAccessPlayers(scope, players) {
   if (!Array.isArray(players) || players.length === 0) { container.append(`<div class="empty-state small">No online players found.</div>`); return; }
   players.forEach((playerData) => {
     const id = safeNumber(playerData.id); if (!Number.isInteger(id) || id <= 0) return;
-    const name = escapeHtml(playerData.name || `Player ${id}`); const identifier = escapeHtml(playerData.identifier || "license not available yet");
-    const initial = escapeHtml(String(playerData.name || "?").trim().charAt(0).toUpperCase() || "?");
+    const name = escapeHtml(displayName(playerData.name, id)); const identifier = streamerMode ? "hidden" : escapeHtml(playerData.identifier || "license not available yet");
+    const initial = streamerMode ? "P" : escapeHtml(String(playerData.name || "?").trim().charAt(0).toUpperCase() || "?");
     const already = scope === "admins" ? Boolean(playerData.isAdmin) : Boolean(playerData.isWhitelist);
     const label = already ? (scope === "admins" ? "ADMIN" : "WHITELISTED") : (scope === "admins" ? "ADD ADMIN" : "ADD WHITELIST");
     const action = scope === "admins" ? "addToAdmin" : "addToWhiteList";
@@ -522,7 +533,7 @@ function updateQuarantineList(list) {
 
   list.forEach((entry) => {
     const id = safeNumber(entry.id); if (!Number.isInteger(id) || id <= 0) return;
-    const name = escapeHtml(entry.name || `Player ${id}`);
+    const name = escapeHtml(displayName(entry.name, id));
     const reason = escapeHtml(entry.reason || "Unknown");
     const details = escapeHtml(entry.details || "");
     const action = escapeHtml(entry.action || "BAN");
@@ -552,9 +563,9 @@ function updateAdminLog(list) {
   empty.hide();
 
   list.forEach((entry) => {
-    const admin = escapeHtml(entry.admin_name || "Unknown");
+    const admin = escapeHtml(streamerMode ? "Admin" : (entry.admin_name || "Unknown"));
     const action = escapeHtml(entry.action || "Unknown");
-    const target = escapeHtml(entry.target_name || "-");
+    const target = escapeHtml(streamerMode && entry.target_name && entry.target_name !== "-" ? "a player" : (entry.target_name || "-"));
     const reason = escapeHtml(entry.reason || "");
     const initial = escapeHtml(String(entry.admin_name || "?").trim().charAt(0).toUpperCase() || "?");
     container.append(`
@@ -581,7 +592,7 @@ function updateAppeals(list) {
 
   list.forEach((entry) => {
     const id = safeNumber(entry.id); if (!Number.isInteger(id) || id <= 0) return;
-    const name = escapeHtml(entry.player_name || "Unknown");
+    const name = escapeHtml(streamerMode ? "Appellant" : (entry.player_name || "Unknown"));
     const message = escapeHtml(entry.message || "");
     const initial = escapeHtml(String(entry.player_name || "?").trim().charAt(0).toUpperCase() || "?");
     container.append(`
@@ -602,6 +613,24 @@ function updateAppeals(list) {
 
 function updateChangelog(content) {
   document.getElementById("changelog-box").textContent = content || "No changelog available.";
+}
+
+function updateBranding(branding) {
+  if (branding.panelName) {
+    const nameEl = document.getElementById("brand-name");
+    if (nameEl) nameEl.textContent = branding.panelName; // plain text — replaces the styled split-span, which is fine for a custom brand
+    const footerBrand = document.getElementById("footer-brand");
+    if (footerBrand) footerBrand.textContent = `${branding.panelName} Hardened UI`;
+    document.title = `${branding.panelName} Admin Control Center`;
+  }
+  if (branding.footerCredit) {
+    const creditEl = document.getElementById("footer-credit");
+    if (creditEl) creditEl.textContent = branding.footerCredit;
+  }
+  if (branding.version) {
+    const versionEl = document.getElementById("footer-version");
+    if (versionEl) versionEl.textContent = `V${branding.version}`.replace(/^VV/, "V");
+  }
 }
 
 $(document).keydown(function (e) { if (e.key === "Escape") { if (currentView !== "home" || $(".playerAction").is(":visible")) goBack(); else closeUI(); } });

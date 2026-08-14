@@ -167,6 +167,11 @@ AddEventHandler("UNIQUE_AC:updateChangelog", function(content)
     SendNUIMessage({ action = "updateChangelog", content = content or "" })
 end)
 
+RegisterNetEvent("UNIQUE_AC:updateBranding")
+AddEventHandler("UNIQUE_AC:updateBranding", function(branding)
+    SendNUIMessage({ action = "updateBranding", branding = branding or {} })
+end)
+
 RegisterNetEvent("UNIQUE_AC:updateAccessOnlinePlayers")
 AddEventHandler("UNIQUE_AC:updateAccessOnlinePlayers", function(scope, players)
     if not isAdmin then return end
@@ -794,6 +799,7 @@ end)
 function openAdminMenu()
     if not isAdmin then return end
     TriggerServerEvent("UNIQUE_AC:checkIsAdmin")
+    TriggerServerEvent("UNIQUE_AC:getBranding")
     SendNUIMessage({
         action = "openUI",
     })

@@ -36,5 +36,11 @@ CREATE TABLE IF NOT EXISTS urgent_events (
     created_at   INTEGER NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS rate_limits (
+    bucket_key   TEXT PRIMARY KEY,
+    window_start INTEGER NOT NULL,
+    request_count INTEGER NOT NULL DEFAULT 0
+);
+
 CREATE INDEX IF NOT EXISTS idx_servers_license ON servers(license_key);
 CREATE INDEX IF NOT EXISTS idx_urgent_created ON urgent_events(created_at);

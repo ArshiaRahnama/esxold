@@ -6,13 +6,17 @@ session_start();
 $error = null;
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
-    $password = (string)($_POST['password'] ?? '');
-    if (hash_equals(HUB_ADMIN_PASSWORD, $password)) {
-        $_SESSION['hub_admin'] = true;
-        header('Location: index.html');
-        exit;
+    if (!hub_rate_limit('login:' . hub_client_ip(), 5, 60)) {
+        $error = 'Too many attempts — wait a minute and try again.';
+    } else {
+        $password = (string)($_POST['password'] ?? '');
+        if (hash_equals(HUB_ADMIN_PASSWORD, $password)) {
+            $_SESSION['hub_admin'] = true;
+            header('Location: index.html');
+            exit;
+        }
+        $error = 'Wrong password.';
     }
-    $error = 'Wrong password.';
 }
 ?>
 <!DOCTYPE html>

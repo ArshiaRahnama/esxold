@@ -392,6 +392,11 @@ local function uniqueacLoadTrust(src)
             end
             st.license = license
             uniqueacRecomputeRisk(st)
+
+            local recogCfg = UNIQUE_AC.TrustRecognition
+            if recogCfg and recogCfg.Enable and rows and rows[1] and st.trust >= (tonumber(recogCfg.Threshold) or 90) then
+                uniqueacNotify(src, "✓ Welcome back — your account is in good standing. Thanks for playing fair.", { 89, 201, 122 })
+            end
         end)
 end
 
@@ -634,6 +639,20 @@ AddEventHandler("UNIQUE_AC:getChangelog", function()
     if not src or not UNIQUE_AC_GETADMINS(src) then return end
     local content = LoadResourceFile(GetCurrentResourceName(), "update.txt") or "update.txt not found."
     TriggerClientEvent("UNIQUE_AC:updateChangelog", src, content)
+end)
+
+-- White-Label: sends the configured brand strings so the panel can display them
+-- without any HTML/CSS changes.
+RegisterNetEvent("UNIQUE_AC:getBranding")
+AddEventHandler("UNIQUE_AC:getBranding", function()
+    local src = tonumber(source)
+    if not src then return end
+    local branding = UNIQUE_AC.Branding or {}
+    TriggerClientEvent("UNIQUE_AC:updateBranding", src, {
+        panelName = branding.PanelName or "UNIQUE_AC",
+        footerCredit = branding.FooterCredit or "",
+        version = (branding.BuildLabel and branding.BuildLabel ~= "") and branding.BuildLabel or tostring(UNIQUE_AC.Version)
+    })
 end)
 
 RegisterNetEvent("UNIQUE_AC:getAppeals")
@@ -3034,6 +3053,16 @@ function UNIQUE_AC_ACTION(SRC, ACTION, REASON, DETAILS)
     if UNIQUE_AC_IS_SPAMLIST(src, action, reason, details) then return false end
     UNIQUE_AC_ADD_SPAMLIST(src, action, reason, details)
 
+    if UNIQUE_AC.SandboxMode and UNIQUE_AC.SandboxMode.Enable then
+        local playerName = GetPlayerName(src) or ("ID " .. src)
+        print(("^5[UNIQUE_AC SANDBOX]^0 Would have applied ^3%s^0 to ^3%s^0 | %s | %s (no action actually taken)"):format(action, playerName, reason, details))
+        uniqueacLogDetection(src, reason, details, "SANDBOX_" .. action)
+        if UNIQUE_AC.SandboxMode.NotifyAdmins then
+            uniqueacNotifyAdmins(("🧪 SANDBOX: would have %sed %s (%s) — no action taken."):format(action:lower(), playerName, reason), { 0, 209, 255 })
+        end
+        return false
+    end
+
     if UNIQUE_AC.ScreenShot and UNIQUE_AC.ScreenShot.Enable
         and GetResourceState("discord-screenshot") == "started"
         and UNIQUE_AC.Webhooks and type(UNIQUE_AC.Webhooks.ScreenShot) == "string"
@@ -3468,3 +3497,85 @@ RegisterCommand('addunban', function(source, args)
         end
     end
 end)
+
+-- Data export/delete: console-only, for privacy requests (GDPR-style). Accepts either a
+-- license identifier directly, or an online player's server ID (resolved automatically).
+local function uniqueacResolveIdentifierArg(arg)
+    local asId = tonumber(arg)
+    if asId and GetPlayerName(asId) then
+        return uniqueacPlayerLicense(asId) or arg
+    end
+    return arg
+end
+
+RegisterCommand('exportplayerdata', function(source, args)
+    if source ~= 0 then return end
+    local identifier = uniqueacResolveIdentifierArg(args[1])
+    if not identifier or identifier == "" then
+        print("Usage: exportplayerdata [license:xxxx or online ServerID]")
+        return
+    end
+
+    local exportData = { identifier = identifier, exported_at = os.date("!%Y-%m-%d %H:%M:%S UTC") }
+    local pending = 5
+
+    local function finish()
+        pending = pending - 1
+        if pending > 0 then return end
+        local fileName = "exports/player-" .. identifier:gsub("[^%w]", "_") .. ".json"
+        local ok = pcall(SaveResourceFile, GetCurrentResourceName(), fileName, json.encode(exportData), -1)
+        if ok then
+            print(("^2[UNIQUE_AC]^0 Export saved to %s/%s"):format(GetCurrentResourceName(), fileName))
+        else
+            print("^1[UNIQUE_AC]^0 Export failed — SaveResourceFile isn't available on this build. Printing to console instead:")
+            print(json.encode(exportData))
+        end
+    end
+
+    MySQL.Async.fetchAll("SELECT * FROM uniqueac_trust WHERE identifier = @id", { ["@id"] = identifier }, function(r) exportData.trust = r; finish() end)
+    MySQL.Async.fetchAll("SELECT id, note, author_name, created_at FROM uniqueac_notes WHERE target_identifier = @id", { ["@id"] = identifier }, function(r) exportData.notes = r; finish() end)
+    MySQL.Async.fetchAll("SELECT reason, details, action, created_at FROM uniqueac_detections WHERE identifier = @id", { ["@id"] = identifier }, function(r) exportData.detections = r; finish() end)
+    MySQL.Async.fetchAll("SELECT id, message, status, created_at FROM uniqueac_appeals WHERE identifier = @id", { ["@id"] = identifier }, function(r) exportData.appeals = r; finish() end)
+    MySQL.Async.fetchAll("SELECT * FROM uniqueac_banlist WHERE LICENSE = @id", { ["@id"] = identifier }, function(r) exportData.bans = r; finish() end)
+end)
+
+RegisterCommand('deleteplayerdata', function(source, args)
+    if source ~= 0 then return end
+    local identifier = uniqueacResolveIdentifierArg(args[1])
+    if not identifier or identifier == "" then
+        print("Usage: deleteplayerdata [license:xxxx or online ServerID]")
+        return
+    end
+
+    -- Deliberately NOT touched: uniqueac_banlist (an active ban is a moderation record, not
+    -- just personal data — deleting it here would let a GDPR request be used to dodge a ban),
+    -- and admin_log rows where this identifier was the ADMIN (that's staff accountability,
+    -- not this person's own data). Admin_log rows where they were the TARGET are cleared.
+    MySQL.Async.execute("DELETE FROM uniqueac_trust WHERE identifier = @id", { ["@id"] = identifier })
+    MySQL.Async.execute("DELETE FROM uniqueac_notes WHERE target_identifier = @id", { ["@id"] = identifier })
+    MySQL.Async.execute("DELETE FROM uniqueac_detections WHERE identifier = @id", { ["@id"] = identifier })
+    MySQL.Async.execute("DELETE FROM uniqueac_appeals WHERE identifier = @id", { ["@id"] = identifier })
+    MySQL.Async.execute("DELETE FROM uniqueac_admin_log WHERE target_identifier = @id", { ["@id"] = identifier })
+
+    print(("^2[UNIQUE_AC]^0 Deleted UNIQUE_AC-held data for %s (trust, notes, detections, appeals, and admin-log entries where they were the target). Ban records were NOT deleted — use /uniqueacunban separately if that's also intended."):format(identifier))
+end)
+
+-- Player Transparency: lets any player check their own general standing.
+RegisterCommand((UNIQUE_AC.PlayerTransparency and UNIQUE_AC.PlayerTransparency.Command) or "mystatus", function(source)
+    if not UNIQUE_AC.PlayerTransparency or not UNIQUE_AC.PlayerTransparency.Enable then return end
+    local src = tonumber(source)
+    if not src or src == 0 then return end
+    local st = playerState(src)
+    local trust = (st and st.trust) or 100
+
+    local label, color
+    if trust >= 80 then
+        label, color = "Good standing", { 89, 201, 122 }
+    elseif trust >= 50 then
+        label, color = "Under light review — nothing to worry about, just keep playing fair", { 245, 166, 35 }
+    else
+        label, color = "Flagged — please avoid anything that looks like cheating", { 228, 72, 58 }
+    end
+
+    uniqueacNotify(src, ("Your account standing: %d/100 — %s."):format(trust, label), color)
+end, false)
