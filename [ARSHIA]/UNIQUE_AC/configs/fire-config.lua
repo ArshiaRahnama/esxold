@@ -86,7 +86,16 @@ UNIQUE_AC.ConfigBackup = {
 UNIQUE_AC.KnownConflicts = {
     Enable = true,
     Resources = {
-        "esx_aduty", -- contains a remote-code-execution backdoor disguised as "anti-dump" protection
+        -- "esx_aduty" removed from this list: the RCE backdoor (the
+        -- pcall(load(Code)) anti-dump trap in Server/carp_sv.lua and
+        -- Client/carp_cl.lua) was manually stripped out of this project's
+        -- copy. Several other resources (Admin_Menu, esx_jailwork,
+        -- CoinSystem, esx_idoverhead) depend on esx_aduty:checkAduty /
+        -- getAdminPerm / DutyHandlerForJail, so it stays installed. If you
+        -- ever drop in a *different*/downloaded copy of esx_aduty, re-check
+        -- Server/carp_sv.lua and Client/carp_cl.lua for a "Code"/load()
+        -- pattern before trusting it, and add "esx_aduty" back to this list
+        -- if you're not sure.
     }
 }
 

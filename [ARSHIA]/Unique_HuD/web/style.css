@@ -1,0 +1,256 @@
+/* AbtinQX */
+
+@import url('https://fonts.cdnfonts.com/css/akrobat');
+
+
+@font-face {
+    font-family: higha;
+    src: url(Merich.otf);
+}
+
+@font-face {
+    font-family: higha;
+    src: url(coolveticargit.otf);
+}
+
+/* hud bars */
+
+#hud {
+	position: absolute;
+	width: 100vw;
+	top: 0vh;
+	height:100vh;
+	right: 0vw;
+}
+
+#head {
+	position: absolute;
+	background: rgba(0, 0, 0, 0.767);
+	width: 13vw;
+	top: 3vh;
+	height:4vh;
+	right: 1vw;
+	font-size: 1vw;
+	border-radius: 0.8vw;
+}
+
+#body {
+	position: absolute;
+	background: rgba(0, 0, 0, 0.767);
+	width: 13vw;
+	top: 8vh;
+	height:10vh;
+	right: 1vw;
+	font-size: 1vw;
+	border-radius: 0.8vw;
+}
+
+#heal {
+	position: absolute;
+	background: rgba(0, 0, 0, 0.767);
+	width: 6.2vw;
+	top: 19vh;
+	height:2vh;
+	right: 7.7vw;
+	border-radius: 0.8vw;
+}
+
+#armor {
+	position: absolute;
+	background: rgba(0, 0, 0, 0.767);
+	width: 6.2vw;
+	top: 19vh;
+	height:2vh;
+	right: 1vw;
+	border-radius: 0.8vw;
+}
+
+#food {
+	position: absolute;
+	background: rgba(0, 0, 0, 0.767);
+	width: 6.2vw;
+	top: 22vh;
+	height:2vh;
+	right: 7.7vw;
+	border-radius: 0.8vw;
+}
+
+#water {
+	position: absolute;
+	background: rgba(0, 0, 0, 0.767);
+	width: 6.2vw;
+	top: 22vh;
+	height:2vh;
+	right: 1vw;
+	border-radius: 0.8vw;
+}
+
+#sname {
+	position: absolute;
+	width: 7vw;
+	left: 2.5vw;
+	top: 0.7vh;
+	color: #00d5ff;
+	font-size: 1vw;
+	border-radius: 0.1vw;
+	font-family: higha;
+	text-align: left;
+}
+
+.koset {
+	position: absolute;
+	font-size: 0.8vw;
+	text-align: center;
+	font-family: higha;
+color: rgb(255, 255, 255);
+left: 35%;
+}
+
+#healb {
+	position: absolute;
+	background: rgba(182, 49, 49, 0.967);
+	width: 100%;
+	height:100%;
+	border-radius: 0.8vw;
+}
+
+#armorb {
+	position: absolute;
+	background: rgba(163, 163, 163, 0.967);
+	width: 100%;
+	height:100%;
+	border-radius: 0.8vw;
+}
+
+#foodb {
+	position: absolute;
+	background: rgba(194, 103, 0, 0.967);
+	width: 100%;
+	height:100%;
+	border-radius: 0.8vw;
+}
+
+
+#waterb {
+	position: absolute;
+	background: rgba(0, 165, 177, 0.967);
+	width: 100%;
+	height:100%;
+	border-radius: 0.8vw;
+}
+
+
+#snameb {
+	position: absolute;
+	width: 7vw;
+	left: 2.5vw;
+	top: 0.5vh;
+	color: rgb(124, 255, 194);
+	font-size: 1.2vw;
+	border-radius: 0.1vw;
+	font-family: higha;
+	text-align: left;
+}
+
+#money {
+	position: absolute;
+	width: 7vw;
+	right: 0.7vw;
+	top: 0.5vh;
+	color: rgb(9, 255, 0);
+	font-size: 0.8vw;
+	border-radius: 0.1vw;
+	font-family: higha;
+	text-align: right;
+}
+
+#bank {
+	position: absolute;
+	width: 7vw;
+	right: 0.7vw;
+	top: 3.5vh;
+	color: rgb(0, 255, 106);
+	font-size: 0.8vw;
+	border-radius: 0.1vw;
+	font-family: higha;
+	text-align: right;
+}
+
+#name {
+	position: absolute;
+	width: 7vw;
+	left:0.7vw;
+	top: 0.5vh;
+	color: rgb(255, 255, 255);
+	font-size: 0.8vw;
+	border-radius: 0.1vw;
+	font-family: higha;
+	text-align: left;
+}
+
+#job {
+	position: absolute;
+	width: 7vw;
+	left:0.7vw;
+	top: 3.5vh;
+	color: rgb(255, 255, 255);
+	font-size: 0.8vw;
+	border-radius: 0.1vw;
+	font-family: higha;
+	text-align: left;
+}
+
+#gang {
+	position: absolute;
+	width: 7vw;
+	left:0.7vw;
+	top: 6.5vh;
+	color: rgb(255, 255, 255);
+	font-size: 0.8vw;
+	border-radius: 0.1vw;
+	font-family: higha;
+	text-align: left;
+}
+
+#coin {
+	position: absolute;
+	width: 7vw;
+	right:0.7vw;
+	top: 6.5vh;
+	color: rgb(229, 255, 0);
+	font-size: 0.8vw;
+	border-radius: 0.1vw;
+	font-family: higha;
+	text-align: right;
+}
+
+
+#prof {
+	position: absolute;
+	background: white;
+	width: 2vw;
+	top: 3.25vh;
+	right: 1.7vw;
+	font-size: 1vw;
+	border-radius: 1.5vw;
+	box-shadow: 1px 1px 1px black;
+}
+
+#icon {
+	position: absolute;
+	top: 0.4vh;
+	left: 2.6vw;
+	color: rgb(255, 255, 255);
+width: 0.75vw;
+	text-align: left;
+	opacity: 0.254;
+}
+
+#icons {
+	position: absolute;
+	top: 0.8vh;
+	left: 0.6vw;
+	color: rgb(255, 255, 255);
+width: 1.1vw;
+	text-align: left;
+}
