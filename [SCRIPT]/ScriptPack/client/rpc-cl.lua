@@ -1,4 +1,3 @@
-
 ESX                      = nil
 PlayerData               = {}
 
@@ -87,7 +86,7 @@ Citizen.CreateThread(function()
 		ass = "https://discord.gg/rwBHcCqzJB"
 	end
 	
-	if ESX.GetPlayerData()['aduty'] == 1 then
+	if ESX.GetPlayerData()['aduty'] then
 		name = 'Staff'
 		ass = "admin"
 	end

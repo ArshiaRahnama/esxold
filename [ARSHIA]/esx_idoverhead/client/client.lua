@@ -14,8 +14,6 @@ local NewBiePlayer = {}
 local ShowPlayersId = false
 local alias = {}
 local isDead = false
-local LevelData = {}
-local Levels = 0
 
 local gtComponent = {
     GAMER_NAME = 0,
@@ -37,20 +35,32 @@ local gtComponent = {
     MP_TYPING = 16
 }
 
+-- Rank lookup: on-demand + cached, instead of a periodic bulk poll.
+-- 'XP_System:getRank' is a read-only server callback exposed by the
+-- Unique_LevelQuest resource (server/xp.lua) — it must be running
+-- alongside this resource for level numbers to show up.
 local DatPlayerLevel = {}
-RegisterNetEvent('idoverhead:GetPlayerLevel_Client')
-AddEventHandler('idoverhead:GetPlayerLevel_Client', function(Data)
-    LevelData = Data
-    for k,v in pairs(LevelData) do 
-        DatPlayerLevel[v.ID] = v.level
-    end
-end)
+local requestedRank = {} -- [serverId] = true once asked, avoids re-asking every tick
 
-Citizen.CreateThread(function()
-    while true do 
-        TriggerServerEvent('idoverhead:GetPlayerLevel')
-        Citizen.Wait(60000)
+local function getCachedRank(serverId)
+    if DatPlayerLevel[serverId] then
+        return DatPlayerLevel[serverId]
     end
+    if not requestedRank[serverId] then
+        requestedRank[serverId] = true
+        ESX.TriggerServerCallback('XP_System:getRank', function(rank)
+            if rank and rank > 0 then
+                DatPlayerLevel[serverId] = rank
+            end
+        end, serverId)
+    end
+    return DatPlayerLevel[serverId] or '?'
+end
+
+RegisterNetEvent('pname:clearRankCache')
+AddEventHandler('pname:clearRankCache', function(serverId)
+    DatPlayerLevel[serverId] = nil
+    requestedRank[serverId] = nil
 end)
 
 local function makeSettings()
@@ -98,7 +108,7 @@ function updatePlayerNames()
                 local isTyping = DecorGetInt(GetPlayerPed(i), 'typing')
                 SetMpGamerTagVisibility(tag, gtComponent.MP_TYPING, isTyping)
                 if ShowPlayersId or NetworkIsPlayerTalking(i) or mpGamerTagSettings[serverId].nameTag then
-                    local level = DatPlayerLevel[serverId]
+                    local level = getCachedRank(serverId)
                     
                     SetMpGamerTagVisibility(tag, gtComponent.AUDIO_ICON, NetworkIsPlayerTalking(i))
                     SetMpGamerTagAlpha(tag, gtComponent.AUDIO_ICON, 255)
@@ -159,7 +169,7 @@ AddEventHandler("esx:playerLoaded", function()
     if IsPlayerSwitchInProgress() then
         Wait(2000)
     end
-    local id = PlayerId()
+    local id = GetPlayerServerId(PlayerId())
     TriggerServerEvent('esx_idoverhead:checkTimePlay', id)
 end)
 

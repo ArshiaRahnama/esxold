@@ -130,29 +130,36 @@ ESX.RegisterServerCallback("esx_idoverhead:retrievePlayTime", function(source, c
 end)
 
 RegisterNetEvent('esx_idoverhead:checkTimePlay')
-AddEventHandler('esx_idoverhead:checkTimePlay', function(playerId)
-    if source == nil or playerId == nil then return end
-
+AddEventHandler('esx_idoverhead:checkTimePlay', function()
     local src = source
-    local xPlayer = ESX.GetPlayerFromId(src)
+    if src == nil then return end
 
-    if timePlays[playerId] == nil then
+    local xPlayer = ESX.GetPlayerFromId(src)
+    if not xPlayer then return end
+
+    -- FIX: this used to be keyed by a client-supplied `playerId` argument
+    -- that was PlayerId() on the client — a LOCAL, non-network-unique
+    -- handle (almost always 0 for every single client). Every player was
+    -- writing into the same timePlays[0] slot, corrupting/overwriting
+    -- each other's playtime tracking. Now keyed by the real network
+    -- source, which is guaranteed unique per connected player.
+    if timePlays[src] == nil then
         local identifier = GetPlayerIdentifier(src)
 
         MySQL.Async.fetchAll("SELECT timePlay FROM users WHERE identifier = @identifier", { ["@identifier"] = identifier }, function(result)
             if result and result[1] then
                 local timePlayP = result[1].timePlay
-                timePlays[playerId] = { source = src, joinTime = os.time(), timePlay = timePlayP }
+                timePlays[src] = { source = src, joinTime = os.time(), timePlay = timePlayP }
 
                 if timePlayP < 21600 and xPlayer.permission_level <= 0 then
                     -- Add new player label if needed
                 else
-                    AddToNet(src, "timePlay", playerId)
+                    AddToNet(src, "timePlay", src)
                 end
             end
         end)
     else
-        print("LUA EXECUTOR OR A BUG IS HAPPENING! On Source : " .. src .. ' Wanted Modify ' .. playerId)
+        print("esx_idoverhead: duplicate checkTimePlay call ignored for source " .. src)
     end
 end)
 
@@ -268,25 +275,15 @@ function AddToNet(source, netType, id)
     end
 end
 
-RegisterNetEvent('idoverhead:GetPlayerLevel')
-AddEventHandler('idoverhead:GetPlayerLevel', function()
-    src = source 
-    local Data = {}
-    MySQL.Async.fetchAll("SELECT identifier, rank FROM users", { 
-
-    }, function(result)
-        if result  then
-
-            for i=1, #result do 
-                local Steam = result[i].identifier
-                local xPlayer = ESX.GetPlayerFromIdentifier(Steam)
-                if xPlayer then 
-                    table.insert(Data, {ID = xPlayer.source, level = result[i].rank})
-                end
-            end
-       
-            TriggerClientEvent('idoverhead:GetPlayerLevel_Client', src, Data)
-        end
-    end)
-end)
+-- ================================================================= --
+-- Level display now goes through Unique_LevelQuest's existing
+-- 'XP_System:getRank' read-only callback (client/client.lua fetches a
+-- player's rank once, on demand, when their tag first becomes visible —
+-- see client/client.lua). The old 'idoverhead:GetPlayerLevel' handler
+-- that lived here queried the ENTIRE `users` table (every account ever
+-- registered, not just online players) every 60 seconds, independently
+-- for EVERY connected client — with 50 players online that's 50
+-- full-table scans per minute, all discarding almost everything they
+-- fetched. Removed entirely rather than patched.
+-- ================================================================= --
 

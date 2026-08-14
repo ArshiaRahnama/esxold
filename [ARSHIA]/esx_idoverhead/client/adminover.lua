@@ -44,6 +44,26 @@ local playersInfo = {}
 local controlPress = false
 local labels = {}
 
+-- FIX: this file used "..v.info.level" in DrawText3Dido below, but
+-- v.info.level was NEVER set anywhere in this file — every frame that
+-- text was on screen (i.e. whenever the ID overlay was up) this
+-- concatenated a nil value and threw a Lua error. Added the same
+-- on-demand cached rank lookup used in client.lua.
+local DatPlayerLevel = {}
+local requestedRank = {}
+local function getCachedRank(serverId)
+    if DatPlayerLevel[serverId] then return DatPlayerLevel[serverId] end
+    if not requestedRank[serverId] then
+        requestedRank[serverId] = true
+        ESX.TriggerServerCallback('XP_System:getRank', function(rank)
+            if rank and rank > 0 then
+                DatPlayerLevel[serverId] = rank
+            end
+        end, serverId)
+    end
+    return DatPlayerLevel[serverId] or '?'
+end
+
 RegisterNetEvent('esx_idoverhead:modifydistance')
 AddEventHandler('esx_idoverhead:modifydistance', function(distance)
     ESX.TriggerServerCallback('esx_aduty:checkAdmin', function(isAdmin)
@@ -167,6 +187,7 @@ Citizen.CreateThread(function()
                         name = GetPlayerName(player),
                         hide = IsEntityVisible(tped),
                         id = GetPlayerServerId(player),
+                        level = getCachedRank(GetPlayerServerId(player)),
                         ped = tped,
                         vehicle = vehicle,
                         class = class,

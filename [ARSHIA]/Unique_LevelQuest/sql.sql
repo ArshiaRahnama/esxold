@@ -17,3 +17,9 @@ CREATE TABLE IF NOT EXISTS `quest` (
     `quests`     LONGTEXT     NOT NULL,
     PRIMARY KEY (`identifier`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Safety net: if `quest` already existed on your DB from an earlier run
+-- (without the `date` column), CREATE TABLE IF NOT EXISTS above is a
+-- no-op and this ALTER TABLE adds it. If the column already exists this
+-- one line will error and you can just ignore/skip it.
+ALTER TABLE `quest` ADD COLUMN `date` VARCHAR(20) NOT NULL DEFAULT '';
