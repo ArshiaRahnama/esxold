@@ -811,7 +811,7 @@ RegisterCommand('joblist', function(source, args, rawCommand)
     local hasPermission = zPlayer.permission_level > 0
     local allowedJobs = {}
     if hasPermission or (zPlayer.job.name == 'fbi' and zPlayer.job.grade > 15) then
-        allowedJobs = {police = {}, mt = {}, ambulance = {}, sheriff = {}, metropolitan = {}, mechanic = {}, weazel = {}, fbi = {},taxi = {}}
+        allowedJobs = {police = {}, mt = {}, ambulance = {}, sheriff = {}, metropolitan = {}, mechanic = {}, weazel = {}, fbi = {}, taxi = {}, cid = {}, cia = {}, marshal = {}, judge = {}, doa = {}}
     else
         TriggerClientEvent('chat:addMessage', source, {args = {"^1[System]", "^3 Perm Nadary !"}})
         return
@@ -1242,7 +1242,7 @@ AddEventHandler('notifyPolice', function(location)
 
     for i = 1, #xPlayers, 1 do
         local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-        if xPlayer.job.name == 'police' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'mt' then
+        if xPlayer.job.name == 'police' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'mt' or xPlayer.job.name == 'cid' or xPlayer.job.name == 'cia' or xPlayer.job.name == 'marshal' then
             TriggerClientEvent('esx:showNotification', xPlayers[i], "یک نفر در حال پول‌شویی است!")
             TriggerClientEvent('createPoliceBlip', xPlayers[i], location.x, location.y, location.z) 
         end
@@ -1255,7 +1255,7 @@ AddEventHandler('removePoliceBlip', function()
 
     for i = 1, #xPlayers, 1 do
         local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-        if xPlayer.job.name == 'police' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'mt' then
+        if xPlayer.job.name == 'police' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'mt' or xPlayer.job.name == 'cid' or xPlayer.job.name == 'cia' or xPlayer.job.name == 'marshal' then
             TriggerClientEvent('removePoliceBlip', xPlayers[i]) 
         end
     end

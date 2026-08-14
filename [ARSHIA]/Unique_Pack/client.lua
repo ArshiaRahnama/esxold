@@ -2275,7 +2275,7 @@ RegisterCommand('badge', function()
     end
 
     -- چک کردن اگر شغل فرد در بین شغل‌های مجاز باشد
-    local allowedJobs = {"police", "sheriff", "mt", "taxi", "mechanic", "ambulance", "fbi", "weazel"}
+    local allowedJobs = {"police", "sheriff", "mt", "taxi", "mechanic", "ambulance", "fbi", "weazel", "cid", "cia", "marshal", "judge", "doa"}
     if isJobAllowed(playerJob, allowedJobs) then
         -- نمایش پیام در چت برای 15 متر اطراف
         TriggerServerEvent('badge:showBadge', playerName, playerJob, playerJobGrade)
@@ -2486,7 +2486,7 @@ Citizen.CreateThread(function()
                     label = 'درمان', -- Display text
                     onSelect = function()
                         local playerData = ESX.GetPlayerData()
-                        if playerData.job.name == 'police' or playerData.job.name == 'sheriff' or playerData.job.name == 'fbi' or playerData.job.name == 'mt' then -- Check player job
+                        if playerData.job.name == 'police' or playerData.job.name == 'sheriff' or playerData.job.name == 'fbi' or playerData.job.name == 'mt' or playerData.job.name == 'cid' or playerData.job.name == 'cia' or playerData.job.name == 'marshal' or playerData.job.name == 'judge' or playerData.job.name == 'doa' then -- Check player job
                             TriggerEvent("esx_ambulancejob:revivex", GetPlayerServerId(PlayerId()))
                             TriggerEvent("mythic_progbar:client:progress", {
                                 name = "pdheal",

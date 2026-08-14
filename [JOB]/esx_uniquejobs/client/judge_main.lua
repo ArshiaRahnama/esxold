@@ -602,7 +602,7 @@ function OpenVehicleSpawnerMenu_judge(station, partNum)
 													TriggerEvent('chat:addMessage', {
 														args = {'^1SYSTEM', 'Mashin be moafaghiat hazf shod'}
 													})
-												end, "SH" .. plate[1])
+												end, "JD" .. plate[1])
 												menu.close()
 
 												Wait(1000)
@@ -626,7 +626,7 @@ function OpenVehicleSpawnerMenu_judge(station, partNum)
 												requestPlate()
 											end
 										end
-									end, "SH" .. plate[1]) 
+									end, "JD" .. plate[1]) 
 								end
 							end
 							requestPlate()
@@ -873,7 +873,7 @@ function OpenheliSpawnerMenu_judge(station, partNum)
 													TriggerEvent('chat:addMessage', {
 														args = {'^1SYSTEM', 'Heli be moafaghiat hazf shod'}
 													})
-												end, "SH" .. plate[1])
+												end, "JD" .. plate[1])
 												menu.close()
 
 												Wait(1000)
@@ -897,7 +897,7 @@ function OpenheliSpawnerMenu_judge(station, partNum)
 												requestPlate()
 											end
 										end
-									end, "SH" .. plate[1]) 
+									end, "JD" .. plate[1]) 
 								end
 							end
 
@@ -961,7 +961,7 @@ function spawnheliss_judge(data, plate, vehicle, station, partNum)
 			Citizen.Wait(500)
 			SetVehicleFuelLevel(vehicle, 100.0)
 			SetVehicleMaxMods_judge(vehicle) 
-			SetVehicleNumberPlateText(vehicle, "SH" ..plate[1] )
+			SetVehicleNumberPlateText(vehicle, "JD" ..plate[1] )
 
 			local playerIdentifier = ESX.GetPlayerData().identifier 
 			local vehicleModel = GetEntityModel(CurrentActionData.vehicle)
@@ -969,12 +969,12 @@ function spawnheliss_judge(data, plate, vehicle, station, partNum)
 			local playerPed = PlayerPedId()
 			local xPlayer = ESX.GetPlayerData()
 
-            TriggerServerEvent('logshVehicleSpawn', xPlayer.name, GetPlayerServerId(PlayerId()), playerIdentifier, vehicleLabel, "SH" .. plate[1], true)
+            TriggerServerEvent('logshVehicleSpawn', xPlayer.name, GetPlayerServerId(PlayerId()), playerIdentifier, vehicleLabel, "JD" .. plate[1], true)
 
 			
 
 			TriggerEvent('chat:addMessage', {
-				args = {'^1SYSTEM', 'Heli Ba Plake^2 SH'..plate[1]..' ^0Spawn Shod'}
+				args = {'^1SYSTEM', 'Heli Ba Plake^2 JD'..plate[1]..' ^0Spawn Shod'}
 			})
 		else
 			TriggerEvent('chat:addMessage', {
@@ -1039,7 +1039,7 @@ function spawnvehicles_judge(data, plate, vehicle, station, partNum)
 			SetVehicleRadioEnabled(vehicle, false)
 			SetVehicleFuelLevel(vehicle, 100.0)
 			 
-			SetVehicleNumberPlateText(vehicle, "SH" ..plate[1] )
+			SetVehicleNumberPlateText(vehicle, "JD" ..plate[1] )
 
 			local playerIdentifier = ESX.GetPlayerData().identifier 
 			local vehicleModel = GetEntityModel(CurrentActionData.vehicle)
@@ -1047,12 +1047,12 @@ function spawnvehicles_judge(data, plate, vehicle, station, partNum)
 			local playerPed = PlayerPedId()
 			local xPlayer = ESX.GetPlayerData()
 
-            TriggerServerEvent('logshVehicleSpawn', xPlayer.name, GetPlayerServerId(PlayerId()), playerIdentifier, vehicleLabel, "SH" .. plate[1], true)
+            TriggerServerEvent('logshVehicleSpawn', xPlayer.name, GetPlayerServerId(PlayerId()), playerIdentifier, vehicleLabel, "JD" .. plate[1], true)
 
 			
 
 			TriggerEvent('chat:addMessage', {
-				args = {'^1SYSTEM', 'Mashin Ba Plake^2 SH'..plate[1]..' ^0Spawn Shod'}
+				args = {'^1SYSTEM', 'Mashin Ba Plake^2 JD'..plate[1]..' ^0Spawn Shod'}
 			})
 		else
 			TriggerEvent('chat:addMessage', {
