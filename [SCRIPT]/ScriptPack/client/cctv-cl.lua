@@ -57,7 +57,7 @@ RegisterCommand("cctv", function (source, args, rawCommand)
 	local xPlayer = ESX.GetPlayerData()
 	local job = xPlayer.job
 	local jobname = xPlayer.job.name
-	if job and (jobname == 'police' or jobname == 'food' or jobname == 'sheriff' or jobname == 'mt' or jobname == 'fbi' or jobname == 'cid' or jobname == 'cia' or jobname == 'marshal') then
+	if job and jobname == 'police' or jobname == 'food' then
 		TriggerEvent('cctv:camera', cam)
 	end
 
@@ -118,7 +118,7 @@ AddEventHandler("cctv:startcamera", function(camNumber)
 		SetCamCoord(cctvCam,x,y,z+1.2)						
 		-- SetCamRot(cctvCam, -15.0,0.0,h)
 		PushScaleformMovieFunction(scaleform, "SET_ALT_FOV_HEADING")
-		PushScaleformMovieFunctionParameterFloat(h)
+		PushScaleformMovieFunctionParameterFloat(GetEntityCoords(h).z)
 		PushScaleformMovieFunctionParameterFloat(1.0)
 		PushScaleformMovieFunctionParameterFloat(GetCamRot(cctvCam, 2).z)
 		PopScaleformMovieFunctionVoid()

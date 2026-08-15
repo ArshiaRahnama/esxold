@@ -14,7 +14,7 @@ Citizen.CreateThread(function ()
   PlayerData = ESX.GetPlayerData()
 end)
 
-local block = {["sheriff"] = true, ["police"] = true, ["ambulance"] = true, ["mt"] = true, ["fbi"] = true, ["cid"] = true, ["cia"] = true, ["marshal"] = true, ["judge"] = true, ["doa"] = true}
+local block = {["sheriff"] = true, ["police"] = true, ["ambulance"] = true, ["mt"] = true}
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)

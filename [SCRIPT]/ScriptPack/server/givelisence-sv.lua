@@ -12,11 +12,11 @@ RegisterCommand(
     function(source, args, user)
         local xPlayer = ESX.GetPlayerFromId(source)
 
-        if (xPlayer.job.name == "police" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "mt") and xPlayer.job.grade > 12 then
+        if xPlayer.job.name == "police" and xPlayer.job.grade > 12 then
             if args[1] then
                 if args[2] then
                     --if xPlayer.hasDivision("police") then
-					if (xPlayer.job.name == "police" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "mt") and xPlayer.job.grade > 12 then
+					if xPlayer.job.name == "police" and xPlayer.job.grade > 12 then
                         local target = tonumber(args[1])
                         if target ~= nil then
                             if GetPlayerName(target) then
@@ -161,7 +161,7 @@ RegisterCommand(
     function(source, args, user)
         local xPlayer = ESX.GetPlayerFromId(source)
 
-        if (xPlayer.job.name == "police" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "mt") and xPlayer.job.grade > 12 then
+        if xPlayer.job.name == "police" and xPlayer.job.grade > 12 then
             if args[1] then
                 if args[2] then
                     local target = tonumber(args[1])

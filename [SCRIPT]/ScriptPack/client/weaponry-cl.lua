@@ -31,11 +31,6 @@ local WhitelistJob = {
 	["sheriff"] = 'sheriff',
 	["mt"] = 'mt',
 	["fbi"] = 'fbi',
-	["cid"] = 'cid',
-	["cia"] = 'cia',
-	["marshal"] = 'marshal',
-	["judge"] = 'judge',
-	["doa"] = 'doa',
 }
 -- Script by Lyrad for LEFR
 

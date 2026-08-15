@@ -21,7 +21,7 @@ end)
 
 RegisterNetEvent('esx_dispatch:assignBadge')
 AddEventHandler('esx_dispatch:assignBadge',function(label)
-   if PlayerData.job.name == "police" or PlayerData.job.name == "ambulance" or PlayerData.job.name == "sheriff" or PlayerData.job.name == "mt" or PlayerData.job.name == "fbi" or PlayerData.job.name == "cid" or PlayerData.job.name == "cia" or PlayerData.job.name == "marshal" or PlayerData.job.name == "judge" or PlayerData.job.name == "doa" then
+   if PlayerData.job.name == "police" or PlayerData.job.name == "ambulance" then
         local id = PlayerId()
         TriggerServerEvent('esx_idoverhead:modifyLabel', id, label)
    end

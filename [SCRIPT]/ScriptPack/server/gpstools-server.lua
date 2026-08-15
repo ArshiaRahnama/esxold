@@ -51,12 +51,6 @@ local PoliceJobs = {
 	["police"] = true,
 	["sheriff"] = true,
 	["fbi"] = true,
-	["mt"] = true,
-	["cid"] = true,
-	["cia"] = true,
-	["marshal"] = true,
-	["judge"] = true,
-	["doa"] = true,
 }
 
 RegisterServerEvent("PoliceVehicleWeaponDeleter:askDropWeapon")

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Access Terminal</title>
+  <link rel="stylesheet" href="styles/fonts.css" />
+  <link rel="stylesheet" href="styles/style.css" />
+  <link rel="stylesheet" href="styles/quest.css" />
+  <link rel="stylesheet" href="styles/admin.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="window">
+
+      <div class="topbar">
+        <div class="tLeft">
+          <div class="leftRow">
+            <div class="avatarWrap"><div class="avatar"><i class="fa-solid fa-user"></i></div></div>
+            <div>
+              <div class="pname name_span">PlayerName</div>
+              <div class="pline"><i class="fa-solid fa-money-bill"></i> <span class="cash_span">-</span></div>
+              <div class="pline"><i class="fa-solid fa-landmark"></i> <span class="bank_span">-</span> &middot; <i class="fa-solid fa-coins"></i> <span class="coin_span">-</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tCenter">
+          <div class="lvBox">
+            <div class="lvTitle">LEVEL</div>
+            <div class="lvValue level-number">0</div>
+            <div class="lvXpRow">
+              <span class="xp-fraction">0/0</span>
+            </div>
+            <div class="xp-bar"><div class="xp-fill" style="width:0%"></div></div>
+          </div>
+        </div>
+
+        <div class="tRight">
+          <div class="rightBox">
+            <div class="badgeLine">
+              <span class="badgeTitle">JOB</span>
+              <span class="badgeValue job_span">-</span>
+            </div>
+            <div class="badgeLine">
+              <span class="badgeTitle">GANG</span>
+              <span class="badgeValue gang_span">-</span>
+            </div>
+          </div>
+          <button class="adminDuty" id="adminDuty">Off Duty</button>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active menu-item" data-tab="quests">
+          <i class="fa-solid fa-person-circle-question"></i> QUESTS
+        </button>
+        <button class="tab menu-item" id="admin" data-tab="dispatch">
+          <i class="fa-solid fa-user-shield"></i> DISPATCH
+        </button>
+      </div>
+
+      <div class="content">
+        <div class="panel quests" id="tab_quests">
+          <div class="quests-grid"></div>
+        </div>
+
+        <div class="panel adminMenu hidden" id="tab_dispatch">
+          <div class="players-grid"></div>
+        </div>
+      </div>
+
+      <div class="hint">Press ESC to close</div>
+    </div>
+  </div>
+
+  <script src="scripts/script.js"></script>
+  <script src="scripts/personal.js"></script>
+  <script src="scripts/quest.js"></script>
+  <script src="scripts/admin.js"></script>
+</body>
+</html>

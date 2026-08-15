@@ -198,7 +198,7 @@ Citizen.CreateThread(function()
 				end
 
 				if IsControlJustPressed(0, toggle_vision) then
-					if PlayerData.job.name == "police" or PlayerData.job.name == "sheriff" or PlayerData.job.name == "mt" or PlayerData.job.name == "fbi" or PlayerData.job.name == "cid" or PlayerData.job.name == "cia" or PlayerData.job.name == "marshal" or PlayerData.job.name == "judge" or PlayerData.job.name == "doa" then
+					if PlayerData.job.name == "police" or PlayerData.job.name == "sheriff" or PlayerData.job.name == "mt" or PlayerData.job.name == "fbi" then
 						PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", false)
 						ChangeVision()
 					end

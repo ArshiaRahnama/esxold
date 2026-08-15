@@ -847,54 +847,6 @@ AddEventHandler("lock",function()
 		}
 		name = "sheriff"
 
-	elseif PlayerData.job.name == "fbi" or PlayerData.job.name == "mt" or PlayerData.job.name == "marshal" then
-		-- Same fleet as police/sheriff (matches Config.Garage in esx_society for these jobs)
-		vehicles = {
-			2077947032,  -- b2chal
-			1297025416,  -- b211vic
-			1950839834,  -- b212caprice
-			-1410990457, -- b214charger
-			-452605565,  -- b216explorer
-			181296288,   -- b218charger
-			306250322,   -- b218tau
-			976957217,   -- b219tahoe
-			1960197401,  -- fibm5
-			941471002,   -- polnspeedo
-			-888725296,  -- POLKCH
-			164236479,   -- swat_dirtbike
-		}
-		name = PlayerData.job.name
-
-	elseif PlayerData.job.name == "cid" then
-		vehicles = {
-			1297025416, -- b211vic
-			1950839834, -- b212caprice
-			1960197401, -- fibm5
-			941471002,  -- polnspeedo
-		}
-		name = "cid"
-
-	elseif PlayerData.job.name == "cia" then
-		vehicles = {
-			1960197401, -- fibm5
-			1950839834, -- b212caprice
-			941471002,  -- polnspeedo
-		}
-		name = "cia"
-
-	elseif PlayerData.job.name == "doa" then
-		vehicles = {
-			1950839834, -- b212caprice
-			941471002,  -- polnspeedo
-		}
-		name = "doa"
-
-	elseif PlayerData.job.name == "judge" then
-		vehicles = {
-			1960197401, -- fibm5
-		}
-		name = "judge"
-
 	elseif PlayerData.job.name == "ambulance" then
 
 		vehicles = {

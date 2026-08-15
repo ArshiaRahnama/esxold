@@ -1365,8 +1365,7 @@ CreateThread(function()
         local playerPed = PlayerPedId()
         local playerCoords = GetEntityCoords(playerPed)
 
-        -- ChopShop Marker (disabled — see Config_Antipg.ChopShopEnabled)
-        if Config_Antipg.ChopShopEnabled then
+        -- ChopShop Marker
         local chopShopDistance = #(playerCoords - Config_Antipg.Marker.Position)
         if chopShopDistance < 20 then
             DrawMarker(
@@ -1449,7 +1448,6 @@ CreateThread(function()
                 end
             end
         end
-        end -- Config_Antipg.ChopShopEnabled
 
         -- Engine Install Marker
         local installDistance = #(playerCoords - Config_Antipg.InstallLocation)
@@ -1598,7 +1596,6 @@ function Draw3DText_Antipg(x, y, z, text)
 end
 
 
-if Config_Antipg.ChopShopEnabled then
 CreateThread(function()
     local blip = AddBlipForCoord(Config_Antipg.Marker.Position.x, Config_Antipg.Marker.Position.y, Config_Antipg.Marker.Position.z)
 
@@ -1612,7 +1609,6 @@ CreateThread(function()
     AddTextComponentSubstringPlayerName("Chop Shop")  -- اسم blip که نمایش داده می‌شود
     EndTextCommandSetBlipName(blip)
 end)
-end -- Config_Antipg.ChopShopEnabled
 
 
 
@@ -2089,14 +2085,14 @@ end)
 -- ====================================================================
 -- [notbad-rockstar-editor] client
 -- ====================================================================
-TriggerEvent('chat:addSuggestion', '/record', 'Recording options', {
+TriggerEvent('chat:addSuggestion', '/rsrecord', 'Recording options', {
     { name = "type", help = "start/stop/discard" }
 })
 
 -- TriggerEvent('chat:addSuggestion', '/picture', 'Take a picture')
 -- TriggerEvent('chat:addSuggestion', '/rockstareditor', 'Opens rockstar editor')
 
-RegisterCommand('record', function(source, args, rawCommand)
+RegisterCommand('rsrecord', function(source, args, rawCommand)
 	local type = args[1]
 	if type == 'start' then StartRecording(1) end
 	if type == 'stop' then StopRecordingAndSaveClip() end
@@ -2251,7 +2247,7 @@ Citizen.CreateThread(function()
 end)
 
 -- فرمان برای نشان دادن badge
-RegisterCommand('badge', function()
+RegisterCommand('showbadge', function()
     local currentTime = GetGameTimer() -- زمان کنونی
     local cooldownTime = 10000 -- 10 ثانیه به میلی‌ثانیه
 
@@ -3029,13 +3025,7 @@ function GetClosestVehicleTire(vehicle)
 	return closestTire
 end
 
-function loadAnimDict(dict)
-	while (not HasAnimDictLoaded(dict)) do
-		RequestAnimDict(dict)
-		Citizen.Wait(5)
-	end
-end
-
+-- (removed duplicate global loadAnimDict - dead code, the local version above already handles every call in this file, and this global copy collided with ScriptPack's own global loadAnimDict)
 function Draw3DText_ItemMC(x, y, z, text)
     local onScreen,_x,_y=World3dToScreen2d(x,y,z)
     local px,py,pz=table.unpack(GetGameplayCamCoords())
@@ -3773,7 +3763,7 @@ function GiveBoxingGloves()
     RemoveBoxingGloves()
     
     
-    local gloveModel = 'prop_boxing_glove_01'
+    local gloveModel = `prop_boxing_glove_01`
     
 
     RequestModel(gloveModel)

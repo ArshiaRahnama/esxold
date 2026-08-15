@@ -42,7 +42,7 @@ function checkHolsters()
 			--local Petrol = (GetSelectedPedWeapon(PlayerPedId()) == GetHashKey("weapon_petrolcan"))
 			if inPaintball ~= true then
 				--if Petrol == true then 
-					if PlayerData.job.name == 'police' or PlayerData.job.name == 'sheriff' or PlayerData.job.name == 'mt' or PlayerData.job.name == 'fbi' or PlayerData.job.name == 'cid' or PlayerData.job.name == 'cia' or PlayerData.job.name == 'marshal' or PlayerData.job.name == 'judge' or PlayerData.job.name == 'doa' then
+					if PlayerData.job.name == 'police' or PlayerData.job.name == 'sheriff' or PlayerData.job.name == 'mt' then
 						if not IsPedInAnyVehicle(ped, false) then
 							if GetVehiclePedIsTryingToEnter (ped) == 0 and IsPedInParachuteFreeFall(ped) == false then
 								local weapon = CheckWeapon(ped)
