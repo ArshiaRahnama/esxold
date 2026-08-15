@@ -25,3 +25,21 @@ function getGroundZ(x, y, z)
 		local result, groundZ = GetGroundZFor_3dCoord(x + 0.0, y + 0.0, z + 0.0, Citizen.ReturnResultAnyway())
 		return groundZ
 end
+
+-- Simple onscreen-keyboard text input helper, used by the new admin tools
+-- (kick/ban reasons, plates, coordinates, job names, amounts...). WarMenu
+-- itself has no text-input widget, so this fills that gap.
+function GetUserInput(windowTitle, defaultText, maxLength)
+    defaultText = defaultText or ""
+    maxLength = maxLength or 40
+    DisplayOnscreenKeyboard(1, "FMMC_MPM_NA", "", defaultText, "", "", "", maxLength)
+    while true do
+        Citizen.Wait(0)
+        local status = UpdateOnscreenKeyboard()
+        if status == 1 then
+            return GetOnscreenKeyboardResult()
+        elseif status == 2 or status == 3 then
+            return nil -- cancelled
+        end
+    end
+end

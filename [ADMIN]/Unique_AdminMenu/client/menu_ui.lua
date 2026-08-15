@@ -111,6 +111,10 @@ function AdminMenu()
     WarMenu.MenuButton('Spectate Menu', 'spectate')
     WarMenu.MenuButton('Teleport to player', 'teleport_player')
     WarMenu.MenuButton('Player Menu', 'player_menu')
+    WarMenu.MenuButton('Player Tools', 'select_target')
+    WarMenu.MenuButton('Vehicle Tools', 'vehicle_tools')
+    WarMenu.MenuButton('World Tools', 'world_tools')
+    WarMenu.MenuButton('Server Tools', 'server_tools')
 
     WarMenu.Display()
   -- ---------------------------------------------------------------------

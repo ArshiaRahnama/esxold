@@ -17,7 +17,8 @@ server_exports {
     'SetJob',
     'SetGang',
     'SetMoney',
-    'SetBank'
+    'SetBank',
+    'GetReports'
 }
 
 client_scripts{

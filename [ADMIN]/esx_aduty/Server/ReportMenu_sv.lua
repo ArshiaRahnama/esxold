@@ -56,8 +56,17 @@ RegisterCommand('ar', function(source, args)
 			end
 			local Targetid = tonumber(reports[args[1]].owner.id)
 			local Target = ESX.GetPlayerFromId(Targetid)
-			if Target then 
-				local Distance = GetDistanceBetweenCoords(Target.coords.x, Target.coords.y, Target.coords.z, xPlayer.coordsx, xPlayer.coordsy, xPlayer.coordsz, false)
+			if Target and Target.coords and xPlayer.coords then
+				-- FIX: GetDistanceBetweenCoords is a CLIENT-only native and
+				-- doesn't exist server-side - calling it here threw
+				-- "attempt to call a nil value" and crashed every /ar.
+				-- Also fixed xPlayer.coordsx/coordsy/coordsz (not real
+				-- fields - the actual table is xPlayer.coords.x/.y/.z,
+				-- same as Target above) with a plain Euclidean distance.
+				local dx = Target.coords.x - xPlayer.coords.x
+				local dy = Target.coords.y - xPlayer.coords.y
+				local dz = Target.coords.z - xPlayer.coords.z
+				local Distance = math.sqrt(dx * dx + dy * dy + dz * dz)
 				if Distance <= 10 then 
 					TriggerClientEvent('chatMessage', source, "[ Report ] : ", {255, 0, 0}, "Shoma Bayad Spect Bashid Ta Betavanid Accept Konid!")
 					return
@@ -223,3 +232,10 @@ function canRespond(identifier)
 
 	return true
 end
+
+-- Bridge for Unique_AdminMenu's Report Queue panel: `reports` above is a
+-- file-local table with no other way to read it from outside this file.
+-- This export doesn't change any existing behavior.
+exports('GetReports', function()
+	return reports
+end)
