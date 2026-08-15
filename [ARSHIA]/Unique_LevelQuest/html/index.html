@@ -17,15 +17,23 @@
     <div class="window">
 
       <div class="topbar">
-        <!-- first in source = rightmost in RTL -->
-        <div class="headerName">
-          <div class="leftRow">
-            <div>
-              <div class="pname name_span">PlayerName</div>
-              <div class="pline"><i class="fa-solid fa-money-bill"></i> <span class="cash_span">-</span></div>
-              <div class="pline"><i class="fa-solid fa-landmark"></i> <span class="bank_span">-</span> &middot; <i class="fa-solid fa-coins"></i> <span class="coin_span">-</span></div>
+        <!-- explicit physical order (topbar forces direction:ltr) -->
+        <div class="headerBadges">
+          <div class="rightBox">
+            <div class="badgeLine">
+              <i class="fa-solid fa-briefcase badgeIcon"></i>
+              <div class="badgeText">
+                <span class="badgeTitle">JOB</span>
+                <span class="badgeValue job_span">-</span>
+              </div>
             </div>
-            <div class="avatarWrap"><div class="avatar"><i class="fa-solid fa-user"></i></div></div>
+            <div class="badgeLine">
+              <i class="fa-solid fa-people-group badgeIcon"></i>
+              <div class="badgeText">
+                <span class="badgeTitle">GANG</span>
+                <span class="badgeValue gang_span">-</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -40,17 +48,14 @@
           </div>
         </div>
 
-        <!-- last in source = leftmost in RTL -->
-        <div class="headerBadges">
-          <div class="rightBox">
-            <div class="badgeLine">
-              <span class="badgeTitle">JOB</span>
-              <span class="badgeValue job_span">-</span>
+        <div class="headerName">
+          <div class="leftRow">
+            <div class="pnameBlock">
+              <div class="pname name_span">PlayerName</div>
+              <div class="pline"><i class="fa-solid fa-money-bill"></i> <span class="cash_span">-</span></div>
+              <div class="pline"><i class="fa-solid fa-landmark"></i> <span class="bank_span">-</span> &middot; <i class="fa-solid fa-coins"></i> <span class="coin_span">-</span></div>
             </div>
-            <div class="badgeLine">
-              <span class="badgeTitle">GANG</span>
-              <span class="badgeValue gang_span">-</span>
-            </div>
+            <div class="avatarWrap"><div class="avatar"><i class="fa-solid fa-user"></i></div></div>
           </div>
         </div>
       </div>

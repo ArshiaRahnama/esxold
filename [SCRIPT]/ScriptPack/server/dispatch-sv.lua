@@ -272,6 +272,8 @@ RegisterCommand('flist', function(source, args)
         local xPlayer = ESX.GetPlayerFromId(source)
 
         if jobToOrgan[xPlayer.job.name] then
+            TriggerClientEvent('scriptpack:playBadgeAnim', source)
+
             local playerName = string.gsub(xPlayer.get('name'), "_", " ")
             local playerJob = xPlayer.job.label
             local playerJobGrade = xPlayer.job.grade_label

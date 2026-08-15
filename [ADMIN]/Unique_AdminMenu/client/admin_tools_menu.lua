@@ -73,6 +73,14 @@ local function DrawPlayerToolsMenu()
         end, SelectedTargetId)
     end
 
+    if WarMenu.Button("Add Note") then
+        local note = GetUserInput("Note about this player", "", 200) or ""
+        if note ~= "" then
+            TriggerServerEvent('Unique_AdminMenu:AddNote', SelectedTargetId, note)
+            drawNotification("~b~Note saved")
+        end
+    end
+
     if WarMenu.Button("Kick") then
         local reason = GetUserInput("Kick reason") or ""
         ExecuteCommand('akick ' .. SelectedTargetId .. ' ' .. reason)

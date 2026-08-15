@@ -51,9 +51,12 @@ end
 
 -- ============================================================================
 -- AUDIT LOG - every admin action (toggle, teleport, spectate, slap, area)
--- goes through here so there's always a paper trail.
+-- goes through here so there's always a paper trail. When a target player
+-- is known, it's also persisted to `admin_action_log` so it can be pulled
+-- up later as that player's Action History (see admin_tools.lua's
+-- InspectPlayer callback).
 -- ============================================================================
-function LogAdminAction(source, action, details)
+function LogAdminAction(source, action, details, targetIdentifier, targetName)
     local name = GetPlayerName(source) or ('Unknown (' .. tostring(source) .. ')')
     local line = ('[Unique_AdminMenu] %s (id:%s) -> %s%s'):format(
         name, tostring(source), action, details and (' | ' .. details) or ''
@@ -72,6 +75,22 @@ function LogAdminAction(source, action, details)
         PerformHttpRequest(Config.DiscordWebhook, function() end, 'POST',
             json.encode({ username = "Admin Log", embeds = embeds }),
             { ['Content-Type'] = 'application/json' })
+    end
+
+    if targetIdentifier then
+        local xPlayer = ESX.GetPlayerFromId(source)
+        MySQL.Async.execute(
+            "INSERT INTO `admin_action_log` (`admin_identifier`, `admin_name`, `target_identifier`, `target_name`, `action`, `details`, `created_at`) VALUES (@adminidentifier, @adminname, @targetidentifier, @targetname, @action, @details, @createdat)",
+            {
+                ['@adminidentifier'] = xPlayer and xPlayer.identifier or nil,
+                ['@adminname'] = name,
+                ['@targetidentifier'] = targetIdentifier,
+                ['@targetname'] = targetName,
+                ['@action'] = action,
+                ['@details'] = details,
+                ['@createdat'] = os.date('%Y-%m-%d %H:%M:%S'),
+            }
+        )
     end
 end
 

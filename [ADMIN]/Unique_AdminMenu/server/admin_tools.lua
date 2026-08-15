@@ -24,7 +24,7 @@ AddEventHandler('Unique_AdminMenu:FreezePlayer', function(targetId)
 
     FrozenPlayers[targetId] = not FrozenPlayers[targetId]
     TriggerClientEvent('Unique_AdminMenu:ApplyFreeze', targetId, FrozenPlayers[targetId])
-    LogAdminAction(source, "freeze", ("target: %s (id:%s) -> %s"):format(GetPlayerName(targetId), targetId, tostring(FrozenPlayers[targetId])))
+    LogAdminAction(source, "freeze", ("target: %s (id:%s) -> %s"):format(GetPlayerName(targetId), targetId, tostring(FrozenPlayers[targetId])), ESX.GetPlayerFromId(targetId).identifier, GetPlayerName(targetId))
 end)
 
 -- Heal / Revive -----------------------------------------------------------
@@ -36,7 +36,7 @@ AddEventHandler('Unique_AdminMenu:HealPlayer', function(targetId)
     if not targetId or not ESX.GetPlayerFromId(targetId) then return end
 
     TriggerClientEvent('Unique_AdminMenu:ApplyHeal', targetId)
-    LogAdminAction(source, "heal", ("target: %s (id:%s)"):format(GetPlayerName(targetId), targetId))
+    LogAdminAction(source, "heal", ("target: %s (id:%s)"):format(GetPlayerName(targetId), targetId), ESX.GetPlayerFromId(targetId).identifier, GetPlayerName(targetId))
 end)
 
 RegisterServerEvent('Unique_AdminMenu:RevivePlayer')
@@ -47,7 +47,7 @@ AddEventHandler('Unique_AdminMenu:RevivePlayer', function(targetId)
     if not targetId or not ESX.GetPlayerFromId(targetId) then return end
 
     TriggerClientEvent('Unique_AdminMenu:ApplyRevive', targetId)
-    LogAdminAction(source, "revive", ("target: %s (id:%s)"):format(GetPlayerName(targetId), targetId))
+    LogAdminAction(source, "revive", ("target: %s (id:%s)"):format(GetPlayerName(targetId), targetId), ESX.GetPlayerFromId(targetId).identifier, GetPlayerName(targetId))
 end)
 
 -- Kick with reason ----------------------------------------------------------
@@ -61,7 +61,7 @@ RegisterCommand('akick', function(source, args)
     local reason = table.concat(args, ' ', 2)
     if reason == '' then reason = 'No reason specified' end
 
-    LogAdminAction(source, "kick", ("target: %s (id:%s) | reason: %s"):format(GetPlayerName(targetId), targetId, reason))
+    LogAdminAction(source, "kick", ("target: %s (id:%s) | reason: %s"):format(GetPlayerName(targetId), targetId, reason), Target.identifier, GetPlayerName(targetId))
     DropPlayer(targetId, ("You have been kicked by an admin.\nReason: %s"):format(reason))
 end, false)
 
@@ -123,7 +123,7 @@ RegisterCommand('aban', function(source, args)
         }
     )
 
-    LogAdminAction(source, "ban", ("target: %s | %s | reason: %s"):format(targetName, permanent == 1 and "PERMANENT" or (minutes .. " minutes"), reason))
+    LogAdminAction(source, "ban", ("target: %s | %s | reason: %s"):format(targetName, permanent == 1 and "PERMANENT" or (minutes .. " minutes"), reason), identifier, targetName)
     DropPlayer(targetId, permanent == 1
         and ("You have been permanently banned.\nReason: %s"):format(reason)
         or ("You have been banned for %s minutes.\nReason: %s"):format(minutes, reason))
@@ -161,10 +161,10 @@ RegisterCommand('awarn', function(source, args)
                 function(count)
                     count = tonumber(count) or 0
                     TriggerClientEvent('esx:showNotification', targetId, ("~y~You were warned by an admin (%s/%s): %s"):format(count, Config_AutoActionAtWarnCount, reason))
-                    LogAdminAction(source, "warn", ("target: %s | reason: %s | total warnings: %s"):format(GetPlayerName(targetId), reason, count))
+                    LogAdminAction(source, "warn", ("target: %s | reason: %s | total warnings: %s"):format(GetPlayerName(targetId), reason, count), Target.identifier, GetPlayerName(targetId))
 
                     if count >= Config_AutoActionAtWarnCount then
-                        LogAdminAction(source, "auto-kick (warn threshold reached)", ("target: %s reached %s warnings"):format(GetPlayerName(targetId), count))
+                        LogAdminAction(source, "auto-kick (warn threshold reached)", ("target: %s reached %s warnings"):format(GetPlayerName(targetId), count), Target.identifier, GetPlayerName(targetId))
                         DropPlayer(targetId, ("You have been kicked automatically after reaching %s warnings."):format(count))
                     end
                 end
@@ -189,7 +189,7 @@ RegisterCommand('asetjob', function(source, args)
     end
 
     Target.setJob(job, grade)
-    LogAdminAction(source, "setjob", ("target: %s | job: %s grade: %s"):format(GetPlayerName(targetId), job, grade))
+    LogAdminAction(source, "setjob", ("target: %s | job: %s grade: %s"):format(GetPlayerName(targetId), job, grade), Target.identifier, GetPlayerName(targetId))
 end, false)
 
 -- Give / Remove Money -----------------------------------------------------
@@ -209,7 +209,7 @@ RegisterCommand('agivemoney', function(source, args)
     if not Target then return end
 
     if account == 'money' then Target.addMoney(amount) else Target.addBank(amount) end
-    LogAdminAction(source, "give-money", ("target: %s | %s: +%s | reason: %s"):format(GetPlayerName(targetId), account, amount, reason))
+    LogAdminAction(source, "give-money", ("target: %s | %s: +%s | reason: %s"):format(GetPlayerName(targetId), account, amount, reason), Target.identifier, GetPlayerName(targetId))
 end, false)
 
 RegisterCommand('aremovemoney', function(source, args)
@@ -227,17 +227,19 @@ RegisterCommand('aremovemoney', function(source, args)
     if not Target then return end
 
     if account == 'money' then Target.removeMoney(amount) else Target.removeBank(amount) end
-    LogAdminAction(source, "remove-money", ("target: %s | %s: -%s | reason: %s"):format(GetPlayerName(targetId), account, amount, reason))
+    LogAdminAction(source, "remove-money", ("target: %s | %s: -%s | reason: %s"):format(GetPlayerName(targetId), account, amount, reason), Target.identifier, GetPlayerName(targetId))
 end, false)
 
 -- Player Inspect Panel ----------------------------------------------------
+-- Now also returns: recent Action History (from admin_action_log), any
+-- Player Notes, and other identifiers seen on the same IP (possible alts).
 ESX.RegisterServerCallback('Unique_AdminMenu:InspectPlayer', function(source, cb, targetId)
     if not IsOnDutyAdmin(source) then cb(nil) return end
     targetId = tonumber(targetId)
     local Target = ESX.GetPlayerFromId(targetId)
     if not Target then cb(nil) return end
 
-    cb({
+    local base = {
         source = targetId,
         name = GetPlayerName(targetId),
         identifier = Target.identifier,
@@ -247,7 +249,105 @@ ESX.RegisterServerCallback('Unique_AdminMenu:InspectPlayer', function(source, cb
         inventory = Target.inventory,
         permission_level = Target.permission_level,
         ping = GetPlayerPing(targetId),
-    })
+        history = {},
+        notes = {},
+        linkedAccounts = {},
+    }
+
+    MySQL.Async.fetchAll(
+        "SELECT `admin_name`, `action`, `details`, `created_at` FROM `admin_action_log` WHERE `target_identifier` = @identifier ORDER BY `id` DESC LIMIT 25",
+        { ['@identifier'] = Target.identifier },
+        function(history)
+            base.history = history or {}
+            MySQL.Async.fetchAll(
+                "SELECT `note`, `admin_name`, `created_at` FROM `admin_player_notes` WHERE `identifier` = @identifier ORDER BY `id` DESC",
+                { ['@identifier'] = Target.identifier },
+                function(notes)
+                    base.notes = notes or {}
+                    MySQL.Async.fetchAll(
+                        "SELECT DISTINCT `identifier`, `playername` FROM `admin_ip_log` WHERE `ip` IN (SELECT `ip` FROM `admin_ip_log` WHERE `identifier` = @identifier) AND `identifier` != @identifier",
+                        { ['@identifier'] = Target.identifier },
+                        function(linked)
+                            base.linkedAccounts = linked or {}
+                            cb(base)
+                        end
+                    )
+                end
+            )
+        end
+    )
+end)
+
+-- Player Notes ------------------------------------------------------------
+-- Persistent, shared between admins (not tied to who wrote it - anyone
+-- on-duty can add one, and everyone sees it in the Inspect panel).
+RegisterServerEvent('Unique_AdminMenu:AddNote')
+AddEventHandler('Unique_AdminMenu:AddNote', function(targetId, note)
+    local source = source
+    if not IsOnDutyAdmin(source) then return end
+    targetId = tonumber(targetId)
+    local Target = ESX.GetPlayerFromId(targetId)
+    if not Target or type(note) ~= 'string' or note == '' then return end
+    note = note:sub(1, 500)
+
+    MySQL.Async.execute(
+        "INSERT INTO `admin_player_notes` (`identifier`, `note`, `admin_name`, `created_at`) VALUES (@identifier, @note, @adminname, @createdat)",
+        {
+            ['@identifier'] = Target.identifier,
+            ['@note'] = note,
+            ['@adminname'] = GetPlayerName(source),
+            ['@createdat'] = os.date('%Y-%m-%d %H:%M:%S'),
+        }
+    )
+    LogAdminAction(source, "add-note", ("target: %s | note: %s"):format(GetPlayerName(targetId), note), Target.identifier, GetPlayerName(targetId))
+end)
+
+-- ============================================================================
+-- MULTI-ACCOUNT DETECTOR
+-- Every time a player finishes loading, their (identifier, IP) pair is
+-- logged. If any OTHER identifier has ever logged in from that same IP,
+-- every on-duty admin gets a chat warning right away.
+-- ============================================================================
+AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
+    local ip = GetPlayerEndpoint(playerId)
+    if not ip or ip == '' then return end
+
+    local license = GetPlayerIdentifierByType(playerId, 'license') or 'no info'
+    local discord = GetPlayerIdentifierByType(playerId, 'discord') or 'no info'
+    local playername = GetPlayerName(playerId)
+
+    MySQL.Async.execute(
+        "INSERT INTO `admin_ip_log` (`identifier`, `license`, `discord`, `ip`, `playername`, `last_seen`) VALUES (@identifier, @license, @discord, @ip, @playername, @lastseen) ON DUPLICATE KEY UPDATE `playername` = @playername, `last_seen` = @lastseen",
+        {
+            ['@identifier'] = xPlayer.identifier,
+            ['@license'] = license,
+            ['@discord'] = discord,
+            ['@ip'] = ip,
+            ['@playername'] = playername,
+            ['@lastseen'] = os.date('%Y-%m-%d %H:%M:%S'),
+        }
+    )
+
+    MySQL.Async.fetchAll(
+        "SELECT DISTINCT `identifier`, `playername` FROM `admin_ip_log` WHERE `ip` = @ip AND `identifier` != @identifier",
+        { ['@ip'] = ip, ['@identifier'] = xPlayer.identifier },
+        function(others)
+            if others and #others > 0 then
+                local names = {}
+                for _, row in ipairs(others) do
+                    names[#names + 1] = row.playername or row.identifier
+                end
+                local msg = ("[Multi-Account] %s just connected from the same IP as: %s"):format(playername, table.concat(names, ', '))
+                print("[Unique_AdminMenu] " .. msg)
+
+                for _, adminId in ipairs(ESX.GetPlayers()) do
+                    if IsOnDutyAdmin(adminId) then
+                        TriggerClientEvent('chatMessage', adminId, "[Multi-Account]", { 255, 165, 0 }, msg)
+                    end
+                end
+            end
+        end
+    )
 end)
 
 -- ============================================================================
@@ -284,7 +384,7 @@ AddEventHandler('Unique_AdminMenu:ImpoundTarget', function(targetId)
     if not targetId or not ESX.GetPlayerFromId(targetId) then return end
 
     TriggerClientEvent('Unique_AdminMenu:ApplyImpound', targetId)
-    LogAdminAction(source, "impound", ("target: %s (id:%s)"):format(GetPlayerName(targetId), targetId))
+    LogAdminAction(source, "impound", ("target: %s (id:%s)"):format(GetPlayerName(targetId), targetId), ESX.GetPlayerFromId(targetId).identifier, GetPlayerName(targetId))
 end)
 
 -- ============================================================================

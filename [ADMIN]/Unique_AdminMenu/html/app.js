@@ -55,9 +55,29 @@ function renderInspect(data) {
     ['Ping', data.ping ?? 'n/a'],
     ['Inventory Items', data.inventory ? data.inventory.length : 'n/a'],
   ];
-  document.getElementById('panelBody').innerHTML = rows.map(([k, v]) =>
+
+  let html = rows.map(([k, v]) =>
     `<div class="infoRow"><span>${k}</span><span>${v}</span></div>`
   ).join('');
+
+  if (data.linkedAccounts && data.linkedAccounts.length) {
+    html += `<div class="sectionTitle sectionWarn">⚠ Possible Alt Accounts (${data.linkedAccounts.length})</div>`;
+    html += data.linkedAccounts.map(a =>
+      `<div class="infoRow"><span>${escapeHtml(a.playername || 'Unknown')}</span><span>${escapeHtml(a.identifier)}</span></div>`
+    ).join('');
+  }
+
+  html += `<div class="sectionTitle">Notes (${(data.notes || []).length})</div>`;
+  html += (data.notes && data.notes.length)
+    ? data.notes.map(n => `<div class="noteLine">"${escapeHtml(n.note)}" <span class="rMeta">- ${escapeHtml(n.admin_name)}, ${escapeHtml(n.created_at)}</span></div>`).join('')
+    : `<div class="rMeta">No notes yet</div>`;
+
+  html += `<div class="sectionTitle">Recent Action History (${(data.history || []).length})</div>`;
+  html += (data.history && data.history.length)
+    ? data.history.map(h => `<div class="logLine"><span class="who">${escapeHtml(h.action)}</span><span class="time">${escapeHtml(h.created_at)}</span><br>${escapeHtml(h.details || '')} <span class="rMeta">- by ${escapeHtml(h.admin_name)}</span></div>`).join('')
+    : `<div class="rMeta">No prior actions logged</div>`;
+
+  document.getElementById('panelBody').innerHTML = html;
 }
 
 function renderChatLog(log) {

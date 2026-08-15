@@ -272,7 +272,17 @@ AddEventHandler('onResourceStop', function(resourceName)
     TriggerScreenblurFadeOut(0.1)
 end)
 
+-- Debounce guard: if the F2 command somehow fires twice within one
+-- game tick or two (keyboard/driver double-fire, or two overlapping
+-- key bindings), the second call would immediately undo the first --
+-- open then instantly close again. RegisterCommand itself has no
+-- built-in protection against that, so this adds one explicitly.
+local lastToggleAt = 0
 RegisterCommand('inventory_toggle', function()
+    local now = GetGameTimer()
+    if now - lastToggleAt < 250 then return end
+    lastToggleAt = now
+
     if isOpen or secondActive then
         closeInventory()
     else

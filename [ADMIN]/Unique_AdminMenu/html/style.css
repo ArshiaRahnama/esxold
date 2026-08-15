@@ -176,6 +176,23 @@ html, body { width: 100%; height: 100%; background: transparent; overflow: hidde
 .infoRow span:first-child { color: var(--text-dim); }
 .infoRow span:last-child { font-weight: 600; }
 
+.sectionTitle {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(201, 162, 75, 0.25);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.sectionTitle.sectionWarn { color: var(--danger); }
+.noteLine {
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-style: italic;
+}
+
 .logLine { padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
 .logLine .who { color: var(--accent); font-weight: 600; }
 .logLine .time { color: var(--text-dim); font-size: 11px; margin-left: 6px; }
