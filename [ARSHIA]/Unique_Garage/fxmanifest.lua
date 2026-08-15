@@ -35,8 +35,7 @@ files {
 }
 
 dependencies {
-  'ox_lib',
-  'ox_target'
+  'ox_lib'
 }
 
 -- escrow_ignore { 'Customize.lua' }

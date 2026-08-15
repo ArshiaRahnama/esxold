@@ -50,11 +50,8 @@ Citizen.CreateThread(function()
 end)
 
 -- Real ground pad prop at every park meter (like GTA Online's vehicle warehouse call-in pad),
--- with a floating "Parking Meter" label, and hold-ALT to park/retrieve instead of pressing E.
-RegisterKeyMapping('+uniquegarage_parkhold', 'Hold to Park/Retrieve at a Parking Meter', 'keyboard', 'LALT')
-RegisterCommand('+uniquegarage_parkhold', function() holdingParkKey = true end, false)
-RegisterCommand('-uniquegarage_parkhold', function() holdingParkKey = false end, false)
-
+-- with a floating "Parking Meter" label. Press E to park/retrieve — the fill/progress
+-- animation (ox_lib progressBar) plays via SimpleProgressBar once you do.
 Citizen.CreateThread(function()
     while ESX == nil do Wait(10) end
 
@@ -70,30 +67,11 @@ Citizen.CreateThread(function()
             FreezeEntityPosition(pad, true)
             SetEntityAsMissionEntity(pad, true, true)
         end
-
-        exports.ox_target:addBoxZone({
-            coords = vector3(location.x, location.y, location.z),
-            size = vec3(2.0, 2.0, 3.0),
-            rotation = location.w,
-            debug = false,
-            options = {
-                {
-                    icon = 'fa-solid fa-truck-ramp-box',
-                    label = 'Enghal Mashin be In Parking ($' .. Customize.ParkTransferPrice .. ')',
-                    distance = 2.5,
-                    onSelect = function()
-                        RequestVehicleTransfer(i)
-                    end
-                }
-            }
-        })
     end
 end)
 
--- Hold-ALT to park/retrieve at the pad (RP-style, instead of an instant E-press).
+-- Press E at the pad to park/retrieve.
 Citizen.CreateThread(function()
-    local HOLD_TIME = 1500 -- ms
-
     while true do
         local sleep = 500
         local ped = PlayerPedId()
@@ -103,18 +81,11 @@ Citizen.CreateThread(function()
             local dist = #(pedCoords - vector3(location.x, location.y, location.z))
             if dist <= 2.5 then
                 sleep = 0
-                ParkMeter_Draw3DText(location.x, location.y, location.z + 1.2, "~b~Parking Meter~n~~w~Negah Darid ~y~ALT ~w~Baraye Park/Baziabi")
+                ParkMeter_Draw3DText(location.x, location.y, location.z + 1.2, "~b~Parking Meter")
+                ShowHelpNotification("~INPUT_CONTEXT~ Park / Baziabi Mashin")
 
-                if holdingParkKey then
-                    local held = 0
-                    while holdingParkKey and held < HOLD_TIME do
-                        Wait(0)
-                        held = held + GetFrameTime() * 1000
-                        DrawMarker(2, location.x, location.y, location.z + 1.4, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25, 0.25, 0.25, 80, 200, 255, 200, false, false, false, true, false, false, false)
-                    end
-                    if held >= HOLD_TIME then
-                        HandleParkingOrRetrieve(i)
-                    end
+                if IsControlJustReleased(0, 38) then -- E
+                    HandleParkingOrRetrieve(i)
                 end
             end
         end
@@ -219,16 +190,6 @@ function ShowFloatingHelpNotification(msg, coords)
     SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
     BeginTextCommandDisplayHelp('floatingHelp')
     EndTextCommandDisplayHelp(2, false, false, -1)
-end
-
-function RequestVehicleTransfer(targetIndex)
-    local input = lib.inputDialog('Enghal Mashin', {
-        {type = 'input', label = 'Pelake Mashin', description = 'Pelake mashini ke mikhay be in parking enghal bedi', required = true}
-    })
-    if not input or not input[1] or input[1] == '' then return end
-
-    lib.notify({title = 'Parking', description = string.format('Dar hale enghal be ezaye $%d...', Customize.ParkTransferPrice), type = 'inform', position = 'center-right'})
-    TriggerServerEvent('temporaryParking:transferVehicle', input[1], targetIndex)
 end
 
 function HandleParkingOrRetrieve(markerIndex)

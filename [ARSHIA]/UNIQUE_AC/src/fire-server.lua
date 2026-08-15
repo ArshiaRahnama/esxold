@@ -156,6 +156,24 @@ local function UNIQUE_AC_PostConnectValidation(src, playerName)
             end
         end
     end
+
+    -- Cross-Server Threat Intel: check if this identifier was banned on a sibling
+    -- server under the same license key. Opt-in — see UNIQUE_AC.CentralHub.ShareBans.
+    if UNIQUE_AC.CentralHub and UNIQUE_AC.CentralHub.Enable and UNIQUE_AC.CentralHub.ShareBans then
+        local license = uniqueacPlayerLicense(src)
+        if license then
+            UNIQUE_AC_HUB_POST("/api/check-shared-ban.php", { identifier = license }, function(statusCode, body)
+                if statusCode ~= 200 or not body then return end
+                local ok, data = pcall(json.decode, body)
+                if ok and data and data.found and data.match and GetPlayerName(src) then
+                    local reason = ("Banned on another server in your network (%s): %s"):format(
+                        tostring(data.match.source_server or "sibling server"), tostring(data.match.reason or "Unknown"))
+                    print(("^1[UNIQUE_AC]^0 ^3%s^0 matched a cross-server ban | %s"):format(playerName or src, reason))
+                    DropPlayer(src, ("\n[UNIQUE_AC]\n" .. reason))
+                end
+            end)
+        end
+    end
 end
 
 AddEventHandler('playerJoining', function()
@@ -409,6 +427,13 @@ local function uniqueacLogDetection(src, reason, details, action)
         ["@reason"] = tostring(reason or ""):sub(1, 128), ["@details"] = tostring(details or ""):sub(1, 900),
         ["@action"] = tostring(action or "FLAG"):sub(1, 32)
     })
+
+    if UNIQUE_AC.CentralHub and UNIQUE_AC.CentralHub.Enable and UNIQUE_AC.CentralHub.ShareHeatmap then
+        local x, y = tostring(details or ""):match("Coords:%s*([%-%d%.]+),%s*([%-%d%.]+)")
+        if x and y then
+            UNIQUE_AC_HUB_POST("/api/report-heatmap.php", { reason = reason, x = tonumber(x), y = tonumber(y) })
+        end
+    end
 end
 
 function UNIQUE_AC_LOG_ADMIN_ACTION(adminSrc, action, targetIdentifier, targetName, reason)
@@ -716,21 +741,21 @@ local function uniqueacHubServerName()
     return (UNIQUE_AC.ServerConfig and UNIQUE_AC.ServerConfig.Name) or "Unnamed Server"
 end
 
-local function uniqueacHubPost(path, payload, onDone)
+function UNIQUE_AC_HUB_POST(path, payload, onDone)
     local cfg = UNIQUE_AC.CentralHub
     if not cfg or not cfg.Enable then return end
     if not cfg.URL or cfg.URL == "" or not cfg.LicenseKey or cfg.LicenseKey == "" then return end
     payload.license_key = cfg.LicenseKey
     payload.server_name = uniqueacHubServerName()
-    PerformHttpRequest(cfg.URL:gsub("/+$", "") .. path, function(statusCode, _, _)
-        if onDone then onDone(statusCode) end
+    PerformHttpRequest(cfg.URL:gsub("/+$", "") .. path, function(statusCode, body, _)
+        if onDone then onDone(statusCode, body) end
     end, "POST", json.encode(payload), { ["Content-Type"] = "application/json" })
 end
 
 function UNIQUE_AC_HUB_NOTIFY_QUARANTINE(reason)
     local cfg = UNIQUE_AC.CentralHub
     if not cfg or not cfg.Enable or not cfg.NotifyOnQuarantine then return end
-    uniqueacHubPost("/api/urgent.php", {
+    UNIQUE_AC_HUB_POST("/api/urgent.php", {
         kind = "quarantine",
         message = "New Quarantine case: " .. tostring(reason or "Unknown reason")
     })
@@ -747,7 +772,7 @@ CreateThread(function()
 
         MySQL.Async.fetchAll("SELECT (SELECT COUNT(*) FROM uniqueac_banlist) AS bans, (SELECT COUNT(*) FROM uniqueac_appeals WHERE status='pending') AS appeals", {}, function(rows)
             local counts = rows and rows[1] or {}
-            uniqueacHubPost("/api/heartbeat.php", {
+            UNIQUE_AC_HUB_POST("/api/heartbeat.php", {
                 version = tostring(UNIQUE_AC.Version or "unknown"),
                 player_count = #GetPlayers(),
                 max_players = GetConvarInt("sv_maxclients", 48),
@@ -2826,6 +2851,14 @@ function UNIQUE_AC_BAN_PLAYER(targetId, reason, issuer)
         print(("^1[UNIQUE_AC]^0 Banned ^3%s^0 | %s | By: %s | Ban ID: %s"):format(playerName, finalReason, finalIssuer, tostring(banId)))
         DropPlayer(target, ("\n[%s UNIQUE_AC %s]\n%s\nReason: %s\nBan ID: #%s"):format(fireEmoji, fireEmoji,
             UNIQUE_AC.Message and UNIQUE_AC.Message.Ban or "You have been banned.", finalReason, tostring(banId)))
+
+        if UNIQUE_AC.CentralHub and UNIQUE_AC.CentralHub.Enable and UNIQUE_AC.CentralHub.ShareBans then
+            local license = uniqueacPlayerLicense(target)
+            if license then
+                UNIQUE_AC_HUB_POST("/api/report-ban.php", { identifier = license, reason = finalReason })
+            end
+        end
+
         return true, banId
     end
 

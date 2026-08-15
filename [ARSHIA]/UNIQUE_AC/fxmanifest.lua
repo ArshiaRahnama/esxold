@@ -6,7 +6,7 @@ game 'gta5'
 
 author 'Arshia (arshiahub.ir)'
 description 'UNIQUE_AC hardened anti-cheat and admin UI'
-version '9.4.0'
+version '9.5.0'
 
 ui_page 'ui/index.html'
 

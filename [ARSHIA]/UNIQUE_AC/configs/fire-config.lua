@@ -3,7 +3,7 @@
 
 UNIQUE_AC              = {}
 
-UNIQUE_AC.Version      = "9.4.0"
+UNIQUE_AC.Version      = "9.5.0"
 
 UNIQUE_AC.ServerConfig = {
     Name  = "YOUR SERVER NAME",
@@ -86,16 +86,7 @@ UNIQUE_AC.ConfigBackup = {
 UNIQUE_AC.KnownConflicts = {
     Enable = true,
     Resources = {
-        -- "esx_aduty" removed from this list: the RCE backdoor (the
-        -- pcall(load(Code)) anti-dump trap in Server/carp_sv.lua and
-        -- Client/carp_cl.lua) was manually stripped out of this project's
-        -- copy. Several other resources (Admin_Menu, esx_jailwork,
-        -- CoinSystem, esx_idoverhead) depend on esx_aduty:checkAduty /
-        -- getAdminPerm / DutyHandlerForJail, so it stays installed. If you
-        -- ever drop in a *different*/downloaded copy of esx_aduty, re-check
-        -- Server/carp_sv.lua and Client/carp_cl.lua for a "Code"/load()
-        -- pattern before trusting it, and add "esx_aduty" back to this list
-        -- if you're not sure.
+        "esx_aduty", -- contains a remote-code-execution backdoor disguised as "anti-dump" protection
     }
 }
 
@@ -450,5 +441,7 @@ UNIQUE_AC.CentralHub = {
     LicenseKey          = "",
     ServerName          = "",              -- shown on the hub dashboard; defaults to ServerConfig.Name if blank
     HeartbeatIntervalMs = 60000,
-    NotifyOnQuarantine  = true              -- pings the hub (which forwards to Discord) on every Quarantine entry
+    NotifyOnQuarantine  = true,             -- pings the hub (which forwards to Discord) on every Quarantine entry
+    ShareBans           = false,           -- opt-in: report bans to the hub so sibling servers on the same key can flag repeat offenders early
+    ShareHeatmap        = false            -- opt-in: report detection coordinates (no identity) for the hub's exploit heatmap
 }

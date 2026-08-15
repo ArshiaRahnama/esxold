@@ -42,5 +42,31 @@ CREATE TABLE IF NOT EXISTS rate_limits (
     request_count INTEGER NOT NULL DEFAULT 0
 );
 
+-- Cross-Server Threat Intel: opt-in. A ban on one server (under the same license
+-- family) gets shared here so other servers using the same key can flag the same
+-- person early. Deliberately scoped to servers sharing ONE license — this is not a
+-- public cross-operator ban database.
+CREATE TABLE IF NOT EXISTS shared_bans (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    license_key  TEXT NOT NULL,
+    identifier   TEXT NOT NULL,
+    reason       TEXT NOT NULL DEFAULT '',
+    source_server TEXT NOT NULL DEFAULT '',
+    created_at   INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_shared_bans_license ON shared_bans(license_key, identifier);
+
+-- Exploit Heatmap: detection coordinates (no player identity) reported by servers,
+-- aggregated to spot map exploit hotspots shared across servers.
+CREATE TABLE IF NOT EXISTS heatmap_points (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    license_key  TEXT NOT NULL,
+    reason       TEXT NOT NULL DEFAULT '',
+    x            REAL NOT NULL,
+    y            REAL NOT NULL,
+    created_at   INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_heatmap_created ON heatmap_points(created_at);
+
 CREATE INDEX IF NOT EXISTS idx_servers_license ON servers(license_key);
 CREATE INDEX IF NOT EXISTS idx_urgent_created ON urgent_events(created_at);

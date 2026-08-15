@@ -895,7 +895,3 @@ Customize.Hotkey = "U"          -- Key to lock/unlock the nearby or currently-dr
 Customize.SwitchDistance = 3    -- kept from original config for parity (not currently read by the script)
 Customize.HotwireItem = 'hotwire'  -- inventory item name required to hotwire a vehicle
 Customize.TargetDistance = 5.0  -- max distance for ChangeCarPlate/RemoveCar to grab the vehicle you're aiming at (from addcar_cl.lua)
-
--- ParkMeter vehicle transfer between parkmeters
-Customize.ParkTransferPrice = 5000    -- cost to move a car from one parkmeter to another
-Customize.ParkTransferDelay = 300000  -- delay before the car arrives at the new parkmeter (ms) — 5 minutes

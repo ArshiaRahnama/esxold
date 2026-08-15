@@ -45,36 +45,6 @@ ESX.RegisterServerCallback('CarLock:haskey', function(source, cb, plate)
         return
     end
 
-	if xPlayer.job.name == 'mt' and platePrefix == 'MT' then
-        cb(true)
-        return
-    end
-
-	if xPlayer.job.name == 'cid' and platePrefixFBI == 'CID' then
-        cb(true)
-        return
-    end
-
-	if xPlayer.job.name == 'cia' and platePrefixFBI == 'CIA' then
-        cb(true)
-        return
-    end
-
-	if xPlayer.job.name == 'marshal' and platePrefix == 'MS' then
-        cb(true)
-        return
-    end
-
-	if xPlayer.job.name == 'judge' and platePrefix == 'JD' then
-        cb(true)
-        return
-    end
-
-	if xPlayer.job.name == 'doa' and platePrefixFBI == 'DOA' then
-        cb(true)
-        return
-    end
-
 
     local inventoryItem = xPlayer.getInventoryItem(item)
     if inventoryItem and inventoryItem.count >= 1 then
