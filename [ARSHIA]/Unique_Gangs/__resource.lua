@@ -6,6 +6,12 @@ description 'Unique Gangs (merged: gangs + gangprop + gangaccount)'
 
 version '1.0.0'
 
+-- این دو خط تضمین می‌کنه که essentialmode و mysql-async همیشه قبل از این
+-- ریسورس لود بشن، حتی اگه تو server.cfg ترتیبشون درست چیده نشده باشه.
+-- (این باعث میشه تابع _U/Locales که این ریسورس بهش وابسته‌ست همیشه آماده باشه)
+dependency 'mysql-async'
+dependency 'essentialmode'
+
 -- =====================================================================
 -- این ریسورس حاصل ادغام سه ریسورس مجزا در یک ریسورس واحده:
 --   gangs        -> config.lua        + server/main.lua        + server/mainxp.lua

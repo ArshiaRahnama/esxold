@@ -125,15 +125,21 @@ AddEventHandler('chop:craft', function()
 end)
 
 -- ============================================================
--- Craft engine ("chop:craftengine") — pay money for a tiered scrap engine item.
--- Uses Config.craftengine[key] as the cost table (only 'money' entries are
--- supported, matching what's actually defined in config.lua).
+-- Craft engine ("chop:craftengine") — MECHANIC JOB ONLY. Pay money for a
+-- tiered scrap engine item. Uses Config.craftengine[key] as the cost table
+-- (only 'money' entries are supported, matching what's actually defined in
+-- config.lua).
 -- ============================================================
 RegisterNetEvent('chop:craftengine')
 AddEventHandler('chop:craftengine', function(key)
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
 	if not xPlayer then return end
+
+	if not xPlayer.job or xPlayer.job.name ~= 'mechanic' then
+		TriggerClientEvent('esx:showNotification', src, 'In Kar Faghat Baraye Mechanic Hast!')
+		return
+	end
 
 	local requirements = Config.craftengine[key]
 	if not requirements then return end
@@ -145,7 +151,9 @@ AddEventHandler('chop:craftengine', function(key)
 		end
 	end
 
-	if xPlayer.getMoney() < totalCost then
+	-- FIX: essentialmode's xPlayer has no getMoney() method — money is
+	-- the .money property directly.
+	if xPlayer.money < totalCost then
 		TriggerClientEvent('esx:showNotification', src, 'Pool Kafi Nadarid!')
 		return
 	end
@@ -166,7 +174,8 @@ AddEventHandler('chop:buypich', function()
 	local xPlayer = ESX.GetPlayerFromId(src)
 	if not xPlayer then return end
 
-	if xPlayer.getMoney() < Config.tokenzero then
+	-- FIX: same getMoney() crash as chop:craftengine — use .money property
+	if xPlayer.money < Config.tokenzero then
 		TriggerClientEvent('esx:showNotification', src, 'Pool Kafi Nadarid!')
 		return
 	end
