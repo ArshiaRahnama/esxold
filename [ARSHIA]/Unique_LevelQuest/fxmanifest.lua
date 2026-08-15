@@ -7,6 +7,7 @@ version '2.0.0'
 
 server_scripts {
     '@mysql-async/lib/MySQL.lua',
+    'server/migrations.lua',
     'config.lua',
     'server/core.lua',
     'server/xp.lua',

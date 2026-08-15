@@ -71,6 +71,7 @@ client_scripts {
 	'client/teleport_ambulance.lua',
 	'client/teleport_mechanic.lua',
 	'client/teleport_taxi.lua',
+	'client/teleport_weazel.lua',
 	-- Ambulance
 	'client/config_ambulance.lua',
 	'client/ambulance_main.lua',
