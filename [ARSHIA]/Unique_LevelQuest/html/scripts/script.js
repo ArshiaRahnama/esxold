@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const tabs = document.querySelectorAll('.tab');
   const panels = {
     quests: document.getElementById('tab_quests'),
-    dispatch: document.getElementById('tab_dispatch'),
+    collections: document.getElementById('tab_collections'),
   };
 
   function activateTab(tabName) {
@@ -18,6 +18,25 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  const subtabs = document.querySelectorAll('.subtab');
+  const subpanels = {
+    vehicles: document.getElementById('sub_vehicles'),
+    houses: document.getElementById('sub_houses'),
+  };
+
+  function activateSubtab(subName) {
+    Object.keys(subpanels).forEach(key => {
+      subpanels[key].classList.toggle('hidden', key !== subName);
+    });
+    subtabs.forEach(t => t.classList.toggle('active', t.dataset.sub === subName));
+  }
+
+  subtabs.forEach(subBtn => {
+    subBtn.addEventListener('click', function () {
+      activateSubtab(this.dataset.sub);
+    });
+  });
+
   window.addEventListener('message', function (event) {
     const data = event.data;
     const container = document.querySelector('.container');
@@ -27,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
       case 'openMenu':
         container.style.display = 'flex';
         activateTab('quests');
+        activateSubtab('vehicles');
         break;
 
       case 'closeMenu':

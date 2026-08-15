@@ -14,6 +14,7 @@ server_scripts {
     'server/quest.lua',
     'server/bridges.lua',
     'server/menu.lua',
+    'server/collections.lua',
 }
 
 client_scripts {
@@ -22,6 +23,7 @@ client_scripts {
     'client/quest.lua',
     'client/bridges.lua',
     'client/menu.lua',
+    'client/collections.lua',
 }
 
 ui_page 'html/index.html'

@@ -38,10 +38,6 @@ function UpdateProfile()
                 bank      = data.bank,
                 coin      = Coin .. " Coin",
             })
-
-            if data.permission_level and data.permission_level > 0 then
-                SendNUIMessage({ type = "adminDutyStatus", status = data.aduty })
-            end
         end)
     end)
 
@@ -93,16 +89,10 @@ function UpdateProfile()
     end)
 end
 
-function UpdateAllPlayers()
-    ESX.TriggerServerCallback('HUD_Menu:GetAllPLayers', function(allplayers)
-        SendNUIMessage({ type = "loadPlayers", players = allplayers })
-    end)
-end
-
 RegisterCommand('menu', function()
     SetNuiFocus(true, true)
     UpdateProfile()
-    UpdateAllPlayers()
+    UpdateCollections()
     UiShow()
 end, false)
 
@@ -114,32 +104,5 @@ end)
 
 RegisterNUICallback('menuClosed', function(_, cb)
     SetNuiFocus(false, false)
-    cb('ok')
-end)
-
-RegisterNUICallback('toggleDuty', function(_, cb)
-    ExecuteCommand("aduty")
-    ESX.TriggerServerCallback('HUD_Menu:GetAcc', function(data)
-        if data and data.permission_level and data.permission_level > 0 then
-            SendNUIMessage({ type = "adminDutyStatus", status = data.aduty })
-        end
-    end)
-    cb('ok')
-end)
-
--- NOTE: 'sp' and 'goto' both re-check real admin permission SERVER-SIDE
--- inside their own command handlers (esx_aduty), so a non-admin sending
--- this NUI callback can't actually do anything even though the check
--- here is only client-side. 'freeze' isn't a registered command anywhere
--- on this server, so it's a no-op today; wire a real freeze command
--- server-side first if you want this to do something.
-RegisterNUICallback('playerAction', function(data, cb)
-    if data.action == 'spect' then
-        ExecuteCommand("sp " .. data.id)
-    elseif data.action == 'goto' then
-        ExecuteCommand("goto " .. data.id)
-    elseif data.action == 'freeze' then
-        ExecuteCommand("freeze " .. data.id)
-    end
     cb('ok')
 end)

@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="styles/fonts.css" />
   <link rel="stylesheet" href="styles/style.css" />
   <link rel="stylesheet" href="styles/quest.css" />
-  <link rel="stylesheet" href="styles/admin.css" />
+  <link rel="stylesheet" href="styles/collections.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 
@@ -17,14 +17,15 @@
     <div class="window">
 
       <div class="topbar">
-        <div class="tLeft">
+        <!-- first in source = rightmost in RTL -->
+        <div class="headerName">
           <div class="leftRow">
-            <div class="avatarWrap"><div class="avatar"><i class="fa-solid fa-user"></i></div></div>
             <div>
               <div class="pname name_span">PlayerName</div>
               <div class="pline"><i class="fa-solid fa-money-bill"></i> <span class="cash_span">-</span></div>
               <div class="pline"><i class="fa-solid fa-landmark"></i> <span class="bank_span">-</span> &middot; <i class="fa-solid fa-coins"></i> <span class="coin_span">-</span></div>
             </div>
+            <div class="avatarWrap"><div class="avatar"><i class="fa-solid fa-user"></i></div></div>
           </div>
         </div>
 
@@ -39,7 +40,8 @@
           </div>
         </div>
 
-        <div class="tRight">
+        <!-- last in source = leftmost in RTL -->
+        <div class="headerBadges">
           <div class="rightBox">
             <div class="badgeLine">
               <span class="badgeTitle">JOB</span>
@@ -50,26 +52,44 @@
               <span class="badgeValue gang_span">-</span>
             </div>
           </div>
-          <button class="adminDuty" id="adminDuty">Off Duty</button>
         </div>
       </div>
 
       <div class="tabs">
-        <button class="tab active menu-item" data-tab="quests">
+        <button class="tab active" data-tab="quests">
           <i class="fa-solid fa-person-circle-question"></i> QUESTS
         </button>
-        <button class="tab menu-item" id="admin" data-tab="dispatch">
-          <i class="fa-solid fa-user-shield"></i> DISPATCH
+        <button class="tab" data-tab="collections">
+          <i class="fa-solid fa-layer-group"></i> COLLECTIONS
         </button>
       </div>
 
       <div class="content">
-        <div class="panel quests" id="tab_quests">
+        <div class="panel" id="tab_quests">
           <div class="quests-grid"></div>
         </div>
 
-        <div class="panel adminMenu hidden" id="tab_dispatch">
-          <div class="players-grid"></div>
+        <div class="panel hidden" id="tab_collections">
+          <div class="subtabs">
+            <button class="subtab active" data-sub="vehicles">VEHICLES</button>
+            <button class="subtab" data-sub="houses">HOUSES</button>
+          </div>
+
+          <div class="panel2" id="sub_vehicles">
+            <div class="gridCards" id="veh_grid"></div>
+            <div class="emptyState hidden" id="veh_empty">
+              <i class="fa-solid fa-car-side"></i>
+              <span>No vehicles owned</span>
+            </div>
+          </div>
+
+          <div class="panel2 hidden" id="sub_houses">
+            <div class="gridCards" id="house_grid"></div>
+            <div class="emptyState hidden" id="house_empty">
+              <i class="fa-solid fa-house"></i>
+              <span>No properties owned</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -80,6 +100,6 @@
   <script src="scripts/script.js"></script>
   <script src="scripts/personal.js"></script>
   <script src="scripts/quest.js"></script>
-  <script src="scripts/admin.js"></script>
+  <script src="scripts/collections.js"></script>
 </body>
 </html>

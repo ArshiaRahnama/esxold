@@ -52,12 +52,3 @@ ESX.RegisterServerCallback("HUD_Menu:GetQuests", function(source, cb)
         end
     end)
 end)
-
-ESX.RegisterServerCallback("HUD_Menu:GetAllPLayers", function(source, cb)
-    local xPlayers = ESX.GetPlayers()
-    local allplayers = {}
-    for i = 1, #xPlayers, 1 do
-        table.insert(allplayers, { id = xPlayers[i], name = GetPlayerName(xPlayers[i]) })
-    end
-    cb(allplayers)
-end)

@@ -269,77 +269,27 @@ RegisterCommand('flist', function(source, args)
 
 
     RegisterCommand('badge', function(source)
-
         local xPlayer = ESX.GetPlayerFromId(source)
-        if xPlayer.job.name == "police" or xPlayer.job.name == "ambulance" then
-            
-                local identifier = xPlayer.identifier
 
-                if not badges[identifier] then
-                    badges[identifier] = {badge = 0, hide = false, isOn = false}
+        if jobToOrgan[xPlayer.job.name] then
+            local playerName = string.gsub(xPlayer.get('name'), "_", " ")
+            local playerJob = xPlayer.job.label
+            local playerJobGrade = xPlayer.job.grade_label
+            local playerPed = GetPlayerPed(source)
+            local playerCoords = GetEntityCoords(playerPed)
+            local xPlayers = ESX.GetPlayers()
+
+            for i=1, #xPlayers, 1 do
+                local otherPlayerPed = GetPlayerPed(xPlayers[i])
+                local otherPlayerCoords = GetEntityCoords(otherPlayerPed)
+                local distance = math.sqrt((playerCoords.x - otherPlayerCoords.x) ^ 2 + (playerCoords.y - otherPlayerCoords.y) ^ 2 + (playerCoords.z - otherPlayerCoords.z) ^ 2)
+                if distance < 15.0 then
+                    TriggerClientEvent('chatMessage', xPlayers[i], "", {252, 1, 1}, "Job Badge:\n^5Name: ^0" .. playerName .. "\n^5Job: ^0" .. playerJob .. "\n^5Job Grade: ^0" .. playerJobGrade)
                 end
-
-                local badge = badges[identifier].badge
-
-                if badge == 0 then
-                    TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma badge nadarid!")
-                    return
-                end
-
-                local color
-                if xPlayer.job.name == "police" then
-                    color = "~b~"
-                elseif xPlayer.job.name == "ambulance" then
-                    color = "~r~" 
-                end
-
-                local label = {display = color .. "#" .. tostring(badge) .. " " .. xPlayer.job.grade_label, height = 1.15, toggle = false, badge = true}
-                TriggerClientEvent('esx_dispatch:assignBadge', source, label)
-                TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma badge khod ra gozashtid!")
-                badges[identifier].isOn = true
-            
-        else
-            TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma Ozv hich organ dolati nistid!")
-        end
-        
-    end, false)
-
-    RegisterCommand('tbadge', function(source)
-
-        local xPlayer = ESX.GetPlayerFromId(source)
-        if xPlayer.job.name == "police" or xPlayer.job.name == "ambulance" then
-           
-            local identifier = xPlayer.identifier
-            local badge = badges[identifier]
-            if badge.isOn then
-
-                local color
-                if xPlayer.job.name == "police" then
-                    color = "~b~"
-                elseif xPlayer.job.name == "ambulance" then
-                    color = "~r~" 
-                end
-                
-                if badge.hide then
-                    badges[identifier].hide = false
-                    local label = {display = color .. "#" .. tostring(badge.badge) .. " " .. xPlayer.job.grade_label, height = 1.15, toggle = false, badge = true}
-                    TriggerClientEvent('esx_dispatch:assignBadge', source, label)
-                    TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma badge khod ra gozashtid!")
-                else
-                    badges[identifier].hide = true
-                    local label = {display = color .. "#" .. tostring(badge.badge) .. " " .. xPlayer.job.grade_label, height = 1.15, toggle = true, badge = true}
-                    TriggerClientEvent('esx_dispatch:assignBadge', source, label)
-                    TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma badge khod ra bardashtid!")
-                end
-                
-            else
-                TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Badge shoma roshan nist!")
             end
-            
         else
             TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma Ozv hich organ dolati nistid!")
         end
-        
     end, false)
 
     RegisterCommand('assign', function(source, args)
@@ -552,35 +502,3 @@ function TableLengthx(table)
     return count
 
 end
-
-RegisterCommand('showbadge', function(source, args)
-    if not tonumber(args[1]) then
-        TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^1Shoma ID Ra Vared nakardid")
-        return 
-    end
-    local xPlayer, zPlayer, perm = ESX.GetPlayerFromId(source), ESX.GetPlayerFromId(tonumber(args[1])), nil
-    if xPlayer.job.name == "police" or xPlayer.job.name == "ambulance" then
-        if xPlayer.job.name == "ambulance" then
-            perm = 4
-        else
-            perm = 8
-        end
-        if xPlayer.job.grade > perm then
-            
-                if zPlayer.job.name == "ambulance" or xPlayer.job.name == "police" then
-                    if xPlayer.job.name == zPlayer.job.name then
-                        local TargetBadge = badges[zPlayer.identifier].badge
-                        TriggerClientEvent('esx:showNotification', source, "~r~~h~Badge ID : "..zPlayer.source.."  ~b~["..TargetBadge.."]~r~ Mibashad")
-                    else
-                        TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^1Shoma Nemitavanid Badge Kasi Ke Dar Faction Shoma Nist Ra Negah Konid")
-                    end
-                    TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^1Player Mored Nazar Police Ya Medic Nemibashad")
-                end
-            else
-                TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^1Shoma Dastresi Be In Command Nadarid")
-            end
-        
-    else
-        TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^1Shoma Police / Medic Nistid")
-    end
-end, false)
