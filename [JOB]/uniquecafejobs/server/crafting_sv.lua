@@ -52,14 +52,13 @@ function craft(src, item, retrying)
 
   
 	local xPlayer = ESX.GetPlayerFromId(src)
-	local ggnamep = xPlayer.gang.name
 
 	local cancraft = true
 
 	local count = ConfigCrafting.Recipes[item].Amount
 
-	if ggnamep == "PD" or ggnamep == "SH" or ggnamep == "MD" or ggnamep == "WZ" or ggnamep == "MC" or ggnamep == "Army" or ggnamep == "FBI" then
-		return TriggerClientEvent('esx:showNotification', src, "Gang Shoma Ejaze Estefade Az Crafting Ra Nadarad!")
+	if not IsCafeJob(xPlayer.job.name) then
+		return TriggerClientEvent('esx:showNotification', src, "Shoma Dastresi Az Estefade Az Crafting Ra Nadarid!")
 	end
 
 	if not retrying then

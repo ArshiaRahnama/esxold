@@ -18,7 +18,7 @@ Citizen.CreateThread(function()
     while true do 
         Wait(1)
  
-        if IsControlJustPressed(0, 167) and PlayerData.job.name == 'uwucafe' then 
+        if IsControlJustPressed(0, 167) and IsCafeJob(PlayerData.job.name) then 
             OpenMobileuwueActionsMenu()
         end
     end
@@ -34,25 +34,21 @@ AddEventHandler('esx:setJob', function(job)
 end)
 
 Citizen.CreateThread(function()
-    for k,v in pairs(Config.uwustasion) do 
-       
+    for k,cafe in pairs(Cafes) do
 
-        local blip = AddBlipForCoord(v.Blip.Pos.x, v.Blip.Pos.y, v.Blip.Pos.z)
+        local blip = AddBlipForCoord(cafe.Blip.Pos.x, cafe.Blip.Pos.y, cafe.Blip.Pos.z)
 
-        SetBlipSprite (blip, v.Blip.Sprite)
-        SetBlipDisplay(blip, v.Blip.Display)
-        SetBlipScale  (blip, v.Blip.Scale)
-        SetBlipColour (blip, v.Blip.Colour)
+        SetBlipSprite (blip, cafe.Blip.Sprite)
+        SetBlipDisplay(blip, cafe.Blip.Display)
+        SetBlipScale  (blip, cafe.Blip.Scale)
+        SetBlipColour (blip, cafe.Blip.Colour)
         SetBlipAsShortRange(blip, true)
 
         BeginTextCommandSetBlipName("STRING")
-        AddTextComponentString(_U('map_blip'))
+        AddTextComponentString(cafe.Label)
         EndTextCommandSetBlipName(blip)
 
     end
-
- 
-
 end)
 
 
@@ -114,37 +110,45 @@ end
 -- Freezer --
 
 function FreezerTarget()
-    -- freezer --
-    for k,v in pairs(Config.uwustasion) do 
-        CreateOXTarget(v.Freezer.Pos, v.Freezer.Name, 'AH_uwucafejob:OpenInventory', v.Freezer.Icon)
+    -- freezer -- (only the ONE station matching the player's own cafe)
+    local myCafe = GetCafeForJob(PlayerData.job.name)
+    if myCafe then
+        CreateOXTarget(myCafe.Freezer.Pos, myCafe.Freezer.Name, 'AH_uwucafejob:OpenInventory', myCafe.Freezer.Icon)
     end
     -- ped --
-    for k,v in pairs(Config.uwustasion) do 
-        CreateOXTarget(v.PedShop.Pos, v.PedShop.Name, 'AH_uwucafejob:OpenShopMenus', v.PedShop.Icon)
+    local myCafeShop = GetCafeForJob(PlayerData.job.name)
+    if myCafeShop then
+        CreateOXTarget(myCafeShop.PedShop.Pos, myCafeShop.PedShop.Name, 'AH_uwucafejob:OpenShopMenus', myCafeShop.PedShop.Icon)
     end
     -- Boss Action --
-    for k,v in pairs(Config.uwustasion) do 
-        CreateOXTarget(v.BossAction.Pos, v.BossAction.Name, 'AH_uwucafejob:OpenBossMenus', v.BossAction.Icon)
+    local myCafeBoss = GetCafeForJob(PlayerData.job.name)
+    if myCafeBoss then
+        CreateOXTarget(myCafeBoss.BossAction.Pos, myCafeBoss.BossAction.Name, 'AH_uwucafejob:OpenBossMenus', myCafeBoss.BossAction.Icon)
     end
     -- Cloack Room --
-    for k,v in pairs(Config.uwustasion) do 
-        CreateOXTarget(v.CloackRoom.Pos, v.CloackRoom.Name, 'AH_uwucafejob:OpenCloakroomMenu', v.CloackRoom.Icon)
+    local myCafeCR = GetCafeForJob(PlayerData.job.name)
+    if myCafeCR then
+        CreateOXTarget(myCafeCR.CloackRoom.Pos, myCafeCR.CloackRoom.Name, 'AH_uwucafejob:OpenCloakroomMenu', myCafeCR.CloackRoom.Icon)
     end
     -- Crafting Ham Zan--
-    for k,v in pairs(Config.uwustasion) do 
-        CreateOXTarget(v.Crafting_Hamzan.Pos, v.Crafting_Hamzan.Name, 'AH_uwucafejob:OpenCraftingHamzan', v.Crafting_Hamzan.Icon)
+    local myCafeHZ = GetCafeForJob(PlayerData.job.name)
+    if myCafeHZ then
+        CreateOXTarget(myCafeHZ.Crafting_Hamzan.Pos, myCafeHZ.Crafting_Hamzan.Name, 'AH_uwucafejob:OpenCraftingHamzan', myCafeHZ.Crafting_Hamzan.Icon)
     end
     -- Crafting Ghahve Saz--
-    for k,v in pairs(Config.uwustasion) do 
-        CreateOXTarget(v.Crafting_Ghahvesaz.Pos, v.Crafting_Ghahvesaz.Name, 'AH_uwucafejob:OpenCraftingGhahvesaz', v.Crafting_Ghahvesaz.Icon)
+    local myCafeGS = GetCafeForJob(PlayerData.job.name)
+    if myCafeGS then
+        CreateOXTarget(myCafeGS.Crafting_Ghahvesaz.Pos, myCafeGS.Crafting_Ghahvesaz.Name, 'AH_uwucafejob:OpenCraftingGhahvesaz', myCafeGS.Crafting_Ghahvesaz.Icon)
     end
     -- Crafting Zarf Shoe--
-    for k,v in pairs(Config.uwustasion) do 
-        CreateOXTarget(v.Crafting_ZarfShoe.Pos, v.Crafting_ZarfShoe.Name, 'AH_uwucafejob:OpenCraftingZarfShoe', v.Crafting_ZarfShoe.Icon)
+    local myCafeZS = GetCafeForJob(PlayerData.job.name)
+    if myCafeZS then
+        CreateOXTarget(myCafeZS.Crafting_ZarfShoe.Pos, myCafeZS.Crafting_ZarfShoe.Name, 'AH_uwucafejob:OpenCraftingZarfShoe', myCafeZS.Crafting_ZarfShoe.Icon)
     end
     -- Crafting Gaz--
-    for k,v in pairs(Config.uwustasion) do 
-        CreateOXTarget(v.Crafting_Gaz.Pos, v.Crafting_Gaz.Name, 'AH_uwucafejob:OpenCraftingGaz', v.Crafting_Gaz.Icon)
+    local myCafeGZ = GetCafeForJob(PlayerData.job.name)
+    if myCafeGZ then
+        CreateOXTarget(myCafeGZ.Crafting_Gaz.Pos, myCafeGZ.Crafting_Gaz.Name, 'AH_uwucafejob:OpenCraftingGaz', myCafeGZ.Crafting_Gaz.Icon)
     end
   
 end
@@ -285,8 +289,8 @@ Citizen.CreateThread(function()
 
     SetTimeout(5000, function()
 
-        for k,v in pairs(Config.uwustasion) do 
-            CreateOXTargetNotJob(v.Menu_Sefaresh.Pos, v.Menu_Sefaresh.Name, 'AH_uwucafejob:OpenMenuSefaresh', v.Menu_Sefaresh.Icon)
+        for k,cafe in pairs(Cafes) do
+            CreateOXTargetNotJob(cafe.Menu_Sefaresh.Pos, cafe.Menu_Sefaresh.Name, 'AH_uwucafejob:OpenMenuSefaresh', cafe.Menu_Sefaresh.Icon)
         end
         UwUCafeMenuAction()
     end)
@@ -295,7 +299,7 @@ end)
 function UwUCafeMenuAction()
     local options = {}
     
-    if PlayerData.job.name == "uwucafe" then 
+    if IsCafeJob(PlayerData.job.name) then 
         table.insert(options, {
             title = 'Action House', 
             value = 'menu_Action', 
@@ -528,7 +532,7 @@ AddEventHandler('AH_uwucafejob:OpenMenuDialog', function(player, target, amount)
         }, 
         function(data, menu)
             if data.current.value == 'yes' then
-                TriggerServerEvent('esx_billing:send2Bill2', target, player, 'society_uwucafe', 'uwucafe', amount)
+                TriggerServerEvent('esx_billing:send2Bill2', target, player, 'society_' .. PlayerData.job.name, PlayerData.job.name, amount)
                 TriggerServerEvent("AH_uwucafejob:ChatMessage",target, player, true)
 
                 ESX.UI.Menu.CloseAll()		

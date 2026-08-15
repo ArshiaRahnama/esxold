@@ -1,5 +1,5 @@
 AddEventHandler('playerSpawned', function()
-    SendNUIMessage({
+    SendMarketNUI({
         config = Config,
         translate = translate,
         NameResource = GetCurrentResourceName()
@@ -8,7 +8,7 @@ end)
 
 AddEventHandler('onResourceStart', function()
     Wait(5000)
-    SendNUIMessage({
+    SendMarketNUI({
         config = Config,
         translate = translate,
         NameResource = GetCurrentResourceName()
@@ -17,7 +17,7 @@ end)
 
 RegisterNetEvent('lg: loaduwuMarket')
 AddEventHandler('lg: loaduwuMarket', function(identifier, result)
-    SendNUIMessage({
+    SendMarketNUI({
         open = true,
         list_products = list_products,
         products = result,
@@ -30,7 +30,7 @@ end)
 RegisterNetEvent('lg: loadPlayeruwuMarket')
 AddEventHandler('lg: loadPlayeruwuMarket', function(inventory, result)
 
-    SendNUIMessage({
+    SendMarketNUI({
         myProductsOpen = true,
         list_products = list_products,
         inventory = inventory,
@@ -51,7 +51,7 @@ end)
 
 RegisterNetEvent('lg: uwumarketNotify')
 AddEventHandler('lg: uwumarketNotify', function(color, Notify)
-    SendNUIMessage({
+    SendMarketNUI({
         Notify = Notify,
         color = color
     })
@@ -59,7 +59,7 @@ end)
 
 RegisterNetEvent('lg: uwumarketRefused')
 AddEventHandler('lg: uwumarketRefused', function()
-    SendNUIMessage({
+    SendMarketNUI({
         Refused = true
     })
 end)

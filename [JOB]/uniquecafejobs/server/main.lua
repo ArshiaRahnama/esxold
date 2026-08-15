@@ -1,6 +1,8 @@
 ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-TriggerEvent('esx_society:registerSociety', 'uwucafe', 'uwucafe', 'society_uwucafe', 'society_uwucafe', 'society_uwucafe', {type = 'public'})
+for _, cafe in pairs(Cafes) do
+	TriggerEvent('esx_society:registerSociety', cafe.Job, cafe.Label, 'society_' .. cafe.Job, 'society_' .. cafe.Job, 'society_' .. cafe.Job, {type = 'public'})
+end
 
 local cooldown = {}
 
@@ -176,7 +178,7 @@ AddEventHandler('minijob:addToInventory', function(type, item, count)
                     -- TriggerClientEvent('esx:showNotification', _source, _U('invalid_quantity'))
                 end
             else
-                TriggerClientEvent('esx:showNotification', _source, "Shoma Fagat Item Haye UwU Cafe Ro Mitavanid Dakhel Freezr Bezarid!!")
+                TriggerClientEvent('esx:showNotification', _source, "Shoma Fagat Item Haye In Cafe Ro Mitavanid Dakhel Freezr Bezarid!!")
             end
             
 		end
@@ -234,11 +236,12 @@ AddEventHandler("spawnCarOnMarker", function(vehicleName)
     
     if not xPlayer then return end
 
-    if xPlayer.job.name == "uwucafe" then
-        if vehicleName == "scania" or vehicleName == "bf400" then
+    local myCafe = GetCafeForJob(xPlayer.job.name)
+    if myCafe then
+        if vehicleName == myCafe.SpawnVehicle then
             TriggerClientEvent("spawnCarClient", source, vehicleName)
         else
-            TriggerClientEvent("chatMessage", source, "^1شما فقط می‌توانید 'neon' یا 'bf400' اسپاون کنید.")
+            TriggerClientEvent("chatMessage", source, "^1شما فقط می‌توانید '" .. myCafe.SpawnVehicle .. "' اسپاون کنید.")
         end
     else
         TriggerClientEvent("chatMessage", source, "^1شما اجازه این کار را ندارید!")
@@ -265,7 +268,7 @@ end)
 ESX.RegisterServerCallback("AH_uwucafejob:GetOnDutyJob", function(source, cb)
 	for k,v in pairs(GetPlayers()) do 
 		local Target = ESX.GetPlayerFromId(v)
-		if Target.job.name == "uwucafe" then 
+		if IsCafeJob(Target.job.name) then 
 			cb(true)
 			return
 		end

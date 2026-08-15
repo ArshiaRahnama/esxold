@@ -122,14 +122,8 @@ end
 RegisterNetEvent('lg: advertiseItemuwu')
 AddEventHandler('lg: advertiseItemuwu', function(data)
     local idJ = source
-    local injob = false
-    for k,v in pairs(GetPlayers()) do 
-        Target = ESX.GetPlayerFromId(v)
-        if Target.job.name == "uwucafe" and Target.job.grade >= 3 then 
-            injob = true
-            break
-        end
-    end
+    local xPlayer = ESX.GetPlayerFromId(idJ)
+    local injob = IsCafeJob(xPlayer.job.name) and xPlayer.job.grade >= 3
     if not injob then
         TriggerClientEvent("lg: uwumarketNotify", idJ, "brown", translate.TR_DONT_AMOUNTJob)
         TriggerClientEvent("chat:addMessage", idJ, {args = {translate.TR_DONT_AMOUNTJob}})

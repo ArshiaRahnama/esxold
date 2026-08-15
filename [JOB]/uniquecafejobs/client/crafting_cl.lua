@@ -174,7 +174,7 @@ Citizen.CreateThread(
                 if not ConfigCrafting.CraftingStopWithDistance or (ConfigCrafting.CraftingStopWithDistance and isNearWorkbench()) then
                     craftingQueue[1].time = craftingQueue[1].time - 1
 
-                    SendNUIMessage(
+                    SendCafeNUI(
                         {
                             type = "addqueue",
                             item = craftingQueue[1].item,
@@ -221,7 +221,7 @@ function openWorkbench(category)
 			recipes = ConfigCrafting.Recipes
         
 		
-            SendNUIMessage(
+            SendCafeNUI(
                 {
                     type = "open",
                     recipes = recipes,
@@ -305,14 +305,14 @@ AddEventHandler(
 		local playerPed = PlayerPedId()
         table.insert(craftingQueue, {time = ConfigCrafting.Recipes[item].Time, item = item, count = 1, id = id})
 
-        SendNUIMessage(
+        SendCafeNUI(
             {
                 type = "crafting",
                 item = item
             }
         )
 
-        SendNUIMessage(
+        SendCafeNUI(
             {
                 type = "addqueue",
                 item = item,

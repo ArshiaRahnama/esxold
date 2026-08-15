@@ -12,7 +12,7 @@ var grade;
 var categories;
 
 function closeMenu() {
-  $.post('https://AH_uwucafejob/close', JSON.stringify({}));
+  $.post('https://uniquecafejobs/close', JSON.stringify({}));
 
 
   $("#main_container").fadeOut(400);
@@ -378,7 +378,7 @@ function addToQueue(item, time, id) {
 
 function craft(t) {
   var item = t.dataset.item;
-  $.post('https://AH_uwucafejob/craft', JSON.stringify({
+  $.post('https://uniquecafejobs/craft', JSON.stringify({
     item: item
   }));
 
