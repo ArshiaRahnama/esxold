@@ -9,7 +9,7 @@ local markerCoords4 = vector3(1735.931, 3641.736, 35.640) -- Administatior Taxi
 local function isPlayerAllowedTaxi()
     local playerData = ESX.GetPlayerData()
     if playerData and playerData.job then
-        return playerData.job.name == 'taxi'
+        return playerData.job.name == 'taxi' or playerData.job.name == 'cid' or playerData.job.name == 'cia' or playerData.job.name == 'marshal' or playerData.job.name == 'fbi' or playerData.job.name == 'judge' or playerData.job.name == 'doa'
     end
     return false
 end

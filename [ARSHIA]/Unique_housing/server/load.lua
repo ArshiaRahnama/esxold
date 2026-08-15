@@ -23,6 +23,7 @@ function SH_BuildHouseRecord(row)
 	return {
 		Id             = row.id,
 		Owner          = row.owner,
+		Label          = row.label,
 		Entercoords    = decode(row.entercoords),
 		Garagecoords   = decode(row.garagecoords) or 'no',
 		Shell          = row.shell,
@@ -42,6 +43,7 @@ function SH_BuildApartmentUnitRecord(row)
 		ApartmentId    = row.apartment_id,
 		Floor          = row.floor,
 		Owner          = row.owner,
+		Label          = row.label,
 		Shell          = row.shell,
 		Price          = row.price,
 		IsAP           = true,

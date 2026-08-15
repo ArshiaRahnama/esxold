@@ -67,6 +67,7 @@ AddEventHandler('sunset_housing:AddHouse', function(adddata)
 
 	SH_DB.InsertHouse({
 		owner        = nil,
+		label        = adddata.label,
 		entercoords  = json.encode(adddata.enter),
 		garagecoords = adddata.entergarage and json.encode(adddata.entergarage) or nil,
 		shell        = adddata.interior,
@@ -131,11 +132,12 @@ AddEventHandler('sunset_housing:AddAP', function(adddata2)
 		floor        = adddata2.floor,
 		shell        = adddata2.interior,
 		price        = adddata2.price,
+		label        = adddata2.label,
 	}, function(newId)
 		if not newId then return end
 		ApartmentUnits[newId] = SH_BuildApartmentUnitRecord({
 			id = newId, apartment_id = apartmentId, floor = adddata2.floor,
-			shell = adddata2.interior, price = adddata2.price,
+			shell = adddata2.interior, price = adddata2.price, label = adddata2.label,
 			inventorylevel = 1, safelevel = 1, furniture = '[]',
 		})
 		if not ApartmentUnitIndex[apartmentId] then ApartmentUnitIndex[apartmentId] = { house = {} } end

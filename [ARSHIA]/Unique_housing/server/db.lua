@@ -13,6 +13,7 @@ CreateThread(function()
 			CREATE TABLE IF NOT EXISTS `sh_houses` (
 				`id`             INT(11)      NOT NULL AUTO_INCREMENT,
 				`owner`          VARCHAR(60)  DEFAULT NULL,
+				`label`          VARCHAR(150) DEFAULT NULL,
 				`entercoords`    LONGTEXT     DEFAULT NULL,
 				`garagecoords`   LONGTEXT     DEFAULT NULL,
 				`shell`          VARCHAR(100) DEFAULT NULL,
@@ -25,6 +26,9 @@ CreateThread(function()
 				PRIMARY KEY (`id`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 		]])
+
+		-- safe for existing installs that already had sh_houses without `label`
+		MySQL.Async.execute('ALTER TABLE `sh_houses` ADD COLUMN IF NOT EXISTS `label` VARCHAR(150) DEFAULT NULL')
 
 		-- Apartment buildings (the blip/entrance you interact with to pick a unit)
 		MySQL.Async.execute([[
@@ -45,6 +49,7 @@ CreateThread(function()
 				`apartment_id`   INT(11)      NOT NULL,
 				`floor`          INT(11)      NOT NULL DEFAULT 1,
 				`owner`          VARCHAR(60)  DEFAULT NULL,
+				`label`          VARCHAR(150) DEFAULT NULL,
 				`shell`          VARCHAR(100) DEFAULT NULL,
 				`price`          INT(11)      NOT NULL DEFAULT 0,
 				`inventorylevel` INT(11)      NOT NULL DEFAULT 1,
@@ -55,6 +60,9 @@ CreateThread(function()
 				KEY `apartment_id` (`apartment_id`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 		]])
+
+		-- safe for existing installs that already had sh_apartment_units without `label`
+		MySQL.Async.execute('ALTER TABLE `sh_apartment_units` ADD COLUMN IF NOT EXISTS `label` VARCHAR(150) DEFAULT NULL')
 
 		-- House inventory / safe / postbox storage - one row per named stash,
 		-- e.g. 'house_12', 'house_safe_12', 'house_postbox_12'.
@@ -108,10 +116,11 @@ end
 
 function SH_DB.InsertHouse(data, cb)
 	MySQL.Async.insert([[
-		INSERT INTO sh_houses (owner, entercoords, garagecoords, shell, shellgarage, price, inventorylevel, safelevel, furniture, storage_data)
-		VALUES (@owner, @entercoords, @garagecoords, @shell, @shellgarage, @price, 1, 1, '[]', @storage_data)
+		INSERT INTO sh_houses (owner, label, entercoords, garagecoords, shell, shellgarage, price, inventorylevel, safelevel, furniture, storage_data)
+		VALUES (@owner, @label, @entercoords, @garagecoords, @shell, @shellgarage, @price, 1, 1, '[]', @storage_data)
 	]], {
 		['@owner']        = data.owner,
+		['@label']        = data.label,
 		['@entercoords']  = data.entercoords,
 		['@garagecoords'] = data.garagecoords,
 		['@shell']        = data.shell,
@@ -156,13 +165,14 @@ end
 
 function SH_DB.InsertApartmentUnit(data, cb)
 	MySQL.Async.insert([[
-		INSERT INTO sh_apartment_units (apartment_id, floor, shell, price, inventorylevel, safelevel, furniture, storage_data)
-		VALUES (@apartment_id, @floor, @shell, @price, 1, 1, '[]', @storage_data)
+		INSERT INTO sh_apartment_units (apartment_id, floor, shell, price, label, inventorylevel, safelevel, furniture, storage_data)
+		VALUES (@apartment_id, @floor, @shell, @price, @label, 1, 1, '[]', @storage_data)
 	]], {
 		['@apartment_id'] = data.apartment_id,
 		['@floor']        = data.floor,
 		['@shell']        = data.shell,
 		['@price']        = data.price,
+		['@label']        = data.label,
 		['@storage_data'] = data.storage_data or ConfigSV.StorageNamespace,
 	}, cb)
 end

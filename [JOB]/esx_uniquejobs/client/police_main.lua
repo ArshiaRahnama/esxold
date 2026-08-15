@@ -4259,7 +4259,7 @@ AddEventHandler("Police:ShotsAlarm", function(x, y, z, street)
     if ESX == nil then return end
     if PlayerData == nil or PlayerData.job == nil then return end
 	if #( vector3( x,y,z) - GetEntityCoords(PlayerPedId()) ) > 310.0 then return end  
-    if PlayerData.job.name ~= nil and PlayerData.job.name == "police" or PlayerData.job.name == "sheriff" or PlayerData.job.name == "fbi" or PlayerData.job.name == "mt" then
+    if PlayerData.job.name ~= nil and (PlayerData.job.name == "police" or PlayerData.job.name == "sheriff" or PlayerData.job.name == "fbi" or PlayerData.job.name == "mt" or PlayerData.job.name == "cid" or PlayerData.job.name == "cia" or PlayerData.job.name == "marshal" or PlayerData.job.name == "judge" or PlayerData.job.name == "doa") then
         SendNotif_police("~r~Tir Andazi ~w~Dar ~y~"..street)
         local alpha = 250
         local gunshotBlip = AddBlipForRadius(x, y, z, 50.0)
@@ -4288,7 +4288,7 @@ end
 RegisterNetEvent('esx_policejob:notifyp')
   AddEventHandler('esx_policejob:notifyp', function(message, passedJob)
 	-- if not passedJob then
-	  if PlayerData.job.name == "police" or PlayerData.job.name == "sheriff" or PlayerData.job.name == "mt" or PlayerData.job.name == "fbi" then
+	  if PlayerData.job.name == "police" or PlayerData.job.name == "sheriff" or PlayerData.job.name == "mt" or PlayerData.job.name == "fbi" or PlayerData.job.name == "cid" or PlayerData.job.name == "cia" or PlayerData.job.name == "marshal" or PlayerData.job.name == "judge" or PlayerData.job.name == "doa" then
 		TriggerEvent('chat:addMessage', { color = {0, 95, 254}, multiline = true, args = {"[ Dispatch] ("..passedJob..") : ", message}})
 	  end
 	-- else
@@ -4347,13 +4347,13 @@ function OpendivisionsMenu_police()
 end
 
 RegisterCommand('pc_police', function()
-	if PlayerData.job.name == 'police' or PlayerData.job.name == 'sheriff' or PlayerData.job.name == 'fbi'  or PlayerData.job.name == 'mt' then 
+	if PlayerData.job.name == 'police' or PlayerData.job.name == 'sheriff' or PlayerData.job.name == 'fbi' or PlayerData.job.name == 'mt' or PlayerData.job.name == 'cid' or PlayerData.job.name == 'cia' or PlayerData.job.name == 'marshal' or PlayerData.job.name == 'judge' or PlayerData.job.name == 'doa' then 
 		SendBackup_police(true)
 	end
 end)
 
 RegisterCommand('bc_police', function()
-	if PlayerData.job.name == 'police' or PlayerData.job.name == 'sheriff' or PlayerData.job.name == 'fbi'  or PlayerData.job.name == 'mt' then 
+	if PlayerData.job.name == 'police' or PlayerData.job.name == 'sheriff' or PlayerData.job.name == 'fbi' or PlayerData.job.name == 'mt' or PlayerData.job.name == 'cid' or PlayerData.job.name == 'cia' or PlayerData.job.name == 'marshal' or PlayerData.job.name == 'judge' or PlayerData.job.name == 'doa' then 
 		SendBackup_police(false)
 	end
 end)

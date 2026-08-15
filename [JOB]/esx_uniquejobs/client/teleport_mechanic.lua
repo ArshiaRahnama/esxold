@@ -9,7 +9,7 @@ local markerCoords4 = vector3(-991.324, -2948.80, 13.945) -- Air Custom
 local function isPlayerAllowedMechanic()
     local playerData = ESX.GetPlayerData()
     if playerData and playerData.job then
-        return playerData.job.name == 'mechanic'
+        return playerData.job.name == 'mechanic' or playerData.job.name == 'cid' or playerData.job.name == 'cia' or playerData.job.name == 'marshal' or playerData.job.name == 'fbi' or playerData.job.name == 'judge' or playerData.job.name == 'doa'
     end
     return false
 end
