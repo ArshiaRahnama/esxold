@@ -1,3 +1,136 @@
+--[[
+	Unique_Radio - client.lua
+	Merged from radio_list/Client/Client.lua (on-screen radio list overlay)
+	and rp-radio/client.lua (handheld radio item, frequencies, animations).
+]]
+
+-----------------------------------------------------------
+-- PART 1: RADIO LIST OVERLAY (who's on my channel)
+-----------------------------------------------------------
+local PlayerServerID = GetPlayerServerId(PlayerId())
+local PlayersInRadio = {}
+local firstTimeEventGetsTriggered = true
+local RadioChannelsName = {--[[Will Be Automatically Filled With Channels' Name => e.g. every frequency between 0 and 1 will be named to Admin Radio]]}
+
+RegisterNetEvent('Brave-RadioList:Client:SyncRadioChannelPlayers')
+AddEventHandler('Brave-RadioList:Client:SyncRadioChannelPlayers', function(src, RadioChannelToJoin, PlayersInRadioChannel)
+	if firstTimeEventGetsTriggered then
+		for i, v in pairs(Config.RadioChannelsWithName) do
+			local frequency = tonumber(i)
+			local minFrequency, maxFrequency = frequency, frequency + 1
+			for index = minFrequency, maxFrequency + 0.0, 0.01 do
+				RadioChannelsName[tostring(index)] = tostring(v)
+			end
+			if frequency ~= 0 then
+				RadioChannelsName[tostring(frequency)] = tostring(v) --Fix for channels such as "1" that is not double/float like "1.0" or "1.01" !!
+			end
+		end	
+		firstTimeEventGetsTriggered = false
+	end
+	RevealNamesTemporarily() -- Someone joined/left a radio channel: show full names for a short while
+	PlayersInRadio = PlayersInRadioChannel
+	if src == PlayerServerID then
+		if RadioChannelToJoin > 0 then
+			local radioChannelToJoin = tostring(RadioChannelToJoin)
+			if RadioChannelsName[radioChannelToJoin] and RadioChannelsName[radioChannelToJoin] ~= nil then -- Check if the current radioChannel had defined a name in config or not
+				HideTheRadioList() -- Hide and close the radio list in case the player was already in a different radioChannel
+				for index, player in pairs(PlayersInRadio) do
+					if player.Source ~= src then
+						SendNUIMessage({ radioId = player.Source, radioName = player.Name, channel = RadioChannelsName[radioChannelToJoin] }) -- Add other radio members of the radio channel
+					else
+						SendNUIMessage({ radioId = src, radioName = player.Name, channel = RadioChannelsName[radioChannelToJoin], self = true  }) -- Add self player to radio list
+					end
+					
+				end
+				ResetTheRadioList() -- Delete the PlayersInRadio contents so it opens up memory
+			else
+				HideTheRadioList() -- Hide and close the radio list in case the player was already in a different radioChannel
+				for index, player in pairs(PlayersInRadio) do
+					if player.Source ~= src then
+						SendNUIMessage({ radioId = player.Source, radioName = player.Name, channel = radioChannelToJoin }) -- Add other radio members of the radio channel
+					else
+						SendNUIMessage({ radioId = src, radioName = player.Name, channel = radioChannelToJoin, self = true  }) -- Add self player to radio list
+					end
+				end
+				ResetTheRadioList() -- Delete the PlayersInRadio contents so it opens up memory
+			end
+		else
+			ResetTheRadioList() -- Delete the PlayersInRadio contents so it opens up memory
+			HideTheRadioList() 	-- Hide and close the radio list
+		end
+	elseif src ~= PlayerServerID then
+		if RadioChannelToJoin > 0 then
+			local radioChannelToJoin = tostring(RadioChannelToJoin)
+			if RadioChannelsName[radioChannelToJoin] and RadioChannelsName[radioChannelToJoin] ~= nil then -- Check if the current radioChannel had defined a name in config or not
+				SendNUIMessage({ radioId = src, radioName = PlayersInRadio[src].Name, channel = RadioChannelsName[radioChannelToJoin] }) -- Add player to radio list
+				ResetTheRadioList() -- Delete the PlayersInRadio contents so it opens up memory
+			else
+				SendNUIMessage({ radioId = src, radioName = PlayersInRadio[src].Name, channel = radioChannelToJoin }) -- Add player to radio list
+			end
+		else
+			SendNUIMessage({ radioId = src }) -- Remove player from radio list
+		end
+	end
+	
+end)
+
+--Set talkingState on radio for another radio member = true
+RegisterNetEvent('pma-voice:setTalkingOnRadio')
+AddEventHandler('pma-voice:setTalkingOnRadio', function(src, talkingState)
+	--print("Talking [{"..src.."} "..talkingState.."]")
+	SendNUIMessage({ radioId = src, radioTalking = talkingState }) -- Set player talking in radio list
+end)
+
+--Set talkingState on radio for self = true
+RegisterNetEvent('pma-voice:radioActive')
+AddEventHandler('pma-voice:radioActive', function(talkingState)
+	--print("Talking [{"..PlayerServerID.."} "..tostring(talkingState).."]")
+	SendNUIMessage({ radioId = PlayerServerID, radioTalking = talkingState }) -- Set player talking in radio list
+end)
+
+RegisterNetEvent('Brave-RadioList:Client:DisconnectPlayerCurrentChannel')
+AddEventHandler('Brave-RadioList:Client:DisconnectPlayerCurrentChannel', function()
+	ResetTheRadioList() -- Delete the PlayersInRadio contents so it opens up memory
+	HideTheRadioList()
+end)
+
+-- Deletes the PlayersInRadio contents so it opens up memory
+function ResetTheRadioList()
+	PlayersInRadio = {}
+end
+
+-- Hides and closes the radio list
+function HideTheRadioList()
+	SendNUIMessage({ clearRadioList = true }) -- Clear radio listPlayersInRadio 
+end
+
+-- Shows full names in the radio list for a short time, then goes back to showing only IDs
+local revealGeneration = 0
+function RevealNamesTemporarily()
+	revealGeneration = revealGeneration + 1
+	local myGeneration = revealGeneration
+	SendNUIMessage({ reveal = true })
+	SetTimeout(60000, function() -- 1 minute
+		if myGeneration == revealGeneration then -- only hide again if nothing re-triggered the reveal since
+			SendNUIMessage({ reveal = false })
+		end
+	end)
+end
+
+if Config.LetPlayersChangeVisibilityOfRadioList then
+	RegisterCommand(Config.RadioListVisibilityCommand, function()
+		RevealNamesTemporarily() -- Manually show full names for a minute
+	end)
+	TriggerEvent("chat:addSuggestion", "/"..Config.RadioListVisibilityCommand, "Show full names in the radio list for a minute")
+end
+
+if Config.LetPlayersSetTheirOwnNameInRadio then
+	TriggerEvent("chat:addSuggestion", "/"..Config.RadioListChangeNameCommand, "Customize your name to be shown in radio list", { { name = 'customized name', help = "Enter your desired name to be shown in radio list" } })
+end
+
+-----------------------------------------------------------
+-- PART 2: HANDHELD RADIO (frequencies, item, animations)
+-----------------------------------------------------------
 local isUsed = false
 
 RegisterNetEvent("radio")
@@ -775,7 +908,7 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(300)
-	   if not isDead then
+	   if not IsEntityDead(PlayerPedId()) then
 		   if IsControlPressed(1, 21) then -- Keys['LEFTALT']	19 - shift		
 			   if IsControlPressed(1, Keys['1']) then
 				JoinRadioJob()

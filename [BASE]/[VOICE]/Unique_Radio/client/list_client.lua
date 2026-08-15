@@ -51,12 +51,14 @@ AddEventHandler('Brave-RadioList:Client:SyncRadioChannelPlayers', function(src, 
 		end
 	elseif src ~= PlayerServerID then
 		if RadioChannelToJoin > 0 then
-			local radioChannelToJoin = tostring(RadioChannelToJoin)
-			if RadioChannelsName[radioChannelToJoin] and RadioChannelsName[radioChannelToJoin] ~= nil then -- Check if the current radioChannel had defined a name in config or not
-				SendNUIMessage({ radioId = src, radioName = PlayersInRadio[src].Name, channel = RadioChannelsName[radioChannelToJoin] }) -- Add player to radio list
-				ResetTheRadioList() -- Delete the PlayersInRadio contents so it opens up memory
-			else
-				SendNUIMessage({ radioId = src, radioName = PlayersInRadio[src].Name, channel = radioChannelToJoin }) -- Add player to radio list
+			if PlayersInRadio[src] then -- Guard against the joining player's entry not being included yet
+				local radioChannelToJoin = tostring(RadioChannelToJoin)
+				if RadioChannelsName[radioChannelToJoin] and RadioChannelsName[radioChannelToJoin] ~= nil then -- Check if the current radioChannel had defined a name in config or not
+					SendNUIMessage({ radioId = src, radioName = PlayersInRadio[src].Name, channel = RadioChannelsName[radioChannelToJoin] }) -- Add player to radio list
+					ResetTheRadioList() -- Delete the PlayersInRadio contents so it opens up memory
+				else
+					SendNUIMessage({ radioId = src, radioName = PlayersInRadio[src].Name, channel = radioChannelToJoin }) -- Add player to radio list
+				end
 			end
 		else
 			SendNUIMessage({ radioId = src }) -- Remove player from radio list

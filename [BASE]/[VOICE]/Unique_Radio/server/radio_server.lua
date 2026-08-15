@@ -1,18 +1,23 @@
-ESX = nil 
+ESX = nil
 
-TriggerEvent("esx:getSharedObject", function(obj) ESX = obj end)
-
-ESX.RegisterUsableItem("radio", function(source) 
-    TriggerClientEvent("radio", source)
-end)
-
-ESX.RegisterServerCallback("CheckRadio", function(source, cb)
-    local xPlayer = ESX.GetPlayerFromId(source)
-    if xPlayer.getInventoryItem("radio").count > 0 then
-        cb(true)
-    else
-        cb(false)
+Citizen.CreateThread(function()
+    while ESX == nil do
+        TriggerEvent("esx:getSharedObject", function(obj) ESX = obj end)
+        Citizen.Wait(0)
     end
+
+    ESX.RegisterUsableItem("radio", function(source)
+        TriggerClientEvent("radio", source)
+    end)
+
+    ESX.RegisterServerCallback("CheckRadio", function(source, cb)
+        local xPlayer = ESX.GetPlayerFromId(source)
+        if xPlayer and xPlayer.getInventoryItem("radio") and xPlayer.getInventoryItem("radio").count > 0 then
+            cb(true)
+        else
+            cb(false)
+        end
+    end)
 end)
 
 local requests = {}

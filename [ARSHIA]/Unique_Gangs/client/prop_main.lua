@@ -1887,55 +1887,55 @@ while true do
   local playerPed = GetPlayerPed(-1)
   local coords    = GetEntityCoords(playerPed)
   if Data.locker ~= nil then
-    if GetDistanceBetweenCoords(coords,  Data.locker.x,  Data.locker.y,  Data.locker.z,  true) < Config.DrawDistance then
+    if GetDistanceBetweenCoords(coords,  Data.locker.x,  Data.locker.y,  Data.locker.z,  true) < PropConfig.DrawDistance then
       DrawMarker(21, Data.locker.x,  Data.locker.y,  Data.locker.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.8,0.8,0.8, 0, 0, 255, 200, true, true, 2, true, false, false, false)
     end
   end
 
   if Data.armory ~= nil then
-    if GetDistanceBetweenCoords(coords,  Data.armory.x,  Data.armory.y,  Data.armory.z,  true) < Config.DrawDistance then
+    if GetDistanceBetweenCoords(coords,  Data.armory.x,  Data.armory.y,  Data.armory.z,  true) < PropConfig.DrawDistance then
       DrawMarker(42, Data.armory.x,  Data.armory.y,  Data.armory.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.8,0.8,0.8, 150, 200, 150, 200, true, true, 2, true, false, false, false)
     end
   end
 
   if Data.veh ~= nil then
-    if GetDistanceBetweenCoords(coords,  Data.veh.x,  Data.veh.y,  Data.veh.z,  true) < Config.DrawDistance then
-      DrawMarker(36, Data.veh.x,  Data.veh.y,  Data.veh.z+0.9, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColorVeh.r, Config.MarkerColorVeh.g, Config.MarkerColorVeh.b, 100, false, true, 2, true, false, false, false)
+    if GetDistanceBetweenCoords(coords,  Data.veh.x,  Data.veh.y,  Data.veh.z,  true) < PropConfig.DrawDistance then
+      DrawMarker(36, Data.veh.x,  Data.veh.y,  Data.veh.z+0.9, 0.0, 0.0, 0.0, 0, 0.0, 0.0, PropConfig.MarkerSize.x, PropConfig.MarkerSize.y, PropConfig.MarkerSize.z, PropConfig.MarkerColorVeh.r, PropConfig.MarkerColorVeh.g, PropConfig.MarkerColorVeh.b, 100, false, true, 2, true, false, false, false)
     end
   end
 
   if Data.vehdel ~= nil then
-    if GetDistanceBetweenCoords(coords,   Data.vehdel.x,  Data.vehdel.y,  Data.vehdel.z,  true) < Config.DrawDistance then
-      DrawMarker(24, Data.vehdel.x,  Data.vehdel.y,  Data.vehdel.z+0.7, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x+0.5, Config.MarkerSize.y+0.5, Config.MarkerSize.z+0.5, Config.MarkerColorVehDel.r, Config.MarkerColorVehDelg, Config.MarkerColorVehDel.b, 100, false, true, 2, true, false, false, false)
+    if GetDistanceBetweenCoords(coords,   Data.vehdel.x,  Data.vehdel.y,  Data.vehdel.z,  true) < PropConfig.DrawDistance then
+      DrawMarker(24, Data.vehdel.x,  Data.vehdel.y,  Data.vehdel.z+0.7, 0.0, 0.0, 0.0, 0, 0.0, 0.0, PropConfig.MarkerSize.x+0.5, PropConfig.MarkerSize.y+0.5, PropConfig.MarkerSize.z+0.5, PropConfig.MarkerColorVehDel.r, PropConfig.MarkerColorVehDelg, PropConfig.MarkerColorVehDel.b, 100, false, true, 2, true, false, false, false)
     end
   end
 
   if Data.heli ~= nil then
-    if GetDistanceBetweenCoords(coords,  Data.heli.x,  Data.heli.y,  Data.heli.z,  true) < Config.DrawDistance then
+    if GetDistanceBetweenCoords(coords,  Data.heli.x,  Data.heli.y,  Data.heli.z,  true) < PropConfig.DrawDistance then
       DrawMarker(34, Data.heli.x,  Data.heli.y,  Data.heli.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.8,0.8,0.8, 0, 255, 0, 200, true, true, 2, true, false, false, false)
     end
   end
 
   if Data.helidel ~= nil then
-    if GetDistanceBetweenCoords(coords,   Data.helidel.x,  Data.helidel.y,  Data.helidel.z,  true) < Config.DrawDistance then
+    if GetDistanceBetweenCoords(coords,   Data.helidel.x,  Data.helidel.y,  Data.helidel.z,  true) < PropConfig.DrawDistance then
       DrawMarker(34, Data.helidel.x,  Data.helidel.y,  Data.helidel.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0,3.0,2.5, 255, 0, 0, 200, true, true, 2, false, false, false, false)
     end
   end
 
   if Data.boat ~= nil then
-    if GetDistanceBetweenCoords(coords,  Data.boat.x,  Data.boat.y,  Data.boat.z,  true) < Config.DrawDistance then
+    if GetDistanceBetweenCoords(coords,  Data.boat.x,  Data.boat.y,  Data.boat.z,  true) < PropConfig.DrawDistance then
       DrawMarker(35, Data.boat.x,  Data.boat.y,  Data.boat.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.8,0.8,0.8, 0, 255, 0, 200, true, true, 2, true, false, false, false)
     end
   end
 
   if Data.boatdel ~= nil then
-    if GetDistanceBetweenCoords(coords,   Data.boatdel.x,  Data.boatdel.y,  Data.boatdel.z,  true) < Config.DrawDistance then
+    if GetDistanceBetweenCoords(coords,   Data.boatdel.x,  Data.boatdel.y,  Data.boatdel.z,  true) < PropConfig.DrawDistance then
       DrawMarker(35, Data.boatdel.x,  Data.boatdel.y,  Data.boatdel.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0,3.0,2.5, 255, 0, 0, 200, true, true, 2, false, false, false, false)
     end
   end
 
   if Data.boss ~= nil then
-    if GetDistanceBetweenCoords(coords,  Data.boss.x,  Data.boss.y,  Data.boss.z,  true) < Config.DrawDistance then
+    if GetDistanceBetweenCoords(coords,  Data.boss.x,  Data.boss.y,  Data.boss.z,  true) < PropConfig.DrawDistance then
       DrawMarker(31, Data.boss.x,  Data.boss.y,  Data.boss.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.8,0.8,0.8, 255, 255, 255, 200, true, true, 2, true, false, false, false)
     end
   end
@@ -1958,7 +1958,7 @@ Citizen.CreateThread(function()
     local currentPart    = nil
     
     if Data.locker ~= nil then
-      if GetDistanceBetweenCoords(coords,  Data.locker.x,  Data.locker.y,  Data.locker.z,  true) < Config.MarkerSize.x then
+      if GetDistanceBetweenCoords(coords,  Data.locker.x,  Data.locker.y,  Data.locker.z,  true) < PropConfig.MarkerSize.x then
         isInMarker     = true
         currentStation = Data.gang_name
         currentPart    = 'Cloakroom'
@@ -1966,7 +1966,7 @@ Citizen.CreateThread(function()
     end
 
     if Data.armory ~= nil then
-      if GetDistanceBetweenCoords(coords,  Data.armory.x,  Data.armory.y,  Data.armory.z,  true) < Config.MarkerSize.x then
+      if GetDistanceBetweenCoords(coords,  Data.armory.x,  Data.armory.y,  Data.armory.z,  true) < PropConfig.MarkerSize.x then
         isInMarker     = true
         currentStation = Data.gang_name
         currentPart    = 'Armory'
@@ -1974,7 +1974,7 @@ Citizen.CreateThread(function()
     end
 
     if Data.veh ~= nil then
-      if GetDistanceBetweenCoords(coords,  Data.veh.x,  Data.veh.y,  Data.veh.z,  true) < Config.MarkerSize.x then
+      if GetDistanceBetweenCoords(coords,  Data.veh.x,  Data.veh.y,  Data.veh.z,  true) < PropConfig.MarkerSize.x then
         isInMarker     = true
         currentStation = Data.gang_name
         currentPart    = 'VehicleSpawner'
@@ -1982,7 +1982,7 @@ Citizen.CreateThread(function()
     end
 
     if Data.vehspawn ~= nil then
-      if GetDistanceBetweenCoords(coords,  Data.vehspawn.x,  Data.vehspawn.y,  Data.vehspawn.z,  true) < Config.MarkerSize.x then
+      if GetDistanceBetweenCoords(coords,  Data.vehspawn.x,  Data.vehspawn.y,  Data.vehspawn.z,  true) < PropConfig.MarkerSize.x then
         isInMarker     = true
         currentStation = Data.gang_name
         currentPart    = 'VehicleSpawnPoint'
@@ -2006,7 +2006,7 @@ Citizen.CreateThread(function()
     end
 
     if Data.helispawn ~= nil then
-      if GetDistanceBetweenCoords(coords,  Data.helispawn.x,  Data.helispawn.y,  Data.helispawn.z,  true) < Config.MarkerSize.x then
+      if GetDistanceBetweenCoords(coords,  Data.helispawn.x,  Data.helispawn.y,  Data.helispawn.z,  true) < PropConfig.MarkerSize.x then
         isInMarker     = true
         currentStation = Data.gang_name
         currentPart    = 'HeliSpawnPoint'
@@ -2032,7 +2032,7 @@ Citizen.CreateThread(function()
     end
 
     if Data.boatspawn ~= nil then
-      if GetDistanceBetweenCoords(coords,  Data.boatspawn.x,  Data.boatspawn.y,  Data.boatspawn.z,  true) < Config.MarkerSize.x then
+      if GetDistanceBetweenCoords(coords,  Data.boatspawn.x,  Data.boatspawn.y,  Data.boatspawn.z,  true) < PropConfig.MarkerSize.x then
         isInMarker     = true
         currentStation = Data.gang_name
         currentPart    = 'BoatSpawnPoint'
@@ -2049,7 +2049,7 @@ Citizen.CreateThread(function()
     end
 	
     if Data.boss ~= nil and PlayerData.gang ~= nil then
-      if GetDistanceBetweenCoords(coords,   Data.boss.x,  Data.boss.y,  Data.boss.z,  true) < Config.MarkerSize.x then
+      if GetDistanceBetweenCoords(coords,   Data.boss.x,  Data.boss.y,  Data.boss.z,  true) < PropConfig.MarkerSize.x then
         isInMarker     = true
         currentStation = Data.gang_name
         currentPart    = 'BossActions' 
