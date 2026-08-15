@@ -33,8 +33,18 @@ end)
 -- register kif_1 .. kif_<Config.MaxBagId> as usable items so using one
 -- opens its bag (the bag module only reacts to inventory-bag:openBag,
 -- it never fires it -- something has to)
+--
+-- IMPORTANT for this server: essentialmode's ESX.Items table is loaded
+-- from the DB `items` table on boot and kif_1..kif_300 are NOT rows in
+-- it (checked against database.sql) -- without registering them here,
+-- xPlayer.addInventoryItem('kif_N', 1) silently does nothing, because
+-- getInventoryItem() returns nil for anything missing from ESX.Items.
+-- 'esx:CreateItem' is essentialmode's runtime item-registration event
+-- (server/common.lua) that adds straight into ESX.Items without
+-- touching the database, so a restart never has stale duplicate rows.
 CreateThread(function()
     for i = 1, (Config.MaxBagId or 300) do
+        TriggerEvent('esx:CreateItem', 'kif_' .. i, 'Kif ' .. i, -1, false, true)
         ESX.RegisterUsableItem('kif_' .. i, function(playerId)
             TriggerClientEvent('inventory-bag:openBag', playerId, i, Config.DefaultBagMaxWeight or 8000)
         end)

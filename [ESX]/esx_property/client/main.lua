@@ -51,9 +51,10 @@ function CreateBlips()
 		if property.entering then
 			Blips[property.name] = AddBlipForCoord(property.entering.x, property.entering.y, property.entering.z)
 
-			SetBlipSprite (Blips[property.name], 476)
+			SetBlipSprite (Blips[property.name], 475)
+			SetBlipColour (Blips[property.name], 2)
 			SetBlipDisplay(Blips[property.name], 4)
-			SetBlipScale  (Blips[property.name], 0.7)
+			SetBlipScale  (Blips[property.name], 0.8)
 			SetBlipAsShortRange(Blips[property.name], true)
 
 			BeginTextCommandSetBlipName("STRING")
@@ -188,6 +189,7 @@ function SetPropertyOwned(name, owned)
 
 		Blips[enteringName] = AddBlipForCoord(entering.x, entering.y, entering.z)
 		SetBlipSprite(Blips[enteringName], 475)
+		SetBlipColour(Blips[enteringName], 46)
 		SetBlipAsShortRange(Blips[enteringName], true)
 
 		BeginTextCommandSetBlipName("STRING")
@@ -213,7 +215,8 @@ function SetPropertyOwned(name, owned)
 			RemoveBlip(Blips[enteringName])
 
 			Blips[enteringName] = AddBlipForCoord(entering.x, entering.y, entering.z)
-			SetBlipSprite(Blips[enteringName], 476)
+			SetBlipSprite(Blips[enteringName], 475)
+			SetBlipColour(Blips[enteringName], 2)
 			SetBlipAsShortRange(Blips[enteringName], true)
 
 			BeginTextCommandSetBlipName("STRING")
@@ -796,7 +799,7 @@ Citizen.CreateThread(function()
 				local distance = GetDistanceBetweenCoords(coords, property.entering.x, property.entering.y, property.entering.z, true)
 
 				if distance < Config.DrawDistance then
-					DrawMarker(21, property.entering.x, property.entering.y, property.entering.z+1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4,0.4,0.4, 0, 255, 0, 500, true, true, 2, false, nil, nil, false)
+					DrawMarker(2, property.entering.x, property.entering.y, property.entering.z+1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4,0.4,0.4, 46, 204, 113, 200, true, true, 2, false, nil, nil, false)
 					letSleep = false
 				end
 
