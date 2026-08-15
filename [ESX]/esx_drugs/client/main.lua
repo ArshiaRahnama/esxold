@@ -717,7 +717,7 @@ end)--]]
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)	
-        if ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'police' then
+        if ESX.PlayerData.job ~= nil and (ESX.PlayerData.job.name == 'police' or ESX.PlayerData.job.name == 'sheriff' or ESX.PlayerData.job.name == 'mt' or ESX.PlayerData.job.name == 'fbi' or ESX.PlayerData.job.name == 'cid' or ESX.PlayerData.job.name == 'cia' or ESX.PlayerData.job.name == 'marshal' or ESX.PlayerData.job.name == 'judge' or ESX.PlayerData.job.name == 'doa') then
         
             local coords = GetEntityCoords(GetPlayerPed(-1))
 

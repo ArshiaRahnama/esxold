@@ -90,6 +90,11 @@ function OpenJobSelectionMenu_cia()
                 { label = "Taxi", value = "taxi" },
                 { label = "Weazel", value = "weazel" },
                 { label = "MT", value = "mt" },
+                { label = "CID", value = "cid" },
+                { label = "Marshal", value = "marshal" },
+                { label = "FBI", value = "fbi" },
+                { label = "Judge", value = "judge" },
+                { label = "DOA", value = "doa" },
             }
         elseif grade == 8 then
             elements = {

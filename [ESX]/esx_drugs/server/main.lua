@@ -531,6 +531,11 @@ AddEventHandler('esx_jk_drugs:testResultsPassBCA', function()
 	end
 end)
 
+local DrugAlertJobs = {
+	police = true, sheriff = true, mt = true, fbi = true,
+	cid = true, cia = true, marshal = true, judge = true, doa = true,
+}
+
 RegisterServerEvent('esx_jk_drugs:policeAlert')
 AddEventHandler('esx_jk_drugs:policeAlert', function()
 	local _source = source
@@ -538,8 +543,8 @@ AddEventHandler('esx_jk_drugs:policeAlert', function()
 
 	for i=1, #xPlayers, 1 do
 		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-		
-		if xPlayer.job.name == 'police' then
+
+		if DrugAlertJobs[xPlayer.job.name] then
 			TriggerClientEvent('esx:showNotification', xPlayers[i], (_U('police_alert')))
 		end
 	end

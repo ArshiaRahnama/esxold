@@ -16,7 +16,8 @@ Citizen.CreateThread(function ()
 end)
 
 AddEventHandler('esx_duty:hasEnteredMarker', function (zone)
-    if zone == 'ambulance' or zone == "police" or zone == "mechanic" or zone == "sheriff" or zone == "taxi" or zone == "weazel" or zone == "fbi" or zone == "mt" then
+    if zone == 'ambulance' or zone == "police" or zone == "mechanic" or zone == "sheriff" or zone == "taxi" or zone == "weazel" or zone == "fbi" or zone == "mt"
+        or zone == "cid" or zone == "cia" or zone == "marshal" or zone == "judge" or zone == "doa" then
         CurrentAction     = 'duty'
         CurrentActionJob  = zone
     end

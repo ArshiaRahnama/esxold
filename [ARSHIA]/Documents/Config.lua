@@ -4,26 +4,25 @@ logo = "img/LegendaryBanner.png"
 -- no longer used to gate opening it — access to each action (create,
 -- edit, close, copy, give, delete) is controlled below individually.
 jobs_OpenMenu = {
-    -- "judge",
-     "police",
+     "police", "sheriff", "mt", "fbi", "cid", "cia", "marshal", "judge", "doa",
 }
 jobs_SaveTemplate = {
-    "police",
+    "police", "sheriff", "mt", "fbi", "cid", "cia", "marshal", "judge", "doa",
 }
 jobs_CreateDocument = {
-    "police",
+    "police", "sheriff", "mt", "fbi", "cid", "cia", "marshal", "judge", "doa",
 }
 jobs_DeleteDocument = {
-    "police",
+    "police", "sheriff", "mt", "fbi", "cid", "cia", "marshal", "judge", "doa",
 }
 jobs_CloseDocument = {
-    "police",
+    "police", "sheriff", "mt", "fbi", "cid", "cia", "marshal", "judge", "doa",
 }
 jobs_CopyDocument = {
-    "police",
+    "police", "sheriff", "mt", "fbi", "cid", "cia", "marshal", "judge", "doa",
 }
 jobs_GiveDocument = {
-    "police",
+    "police", "sheriff", "mt", "fbi", "cid", "cia", "marshal", "judge", "doa",
 }
 
 commands = {

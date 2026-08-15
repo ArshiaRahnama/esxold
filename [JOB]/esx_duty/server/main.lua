@@ -129,7 +129,8 @@ Citizen.CreateThread(function()
             local xPlayer = ESX.GetPlayerFromId(source)
             if xPlayer then
                 local JobName = xPlayer.job.name
-                if xPlayer and JobName == 'police' or JobName == 'sheriff' or JobName == 'ambulance' or JobName == 'fbi' or JobName == 'mechanic' or JobName == 'weazel' or JobName == 'taxi' or JobName == 'mt' then
+                if xPlayer and (JobName == 'police' or JobName == 'sheriff' or JobName == 'ambulance' or JobName == 'fbi' or JobName == 'mechanic' or JobName == 'weazel' or JobName == 'taxi' or JobName == 'mt'
+                    or JobName == 'cid' or JobName == 'cia' or JobName == 'marshal' or JobName == 'judge' or JobName == 'doa') then
                     local steamHex = GetPlayerIdentifiers(source)[1] 
                     local todayDate = os.date("%Y-%m-%d") 
                     local jgrade = xPlayer.job.grade_label

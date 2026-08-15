@@ -90,6 +90,11 @@ function OpenJobSelectionMenu_fbi()
                 { label = "Taxi", value = "taxi" },
                 { label = "Weazel", value = "weazel" },
                 { label = "MT", value = "mt" },
+                { label = "CID", value = "cid" },
+                { label = "CIA", value = "cia" },
+                { label = "Marshal", value = "marshal" },
+                { label = "Judge", value = "judge" },
+                { label = "DOA", value = "doa" },
             }
         elseif grade == 8 then
             elements = {

@@ -3,7 +3,7 @@ Config = {}
 -- Job names registered by your esx_policejob resource. Anyone with one of these
 -- jobs is treated as a cop for the rob system (blocked from robbing, counted for
 -- copsrequired, and notified when a robbery starts/ends).
-Config.PoliceJobs = { 'police', 'sheriff', 'fbi', 'mt' }
+Config.PoliceJobs = { 'police', 'sheriff', 'fbi', 'mt', 'cid', 'cia', 'marshal', 'judge', 'doa' }
 
 Config.Marker = {
 	r = 0, g = 255, b = 0, a = 255,  -- green color

@@ -520,6 +520,13 @@ AddEventHandler(
         local info = {
             police = exports.esx_playerinfo:GetCounts("police"),
             sheriff = exports.esx_playerinfo:GetCounts("sheriff"),
+            mt = exports.esx_playerinfo:GetCounts("mt"),
+            fbi = exports.esx_playerinfo:GetCounts("fbi"),
+            cid = exports.esx_playerinfo:GetCounts("cid"),
+            cia = exports.esx_playerinfo:GetCounts("cia"),
+            marshal = exports.esx_playerinfo:GetCounts("marshal"),
+            judge = exports.esx_playerinfo:GetCounts("judge"),
+            doa = exports.esx_playerinfo:GetCounts("doa"),
             nightclub = exports.esx_playerinfo:GetCounts("nightclub"),
             food = exports.esx_playerinfo:GetCounts("food"),
             ambulance = exports.esx_playerinfo:GetCounts("ambulance"),

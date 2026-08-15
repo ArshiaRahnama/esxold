@@ -29,7 +29,7 @@ AddEventHandler('esx_policejob:requestrelease', function(targetid, playerheading
 	if not GetPlayerName(targetid) or not cPlayer then
 		return
 	end
-	if xPlayer.job.name == "police" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "fbi" or xPlayer.gang.name ~= "nogang" or xPlayer.job.name == "mt" or xPlayer.job.name == "forces" then
+	if xPlayer.job.name == "police" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "fbi" or xPlayer.gang.name ~= "nogang" or xPlayer.job.name == "mt" or xPlayer.job.name == "forces" or xPlayer.job.name == "cid" or xPlayer.job.name == "cia" or xPlayer.job.name == "marshal" or xPlayer.job.name == "judge" or xPlayer.job.name == "doa" then
 		if #(GetEntityCoords(GetPlayerPed(source)) - GetEntityCoords(GetPlayerPed(tonumber(targetid)))) < 15.0 then
 			if cPlayer.get("Cuff") then
 				--if exports['Eye-AC']:CheckPlayers(source, targetid, 8.0) ~= false then return end
@@ -203,7 +203,7 @@ end)
 
 RegisterCommand('findnumber_police', function(source, args, users)
     local xPlayer = ESX.GetPlayerFromId(source)
-    if xPlayer.job.name == "police" or xPlayer.job.name == "sheriff"  or xPlayer.job.name == "fbi" then
+    if xPlayer.job.name == "police" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "fbi" or xPlayer.job.name == "mt" or xPlayer.job.name == "cid" or xPlayer.job.name == "cia" or xPlayer.job.name == "marshal" or xPlayer.job.name == "judge" or xPlayer.job.name == "doa" then
         if args[1] then
             if string.len(args[1]) == 10 then
             local number = tonumber(args[1])
