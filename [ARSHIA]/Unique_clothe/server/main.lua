@@ -120,3 +120,81 @@ ESX.RegisterServerCallback('clothe:usePack', function(source, cb, packItemName)
     packs[packItemName] = nil
     cb(contents)
 end)
+
+-- ------------------------------------------------------------
+-- Named outfit presets (ported from esx_eden_clotheshop's
+-- saveOutfit/deleteOutfit/getPlayerDressing/getPlayerOutfit).
+-- Same esx_datastore 'property' namespace, keyed by identifier, as
+-- eden used -- so existing saved presets from before eden is deleted
+-- are still readable here, and esx_datastore itself is unaffected by
+-- removing eden (other resources use the same store). Each entry now
+-- holds an {itemName -> true} table (owned items that were worn)
+-- instead of a full skin snapshot.
+-- ------------------------------------------------------------
+RegisterServerEvent('clothe:saveOutfit')
+AddEventHandler('clothe:saveOutfit', function(label, items)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    if not xPlayer or type(items) ~= 'table' then return end
+
+    local worn = {}
+    for itemName, isUsed in pairs(items) do
+        if isUsed and ownsItem(xPlayer, itemName) then
+            worn[itemName] = true
+        end
+    end
+
+    TriggerEvent('esx_datastore:getDataStore', 'property', xPlayer.identifier, function(store)
+        local dressing = store.get('dressing') or {}
+        table.insert(dressing, { label = label, items = worn })
+        store.set('dressing', dressing)
+    end)
+end)
+
+RegisterServerEvent('clothe:deleteOutfit')
+AddEventHandler('clothe:deleteOutfit', function(num)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    if not xPlayer then return end
+
+    TriggerEvent('esx_datastore:getDataStore', 'property', xPlayer.identifier, function(store)
+        local dressing = store.get('dressing') or {}
+        table.remove(dressing, num)
+        store.set('dressing', dressing)
+    end)
+end)
+
+ESX.RegisterServerCallback('clothe:getOutfits', function(source, cb)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if not xPlayer then cb({}) return end
+
+    TriggerEvent('esx_datastore:getDataStore', 'property', xPlayer.identifier, function(store)
+        local dressing = store.get('dressing') or {}
+        local labels = {}
+        for _, entry in ipairs(dressing) do
+            table.insert(labels, entry.label)
+        end
+        cb(labels)
+    end)
+end)
+
+ESX.RegisterServerCallback('clothe:loadOutfit', function(source, cb, num)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if not xPlayer then cb(nil) return end
+
+    TriggerEvent('esx_datastore:getDataStore', 'property', xPlayer.identifier, function(store)
+        local dressing = store.get('dressing') or {}
+        local entry = dressing[num]
+        if not entry then cb(nil) return end
+
+        -- only hand back items the player still actually owns --
+        -- ownership may have changed since the preset was saved
+        local valid = {}
+        for itemName in pairs(entry.items or {}) do
+            if ownsItem(xPlayer, itemName) then
+                valid[itemName] = true
+            end
+        end
+        cb(valid)
+    end)
+end)

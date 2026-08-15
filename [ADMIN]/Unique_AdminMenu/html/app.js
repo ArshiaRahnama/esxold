@@ -1,6 +1,7 @@
 let resourceName = 'Unique_AdminMenu';
 let currentChatLog = [];
-let currentReports = [];
+// Report Queue moved to ox_lib's context menu (see client/nui_panel.lua ->
+// OpenReportsMenu) - this custom panel no longer handles reports.
 
 function post(endpoint, data) {
   fetch(`https://${resourceName}/${endpoint}`, {
@@ -59,39 +60,6 @@ function renderInspect(data) {
   ).join('');
 }
 
-function renderReports(reports) {
-  // `reports` comes from esx_aduty as an object keyed by report id, e.g.
-  // { "3": { owner:{name,id}, category, Detail, status, time }, ... } -
-  // not an array, so it's normalized to a list here first.
-  currentReports = Object.keys(reports || {}).map(id => ({ id, ...reports[id] }));
-  openPanel(`Report Queue (${currentReports.filter(r => r.status === 'open').length} open)`, true);
-  drawReports(currentReports);
-}
-function drawReports(list) {
-  if (!list.length) {
-    document.getElementById('panelBody').innerHTML = '<div class="infoRow"><span>No open reports</span></div>';
-    return;
-  }
-  document.getElementById('panelBody').innerHTML = list.map(r => `
-    <div class="reportCard status-${escapeHtml(r.status || 'open')}">
-      <div class="rTitle">${escapeHtml(r.owner ? r.owner.name : 'Unknown')} (id: ${r.owner ? r.owner.id : '?'}) - ${escapeHtml(r.category || '')}</div>
-      <div class="rMeta">${escapeHtml(r.Detail || '')}</div>
-      <div class="rMeta">status: <span class="statusTag status-${escapeHtml(r.status || 'open')}">${escapeHtml(r.status || 'open')}</span>${r.respond && r.respond.name !== 'none' ? ' | handled by: ' + escapeHtml(r.respond.name) : ''}</div>
-      <div class="rActions">
-        ${r.status === 'open' ? `<button class="rBtn accept" data-id="${escapeHtml(r.id)}">Accept</button>` : ''}
-        ${r.status === 'pending' ? `<button class="rBtn close" data-id="${escapeHtml(r.id)}">Close</button>` : ''}
-      </div>
-    </div>
-  `).join('');
-
-  document.querySelectorAll('.rBtn.accept').forEach(btn => {
-    btn.addEventListener('click', () => post('reportAction', { id: btn.dataset.id, action: 'accept' }));
-  });
-  document.querySelectorAll('.rBtn.close').forEach(btn => {
-    btn.addEventListener('click', () => post('reportAction', { id: btn.dataset.id, action: 'close' }));
-  });
-}
-
 function renderChatLog(log) {
   currentChatLog = log || [];
   openPanel('Chat Log', true);
@@ -119,10 +87,6 @@ document.getElementById('panelSearch').addEventListener('input', (e) => {
   if (document.getElementById('panelTitle').textContent === 'Chat Log') {
     drawChatLog(currentChatLog.filter(m =>
       (m.message || '').toLowerCase().includes(q) || (m.name || '').toLowerCase().includes(q)
-    ));
-  } else if (document.getElementById('panelTitle').textContent.startsWith('Report Queue')) {
-    drawReports(currentReports.filter(r =>
-      ((r.Detail || '') + (r.owner ? r.owner.name : '') + (r.category || '')).toLowerCase().includes(q)
     ));
   }
 });
@@ -195,7 +159,6 @@ window.addEventListener('message', (event) => {
   switch (type) {
     case 'stats': renderStats(data); break;
     case 'inspect': renderInspect(data); break;
-    case 'reports': renderReports(data); break;
     case 'chatlog': renderChatLog(data); break;
     case 'showRadial': showRadial(); break;
     case 'hideRadial': hideRadial(); break;

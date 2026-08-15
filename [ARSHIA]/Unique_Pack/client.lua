@@ -1365,7 +1365,8 @@ CreateThread(function()
         local playerPed = PlayerPedId()
         local playerCoords = GetEntityCoords(playerPed)
 
-        -- ChopShop Marker
+        -- ChopShop Marker (disabled — see Config_Antipg.ChopShopEnabled)
+        if Config_Antipg.ChopShopEnabled then
         local chopShopDistance = #(playerCoords - Config_Antipg.Marker.Position)
         if chopShopDistance < 20 then
             DrawMarker(
@@ -1448,6 +1449,7 @@ CreateThread(function()
                 end
             end
         end
+        end -- Config_Antipg.ChopShopEnabled
 
         -- Engine Install Marker
         local installDistance = #(playerCoords - Config_Antipg.InstallLocation)
@@ -1596,6 +1598,7 @@ function Draw3DText_Antipg(x, y, z, text)
 end
 
 
+if Config_Antipg.ChopShopEnabled then
 CreateThread(function()
     local blip = AddBlipForCoord(Config_Antipg.Marker.Position.x, Config_Antipg.Marker.Position.y, Config_Antipg.Marker.Position.z)
 
@@ -1609,6 +1612,7 @@ CreateThread(function()
     AddTextComponentSubstringPlayerName("Chop Shop")  -- اسم blip که نمایش داده می‌شود
     EndTextCommandSetBlipName(blip)
 end)
+end -- Config_Antipg.ChopShopEnabled
 
 
 
@@ -2275,7 +2279,7 @@ RegisterCommand('badge', function()
     end
 
     -- چک کردن اگر شغل فرد در بین شغل‌های مجاز باشد
-    local allowedJobs = {"police", "sheriff", "mt", "taxi", "mechanic", "ambulance", "fbi", "weazel", "cid", "cia", "marshal", "judge", "doa"}
+    local allowedJobs = {"police", "sheriff", "mt", "taxi", "mechanic", "ambulance", "fbi", "weazel"}
     if isJobAllowed(playerJob, allowedJobs) then
         -- نمایش پیام در چت برای 15 متر اطراف
         TriggerServerEvent('badge:showBadge', playerName, playerJob, playerJobGrade)
@@ -2486,7 +2490,7 @@ Citizen.CreateThread(function()
                     label = 'درمان', -- Display text
                     onSelect = function()
                         local playerData = ESX.GetPlayerData()
-                        if playerData.job.name == 'police' or playerData.job.name == 'sheriff' or playerData.job.name == 'fbi' or playerData.job.name == 'mt' or playerData.job.name == 'cid' or playerData.job.name == 'cia' or playerData.job.name == 'marshal' or playerData.job.name == 'judge' or playerData.job.name == 'doa' then -- Check player job
+                        if playerData.job.name == 'police' or playerData.job.name == 'sheriff' or playerData.job.name == 'fbi' or playerData.job.name == 'mt' then -- Check player job
                             TriggerEvent("esx_ambulancejob:revivex", GetPlayerServerId(PlayerId()))
                             TriggerEvent("mythic_progbar:client:progress", {
                                 name = "pdheal",
@@ -3769,7 +3773,7 @@ function GiveBoxingGloves()
     RemoveBoxingGloves()
     
     
-    local gloveModel = `prop_boxing_glove_01`
+    local gloveModel = 'prop_boxing_glove_01'
     
 
     RequestModel(gloveModel)

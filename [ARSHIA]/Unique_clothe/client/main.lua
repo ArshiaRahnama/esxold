@@ -496,6 +496,50 @@ function createPack(name)
 end
 exports('createPack', createPack)
 
+-- ============================================================
+-- Named outfit presets -- ported from esx_eden_clotheshop, which
+-- this replaces. Eden saved a full permanent-skin snapshot per label
+-- via esx_datastore's 'property' store, keyed to the player's
+-- identifier. Same storage backend here (nothing about esx_datastore
+-- itself goes away when eden is deleted -- other resources use it
+-- too), but the preset now stores which OWNED ITEMS were worn rather
+-- than a full skin overwrite, so loading a preset only re-equips
+-- items you still actually own instead of forcing an appearance you
+-- might not have anymore.
+-- ============================================================
+
+function saveOutfit(label)
+    local worn = {}
+    for k, v in pairs(usedClothe) do
+        if not clothes[k].antiSearch then
+            worn[k] = v
+        end
+    end
+    TriggerServerEvent('clothe:saveOutfit', label, worn)
+end
+exports('saveOutfit', saveOutfit)
+
+function getOutfits(cb)
+    ESX.TriggerServerCallback('clothe:getOutfits', function(labels)
+        cb(labels)
+    end)
+end
+exports('getOutfits', getOutfits)
+
+function loadOutfit(num)
+    ESX.TriggerServerCallback('clothe:loadOutfit', function(items)
+        if items then
+            loadPack(items, false, true)
+        end
+    end, num)
+end
+exports('loadOutfit', loadOutfit)
+
+function deleteOutfit(num)
+    TriggerServerEvent('clothe:deleteOutfit', num)
+end
+exports('deleteOutfit', deleteOutfit)
+
 -- function usePack(name)
 --     ESX.TriggerServerEvent('clothe:unpack',name)
 -- end

@@ -1,7 +1,10 @@
 -- ============================================================================
 -- Unique_AdminMenu / client/nui_panel.lua
--- Drives the dark-themed NUI: the always-on stats corner widget, the F7
--- radial quick-actions menu, and closes the Inspect/Reports/ChatLog panel.
+-- Drives the dark-themed NUI: the always-on stats corner widget and the F7
+-- radial quick-actions menu. The Report Queue (F12) uses ox_lib's own
+-- context menu (lib.registerContext/lib.showContext) instead of a custom
+-- panel, since ox_lib is already a dependency here - see OpenReportsMenu()
+-- below.
 -- ============================================================================
 
 InAdminNui = false
@@ -9,15 +12,73 @@ InAdminNui = false
 RegisterKeyMapping('adminradial', 'Open Admin Quick Actions Radial Menu', 'keyboard', 'F7')
 RegisterKeyMapping('adminreports', 'Open Admin Report Queue', 'keyboard', 'F12')
 
-RegisterCommand('adminreports', function()
+-- ============================================================================
+-- REPORT QUEUE - ox_lib context menu
+-- ============================================================================
+function OpenReportsMenu()
     if not aduty then return end
-    if InAdminNui then return end
     ESX.TriggerServerCallback('Unique_AdminMenu:GetReports', function(reports)
-        InAdminNui = true
-        SetNuiFocus(true, true)
-        SendNUIMessage({ type = 'reports', data = reports })
+        reports = reports or {}
+        local options = {}
+
+        for id, r in pairs(reports) do
+            local statusIcon = r.status == 'open' and 'circle-exclamation' or 'clock'
+            local statusColor = r.status == 'open' and '#c85450' or '#d6a83a'
+
+            -- Register a tiny per-report submenu with the actual Accept/Close
+            -- actions, wired to the same safe /ar and /cr commands as before.
+            lib.registerContext({
+                id = 'report_actions_' .. id,
+                title = ('Report #%s'):format(id),
+                menu = 'reports_menu',
+                options = {
+                    {
+                        title = 'Accept Report',
+                        icon = 'check',
+                        iconColor = '#5fae72',
+                        disabled = r.status ~= 'open',
+                        onSelect = function()
+                            ExecuteCommand('ar ' .. id)
+                            Citizen.SetTimeout(300, OpenReportsMenu)
+                        end,
+                    },
+                    {
+                        title = 'Close Report',
+                        icon = 'xmark',
+                        iconColor = '#c85450',
+                        disabled = r.status ~= 'pending',
+                        onSelect = function()
+                            ExecuteCommand('cr ' .. id)
+                            Citizen.SetTimeout(300, OpenReportsMenu)
+                        end,
+                    },
+                }
+            })
+
+            options[#options + 1] = {
+                title = ('%s (id: %s) - %s'):format(r.owner and r.owner.name or 'Unknown', r.owner and r.owner.id or '?', r.category or ''),
+                description = (r.Detail or '') .. '\nstatus: ' .. (r.status or 'open'),
+                icon = statusIcon,
+                iconColor = statusColor,
+                menu = 'report_actions_' .. id,
+                arrow = true,
+            }
+        end
+
+        if #options == 0 then
+            options[1] = { title = 'No open reports', disabled = true }
+        end
+
+        lib.registerContext({
+            id = 'reports_menu',
+            title = ('Report Queue (%s)'):format(#options),
+            options = options,
+        })
+        lib.showContext('reports_menu')
     end)
-end, false)
+end
+
+RegisterCommand('adminreports', OpenReportsMenu, false)
 
 RegisterCommand('adminradial', function()
     if not aduty then return end
@@ -87,25 +148,6 @@ RegisterNUICallback('radialAction', function(payload, cb)
 
     InAdminNui = false
     SetNuiFocus(false, false)
-    cb('ok')
-end)
-
-RegisterNUICallback('reportAction', function(payload, cb)
-    local id = payload.id
-    local action = payload.action -- 'accept' or 'close'
-    if id then
-        if action == 'accept' then
-            ExecuteCommand('ar ' .. id)
-        elseif action == 'close' then
-            ExecuteCommand('cr ' .. id)
-        end
-        -- give the server a moment to update `reports`, then push a refresh
-        Citizen.SetTimeout(300, function()
-            ESX.TriggerServerCallback('Unique_AdminMenu:GetReports', function(reports)
-                SendNUIMessage({ type = 'reports', data = reports })
-            end)
-        end)
-    end
     cb('ok')
 end)
 

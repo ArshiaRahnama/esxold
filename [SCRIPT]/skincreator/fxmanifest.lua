@@ -1,9 +1,6 @@
 fx_version 'bodacious'
 game 'gta5'
 
--- Manifest Version
-
--- UI
 ui_page "ui/index.html"
 files {
 	"ui/index.html",
@@ -71,10 +68,23 @@ files {
 	'ui/debounce.min.js'
 }
 
--- Client Scripts
 client_script 'client.lua'
 
--- Server Scripts
 server_script 'server.lua'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

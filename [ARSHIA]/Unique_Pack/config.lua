@@ -38,6 +38,11 @@ Config_Megaphone.Framework = 'esx' -- esx, qb-core,
 Config_Antipg = {
     Debug = false,
 
+    -- Chop Shop feature disabled: replaced by the new dedicated chopshop
+    -- resource (3 locations, engine1-6 tiered items). Engine repair/install
+    -- below is untouched — it's a separate feature.
+    ChopShopEnabled = false,
+
     InstallLocation = vector3(-352.312, -90.3062, 40.0),  ----- Nasb va Tamir
     
     Marker = {  ------- Chop Shop 

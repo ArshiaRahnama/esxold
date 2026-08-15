@@ -226,11 +226,7 @@ local function DrawServerToolsMenu()
     end
 
     if WarMenu.Button("Report Queue") then
-        ESX.TriggerServerCallback('Unique_AdminMenu:GetReports', function(reports)
-            SendNUIMessage({ type = 'reports', data = reports })
-            SetNuiFocus(true, true)
-            InAdminNui = true
-        end)
+        OpenReportsMenu() -- ox_lib context menu, see client/nui_panel.lua
     end
 
     if WarMenu.Button("Chat Log") then
