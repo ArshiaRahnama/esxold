@@ -174,11 +174,22 @@ function SetPropertyOwned(name, owned)
 	local entering     = nil
 	local enteringName = nil
 
+	if not property then
+		print(('[esx_property] WARNING: SetPropertyOwned called with unknown property "%s" — skipping (property missing from Config.Properties)'):format(tostring(name)))
+		return
+	end
+
 	if property.isSingle then
 		entering     = property.entering
 		enteringName = property.name
 	else
 		local gateway = GetGateway(property)
+
+		if not gateway then
+			print(('[esx_property] WARNING: SetPropertyOwned — property "%s" has no matching gateway (property.gateway = "%s") — skipping'):format(tostring(name), tostring(property.gateway)))
+			return
+		end
+
 		entering      = gateway.entering
 		enteringName  = gateway.name
 	end
