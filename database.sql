@@ -283,6 +283,92 @@ REPLACE INTO `addon_inventory_items` (`id`, `inventory_name`, `name`, `count`, `
 	(7, 'gang_a', 'blowtorch', 1, NULL),
 	(8, 'gang_a', 'blackmoney', 0, NULL);
 
+-- Dumping structure for table essentialmode.admin_action_log
+DROP TABLE IF EXISTS `admin_action_log`;
+CREATE TABLE IF NOT EXISTS `admin_action_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `admin_identifier` varchar(60) DEFAULT NULL,
+  `admin_name` varchar(100) DEFAULT NULL,
+  `target_identifier` varchar(60) DEFAULT NULL,
+  `target_name` varchar(100) DEFAULT NULL,
+  `action` varchar(100) NOT NULL,
+  `details` varchar(500) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `target_identifier` (`target_identifier`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table essentialmode.admin_action_log: ~1 rows (approximately)
+REPLACE INTO `admin_action_log` (`id`, `admin_identifier`, `admin_name`, `target_identifier`, `target_name`, `action`, `details`, `created_at`) VALUES
+	(1, 'steam:11000014bf543e0', 'GD', 'steam:11000014bf543e0', 'GD', 'give-money', 'target: GD | money: +1000 | reason: No reason specified', '2026-08-16 00:48:09');
+
+-- Dumping structure for table essentialmode.admin_ip_log
+DROP TABLE IF EXISTS `admin_ip_log`;
+CREATE TABLE IF NOT EXISTS `admin_ip_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `identifier` varchar(60) NOT NULL,
+  `license` varchar(60) DEFAULT NULL,
+  `discord` varchar(60) DEFAULT NULL,
+  `ip` varchar(64) NOT NULL,
+  `playername` varchar(100) DEFAULT NULL,
+  `last_seen` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `identifier_ip` (`identifier`,`ip`),
+  KEY `ip` (`ip`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table essentialmode.admin_ip_log: ~1 rows (approximately)
+REPLACE INTO `admin_ip_log` (`id`, `identifier`, `license`, `discord`, `ip`, `playername`, `last_seen`) VALUES
+	(1, 'steam:11000014bf543e0', 'license:153122398469261248', 'no info', '192.168.1.110', 'GD', '2026-08-16 00:41:01'),
+	(2, 'steam:11000014bf543e0', 'license:153122398469261248', 'no info', '172.20.10.2', 'GD', '2026-08-16 16:10:56');
+
+-- Dumping structure for table essentialmode.admin_player_notes
+DROP TABLE IF EXISTS `admin_player_notes`;
+CREATE TABLE IF NOT EXISTS `admin_player_notes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `identifier` varchar(60) NOT NULL,
+  `note` varchar(500) NOT NULL,
+  `admin_name` varchar(100) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `identifier` (`identifier`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table essentialmode.admin_player_notes: ~0 rows (approximately)
+
+-- Dumping structure for table essentialmode.admin_saved_locations
+DROP TABLE IF EXISTS `admin_saved_locations`;
+CREATE TABLE IF NOT EXISTS `admin_saved_locations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `x` float NOT NULL,
+  `y` float NOT NULL,
+  `z` float NOT NULL,
+  `created_by` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table essentialmode.admin_saved_locations: ~0 rows (approximately)
+
+-- Dumping structure for table essentialmode.admin_warnings
+DROP TABLE IF EXISTS `admin_warnings`;
+CREATE TABLE IF NOT EXISTS `admin_warnings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `identifier` varchar(60) NOT NULL,
+  `playername` varchar(100) DEFAULT NULL,
+  `admin_identifier` varchar(60) DEFAULT NULL,
+  `admin_name` varchar(100) DEFAULT NULL,
+  `reason` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `identifier` (`identifier`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table essentialmode.admin_warnings: ~2 rows (approximately)
+REPLACE INTO `admin_warnings` (`id`, `identifier`, `playername`, `admin_identifier`, `admin_name`, `reason`, `created_at`) VALUES
+	(1, 'steam:11000014bf543e0', 'GD', 'steam:11000014bf543e0', 'GD', '1', '2026-08-15 09:31:07'),
+	(2, 'steam:11000014bf543e0', 'GD', 'steam:11000014bf543e0', 'GD', '2', '2026-08-15 10:31:57');
+
 -- Dumping structure for table essentialmode.adminjaillog
 DROP TABLE IF EXISTS `adminjaillog`;
 CREATE TABLE IF NOT EXISTS `adminjaillog` (
@@ -309,9 +395,9 @@ CREATE TABLE IF NOT EXISTS `audit` (
   `timestamp` varchar(50) DEFAULT NULL,
   `type` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`log_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=210 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=254 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table essentialmode.audit: ~203 rows (approximately)
+-- Dumping data for table essentialmode.audit: ~242 rows (approximately)
 REPLACE INTO `audit` (`log_id`, `id`, `identifier`, `oname`, `timestamp`, `type`) VALUES
 	(1, 1, 'steam:11000014bf543e0', 'AghaT BardiA', '1785397967', 'Enter'),
 	(2, 2, 'steam:11000014bf543e0', 'AghaT BardiA', '1785398099', 'Exit([txAdmin] You have been kicked: for unknown r'),
@@ -521,7 +607,51 @@ REPLACE INTO `audit` (`log_id`, `id`, `identifier`, `oname`, `timestamp`, `type`
 	(206, 1, 'steam:11000014bf543e0', 'GD', '1786564703', 'Enter'),
 	(207, 1, 'steam:11000014bf543e0', 'GD', '1786565690', 'Exit(Exiting)'),
 	(208, 1, 'steam:11000014bf543e0', 'GD', '1786601489', 'Enter'),
-	(209, 1, 'steam:11000014bf543e0', 'GD', '1786602347', 'Exit(Server shutting down: SIGHUP received)');
+	(209, 1, 'steam:11000014bf543e0', 'GD', '1786602347', 'Exit(Server shutting down: SIGHUP received)'),
+	(210, 1, 'steam:11000014bf543e0', 'GD', '1786610948', 'Enter'),
+	(211, 1, 'steam:11000014bf543e0', 'GD', '1786611180', 'Exit(Exiting)'),
+	(212, 1, 'steam:11000014bf543e0', 'GD', '1786687198', 'Enter'),
+	(213, 1, 'steam:11000014bf543e0', 'GD', '1786688700', 'Exit(Server shutting down: SIGHUP received)'),
+	(214, 1, 'steam:11000014bf543e0', 'GD', '1786689313', 'Enter'),
+	(215, 1, 'steam:11000014bf543e0', 'GD', '1786689722', 'Exit(Server shutting down: SIGHUP received)'),
+	(216, 1, 'steam:11000014bf543e0', 'GD', '1786690108', 'Enter'),
+	(217, 1, 'steam:11000014bf543e0', 'GD', '1786690369', 'Exit(Server shutting down: SIGHUP received)'),
+	(218, 1, 'steam:11000014bf543e0', 'GD', '1786698194', 'Enter'),
+	(219, 1, 'steam:11000014bf543e0', 'GD', '1786701592', 'Exit(Exiting)'),
+	(220, 1, 'steam:11000014bf543e0', 'GD', '1786708993', 'Enter'),
+	(221, 1, 'steam:11000014bf543e0', 'GD', '1786710237', 'Exit(Server shutting down: SIGHUP received)'),
+	(222, 1, 'steam:11000014bf543e0', 'GD', '1786723387', 'Enter'),
+	(223, 1, 'steam:11000014bf543e0', 'GD', '1786724425', 'Exit(Exiting)'),
+	(224, 1, 'steam:11000014bf543e0', 'GD', '1786773472', 'Enter'),
+	(225, 1, 'steam:11000014bf543e0', 'GD', '1786773965', 'Exit(Server shutting down: SIGHUP received)'),
+	(226, 1, 'steam:11000014bf543e0', 'GD', '1786774275', 'Enter'),
+	(227, 1, 'steam:11000014bf543e0', 'GD', '1786775403', 'Exit(Server shutting down: SIGHUP received)'),
+	(228, 1, 'steam:11000014bf543e0', 'GD', '1786775620', 'Enter'),
+	(229, 1, 'steam:11000014bf543e0', 'GD', '1786776232', 'Exit(Server shutting down: SIGHUP received)'),
+	(230, 1, 'steam:11000014bf543e0', 'GD', '1786777211', 'Enter'),
+	(231, 1, 'steam:11000014bf543e0', 'GD', '1786777893', 'Exit(Server shutting down: SIGHUP received)'),
+	(232, 1, 'steam:11000014bf543e0', 'GD', '1786782978', 'Enter'),
+	(233, 1, 'steam:11000014bf543e0', 'GD', '1786783244', 'Exit(Server shutting down: SIGHUP received)'),
+	(234, 1, 'steam:11000014bf543e0', 'GD', '1786791239', 'Enter'),
+	(235, 1, 'steam:11000014bf543e0', 'GD', '1786791916', 'Exit(Server shutting down: SIGHUP received)'),
+	(236, 1, 'steam:11000014bf543e0', 'GD', '1786792099', 'Enter'),
+	(237, 1, 'steam:11000014bf543e0', 'GD', '1786792974', 'Exit(Server->client connection timed out. Last see'),
+	(238, 1, 'steam:11000014bf543e0', 'GD', '1786793169', 'Enter'),
+	(239, 1, 'steam:11000014bf543e0', 'GD', '1786793505', 'Exit(Exiting)'),
+	(240, 1, 'steam:11000014bf543e0', 'GD', '1786794588', 'Enter'),
+	(241, 1, 'steam:11000014bf543e0', 'GD', '1786795130', 'Exit(Server shutting down: SIGHUP received)'),
+	(242, 1, 'steam:11000014bf543e0', 'GD', '1786796354', 'Enter'),
+	(243, 1, 'steam:11000014bf543e0', 'GD', '1786796854', 'Exit(Server shutting down: SIGHUP received)'),
+	(244, 1, 'steam:11000014bf543e0', 'GD', '1786807778', 'Enter'),
+	(245, 1, 'steam:11000014bf543e0', 'GD', '1786808545', 'Exit(Server shutting down: SIGHUP received)'),
+	(246, 1, 'steam:11000014bf543e0', 'GD', '1786809538', 'Enter'),
+	(247, 1, 'steam:11000014bf543e0', 'GD', '1786811016', 'Exit(Server shutting down: SIGHUP received)'),
+	(248, 1, 'steam:11000014bf543e0', 'GD', '1786828263', 'Enter'),
+	(249, 1, 'steam:11000014bf543e0', 'GD', '1786829041', 'Exit(Exiting)'),
+	(250, 1, 'steam:11000014bf543e0', 'GD', '1786867186', 'Enter'),
+	(251, 1, 'steam:11000014bf543e0', 'GD', '1786869639', 'Exit(Server shutting down: SIGHUP received)'),
+	(252, 1, 'steam:11000014bf543e0', 'GD', '1786884058', 'Enter'),
+	(253, 1, 'steam:11000014bf543e0', 'GD', '1786889490', 'Exit(Exiting)');
 
 -- Dumping structure for table essentialmode.bag_inventories
 DROP TABLE IF EXISTS `bag_inventories`;
@@ -550,7 +680,7 @@ CREATE TABLE IF NOT EXISTS `baninfo` (
 
 -- Dumping data for table essentialmode.baninfo: ~0 rows (approximately)
 REPLACE INTO `baninfo` (`identifier`, `license`, `liveid`, `xblid`, `discord`, `playerip`, `playername`, `oocname`) VALUES
-	('steam:11000014bf543e0', 'license:153122398469261248', 'no info', 'no info', 'no info', 'ip:172.20.10.2', 'Arshia_Mtz', 'GD');
+	('steam:11000014bf543e0', 'license:153122398469261248', 'no info', 'no info', 'no info', 'ip:192.168.1.110', 'Arshia_Mtz', 'GD');
 
 -- Dumping structure for table essentialmode.banlist
 DROP TABLE IF EXISTS `banlist`;
@@ -643,9 +773,9 @@ CREATE TABLE IF NOT EXISTS `capture_academy_stats` (
   PRIMARY KEY (`identifier`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table essentialmode.capture_academy_stats: ~1 rows (approximately)
+-- Dumping data for table essentialmode.capture_academy_stats: ~0 rows (approximately)
 REPLACE INTO `capture_academy_stats` (`identifier`, `name`, `kills`) VALUES
-	('steam:11000014bf543e0', 'GD', 16);
+	('steam:11000014bf543e0', 'GD', 65);
 
 -- Dumping structure for table essentialmode.capture_gang_season_archive
 DROP TABLE IF EXISTS `capture_gang_season_archive`;
@@ -700,14 +830,15 @@ CREATE TABLE IF NOT EXISTS `capture_history` (
   `top_gangs_json` text DEFAULT NULL,
   `top_killers_json` text DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table essentialmode.capture_history: ~3 rows (approximately)
 REPLACE INTO `capture_history` (`id`, `round_date`, `winner_gang`, `winner_points`, `top_killer_name`, `top_killer_kills`, `top_gangs_json`, `top_killers_json`) VALUES
 	(1, '2026-08-09 01:32:21', 'A', 52, NULL, 0, '[{"Name":"A","Logo":"defaultlogo","Points":52}]', '[]'),
 	(2, '2026-08-09 01:51:32', 'A', 4, NULL, 0, '[{"Points":4,"Logo":"defaultlogo","Name":"A"}]', '[]'),
 	(3, '2026-08-09 10:12:52', 'A', 4, NULL, 0, '[{"Points":4,"Logo":"defaultlogo","Name":"A"}]', '[]'),
-	(4, '2026-08-11 10:05:48', 'A', 5, NULL, 0, '[{"Points":5,"Name":"A","Logo":"defaultlogo"}]', '[]');
+	(4, '2026-08-11 10:05:48', 'A', 5, NULL, 0, '[{"Points":5,"Name":"A","Logo":"defaultlogo"}]', '[]'),
+	(5, '2026-08-16 17:11:27', NULL, 0, NULL, 0, '[]', '[]');
 
 -- Dumping structure for table essentialmode.capture_meta
 DROP TABLE IF EXISTS `capture_meta`;
@@ -875,6 +1006,7 @@ CREATE TABLE IF NOT EXISTS `datastore` (
 -- Dumping data for table essentialmode.datastore: ~16 rows (approximately)
 REPLACE INTO `datastore` (`name`, `label`, `shared`) VALUES
 	('gang_a', 'gang', 1),
+	('property', 'Property', 0),
 	('society_ambulance', 'Ambulance', 1),
 	('society_cardealer', 'Cardealer', 1),
 	('society_concess', 'Concessionnaire', 1),
@@ -901,7 +1033,7 @@ CREATE TABLE IF NOT EXISTS `datastore_data` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_datastore_data_name_owner` (`name`,`owner`),
   KEY `index_datastore_data_name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table essentialmode.datastore_data: ~16 rows (approximately)
 REPLACE INTO `datastore_data` (`id`, `name`, `owner`, `data`) VALUES
@@ -920,7 +1052,8 @@ REPLACE INTO `datastore_data` (`id`, `name`, `owner`, `data`) VALUES
 	(13, 'user_helmet', 'steam:11000014bf543e0', '{}'),
 	(14, 'user_mask', 'steam:11000014bf543e0', '{}'),
 	(15, 'user_ears', 'steam:11000014bf543e0', '{}'),
-	(16, 'gang_a', NULL, '[]');
+	(16, 'gang_a', NULL, '[]'),
+	(17, 'property', 'steam:11000014bf543e0', '{}');
 
 -- Dumping structure for table essentialmode.division_grades
 DROP TABLE IF EXISTS `division_grades`;
@@ -950,11 +1083,12 @@ CREATE TABLE IF NOT EXISTS `divisions` (
   `items` longtext DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `owner_name` (`owner`,`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table essentialmode.divisions: ~0 rows (approximately)
 REPLACE INTO `divisions` (`id`, `owner`, `name`, `label`, `skin_male`, `skin_female`, `vehicles`, `helis`, `weapons`, `items`) VALUES
-	(1, 'police', 'Arshia', '1', '{"helmet_1":-1,"bags_2":0,"ears_2":-1,"hair_2":0,"lipstick_4":0,"makeup_3":0,"age_1":0,"mask_2":2,"lipstick_1":0,"tshirt_2":0,"hair_color_1":0,"shoes_2":0,"lipstick_3":0,"eyebrows_1":0,"bproof_1":0,"decals_2":0,"arms":15,"glasses_1":-1,"lipstick_2":0,"makeup_1":0,"eyebrows_3":12,"beard_2":10,"ears_1":-1,"eye_color":12,"watches_2":-1,"moles_1":0,"eyebrows_2":10,"age_2":0,"chain_1":0,"eyebrows_4":12,"tshirt_1":15,"pants_1":61,"hair_color_2":0,"mask_1":0,"beard_3":0,"face_1":19,"makeup_4":0,"complexion_2":1,"chain_2":0,"glasses_2":-1,"bags_1":0,"face_3":10,"complexion_1":0,"hair_1":0,"sex":0,"beard_1":0,"moles_2":1,"helmet_2":-1,"makeup_2":0,"beard_4":0,"pants_2":4,"decals_1":0,"shoes_1":34,"torso_2":0,"arms_2":0,"watches_1":-1,"face_2":21,"bproof_2":0,"torso_1":15,"skin":19}', '[]', '[]', '[]', '[]', '[]');
+	(1, 'police', 'Arshia', '1', '{"helmet_1":-1,"bags_2":0,"ears_2":-1,"hair_2":0,"lipstick_4":0,"makeup_3":0,"age_1":0,"mask_2":2,"lipstick_1":0,"tshirt_2":0,"hair_color_1":0,"shoes_2":0,"lipstick_3":0,"eyebrows_1":0,"bproof_1":0,"decals_2":0,"arms":15,"glasses_1":-1,"lipstick_2":0,"makeup_1":0,"eyebrows_3":12,"beard_2":10,"ears_1":-1,"eye_color":12,"watches_2":-1,"moles_1":0,"eyebrows_2":10,"age_2":0,"chain_1":0,"eyebrows_4":12,"tshirt_1":15,"pants_1":61,"hair_color_2":0,"mask_1":0,"beard_3":0,"face_1":19,"makeup_4":0,"complexion_2":1,"chain_2":0,"glasses_2":-1,"bags_1":0,"face_3":10,"complexion_1":0,"hair_1":0,"sex":0,"beard_1":0,"moles_2":1,"helmet_2":-1,"makeup_2":0,"beard_4":0,"pants_2":4,"decals_1":0,"shoes_1":34,"torso_2":0,"arms_2":0,"watches_1":-1,"face_2":21,"bproof_2":0,"torso_1":15,"skin":19}', '[]', '[]', '[]', '[]', '[]'),
+	(2, 'doa', 'test', 'Test', '{"eye_color":5,"face_1":0,"age_1":0,"pants_1":61,"hair_color_1":0,"mask_1":0,"glasses_2":-1,"lipstick_4":0,"torso_2":0,"eyebrows_1":0,"bags_2":0,"watches_2":-1,"beard_1":0,"pants_2":4,"lipstick_2":0,"lipstick_1":0,"helmet_2":-1,"lipstick_3":0,"sex":0,"decals_1":0,"complexion_1":0,"arms_2":0,"mask_2":2,"beard_2":10,"shoes_1":34,"makeup_3":0,"chain_1":0,"makeup_4":0,"hair_2":0,"complexion_2":1,"hair_1":10,"shoes_2":0,"eyebrows_4":12,"bags_1":0,"beard_4":0,"makeup_2":0,"chain_2":0,"arms":15,"moles_2":1,"eyebrows_2":10,"tshirt_2":0,"bproof_2":0,"ears_2":-1,"glasses_1":-1,"beard_3":0,"face_2":21,"skin":12,"makeup_1":0,"watches_1":-1,"decals_2":0,"bproof_1":0,"eyebrows_3":12,"moles_1":0,"hair_color_2":0,"tshirt_1":59,"helmet_1":-1,"ears_1":-1,"age_2":0,"torso_1":15,"face_3":5}', '[]', '[]', '[]', '[]', '[]');
 
 -- Dumping structure for table essentialmode.duckcad_data
 DROP TABLE IF EXISTS `duckcad_data`;
@@ -984,9 +1118,9 @@ CREATE TABLE IF NOT EXISTS `duty_logs` (
   `date` date DEFAULT NULL,
   `total_time` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=225 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=230 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table essentialmode.duty_logs: ~38 rows (approximately)
+-- Dumping data for table essentialmode.duty_logs: ~43 rows (approximately)
 REPLACE INTO `duty_logs` (`id`, `steamhex`, `ic_name`, `job_name`, `job_grade`, `date`, `total_time`) VALUES
 	(186, 'steam:110000146d830cd', 'Sohrab_Qaderi', 'police', 'Chief', '2025-02-06', 7800),
 	(187, 'steam:110000146d830cd', 'Sohrab_Qaderi', 'police', 'Chief', '2025-02-07', 2400),
@@ -1025,7 +1159,12 @@ REPLACE INTO `duty_logs` (`id`, `steamhex`, `ic_name`, `job_name`, `job_grade`, 
 	(221, 'steam:11000014bf543e0', 'Arshia_Mtz', 'mechanic', 'Rank 18', '2026-08-11', 900),
 	(222, 'steam:11000014bf543e0', 'Arshia_Mtz', 'mt', 'Commissioner', '2026-08-11', 300),
 	(223, 'steam:11000014bf543e0', 'Arshia_Mtz', 'ambulance', 'Chief', '2026-08-11', 300),
-	(224, 'steam:11000014bf543e0', 'Arshia_Mtz', 'police', 'Commissioner', '2026-08-13', 900);
+	(224, 'steam:11000014bf543e0', 'Arshia_Mtz', 'police', 'Commissioner', '2026-08-13', 1200),
+	(225, 'steam:11000014bf543e0', 'Arshia_Mtz', 'police', 'Commissioner', '2026-08-14', 3900),
+	(226, 'steam:11000014bf543e0', 'Arshia_Mtz', 'police', 'Commissioner', '2026-08-15', 4500),
+	(227, 'steam:11000014bf543e0', 'Arshia_Mtz', 'sheriff', 'Deputy', '2026-08-15', 6300),
+	(228, 'steam:11000014bf543e0', 'Arshia_Mtz', 'cid', 'Chief of CID', '2026-08-15', 4500),
+	(229, 'steam:11000014bf543e0', 'Arshia_Mtz', 'cid', 'CID Officer 1', '2026-08-16', 3000);
 
 -- Dumping structure for table essentialmode.fightbans
 DROP TABLE IF EXISTS `fightbans`;
@@ -1259,6 +1398,12 @@ REPLACE INTO `items` (`name`, `label`, `limit`, `rare`, `can_remove`) VALUES
 	('eclip', 'Extended Clip', -1, 0, 1),
 	('egg', 'Tokhm Morgh', 30, 0, 1),
 	('engine', 'Engine', -1, 0, 1),
+	('engine1', 'Engine Scrap X1', -1, 0, 1),
+	('engine2', 'Engine Scrap X2', -1, 0, 1),
+	('engine3', 'Engine Scrap X3', -1, 0, 1),
+	('engine4', 'Engine Scrap X4', -1, 0, 1),
+	('engine5', 'Engine Scrap X5', -1, 0, 1),
+	('engine6', 'Engine Scrap X6', -1, 0, 1),
 	('ephedra', 'Ephedra', 100, 0, 1),
 	('ephedrine', 'Ephedrine', 100, 0, 1),
 	('eskenas', 'Eskenas', -1, 0, 1),
@@ -1373,6 +1518,7 @@ REPLACE INTO `items` (`name`, `label`, `limit`, `rare`, `can_remove`) VALUES
 	('scope', 'Scope', -1, 0, 1),
 	('sf', 'SF', -1, 0, 1),
 	('sh', 'SH', -1, 0, 1),
+	('shahkelid', 'Shah Kelid', -1, 0, 1),
 	('shekar', 'Shekar', 30, 0, 1),
 	('shir', 'Shir', 30, 0, 1),
 	('shokolat', 'Shokolat', 10, 0, 1),
@@ -1422,7 +1568,7 @@ CREATE TABLE IF NOT EXISTS `job_grades` (
   PRIMARY KEY (`job_name`,`grade`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table essentialmode.job_grades: ~448 rows (approximately)
+-- Dumping data for table essentialmode.job_grades: ~422 rows (approximately)
 REPLACE INTO `job_grades` (`job_name`, `grade`, `name`, `label`, `salary`, `skin_male`, `skin_female`, `vehicles`, `helis`, `weapons`, `items`) VALUES
 	('ambulance', 0, 'ambulance', 'Ambulancier', 20, '{"tshirt_2":0,"hair_color_1":5,"glasses_2":3,"shoes":9,"torso_2":3,"hair_color_2":0,"pants_1":24,"glasses_1":4,"hair_1":2,"sex":0,"decals_2":0,"tshirt_1":15,"helmet_1":8,"helmet_2":0,"arms":92,"face":19,"decals_1":60,"torso_1":13,"hair_2":0,"skin":34,"pants_2":5}', '{"tshirt_2":3,"decals_2":0,"glasses":0,"hair_1":2,"torso_1":73,"shoes":1,"hair_color_2":0,"glasses_1":19,"skin":13,"face":6,"pants_2":5,"tshirt_1":75,"pants_1":37,"helmet_1":57,"torso_2":0,"arms":14,"sex":1,"glasses_2":0,"decals_1":0,"hair_2":0,"helmet_2":0,"hair_color_1":0}', NULL, NULL, NULL, NULL),
 	('ambulance', 1, 'intern', 'Intern', 3000, '{"mask_1":0,"jaw_1":0,"age_1":0,"lip_thickness":0,"ears_1":-1,"face_2":21,"moles_2":1,"glasses_2":-1,"blush_1":-1,"nose_5":0,"beard_3":0,"sex":0,"tshirt_2":0,"beard_1":0,"face_md_weight":50.0,"chin_3":0,"beard_4":0,"bags_2":0,"decals_1":0,"neck_thickness":0,"eye_squint":0,"beard_2":10,"hair_2":0,"blush_2":10,"eyebrows_3":12,"lipstick_1":0,"shoes_2":0,"jaw_2":0,"complexion_1":0,"watches_2":-1,"blush_3":0,"skin":12,"hair_color_2":0,"watches_1":-1,"ears_2":-1,"chest_1":-1,"hair_color_1":0,"arms":85,"shoes_1":179,"age_2":0,"chin_4":0,"bodyb_1":-1,"cheeks_2":0,"lipstick_4":0,"lipstick_3":0,"makeup_2":0,"makeup_4":0,"chain_1":126,"sun_1":-1,"torso_2":4,"bodyb_3":-1,"chin_1":0,"blemishes_1":-1,"nose_4":0,"bracelets_1":-1,"helmet_1":-1,"eyebrows_2":10,"eye_color":0,"moles_1":0,"bproof_1":0,"eyebrows_6":0,"bags_1":0,"eyebrows_4":12,"hair_1":10,"bproof_2":0,"glasses_1":-1,"decals_2":0,"bracelets_2":0,"makeup_1":0,"tshirt_1":15,"dad":0,"bodyb_4":0,"face_1":0,"bodyb_2":0,"face_3":5,"pants_1":279,"mom":21,"blemishes_2":10,"complexion_2":1,"cheeks_3":0,"eyebrows_5":0,"sun_2":10,"chin_2":0,"nose_2":0,"helmet_2":-1,"nose_3":0,"nose_6":0,"torso_1":791,"pants_2":4,"arms_2":0,"makeup_3":0,"nose_1":0,"chain_2":0,"cheeks_1":0,"mask_2":0,"lipstick_2":0,"chest_2":10,"skin_md_weight":6,"chest_3":0,"eyebrows_1":0}', '{}', '[{"status":true,"model":"ambulance"},{"status":true,"model":"1200rt"},{"status":true,"model":"corvette"},{"status":false,"model":"motorpm"},{"status":false,"model":"orbmwm5"},{"status":false,"model":"polkch"},{"status":false,"model":"poljug"},{"status":false,"model":"polkmd"},{"status":false,"model":"polreb"},{"status":false,"model":"polros"}]', NULL, '', '[]'),
@@ -1885,6 +2031,17 @@ CREATE TABLE IF NOT EXISTS `job_inventories` (
 
 -- Dumping data for table essentialmode.job_inventories: ~0 rows (approximately)
 
+-- Dumping structure for table essentialmode.job_skill
+DROP TABLE IF EXISTS `job_skill`;
+CREATE TABLE IF NOT EXISTS `job_skill` (
+  `identifier` varchar(60) NOT NULL,
+  `job` varchar(50) NOT NULL,
+  `minutes` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`identifier`,`job`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table essentialmode.job_skill: ~0 rows (approximately)
+
 -- Dumping structure for table essentialmode.jobs
 DROP TABLE IF EXISTS `jobs`;
 CREATE TABLE IF NOT EXISTS `jobs` (
@@ -1895,61 +2052,62 @@ CREATE TABLE IF NOT EXISTS `jobs` (
   `handyservice` varchar(5) DEFAULT '0',
   `hasapp` tinyint(1) NOT NULL DEFAULT 0,
   `onlyboss` tinyint(1) NOT NULL DEFAULT 0,
+  `icon_url` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table essentialmode.jobs: ~50 rows (approximately)
-REPLACE INTO `jobs` (`name`, `label`, `whitelisted`, `washmoney`, `handyservice`, `hasapp`, `onlyboss`) VALUES
-	('ambulance', 'Ambulance', 1, 0, '0', 0, 0),
-	('artesh', 'Artesh', 0, 0, '0', 0, 0),
-	('burgershot', 'Burgershot', 1, 0, '0', 0, 0),
-	('cafe', 'Cafe', 1, 0, '0', 0, 0),
-	('cardealer', 'Cardealer', 0, 0, '0', 0, 0),
-	('cia', 'CIA', 1, 0, '0', 0, 0),
-	('cid', 'CID', 1, 0, '0', 0, 0),
-	('coffee', 'Coffee Shop', 0, 0, '0', 0, 0),
-	('dadgostari', 'Dadgostari', 0, 0, '0', 0, 0),
-	('doa', 'DOA', 1, 0, '0', 0, 0),
-	('doc', 'Doctor', 0, 0, '0', 0, 0),
-	('fbi', 'FBI', 1, 0, '0', 0, 0),
-	('fisherman', 'Mahi Gir', 0, 0, '0', 0, 0),
-	('food', 'Food Delivery', 0, 0, '0', 0, 0),
-	('forces', 'Special Forces', 0, 0, '0', 0, 0),
-	('fueler', 'Sherekat Naft', 0, 0, '0', 0, 0),
-	('government', 'Government', 0, 0, '0', 0, 0),
-	('judge', 'Judge', 1, 0, '0', 0, 0),
-	('lumberjack', 'Najar', 0, 0, '0', 0, 0),
-	('marshal', 'Marshal', 1, 0, '0', 0, 0),
-	('mechanic', 'Mechanic', 1, 0, '0', 0, 0),
-	('miner', 'Madanchi', 0, 0, '0', 0, 0),
-	('mt', 'Metropolitan', 0, 0, '0', 0, 0),
-	('nightclub', 'Nightclub', 0, 0, '0', 0, 0),
-	('nojob', 'Bikar', 0, 0, '0', 0, 0),
-	('offambulance', 'Off-Duty', 1, 0, '0', 0, 0),
-	('offcatcafe', 'Off-Duty', 1, 0, '0', 0, 0),
-	('offcia', 'Off-Duty', 1, 0, '0', 0, 0),
-	('offcid', 'Off-Duty', 1, 0, '0', 0, 0),
-	('offdoa', 'Off-Duty', 1, 0, '0', 0, 0),
-	('offfbi', 'FBI (Off Duty)', 0, 0, '0', 0, 0),
-	('offjudge', 'Off-Duty', 1, 0, '0', 0, 0),
-	('offmarshal', 'Off-Duty', 1, 0, '0', 0, 0),
-	('offmechanic', 'Off-Duty', 1, 0, '0', 0, 0),
-	('offmt', 'Off Duty', 0, 0, '0', 0, 0),
-	('offpolice', 'Off-Duty', 1, 0, '0', 0, 0),
-	('offsheriff', 'Off-Duty', 1, 0, '0', 0, 0),
-	('offtaxi', 'Off-Duty', 1, 0, '0', 0, 0),
-	('offweazel', 'Off-Duty', 1, 0, '0', 0, 0),
-	('police', 'Police', 1, 0, '0', 0, 0),
-	('psuspend', 'Suspended', 0, 0, '0', 0, 0),
-	('reporter', 'Journalisti', 0, 0, '0', 0, 0),
-	('resturan', 'Resturan', 1, 0, '0', 0, 0),
-	('sheriff', 'Sheriff', 1, 0, '0', 0, 0),
-	('slaughterer', 'Qasab', 0, 0, '0', 0, 0),
-	('tailor', 'Khayat', 0, 0, '0', 0, 0),
-	('taxi', 'Taxi', 1, 0, '0', 0, 0),
-	('unemployed', 'Unemployed', 0, 0, '0', 0, 0),
-	('uwucafe', 'UwU Cafe', 1, 0, '0', 0, 0),
-	('weazel', 'Weazel News', 1, 0, '0', 0, 0);
+REPLACE INTO `jobs` (`name`, `label`, `whitelisted`, `washmoney`, `handyservice`, `hasapp`, `onlyboss`, `icon_url`) VALUES
+	('ambulance', 'Ambulance', 1, 0, '0', 0, 0, NULL),
+	('artesh', 'Artesh', 0, 0, '0', 0, 0, NULL),
+	('burgershot', 'Burgershot', 1, 0, '0', 0, 0, NULL),
+	('cafe', 'Cafe', 1, 0, '0', 0, 0, NULL),
+	('cardealer', 'Cardealer', 0, 0, '0', 0, 0, NULL),
+	('cia', 'CIA', 1, 0, '0', 0, 0, NULL),
+	('cid', 'CID', 1, 0, '0', 0, 0, NULL),
+	('coffee', 'Coffee Shop', 0, 0, '0', 0, 0, NULL),
+	('dadgostari', 'Dadgostari', 0, 0, '0', 0, 0, NULL),
+	('doa', 'DOA', 1, 0, '0', 0, 0, NULL),
+	('doc', 'Doctor', 0, 0, '0', 0, 0, NULL),
+	('fbi', 'FBI', 1, 0, '0', 0, 0, NULL),
+	('fisherman', 'Mahi Gir', 0, 0, '0', 0, 0, NULL),
+	('food', 'Food Delivery', 0, 0, '0', 0, 0, NULL),
+	('forces', 'Special Forces', 0, 0, '0', 0, 0, NULL),
+	('fueler', 'Sherekat Naft', 0, 0, '0', 0, 0, NULL),
+	('government', 'Government', 0, 0, '0', 0, 0, NULL),
+	('judge', 'Judge', 1, 0, '0', 0, 0, NULL),
+	('lumberjack', 'Najar', 0, 0, '0', 0, 0, NULL),
+	('marshal', 'Marshal', 1, 0, '0', 0, 0, NULL),
+	('mechanic', 'Mechanic', 1, 0, '0', 0, 0, NULL),
+	('miner', 'Madanchi', 0, 0, '0', 0, 0, NULL),
+	('mt', 'Metropolitan', 0, 0, '0', 0, 0, NULL),
+	('nightclub', 'Nightclub', 0, 0, '0', 0, 0, NULL),
+	('nojob', 'Bikar', 0, 0, '0', 0, 0, NULL),
+	('offambulance', 'Off-Duty', 1, 0, '0', 0, 0, NULL),
+	('offcatcafe', 'Off-Duty', 1, 0, '0', 0, 0, NULL),
+	('offcia', 'Off-Duty', 1, 0, '0', 0, 0, NULL),
+	('offcid', 'Off-Duty', 1, 0, '0', 0, 0, NULL),
+	('offdoa', 'Off-Duty', 1, 0, '0', 0, 0, NULL),
+	('offfbi', 'FBI (Off Duty)', 0, 0, '0', 0, 0, NULL),
+	('offjudge', 'Off-Duty', 1, 0, '0', 0, 0, NULL),
+	('offmarshal', 'Off-Duty', 1, 0, '0', 0, 0, NULL),
+	('offmechanic', 'Off-Duty', 1, 0, '0', 0, 0, NULL),
+	('offmt', 'Off Duty', 0, 0, '0', 0, 0, NULL),
+	('offpolice', 'Off-Duty', 1, 0, '0', 0, 0, NULL),
+	('offsheriff', 'Off-Duty', 1, 0, '0', 0, 0, NULL),
+	('offtaxi', 'Off-Duty', 1, 0, '0', 0, 0, NULL),
+	('offweazel', 'Off-Duty', 1, 0, '0', 0, 0, NULL),
+	('police', 'Police', 1, 0, '0', 0, 0, NULL),
+	('psuspend', 'Suspended', 0, 0, '0', 0, 0, NULL),
+	('reporter', 'Journalisti', 0, 0, '0', 0, 0, NULL),
+	('resturan', 'Resturan', 1, 0, '0', 0, 0, NULL),
+	('sheriff', 'Sheriff', 1, 0, '0', 0, 0, NULL),
+	('slaughterer', 'Qasab', 0, 0, '0', 0, 0, NULL),
+	('tailor', 'Khayat', 0, 0, '0', 0, 0, NULL),
+	('taxi', 'Taxi', 1, 0, '0', 0, 0, NULL),
+	('unemployed', 'Unemployed', 0, 0, '0', 0, 0, NULL),
+	('uwucafe', 'UwU Cafe', 1, 0, '0', 0, 0, NULL),
+	('weazel', 'Weazel News', 1, 0, '0', 0, 0, NULL);
 
 -- Dumping structure for table essentialmode.lapraces
 DROP TABLE IF EXISTS `lapraces`;
@@ -2007,8 +2165,6 @@ CREATE TABLE IF NOT EXISTS `owned_peds` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table essentialmode.owned_peds: ~2 rows (approximately)
-REPLACE INTO `owned_peds` (`id`, `identifier`, `ped_model`, `ped_expiry`) VALUES
-	(2, 'steam:11000014bf543e0', 'a_m_m_farmer_01', '2026-08-15 12:34:07');
 
 -- Dumping structure for table essentialmode.owned_pets
 DROP TABLE IF EXISTS `owned_pets`;
@@ -2034,9 +2190,14 @@ CREATE TABLE IF NOT EXISTS `owned_properties` (
   `owner` varchar(60) DEFAULT NULL,
   `storage_data` longtext DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table essentialmode.owned_properties: ~0 rows (approximately)
+-- Dumping data for table essentialmode.owned_properties: ~4 rows (approximately)
+REPLACE INTO `owned_properties` (`id`, `name`, `price`, `rented`, `owner`, `storage_data`) VALUES
+	(1, 'trevor_trailer', 150000, 0, 'steam:11000014bf543e0', 'property'),
+	(2, 'Aqua3Apartment', 1500000, 0, 'steam:11000014bf543e0', NULL),
+	(3, 'NorthConkerAvenue2045', 1500000, 0, 'steam:11000014bf543e0', 'property'),
+	(4, 'HillcrestAvenue2862', 1500000, 0, 'steam:11000014bf543e0', 'property');
 
 -- Dumping structure for table essentialmode.owned_vehicles
 DROP TABLE IF EXISTS `owned_vehicles`;
@@ -2064,7 +2225,7 @@ CREATE TABLE IF NOT EXISTS `owned_vehicles` (
 
 -- Dumping data for table essentialmode.owned_vehicles: ~26 rows (approximately)
 REPLACE INTO `owned_vehicles` (`owner`, `plate`, `vehicle`, `type`, `job`, `stored`, `WantedLevel`, `Profile_Pic`, `engine`, `police`, `parkmeter`, `parkmeternum`, `damage`, `garagenum`, `steamowned`, `buyer`, `fuel`, `body`) VALUES
-	('steam:11000014bf543e0', '1', '{"modArmor":-1,"modSpeakers":-1,"modTrimB":-1,"modSpoilers":-1,"tyreSmokeColor":[255,255,255],"windowTint":-1,"modVanityPlate":-1,"modAirFilter":-1,"modTrimA":-1,"wheelColor":0,"wheels":0,"model":-1848994066,"modDoorSpeaker":-1,"modTank":-1,"pearlescentColor":2,"modFrontWheels":-1,"modFrame":-1,"neonEnabled":[false,false,false,false],"IsPrimaryCustomColor":false,"plate":"1","modRoof":-1,"neonColor":[255,0,255],"modHood":-1,"modDial":-1,"modSmokeEnabled":false,"headlight":255,"modRightFender":-1,"modHydrolic":-1,"modShifterLeavers":-1,"modExhaust":-1,"modEngine":-1,"modHorns":-1,"plateIndex":0,"modFender":-1,"modRearBumper":-1,"modDashboard":-1,"modGrille":-1,"color2":1,"modBackWheels":-1,"modWindows":-1,"IsSecondaryCustomColor":false,"modTrunk":-1,"modOrnaments":-1,"modAPlate":-1,"modSuspension":-1,"modSeats":-1,"modLivery":-1,"modEngineBlock":-1,"modTurbo":false,"modStruts":-1,"SecondaryCustomColor":{"r":15,"g":15,"b":15},"modFrontBumper":-1,"modTransmission":-1,"modSideSkirt":-1,"color1":0,"modBrakes":-1,"fuel":64.98500061035156,"modAerials":-1,"modArchCover":-1,"livery":-1,"modPlateHolder":-1,"PrimaryCustomColor":{"r":8,"g":8,"b":8},"modSteeringWheel":-1}', 'car', '', 0, 'standard', 'https://media.discordapp.net/attachments/813604209462214676/858319794900959232/unknown.png?width=1201&height=676', 1000, 0, 0, 0, NULL, 1, 'steam:11000014bf543e0', NULL, 64.985, 1000),
+	('steam:11000014bf543e0', '1', '{"modArmor":-1,"modSpeakers":-1,"modTrimB":-1,"modSpoilers":-1,"tyreSmokeColor":[255,255,255],"windowTint":-1,"modVanityPlate":-1,"modAirFilter":-1,"modTrimA":-1,"wheelColor":0,"wheels":0,"model":-1848994066,"modDoorSpeaker":-1,"modTank":-1,"pearlescentColor":2,"modFrontWheels":-1,"modFrame":-1,"neonEnabled":[false,false,false,false],"IsPrimaryCustomColor":false,"plate":"1","modRoof":-1,"neonColor":[255,0,255],"modHood":-1,"modDial":-1,"modSmokeEnabled":false,"headlight":255,"modRightFender":-1,"modHydrolic":-1,"modShifterLeavers":-1,"modExhaust":-1,"modEngine":-1,"modHorns":-1,"plateIndex":0,"modFender":-1,"modRearBumper":-1,"modDashboard":-1,"modGrille":-1,"color2":1,"modBackWheels":-1,"modWindows":-1,"IsSecondaryCustomColor":false,"modTrunk":-1,"modOrnaments":-1,"modAPlate":-1,"modSuspension":-1,"modSeats":-1,"modLivery":-1,"modEngineBlock":-1,"modTurbo":false,"modStruts":-1,"SecondaryCustomColor":{"r":15,"g":15,"b":15},"modFrontBumper":-1,"modTransmission":-1,"modSideSkirt":-1,"color1":0,"modBrakes":-1,"fuel":64.98500061035156,"modAerials":-1,"modArchCover":-1,"livery":-1,"modPlateHolder":-1,"PrimaryCustomColor":{"r":8,"g":8,"b":8},"modSteeringWheel":-1}', 'car', '', 1, 'standard', 'https://media.discordapp.net/attachments/813604209462214676/858319794900959232/unknown.png?width=1201&height=676', 1000, 0, 0, 0, NULL, 1, 'steam:11000014bf543e0', NULL, 64.985, 1000),
 	('steam:11000014bf543e0', '123213', '{"modDial":-1,"modAPlate":-1,"modRoof":-1,"modSmokeEnabled":false,"fuel":64.95999908447266,"model":-1848994066,"modSeats":-1,"modHood":-1,"modSpeakers":-1,"color1":64,"modArchCover":-1,"modEngineBlock":-1,"modBrakes":-1,"modRearBumper":-1,"modBackWheels":-1,"modGrille":-1,"modRightFender":-1,"modOrnaments":-1,"modSideSkirt":-1,"livery":-1,"modHydrolic":-1,"modSpoilers":-1,"modPlateHolder":-1,"pearlescentColor":73,"modTurbo":false,"modTrimB":-1,"modDashboard":-1,"modEngine":-1,"tyreSmokeColor":[255,255,255],"modFrontWheels":-1,"SecondaryCustomColor":{"b":8,"r":8,"g":8},"modFender":-1,"headlight":255,"modWindows":-1,"modTank":-1,"modExhaust":-1,"modStruts":-1,"plateIndex":0,"modFrontBumper":-1,"modHorns":-1,"modTrimA":-1,"windowTint":-1,"modSteeringWheel":-1,"modVanityPlate":-1,"wheelColor":0,"IsSecondaryCustomColor":false,"plate":"123213","modShifterLeavers":-1,"modDoorSpeaker":-1,"modFrame":-1,"neonColor":[255,0,255],"color2":0,"modAerials":-1,"PrimaryCustomColor":{"b":87,"r":0,"g":27},"neonEnabled":[false,false,false,false],"wheels":0,"modAirFilter":-1,"modTrunk":-1,"IsPrimaryCustomColor":false,"modArmor":-1,"modLivery":-1,"modTransmission":-1,"modSuspension":-1}', 'car', '', 1, 'standard', 'https://media.discordapp.net/attachments/813604209462214676/858319794900959232/unknown.png?width=1201&height=676', 1000, 0, 0, 0, NULL, 1, 'steam:11000014bf543e0', NULL, 64.96, 1000),
 	('steam:11000014bf543e0', 'A5T4N49S', '{"modExhaust":-1,"plateIndex":4,"modArmor":-1,"modSideSkirt":-1,"modTrimB":-1,"modAirFilter":-1,"fuel":64.86500549316406,"modAPlate":-1,"modGrille":-1,"modSteeringWheel":-1,"modTank":-1,"SecondaryCustomColor":{"b":8,"g":8,"r":8},"modArchCover":-1,"modTurbo":false,"windowTint":-1,"IsSecondaryCustomColor":false,"modVanityPlate":-1,"modFender":-1,"modFrame":-1,"neonColor":[255,0,255],"modRearBumper":-1,"modStruts":-1,"modDashboard":-1,"modHydrolic":-1,"modTransmission":-1,"modHood":-1,"headlight":255,"tyreSmokeColor":[255,255,255],"PrimaryCustomColor":{"b":255,"g":255,"r":255},"modPlateHolder":-1,"modOrnaments":-1,"plate":"A5T4N49S","modShifterLeavers":-1,"neonEnabled":[false,false,false,false],"modDial":-1,"modFrontWheels":-1,"modSeats":-1,"modBackWheels":-1,"modSuspension":-1,"model":-1627000575,"wheels":0,"color2":0,"modRoof":-1,"modLivery":-1,"modEngine":-1,"modWindows":-1,"modFrontBumper":-1,"modSpeakers":-1,"livery":2,"IsPrimaryCustomColor":false,"color1":134,"modBrakes":-1,"modEngineBlock":-1,"modDoorSpeaker":-1,"modTrimA":-1,"modRightFender":-1,"pearlescentColor":0,"modHorns":-1,"modSmokeEnabled":false,"modSpoilers":-1,"modAerials":-1,"wheelColor":156,"modTrunk":-1}', 'car', '', 1, 'standard', 'https://media.discordapp.net/attachments/813604209462214676/858319794900959232/unknown.png?width=1201&height=676', 1000, 0, 0, 0, NULL, 1, 'steam:11000014bf543e0', NULL, 64.865, 1000),
 	('steam:11000014bf543e0', 'B0Z6S41Z', '{"modFrontWheels":-1,"modAirFilter":-1,"modHorns":-1,"modSpoilers":-1,"SecondaryCustomColor":{"r":15,"g":15,"b":15},"modDial":-1,"modRearBumper":-1,"neonColor":[255,0,255],"modFender":-1,"windowTint":-1,"modRoof":-1,"modHood":-1,"modRightFender":-1,"color1":0,"modPlateHolder":-1,"fuel":65.0,"modShifterLeavers":-1,"modLivery":-1,"plate":"B0Z6S41Z","color2":1,"modEngine":-1,"modExhaust":-1,"headlight":255,"modTurbo":false,"modBrakes":-1,"model":-1848994066,"modSeats":-1,"modGrille":-1,"modHydrolic":-1,"modSmokeEnabled":1,"modArmor":-1,"neonEnabled":[false,false,false,false],"modTrimB":-1,"modBackWheels":-1,"modTrunk":-1,"PrimaryCustomColor":{"r":8,"g":8,"b":8},"modSuspension":-1,"modAerials":-1,"modDoorSpeaker":-1,"tyreSmokeColor":[255,255,255],"plateIndex":0,"modAPlate":-1,"modVanityPlate":-1,"modEngineBlock":-1,"livery":-1,"modFrontBumper":-1,"pearlescentColor":2,"modFrame":-1,"IsSecondaryCustomColor":false,"modOrnaments":-1,"modSpeakers":-1,"modTrimA":-1,"modDashboard":-1,"modTank":-1,"IsPrimaryCustomColor":false,"modTransmission":-1,"modWindows":-1,"modStruts":-1,"modArchCover":-1,"modSideSkirt":-1,"wheels":0,"modSteeringWheel":-1,"wheelColor":0}', 'car', '', 1, 'standard', 'https://media.discordapp.net/attachments/813604209462214676/858319794900959232/unknown.png?width=1201&height=676', 1000, 0, 0, 0, NULL, 1, 'steam:11000014bf543e0', NULL, 100, 1000),
@@ -2200,14 +2361,67 @@ CREATE TABLE IF NOT EXISTS `police_ext` (
 DROP TABLE IF EXISTS `properties`;
 CREATE TABLE IF NOT EXISTS `properties` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
-  `label` varchar(100) DEFAULT NULL,
-  `price` int(11) NOT NULL DEFAULT 0,
-  `coords` longtext DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `label` varchar(255) DEFAULT NULL,
+  `entering` varchar(255) DEFAULT NULL,
+  `exit` varchar(255) DEFAULT NULL,
+  `inside` varchar(255) DEFAULT NULL,
+  `outside` varchar(255) DEFAULT NULL,
+  `ipls` varchar(255) DEFAULT '[]',
+  `gateway` varchar(255) DEFAULT NULL,
+  `is_single` int(11) DEFAULT NULL,
+  `is_room` int(11) DEFAULT NULL,
+  `is_gateway` int(11) DEFAULT NULL,
+  `room_menu` varchar(255) DEFAULT NULL,
+  `price` int(11) NOT NULL,
+  `storage_data` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table essentialmode.properties: ~0 rows (approximately)
+-- Dumping data for table essentialmode.properties: ~42 rows (approximately)
+REPLACE INTO `properties` (`id`, `name`, `label`, `entering`, `exit`, `inside`, `outside`, `ipls`, `gateway`, `is_single`, `is_room`, `is_gateway`, `room_menu`, `price`, `storage_data`) VALUES
+	(1, 'WhispymoundDrive', '2677 Whispymound Drive', '{"y":564.89,"z":182.959,"x":119.384}', '{"x":117.347,"y":559.506,"z":183.304}', '{"y":557.032,"z":183.301,"x":118.037}', '{"y":567.798,"z":182.131,"x":119.249}', '[]', NULL, 1, 1, 0, '{"x":118.748,"y":566.573,"z":175.697}', 1500000, 'property'),
+	(2, 'NorthConkerAvenue2045', '2045 North Conker Avenue', '{"x":372.796,"y":428.327,"z":144.685}', '{"x":373.548,"y":422.982,"z":144.907}', '{"y":420.075,"z":145.904,"x":372.161}', '{"x":372.454,"y":432.886,"z":143.443}', '[]', NULL, 1, 1, 0, '{"x":377.349,"y":429.422,"z":137.3}', 1500000, 'property'),
+	(3, 'RichardMajesticApt2', 'Richard Majestic, Apt 2', '{"y":-379.165,"z":37.961,"x":-936.363}', '{"y":-365.476,"z":113.274,"x":-913.097}', '{"y":-367.637,"z":113.274,"x":-918.022}', '{"y":-382.023,"z":37.961,"x":-943.626}', '[]', NULL, 1, 1, 0, '{"x":-927.554,"y":-377.744,"z":112.674}', 1700000, 'property'),
+	(4, 'NorthConkerAvenue2044', '2044 North Conker Avenue', '{"y":440.8,"z":146.702,"x":346.964}', '{"y":437.456,"z":148.394,"x":341.683}', '{"y":435.626,"z":148.394,"x":339.595}', '{"x":350.535,"y":443.329,"z":145.764}', '[]', NULL, 1, 1, 0, '{"x":337.726,"y":436.985,"z":140.77}', 1500000, 'property'),
+	(5, 'WildOatsDrive', '3655 Wild Oats Drive', '{"y":502.696,"z":136.421,"x":-176.003}', '{"y":497.817,"z":136.653,"x":-174.349}', '{"y":495.069,"z":136.666,"x":-173.331}', '{"y":506.412,"z":135.0664,"x":-177.927}', '[]', NULL, 1, 1, 0, '{"x":-174.725,"y":493.095,"z":129.043}', 1500000, 'property'),
+	(6, 'HillcrestAvenue2862', '2862 Hillcrest Avenue', '{"y":596.58,"z":142.641,"x":-686.554}', '{"y":591.988,"z":144.392,"x":-681.728}', '{"y":590.608,"z":144.392,"x":-680.124}', '{"y":599.019,"z":142.059,"x":-689.492}', '[]', NULL, 1, 1, 0, '{"x":-680.46,"y":588.6,"z":136.769}', 1500000, 'property'),
+	(7, 'LowEndApartment', 'Appartement de base', '{"y":-1078.735,"z":28.4031,"x":292.528}', '{"y":-1007.152,"z":-102.002,"x":265.845}', '{"y":-1002.802,"z":-100.008,"x":265.307}', '{"y":-1078.669,"z":28.401,"x":296.738}', '[]', NULL, 1, 1, 0, '{"x":265.916,"y":-999.38,"z":-100.008}', 1500000, 'property'),
+	(8, 'MadWayneThunder', '2113 Mad Wayne Thunder', '{"y":454.955,"z":96.462,"x":-1294.433}', '{"x":-1289.917,"y":449.541,"z":96.902}', '{"y":446.322,"z":96.899,"x":-1289.642}', '{"y":455.453,"z":96.517,"x":-1298.851}', '[]', NULL, 1, 1, 0, '{"x":-1287.306,"y":455.901,"z":89.294}', 1500000, 'property'),
+	(9, 'HillcrestAvenue2874', '2874 Hillcrest Avenue', '{"x":-853.346,"y":696.678,"z":147.782}', '{"y":690.875,"z":151.86,"x":-859.961}', '{"y":688.361,"z":151.857,"x":-859.395}', '{"y":701.628,"z":147.773,"x":-855.007}', '[]', NULL, 1, 1, 0, '{"x":-858.543,"y":697.514,"z":144.253}', 1500000, 'property'),
+	(10, 'HillcrestAvenue2868', '2868 Hillcrest Avenue', '{"y":620.494,"z":141.588,"x":-752.82}', '{"y":618.62,"z":143.153,"x":-759.317}', '{"y":617.629,"z":143.153,"x":-760.789}', '{"y":621.281,"z":141.254,"x":-750.919}', '[]', NULL, 1, 1, 0, '{"x":-762.504,"y":618.992,"z":135.53}', 1500000, 'property'),
+	(11, 'TinselTowersApt12', 'Tinsel Towers, Apt 42', '{"y":37.025,"z":42.58,"x":-618.299}', '{"y":58.898,"z":97.2,"x":-603.301}', '{"y":58.941,"z":97.2,"x":-608.741}', '{"y":30.603,"z":42.524,"x":-620.017}', '[]', NULL, 1, 1, 0, '{"x":-622.173,"y":54.585,"z":96.599}', 1700000, 'property'),
+	(12, 'MiltonDrive', 'Milton Drive', '{"x":-775.17,"y":312.01,"z":84.658}', NULL, NULL, '{"x":-775.346,"y":306.776,"z":84.7}', '[]', NULL, 0, 0, 1, NULL, 0, 'property'),
+	(13, 'Modern1Apartment', 'Appartement Moderne 1', NULL, '{"x":-784.194,"y":323.636,"z":210.997}', '{"x":-779.751,"y":323.385,"z":210.997}', NULL, '["apa_v_mp_h_01_a"]', 'MiltonDrive', 0, 1, 0, '{"x":-766.661,"y":327.672,"z":210.396}', 1500000, 'property'),
+	(14, 'Modern2Apartment', 'Appartement Moderne 2', NULL, '{"x":-786.8663,"y":315.764,"z":186.913}', '{"x":-781.808,"y":315.866,"z":186.913}', NULL, '["apa_v_mp_h_01_c"]', 'MiltonDrive', 0, 1, 0, '{"x":-795.735,"y":326.757,"z":186.313}', 1500000, 'property'),
+	(15, 'Modern3Apartment', 'Appartement Moderne 3', NULL, '{"x":-774.012,"y":342.042,"z":195.686}', '{"x":-779.057,"y":342.063,"z":195.686}', NULL, '["apa_v_mp_h_01_b"]', 'MiltonDrive', 0, 1, 0, '{"x":-765.386,"y":330.782,"z":195.08}', 1500000, 'property'),
+	(16, 'Mody1Apartment', 'Appartement Mode 1', NULL, '{"x":-784.194,"y":323.636,"z":210.997}', '{"x":-779.751,"y":323.385,"z":210.997}', NULL, '["apa_v_mp_h_02_a"]', 'MiltonDrive', 0, 1, 0, '{"x":-766.615,"y":327.878,"z":210.396}', 1500000, 'property'),
+	(17, 'Mody2Apartment', 'Appartement Mode 2', NULL, '{"x":-786.8663,"y":315.764,"z":186.913}', '{"x":-781.808,"y":315.866,"z":186.913}', NULL, '["apa_v_mp_h_02_c"]', 'MiltonDrive', 0, 1, 0, '{"x":-795.297,"y":327.092,"z":186.313}', 1500000, 'property'),
+	(18, 'Mody3Apartment', 'Appartement Mode 3', NULL, '{"x":-774.012,"y":342.042,"z":195.686}', '{"x":-779.057,"y":342.063,"z":195.686}', NULL, '["apa_v_mp_h_02_b"]', 'MiltonDrive', 0, 1, 0, '{"x":-765.303,"y":330.932,"z":195.085}', 1500000, 'property'),
+	(19, 'Vibrant1Apartment', 'Appartement Vibrant 1', NULL, '{"x":-784.194,"y":323.636,"z":210.997}', '{"x":-779.751,"y":323.385,"z":210.997}', NULL, '["apa_v_mp_h_03_a"]', 'MiltonDrive', 0, 1, 0, '{"x":-765.885,"y":327.641,"z":210.396}', 1500000, 'property'),
+	(20, 'Vibrant2Apartment', 'Appartement Vibrant 2', NULL, '{"x":-786.8663,"y":315.764,"z":186.913}', '{"x":-781.808,"y":315.866,"z":186.913}', NULL, '["apa_v_mp_h_03_c"]', 'MiltonDrive', 0, 1, 0, '{"x":-795.607,"y":327.344,"z":186.313}', 1500000, 'property'),
+	(21, 'Vibrant3Apartment', 'Appartement Vibrant 3', NULL, '{"x":-774.012,"y":342.042,"z":195.686}', '{"x":-779.057,"y":342.063,"z":195.686}', NULL, '["apa_v_mp_h_03_b"]', 'MiltonDrive', 0, 1, 0, '{"x":-765.525,"y":330.851,"z":195.085}', 1500000, 'property'),
+	(22, 'Sharp1Apartment', 'Appartement Persan 1', NULL, '{"x":-784.194,"y":323.636,"z":210.997}', '{"x":-779.751,"y":323.385,"z":210.997}', NULL, '["apa_v_mp_h_04_a"]', 'MiltonDrive', 0, 1, 0, '{"x":-766.527,"y":327.89,"z":210.396}', 1500000, 'property'),
+	(23, 'Sharp2Apartment', 'Appartement Persan 2', NULL, '{"x":-786.8663,"y":315.764,"z":186.913}', '{"x":-781.808,"y":315.866,"z":186.913}', NULL, '["apa_v_mp_h_04_c"]', 'MiltonDrive', 0, 1, 0, '{"x":-795.642,"y":326.497,"z":186.313}', 1500000, 'property'),
+	(24, 'Sharp3Apartment', 'Appartement Persan 3', NULL, '{"x":-774.012,"y":342.042,"z":195.686}', '{"x":-779.057,"y":342.063,"z":195.686}', NULL, '["apa_v_mp_h_04_b"]', 'MiltonDrive', 0, 1, 0, '{"x":-765.503,"y":331.318,"z":195.085}', 1500000, 'property'),
+	(25, 'Monochrome1Apartment', 'Appartement Monochrome 1', NULL, '{"x":-784.194,"y":323.636,"z":210.997}', '{"x":-779.751,"y":323.385,"z":210.997}', NULL, '["apa_v_mp_h_05_a"]', 'MiltonDrive', 0, 1, 0, '{"x":-766.289,"y":328.086,"z":210.396}', 1500000, 'property'),
+	(26, 'Monochrome2Apartment', 'Appartement Monochrome 2', NULL, '{"x":-786.8663,"y":315.764,"z":186.913}', '{"x":-781.808,"y":315.866,"z":186.913}', NULL, '["apa_v_mp_h_05_c"]', 'MiltonDrive', 0, 1, 0, '{"x":-795.692,"y":326.762,"z":186.313}', 1500000, 'property'),
+	(27, 'Monochrome3Apartment', 'Appartement Monochrome 3', NULL, '{"x":-774.012,"y":342.042,"z":195.686}', '{"x":-779.057,"y":342.063,"z":195.686}', NULL, '["apa_v_mp_h_05_b"]', 'MiltonDrive', 0, 1, 0, '{"x":-765.094,"y":330.976,"z":195.085}', 1500000, 'property'),
+	(28, 'Seductive1Apartment', 'Appartement Séduisant 1', NULL, '{"x":-784.194,"y":323.636,"z":210.997}', '{"x":-779.751,"y":323.385,"z":210.997}', NULL, '["apa_v_mp_h_06_a"]', 'MiltonDrive', 0, 1, 0, '{"x":-766.263,"y":328.104,"z":210.396}', 1500000, 'property'),
+	(29, 'Seductive2Apartment', 'Appartement Séduisant 2', NULL, '{"x":-786.8663,"y":315.764,"z":186.913}', '{"x":-781.808,"y":315.866,"z":186.913}', NULL, '["apa_v_mp_h_06_c"]', 'MiltonDrive', 0, 1, 0, '{"x":-795.655,"y":326.611,"z":186.313}', 1500000, 'property'),
+	(30, 'Seductive3Apartment', 'Appartement Séduisant 3', NULL, '{"x":-774.012,"y":342.042,"z":195.686}', '{"x":-779.057,"y":342.063,"z":195.686}', NULL, '["apa_v_mp_h_06_b"]', 'MiltonDrive', 0, 1, 0, '{"x":-765.3,"y":331.414,"z":195.085}', 1500000, 'property'),
+	(31, 'Regal1Apartment', 'Appartement Royal 1', NULL, '{"x":-784.194,"y":323.636,"z":210.997}', '{"x":-779.751,"y":323.385,"z":210.997}', NULL, '["apa_v_mp_h_07_a"]', 'MiltonDrive', 0, 1, 0, '{"x":-765.956,"y":328.257,"z":210.396}', 1500000, 'property'),
+	(32, 'Regal2Apartment', 'Appartement Royal 2', NULL, '{"x":-786.8663,"y":315.764,"z":186.913}', '{"x":-781.808,"y":315.866,"z":186.913}', NULL, '["apa_v_mp_h_07_c"]', 'MiltonDrive', 0, 1, 0, '{"x":-795.545,"y":326.659,"z":186.313}', 1500000, 'property'),
+	(33, 'Regal3Apartment', 'Appartement Royal 3', NULL, '{"x":-774.012,"y":342.042,"z":195.686}', '{"x":-779.057,"y":342.063,"z":195.686}', NULL, '["apa_v_mp_h_07_b"]', 'MiltonDrive', 0, 1, 0, '{"x":-765.087,"y":331.429,"z":195.123}', 1500000, 'property'),
+	(34, 'Aqua1Apartment', 'Appartement Aqua 1', NULL, '{"x":-784.194,"y":323.636,"z":210.997}', '{"x":-779.751,"y":323.385,"z":210.997}', NULL, '["apa_v_mp_h_08_a"]', 'MiltonDrive', 0, 1, 0, '{"x":-766.187,"y":328.47,"z":210.396}', 1500000, 'property'),
+	(35, 'Aqua2Apartment', 'Appartement Aqua 2', NULL, '{"x":-786.8663,"y":315.764,"z":186.913}', '{"x":-781.808,"y":315.866,"z":186.913}', NULL, '["apa_v_mp_h_08_c"]', 'MiltonDrive', 0, 1, 0, '{"x":-795.658,"y":326.563,"z":186.313}', 1500000, 'property'),
+	(36, 'Aqua3Apartment', 'Appartement Aqua 3', NULL, '{"x":-774.012,"y":342.042,"z":195.686}', '{"x":-779.057,"y":342.063,"z":195.686}', NULL, '["apa_v_mp_h_08_b"]', 'MiltonDrive', 0, 1, 0, '{"x":-765.287,"y":331.084,"z":195.086}', 1500000, 'property'),
+	(37, 'IntegrityWay', '4 Integrity Way', '{"x":-47.804,"y":-585.867,"z":36.956}', NULL, NULL, '{"x":-54.178,"y":-583.762,"z":35.798}', '[]', NULL, 0, 0, 1, NULL, 0, 'property'),
+	(38, 'IntegrityWay28', '4 Integrity Way - Apt 28', NULL, '{"x":-31.409,"y":-594.927,"z":79.03}', '{"x":-26.098,"y":-596.909,"z":79.03}', NULL, '[]', 'IntegrityWay', 0, 1, 0, '{"x":-11.923,"y":-597.083,"z":78.43}', 1700000, 'property'),
+	(39, 'IntegrityWay30', '4 Integrity Way - Apt 30', NULL, '{"x":-17.702,"y":-588.524,"z":89.114}', '{"x":-16.21,"y":-582.569,"z":89.114}', NULL, '[]', 'IntegrityWay', 0, 1, 0, '{"x":-26.327,"y":-588.384,"z":89.123}', 1700000, 'property'),
+	(40, 'DellPerroHeights', 'Dell Perro Heights', '{"x":-1447.06,"y":-538.28,"z":33.74}', NULL, NULL, '{"x":-1440.022,"y":-548.696,"z":33.74}', '[]', NULL, 0, 0, 1, NULL, 0, 'property'),
+	(41, 'DellPerroHeightst4', 'Dell Perro Heights - Apt 28', NULL, '{"x":-1452.125,"y":-540.591,"z":73.044}', '{"x":-1455.435,"y":-535.79,"z":73.044}', NULL, '[]', 'DellPerroHeights', 0, 1, 0, '{"x":-1467.058,"y":-527.571,"z":72.443}', 1700000, 'property'),
+	(42, 'DellPerroHeightst7', 'Dell Perro Heights - Apt 30', NULL, '{"x":-1451.562,"y":-523.535,"z":55.928}', '{"x":-1456.02,"y":-519.209,"z":55.929}', NULL, '[]', 'DellPerroHeights', 0, 1, 0, '{"x":-1457.026,"y":-530.219,"z":55.937}', 1700000, 'property');
 
 -- Dumping structure for table essentialmode.public_inventories
 DROP TABLE IF EXISTS `public_inventories`;
@@ -2238,12 +2452,13 @@ CREATE TABLE IF NOT EXISTS `quest` (
   `give` tinyint(5) DEFAULT 0,
   `sell` tinyint(5) DEFAULT 0,
   `dailyquests` int(11) DEFAULT 0,
+  `date` varchar(20) NOT NULL DEFAULT '',
   PRIMARY KEY (`ID`,`identifier`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=135 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table essentialmode.quest: ~0 rows (approximately)
-REPLACE INTO `quest` (`ID`, `identifier`, `daily_data`, `weekly_data`, `bigtime_data`, `quests`, `job`, `job2`, `job3`, `gang`, `gang2`, `farm`, `farm2`, `give`, `sell`, `dailyquests`) VALUES
-	(134, 'steam:11000014bf543e0', '{"AllEnd":false,"End":false,"Completed":0,"ID":0,"Trigger":"","Category":0,"Finish":0,"status":false}', '{"End":false,"Finish2":0,"Trigger":"","Completed2":0,"Finish":0,"status":false,"Completed":0,"Category":0,"ID":0}', '{"End":false,"Completed":0,"ID":0,"Trigger":"","Category":0,"Finish":0,"status":false}', '{"JobNum2":0,"JobNum3":0,"JobNum":0,"WeeklyNum":0,"BigTimeNum":0,"FarmNum":0,"GiveNum":0,"GangNum":0,"GangNum2":0,"SellNum":0,"FarmNum2":0}', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+REPLACE INTO `quest` (`ID`, `identifier`, `daily_data`, `weekly_data`, `bigtime_data`, `quests`, `job`, `job2`, `job3`, `gang`, `gang2`, `farm`, `farm2`, `give`, `sell`, `dailyquests`, `date`) VALUES
+	(134, 'steam:11000014bf543e0', '{"AllEnd":false,"End":false,"Completed":0,"ID":0,"Trigger":"","Category":0,"Finish":0,"status":false}', '{"End":false,"Finish2":0,"Trigger":"","Completed2":0,"Finish":0,"status":false,"Completed":0,"Category":0,"ID":0}', '{"End":false,"Completed":0,"ID":0,"Trigger":"","Category":0,"Finish":0,"status":false}', '{"20":0,"5":0,"4":0,"15":0,"19":0,"17":0}', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2026/08/16');
 
 -- Dumping structure for table essentialmode.quest_list
 DROP TABLE IF EXISTS `quest_list`;
@@ -2539,9 +2754,11 @@ CREATE TABLE IF NOT EXISTS `uniqueac_admin_log` (
   PRIMARY KEY (`id`),
   KEY `idx_uniqueac_adminlog_admin` (`admin_identifier`),
   KEY `idx_uniqueac_adminlog_target` (`target_identifier`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- Dumping data for table essentialmode.uniqueac_admin_log: ~0 rows (approximately)
+REPLACE INTO `uniqueac_admin_log` (`id`, `admin_identifier`, `admin_name`, `action`, `target_identifier`, `target_name`, `reason`, `created_at`) VALUES
+	(1, 'license:153122398469261248', 'GD', 'NOTE_ADD', 'license:153122398469261248', 'GD', '1', '2026-08-15 19:02:31');
 
 -- Dumping structure for table essentialmode.uniqueac_appeals
 DROP TABLE IF EXISTS `uniqueac_appeals`;
@@ -2613,9 +2830,11 @@ CREATE TABLE IF NOT EXISTS `uniqueac_notes` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `idx_uniqueac_notes_target` (`target_identifier`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- Dumping data for table essentialmode.uniqueac_notes: ~0 rows (approximately)
+REPLACE INTO `uniqueac_notes` (`id`, `target_identifier`, `target_name`, `author_identifier`, `author_name`, `note`, `created_at`) VALUES
+	(1, 'license:153122398469261248', 'GD', 'license:153122398469261248', 'GD', '1', '2026-08-15 19:02:31');
 
 -- Dumping structure for table essentialmode.uniqueac_trust
 DROP TABLE IF EXISTS `uniqueac_trust`;
@@ -2633,9 +2852,9 @@ CREATE TABLE IF NOT EXISTS `uniqueac_trust` (
   PRIMARY KEY (`identifier`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table essentialmode.uniqueac_trust: ~1 rows (approximately)
+-- Dumping data for table essentialmode.uniqueac_trust: ~0 rows (approximately)
 REPLACE INTO `uniqueac_trust` (`identifier`, `player_name`, `trust_score`, `risk_score`, `flag_count`, `quarantine_count`, `reconnect_count`, `last_reconnect_at`, `first_seen`, `last_seen`) VALUES
-	('license:153122398469261248', 'GD', 100, 20, 0, 0, 2, 779347, '2026-08-11 10:06:10', '2026-08-13 09:53:00');
+	('license:153122398469261248', 'GD', 100, 30, 0, 0, 3, 624173, '2026-08-11 10:06:10', '2026-08-16 16:19:02');
 
 -- Dumping structure for table essentialmode.uniqueac_unban
 DROP TABLE IF EXISTS `uniqueac_unban`;
@@ -2762,7 +2981,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 -- Dumping data for table essentialmode.users: ~1 rows (approximately)
 REPLACE INTO `users` (`identifier`, `accounts`, `inventory`, `job`, `job_grade`, `group`, `gang`, `gang_grade`, `divisions`, `position`, `firstname`, `lastname`, `dateofbirth`, `sex`, `height`, `skin`, `is_dead`, `last_property`, `money`, `bank`, `black_money`, `loadout`, `disabled`, `disabled_reason`, `phone_number`, `steam`, `license`, `discord`, `fivem`, `xbl`, `live`, `ip`, `playtime`, `last_seen`, `created_at`, `coin`, `timercoin`, `score`, `skills`, `WantedLevel`, `Profile_Pic`, `token`, `tasks`, `tasks_completed`, `winnings`, `tattoos`, `status`, `name`, `playerName`, `discordid`, `subscription_uses`, `permission_level`, `phone`, `iban`, `badge`, `rank`, `jail`, `timePlay`, `level`, `R`, `starterpack`, `roles`, `xp`, `setwarn`, `division`, `account_num`) VALUES
-	('steam:11000014bf543e0', NULL, '[{"item":"hifi","count":0},{"item":"grip","count":0},{"item":"radio","count":0},{"item":"gold","count":0},{"item":"lockpick","count":0},{"item":"blowtorch","count":0},{"item":"silencer","count":1},{"item":"blackmoney","count":9021},{"item":"xpshop","count":2},{"item":"phone","count":1}]', 'police', 21, 'user', 'A', 13, '[]', '{"z":70.76978302001953,"y":8.75557804107666,"x":2.71913123130798}', NULL, NULL, '02/08/2000', '0', NULL, '{"helmet_1":-1,"face_3":5,"face_2":21,"tshirt_2":0,"beard_3":0,"torso_2":0,"shoes_1":34,"chain_1":0,"eyebrows_1":0,"beard_4":0,"chain_2":0,"complexion_2":1,"tshirt_1":15,"eye_color":5,"face_1":3,"pants_1":61,"hair_2":0,"age_2":0,"watches_2":-1,"glasses_2":-1,"age_1":0,"pants_2":4,"moles_2":1,"watches_1":-1,"torso_1":15,"hair_1":0,"helmet_2":-1,"arms":15,"ears_1":-1,"glasses_1":-1,"ears_2":-1,"beard_2":10,"eyebrows_2":10,"hair_color_1":0,"complexion_1":0,"hair_color_2":0,"shoes_2":0,"arms_2":0,"skin":14,"beard_1":0,"moles_1":0,"sex":0}', 0, NULL, 2999, 1554300, 0, '[{"components":["clip_default"],"ammo":38,"name":"WEAPON_PISTOL","label":"Pistol"},{"components":["clip_default"],"ammo":0,"name":"WEAPON_SMG","label":"SMG"}]', 0, NULL, NULL, NULL, 'license:153122398469261248', NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-08-02 11:52:24', 27, 45, 1, '{"achievements":[{"max":1,"point":1,"count":1,"label":"+1 Players"},{"max":100,"point":50,"count":0,"label":"+100 Players"},{"max":1,"point":700,"count":0,"label":"Organ Services"},{"max":1,"point":300,"count":0,"label":"Police Master"},{"max":1,"point":500,"count":0,"label":"Farm Master"},{"max":1,"point":300,"count":0,"label":"Job Azad Master"},{"max":10,"point":20,"count":0,"label":"10 Quest"},{"max":100,"point":50,"count":0,"label":"100 Quest"},{"max":500,"point":100,"count":0,"label":"500 Quest"}],"collections":[],"weapon":[{"value":0.0,"id":"pistol","title":"Pistol"},{"value":0.0,"id":"smg","title":"SMG"},{"value":0.0,"id":"assault_rifle","title":"Assault Rifle"},{"value":0.0,"id":"shotgun","title":"Shotgun"}],"skills":[{"name":"Police","minutes":1,"percent":0.03333333333333,"color":["#9cfcf8"]},{"name":"Medic","percent":0.03333333333333,"color":["#9cfcf8"]},{"name":"Taxi","percent":0.03333333333333,"color":["#9cfcf8"]},{"name":"Mechanic","percent":0.03333333333333,"color":["#9cfcf8"]},{"name":"Robbery","percent":0,"color":["#9cfcf8"]},{"name":"Farm","percent":0,"color":["#9cfcf8"]},{"name":"Job Azad","percent":0,"color":["#9cfcf8"]}],"skill":[{"value":0.0,"id":"police","title":"Police"},{"value":0.0,"id":"medic","title":"Medic"},{"value":0.0,"id":"taxi","title":"Taxi"},{"value":0.0,"id":"mechanic","title":"Mechanic"},{"value":0.0,"id":"robbery","title":"Robbery"},{"value":0.0,"id":"farm","title":"Farm"},{"value":0.0,"id":"farm2","title":"Job Azad"}]}', 'standard', '', 0, NULL, NULL, '', NULL, NULL, 'GD', 'Arshia_Mtz', 'N/A', 0, 16, '05232813391', '5959138', NULL, 0, 0, 74784, 100, 0, 'false', '', 0, '0', '', 1);
+	('steam:11000014bf543e0', NULL, '[{"item":"hifi","count":0},{"item":"grip","count":0},{"item":"radio","count":1},{"item":"gold","count":0},{"item":"lockpick","count":0},{"item":"blowtorch","count":0},{"item":"silencer","count":1},{"item":"blackmoney","count":9021},{"item":"xpshop","count":2},{"item":"phone","count":1}]', 'cid', 1, 'user', 'A', 13, '[]', '{"z":327.6873474121094,"x":-428.528076171875,"y":1111.6768798828126}', NULL, NULL, '02/08/2000', '0', NULL, '{"torso_1":15,"bags_2":0,"ears_1":-1,"glasses_1":-1,"makeup_3":0,"shoes_2":0,"beard_1":0,"hair_color_2":0,"pants_1":61,"moles_1":0,"mask_1":0,"sex":0,"helmet_1":-1,"pants_2":4,"chain_2":0,"tshirt_2":0,"tshirt_1":15,"decals_1":0,"beard_3":0,"makeup_4":0,"face_3":5,"lipstick_3":0,"age_1":0,"watches_1":-1,"complexion_1":0,"decals_2":0,"bproof_1":0,"age_2":0,"bproof_2":0,"arms":15,"eyebrows_1":0,"lipstick_4":0,"beard_2":10,"glasses_2":-1,"makeup_1":0,"eyebrows_2":10,"makeup_2":0,"face_2":21,"chain_1":0,"face_1":3,"eyebrows_4":0,"arms_2":0,"bags_1":0,"lipstick_2":0,"skin":14,"eye_color":5,"hair_color_1":0,"beard_4":0,"lipstick_1":0,"hair_1":0,"mask_2":0,"moles_2":1,"watches_2":-1,"ears_2":-1,"complexion_2":1,"helmet_2":-1,"hair_2":0,"torso_2":0,"shoes_1":34,"eyebrows_3":0}', 0, NULL, 5350000, 1872020, 0, '[{"label":"Pistol","ammo":0,"name":"WEAPON_PISTOL","components":["clip_default"]},{"label":"SMG","ammo":0,"name":"WEAPON_SMG","components":["clip_default"]}]', 0, NULL, NULL, NULL, 'license:153122398469261248', NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-08-02 11:52:24', 35, 20, 1, '{"skills":[{"name":"Police","percent":0.03333333333333,"color":["#9cfcf8"],"minutes":1},{"name":"Medic","percent":0.03333333333333,"color":["#9cfcf8"]},{"name":"Taxi","percent":0.03333333333333,"color":["#9cfcf8"]},{"name":"Mechanic","percent":0.03333333333333,"color":["#9cfcf8"]},{"name":"Robbery","percent":0,"color":["#9cfcf8"]},{"name":"Farm","percent":0,"color":["#9cfcf8"]},{"name":"Job Azad","percent":0,"color":["#9cfcf8"]}],"weapon":[{"id":"pistol","value":0.0,"title":"Pistol"},{"id":"smg","value":0.0,"title":"SMG"},{"id":"assault_rifle","value":0.0,"title":"Assault Rifle"},{"id":"shotgun","value":0.0,"title":"Shotgun"}],"skill":[{"id":"police","value":0.0,"title":"Police"},{"id":"medic","value":0.0,"title":"Medic"},{"id":"taxi","value":0.0,"title":"Taxi"},{"id":"mechanic","value":0.0,"title":"Mechanic"},{"id":"robbery","value":0.0,"title":"Robbery"},{"id":"farm","value":0.0,"title":"Farm"},{"id":"farm2","value":0.0,"title":"Job Azad"}],"collections":[],"achievements":[{"count":1,"label":"+1 Players","point":1,"max":1},{"count":0,"label":"+100 Players","point":50,"max":100},{"count":0,"label":"Organ Services","point":700,"max":1},{"count":0,"label":"Police Master","point":300,"max":1},{"count":0,"label":"Farm Master","point":500,"max":1},{"count":0,"label":"Job Azad Master","point":300,"max":1},{"count":0,"label":"10 Quest","point":20,"max":10},{"count":0,"label":"100 Quest","point":50,"max":100},{"count":0,"label":"500 Quest","point":100,"max":500}]}', 'standard', '', 0, NULL, NULL, '', NULL, NULL, 'GD', 'Arshia_Mtz', 'N/A', 0, 16, '05232813391', '5959138', NULL, 13, 0, 96526, 100, 0, 'false', '', 80, '0', '', 1);
 
 -- Dumping structure for table essentialmode.uwumarket
 DROP TABLE IF EXISTS `uwumarket`;
