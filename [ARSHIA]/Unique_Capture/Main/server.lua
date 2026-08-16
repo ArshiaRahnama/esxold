@@ -716,6 +716,19 @@ end
 
 
 -- ============================================================================
+-- Academy Badges (isolated - purely cosmetic, based on capture_academy_stats only)
+-- ============================================================================
+function GetAcademyBadge(academyKills)
+    local badge = nil
+    for _, tier in ipairs(Config.AcademyMilestones) do
+        if academyKills >= tier.Kills then
+            badge = tier.Title
+        end
+    end
+    return badge
+end
+
+-- ============================================================================
 -- Rank Badges (isolated - does not touch kills/points/gang_points logic above)
 -- ============================================================================
 function GetRankForScore(score)
@@ -1924,5 +1937,23 @@ if Config.EnableAcademy then
             end
             AcademyPedsBySource[_source] = nil
         end
+    end)
+end
+
+-- ============================================================================
+-- Spectator Mode (isolated - only changes routing bucket, never touches stats)
+-- ============================================================================
+if Config.EnableSpectate then
+    RegisterCommand(Config.SpectateCommand, function(source, args, rawCommand)
+        if not CapturesInfo.Active then
+            TriggerClientEvent("Violet-Capture:OxNotify", source, "No Active Capture Round To Spectate !", 'error')
+            return
+        end
+        SetPlayerRoutingBucket(source, Config.CaptureWorld)
+        TriggerClientEvent("Violet-Capture:SpectateReady", source)
+    end)
+
+    RegisterCommand(Config.SpectateLeaveCommand, function(source, args, rawCommand)
+        SetPlayerRoutingBucket(source, 0)
     end)
 end

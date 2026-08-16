@@ -296,3 +296,26 @@ Config.AcademyInstructorPedModel = "s_m_y_cop_01"
 
 -- In-academy practice capture point that teaches the real capture flow
 Config.AcademyTutorialPointOffset = vector3(10.0, 10.0, 0.0) -- relative to Config.AcademyCoord
+
+-- Safe zone inside the academy where NPCs stop attacking you
+Config.AcademySafeZoneOffset = vector3(-8.0, -8.0, 0.0) -- relative to Config.AcademyCoord
+Config.AcademySafeZoneRadius = 5.0
+
+-- Permanent Academy titles (shown in the dashboard, based on all-time Academy kills)
+Config.AcademyMilestones = {
+    {Kills = 100,  Title = "Sharpshooter"},
+    {Kills = 500,  Title = "Marksman Elite"},
+    {Kills = 1000, Title = "Academy Legend"},
+}
+
+-- Reminder to go play a real round if someone stays in the Academy too long
+Config.AcademyTimeLimitMinutes = 20
+Config.AcademyReminderIntervalMinutes = 20 -- repeats every N minutes after the first reminder
+
+-- ============================================================================
+-- Spectator Mode — free camera over an active capture round, zero interference
+-- ============================================================================
+Config.EnableSpectate = true
+Config.SpectateCommand = "captureSpectate"
+Config.SpectateLeaveCommand = "leaveSpectate"
+Config.SpectateSpeed = 1.0

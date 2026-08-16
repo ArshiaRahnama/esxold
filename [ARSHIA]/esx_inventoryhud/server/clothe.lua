@@ -108,6 +108,7 @@ AddEventHandler('sun-clothe:createPack', function(label)
         }, function(packId)
             if not packId then return end
             local itemName = 'pack_' .. packId
+            TriggerEvent('esx:CreateItem', itemName, label, -1, false, true)
             ESX.RegisterUsableItem(itemName, function(playerId)
                 local usingPlayer = ESX.GetPlayerFromId(playerId)
                 if not usingPlayer then return end
@@ -144,10 +145,11 @@ end)
 -- after a resource restart (usable-item registration is in-memory only)
 CreateThread(function()
     Citizen.Wait(2000)
-    exports.oxmysql:fetch('SELECT pack_id FROM player_clothe_packs', {}, function(result)
+    exports.oxmysql:fetch('SELECT pack_id, label FROM player_clothe_packs', {}, function(result)
         if not result then return end
         for _, row in ipairs(result) do
             local itemName = 'pack_' .. row.pack_id
+            TriggerEvent('esx:CreateItem', itemName, row.label or itemName, -1, false, true)
             ESX.RegisterUsableItem(itemName, function(playerId)
                 local usingPlayer = ESX.GetPlayerFromId(playerId)
                 if not usingPlayer then return end

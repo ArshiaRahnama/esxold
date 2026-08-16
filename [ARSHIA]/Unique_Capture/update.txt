@@ -375,4 +375,55 @@
     started before this resource — added as a proper dependency in 
     fxmanifest.lua.
 
+57- Fix: Academy NPCs could actually kill you. Health is now floored 
+    at 12% while you're active in the Academy — NPCs can still hurt 
+    you and you'll feel the pressure, but they can never land a 
+    finishing blow. This is a training sandbox, not a death trap.
+
+58- Fix: Academy revive was unreliable — it relied on the standard 
+    esx:onPlayerDeath event (which doesn't fire consistently on 
+    every server setup) and used a generic native to respawn 
+    instead of this server's actual revive flow. Rewrote it to use 
+    the same reliable polling pattern (IsEntityDead) the real 
+    capture system already uses, and revive now goes through 
+    Config.ReviveTrigger — your server's actual configured revive 
+    event — exactly like a real capture death/respawn does.
+
+59- Feature: Academy entry/exit now uses ox_target instead of a 
+    "press E" prompt. Walk up to an instructor NPC at any 
+    Config.AcademyEntryPoint and target it to enter; a second 
+    instructor NPC spawns inside the Academy itself so you can 
+    target-interact to leave, in addition to the dashboard's Leave 
+    button. Added ox_target as a proper dependency. (Falls back to 
+    silently doing nothing if ox_target isn't running — make sure 
+    it's started before this resource.)
+
+60- Feature: Safe Zone inside the Academy — a marked blue circle 
+    (Config.AcademySafeZoneOffset/Radius) where all NPCs immediately 
+    stop attacking the moment you step in, and resume the instant 
+    you step out. Useful to catch your breath or reposition without 
+    getting swarmed.
+
+61- Bug Fix: The dashboard callback referenced a GetAcademyBadge 
+    function that was never actually defined — this would have 
+    crashed the server callback the moment anyone opened /capture. 
+    Added the missing function.
+
+62- Feature: Academy badges + leaderboard, now visible right inside 
+    the Academy tab of /capture: permanent titles (Sharpshooter @ 
+    100 kills, Marksman Elite @ 500, Academy Legend @ 1000 — all 
+    configurable in Config.AcademyMilestones) plus an all-time 
+    Top 10 Academy killers leaderboard, both driven entirely by the 
+    permanent capture_academy_stats table — none of this touches 
+    real capture stats or rank.
+
+63- Feature: Spectator Mode — /captureSpectate (anyone, only works 
+    during an active round) drops you into a free-flying camera 
+    over the battle (WASD to move, mouse to look, Space/Ctrl for 
+    up/down, ESC or /leaveSpectate to exit). Your character is 
+    frozen, invisible, and invincible the whole time — you cannot 
+    be seen, damaged, or interfere with the round in any way. 
+    Automatically exits cleanly if the round ends while you're 
+    watching. Toggle: Config.EnableSpectate.
+
 ========================================================

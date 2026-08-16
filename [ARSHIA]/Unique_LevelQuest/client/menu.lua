@@ -26,17 +26,20 @@ function UpdateProfile()
             end
 
             SendNUIMessage({
-                type      = "updateProfile",
-                name      = string.gsub(data.name, "_", " ") .. " (" .. myId .. ")",
-                job       = jobsection,
-                gang      = gangsection,
-                level     = data.rank,
-                xpCurrent = data.xp,
-                xpNeeded  = config.Levels[data.rank] or 0,
-                xpPercent = config.Levels[data.rank] and (data.xp / config.Levels[data.rank]) * 100 or 0,
-                cash      = data.money,
-                bank      = data.bank,
-                coin      = Coin .. " Coin",
+                type       = "updateProfile",
+                name       = string.gsub(data.name, "_", " ") .. " (" .. myId .. ")",
+                job        = jobsection,
+                gang       = gangsection,
+                level      = data.rank,
+                xpCurrent  = data.xp,
+                xpNeeded   = config.Levels[data.rank] or 0,
+                xpPercent  = config.Levels[data.rank] and (data.xp / config.Levels[data.rank]) * 100 or 0,
+                cash       = data.money,
+                bank       = data.bank,
+                coin       = Coin .. " Coin",
+                avatarUrl  = data.avatarUrl,
+                gangLogoUrl= data.gangLogoUrl,
+                jobIconUrl = data.jobIconUrl,
             })
         end)
     end)

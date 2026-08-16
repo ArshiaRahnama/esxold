@@ -531,6 +531,28 @@
             100% { opacity: 0; transform: translateX(-50%) translateY(-22px) scale(1); }
         }
 
+        /* ============ Spectator HUD ============ */
+        .spectate-hud {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1500;
+            padding: 8px 22px;
+            background: linear-gradient(90deg, rgba(10,5,5,0.9), rgba(20,8,8,0.92));
+            border: 2px solid #9b59b6;
+            border-radius: 30px;
+            box-shadow: 0 0 24px rgba(155,89,182,0.4);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #c9a3d9;
+            text-transform: uppercase;
+        }
+        .spectate-hud.show { display: block; animation: fadeIn 0.3s ease-out; }
+        .spectate-hud b { color: #9b59b6; }
+
         .dash-tabs {
             display: flex;
             gap: 6px;
@@ -676,6 +698,19 @@
                         <span class="sub">Exit training and clean up NPCs</span>
                     </button>
                 </div>
+
+                <div class="dash-card">
+                    <div class="dash-card-title">🏅 My Academy Record</div>
+                    <div id="academyBadgePill"></div>
+                    <div class="stat-grid" style="grid-template-columns: 1fr;">
+                        <div class="stat-box"><div class="num" id="academyDashKills">0</div><div class="lbl">Total Academy Kills</div></div>
+                    </div>
+                </div>
+
+                <div class="dash-card full">
+                    <div class="dash-card-title">📈 Academy Leaderboard (All-Time)</div>
+                    <ul class="dash-list" id="academyLeaderboardList"></ul>
+                </div>
             </div>
 
             <div class="dash-page single" id="tab-commands">
@@ -713,6 +748,10 @@
                         <button class="action-btn" data-cmd="halloffame">
                             🏛️ Hall of Fame
                             <span class="sub">Inducted legends</span>
+                        </button>
+                        <button class="action-btn" data-cmd="spectate">
+                            📷 Spectate Round
+                            <span class="sub">Free camera over the active battle</span>
                         </button>
                     </div>
                 </div>
@@ -771,11 +810,16 @@
         </div>
     </div>
 
+    <div class="spectate-hud" id="spectateHud">
+        📷 <b>SPECTATING</b> &nbsp;|&nbsp; WASD move · Mouse look · Space/Ctrl up-down · ESC to exit
+    </div>
+
     <script>
         const boardsWrap = document.getElementById('boardsWrap');
         const toggleHint = document.querySelector('.toggle-hint');
         const killMessage = document.getElementById('killMessage');
         const academyHud = document.getElementById('academyHud');
+        const spectateHud = document.getElementById('spectateHud');
         const myProgress = document.getElementById('myProgress');
         let isVisible = false;
 
@@ -884,6 +928,9 @@
         document.querySelectorAll('.action-btn[data-cmd]').forEach((btn) => {
             btn.addEventListener('click', () => {
                 runDashboardAction(btn.dataset.cmd);
+                if (btn.dataset.cmd === 'spectate') {
+                    closeDashboard();
+                }
             });
         });
 
@@ -935,6 +982,13 @@
             }
 
             document.getElementById('btnStandings').style.display = d.leagueEnabled ? 'block' : 'none';
+
+            const academy = d.academy || {};
+            document.getElementById('academyDashKills').textContent = academy.kills || 0;
+            document.getElementById('academyBadgePill').innerHTML = academy.badge
+                ? `<span class="rank-pill Legend">🏅 ${academy.badge}</span>`
+                : `<span style="font-size:11px; color:#8a6a6d;">No badge yet — keep training</span>`;
+            fillSimpleList('academyLeaderboardList', academy.leaderboard, 'name', 'kills', ' kills');
 
             dashOverlay.classList.add('show');
         }
@@ -1005,6 +1059,10 @@
               pop.classList.add('pop');
             } else if (data.action === 'academyClose') {
               academyHud.classList.remove('show');
+            } else if (data.action === 'spectateOpen') {
+              spectateHud.classList.add('show');
+            } else if (data.action === 'spectateClose') {
+              spectateHud.classList.remove('show');
             }
         });
     </script>

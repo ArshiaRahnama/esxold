@@ -182,7 +182,7 @@ end
 -- functions above instead of the missing sunset_clothe exports)
 -- ============================================================
 
-RegisterNUICallback('Select', function(data)
+RegisterNUICallback('Select', function(data, cb)
     mode = data.mode
     SendNuiMessage(json.encode({
         action = "loadClothe",
@@ -190,21 +190,23 @@ RegisterNUICallback('Select', function(data)
         mode = mode,
         used = getUsedType()
     }))
+    cb('ok')
 end)
 
-RegisterNUICallback('LoadPack', function()
+RegisterNUICallback('LoadPack', function(_, cb)
     SendNuiMessage(json.encode({
         action = 'loadClothe',
         obj = getOwnedPack(),
         mode = 'pack'
     }))
+    cb('ok')
 end)
 
 
 
 local spam = false
-RegisterNUICallback('ChangeClothe', function(data)
-    if spam then return end
+RegisterNUICallback('ChangeClothe', function(data, cb)
+    if spam then cb('ok') return end
     spam = true
     Citizen.SetTimeout(2000,function()
         spam = false
@@ -233,20 +235,27 @@ RegisterNUICallback('ChangeClothe', function(data)
     }))
     refreshPedScreen()
     loadPlayerInventory()
+    cb('ok')
 end)
 
-RegisterNUICallback('UsePack', function(data)
-    if spam then return end
+RegisterNUICallback('UsePack', function(data, cb)
+    if spam then cb('ok') return end
     spam = true
     Citizen.SetTimeout(10000,function()
         spam = false
     end)
     closeInventory()
-    ESX.TriggerServerEvent("esx:useItem", data.name)
+    -- ESX.TriggerServerEvent doesn't exist anywhere in essentialmode
+    -- (same bug already found in Unique_clothe's createPack and
+    -- skincreator's save) -- this silently errored every time, so
+    -- using a pack never actually triggered anything server-side.
+    TriggerServerEvent("esx:useItem", data.name)
+    cb('ok')
 end)
 
-RegisterNUICallback('CreatePack', function(data)
+RegisterNUICallback('CreatePack', function(data, cb)
     closeInventory()
+    cb('ok')
     Citizen.Wait(500)
     ESX.UI.Menu.Open(
     'dialog',
@@ -274,7 +283,7 @@ end)
 
 function playClotheAnim(mode)
     while not HasAnimDictLoaded(componentIds[mode].Dict) do RequestAnimDict(componentIds[mode].Dict) Wait(100) end
-    if IsPedInAnyVehicle(Ped) then componentIds[mode].Move = 51 end
+    if IsPedInAnyVehicle(PlayerPedId(), false) then componentIds[mode].Move = 51 end
     TaskPlayAnim(PlayerPedId(), componentIds[mode].Dict, componentIds[mode].Anim, 3.0, 3.0, componentIds[mode].Dur, componentIds[mode].Move, 0, false, false, false)
 
     Wait(componentIds[mode].Dur)
@@ -338,10 +347,12 @@ function refreshPedScreen()
     end
 end
 
-RegisterNUICallback('createPed', function()
+RegisterNUICallback('createPed', function(_, cb)
     createPedScreen() 
+    cb('ok')
 end)
 
-RegisterNUICallback('deletePed', function()
+RegisterNUICallback('deletePed', function(_, cb)
     deletePedScreen()
+    cb('ok')
 end)

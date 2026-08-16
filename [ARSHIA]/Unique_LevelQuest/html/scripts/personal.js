@@ -46,5 +46,20 @@ window.addEventListener('message', (event) => {
       const percent = Math.max(0, Math.min(100, parseInt(data.xpPercent)));
       animateXpBar(xpFillElem, percent);
     }
+
+    setImageOrFallback(document.getElementById('avatarImg'), data.avatarUrl);
+    setImageOrFallback(document.getElementById('jobIcon'), data.jobIconUrl);
+    setImageOrFallback(document.getElementById('gangIcon'), data.gangLogoUrl);
   }
 });
+
+function setImageOrFallback(el, url) {
+  if (!el) return;
+  if (url) {
+    el.style.backgroundImage = `url('${url}')`;
+    el.classList.add('hasImage');
+  } else {
+    el.style.backgroundImage = '';
+    el.classList.remove('hasImage');
+  }
+}

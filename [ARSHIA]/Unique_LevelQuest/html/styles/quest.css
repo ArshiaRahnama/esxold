@@ -6,50 +6,33 @@
 
 .achCard {
   position: relative;
-  background: linear-gradient(160deg, rgba(32, 32, 34, 0.95), rgba(20, 20, 22, 0.95));
-  border: 2px solid rgba(255, 255, 255, 0.14);
+  background: rgba(28, 28, 28, 0.92);
+  border: 2px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
   padding: 18px 14px 16px;
   text-align: center;
-  overflow: hidden;
   transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-  animation: cardIn 0.4s ease backwards;
+  animation: cardIn 0.35s ease backwards;
 }
 
 .quests-grid .achCard:nth-child(1) { animation-delay: 0.02s; }
-.quests-grid .achCard:nth-child(2) { animation-delay: 0.06s; }
-.quests-grid .achCard:nth-child(3) { animation-delay: 0.10s; }
-.quests-grid .achCard:nth-child(4) { animation-delay: 0.14s; }
-.quests-grid .achCard:nth-child(5) { animation-delay: 0.18s; }
-.quests-grid .achCard:nth-child(6) { animation-delay: 0.22s; }
-.quests-grid .achCard:nth-child(7) { animation-delay: 0.26s; }
-.quests-grid .achCard:nth-child(8) { animation-delay: 0.30s; }
+.quests-grid .achCard:nth-child(2) { animation-delay: 0.05s; }
+.quests-grid .achCard:nth-child(3) { animation-delay: 0.08s; }
+.quests-grid .achCard:nth-child(4) { animation-delay: 0.11s; }
+.quests-grid .achCard:nth-child(5) { animation-delay: 0.14s; }
+.quests-grid .achCard:nth-child(6) { animation-delay: 0.17s; }
+.quests-grid .achCard:nth-child(7) { animation-delay: 0.20s; }
+.quests-grid .achCard:nth-child(8) { animation-delay: 0.23s; }
 
 @keyframes cardIn {
-  from { opacity: 0; transform: translateY(10px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.achCard::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -60%;
-  width: 40%;
-  height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.06), transparent);
-  transform: skewX(-20deg);
-  transition: left 0.6s ease;
-  pointer-events: none;
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .achCard:hover {
-  border-color: rgba(255, 140, 26, 0.55);
-  transform: translateY(-4px);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45), 0 0 22px rgba(255, 140, 26, 0.12);
-}
-
-.achCard:hover::before {
-  left: 130%;
+  border-color: rgba(255, 140, 26, 0.45);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35);
 }
 
 .ring {
@@ -61,8 +44,7 @@
   border-radius: 999px;
   position: relative;
   background: conic-gradient(var(--ringColor) var(--deg), rgba(255, 255, 255, 0.12) 0deg);
-  box-shadow: 0 0 16px -4px var(--ringColor);
-  transition: background 0.15s linear, box-shadow 0.3s ease;
+  transition: background 0.15s linear;
 }
 
 .ring::after {

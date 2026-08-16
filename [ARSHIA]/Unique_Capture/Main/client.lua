@@ -108,6 +108,7 @@ RegisterNUICallback('dashboardAction', function(data, cb)
         halloffame = Config.HallOfFameCommand,
         enterAcademy = Config.AcademyCommand,
         leaveAcademy = Config.AcademyLeaveCommand,
+        spectate = Config.SpectateCommand,
     }
     local commandToRun = data and data.action and actionMap[data.action]
     if commandToRun then
@@ -130,7 +131,11 @@ if Config.EnableAcademy then
     local AcademySessionStart = 0
     local AcademyEntryCoords = nil
     local AcademyDead = false
+    local AcademyReviveBusy = false
+    local AcademyInSafeZone = false
     local TutorialShown = false
+    local LastReminderInterval = 0
+    local AcademyLeavePed = nil
 
     Citizen.CreateThread(function()
         AddRelationshipGroup("ACADEMY_ENEMY")
@@ -169,7 +174,7 @@ if Config.EnableAcademy then
 
     RegisterCommand(Config.AcademyCommand, TryEnterAcademy, false)
 
-    -- ============ Instructor NPCs at each entry point ============
+    -- ============ Instructor NPCs at each entry point (ox_target to enter) ============
     Citizen.CreateThread(function()
         RequestModel(GetHashKey(Config.AcademyInstructorPedModel))
         local timeout = 0
@@ -184,30 +189,21 @@ if Config.EnableAcademy then
                 SetEntityInvincible(instructor, true)
                 SetBlockingOfNonTemporaryEvents(instructor, true)
                 TaskStartScenarioInPlace(instructor, "WORLD_HUMAN_COP_IDLES", 0, true)
-            end
-        end
-    end)
 
-    Citizen.CreateThread(function()
-        while true do
-            local sleep = 1000
-            if not AcademyActive then
-                for _, point in ipairs(Config.AcademyEntryPoints) do
-                    local playerCoords = GetEntityCoords(PlayerPedId())
-                    local dist = #(playerCoords - vector3(point.x, point.y, point.z))
-                    if dist <= 2.0 then
-                        sleep = 0
-                        DrawMarker(2, point.x, point.y, point.z + 1.0, 0.0,0.0,0.0, 0.0,0.0,0.0, 0.4,0.4,0.4, 26,188,156,180, false,false,2,false,nil,nil,false)
-                        BeginTextCommandDisplayHelp("STRING")
-                        AddTextComponentSubstringPlayerName("Press ~INPUT_CONTEXT~ to enter the Training Academy")
-                        EndTextCommandDisplayHelp(0, false, true, -1)
-                        if IsControlJustPressed(0, 38) then -- E
-                            TryEnterAcademy()
-                        end
-                    end
+                if GetResourceState('ox_target') == 'started' then
+                    exports.ox_target:addLocalEntity(instructor, {
+                        {
+                            name = 'academy_enter_' .. tostring(instructor),
+                            icon = 'fa-solid fa-crosshairs',
+                            label = 'Enter Training Academy',
+                            distance = 2.5,
+                            onSelect = function()
+                                TryEnterAcademy()
+                            end,
+                        }
+                    })
                 end
             end
-            Citizen.Wait(sleep)
         end
     end)
 
@@ -222,10 +218,14 @@ if Config.EnableAcademy then
     function ApplyAcademyPedSettings(npc)
         local accuracy, armor = GetAcademyDifficulty()
         SetPedRelationshipGroupHash(npc, GetHashKey("ACADEMY_ENEMY"))
-        SetPedCombatAttributes(npc, 46, true)
         SetPedAccuracy(npc, accuracy)
         SetPedArmour(npc, armor)
-        TaskCombatPed(npc, PlayerPedId(), 0, 16)
+        if AcademyInSafeZone then
+            ClearPedTasksImmediately(npc)
+        else
+            SetPedCombatAttributes(npc, 46, true)
+            TaskCombatPed(npc, PlayerPedId(), 0, 16)
+        end
     end
 
     function WatchAcademyPedDeath(npc)
@@ -273,14 +273,120 @@ if Config.EnableAcademy then
         end
     end
 
+    -- NPCs can hurt you, but can never land the finishing blow - health is floored above zero
+    function StartAcademyHealthFloor()
+        Citizen.CreateThread(function()
+            while AcademyActive do
+                Citizen.Wait(150)
+                local ped = PlayerPedId()
+                if not IsEntityDead(ped) then
+                    local maxHealth = GetEntityMaxHealth(ped)
+                    local floorHealth = math.floor(maxHealth * 0.12)
+                    if GetEntityHealth(ped) < floorHealth then
+                        SetEntityHealth(ped, floorHealth)
+                    end
+                end
+            end
+        end)
+    end
+
+    -- Reliable death detection (polling, same pattern the real capture system already uses)
+    -- + revive through this server's actual revive trigger, not a generic native.
+    function StartAcademyDeathWatch()
+        Citizen.CreateThread(function()
+            while AcademyActive do
+                Citizen.Wait(0)
+                if not AcademyDead and IsEntityDead(PlayerPedId()) then
+                    AcademyDead = true
+                end
+                if AcademyDead then
+                    BeginTextCommandDisplayHelp("STRING")
+                    AddTextComponentSubstringPlayerName("~r~You died in training.~s~ Press ~INPUT_CONTEXT~ to respawn")
+                    EndTextCommandDisplayHelp(0, false, true, -1)
+                    if not AcademyReviveBusy and IsControlJustPressed(0, 38) then -- E
+                        AcademyReviveBusy = true
+                        local ped = PlayerPedId()
+                        SetEntityVisible(ped, false, false)
+                        Citizen.Wait(1200)
+                        TriggerEvent(Config.ReviveTrigger)
+                        Citizen.Wait(800)
+                        SetEntityCoords(ped, Config.AcademyCoord.x, Config.AcademyCoord.y, Config.AcademyCoord.z, false, false, false, false)
+                        SetEntityVisible(ped, true, false)
+                        SetEntityHealth(ped, GetEntityMaxHealth(ped))
+                        SetPedArmour(ped, 100)
+                        ClearPedBloodDamage(ped)
+                        GiveWeaponToPed(ped, GetHashKey(Config.AcademyWeapon), 250, false, true)
+                        Notify("Respawned ! Keep training.", 'success')
+                        AcademyDead = false
+                        AcademyReviveBusy = false
+                    end
+                end
+            end
+        end)
+    end
+
+    -- Safe zone: NPCs stop attacking while you're standing in it
+    function StartAcademySafeZone()
+        Citizen.CreateThread(function()
+            local safePoint = Config.AcademyCoord + Config.AcademySafeZoneOffset
+            while AcademyActive do
+                Citizen.Wait(0)
+                local dist = #(GetEntityCoords(PlayerPedId()) - safePoint)
+                local nowInSafeZone = dist <= Config.AcademySafeZoneRadius
+                if nowInSafeZone ~= AcademyInSafeZone then
+                    AcademyInSafeZone = nowInSafeZone
+                    for _, npc in ipairs(AcademyPeds) do
+                        if DoesEntityExist(npc) then
+                            if AcademyInSafeZone then
+                                ClearPedTasksImmediately(npc)
+                            else
+                                TaskCombatPed(npc, PlayerPedId(), 0, 16)
+                            end
+                        end
+                    end
+                    if AcademyInSafeZone then
+                        Notify("You're in the Safe Zone — NPCs won't attack you here.", 'info')
+                    end
+                end
+                if dist <= 25.0 then
+                    DrawMarker(1, safePoint.x, safePoint.y, safePoint.z - 1.0, 0.0,0.0,0.0, 0.0,0.0,0.0,
+                        Config.AcademySafeZoneRadius*2, Config.AcademySafeZoneRadius*2, 2.0, 0,150,255,60, false,false,2,false,nil,nil,false)
+                else
+                    Citizen.Wait(400)
+                end
+            end
+        end)
+    end
+
+    -- Reminder to go play a real round if someone camps the academy too long
+    function StartAcademyTimeReminder()
+        LastReminderInterval = 0
+        Citizen.CreateThread(function()
+            while AcademyActive do
+                Citizen.Wait(30000)
+                local elapsedMinutes = math.floor((GetGameTimer() - AcademySessionStart) / 60000)
+                if elapsedMinutes >= Config.AcademyTimeLimitMinutes then
+                    local interval = math.floor((elapsedMinutes - Config.AcademyTimeLimitMinutes) / Config.AcademyReminderIntervalMinutes)
+                    if interval > LastReminderInterval or (interval == 0 and LastReminderInterval == 0 and elapsedMinutes == Config.AcademyTimeLimitMinutes) then
+                        LastReminderInterval = math.max(interval, 1)
+                        Notify("You've been training for a while — why not try a real capture round ?", 'info')
+                    end
+                end
+            end
+        end)
+    end
+
     RegisterNetEvent("Violet-Capture:AcademyPedsSpawned")
     AddEventHandler("Violet-Capture:AcademyPedsSpawned", function(pedNetIds, currentKills)
         if not AcademyActive then return end
         local ped = PlayerPedId()
+        AcademyDead = false
+        AcademyReviveBusy = false
+        AcademyInSafeZone = false
         SetEntityCoords(ped, Config.AcademyCoord.x, Config.AcademyCoord.y, Config.AcademyCoord.z, false, false, false, false)
         GiveWeaponToPed(ped, GetHashKey(Config.AcademyWeapon), 250, false, true)
         SetPedArmour(ped, 100)
-        Notify("Welcome To The Training Academy ! Defeat the NPCs. No real stats are recorded here. Use /"..Config.AcademyLeaveCommand.." (or the menu) to exit.", 'success')
+        Notify("Welcome To The Training Academy ! Defeat the NPCs. No real stats are recorded here.", 'success')
 
         AcademySessionKills = 0
         AcademyTotalKills = currentKills or 0
@@ -322,6 +428,44 @@ if Config.EnableAcademy then
             end)
         end
 
+        -- Leave point inside the academy (ox_target)
+        Citizen.CreateThread(function()
+            RequestModel(GetHashKey(Config.AcademyInstructorPedModel))
+            local timeout = 0
+            while not HasModelLoaded(GetHashKey(Config.AcademyInstructorPedModel)) and timeout < 100 do
+                Citizen.Wait(10)
+                timeout = timeout + 1
+            end
+            local leavePoint = Config.AcademyCoord + vector3(3.0, 3.0, 0.0)
+            AcademyLeavePed = CreatePed(4, GetHashKey(Config.AcademyInstructorPedModel), leavePoint.x, leavePoint.y, leavePoint.z, 0.0, true, true)
+            if DoesEntityExist(AcademyLeavePed) then
+                FreezeEntityPosition(AcademyLeavePed, true)
+                SetEntityInvincible(AcademyLeavePed, true)
+                SetBlockingOfNonTemporaryEvents(AcademyLeavePed, true)
+                SetPedRelationshipGroupHash(AcademyLeavePed, GetHashKey("PLAYER"))
+                TaskStartScenarioInPlace(AcademyLeavePed, "WORLD_HUMAN_COP_IDLES", 0, true)
+
+                if GetResourceState('ox_target') == 'started' then
+                    exports.ox_target:addLocalEntity(AcademyLeavePed, {
+                        {
+                            name = 'academy_leave',
+                            icon = 'fa-solid fa-door-open',
+                            label = 'Leave Training Academy',
+                            distance = 2.5,
+                            onSelect = function()
+                                LeaveAcademyNow()
+                            end,
+                        }
+                    })
+                end
+            end
+        end)
+
+        StartAcademyHealthFloor()
+        StartAcademyDeathWatch()
+        StartAcademySafeZone()
+        StartAcademyTimeReminder()
+
         Citizen.CreateThread(function()
             while AcademyActive do
                 Citizen.Wait(1000)
@@ -356,8 +500,16 @@ if Config.EnableAcademy then
         if not AcademyActive then return end
         AcademyActive = false
         AcademyDead = false
+        AcademyReviveBusy = false
         TriggerServerEvent("Violet-Capture:LeaveAcademyWorld")
         AcademyPeds = {}
+        if AcademyLeavePed and DoesEntityExist(AcademyLeavePed) then
+            if GetResourceState('ox_target') == 'started' then
+                exports.ox_target:removeLocalEntity(AcademyLeavePed, 'academy_leave')
+            end
+            DeleteEntity(AcademyLeavePed)
+        end
+        AcademyLeavePed = nil
         RemoveWeaponFromPed(PlayerPedId(), GetHashKey(Config.AcademyWeapon))
         if AcademyEntryCoords then
             SetEntityCoords(PlayerPedId(), AcademyEntryCoords.x, AcademyEntryCoords.y, AcademyEntryCoords.z, false, false, false, false)
@@ -370,33 +522,6 @@ if Config.EnableAcademy then
     end
 
     RegisterCommand(Config.AcademyLeaveCommand, LeaveAcademyNow, false)
-
-    -- Death in academy: DO NOT exit automatically. Revive in place with an on-screen prompt.
-    -- Only /leaveAcademy (or the dashboard button) actually leaves the academy world.
-    AddEventHandler('esx:onPlayerDeath', function()
-        if AcademyActive then
-            AcademyDead = true
-            Citizen.CreateThread(function()
-                while AcademyDead and AcademyActive do
-                    Citizen.Wait(0)
-                    local coords = GetEntityCoords(PlayerPedId())
-                    BeginTextCommandDisplayHelp("STRING")
-                    AddTextComponentSubstringPlayerName("~r~You died in training.~s~ Press ~INPUT_CONTEXT~ to respawn")
-                    EndTextCommandDisplayHelp(0, false, true, -1)
-                    if IsControlJustPressed(0, 38) then -- E
-                        AcademyDead = false
-                        local ped = PlayerPedId()
-                        NetworkResurrectLocalPlayer(Config.AcademyCoord.x, Config.AcademyCoord.y, Config.AcademyCoord.z, 0.0, true, false)
-                        SetEntityHealth(ped, GetEntityMaxHealth(ped))
-                        SetPedArmour(ped, 100)
-                        ClearPedBloodDamage(ped)
-                        GiveWeaponToPed(ped, GetHashKey(Config.AcademyWeapon), 250, false, true)
-                        Notify("Respawned ! Keep training.", 'success')
-                    end
-                end
-            end)
-        end
-    end)
 end
 
 
@@ -1353,3 +1478,128 @@ RegisterNetEvent('Violet-CaptureSystem:ReceiveGroup')
 AddEventHandler('Violet-CaptureSystem:ReceiveGroup',function(group)
     PlayerCaptureInf.Group = group
 end)
+-- ============================================================================
+-- Spectator Mode (isolated - free camera only, never spawns/kills/scores anything)
+-- ============================================================================
+if Config.EnableSpectate then
+    local SpectateActive = false
+    local SpectateCam = nil
+    local SpectateOriginalCoords = nil
+    local SpectateHeading = 0.0
+    local SpectatePitch = -25.0
+
+    RegisterCommand(Config.SpectateCommand, function()
+        if SpectateActive then
+            Notify("Already Spectating !", 'error')
+            return
+        end
+        if PlayerCaptureInf.InCapture then
+            Notify("You Can't Spectate While Playing In A Real Capture !", 'error')
+            return
+        end
+        SpectateActive = true
+        TriggerServerEvent("Violet-Capture:EnterSpectateWorld")
+    end, false)
+
+    RegisterNetEvent("Violet-Capture:SpectateReady")
+    AddEventHandler("Violet-Capture:SpectateReady", function()
+        if not SpectateActive then return end
+        local ped = PlayerPedId()
+        SpectateOriginalCoords = GetEntityCoords(ped)
+
+        local startCoord = SpectateOriginalCoords + vector3(0.0, 0.0, 100.0)
+        if CapturesInfo and CapturesInfo.Zones then
+            for _, coord in pairs(CapturesInfo.Zones) do
+                startCoord = vector3(coord.x, coord.y, coord.z + 100.0)
+                break
+            end
+        end
+
+        FreezeEntityPosition(ped, true)
+        SetEntityVisible(ped, false, false)
+        SetEntityCollision(ped, false, false)
+        SetEntityInvincible(ped, true)
+        SetEntityCoordsNoOffset(ped, startCoord.x, startCoord.y, startCoord.z - 150.0, false, false, false)
+
+        SpectateHeading = 0.0
+        SpectatePitch = -25.0
+        SpectateCam = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
+        SetCamCoord(SpectateCam, startCoord.x, startCoord.y, startCoord.z)
+        SetCamRot(SpectateCam, SpectatePitch, 0.0, SpectateHeading, 2)
+        SetCamFov(SpectateCam, 70.0)
+        SetCamActive(SpectateCam, true)
+        RenderScriptCams(true, true, 800, true, true)
+
+        SendNUIMessage({action = "spectateOpen"})
+        Notify("Spectator Mode ON — WASD to move, mouse to look, SPACE/CTRL for up/down, /"..Config.SpectateLeaveCommand.." or ESC to exit.", 'success')
+
+        Citizen.CreateThread(function()
+            while SpectateActive do
+                Citizen.Wait(0)
+                DisableAllControlActions(0)
+                EnableControlAction(0, 1, true)   -- LookLeftRight
+                EnableControlAction(0, 2, true)   -- LookUpDown
+                EnableControlAction(0, 200, true) -- ESC
+
+                if IsControlJustPressed(0, 200) then
+                    ExecuteCommand(Config.SpectateLeaveCommand)
+                    return
+                end
+
+                local mx = GetDisabledControlNormal(0, 1)
+                local my = GetDisabledControlNormal(0, 2)
+                SpectateHeading = SpectateHeading - (mx * 6.0)
+                SpectatePitch = math.max(-89.0, math.min(89.0, SpectatePitch - (my * 6.0)))
+                SetCamRot(SpectateCam, SpectatePitch, 0.0, SpectateHeading, 2)
+
+                local camCoord = GetCamCoord(SpectateCam)
+                local speed = Config.SpectateSpeed
+                if IsControlPressed(0, 21) then speed = speed * 3.0 end -- sprint
+
+                local forward, right, up = 0.0, 0.0, 0.0
+                if IsControlPressed(0, 32) then forward = forward + speed end -- W
+                if IsControlPressed(0, 33) then forward = forward - speed end -- S
+                if IsControlPressed(0, 34) then right = right - speed end -- A
+                if IsControlPressed(0, 35) then right = right + speed end -- D
+                if IsControlPressed(0, 22) then up = up + speed end -- SPACE
+                if IsControlPressed(0, 36) then up = up - speed end -- CTRL
+
+                if forward ~= 0.0 or right ~= 0.0 or up ~= 0.0 then
+                    local rad = math.rad(SpectateHeading)
+                    local dx = (math.sin(-rad) * forward) + (math.cos(-rad) * right)
+                    local dy = (math.cos(-rad) * forward) - (math.sin(-rad) * right)
+                    SetCamCoord(SpectateCam, camCoord.x + dx, camCoord.y + dy, camCoord.z + up)
+                end
+            end
+        end)
+    end)
+
+    RegisterCommand(Config.SpectateLeaveCommand, function()
+        if not SpectateActive then return end
+        SpectateActive = false
+        RenderScriptCams(false, true, 800, true, true)
+        if SpectateCam then
+            DestroyCam(SpectateCam, false)
+            SpectateCam = nil
+        end
+        local ped = PlayerPedId()
+        FreezeEntityPosition(ped, false)
+        SetEntityVisible(ped, true, false)
+        SetEntityCollision(ped, true, true)
+        SetEntityInvincible(ped, false)
+        if SpectateOriginalCoords then
+            SetEntityCoords(ped, SpectateOriginalCoords.x, SpectateOriginalCoords.y, SpectateOriginalCoords.z, false, false, false, false)
+        end
+        SpectateOriginalCoords = nil
+        TriggerServerEvent("Violet-Capture:LeaveSpectateWorld")
+        SendNUIMessage({action = "spectateClose"})
+        Notify("Spectator Mode OFF.", 'info')
+    end, false)
+
+    -- If the round ends while someone is spectating, pull them out cleanly
+    AddEventHandler("Violet-Capture:LeaveCapture", function()
+        if SpectateActive then
+            ExecuteCommand(Config.SpectateLeaveCommand)
+        end
+    end)
+end

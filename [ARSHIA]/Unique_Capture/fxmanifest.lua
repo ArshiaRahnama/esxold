@@ -10,6 +10,7 @@ version '1.8'
 
 shared_script '@ox_lib/init.lua'
 dependency 'ox_lib'
+dependency 'ox_target'
 
 client_scripts {
     'Config.lua',

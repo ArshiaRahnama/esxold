@@ -150,3 +150,21 @@ ESX.RegisterServerCallback('inventory:core:getPlayerInventory', function(source,
     if not xTarget then cb(nil) return end
     cb({ items = xTarget.inventory, weapons = xTarget.loadout })
 end)
+
+-- ============================================================
+-- TEMPORARY DIAGNOSTIC (remove once useItem is confirmed fixed):
+-- listens to the SAME event essentialmode's core esx:useItem handler
+-- does, just to print what actually arrives server-side and whether
+-- the item is owned + registered as usable, without touching
+-- essentialmode itself.
+-- ============================================================
+AddEventHandler('esx:useItem', function(itemName)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    local item = xPlayer and xPlayer.getInventoryItem(itemName)
+    print(('[DEBUG-SERVER] esx:useItem received itemName=%s owned_count=%s registered_in_ESX_Items=%s'):format(
+        tostring(itemName),
+        tostring(item and item.count),
+        tostring(ESX.Items[itemName] ~= nil)
+    ))
+end)

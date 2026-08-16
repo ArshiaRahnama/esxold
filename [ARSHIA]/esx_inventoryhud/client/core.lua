@@ -1,3 +1,4 @@
+
 -- ============================================================
 
 ESX = nil
@@ -285,36 +286,24 @@ AddEventHandler('onResourceStop', function(resourceName)
     TriggerScreenblurFadeOut(0.1)
 end)
 
--- F2 now ONLY opens the inventory -- it no longer closes it too.
---
--- The reported bug (opens fine the first time; every time after that,
--- it flashes open then immediately closes itself again, with zero
--- console errors, unrelated to which physical key is bound, and not
--- reproduced by any other NUI menu on the server) points at the
--- SAME key being asked to both open AND close while SetNuiFocus is
--- also flipping state on that exact frame -- a known rough edge in
--- FiveM where a keymapped command and a NUI focus change landing on
--- the same tick can cause the input to be read twice. Splitting open
--- and close onto different triggers removes the code path where
--- pressing the toggle key could ever call closeInventory() right
--- after openMainInventory() ran, which is the only way "opens then
--- instantly closes itself" can happen with no error at all.
---
--- Closing now goes exclusively through ESC / the in-menu close
--- button (html/js/app.js's own close() -> POST /close -> the 'close'
--- NUI callback below), which was already working correctly this
--- whole time and was never part of the bug.
-local lastOpenAt = 0
+-- F2 toggles open/close again. The earlier open-only restriction was
+-- a workaround for the ping-pong bug now fixed in closeInventory()/
+-- the 'close' NUI callback above -- with that fixed, F2 closing is
+-- safe again (it just calls the same closeInventory(true) path ESC
+-- already used).
+local lastToggleAt = 0
 RegisterCommand('inventory_toggle', function()
-    if isOpen or secondActive then return end -- already open: do nothing, use ESC to close
-
     local now = GetGameTimer()
-    if now - lastOpenAt < 250 then return end -- debounce against double-fire
-    lastOpenAt = now
+    if now - lastToggleAt < 250 then return end -- debounce against double-fire
+    lastToggleAt = now
 
-    openMainInventory()
+    if isOpen or secondActive then
+        closeInventory() -- Lua-initiated (F2): NUI doesn't know yet, must send the close message
+    else
+        openMainInventory()
+    end
 end, false)
-RegisterKeyMapping('inventory_toggle', 'Baz Kardan Inventory', 'keyboard', Config.OpenInventoryKey)
+RegisterKeyMapping('inventory_toggle', 'Baz/Baste Kardan Inventory', 'keyboard', Config.OpenInventoryKey)
 
 -- keep the NUI in sync with real inventory/weapon changes. This
 -- framework's ESX.SetPlayerData() is a plain assignment with no
@@ -451,19 +440,27 @@ RegisterNUICallback('close', function(_, cb)
     cb('ok')
 end)
 
-RegisterNUICallback('mounted', function(_, cb)
+RegisterNUICallback('inventory:mounted', function(_, cb)
     cb('ok')
 end)
 
-RegisterNUICallback('useItem', function(data, cb)
-    local itemName = getNuiItemName(data)
+-- inventory:useItem's payload is the item name as a plain STRING
+-- (JS does sendEvent('inventory:useItem', itemName), not an object) --
+-- confirmed by reading html/js/app.js directly, not guessed.
+RegisterNUICallback('inventory:useItem', function(data, cb)
+    print(('[DEBUG] inventory:useItem data type=%s json=%s'):format(type(data), json.encode(data)))
+    local itemName = (type(data) == 'string' and data) or getNuiItemName(data)
+    if type(itemName) == 'string' then
+        itemName = itemName:gsub('^"(.*)"$', '%1') -- defensive: strip stray JSON quotes if not fully decoded
+    end
+    print(('[DEBUG] inventory:useItem resolved itemName=%s'):format(tostring(itemName)))
     if itemName then
         TriggerServerEvent('esx:useItem', itemName)
     end
     cb('ok')
 end)
 
-RegisterNUICallback('throwItem', function(data, cb)
+RegisterNUICallback('inventory:throwItem', function(data, cb)
     local itemName = getNuiItemName(data)
     if itemName then
         local coords = GetEntityCoords(PlayerPedId())
@@ -490,19 +487,19 @@ RegisterNUICallback('getNearbyPlayers', function(_, cb)
     cb(players)
 end)
 
-RegisterNUICallback('giveItemToTarget', function(data, cb)
+RegisterNUICallback('inventory:giveItemToTarget', function(data, cb)
     local itemName = getNuiItemName(data)
-    if data and data.src and itemName then
+    if data and data.targetSrc and itemName then
         if data.isWeapon then
-            TriggerServerEvent('inventory:core:giveWeapon', data.src, itemName)
+            TriggerServerEvent('inventory:core:giveWeapon', data.targetSrc, itemName)
         else
-            TriggerServerEvent('inventory:core:giveItem', data.src, itemName, data.count or 1)
+            TriggerServerEvent('inventory:core:giveItem', data.targetSrc, itemName, data.count or 1)
         end
     end
     cb('ok')
 end)
 
--- moveInside / moveToOther / moveToMain / instantToMain / instantToSecond:
+-- moveInside / moveToSecond / moveToMain / instantToMain / instantToSecond:
 -- when a second inventory is active these all forward to whichever
 -- module opened it; when only the main inventory is open, 'moveInside'
 -- is purely a cosmetic reorder (ESX's own inventory has no slot concept)
@@ -516,29 +513,29 @@ local function forwardToSecond(kind, data)
     end
 end
 
-RegisterNUICallback('moveInside', function(data, cb)
+RegisterNUICallback('inventory:moveInside', function(data, cb)
     if secondActive then
         forwardToSecond('moveInside', data)
     end
     cb('ok')
 end)
 
-RegisterNUICallback('moveToOther', function(data, cb)
+RegisterNUICallback('inventory:moveToSecond', function(data, cb)
     forwardToSecond('moveToOther', data)
     cb('ok')
 end)
 
-RegisterNUICallback('moveToMain', function(data, cb)
+RegisterNUICallback('inventory:moveToMain', function(data, cb)
     forwardToSecond('moveToMain', data)
     cb('ok')
 end)
 
-RegisterNUICallback('instantToMain', function(data, cb)
+RegisterNUICallback('inventory:instantToMain', function(data, cb)
     forwardToSecond('moveToMain', data)
     cb('ok')
 end)
 
-RegisterNUICallback('instantToSecond', function(data, cb)
+RegisterNUICallback('inventory:instantToSecond', function(data, cb)
     forwardToSecond('moveToOther', data)
     cb('ok')
 end)
@@ -549,16 +546,16 @@ RegisterNUICallback('onSearch', function(data, cb)
     cb('ok')
 end)
 
-RegisterNUICallback('swapMoney', function(data, cb)
+RegisterNUICallback('inventory:swapMoney', function(data, cb)
     -- money handling is entirely ESX's own account system; if you want
     -- this to do something specific (e.g. cash<->bank), wire it here
     cb('ok')
 end)
 
--- likely the Settings-menu toggle for the background blur effect.
--- Respected by openMainInventory/openOtherInventory (blurEnabled),
--- and applied immediately if toggled while already open.
-RegisterNUICallback('blurState', function(data, cb)
+-- Settings-menu toggle for the background blur effect. Respected by
+-- openMainInventory/openOtherInventory (blurEnabled), and applied
+-- immediately if toggled while already open.
+RegisterNUICallback('inventory:blurState', function(data, cb)
     if data and data.value ~= nil then
         blurEnabled = data.value
         if blurEnabled then

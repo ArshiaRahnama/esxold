@@ -76,4 +76,11 @@ CreateThread(function()
             print('[Unique_LevelQuest] migrated: created table job_skill')
         end)
     end)
+
+    -- jobs.icon_url: optional, empty by default. There's no real
+    -- per-job image anywhere on this server today, so this just gives
+    -- you a place to add one later (UPDATE jobs SET icon_url = '...'
+    -- WHERE name = '...') — the HUD falls back to a plain icon when
+    -- it's empty, never a fake/placeholder image.
+    ensureColumn('jobs', 'icon_url', "`icon_url` VARCHAR(255) DEFAULT NULL")
 end)

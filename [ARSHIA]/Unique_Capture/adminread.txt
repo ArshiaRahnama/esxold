@@ -9,9 +9,11 @@ If you get "You Don't Have Permissions!", your permission group
 needs adjusting in Config.lua or your ACE/permission setup.
 
 ⚠️ REQUIRED DEPENDENCY: this resource now uses ox_lib for all
-notifications. Make sure ox_lib is installed and started BEFORE
-this resource in your server.cfg:
+notifications and ox_target for Academy entry/exit interactions.
+Make sure both are installed and started BEFORE this resource in
+your server.cfg:
   ensure ox_lib
+  ensure ox_target
   ensure Unique_Capture
 
 ⚠️ REQUIRED SETUP BEFORE GOING LIVE: Config.AcademyEntryPoints in
@@ -247,29 +249,38 @@ Turn off with Config.EnableHallOfFame = false.
 ────────────────────────────────────────────────────────────────
 
 /captureAcademy
-  Teleports the player into a SEPARATE routing bucket/world
-  (Config.AcademyWorld, default 51 — distinct from the main world
-  and the real capture world) and spawns a few hostile NPCs,
-  created server-side and networked to that player, to fight —
-  good for newcomers getting a feel for combat before joining a
-  real round. Never touches real kills, points, or any leaderboard
-  table — genuinely zero risk to your stats.
+  Target-interact (ox_target) with the instructor NPC standing at
+  one of Config.AcademyEntryPoints to enter — no more "press E"
+  prompt. Teleports you into a SEPARATE routing bucket/world
+  (Config.AcademyWorld, default 51) and spawns hostile NPCs,
+  created server-side and networked to you, to fight. Never
+  touches real kills, points, or any leaderboard table.
 
-  ⚠️ Only works if the player is physically near one of
-  Config.AcademyEntryPoints (default radius 10 units) — you MUST
-  fill this in with real coordinates on your map, the shipped
-  value is a placeholder. An "instructor" NPC also stands at each
-  entry point as a walk-up-and-press-E alternative to the command.
+  ⚠️ Config.AcademyEntryPoints is a placeholder — fill it in with
+  real, safe coordinates before enabling this, or nobody can enter.
 
-  Dying inside the Academy does NOT kick you out — you get an
-  on-screen "Press E to respawn" prompt and continue training in
-  place. Only /leaveAcademy or the dashboard's Leave button
-  actually exits, and it puts you back exactly where you entered
-  from (not a random location).
+  NPCs can hurt you but can never actually kill you (health is
+  floored at 12% while training) — this is a sandbox, not a death
+  trap. If you do go down some other way, you get an on-screen
+  "Press E to respawn" prompt and revive right there through this
+  server's real revive trigger (Config.ReviveTrigger) — dying does
+  NOT kick you out of the Academy.
+
+  A second instructor NPC spawns inside the Academy itself — target
+  it (or use the dashboard's Leave button / /leaveAcademy) to exit.
+  You're teleported back to exactly where you entered from.
 
   NPCs get tougher (accuracy + armor) as your permanent Academy
   kill count climbs — see Config.AcademyDifficultyStep /
   Config.AcademyMaxAccuracy / Config.AcademyMaxArmor.
+
+  A marked Safe Zone inside the Academy makes NPCs stop attacking
+  the instant you step into it (Config.AcademySafeZoneOffset/
+  Radius) — useful to catch your breath.
+
+  If you stay past Config.AcademyTimeLimitMinutes (default 20), you
+  get a friendly reminder to go try a real round, repeating every
+  Config.AcademyReminderIntervalMinutes.
 
   The first time you enter, a full step-by-step chat guide explains
   exactly how a real capture round works, and a green practice
@@ -283,7 +294,10 @@ While inside, a dedicated on-screen panel shows a live session
 timer and your TOTAL Academy kill count (a separate, permanent
 counter in capture_academy_stats — it never resets and can never
 touch your real capture stats, rank, or medals). Killed NPCs
-respawn automatically so training never runs dry.
+respawn automatically so training never runs dry. Your badges
+(Sharpshooter/Marksman Elite/Academy Legend) and the all-time
+Academy leaderboard are visible right in the Academy tab of
+/capture.
 
 ⚠️ REQUIRED SETUP: Config.AcademyCoord is a placeholder
 (vector3(0.0, 0.0, 72.0)) and needs to be changed to a real, safe,
@@ -318,6 +332,24 @@ A missing or broken webhook NEVER breaks gameplay — at worst it
 prints a one-line warning to console.
 
 ────────────────────────────────────────────────────────────────
+  14. SPECTATOR MODE (on by default)
+────────────────────────────────────────────────────────────────
+
+/captureSpectate
+  Only works while a round is active. Drops you into a free-flying
+  camera over the battle — WASD to move, mouse to look, Space/Ctrl
+  for up/down, hold Shift to move faster. Your character is frozen,
+  invisible, and invincible for the entire time — you cannot be
+  seen, hurt, or interfere with the round in any way, and you don't
+  need to be in a gang to use it.
+
+/leaveSpectate (or press ESC)
+  Exits and puts you back exactly where you were standing.
+
+Automatically exits cleanly if the round ends while you're
+watching. Turn off with Config.EnableSpectate = false.
+
+────────────────────────────────────────────────────────────────
   QUICK REFERENCE — ALL COMMANDS
 ────────────────────────────────────────────────────────────────
 /capture                        Full dashboard - everything in one screen
@@ -343,5 +375,7 @@ prints a one-line warning to console.
 /hallOfFame                    List of inducted Hall of Fame legends
 /captureAcademy                 Practice vs NPCs, no stats recorded
 /leaveAcademy                   Exit the training academy
+/captureSpectate                 Free camera over an active round
+/leaveSpectate                   Exit spectator mode
 
 ════════════════════════════════════════════════════════════════
