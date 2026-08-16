@@ -36,6 +36,27 @@ Corp = {
 
 		FranchiseFeePercent  = 5,   -- % of each business's current balance collected per run
 		CollectCooldownMins  = 30,  -- server-wide cooldown between collection runs
+
+		-- ── Portfolio (10 businesses Meridian must ACQUIRE one by one) ──
+		-- These are the 10 newer bakery/bar/pizza/icecream/sushi businesses.
+		-- Not acquired = completely untouched by Meridian, no fee taken.
+		PortfolioJobs = { 'flourish', 'goldcrust', 'static', 'nightjar', 'firebrick', 'slice', 'frostbite', 'sundae', 'koi', 'wasabi' },
+		AcquireCost = 20000, -- one-time cost to acquire a portfolio business at Bronze rank
+
+		-- Rank upgrades raise the % collected from that specific business.
+		Ranks = {
+			{ id = 'bronze', label = 'Bronze', feePercent = 5,  upgradeCost = 0 },      -- starting rank on acquisition
+			{ id = 'silver', label = 'Silver', feePercent = 8,  upgradeCost = 15000 },
+			{ id = 'gold',   label = 'Gold',   feePercent = 12, upgradeCost = 30000 },
+		},
+
+		-- ── VIP (the 7 original/prestige businesses: 3 cafes, 3 restaurants, the car wash) ──
+		-- Separate track from Portfolio: no acquiring/ranking, just a single
+		-- one-time "Sign Partnership" buy-in per business, then Meridian
+		-- automatically collects a flat cut from it every franchise-fee run.
+		VIPJobs = { 'uwucafe', 'obsidian', 'voltage', 'ember', 'anchor', 'crimson', 'carwash' },
+		VIPPartnershipCost = 50000, -- one-time investment to sign a VIP partnership
+		VIPFeePercent = 15,          -- flat cut collected from every signed VIP business
 	},
 
 	Blacktide = {

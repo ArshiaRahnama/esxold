@@ -37,3 +37,15 @@ INSERT INTO `addon_account_data` (`account_name`, `money`, `owner`) VALUES
 	('society_meridian', 0, NULL),
 	('society_blacktide', 0, NULL),
 	('society_cratecarry', 0, NULL);
+
+
+-- Tracks which of the 17 businesses Meridian has acquired (portfolio) or
+-- signed a VIP partnership with, and the current rank of each acquired
+-- portfolio business.
+CREATE TABLE IF NOT EXISTS `meridian_portfolio` (
+	`business_job` varchar(50) NOT NULL,
+	`kind` varchar(10) NOT NULL,      -- 'portfolio' or 'vip'
+	`status` varchar(10) NOT NULL,    -- 'acquired' (portfolio) or 'partnered' (vip)
+	`rank` varchar(10) DEFAULT NULL,  -- 'bronze' / 'silver' / 'gold' - portfolio only
+	PRIMARY KEY (`business_job`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

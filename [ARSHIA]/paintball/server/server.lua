@@ -306,6 +306,16 @@ ESX.RegisterServerCallback('esx_paintball:CreateLobby', function(source, cb, dat
 	local xPlayer = ESX.GetPlayerFromId(source)
 	if not xPlayer then return end
 	if DoesOwnerHasLobby(xPlayer.identifier) then cb({}) return end
+
+	-- Turf Wars Inc. integration: if this map is currently rented to a gang,
+	-- only that gang's members can host a lobby on it.
+	local reservedGang = exports['uniquecafejobs']:GetMapReservation(tostring(data.mapName))
+	if reservedGang and (not xPlayer.gang or xPlayer.gang.name ~= reservedGang) then
+		TriggerClientEvent('esx_paintball:Notify', source, ('This map is rented exclusively to %s right now.'):format(reservedGang))
+		cb({})
+		return
+	end
+
 	local createdLobbyID = CreateLobby({source = xPlayer.source, identifier = xPlayer.identifier, name = string.gsub(xPlayer.name, "_", " ")}, data)
 	cb(createdLobbyID)
 	table.insert(LobbyList[createdLobbyID].teams[1], { source = source, ready = true })

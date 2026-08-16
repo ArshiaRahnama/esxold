@@ -82,3 +82,6 @@ server_scripts {
 	'@mysql-async/lib/MySQL.lua',
     'server/*.lua'
 }
+dependencies {
+	'uniquecafejobs', -- Turf Wars Inc. map-rental integration (see server/server.lua CreateLobby)
+}

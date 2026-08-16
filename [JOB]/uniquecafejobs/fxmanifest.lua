@@ -20,6 +20,7 @@ shared_scripts {
 	'shared/market_products.lua',
 	'shared/newbiz_items.lua',
 	'shared/corp.lua',
+	'shared/turfco.lua',
 }
 
 client_scripts {
@@ -31,6 +32,7 @@ client_scripts {
 	'client/crafting_cl.lua',
 	'client/market_client.lua',
 	'client/corp_client.lua',
+	'client/turfco_client.lua',
 }
 
 server_scripts {
@@ -42,6 +44,7 @@ server_scripts {
 	'server/market_config.lua',
 	'server/market_server.lua',
 	'server/corp_server.lua',
+	'server/turfco_server.lua',
 }
 
 ui_page 'html/index.html'
@@ -69,5 +72,7 @@ dependencies {
 	'esx_society',
 	'mysql-async',
 	'ox_lib',
+	'ox_target',
 	'esx_inventoryhud',
+	'gangaccount',
 }

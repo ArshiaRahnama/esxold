@@ -86,7 +86,29 @@ end)
 
 RegisterNetEvent('uniquecafejobs:corp:openMeridianBoss')
 AddEventHandler('uniquecafejobs:corp:openMeridianBoss', function()
-	TriggerServerEvent('uniquecafejobs:corp:requestPortfolio')
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'meridian_boss_root', {
+		title    = 'Meridian Holdings',
+		align    = 'top-left',
+		elements = {
+			{ label = 'Portfolio Dashboard', value = 'dashboard' },
+			{ label = 'Manage Portfolio (Acquire / Rank Up)', value = 'portfolio' },
+			{ label = 'VIP Partnerships', value = 'vip' },
+			{ label = 'Manage Business Staff (Director+)', value = 'staff' },
+		},
+	}, function(data, menu)
+		menu.close()
+		if data.current.value == 'dashboard' then
+			TriggerServerEvent('uniquecafejobs:corp:requestPortfolio')
+		elseif data.current.value == 'portfolio' then
+			TriggerServerEvent('uniquecafejobs:corp:requestManagePortfolio')
+		elseif data.current.value == 'vip' then
+			TriggerServerEvent('uniquecafejobs:corp:requestVIPPartnerships')
+		elseif data.current.value == 'staff' then
+			TriggerServerEvent('uniquecafejobs:corp:requestManageStaffList')
+		end
+	end, function(data, menu)
+		menu.close()
+	end)
 end)
 
 RegisterNetEvent('uniquecafejobs:corp:showPortfolio')
@@ -109,6 +131,118 @@ AddEventHandler('uniquecafejobs:corp:showPortfolio', function(rows, canCollect, 
 	end, function(data, menu)
 		menu.close()
 	end)
+end)
+
+RegisterNetEvent('uniquecafejobs:corp:showManagePortfolio')
+AddEventHandler('uniquecafejobs:corp:showManagePortfolio', function(rows)
+	local elements = {}
+	for _, row in ipairs(rows) do
+		local label
+		if row.acquired then
+			local nextRankCost = nil
+			for i, r in ipairs(Corp.Meridian.Ranks) do
+				if r.id == row.rank and Corp.Meridian.Ranks[i + 1] then
+					nextRankCost = Corp.Meridian.Ranks[i + 1].label .. ' for $' .. Corp.Meridian.Ranks[i + 1].upgradeCost
+				end
+			end
+			label = ('%s - %s rank%s'):format(row.label, row.rank:gsub("^%l", string.upper), nextRankCost and (' (upgrade to ' .. nextRankCost .. ')') or ' (MAX)')
+		else
+			label = ('%s - not acquired ($%d to acquire)'):format(row.label, Corp.Meridian.AcquireCost)
+		end
+		table.insert(elements, { label = label, value = row.job, acquired = row.acquired, maxed = row.acquired and row.rank == 'gold' })
+	end
+
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'meridian_manage_portfolio', {
+		title    = 'Manage Portfolio',
+		align    = 'top-left',
+		elements = elements,
+	}, function(data, menu)
+		if data.current.acquired then
+			if not data.current.maxed then
+				TriggerServerEvent('uniquecafejobs:corp:upgradeBusiness', data.current.value)
+			end
+		else
+			TriggerServerEvent('uniquecafejobs:corp:acquireBusiness', data.current.value)
+		end
+		menu.close()
+	end, function(data, menu)
+		menu.close()
+	end)
+end)
+
+RegisterNetEvent('uniquecafejobs:corp:showVIPPartnerships')
+AddEventHandler('uniquecafejobs:corp:showVIPPartnerships', function(rows)
+	local elements = {}
+	for _, row in ipairs(rows) do
+		local label = row.partnered
+			and (row.label .. ' - VIP Partner (15% flat cut active)')
+			or (row.label .. (' - not partnered ($%d to sign)'):format(Corp.Meridian.VIPPartnershipCost))
+		table.insert(elements, { label = label, value = row.job, partnered = row.partnered })
+	end
+
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'meridian_vip_partnerships', {
+		title    = 'VIP Partnerships',
+		align    = 'top-left',
+		elements = elements,
+	}, function(data, menu)
+		if not data.current.partnered then
+			TriggerServerEvent('uniquecafejobs:corp:signVIPPartnership', data.current.value)
+		end
+		menu.close()
+	end, function(data, menu)
+		menu.close()
+	end)
+end)
+
+RegisterNetEvent('uniquecafejobs:corp:showManageStaffList')
+AddEventHandler('uniquecafejobs:corp:showManageStaffList', function(rows)
+	local elements = {}
+	for _, row in ipairs(rows) do
+		table.insert(elements, { label = row.label, value = row.job })
+	end
+	if #elements == 0 then
+		table.insert(elements, { label = 'No businesses acquired or partnered yet', value = 'noop', disabled = true })
+	end
+
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'meridian_staff_list', {
+		title    = 'Manage Business Staff',
+		align    = 'top-left',
+		elements = elements,
+	}, function(data, menu)
+		if data.current.value == 'noop' then return end
+		local chosenJob = data.current.value
+		menu.close()
+
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'meridian_staff_actions', {
+			title    = 'Manage Staff',
+			align    = 'top-left',
+			elements = {
+				{ label = 'Open Boss Menu (hire / fire / grades)', value = 'boss' },
+				{ label = 'Appoint Manager (make someone the Boss)', value = 'appoint' },
+			},
+		}, function(data2, menu2)
+			menu2.close()
+			if data2.current.value == 'boss' then
+				TriggerServerEvent('uniquecafejobs:corp:openBusinessBossMenuAsMeridian', chosenJob)
+			elseif data2.current.value == 'appoint' then
+				local input = lib.inputDialog('Appoint Manager', {
+					{ type = 'number', label = 'Player server ID', required = true },
+				})
+				if input and input[1] then
+					TriggerServerEvent('uniquecafejobs:corp:appointManager', chosenJob, input[1])
+				end
+			end
+		end, function(data2, menu2)
+			menu2.close()
+		end)
+	end, function(data, menu)
+		menu.close()
+	end)
+end)
+
+RegisterNetEvent('uniquecafejobs:corp:openRemoteBossMenu')
+AddEventHandler('uniquecafejobs:corp:openRemoteBossMenu', function(job)
+	TriggerEvent('esx_society:openBosscarysMenu', job, function(data, menu) end, function(data, menu) end)
 end)
 
 RegisterNetEvent('uniquecafejobs:corp:openBlacktideBoss')
