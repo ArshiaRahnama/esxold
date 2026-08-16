@@ -244,7 +244,10 @@ end
 
 RegisterNetEvent('AH_uwucafejob:OpenCraftingHamzan')
 AddEventHandler('AH_uwucafejob:OpenCraftingHamzan', function()
-    openWorkbench(ConfigCrafting.OpenCategoryHamzan)
+    local myCafe = GetCafeForJob(PlayerData.job.name)
+    if myCafe then
+        openWorkbench(myCafe.MenuGroup .. 'Hamzan')
+    end
 end)
 
 RegisterNetEvent('AH_uwucafejob:OpenCraftingGhahvesaz')
@@ -252,7 +255,7 @@ AddEventHandler('AH_uwucafejob:OpenCraftingGhahvesaz', function()
     local Pcoords = GetEntityCoords(PlayerPedId())
     local isOpen = true 
 
-    for k,v in pairs(Config.uwustasion) do 
+    for k,v in pairs(Cafes) do 
         local distance = GetDistanceBetweenCoords(v.Crafting_Ghahvesaz.Pos.x, v.Crafting_Ghahvesaz.Pos.y, v.Crafting_Ghahvesaz.Pos.z, Pcoords, false)
  
         if distance <= 1.2 then 
@@ -262,8 +265,9 @@ AddEventHandler('AH_uwucafejob:OpenCraftingGhahvesaz', function()
         end
     end
     
-    if isOpen then 
-        openWorkbench(ConfigCrafting.OpenCategoryGhahvesaz)
+    local myCafe = GetCafeForJob(PlayerData.job.name)
+    if isOpen and myCafe then 
+        openWorkbench(myCafe.MenuGroup .. 'Ghahvesaz')
     end
     
 end)
@@ -273,7 +277,7 @@ AddEventHandler('AH_uwucafejob:OpenCraftingZarfShoe', function()
     local Pcoords2 = GetEntityCoords(PlayerPedId())
     local isOpen2 = true 
 
-    for k,v in pairs(Config.uwustasion) do 
+    for k,v in pairs(Cafes) do 
         local distance2 = GetDistanceBetweenCoords(v.Crafting_ZarfShoe.Pos.x, v.Crafting_ZarfShoe.Pos.y, v.Crafting_ZarfShoe.Pos.z, Pcoords2, false)
     
         if distance2 <= 1.2 then 
@@ -283,15 +287,19 @@ AddEventHandler('AH_uwucafejob:OpenCraftingZarfShoe', function()
         end
     end
     
-    if isOpen2 then 
-        openWorkbench(ConfigCrafting.OpenCategoryZarfShoe)
+    local myCafe2 = GetCafeForJob(PlayerData.job.name)
+    if isOpen2 and myCafe2 then 
+        openWorkbench(myCafe2.MenuGroup .. 'ZarfShoe')
     end
     
 end)
 
 RegisterNetEvent('AH_uwucafejob:OpenCraftingGaz')
 AddEventHandler('AH_uwucafejob:OpenCraftingGaz', function()
-    openWorkbench(ConfigCrafting.OpenCategoryGaz)
+    local myCafeGaz = GetCafeForJob(PlayerData.job.name)
+    if myCafeGaz then
+        openWorkbench(myCafeGaz.MenuGroup .. 'Gaz')
+    end
 end)
 
 

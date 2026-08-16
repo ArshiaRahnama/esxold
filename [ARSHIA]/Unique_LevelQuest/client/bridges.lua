@@ -34,6 +34,9 @@ AddEventHandler('esx:givesalary', function()
     if trig then
         TriggerServerEvent(trig)
     end
+    if job and Config.TrackedJobs[job] then
+        TriggerServerEvent('skill-track:tick')
+    end
 end)
 
 -- esx_organserver's ambulance/mechanic job scripts fire these on the

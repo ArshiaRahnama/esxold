@@ -92,6 +92,7 @@ end
 RegisterCommand('menu', function()
     SetNuiFocus(true, true)
     UpdateProfile()
+    UpdateSkills()
     UpdateCollections()
     UiShow()
 end, false)

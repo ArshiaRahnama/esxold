@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const tabs = document.querySelectorAll('.tab');
   const panels = {
     quests: document.getElementById('tab_quests'),
+    skill: document.getElementById('tab_skill'),
     collections: document.getElementById('tab_collections'),
   };
 

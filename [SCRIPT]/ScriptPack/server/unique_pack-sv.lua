@@ -299,16 +299,55 @@ ESX.RegisterServerCallback('engine:checkVehicleOwnership', function(source, cb, 
 end)
 
 
+-- FIX: this used to only check the plain 'engine' item, which was only ever
+-- given out by the now-disabled old chop shop flow. It's now unobtainable,
+-- so this would always fail. Bridged to accept any of the new chopshop's
+-- tiered engine1-6 items instead.
+--
+-- Install price now scales with engine tier (higher tier = better engine
+-- = more expensive to install), capped at 500,000 for tier 6.
+local ENGINE_INSTALL_PRICE = {
+    [1] = 100000,
+    [2] = 180000,
+    [3] = 260000,
+    [4] = 340000,
+    [5] = 420000,
+    [6] = 500000,
+}
+
+local function getOwnedEngineTier(xPlayer)
+    for tier = 1, 6 do
+        local item = xPlayer.getInventoryItem('engine' .. tier)
+        if item and item.count > 0 then
+            return tier
+        end
+    end
+    return nil
+end
+
+-- Returns (hasItem, tier, price) so the client knows exactly what it'll cost
+-- before asking the player to confirm.
 ESX.RegisterServerCallback('engine:checkEngineItem', function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
-    local engineItem = xPlayer.getInventoryItem('engine')
-    cb(engineItem.count > 0)
+    local tier = getOwnedEngineTier(xPlayer)
+    if not tier then
+        cb(false)
+        return
+    end
+    cb(true, tier, ENGINE_INSTALL_PRICE[tier])
 end)
 
 
-ESX.RegisterServerCallback('engine:checkMoney', function(source, cb, amount)
+-- 'amount' here is the tier (1-6), not a raw price — price is always looked
+-- up server-side so the client can't spoof a cheaper amount.
+ESX.RegisterServerCallback('engine:checkMoney', function(source, cb, tier)
     local xPlayer = ESX.GetPlayerFromId(source)
-    cb(xPlayer.bank >= amount)
+    local price = ENGINE_INSTALL_PRICE[tier]
+    if not price then
+        cb(false)
+        return
+    end
+    cb(xPlayer.bank >= price)
 end)
 
 
@@ -319,9 +358,12 @@ AddEventHandler('engine:payForRepair', function()
 end)
 
 RegisterNetEvent('engine:payForEngine')
-AddEventHandler('engine:payForEngine', function()
+AddEventHandler('engine:payForEngine', function(tier)
     local xPlayer = ESX.GetPlayerFromId(source)
-    xPlayer.removeBank(30000)
+    local price = ENGINE_INSTALL_PRICE[tier]
+    if price then
+        xPlayer.removeBank(price)
+    end
 end)
 
 RegisterNetEvent('engine:removeEngine')
@@ -349,14 +391,18 @@ end)
 
 
 RegisterNetEvent('engine:installEngine')
-AddEventHandler('engine:installEngine', function(plate)
+AddEventHandler('engine:installEngine', function(plate, tier)
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
 
     if not plate then return end
 
-    local engineItem = xPlayer.getInventoryItem('engine')
-    if engineItem.count < 1 then
+    -- FIX: same bridge as engine:checkEngineItem — consume whichever
+    -- engine1-6 tier the player actually has (new chopshop economy),
+    -- instead of the unobtainable plain 'engine' item. Re-verify server-side
+    -- rather than trusting the tier the client reports.
+    local ownedTier = getOwnedEngineTier(xPlayer)
+    if not ownedTier then
         TriggerClientEvent('esx:showNotification', src, "Shoma Item Engine Nadarid!")
         return
     end
@@ -365,7 +411,7 @@ AddEventHandler('engine:installEngine', function(plate)
         plate
     })
 
-    xPlayer.removeInventoryItem('engine', 1)
+    xPlayer.removeInventoryItem('engine' .. ownedTier, 1)
     TriggerClientEvent('esx:showNotification', src, "Shoma Engine Mashin ra Nasb Kardid!")
 end)
 

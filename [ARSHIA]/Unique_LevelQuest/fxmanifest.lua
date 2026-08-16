@@ -15,6 +15,7 @@ server_scripts {
     'server/bridges.lua',
     'server/menu.lua',
     'server/collections.lua',
+    'server/skill.lua',
 }
 
 client_scripts {
@@ -24,6 +25,7 @@ client_scripts {
     'client/bridges.lua',
     'client/menu.lua',
     'client/collections.lua',
+    'client/skill.lua',
 }
 
 ui_page 'html/index.html'

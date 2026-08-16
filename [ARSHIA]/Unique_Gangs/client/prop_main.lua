@@ -1906,7 +1906,7 @@ while true do
 
   if Data.vehdel ~= nil then
     if GetDistanceBetweenCoords(coords,   Data.vehdel.x,  Data.vehdel.y,  Data.vehdel.z,  true) < PropConfig.DrawDistance then
-      DrawMarker(24, Data.vehdel.x,  Data.vehdel.y,  Data.vehdel.z+0.7, 0.0, 0.0, 0.0, 0, 0.0, 0.0, PropConfig.MarkerSize.x+0.5, PropConfig.MarkerSize.y+0.5, PropConfig.MarkerSize.z+0.5, PropConfig.MarkerColorVehDel.r, PropConfig.MarkerColorVehDelg, PropConfig.MarkerColorVehDel.b, 100, false, true, 2, true, false, false, false)
+      DrawMarker(24, Data.vehdel.x,  Data.vehdel.y,  Data.vehdel.z+0.7, 0.0, 0.0, 0.0, 0, 0.0, 0.0, PropConfig.MarkerSize.x+0.5, PropConfig.MarkerSize.y+0.5, PropConfig.MarkerSize.z+0.5, PropConfig.MarkerColorVehDel.r, PropConfig.MarkerColorVehDel.g, PropConfig.MarkerColorVehDel.b, 100, false, true, 2, true, false, false, false)
     end
   end
 

@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="styles/fonts.css" />
   <link rel="stylesheet" href="styles/style.css" />
   <link rel="stylesheet" href="styles/quest.css" />
+  <link rel="stylesheet" href="styles/skill.css" />
   <link rel="stylesheet" href="styles/collections.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
@@ -18,6 +19,28 @@
 
       <div class="topbar">
         <!-- explicit physical order (topbar forces direction:ltr) -->
+        <div class="headerName">
+          <div class="leftRow">
+            <div class="avatarWrap"><div class="avatar"><i class="fa-solid fa-user"></i></div></div>
+            <div class="pnameBlock">
+              <div class="pname name_span">PlayerName</div>
+              <div class="pline"><i class="fa-solid fa-money-bill"></i> <span class="cash_span">-</span></div>
+              <div class="pline"><i class="fa-solid fa-landmark"></i> <span class="bank_span">-</span> &middot; <i class="fa-solid fa-coins"></i> <span class="coin_span">-</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tCenter">
+          <div class="lvBox">
+            <div class="lvTitle">LEVEL</div>
+            <div class="lvValue level-number">0</div>
+            <div class="lvXpRow">
+              <span class="xp-fraction">0/0</span>
+            </div>
+            <div class="xp-bar"><div class="xp-fill" style="width:0%"></div></div>
+          </div>
+        </div>
+
         <div class="headerBadges">
           <div class="rightBox">
             <div class="badgeLine">
@@ -36,33 +59,14 @@
             </div>
           </div>
         </div>
-
-        <div class="tCenter">
-          <div class="lvBox">
-            <div class="lvTitle">LEVEL</div>
-            <div class="lvValue level-number">0</div>
-            <div class="lvXpRow">
-              <span class="xp-fraction">0/0</span>
-            </div>
-            <div class="xp-bar"><div class="xp-fill" style="width:0%"></div></div>
-          </div>
-        </div>
-
-        <div class="headerName">
-          <div class="leftRow">
-            <div class="pnameBlock">
-              <div class="pname name_span">PlayerName</div>
-              <div class="pline"><i class="fa-solid fa-money-bill"></i> <span class="cash_span">-</span></div>
-              <div class="pline"><i class="fa-solid fa-landmark"></i> <span class="bank_span">-</span> &middot; <i class="fa-solid fa-coins"></i> <span class="coin_span">-</span></div>
-            </div>
-            <div class="avatarWrap"><div class="avatar"><i class="fa-solid fa-user"></i></div></div>
-          </div>
-        </div>
       </div>
 
       <div class="tabs">
         <button class="tab active" data-tab="quests">
           <i class="fa-solid fa-person-circle-question"></i> QUESTS
+        </button>
+        <button class="tab" data-tab="skill">
+          <i class="fa-solid fa-chart-line"></i> SKILL
         </button>
         <button class="tab" data-tab="collections">
           <i class="fa-solid fa-layer-group"></i> COLLECTIONS
@@ -72,6 +76,10 @@
       <div class="content">
         <div class="panel" id="tab_quests">
           <div class="quests-grid"></div>
+        </div>
+
+        <div class="panel hidden" id="tab_skill">
+          <div class="skill-list"></div>
         </div>
 
         <div class="panel hidden" id="tab_collections">
@@ -105,6 +113,7 @@
   <script src="scripts/script.js"></script>
   <script src="scripts/personal.js"></script>
   <script src="scripts/quest.js"></script>
+  <script src="scripts/skill.js"></script>
   <script src="scripts/collections.js"></script>
 </body>
 </html>

@@ -117,8 +117,8 @@ html, body {
   display: flex;
 }
 
-.headerName { justify-content: flex-end; }
-.headerBadges { justify-content: flex-start; }
+.headerName { justify-content: flex-start; }
+.headerBadges { justify-content: flex-end; }
 
 .leftRow { display: flex; align-items: center; gap: 14px; min-width: 0; }
 
@@ -302,11 +302,12 @@ html, body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: color 0.15s ease;
+  transition: color 0.15s ease, background 0.15s ease;
 }
 
-.tab:hover { color: #d8d8dd; }
-.tab.active { color: #fff; }
+.tab:hover { color: #d8d8dd; background: rgba(255, 255, 255, 0.03); }
+.tab.active { color: #fff; background: linear-gradient(180deg, rgba(255, 140, 26, 0.1), transparent); }
+.tab.active i { color: var(--orange); text-shadow: 0 0 10px rgba(255, 140, 26, 0.6); }
 .tab.active::after {
   content: '';
   position: absolute;

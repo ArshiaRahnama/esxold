@@ -1,4 +1,3 @@
-
 -- ============================================================
 
 ESX = nil
@@ -252,7 +251,19 @@ end
 -- always clears NUI focus AND the native screen blur, unconditionally --
 -- this is the one place that MUST leave the player in a clean state no
 -- matter what was open or what state got confused beforehand.
-function closeInventory()
+--
+-- skipNuiMessage=true is used by the 'close' NUI callback below: the
+-- NUI already knows it's closing (it's the one that asked), so
+-- echoing SendNUIMessage({action='close'}) back to it would trigger
+-- its OWN message handler's `action=='close' -> close()` branch,
+-- which POSTs /close back to Lua again, which calls this function
+-- again, forever -- an infinite Lua<->NUI ping-pong, roughly one
+-- round-trip (~20ms) per cycle, with no error on either side because
+-- both sides are doing exactly what they're written to do. That
+-- loop, once started by the first-ever close, is why every open
+-- after the first one immediately flashed and closed again.
+function closeInventory(skipNuiMessage)
+
     if secondActive and secondCallback then
         secondCallback({ type = 'close' })
     end
@@ -261,7 +272,9 @@ function closeInventory()
     secondCallback = nil
     SetNuiFocus(false, false)
     TriggerScreenblurFadeOut(0.3)
-    SendNUIMessage({ action = 'close' })
+    if not skipNuiMessage then
+        SendNUIMessage({ action = 'close' })
+    end
 end
 
 -- safety net: if the resource restarts while the inventory was open,
@@ -272,24 +285,36 @@ AddEventHandler('onResourceStop', function(resourceName)
     TriggerScreenblurFadeOut(0.1)
 end)
 
--- Debounce guard: if the F2 command somehow fires twice within one
--- game tick or two (keyboard/driver double-fire, or two overlapping
--- key bindings), the second call would immediately undo the first --
--- open then instantly close again. RegisterCommand itself has no
--- built-in protection against that, so this adds one explicitly.
-local lastToggleAt = 0
+-- F2 now ONLY opens the inventory -- it no longer closes it too.
+--
+-- The reported bug (opens fine the first time; every time after that,
+-- it flashes open then immediately closes itself again, with zero
+-- console errors, unrelated to which physical key is bound, and not
+-- reproduced by any other NUI menu on the server) points at the
+-- SAME key being asked to both open AND close while SetNuiFocus is
+-- also flipping state on that exact frame -- a known rough edge in
+-- FiveM where a keymapped command and a NUI focus change landing on
+-- the same tick can cause the input to be read twice. Splitting open
+-- and close onto different triggers removes the code path where
+-- pressing the toggle key could ever call closeInventory() right
+-- after openMainInventory() ran, which is the only way "opens then
+-- instantly closes itself" can happen with no error at all.
+--
+-- Closing now goes exclusively through ESC / the in-menu close
+-- button (html/js/app.js's own close() -> POST /close -> the 'close'
+-- NUI callback below), which was already working correctly this
+-- whole time and was never part of the bug.
+local lastOpenAt = 0
 RegisterCommand('inventory_toggle', function()
-    local now = GetGameTimer()
-    if now - lastToggleAt < 250 then return end
-    lastToggleAt = now
+    if isOpen or secondActive then return end -- already open: do nothing, use ESC to close
 
-    if isOpen or secondActive then
-        closeInventory()
-    else
-        openMainInventory()
-    end
+    local now = GetGameTimer()
+    if now - lastOpenAt < 250 then return end -- debounce against double-fire
+    lastOpenAt = now
+
+    openMainInventory()
 end, false)
-RegisterKeyMapping('inventory_toggle', 'Baz/Baste Kardan Inventory', 'keyboard', Config.OpenInventoryKey)
+RegisterKeyMapping('inventory_toggle', 'Baz Kardan Inventory', 'keyboard', Config.OpenInventoryKey)
 
 -- keep the NUI in sync with real inventory/weapon changes. This
 -- framework's ESX.SetPlayerData() is a plain assignment with no
@@ -422,7 +447,7 @@ local function getNuiItemName(data)
 end
 
 RegisterNUICallback('close', function(_, cb)
-    closeInventory()
+    closeInventory(true) -- NUI already knows it's closing; don't echo the message back
     cb('ok')
 end)
 

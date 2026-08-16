@@ -18,24 +18,30 @@ shared_scripts {
 	'shared/menu.lua',
 	'shared/configcrafting.lua',
 	'shared/market_products.lua',
+	'shared/newbiz_items.lua',
+	'shared/corp.lua',
 }
 
 client_scripts {
 	'client/nui_router.lua',
 	'client/main.lua',
 	'client/items.lua',
+	'client/newbiz_items.lua',
 	'client/functions.lua',
 	'client/crafting_cl.lua',
 	'client/market_client.lua',
+	'client/corp_client.lua',
 }
 
 server_scripts {
 	'@mysql-async/lib/MySQL.lua',
 	'server/main.lua',
 	'server/items.lua',
+	'server/newbiz_items.lua',
 	'server/crafting_sv.lua',
 	'server/market_config.lua',
 	'server/market_server.lua',
+	'server/corp_server.lua',
 }
 
 ui_page 'html/index.html'

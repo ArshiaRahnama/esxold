@@ -164,3 +164,18 @@ Config.GangQuest = {
     -- References esx_shop_robbery / esx_Bank_robbery, neither of which
     -- exists anywhere in this server's resources, so left disabled.
 }
+
+-- ===== Skill tab ===== --
+-- Real, honest tracking: every ~15 minutes a player spends ON DUTY in
+-- one of these jobs (driven by the same esx:givesalary tick already
+-- used for the Onduty quest — essentialmode's own paycheck interval is
+-- 15 minutes), that job's skill minutes go up. No fake/instant progress.
+Config.SkillTargetMinutes = 3000 -- 50 hours of on-duty time = 100%
+Config.TrackedJobs = {
+    police       = "Police",
+    sheriff      = "Sheriff",
+    metropolitan = "Metropolitan",
+    ambulance    = "Ambulance",
+    mechanic     = "Mechanic",
+    taxi         = "Taxi",
+}

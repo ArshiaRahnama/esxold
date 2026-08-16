@@ -40,18 +40,28 @@
 }
 
 .imgCard {
-  background: rgba(24, 24, 24, 0.9);
+  position: relative;
+  background: linear-gradient(160deg, rgba(28, 28, 28, 0.95), rgba(16, 16, 18, 0.95));
   border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: border-color 0.2s ease, transform 0.15s ease;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  animation: cardIn 0.4s ease backwards;
 }
+
+.gridCards .imgCard:nth-child(1) { animation-delay: 0.02s; }
+.gridCards .imgCard:nth-child(2) { animation-delay: 0.06s; }
+.gridCards .imgCard:nth-child(3) { animation-delay: 0.10s; }
+.gridCards .imgCard:nth-child(4) { animation-delay: 0.14s; }
+.gridCards .imgCard:nth-child(5) { animation-delay: 0.18s; }
+.gridCards .imgCard:nth-child(6) { animation-delay: 0.22s; }
 
 .imgCard:hover {
   border-color: rgba(255, 140, 26, 0.5);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45), 0 0 22px rgba(255, 140, 26, 0.12);
 }
 
 .cardIcon {

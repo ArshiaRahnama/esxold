@@ -59,4 +59,21 @@ CreateThread(function()
             print('[Unique_LevelQuest] migrated: created table quest')
         end)
     end)
+
+    -- job_skill table: per-player, per-job minutes worked (drives the
+    -- Skill tab). Not shared with anything else on this server.
+    tableExists('job_skill', function(exists)
+        if exists then return end
+
+        MySQL.Async.execute([[
+            CREATE TABLE `job_skill` (
+                `identifier` VARCHAR(60) NOT NULL,
+                `job`        VARCHAR(50) NOT NULL,
+                `minutes`    INT(11)     NOT NULL DEFAULT 0,
+                PRIMARY KEY (`identifier`, `job`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        ]], {}, function()
+            print('[Unique_LevelQuest] migrated: created table job_skill')
+        end)
+    end)
 end)

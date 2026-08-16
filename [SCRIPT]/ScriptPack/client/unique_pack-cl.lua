@@ -1315,7 +1315,7 @@ AddEventHandler('engine:tryInstallEngine', function(data)
         return
     end
     
-    ESX.TriggerServerCallback('engine:checkEngineItem', function(hasEngineItem)
+    ESX.TriggerServerCallback('engine:checkEngineItem', function(hasEngineItem, tier, price)
         if not hasEngineItem then
             lib.notify({ position = 'center-right', title = '', description = 'شما انجین ندارید!', type = 'error', duration = 3000 })
             return
@@ -1323,7 +1323,7 @@ AddEventHandler('engine:tryInstallEngine', function(data)
         
         ESX.TriggerServerCallback('engine:checkMoney', function(hasMoney)
             if not hasMoney then
-                lib.notify({ position = 'center-right', title = '', description = 'شما پول کافی ندارید ($30,000)!', type = 'error', duration = 3000 })
+                lib.notify({ position = 'center-right', title = '', description = 'شما پول کافی ندارید ($' .. price .. ')!', type = 'error', duration = 3000 })
                 return
             end
             
@@ -1339,8 +1339,8 @@ AddEventHandler('engine:tryInstallEngine', function(data)
                         clip = ''
                     },
                 }) then
-                    TriggerServerEvent('engine:installEngine', plate)
-                    TriggerServerEvent('engine:payForEngine')
+                    TriggerServerEvent('engine:installEngine', plate, tier)
+                    TriggerServerEvent('engine:payForEngine', tier)
                 
                     local vehicle = GetVehiclePedIsIn(playerPed, false)
                     if DoesEntityExist(vehicle) then
@@ -1352,7 +1352,7 @@ AddEventHandler('engine:tryInstallEngine', function(data)
                     lib.notify({ position = 'center-right', title = '', description = 'نصب انجین لغو شد!', type = 'error', duration = 3000 }) 
                 end
             end, plate)
-        end, 30000)
+        end, tier)
     end)
 end)
 
@@ -1365,7 +1365,8 @@ CreateThread(function()
         local playerPed = PlayerPedId()
         local playerCoords = GetEntityCoords(playerPed)
 
-        -- ChopShop Marker
+        -- ChopShop Marker (disabled — see Config_Antipg.ChopShopEnabled)
+        if Config_Antipg.ChopShopEnabled then
         local chopShopDistance = #(playerCoords - Config_Antipg.Marker.Position)
         if chopShopDistance < 20 then
             DrawMarker(
@@ -1448,6 +1449,7 @@ CreateThread(function()
                 end
             end
         end
+        end -- Config_Antipg.ChopShopEnabled
 
         -- Engine Install Marker
         local installDistance = #(playerCoords - Config_Antipg.InstallLocation)
@@ -1596,6 +1598,7 @@ function Draw3DText_Antipg(x, y, z, text)
 end
 
 
+if Config_Antipg.ChopShopEnabled then
 CreateThread(function()
     local blip = AddBlipForCoord(Config_Antipg.Marker.Position.x, Config_Antipg.Marker.Position.y, Config_Antipg.Marker.Position.z)
 
@@ -1609,6 +1612,7 @@ CreateThread(function()
     AddTextComponentSubstringPlayerName("Chop Shop")  -- اسم blip که نمایش داده می‌شود
     EndTextCommandSetBlipName(blip)
 end)
+end -- Config_Antipg.ChopShopEnabled
 
 
 
@@ -3691,7 +3695,7 @@ function GiveBoxingGloves()
     RemoveBoxingGloves()
     
     
-    local gloveModel = `prop_boxing_glove_01`
+    local gloveModel = 'prop_boxing_glove_01'
     
 
     RequestModel(gloveModel)

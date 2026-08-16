@@ -31,33 +31,141 @@ ConfigCrafting = {
 	
 	Categories = {
 	
-	['UwUHamzan'] = {
+	['cafeHamzan'] = {
 		Label = 'Item UwU',
 		Image = 'cupcake',
 		Jobs = ANY_CAFE_JOB,
 	
 	},
 	
-	['UwUGhahve'] = {
+	['cafeGhahvesaz'] = {
 		Label = 'Item UwU',
 		Image = 'cupcake',
 		Jobs = ANY_CAFE_JOB,
 	
 	},
 	
-	['UwUZarfShoe'] = {
+	['cafeZarfShoe'] = {
 		Label = 'Item UwU',
 		Image = 'cupcake',
 		Jobs = ANY_CAFE_JOB,
 	
 	},
 	
-	['UwU'] = {
+	['cafeGaz'] = {
 		Label = 'Item UwU',
 		Image = 'cupcake',
 		Jobs = ANY_CAFE_JOB,
 	
 	},
+	['bakeryHamzan'] = {
+		Label = 'Bakery',
+		Image = 'cupcake',
+		Jobs = {'bakery1', 'bakery2'}, -- placeholder, unused (see note above)
+	},
+	['bakeryGhahvesaz'] = {
+		Label = 'Bakery',
+		Image = 'cupcake',
+		Jobs = {'bakery1', 'bakery2'}, -- placeholder, unused (see note above)
+	},
+	['bakeryZarfShoe'] = {
+		Label = 'Bakery',
+		Image = 'cupcake',
+		Jobs = {'bakery1', 'bakery2'}, -- placeholder, unused (see note above)
+	},
+	['bakeryGaz'] = {
+		Label = 'Bakery',
+		Image = 'cupcake',
+		Jobs = {'bakery1', 'bakery2'}, -- placeholder, unused (see note above)
+	},
+	['barHamzan'] = {
+		Label = 'Bar',
+		Image = 'cupcake',
+		Jobs = {'bar1', 'bar2'}, -- placeholder, unused (see note above)
+	},
+	['barGhahvesaz'] = {
+		Label = 'Bar',
+		Image = 'cupcake',
+		Jobs = {'bar1', 'bar2'}, -- placeholder, unused (see note above)
+	},
+	['barZarfShoe'] = {
+		Label = 'Bar',
+		Image = 'cupcake',
+		Jobs = {'bar1', 'bar2'}, -- placeholder, unused (see note above)
+	},
+	['barGaz'] = {
+		Label = 'Bar',
+		Image = 'cupcake',
+		Jobs = {'bar1', 'bar2'}, -- placeholder, unused (see note above)
+	},
+	['pizzaHamzan'] = {
+		Label = 'Pizza',
+		Image = 'cupcake',
+		Jobs = {'pizza1', 'pizza2'}, -- placeholder, unused (see note above)
+	},
+	['pizzaGhahvesaz'] = {
+		Label = 'Pizza',
+		Image = 'cupcake',
+		Jobs = {'pizza1', 'pizza2'}, -- placeholder, unused (see note above)
+	},
+	['pizzaZarfShoe'] = {
+		Label = 'Pizza',
+		Image = 'cupcake',
+		Jobs = {'pizza1', 'pizza2'}, -- placeholder, unused (see note above)
+	},
+	['pizzaGaz'] = {
+		Label = 'Pizza',
+		Image = 'cupcake',
+		Jobs = {'pizza1', 'pizza2'}, -- placeholder, unused (see note above)
+	},
+	['icecreamHamzan'] = {
+		Label = 'Ice Cream',
+		Image = 'cupcake',
+		Jobs = {'icecream1', 'icecream2'}, -- placeholder, unused (see note above)
+	},
+	['icecreamGhahvesaz'] = {
+		Label = 'Ice Cream',
+		Image = 'cupcake',
+		Jobs = {'icecream1', 'icecream2'}, -- placeholder, unused (see note above)
+	},
+	['icecreamZarfShoe'] = {
+		Label = 'Ice Cream',
+		Image = 'cupcake',
+		Jobs = {'icecream1', 'icecream2'}, -- placeholder, unused (see note above)
+	},
+	['icecreamGaz'] = {
+		Label = 'Ice Cream',
+		Image = 'cupcake',
+		Jobs = {'icecream1', 'icecream2'}, -- placeholder, unused (see note above)
+	},
+	['sushiHamzan'] = {
+		Label = 'Sushi',
+		Image = 'cupcake',
+		Jobs = {'sushi1', 'sushi2'}, -- placeholder, unused (see note above)
+	},
+	['sushiGhahvesaz'] = {
+		Label = 'Sushi',
+		Image = 'cupcake',
+		Jobs = {'sushi1', 'sushi2'}, -- placeholder, unused (see note above)
+	},
+	['sushiZarfShoe'] = {
+		Label = 'Sushi',
+		Image = 'cupcake',
+		Jobs = {'sushi1', 'sushi2'}, -- placeholder, unused (see note above)
+	},
+	['sushiGaz'] = {
+		Label = 'Sushi',
+		Image = 'cupcake',
+		Jobs = {'sushi1', 'sushi2'}, -- placeholder, unused (see note above)
+	},
+
+	['carwashHamzan'] = { Label = 'Car Wash', Image = 'cupcake', Jobs = {'carwash'} },
+	['carwashGhahvesaz'] = { Label = 'Car Wash', Image = 'cupcake', Jobs = {'carwash'} },
+	['carwashZarfShoe'] = { Label = 'Car Wash', Image = 'cupcake', Jobs = {'carwash'} },
+	['carwashGaz'] = { Label = 'Car Wash', Image = 'cupcake', Jobs = {'carwash'} },
+
+
+
 
 	
 	},
@@ -67,7 +175,403 @@ ConfigCrafting = {
 	},
 	
 	Recipes = { 
+		['premium_wax'] = {
+			Category = 'carwashHamzan',
+			Label = 'Premium Wax',
+			Image = 'premium_wax',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['soap_foam'] = 2,
+			},
+		},
+		['interior_cleaner'] = {
+			Category = 'carwashHamzan',
+			Label = 'Interior Cleaner Kit',
+			Image = 'interior_cleaner',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['microfiber_cloth'] = 2,
+			},
+		},
+		['rim_polish'] = {
+			Category = 'carwashGhahvesaz',
+			Label = 'Rim Polish',
+			Image = 'rim_polish',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['soap_foam'] = 2,
+			},
+		},
+		['air_freshener_pine'] = {
+			Category = 'carwashGhahvesaz',
+			Label = 'Air Freshener Pine',
+			Image = 'air_freshener_pine',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['microfiber_cloth'] = 2,
+			},
+		},
+		['ceramic_coat'] = {
+			Category = 'carwashZarfShoe',
+			Label = 'Ceramic Coat',
+			Image = 'ceramic_coat',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['soap_foam'] = 2,
+			},
+		},
+		['tire_shine'] = {
+			Category = 'carwashGaz',
+			Label = 'Tire Shine',
+			Image = 'tire_shine',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['microfiber_cloth'] = 2,
+			},
+		},
 
+		['croissant_kareii'] = {
+			Category = 'bakeryHamzan',
+			Label = 'Croissant Kareii',
+			Image = 'croissant_kareii',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['khamir_shirini'] = 2,
+			},
+		},
+		['non_baget'] = {
+			Category = 'bakeryHamzan',
+			Label = 'Non Baget',
+			Image = 'non_baget',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['khamir_shirini'] = 2,
+			},
+		},
+		['keik_shokolat'] = {
+			Category = 'bakeryGhahvesaz',
+			Label = 'Keik Shokolat',
+			Image = 'keik_shokolat',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['khamir_shirini'] = 2,
+			},
+		},
+		['shirini_khamei'] = {
+			Category = 'bakeryGhahvesaz',
+			Label = 'Shirini Khamei',
+			Image = 'shirini_khamei',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['khamir_shirini'] = 2,
+			},
+		},
+		['cookie_shekari'] = {
+			Category = 'bakeryZarfShoe',
+			Label = 'Cookie Shekari',
+			Image = 'cookie_shekari',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['khamir_shirini'] = 2,
+			},
+		},
+		['roll_darchin'] = {
+			Category = 'bakeryGaz',
+			Label = 'Roll Darchin',
+			Image = 'roll_darchin',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['khamir_shirini'] = 2,
+			},
+		},
+		['mocktail_mojito'] = {
+			Category = 'barHamzan',
+			Label = 'Virgin Mojito',
+			Image = 'mocktail_mojito',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['soda_water'] = 2,
+			},
+		},
+		['mocktail_pinacolada'] = {
+			Category = 'barHamzan',
+			Label = 'Virgin Pina Colada',
+			Image = 'mocktail_pinacolada',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['mive_mix'] = 2,
+			},
+		},
+		['soda_lime'] = {
+			Category = 'barGhahvesaz',
+			Label = 'Soda Lime',
+			Image = 'soda_lime',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['soda_water'] = 2,
+			},
+		},
+		['energy_mix'] = {
+			Category = 'barGhahvesaz',
+			Label = 'Energy Mix',
+			Image = 'energy_mix',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['mive_mix'] = 2,
+			},
+		},
+		['fruit_punch'] = {
+			Category = 'barZarfShoe',
+			Label = 'Fruit Punch',
+			Image = 'fruit_punch',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['soda_water'] = 2,
+			},
+		},
+		['ice_tea_special'] = {
+			Category = 'barGaz',
+			Label = 'Ice Tea Special',
+			Image = 'ice_tea_special',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['mive_mix'] = 2,
+			},
+		},
+		['pizza_margherita'] = {
+			Category = 'pizzaHamzan',
+			Label = 'Pizza Margherita',
+			Image = 'pizza_margherita',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['khamir_pizza'] = 2,
+			},
+		},
+		['pizza_pepperoni'] = {
+			Category = 'pizzaHamzan',
+			Label = 'Pizza Pepperoni',
+			Image = 'pizza_pepperoni',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['sos_gojeh'] = 2,
+			},
+		},
+		['pizza_mushroom'] = {
+			Category = 'pizzaGhahvesaz',
+			Label = 'Pizza Mushroom',
+			Image = 'pizza_mushroom',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['panir_pizza'] = 2,
+			},
+		},
+		['calzone'] = {
+			Category = 'pizzaGhahvesaz',
+			Label = 'Calzone',
+			Image = 'calzone',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['khamir_pizza'] = 2,
+			},
+		},
+		['garlic_bread'] = {
+			Category = 'pizzaZarfShoe',
+			Label = 'Garlic Bread',
+			Image = 'garlic_bread',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['sos_gojeh'] = 2,
+			},
+		},
+		['pizza_bbq_chicken'] = {
+			Category = 'pizzaGaz',
+			Label = 'Pizza BBQ Chicken',
+			Image = 'pizza_bbq_chicken',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['panir_pizza'] = 2,
+			},
+		},
+		['icecream_vanilla_cone'] = {
+			Category = 'icecreamHamzan',
+			Label = 'Icecream Vanilla Cone',
+			Image = 'icecream_vanilla_cone',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['khame_yakhi'] = 2,
+			},
+		},
+		['icecream_chocolate_cone'] = {
+			Category = 'icecreamHamzan',
+			Label = 'Icecream Chocolate Cone',
+			Image = 'icecream_chocolate_cone',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['khame_yakhi'] = 2,
+			},
+		},
+		['milkshake_strawberry'] = {
+			Category = 'icecreamGhahvesaz',
+			Label = 'Milkshake Strawberry',
+			Image = 'milkshake_strawberry',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['khame_yakhi'] = 2,
+			},
+		},
+		['sundae_caramel'] = {
+			Category = 'icecreamGhahvesaz',
+			Label = 'Sundae Caramel',
+			Image = 'sundae_caramel',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['khame_yakhi'] = 2,
+			},
+		},
+		['icecream_sandwich'] = {
+			Category = 'icecreamZarfShoe',
+			Label = 'Icecream Sandwich',
+			Image = 'icecream_sandwich',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['khame_yakhi'] = 2,
+			},
+		},
+		['froyo_mango'] = {
+			Category = 'icecreamGaz',
+			Label = 'Froyo Mango',
+			Image = 'froyo_mango',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['khame_yakhi'] = 2,
+			},
+		},
+		['sushi_california'] = {
+			Category = 'sushiHamzan',
+			Label = 'Sushi California',
+			Image = 'sushi_california',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['berenj_sushi'] = 2,
+			},
+		},
+		['sushi_salmon_nigiri'] = {
+			Category = 'sushiHamzan',
+			Label = 'Sushi Salmon Nigiri',
+			Image = 'sushi_salmon_nigiri',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['maahi_khaam'] = 2,
+			},
+		},
+		['sushi_dragon_roll'] = {
+			Category = 'sushiGhahvesaz',
+			Label = 'Sushi Dragon Roll',
+			Image = 'sushi_dragon_roll',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['nori'] = 2,
+			},
+		},
+		['sushi_spicy_tuna'] = {
+			Category = 'sushiGhahvesaz',
+			Label = 'Sushi Spicy Tuna',
+			Image = 'sushi_spicy_tuna',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['berenj_sushi'] = 2,
+			},
+		},
+		['miso_soup'] = {
+			Category = 'sushiZarfShoe',
+			Label = 'Miso Soup',
+			Image = 'miso_soup',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['maahi_khaam'] = 2,
+			},
+		},
+		['sushi_veggie_roll'] = {
+			Category = 'sushiGaz',
+			Label = 'Sushi Veggie Roll',
+			Image = 'sushi_veggie_roll',
+			Level = 0,
+			Time = 8,
+			Amount = 1,
+			Ingredients = {
+				['nori'] = 2,
+			},
+		},
 	 ['shokolat'] = {
 	 	Level = 1, 
 		Category = 'UwUHamzan', 

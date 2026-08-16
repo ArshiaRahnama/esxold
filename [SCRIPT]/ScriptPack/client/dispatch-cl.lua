@@ -44,8 +44,21 @@ AddEventHandler('scriptpack:playBadgeAnim', function()
     end
 
     local boneIndex = GetPedBoneIndex(playerPed, 28422)
-    local badgeProp = CreateObject(GetHashKey('prop_fib_badge'), 0, 0, 0, true, true, true)
+
+    -- FIX: model wasn't requested/streamed before CreateObject, so the badge
+    -- prop frequently failed to spawn (CreateObject returns an invalid
+    -- entity if the model isn't loaded yet).
+    local badgeModel = GetHashKey('prop_fib_badge')
+    RequestModel(badgeModel)
+    local attempts = 0
+    while not HasModelLoaded(badgeModel) and attempts < 100 do
+        Citizen.Wait(10)
+        attempts = attempts + 1
+    end
+
+    local badgeProp = CreateObject(badgeModel, 0, 0, 0, true, true, true)
     AttachEntityToEntity(badgeProp, playerPed, boneIndex, 0.065, 0.029, -0.035, 80.0, -1.90, 75.0, true, true, false, true, 1, true)
+    SetModelAsNoLongerNeeded(badgeModel)
 
     RequestAnimDict('paper_1_rcm_alt1-9')
     while not HasAnimDictLoaded('paper_1_rcm_alt1-9') do

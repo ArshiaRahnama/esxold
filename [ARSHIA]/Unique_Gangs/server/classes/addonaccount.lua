@@ -14,7 +14,7 @@ function CreateGangAccount(name, owner, money, dirty_money, pay)
 
 		self.save()
 
-		TriggerClientEvent('gangprop:setMoney', self.name, self.money)
+		TriggerClientEvent('gangprop:setMoney', -1, self.name, self.money)
 	end
 
 	self.removeMoney = function(m)
@@ -22,7 +22,7 @@ function CreateGangAccount(name, owner, money, dirty_money, pay)
 
 		self.save()
 
-		TriggerClientEvent('gangprop:setMoney', self.name, self.money)
+		TriggerClientEvent('gangprop:setMoney', -1, self.name, self.money)
 	end
 
 	self.setDirty_Money = function(m)
@@ -38,19 +38,11 @@ function CreateGangAccount(name, owner, money, dirty_money, pay)
 
 		self.save()
 
-		TriggerClientEvent('gangprop:setDirty_Money', self.name, self.dirty_money)
+		TriggerClientEvent('gangprop:setDirty_Money', -1, self.name, self.dirty_money)
 	end
 
 	self.removeDirty_Money = function(m)
 		self.dirty_money = self.dirty_money - m
-
-		self.save()
-
-		TriggerClientEvent('gangprop:setDirty_Money', self.name, self.dirty_money)
-	end
-
-	self.setDirty_Money = function(m)
-		self.dirty_money = m
 
 		self.save()
 
