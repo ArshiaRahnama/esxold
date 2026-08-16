@@ -1254,7 +1254,7 @@ local function showEngineInstallMenu(vehicle, plate)
         ESX.TriggerServerCallback('engine:checkEngineStatus', function(hasEngine)
             if not hasEngine then
                 table.insert(options, 1, {
-                    title = "Install Engine ($30,000)",
+                    title = "Install Engine ($100,000 - $500,000)",
                     description = "Nasb engine baraye mashin",
                     event = "engine:tryInstallEngine",
                     args = { plate = plate }
