@@ -467,7 +467,21 @@ ESX.RegisterServerCallback('esx_property:getOwnedProperties', function(source, c
 		local properties = {}
 
 		for i=1, #ownedProperties, 1 do
-			table.insert(properties, ownedProperties[i].name)
+			local propertyName = ownedProperties[i].name
+			local exists = false
+
+			for j=1, #Config.Properties, 1 do
+				if Config.Properties[j].name == propertyName then
+					exists = true
+					break
+				end
+			end
+
+			if exists then
+				table.insert(properties, propertyName)
+			else
+				print(('[esx_property] WARNING: owned_properties has orphaned row for "%s" (owner: %s) — property no longer exists in "properties" table, skipping'):format(propertyName, xPlayer.identifier))
+			end
 		end
 
 		cb(properties)
@@ -570,10 +584,3 @@ function PayRent(d, h, m)
 end
 
 TriggerEvent('cron:runAt', 22, 0, PayRent)
-
-
-
-
-	 
-
-

@@ -8,7 +8,9 @@ Citizen.CreateThread(function()
 end)
 
 local PlayerData = {}
-local Data = {}
+-- XP/Level default to 0 so any XP event that fires before the
+-- gangs:GetGangLevel_XP callback returns can't do arithmetic on nil.
+local Data = { XP = 0, Level = 0 }
 local GangLevels = {
   1000,
   2500,
@@ -104,6 +106,12 @@ end)
 
 RegisterNetEvent('gangs:AddXPtoGang')
 AddEventHandler('gangs:AddXPtoGang', function(AddedXP)
+  -- Guard: bail out if gang data or AddedXP hasn't loaded/arrived yet,
+  -- instead of crashing on nil arithmetic.
+  if not Data.XP or not Data.Level or not AddedXP then return end
+  -- Guard: don't index past the top of the GangLevels table (max level).
+  if not GangLevels[Data.Level + 1] then return end
+
   if Data.XP + AddedXP >= GangLevels[Data.Level + 1] then
     repeat
       CreateRankBar(0, GangLevels[Data.Level + 1], Data.XP, GangLevels[Data.Level + 1], Data.Level)
@@ -111,11 +119,11 @@ AddEventHandler('gangs:AddXPtoGang', function(AddedXP)
       AddedXP = Data.XP + AddedXP - GangLevels[Data.Level]
       Data.XP = 0
       TriggerEvent("RankUpMessage", "Gang Shoma Level Up Shod", 1500)
-    until Data.XP + AddedXP < GangLevels[Data.Level + 1]
+    until not GangLevels[Data.Level + 1] or Data.XP + AddedXP < GangLevels[Data.Level + 1]
       if AddedXP > 0 then
       Data.XP = Data.XP + AddedXP
       end
-      CreateRankBar(0, GangLevels[Data.Level + 1], 0, Data.XP, Data.Level)
+      CreateRankBar(0, GangLevels[Data.Level + 1] or Data.XP, 0, Data.XP, Data.Level)
   else
     CreateRankBar(0, GangLevels[Data.Level + 1], Data.XP, Data.XP + AddedXP, Data.Level)
     Data.XP = Data.XP + AddedXP
@@ -123,6 +131,10 @@ AddEventHandler('gangs:AddXPtoGang', function(AddedXP)
 end)
 RegisterNetEvent('gangs:RemoveXPtoGang')
 AddEventHandler('gangs:RemoveXPtoGang', function(RemoveXP)
+  -- Same nil/bounds guard as AddXPtoGang above.
+  if not Data.XP or not Data.Level or not RemoveXP then return end
+  if not GangLevels[Data.Level - 1] then return end
+
   if Data.XP - RemoveXP <= GangLevels[Data.Level - 1] then
     repeat
       CreateRankBar(0, GangLevels[Data.Level - 1], Data.XP, GangLevels[Data.Level - 1], Data.Level)
@@ -130,11 +142,11 @@ AddEventHandler('gangs:RemoveXPtoGang', function(RemoveXP)
       RemoveXP = Data.XP - RemoveXP - GangLevels[Data.Level]
       Data.XP = 0
       TriggerEvent("RankUpMessage", "Gang  Level Down Shod", 1500)
-    until Data.XP + RemoveXP < GangLevels[Data.Level - 1]
+    until not GangLevels[Data.Level - 1] or Data.XP + RemoveXP < GangLevels[Data.Level - 1]
       if RemoveXP > 0 then
       Data.XP = Data.XP - RemoveXP
       end
-      CreateRankBar(0, GangLevels[Data.Level - 1], 0, Data.XP, Data.Level)
+      CreateRankBar(0, GangLevels[Data.Level - 1] or 0, 0, Data.XP, Data.Level)
   else
     CreateRankBar(0, GangLevels[Data.Level - 1], Data.XP, Data.XP - RemoveXP, Data.Level)
     Data.XP = Data.XP - RemoveXP
@@ -145,7 +157,7 @@ function ShowXPBar()
     Citizen.CreateThread(function()
       while PlayerData.gang.name ~= 'nogang' do
         Wait(1)
-        if IsControlJustPressed(0, 137) then
+        if IsControlJustPressed(0, 137) and Data.XP and Data.Level and GangLevels[Data.Level + 1] then
           CreateRankBar(0, GangLevels[Data.Level + 1], Data.XP, Data.XP, Data.Level)
         end
       end
