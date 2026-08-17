@@ -1,11 +1,36 @@
 Config = {}
 
+-- ======================================================================
+-- DarkPhone (Hostage / Pursuit) config
+-- Originally: DarkPhone/config.lua -> global Config.Hostage / Config.Pursuit
+-- Namespaced under Config.DarkPhone to avoid clashing with the identically
+-- named (but UNUSED) Config.Hostage/Config.Pursuit that shipped inside
+-- PartySystem/config.lua (PartySystem never actually read that config).
+-- ======================================================================
+Config.DarkPhone = {}
+Config.DarkPhone.Hostage = {}
+Config.DarkPhone.Hostage.CopsRequired = 9
+Config.DarkPhone.Hostage.CancelDistance = 50
+Config.DarkPhone.Hostage.Cooldown = 1*60*60 -- In Seconds
+Config.DarkPhone.Hostage.SuccessTime = 13*60 -- In Seconds
+
+Config.DarkPhone.Pursuit = {}
+Config.DarkPhone.Pursuit.CopsRequired = 4
+Config.DarkPhone.Pursuit.Reward = 200000
+Config.DarkPhone.Pursuit.Cooldown = 10*60 -- In Seconds
+Config.DarkPhone.Pursuit.SuccessTime = 5*60 -- In Seconds
+
+-- ======================================================================
+-- Unique_RobSystem config (Robs, RobTypes, PoliceJobs, Marker)
+-- Namespaced under Config.Rob
+-- ======================================================================
+Config.Rob = {}
 -- Job names registered by your esx_policejob resource. Anyone with one of these
 -- jobs is treated as a cop for the rob system (blocked from robbing, counted for
 -- copsrequired, and notified when a robbery starts/ends).
-Config.PoliceJobs = { 'police', 'sheriff', 'fbi', 'mt', 'cid', 'cia', 'marshal', 'judge', 'doa' }
+Config.Rob.PoliceJobs = { 'police', 'sheriff', 'fbi', 'mt', 'cid', 'cia', 'marshal', 'judge', 'doa' }
 
-Config.Marker = {
+Config.Rob.Marker = {
 	r = 0, g = 255, b = 0, a = 255,  -- green color
 	x = 0.5, y = 0.5, z = 0.5,       -- tiny, cylinder formed circle
 	DrawDistance = 15.0, Type = 6    -- default circle type, low draw distance due to indoors area
@@ -16,7 +41,7 @@ Config.Marker = {
 
 
 
-Config.Robs = {
+Config.Rob.Robs = {
     ["Shop_1"] = {
         nameofrob = "Shop Robbery (Dakhel Shahr)",
         type = "Shop",
@@ -239,7 +264,7 @@ Config.Robs = {
 }
 
 
-Config.RobTypes ={
+Config.Rob.RobTypes ={
     ["Shop"] ={
         reward = {
             ["blackmoney"] = {min = 2500, max = 4000},

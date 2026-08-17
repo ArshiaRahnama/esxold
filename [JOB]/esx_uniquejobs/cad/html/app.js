@@ -26,7 +26,7 @@ DuckMdt.Loading = function(firstpage, nextpage, time) {
 }
 
 DuckMdt.Login = function() {
-    $.post('https://Unique_Cad/Login', JSON.stringify({}));  
+    $.post('https://esx_uniquejobs/Login', JSON.stringify({}));  
     DuckMdt.Loading('LoginPage', 'MainPage', 1000)
 }
 
@@ -36,7 +36,7 @@ DuckMdt.PageSwitch = function(FirstPage, NextPage, Time) {
     $('#Page_Button_' + NextPage).addClass('MainPageTabActiveButton')
 
     if (NextPage === 'TenCodes') {
-        $.post('https://Unique_Cad/LoadTenCodes', JSON.stringify({}));
+        $.post('https://esx_uniquejobs/LoadTenCodes', JSON.stringify({}));
     } else if (NextPage === 'LoginPage') {
         $("#MainPage").fadeOut()
         $("#LoginPage").fadeIn()
@@ -57,7 +57,7 @@ DuckMdt.PageSwitch = function(FirstPage, NextPage, Time) {
 DuckMdt.TabSelected = function(NewTab) {
     if (!inswitchpage) {
         if (NewTab === 'MainPanel') {
-            $.post('https://Unique_Cad/Login', JSON.stringify({}));  
+            $.post('https://esx_uniquejobs/Login', JSON.stringify({}));  
         }
         DuckMdt.PageSwitch(currenttab, NewTab, 500)
         currenttab = NewTab
@@ -92,11 +92,11 @@ DuckMdt.BackToCarList = function() {
 
 function Open_Citizen_Profile(steam) {
     // // console.log(typeof steam)
-    $.post('https://Unique_Cad/CitizenProfile', JSON.stringify({Steam: steam}));
+    $.post('https://esx_uniquejobs/CitizenProfile', JSON.stringify({Steam: steam}));
 }   
 
 function Open_Car_Profile(plate) {
-    $.post('https://Unique_Cad/CarProfile', JSON.stringify({Plate: plate}));
+    $.post('https://esx_uniquejobs/CarProfile', JSON.stringify({Plate: plate}));
 }
 
 function DataButton() {
@@ -112,7 +112,7 @@ function SaveNewData(steam) {
     let reason = $('#NewDataReason').val()
     // console.log(reason)
     if (reason != '') {
-        $.post('https://Unique_Cad/SaveNewData', JSON.stringify({Reason: reason, steam: steam}));
+        $.post('https://esx_uniquejobs/SaveNewData', JSON.stringify({Reason: reason, steam: steam}));
         CloseDataModal()
     } else {
         $('#NewDataReason').addClass('Input-error')
@@ -121,7 +121,7 @@ function SaveNewData(steam) {
 
 function DeleteData(id, steam) {
     if (id) {
-        $.post('https://Unique_Cad/DeleteData', JSON.stringify({id: id, steam: steam}));
+        $.post('https://esx_uniquejobs/DeleteData', JSON.stringify({id: id, steam: steam}));
     }
 }
 
@@ -139,7 +139,7 @@ function SetProfileCitizen() {
 function SetNewProfilePic(steam) {
     let picurl = $("#NewCPorfileUrl").val()
     $("#Character_Profile_Picture").attr('src', picurl && picurl !== '' ? picurl : 'img/no_photo.png')
-    $.post('https://Unique_Cad/UpdateProfilePicCharacter', JSON.stringify({url: picurl, steam: steam}));
+    $.post('https://esx_uniquejobs/UpdateProfilePicCharacter', JSON.stringify({url: picurl, steam: steam}));
     CloseCProfileModal()
 }
 
@@ -158,12 +158,12 @@ function Car_SetProfileCitizen() {
 function Car_SetNewProfilePic(plate) {
     let picurl = $("#NewCarPorfileUrl").val()
     $("#Car_Profile_Picture").attr('src', picurl && picurl !== '' ? picurl : 'img/no_photo.png')
-    $.post('https://Unique_Cad/UpdateProfilePicCar', JSON.stringify({url: picurl, plate: plate}));
+    $.post('https://esx_uniquejobs/UpdateProfilePicCar', JSON.stringify({url: picurl, plate: plate}));
     CloseCarProfileModal()
 }
 
 function ExitTablet() {
-    $.post('https://Unique_Cad/Exit', JSON.stringify({}));
+    $.post('https://esx_uniquejobs/Exit', JSON.stringify({}));
 }
 
 
@@ -174,7 +174,7 @@ $(document).ready(function(){
         if (event.keyCode === 13) {
             let SearchInput = $("#CitizenSearch").val()
             if (SearchInput != "") {
-                $.post('https://Unique_Cad/SearchCitizen', JSON.stringify({Text: SearchInput}));
+                $.post('https://esx_uniquejobs/SearchCitizen', JSON.stringify({Text: SearchInput}));
             }
         }
     });
@@ -184,7 +184,7 @@ $(document).ready(function(){
         if (event.keyCode === 13) {
             let SearchInput = $("#VehicleSearch").val()
             if (SearchInput != "") {
-                $.post('https://Unique_Cad/SearchCars', JSON.stringify({Text: SearchInput}));
+                $.post('https://esx_uniquejobs/SearchCars', JSON.stringify({Text: SearchInput}));
             }
         }
     });
@@ -195,7 +195,7 @@ $(document).ready(function(){
             case 'standard':
                 $("#Character_Profile_Select_Wanted").css('color', 'white')
                 $("#WantedColor_Character").css('background-color', 'white')
-                $.post('https://Unique_Cad/UpdateCharacterStatus', JSON.stringify({NewStatus: this.value, steam: steam}));  
+                $.post('https://esx_uniquejobs/UpdateCharacterStatus', JSON.stringify({NewStatus: this.value, steam: steam}));  
             break;
 
             case 'arrested':
@@ -203,14 +203,14 @@ $(document).ready(function(){
                 // console.log('its working')
                 $("#Character_Profile_Select_Wanted").css('color', 'rgb(201, 36, 36)')
                 $("#WantedColor_Character").css('background-color', 'rgb(201, 36, 36)')
-                $.post('https://Unique_Cad/UpdateCharacterStatus', JSON.stringify({NewStatus: this.value, steam: steam}));  
+                $.post('https://esx_uniquejobs/UpdateCharacterStatus', JSON.stringify({NewStatus: this.value, steam: steam}));  
             break;
 
             case 'in_prison':
             case 'special':
                 $("#Character_Profile_Select_Wanted").css('color', 'rgb(36, 74, 201)')
                 $("#WantedColor_Character").css('background-color', 'rgb(36, 74, 201)')
-                $.post('https://Unique_Cad/UpdateCharacterStatus', JSON.stringify({NewStatus: this.value, steam: steam}));  
+                $.post('https://esx_uniquejobs/UpdateCharacterStatus', JSON.stringify({NewStatus: this.value, steam: steam}));  
             break;
         }
     })
@@ -221,7 +221,7 @@ $(document).ready(function(){
             case 'standard':
                 $("#Car_Profile_Select_Wanted").css('color', 'white')
                 $("#WantedColor_Car").css('background-color', 'white')
-                $.post('https://Unique_Cad/UpdateCarStatus', JSON.stringify({NewStatus: this.value, plate: plate}));  
+                $.post('https://esx_uniquejobs/UpdateCarStatus', JSON.stringify({NewStatus: this.value, plate: plate}));  
 
             break;
             
@@ -229,14 +229,14 @@ $(document).ready(function(){
             case 'wanted':
                 $("#Car_Profile_Select_Wanted").css('color', 'rgb(201, 36, 36)')
                 $("#WantedColor_Car").css('background-color', 'rgb(201, 36, 36)')
-                $.post('https://Unique_Cad/UpdateCarStatus', JSON.stringify({NewStatus: this.value, plate: plate}));  
+                $.post('https://esx_uniquejobs/UpdateCarStatus', JSON.stringify({NewStatus: this.value, plate: plate}));  
             break;
 
             case 'in_prison':
             case 'special':
                 $("#Car_Profile_Select_Wanted").css('color', 'rgb(36, 74, 201)')
                 $("#WantedColor_Car").css('background-color', 'rgb(36, 74, 201)')
-                $.post('https://Unique_Cad/UpdateCarStatus', JSON.stringify({NewStatus: this.value, plate: plate}));  
+                $.post('https://esx_uniquejobs/UpdateCarStatus', JSON.stringify({NewStatus: this.value, plate: plate}));  
             break;
         }
     })

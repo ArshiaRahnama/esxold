@@ -1,13 +1,10 @@
-Locales ['en'] = {
-  ['buy_license'] = 'buy weapon license?',
-  ['yes'] = '%s',
-  ['no'] = 'no',
-  ['weapon_bought'] = 'purchased for $%s',
-  ['not_enough_black'] = 'you do not have enough dirty money',
-  ['not_enough'] = 'you do not have enough money',
-  ['already_owned'] = 'you already own this weapon!',
-  ['shop_menu_title'] = 'ammu-Nation',
-  ['shop_menu_prompt'] = 'press ~INPUT_CONTEXT~ to access the ~y~Ammu-Nation~s~.',
-  ['shop_menu_item'] = '$%s',
-  ['map_blip'] = 'ammu-Nation',
+Locales = Locales or {}
+Locales['en'] = {
+    ['shop_label']        = 'Clothe Shop',
+    ['mask_shop_label']   = 'Mask Shop',
+    ['not_enough_money']  = 'You do not have enough money',
+    ['invalid_item']      = 'Invalid item',
+    ['purchase_success']  = 'Purchased: %s',
+    ['purchase_failed']   = 'Purchase failed',
+    ['wrong_sex']         = 'This item is not for your character',
 }

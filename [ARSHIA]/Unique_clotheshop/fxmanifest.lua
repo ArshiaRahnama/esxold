@@ -1,41 +1,40 @@
-fx_version 'adamant'
+fx_version 'cerulean'
 game 'gta5'
 
--- needs essentialmode's ESX object, ox_target for the shop zones, and
--- Unique_clothe (its getClothe2 export is the real item catalog this
--- shop sells from) -- make sure Unique_clothe is ensured BEFORE this
--- resource in server.cfg
+author 'Unique RP'
+description 'Unique_ClotheShop -- merged clothing shop (replaces the old Unique_clothe + Unique_clotheshop). Sells clothing zones/blips and gives out items in the exact clothe_<type>_<drawable>_<texture> format that esx_inventoryhud already knows how to wear, weigh and persist, so there is no separate wear/inventory system to keep in sync.'
+version '2.0.0'
+
+-- Load order requirement: this resource only needs ESX (essentialmode),
+-- ox_target (for the shop interaction zones) and esx_inventoryhud (which
+-- already owns clothing wear + DB persistence, tables player_worn_clothes
+-- / player_clothe_packs). Make sure all three are ensured BEFORE this
+-- resource in server.cfg -- inside [ARSHIA] that is already true because
+-- esx_inventoryhud is ensured as part of [ARSHIA] together with this one,
+-- and essentialmode / ox_target are both ensured in the "Base" section,
+-- which loads earlier in server.cfg.
 dependency 'ox_target'
-dependency 'Unique_clothe'
+dependency 'esx_inventoryhud'
 
 ui_page 'html/index.html'
 
+shared_scripts {
+    'config.lua',
+}
+
 client_scripts {
-	'@essentialmode/locale.lua',
-	'locales/de.lua',
-	'locales/br.lua',
-	'locales/en.lua',
-	'locales/fi.lua',
-	'locales/fr.lua',
-	'locales/es.lua',
-	'locales/pl.lua',
-	'locales/sv.lua',
-	'locales/cs.lua',
-	'config.lua',
-	'client/main.lua'
+    '@essentialmode/locale.lua',
+    'locales/en.lua',
+    'client/main.lua',
 }
 
 server_scripts {
-	'config.lua',
-	'server/main.lua'
+    'server/main.lua',
 }
 
 files {
-	'html/index.html',
-	'html/style.css',
-	'html/app.js',
-	'html/logo.png',
-	'html/img/*.png',
-	'html/Roboto-Regular.ttf'
+    'html/index.html',
+    'html/style.css',
+    'html/app.js',
+    'html/Roboto-Regular.ttf',
 }
-

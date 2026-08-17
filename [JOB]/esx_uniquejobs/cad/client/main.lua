@@ -1,4 +1,8 @@
-Keys = {
+-- Unique_Cad → merged into esx_uniquejobs
+-- Locals here so this doesn't clash with the other 12 job modules sharing this resource
+-- (see the note at the top of fxmanifest.lua about per-job namespacing).
+
+local Keys_cad = {
     ['ESC'] = 322, ['F1'] = 288, ['F2'] = 289, ['F3'] = 170, ['F5'] = 166, ['F6'] = 167, ['F7'] = 168, ['F8'] = 169, ['F9'] = 56, ['F10'] = 57,
     ['~'] = 243, ['1'] = 157, ['2'] = 158, ['3'] = 160, ['4'] = 164, ['5'] = 165, ['6'] = 159, ['7'] = 161, ['8'] = 162, ['9'] = 163, ['-'] = 84, ['='] = 83, ['BACKSPACE'] = 177,
     ['TAB'] = 37, ['Q'] = 44, ['W'] = 32, ['E'] = 38, ['R'] = 45, ['T'] = 245, ['Y'] = 246, ['U'] = 303, ['P'] = 199, ['['] = 39, [']'] = 40, ['ENTER'] = 18,
@@ -9,13 +13,11 @@ Keys = {
     ['LEFT'] = 174, ['RIGHT'] = 175, ['TOP'] = 27, ['DOWN'] = 173,
 }
 
--- ESX.TriggerServerCallback('DuckMdt:GetLoginPack', function(name)
---     print(name..'name')
--- end)
-
+-- ESX is intentionally global here (same convention every other job file in this
+-- resource uses) - it just gets re-populated with the same shared object each time.
 ESX = nil
-PlayerData = {}
-MdtDisplay = false
+local PlayerData_cad = {}
+local MdtDisplay_cad = false
 
 Citizen.CreateThread(function()
     while ESX == nil do
@@ -27,21 +29,35 @@ Citizen.CreateThread(function()
 		Citizen.Wait(10)
 	end
 
-	PlayerData = ESX.GetPlayerData()
+	PlayerData_cad = ESX.GetPlayerData()
 end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
-    PlayerData.job = job
- 
+    PlayerData_cad.job = job
 end)
 
+local function CheckPerm_cad()
+    if PlayerData_cad.job == nil then return true end
 
+    if (PlayerData_cad.job.name ~= DuckMdt.PoliceJob and PlayerData_cad.job.name ~= 'sheriff' and PlayerData_cad.job.name ~= 'fbi' and PlayerData_cad.job.name ~= 'mt' and PlayerData_cad.job.name ~= 'cid' and PlayerData_cad.job.name ~= 'cia' and PlayerData_cad.job.name ~= 'marshal' and PlayerData_cad.job.name ~= 'judge' and PlayerData_cad.job.name ~= 'doa') and DuckMdt.BlockNuiDevTool then
+        if DuckMdt.LogUsingNuiDevTool then
+            TriggerServerEvent('DuckMdt:PrintLog')
+        end
+        if DuckMdt.AnnouneAdminUsingNuiDevTool then
+            TriggerServerEvent('DuckMdt:Announce')
+        end
+        return true
+    else
+        return false
+    end
+end
 
 RegisterCommand(DuckMdt.Command, function()
-    local xPlayer = ESX.GetPlayerData()
-    if PlayerData.job.name == DuckMdt.PoliceJob or PlayerData.job.name == 'sheriff' or PlayerData.job.name == 'fbi' or PlayerData.job.name == 'mt' or PlayerData.job.name == 'cid' or PlayerData.job.name == 'cia' or PlayerData.job.name == 'marshal' or PlayerData.job.name == 'judge' or PlayerData.job.name == 'doa' then
-        if MdtDisplay then
+    if PlayerData_cad.job == nil then return end
+
+    if PlayerData_cad.job.name == DuckMdt.PoliceJob or PlayerData_cad.job.name == 'sheriff' or PlayerData_cad.job.name == 'fbi' or PlayerData_cad.job.name == 'mt' or PlayerData_cad.job.name == 'cid' or PlayerData_cad.job.name == 'cia' or PlayerData_cad.job.name == 'marshal' or PlayerData_cad.job.name == 'judge' or PlayerData_cad.job.name == 'doa' then
+        if MdtDisplay_cad then
             ClearPedTasks(PlayerPedId())
             SendNuiMessage(json.encode({
                 type = 'MDT',
@@ -54,20 +70,20 @@ RegisterCommand(DuckMdt.Command, function()
                 info = 'Open',
             }))
         end
-        MdtDisplay = not MdtDisplay
-        SetNuiFocus(MdtDisplay, MdtDisplay)
+        MdtDisplay_cad = not MdtDisplay_cad
+        SetNuiFocus(MdtDisplay_cad, MdtDisplay_cad)
     end
 end, false)
 
 
 RegisterNUICallback('Login', function()
-    if CheckPerm() then return end
+    if CheckPerm_cad() then return end
     local xPlayer = ESX.GetPlayerData()
     ESX.TriggerServerCallback('DuckMdt:GetAllWanteds', function(obj)
         SendNuiMessage(json.encode({
             type = 'LoginUpdate',
             name = string.gsub(xPlayer.name, "_", " "),
-            rank = PlayerData.job.grade_label,
+            rank = PlayerData_cad.job.grade_label,
             PeopleWanteds = obj.peoples,
             WantedCars = obj.cars
         }))
@@ -75,29 +91,29 @@ RegisterNUICallback('Login', function()
 end)
 
 RegisterNUICallback('SearchCitizen', function(data, cb)
-    if CheckPerm() then return end
+    if CheckPerm_cad() then return end
     ESX.TriggerServerCallback('DuckMdt:SearchCitizen', function(obj)
         SendNuiMessage(json.encode({
             type = 'SearchResult',
             Stype = 'Citizen',
             object = obj.Citizens
         }))
-    end, data.Text) 
+    end, data.Text)
 end)
 
 RegisterNUICallback('SearchCars', function(data, cb)
-    if CheckPerm() then return end
+    if CheckPerm_cad() then return end
     ESX.TriggerServerCallback('DuckMdt:SearchCars', function(obj)
         SendNuiMessage(json.encode({
             type = 'SearchResult',
             Stype = 'Car',
             object = obj.Cars
         }))
-    end, data.Text) 
+    end, data.Text)
 end)
 
 RegisterNUICallback('CitizenProfile', function(data, cb)
-    if CheckPerm() then return end
+    if CheckPerm_cad() then return end
     ESX.TriggerServerCallback('DuckMdt:CitizenProfile', function(obj)
         SendNuiMessage(json.encode({
             type = 'LoadCitizenProfile',
@@ -109,22 +125,22 @@ RegisterNUICallback('CitizenProfile', function(data, cb)
             type = 'LoadDataList',
             object = obj.Data
         }))
-    end, data.Steam) 
+    end, data.Steam)
 end)
 
 RegisterNUICallback('CarProfile', function(data, cb)
-    if CheckPerm() then return end
+    if CheckPerm_cad() then return end
     ESX.TriggerServerCallback('DuckMdt:CarProfile', function(obj)
         SendNuiMessage(json.encode({
             type = 'LoadCarProfile',
             object = obj.CarInfo,
             owner = obj.OwnerInfo
         }))
-    end, data.Plate) 
+    end, data.Plate)
 end)
 
 RegisterNUICallback('SaveNewData', function(data, cb)
-    if CheckPerm() then return end
+    if CheckPerm_cad() then return end
     local xPlayer = ESX.GetPlayerData()
     ESX.TriggerServerCallback('DuckMdt:SaveNewData', function(obj)
         SendNuiMessage(json.encode({
@@ -135,8 +151,8 @@ RegisterNUICallback('SaveNewData', function(data, cb)
 end)
 
 RegisterNUICallback('DeleteData', function(data)
-    if CheckPerm() then return end
-    
+    if CheckPerm_cad() then return end
+
     ESX.TriggerServerCallback('DuckMdt:DeleteData', function(obj)
         SendNuiMessage(json.encode({
             type = 'LoadDataList',
@@ -146,22 +162,22 @@ RegisterNUICallback('DeleteData', function(data)
 end)
 
 RegisterNUICallback('UpdateCharacterStatus', function(data)
-    if CheckPerm() then return end
+    if CheckPerm_cad() then return end
     TriggerServerEvent('DuckMdt:UpdateCharacterStatus', data.NewStatus, data.steam)
 end)
 
 RegisterNUICallback('UpdateCarStatus', function(data)
-    if CheckPerm() then return end
+    if CheckPerm_cad() then return end
     TriggerServerEvent('DuckMdt:UpdateCarStatus', data.NewStatus, data.plate)
 end)
 
 RegisterNUICallback('UpdateProfilePicCharacter', function(data)
-    if CheckPerm() then return end
+    if CheckPerm_cad() then return end
     TriggerServerEvent('DuckMdt:UpdateProfilePicCharacter', data.url, data.steam)
 end)
 
 RegisterNUICallback('UpdateProfilePicCar', function(data)
-    if CheckPerm() then return end
+    if CheckPerm_cad() then return end
     TriggerServerEvent('DuckMdt:UpdateProfilePicCar', data.url, data.plate)
 end)
 
@@ -170,12 +186,10 @@ RegisterNUICallback('Exit', function(data)
         type = 'MDT',
         info = 'Close'
     }))
-    MdtDisplay = not MdtDisplay
-    SetNuiFocus(MdtDisplay, MdtDisplay)
+    MdtDisplay_cad = not MdtDisplay_cad
+    SetNuiFocus(MdtDisplay_cad, MdtDisplay_cad)
     ClearPedTasks(PlayerPedId())
 end)
-
-
 
 --------------------
 
@@ -185,23 +199,3 @@ RegisterNUICallback('LoadTenCodes', function()
         Codes = DuckMdt.TenCodes
     }))
 end)
-
---------------------
-
-
-
-function CheckPerm()
-    local xPlayer = ESX.GetPlayerData()
-
-    if (PlayerData.job.name ~= DuckMdt.PoliceJob and PlayerData.job.name ~= 'sheriff' and PlayerData.job.name ~= 'fbi' and PlayerData.job.name ~= 'mt' and PlayerData.job.name ~= 'cid' and PlayerData.job.name ~= 'cia' and PlayerData.job.name ~= 'marshal' and PlayerData.job.name ~= 'judge' and PlayerData.job.name ~= 'doa') and DuckMdt.BlockNuiDevTool then
-        if DuckMdt.LogUsingNuiDevTool then
-            TriggerServerEvent('DuckMdt:PrintLog')
-        end
-        if DuckMdt.AnnouneAdminUsingNuiDevTool then
-            TriggerServerEvent('DuckMdt:Announce')
-        end
-        return true
-    else
-        return false
-    end
-end

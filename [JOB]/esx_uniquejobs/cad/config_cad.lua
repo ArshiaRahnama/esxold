@@ -1,3 +1,6 @@
+-- Unique_Cad → merged into esx_uniquejobs (see notes at top of fxmanifest.lua)
+-- Original standalone resource: [ARSHIA]/Unique_Cad
+
 DuckMdt = {}
 
 DuckMdt.Command = 'mdt' -- Command to show up the mdt

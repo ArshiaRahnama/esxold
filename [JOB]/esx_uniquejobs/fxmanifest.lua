@@ -12,12 +12,22 @@ version '1.0.0'
 -- switching ("Change to CID" / "Change to FBI" / ...) lives in esx_society
 -- (Config.JobGroups) and is shared across the whole resource - see boss actions
 -- in shared/department_chat.lua for the /f /dep /mp radio-style chat commands.
+--
+-- NOTE: the standalone Unique_Cad resource (police MDT/dispatch tablet, /mdt)
+-- was merged in under cad/. A FiveM resource can only have ONE ui_page, and
+-- this resource already used its ui_page for the bodydamage HUD, so ui.html
+-- is a small router page that iframes both bodydamage/html/index.html and
+-- cad/html/index.html and relays SendNuiMessage to both - neither app's own
+-- HTML/JS/CSS had to be touched. cad/client/main.lua uses its own locals
+-- (Keys_cad, PlayerData_cad, ...) instead of the DuckMdt-era globals so it
+-- can't collide with the other job modules in this file.
 
 shared_scripts {
 	'@essentialmode/locale.lua',
 	'@ox_lib/init.lua',
 	'locales/*.lua',
 	'shared/departments.lua',
+	'cad/config_cad.lua',
 }
 
 client_scripts {
@@ -81,6 +91,9 @@ client_scripts {
 
 	-- ── Shared: department boss-menu switcher + /f /dep /mp chat ──
 	'shared/department_chat_client.lua',
+
+	-- ── CAD / MDT tablet (/mdt) - Police, Sheriff, FBI, MT, CID, CIA, Marshal, Judge, DOA ──
+	'cad/client/main.lua',
 }
 
 server_scripts {
@@ -123,11 +136,16 @@ server_scripts {
 
 	-- ── Shared: /f /dep /mp chat ──
 	'shared/department_chat_server.lua',
+
+	-- ── CAD / MDT tablet ──
+	'cad/server/main.lua',
 }
 
-ui_page 'bodydamage/html/index.html'
+ui_page 'ui.html'
 
 files {
+	'ui.html',
+
 	'bodydamage/html/index.html',
 	'bodydamage/html/css/*.css',
 	'bodydamage/html/js/*.js',
@@ -145,6 +163,13 @@ files {
 	'bodydamage/html/img/m/cuts/*.png',
 	'bodydamage/html/img/m/punchs/*.png',
 	'bodydamage/html/img/m/shots/*.png',
+
+	'cad/html/index.html',
+	'cad/html/app.js',
+	'cad/html/style.css',
+	'cad/html/img/*',
+	'cad/html/fonts/*',
+	'cad/html/sounds/*',
 }
 
 dependencies {
