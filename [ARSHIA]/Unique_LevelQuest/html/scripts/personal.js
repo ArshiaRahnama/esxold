@@ -48,8 +48,8 @@ window.addEventListener('message', (event) => {
     }
 
     setImageOrFallback(document.getElementById('avatarImg'), data.avatarUrl);
-    setImageOrFallback(document.getElementById('jobIcon'), data.jobIconUrl);
     setImageOrFallback(document.getElementById('gangIcon'), data.gangLogoUrl);
+    setLocalJobIcon(document.getElementById('jobIcon'), data.jobName);
   }
 });
 
@@ -62,4 +62,25 @@ function setImageOrFallback(el, url) {
     el.style.backgroundImage = '';
     el.classList.remove('hasImage');
   }
+}
+
+// Real per-job images shipped locally (img/job/<jobname>.png). Not every
+// job has one, so we test-load it first — if it 404s, the icon fallback
+// stays instead of showing a broken image.
+function setLocalJobIcon(el, jobName) {
+  if (!el) return;
+  el.style.backgroundImage = '';
+  el.classList.remove('hasImage');
+  if (!jobName) return;
+
+  const path = `img/job/${jobName}.png`;
+  const test = new Image();
+  test.onload = () => {
+    el.style.backgroundImage = `url('${path}')`;
+    el.classList.add('hasImage');
+  };
+  test.onerror = () => {
+    // no matching image for this job, keep the icon fallback
+  };
+  test.src = path;
 }

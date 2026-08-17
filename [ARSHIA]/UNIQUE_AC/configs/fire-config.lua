@@ -3,7 +3,7 @@
 
 UNIQUE_AC              = {}
 
-UNIQUE_AC.Version      = "9.5.0"
+UNIQUE_AC.Version      = "9.6.0"
 
 UNIQUE_AC.ServerConfig = {
     Name  = "YOUR SERVER NAME",
@@ -59,6 +59,16 @@ UNIQUE_AC.AimbotWatch = {
     SnapAngleDegrees  = 35.0,
     SnapWindowMs      = 150,
     NotifyAdminsOnFlag = true
+}
+
+-- Behavioral Clustering (simplified heuristic, not real ML): if 2+ different players
+-- trigger the SAME detection reason within a short window, that's often alt accounts
+-- testing the same cheat, or a shared/leaked tool spreading on the server. This only
+-- flags the pattern for admin review — it never punishes anyone by itself.
+UNIQUE_AC.BehavioralClustering = {
+    Enable      = true,
+    WindowMs    = 300000, -- 5 minutes
+    MinPlayers  = 2
 }
 
 -- Resource Monitor: snapshots which resources are already running shortly after UNIQUE_AC
@@ -142,8 +152,45 @@ UNIQUE_AC.Detection = {
 }
 
 UNIQUE_AC.Message                  = {
-    Kick = "⚡️ You've been kicked from the server protection by UNIQUE_AC®. Avoid cheating on this server.",
-    Ban  = "⛔️ You've been banned from the server. Please create a support ticket for assistance.",
+    Kick = "", -- leave blank to use the UNIQUE_AC.Language translation below; set your own text here to override it regardless of language
+    Ban  = "",
+}
+
+-- Multi-language announcements. Honest note: FiveM resources can't generate real
+-- voice/TTS audio — this is TEXT localization for the messages players actually see
+-- (kick/ban screens, Quarantine notices, /mystatus). Set UNIQUE_AC.Message.Kick/Ban
+-- above if you want fully custom text regardless of language; otherwise these
+-- built-in translations are used based on UNIQUE_AC.Language.
+UNIQUE_AC.Language = "en" -- "en" | "fa" | "ar"
+
+UNIQUE_AC.Locales = {
+    en = {
+        kick = "⚡️ You've been kicked from the server protection by UNIQUE_AC®. Avoid cheating on this server.",
+        ban = "⛔️ You've been banned from the server. Please create a support ticket for assistance.",
+        quarantine = "You have been flagged for a security review. An admin will check your case shortly.",
+        quarantine_released = "You have been released from security review. Play fair.",
+        status_good = "Good standing",
+        status_mid = "Under light review — nothing to worry about, just keep playing fair",
+        status_low = "Flagged — please avoid anything that looks like cheating",
+    },
+    fa = {
+        kick = "⚡️ شما به دلیل نقض قوانین امنیتی UNIQUE_AC از سرور اخراج شدید. از تقلب پرهیز کنید.",
+        ban = "⛔️ شما از سرور بن شدید. برای پیگیری یک تیکت پشتیبانی باز کنید.",
+        quarantine = "حساب شما برای بررسی امنیتی علامت‌گذاری شد. یک ادمین به‌زودی بررسی می‌کند.",
+        quarantine_released = "شما از بررسی امنیتی آزاد شدید. منصفانه بازی کنید.",
+        status_good = "وضعیت خوب",
+        status_mid = "در حال بررسی سبک — نگران نباشید، فقط منصفانه بازی کنید",
+        status_low = "علامت‌گذاری شده — از هر کاری که شبیه تقلب باشد پرهیز کنید",
+    },
+    ar = {
+        kick = "⚡️ تم طردك من حماية الخادم بواسطة UNIQUE_AC. تجنب الغش في هذا الخادم.",
+        ban = "⛔️ تم حظرك من الخادم. يرجى فتح تذكرة دعم للمساعدة.",
+        quarantine = "تم وضع علامة على حسابك للمراجعة الأمنية. سيقوم المشرف بمراجعة حالتك قريبًا.",
+        quarantine_released = "تم إطلاق سراحك من المراجعة الأمنية. العب بنزاهة.",
+        status_good = "وضع جيد",
+        status_mid = "قيد المراجعة الخفيفة — لا داعي للقلق، فقط استمر باللعب بنزاهة",
+        status_low = "تم وضع علامة — يرجى تجنب أي شيء يبدو كالغش",
+    },
 }
 
 UNIQUE_AC.AdminMenu                = {

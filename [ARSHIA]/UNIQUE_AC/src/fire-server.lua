@@ -15,6 +15,42 @@ do
 end
 
 local COLORS = math.random(1, 9)
+
+-- Server Health (approximate): FiveM doesn't expose real TPS/RAM to a resource's Lua
+-- environment, so this is a proxy, not a true metric — it measures how much longer each
+-- ~1-second wait actually takes than expected. A healthy server stays near 0ms drift;
+-- rising drift usually means something (a resource, a query, a loop) is blocking the
+-- main thread. Labelled "approximate" everywhere it's shown for that reason.
+local HEALTH_SAMPLES = {}
+local HEALTH_START_TIME = GetGameTimer()
+
+CreateThread(function()
+    while true do
+        local sampleStart = GetGameTimer()
+        Wait(1000)
+        local drift = (GetGameTimer() - sampleStart) - 1000
+        table.insert(HEALTH_SAMPLES, math.max(0, drift))
+        if #HEALTH_SAMPLES > 30 then table.remove(HEALTH_SAMPLES, 1) end
+    end
+end)
+
+function UNIQUE_AC_GET_HEALTH()
+    local sum = 0
+    for _, v in ipairs(HEALTH_SAMPLES) do sum = sum + v end
+    local avgDrift = #HEALTH_SAMPLES > 0 and (sum / #HEALTH_SAMPLES) or 0
+    return {
+        avgFrameDriftMs = math.floor(avgDrift + 0.5),
+        uptimeSeconds = math.floor((GetGameTimer() - HEALTH_START_TIME) / 1000),
+        resourceCount = GetNumResources(),
+    }
+end
+
+function UNIQUE_AC_TR(key)
+    local lang = UNIQUE_AC.Language or "en"
+    local locale = (UNIQUE_AC.Locales and UNIQUE_AC.Locales[lang]) or (UNIQUE_AC.Locales and UNIQUE_AC.Locales.en)
+    local fallback = UNIQUE_AC.Locales and UNIQUE_AC.Locales.en
+    return (locale and locale[key]) or (fallback and fallback[key]) or key
+end
 local SPAWNED = {}
 local SPAMLIST = {}
 local TEMP_WHITELIST = {}
@@ -24,6 +60,7 @@ local TRUSTED_ADMINS = {}
 local PENDING_QUARANTINE = {}
 local FRAMEWORK_PERM_CACHE = {}
 local PLAYER_BLIP_SUBSCRIBERS = {}
+local CLUSTER_RECENT_DETECTIONS = {} -- { {reason=, license=, at=}, ... } rolling window
 local invalidatePermissionCache
 
 local function cfg(name, fallback)
@@ -434,6 +471,29 @@ local function uniqueacLogDetection(src, reason, details, action)
             UNIQUE_AC_HUB_POST("/api/report-heatmap.php", { reason = reason, x = tonumber(x), y = tonumber(y) })
         end
     end
+
+    if UNIQUE_AC.BehavioralClustering and UNIQUE_AC.BehavioralClustering.Enable then
+        local now = os.time()
+        local windowStart = now - math.floor((tonumber(UNIQUE_AC.BehavioralClustering.WindowMs) or 300000) / 1000)
+
+        -- Prune anything outside the window, then record this detection.
+        for i = #CLUSTER_RECENT_DETECTIONS, 1, -1 do
+            if CLUSTER_RECENT_DETECTIONS[i].at < windowStart then table.remove(CLUSTER_RECENT_DETECTIONS, i) end
+        end
+        table.insert(CLUSTER_RECENT_DETECTIONS, { reason = reason, license = license, at = now })
+
+        local distinctPlayers = {}
+        for _, entry in ipairs(CLUSTER_RECENT_DETECTIONS) do
+            if entry.reason == reason then distinctPlayers[entry.license] = true end
+        end
+        local count = 0
+        for _ in pairs(distinctPlayers) do count = count + 1 end
+
+        local minPlayers = tonumber(UNIQUE_AC.BehavioralClustering.MinPlayers) or 2
+        if count == minPlayers then -- fire exactly once per cluster as it crosses the threshold
+            uniqueacNotifyAdmins(("🧬 Possible pattern: %d different players triggered \"%s\" within a few minutes — could be alt accounts or a shared tool. Worth a look."):format(count, reason), { 148, 163, 184 })
+        end
+    end
 end
 
 function UNIQUE_AC_LOG_ADMIN_ACTION(adminSrc, action, targetIdentifier, targetName, reason)
@@ -476,7 +536,7 @@ local function enterQuarantine(src, action, reason, details)
     print(("^3[UNIQUE_AC]^0 ^3%s^0 sent to Quarantine for admin review | %s"):format(playerName, reason))
     UNIQUE_AC_SENDLOG(src, UNIQUE_AC.Webhooks and UNIQUE_AC.Webhooks.Ban or "", "QUARANTINE", reason, details)
     UNIQUE_AC_SCREENSHOT_BURST(src, reason, details, "WARN")
-    uniqueacNotify(src, "You have been flagged for a security review. An admin will check your case shortly.", { 255, 170, 0 })
+    uniqueacNotify(src, UNIQUE_AC_TR("quarantine"), { 255, 170, 0 })
     uniqueacNotifyAdmins(("⚠ %s flagged (%s) — sent to Quarantine, review in the admin panel."):format(playerName, reason), { 255, 100, 100 })
     UNIQUE_AC_HUB_NOTIFY_QUARANTINE(reason)
 end
@@ -585,7 +645,7 @@ AddEventHandler("UNIQUE_AC:quarantineRelease", function(targetId)
     UNIQUE_AC_LOG_ADMIN_ACTION(src, "QUARANTINE_RELEASE", uniqueacPlayerLicense(targetId), GetPlayerName(targetId), "Released from review")
     TriggerClientEvent("UNIQUE_AC:quarantineFreeze", targetId, false)
     if GetPlayerName(targetId) then
-        uniqueacNotify(targetId, "You have been released from security review. Play fair.", { 75, 227, 154 })
+        uniqueacNotify(targetId, UNIQUE_AC_TR("quarantine_released"), { 75, 227, 154 })
     end
 end)
 
@@ -772,6 +832,7 @@ CreateThread(function()
 
         MySQL.Async.fetchAll("SELECT (SELECT COUNT(*) FROM uniqueac_banlist) AS bans, (SELECT COUNT(*) FROM uniqueac_appeals WHERE status='pending') AS appeals", {}, function(rows)
             local counts = rows and rows[1] or {}
+            local health = UNIQUE_AC_GET_HEALTH()
             UNIQUE_AC_HUB_POST("/api/heartbeat.php", {
                 version = tostring(UNIQUE_AC.Version or "unknown"),
                 player_count = #GetPlayers(),
@@ -779,6 +840,9 @@ CreateThread(function()
                 quarantine_count = quarantineCount,
                 appeal_count = tonumber(counts.appeals) or 0,
                 ban_count_total = tonumber(counts.bans) or 0,
+                avg_frame_drift_ms = health.avgFrameDriftMs,
+                uptime_seconds = health.uptimeSeconds,
+                resource_count = health.resourceCount,
             })
         end)
 
@@ -2850,7 +2914,7 @@ function UNIQUE_AC_BAN_PLAYER(targetId, reason, issuer)
     if banId then
         print(("^1[UNIQUE_AC]^0 Banned ^3%s^0 | %s | By: %s | Ban ID: %s"):format(playerName, finalReason, finalIssuer, tostring(banId)))
         DropPlayer(target, ("\n[%s UNIQUE_AC %s]\n%s\nReason: %s\nBan ID: #%s"):format(fireEmoji, fireEmoji,
-            UNIQUE_AC.Message and UNIQUE_AC.Message.Ban or "You have been banned.", finalReason, tostring(banId)))
+            (UNIQUE_AC.Message and UNIQUE_AC.Message.Ban ~= "" and UNIQUE_AC.Message.Ban) or UNIQUE_AC_TR("ban"), finalReason, tostring(banId)))
 
         if UNIQUE_AC.CentralHub and UNIQUE_AC.CentralHub.Enable and UNIQUE_AC.CentralHub.ShareBans then
             local license = uniqueacPlayerLicense(target)
@@ -2864,7 +2928,7 @@ function UNIQUE_AC_BAN_PLAYER(targetId, reason, issuer)
 
     UNIQUE_AC_ERROR(UNIQUE_AC.ServerConfig.Name, "External/admin ban could not be persisted; player was kicked instead")
     DropPlayer(target, ("\n[%s UNIQUE_AC %s]\n%s\nReason: %s"):format(fireEmoji, fireEmoji,
-        UNIQUE_AC.Message and UNIQUE_AC.Message.Kick or "You have been kicked.", finalReason))
+        (UNIQUE_AC.Message and UNIQUE_AC.Message.Kick ~= "" and UNIQUE_AC.Message.Kick) or UNIQUE_AC_TR("kick"), finalReason))
     return false, "db_failed"
 end
 
@@ -3118,18 +3182,18 @@ function UNIQUE_AC_ACTION(SRC, ACTION, REASON, DETAILS)
         if banId then
             print(("^1[UNIQUE_AC]^0 Banned ^3%s^0 | %s | Ban ID: %s"):format(playerName, reason, banId))
             DropPlayer(src, ("\n[%s UNIQUE_AC %s]\n%s\nReason: %s\nBan ID: #%s"):format(fireEmoji, fireEmoji,
-                UNIQUE_AC.Message and UNIQUE_AC.Message.Ban or "You have been banned.", reason, banId))
+                (UNIQUE_AC.Message and UNIQUE_AC.Message.Ban ~= "" and UNIQUE_AC.Message.Ban) or UNIQUE_AC_TR("ban"), reason, banId))
         else
             UNIQUE_AC_ERROR(UNIQUE_AC.ServerConfig.Name, "Ban record could not be persisted; player was kicked instead")
             DropPlayer(src, ("\n[%s UNIQUE_AC %s]\n%s\nReason: %s"):format(fireEmoji, fireEmoji,
-                UNIQUE_AC.Message and UNIQUE_AC.Message.Kick or "You have been kicked.", reason))
+                (UNIQUE_AC.Message and UNIQUE_AC.Message.Kick ~= "" and UNIQUE_AC.Message.Kick) or UNIQUE_AC_TR("kick"), reason))
         end
         return true
     end
 
     print(("^1[UNIQUE_AC]^0 Kicked ^3%s^0 | %s"):format(playerName, reason))
     DropPlayer(src, ("\n[%s UNIQUE_AC %s]\n%s\nReason: %s"):format(fireEmoji, fireEmoji,
-        UNIQUE_AC.Message and UNIQUE_AC.Message.Kick or "You have been kicked.", reason))
+        (UNIQUE_AC.Message and UNIQUE_AC.Message.Kick ~= "" and UNIQUE_AC.Message.Kick) or UNIQUE_AC_TR("kick"), reason))
     return true
 end
 
@@ -3510,6 +3574,15 @@ RegisterCommand('addwhitelist', function(source, args)
     end
 end)
 
+RegisterCommand('uniqueachealth', function(source)
+    if source ~= 0 then return end
+    local h = UNIQUE_AC_GET_HEALTH()
+    local hours = math.floor(h.uptimeSeconds / 3600)
+    local mins = math.floor((h.uptimeSeconds % 3600) / 60)
+    print(("^2[UNIQUE_AC]^0 Uptime: %dh %dm | Resources: %d | Approx. frame drift: %dms (lower is healthier, this is an estimate — FiveM doesn't expose real TPS/RAM to resources)")
+        :format(hours, mins, h.resourceCount, h.avgFrameDriftMs))
+end, false)
+
 RegisterCommand('addunban', function(source, args)
     local PLAYER_ID = tonumber(args[1])
 
@@ -3603,11 +3676,11 @@ RegisterCommand((UNIQUE_AC.PlayerTransparency and UNIQUE_AC.PlayerTransparency.C
 
     local label, color
     if trust >= 80 then
-        label, color = "Good standing", { 89, 201, 122 }
+        label, color = UNIQUE_AC_TR("status_good"), { 89, 201, 122 }
     elseif trust >= 50 then
-        label, color = "Under light review — nothing to worry about, just keep playing fair", { 245, 166, 35 }
+        label, color = UNIQUE_AC_TR("status_mid"), { 245, 166, 35 }
     else
-        label, color = "Flagged — please avoid anything that looks like cheating", { 228, 72, 58 }
+        label, color = UNIQUE_AC_TR("status_low"), { 228, 72, 58 }
     end
 
     uniqueacNotify(src, ("Your account standing: %d/100 — %s."):format(trust, label), color)

@@ -14,6 +14,20 @@ function hub_db(): PDO {
         // it is always safe and cheap — this lets older installs self-heal and pick up
         // new tables (like shared_bans, heatmap_points) without a manual migration step.
         $pdo->exec(file_get_contents(__DIR__ . '/../schema.sql'));
+
+        // CREATE TABLE IF NOT EXISTS can't add columns to an already-existing table, so
+        // new columns on `servers` need their own small migration here.
+        $existingCols = array_column($pdo->query("PRAGMA table_info(servers)")->fetchAll(), 'name');
+        $newColumns = [
+            'avg_frame_drift_ms' => 'INTEGER DEFAULT 0',
+            'uptime_seconds' => 'INTEGER DEFAULT 0',
+            'resource_count' => 'INTEGER DEFAULT 0',
+        ];
+        foreach ($newColumns as $col => $definition) {
+            if (!in_array($col, $existingCols, true)) {
+                $pdo->exec("ALTER TABLE servers ADD COLUMN {$col} {$definition}");
+            }
+        }
     }
     return $pdo;
 }

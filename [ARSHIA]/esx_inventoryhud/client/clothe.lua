@@ -271,6 +271,7 @@ RegisterNUICallback('CreatePack', function(data, cb)
                 return
             end
             menu1.close()
+            TriggerScreenblurFadeOut(0.3)
             name = data1.value
             packAnim()
             createPack(name)
@@ -278,6 +279,7 @@ RegisterNUICallback('CreatePack', function(data, cb)
         end
     end, function(data1,menu1)
         menu1.close()
+        TriggerScreenblurFadeOut(0.3)
     end)
 end)
 

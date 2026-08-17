@@ -51,7 +51,7 @@ function renderServers(servers) {
         <div><small>Total Bans</small><b>${s.ban_count_total}</b></div>
       </div>
       <div class="server-foot">
-        <span>${isOnline ? 'Online' : 'Offline'} · last seen ${timeAgo(s.last_heartbeat_at)}</span>
+        <span>${isOnline ? 'Online' : 'Offline'} · last seen ${timeAgo(s.last_heartbeat_at)}${isOnline ? ` · ~${s.avg_frame_drift_ms ?? 0}ms drift · ${s.resource_count ?? '?'} resources` : ''}</span>
         <span class="license-tag">${escapeHtml(s.license_key)}</span>
       </div>
     `;

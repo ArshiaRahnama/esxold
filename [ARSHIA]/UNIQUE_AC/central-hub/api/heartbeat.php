@@ -47,8 +47,8 @@ try {
     }
 
     $stmt = $db->prepare('
-        INSERT OR IGNORE INTO servers (license_key, server_name, version, player_count, max_players, quarantine_count, appeal_count, ban_count_total, last_heartbeat_at, created_at)
-        VALUES (:key, :name, :version, :players, :maxplayers, :quarantine, :appeals, :bans, :now, :now)
+        INSERT OR IGNORE INTO servers (license_key, server_name, version, player_count, max_players, quarantine_count, appeal_count, ban_count_total, avg_frame_drift_ms, uptime_seconds, resource_count, last_heartbeat_at, created_at)
+        VALUES (:key, :name, :version, :players, :maxplayers, :quarantine, :appeals, :bans, :drift, :uptime, :resources, :now, :now)
     ');
     $stmt->execute([
         ':key' => $licenseKey,
@@ -59,6 +59,9 @@ try {
         ':quarantine' => (int)($body['quarantine_count'] ?? 0),
         ':appeals' => (int)($body['appeal_count'] ?? 0),
         ':bans' => (int)($body['ban_count_total'] ?? 0),
+        ':drift' => (int)($body['avg_frame_drift_ms'] ?? 0),
+        ':uptime' => (int)($body['uptime_seconds'] ?? 0),
+        ':resources' => (int)($body['resource_count'] ?? 0),
         ':now' => hub_now(),
     ]);
 
@@ -66,6 +69,7 @@ try {
         UPDATE servers SET
             version = :version, player_count = :players, max_players = :maxplayers,
             quarantine_count = :quarantine, appeal_count = :appeals, ban_count_total = :bans,
+            avg_frame_drift_ms = :drift, uptime_seconds = :uptime, resource_count = :resources,
             last_heartbeat_at = :now, last_status = :status
         WHERE license_key = :key AND server_name = :name
     ');
@@ -78,6 +82,9 @@ try {
         ':quarantine' => (int)($body['quarantine_count'] ?? 0),
         ':appeals' => (int)($body['appeal_count'] ?? 0),
         ':bans' => (int)($body['ban_count_total'] ?? 0),
+        ':drift' => (int)($body['avg_frame_drift_ms'] ?? 0),
+        ':uptime' => (int)($body['uptime_seconds'] ?? 0),
+        ':resources' => (int)($body['resource_count'] ?? 0),
         ':now' => hub_now(),
         ':status' => 'online',
     ]);

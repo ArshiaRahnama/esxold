@@ -18,33 +18,19 @@ ESX.RegisterServerCallback("HUD_Menu:GetAcc", function(source, cb)
         }, function(profilePic)
 
             local function withGangLogo(gangLogo)
-                local jobName = xPlayer.job and xPlayer.job.name
-                local function withJobIcon(jobIcon)
-                    cb({
-                        name             = xPlayer.name,
-                        job              = xPlayer.job,
-                        gang             = xPlayer.gang,
-                        rank             = rank or 1,
-                        xp               = xp or 0,
-                        money            = xPlayer.money,
-                        bank             = xPlayer.bank,
-                        permission_level = xPlayer.permission_level,
-                        aduty            = xPlayer.aduty,
-                        avatarUrl        = (profilePic ~= nil and profilePic ~= '') and profilePic or nil,
-                        gangLogoUrl      = gangLogo,
-                        jobIconUrl       = jobIcon,
-                    })
-                end
-
-                if jobName then
-                    MySQL.Async.fetchScalar('SELECT icon_url FROM jobs WHERE name = @name', {
-                        ['@name'] = jobName
-                    }, function(iconUrl)
-                        withJobIcon((iconUrl ~= nil and iconUrl ~= '') and iconUrl or nil)
-                    end)
-                else
-                    withJobIcon(nil)
-                end
+                cb({
+                    name             = xPlayer.name,
+                    job              = xPlayer.job,
+                    gang             = xPlayer.gang,
+                    rank             = rank or 1,
+                    xp               = xp or 0,
+                    money            = xPlayer.money,
+                    bank             = xPlayer.bank,
+                    permission_level = xPlayer.permission_level,
+                    aduty            = xPlayer.aduty,
+                    avatarUrl        = (profilePic ~= nil and profilePic ~= '') and profilePic or nil,
+                    gangLogoUrl      = gangLogo,
+                })
             end
 
             if xPlayer.gang and xPlayer.gang.name and xPlayer.gang.name ~= 'nogang' then

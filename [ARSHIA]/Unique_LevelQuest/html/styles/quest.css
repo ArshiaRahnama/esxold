@@ -1,13 +1,13 @@
 .quests-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(190px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
 }
 
 .achCard {
   position: relative;
   background: rgba(28, 28, 28, 0.92);
-  border: 2px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
   padding: 18px 14px 16px;
   text-align: center;

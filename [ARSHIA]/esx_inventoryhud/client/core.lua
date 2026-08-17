@@ -126,6 +126,7 @@ function sortItems(raw, isTrunk)
         local item = ESX.getItem(entry.name)
         table.insert(rows, {
             unique = entry.name,
+            name = entry.name, -- the NUI's own JS reads item.name (use/throw/drag/give), not just .unique
             label = entry.label or (item and item.label) or entry.name,
             image = 'img/items/' .. entry.name .. '.png',
             count = entry.count or 1,
@@ -143,6 +144,7 @@ function sortItems(raw, isTrunk)
     local function addWeapon(entry)
         table.insert(rows, {
             unique = entry.name,
+            name = entry.name,
             label = entry.label or entry.name,
             image = 'img/items/' .. entry.name:lower() .. '.png',
             count = 1,
@@ -332,6 +334,7 @@ AddEventHandler('esx:removeWeapon', function(weaponName, ammo) refreshMainInvent
 function loadPlayerInventory()
     refreshMainInventoryIfOpen()
 end
+exports('loadPlayerInventory', loadPlayerInventory) -- called by Unique_clothe after equipping/using clothes
 
 -- ------------------------------------------------------------
 -- Generic second inventory (bag / trunk / job / public / admin)
@@ -448,12 +451,13 @@ end)
 -- (JS does sendEvent('inventory:useItem', itemName), not an object) --
 -- confirmed by reading html/js/app.js directly, not guessed.
 RegisterNUICallback('inventory:useItem', function(data, cb)
-    print(('[DEBUG] inventory:useItem data type=%s json=%s'):format(type(data), json.encode(data)))
+    -- confirmed via console: JS sends a raw item-name string here, but
+    -- can send [] (empty) if item.name was undefined client-side (now
+    -- fixed by adding a name field alongside unique in sortItems())
     local itemName = (type(data) == 'string' and data) or getNuiItemName(data)
     if type(itemName) == 'string' then
         itemName = itemName:gsub('^"(.*)"$', '%1') -- defensive: strip stray JSON quotes if not fully decoded
     end
-    print(('[DEBUG] inventory:useItem resolved itemName=%s'):format(tostring(itemName)))
     if itemName then
         TriggerServerEvent('esx:useItem', itemName)
     end

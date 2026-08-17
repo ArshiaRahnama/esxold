@@ -239,15 +239,20 @@ end)
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
-    --xPlayer.data.usedClothe = xPlayer.data.usedClothe or {}
-    usedClothe = xPlayer.data.usedClothe or {}
+    -- essentialmode's xPlayer has no .data sub-table (fields are flat:
+    -- xPlayer.group, xPlayer.job, etc -- confirmed against
+    -- essentialmode/client/main.lua's own esx:playerLoaded handler).
+    -- usedClothe isn't part of core ESX player data anyway (it's this
+    -- resource's own concept), so just start clean each load; the
+    -- server already re-validates ownership on every setUsed call.
+    usedClothe = {}
     playerLoaded = true
 end)
 
 
 RegisterNetEvent('clothe:useClothe',function(name)
     toggleClothe(name,nil,true)
-    exports['sun-inventory-hud']:loadPlayerInventory()
+    exports['esx_inventoryhud']:loadPlayerInventory()
 end)
 
 RegisterNetEvent('esx:removeInventoryItemss',function(label,count,name,newcount)
@@ -272,7 +277,7 @@ function toggleClothe(name,force,anim)
         removeClothe(name)
     end
     if anim then
-        exports['sun-inventory-hud']:playClotheAnim(clothes[name].type)
+        exports['esx_inventoryhud']:playClotheAnim(clothes[name].type)
     end
 end
 exports('toggleClothe', toggleClothe)
@@ -405,7 +410,7 @@ RegisterNetEvent('clothe:load', function()
 end)
 
 RegisterNetEvent('clothe:usePack',function(name)
-    exports['sun-inventory-hud']:packAnim()
+    exports['esx_inventoryhud']:packAnim()
     ESX.TriggerServerCallback('clothe:usePack',function(data)
         Citizen.Wait(500)
         local _ = {}

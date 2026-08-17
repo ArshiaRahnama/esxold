@@ -29,6 +29,7 @@ function UpdateProfile()
                 type       = "updateProfile",
                 name       = string.gsub(data.name, "_", " ") .. " (" .. myId .. ")",
                 job        = jobsection,
+                jobName    = data.job and data.job.name,
                 gang       = gangsection,
                 level      = data.rank,
                 xpCurrent  = data.xp,
@@ -39,7 +40,6 @@ function UpdateProfile()
                 coin       = Coin .. " Coin",
                 avatarUrl  = data.avatarUrl,
                 gangLogoUrl= data.gangLogoUrl,
-                jobIconUrl = data.jobIconUrl,
             })
         end)
     end)

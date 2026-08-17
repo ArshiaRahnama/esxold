@@ -4,7 +4,7 @@ require_once __DIR__ . '/../lib/db.php';
 
 hub_require_admin();
 
-$rows = hub_db()->query('SELECT license_key, server_name, version, player_count, max_players, quarantine_count, appeal_count, ban_count_total, last_heartbeat_at, last_status FROM servers ORDER BY server_name ASC')->fetchAll();
+$rows = hub_db()->query('SELECT license_key, server_name, version, player_count, max_players, quarantine_count, appeal_count, ban_count_total, avg_frame_drift_ms, uptime_seconds, resource_count, last_heartbeat_at, last_status FROM servers ORDER BY server_name ASC')->fetchAll();
 
 $now = hub_now();
 foreach ($rows as &$row) {

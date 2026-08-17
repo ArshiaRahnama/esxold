@@ -35,4 +35,5 @@ files {
     'html/scripts/*.js',
     'html/styles/*.css',
     'html/fonts/*.*',
+    'html/img/job/*.png',
 }
