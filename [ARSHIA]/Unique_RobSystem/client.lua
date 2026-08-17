@@ -66,7 +66,7 @@ AddEventHandler('Morphy_RobSystem:setBlip', function(name,position)
 
     blipRobbery[name] = AddBlipForCoord(position.x, position.y, position.z)
 	SetBlipSprite(blipRobbery[name], 161)
-	SetBlipScale(blipRobbery[name], 2.0)
+	SetBlipScale(blipRobbery[name], 0.7)
 	SetBlipColour(blipRobbery[name], 15)
 
 	PulseBlip(blipRobbery[name])

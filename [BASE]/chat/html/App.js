@@ -59,6 +59,15 @@ window.APP = {
       msgIdCounter: 0,
       showStarred: false,
       starred: [], // [{ id, text, ts }]
+      // Hard cap on how many chat lines we keep in memory/DOM at once.
+      // Without this, a long play session builds up thousands of live
+      // <message> components (each with its own Vue instance + text-shadow
+      // heavy DOM node) that never get removed, which is what causes the
+      // chat to gradually lag the longer the server stays up. Pinned and
+      // starred messages are stored separately, so trimming old scrollback
+      // here never touches them.
+      maxMessages: 300,
+      maxOldMessages: 50,
     };
   },
   computed: {
@@ -393,6 +402,13 @@ window.APP = {
         }
       }
       this.messages.push(message);
+      // Trim from the front once we're over the cap. splice() on a Vue 2
+      // reactive array is itself a reactive (patched) method, so this stays
+      // fully reactive - it just keeps the live list (and therefore the
+      // DOM/scrollbar) from growing forever over a long session.
+      if (this.messages.length > this.maxMessages) {
+        this.messages.splice(0, this.messages.length - this.maxMessages);
+      }
       if (channel !== this.activeTab) {
         this.unread[channel] = true;
         this.playSound(channel);
@@ -512,6 +528,9 @@ window.APP = {
           message: this.message,
         }));
         this.oldMessages.unshift(this.message);
+        if (this.oldMessages.length > this.maxOldMessages) {
+          this.oldMessages.length = this.maxOldMessages;
+        }
         this.oldMessagesIndex = -1;
         this.hideInput();
       } else {

@@ -1854,7 +1854,7 @@ AddEventHandler('esx_taxijob:setTaxiBlip', function(coords)
 	elseif not onWayBack then
 		CarBlip = AddBlipForCoord(coords)
 		SetBlipSprite(CarBlip , 56)
-		SetBlipScale(CarBlip , 0.8)
+		SetBlipScale(CarBlip, 0.7)
 		SetBlipColour(CarBlip, 5)
 		BeginTextCommandSetBlipName("STRING")
 		AddTextComponentString('TAXI')

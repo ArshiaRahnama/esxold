@@ -537,7 +537,7 @@ function HandleMarkers()
 
         blip2 = AddBlipForCoord(PlayerCaptureInf.ZoneCoord.x,PlayerCaptureInf.ZoneCoord.y,PlayerCaptureInf.ZoneCoord.z)
         SetBlipSprite(blip2, Config.CapturePointBlip.Model)
-        SetBlipScale(blip2, 1.3)
+        SetBlipScale(blip2, 0.7)
         SetBlipColour(blip2, Config.CapturePointBlip.Color)
         SetBlipAsShortRange(blip2, false)
         BeginTextCommandSetBlipName("STRING")

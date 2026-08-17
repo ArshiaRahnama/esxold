@@ -35,7 +35,7 @@ function addBlip(pos)
   local blip = AddBlipForCoord(pos.x, pos.y, 0.0)
   SetBlipColour(blip, 7)
   SetBlipDisplay(blip, 8)
-  SetBlipScale(blip, 0.6)
+  SetBlipScale(blip, 0.7)
   SetBlipAsShortRange(blip, true)
   return blip
 end
