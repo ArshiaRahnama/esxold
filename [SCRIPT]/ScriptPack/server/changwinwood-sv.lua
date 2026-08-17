@@ -3,13 +3,13 @@ local QBCore = nil
 local FrameworkFound = nil
 
 LoadFramework = function()
-    if Config.Framework == 'esx' then 
+    if VinewoodConfig.Framework == 'esx' then 
         ESX = exports['essentialmode']:getSharedObject()
         FrameworkFound = 'esx'
-    elseif Config.Framework == 'qbcore' then 
+    elseif VinewoodConfig.Framework == 'qbcore' then 
         QBCore = exports["qb-core"]:GetCoreObject()
         FrameworkFound = 'qbcore'
-    elseif Config.Framework == 'autodetect' then
+    elseif VinewoodConfig.Framework == 'autodetect' then
         if GetResourceState('essentialmode') == 'started' then 
             ESX = exports['essentialmode']:getSharedObject()
             FrameworkFound = 'esx'
@@ -19,7 +19,7 @@ LoadFramework = function()
         else
             FrameworkFound = 'standalone'
         end
-    elseif Config.Framework == 'standalone' then
+    elseif VinewoodConfig.Framework == 'standalone' then
         FrameworkFound = 'standalone'
     end
 
@@ -35,19 +35,19 @@ end)
 Authorized = function(source)
     if FrameworkFound == 'esx' then 
         local xPlayer = ESX.GetPlayerFromId(source)
-        for k, v in pairs(Config.AuthorizedGroups.group) do 
+        for k, v in pairs(VinewoodConfig.AuthorizedGroups.group) do 
             if xPlayer.getGroup() == v then 
                 return true
             end
         end
     elseif FrameworkFound == 'qbcore' then
-        for k, v in pairs(Config.AuthorizedGroups.group) do 
+        for k, v in pairs(VinewoodConfig.AuthorizedGroups.group) do 
             if QBCore.Functions.HasPermission(source, v) then 
                 return true
             end
         end
     elseif FrameworkFound == 'standalone' then
-        for k, v in pairs(Config.AuthorizedGroups.identifier) do 
+        for k, v in pairs(VinewoodConfig.AuthorizedGroups.identifier) do 
             for k, v2 in pairs(GetPlayerIdentifiers(source)) do 
                 if v2 == v then 
                     return true
@@ -59,12 +59,12 @@ Authorized = function(source)
 end
 
 GetFileData = function()
-    local file = LoadResourceFile(GetCurrentResourceName(), Config.FileName)
+    local file = LoadResourceFile(GetCurrentResourceName(), VinewoodConfig.FileName)
     file = json.decode(file)
     return file
 end
 
-RegisterCommand(Config.Command, function(source, args, rawCommand)
+RegisterCommand(VinewoodConfig.Command, function(source, args, rawCommand)
     if not Authorized(source) then return 
     end
     TriggerClientEvent('ricky-vinewood:openNui', source, GetFileData()[1], GetFileData()[2])
@@ -75,11 +75,11 @@ AddEventHandler('ricky-vinewood:saveText', function(data)
     if not Authorized(source) then return end
     local newText = data.text 
     local newColor = data.color
-    local file = LoadResourceFile(GetCurrentResourceName(), Config.FileName)
+    local file = LoadResourceFile(GetCurrentResourceName(), VinewoodConfig.FileName)
     file = json.decode(file)
     file[1] = newText
     file[2] = newColor
-    SaveResourceFile(GetCurrentResourceName(), Config.FileName, json.encode(file, {indent = true}), -1)
+    SaveResourceFile(GetCurrentResourceName(), VinewoodConfig.FileName, json.encode(file, {indent = true}), -1)
     TriggerClientEvent('ricky-vinewood:saveText', -1, file)
 end)
 

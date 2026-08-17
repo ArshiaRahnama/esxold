@@ -5,13 +5,13 @@ local nuiOpen = false
 local modelCreated = {}
 
 LoadFramework = function()
-    if Config.Framework == 'esx' then 
+    if VinewoodConfig.Framework == 'esx' then 
         ESX = exports['essentialmode']:getSharedObject()
         FrameworkFound = 'esx'
-    elseif Config.Framework == 'qbcore' then 
+    elseif VinewoodConfig.Framework == 'qbcore' then 
         QBCore = exports["qb-core"]:GetCoreObject()
         FrameworkFound = 'qbcore'
-    elseif Config.Framework == 'autodetect' then
+    elseif VinewoodConfig.Framework == 'autodetect' then
         if GetResourceState('essentialmode') == 'started' then 
             ESX = exports['essentialmode']:getSharedObject()
             FrameworkFound = 'esx'
@@ -21,7 +21,7 @@ LoadFramework = function()
         else
             FrameworkFound = 'standalone'
         end
-    elseif Config.Framework == 'standalone' then
+    elseif VinewoodConfig.Framework == 'standalone' then
         FrameworkFound = 'standalone'
     end
 end
@@ -37,7 +37,7 @@ AddEventHandler('ricky-vinewood:openNui', function(text, color)
     SetNuiFocus(true, true)
     SendNUIMessage({
         type = "SET_LOCALES",
-        locales = Config.Locales
+        locales = VinewoodConfig.Locales
     })
     SendNUIMessage({
         type = "OPEN",
@@ -98,8 +98,8 @@ UpdateMap = function(data)
         end
         local string = completeText:sub(i, i)
         local model = string
-        local coords = Config.Coords[i].coordinate
-        local heading = Config.Coords[i].heading
+        local coords = VinewoodConfig.Coords[i].coordinate
+        local heading = VinewoodConfig.Coords[i].heading
         model = model
         if model ~= " " then
             RequestModel(model)

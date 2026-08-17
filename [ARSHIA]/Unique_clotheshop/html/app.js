@@ -40,7 +40,7 @@ function placeholderIcon(type) {
 
 function CloseShop() {
     $('.items').empty();
-    $('.container').fadeOut(100);
+    $('.container').fadeOut(100, function () { $('body').hide(); });
     closeModal();
     post('focusOff');
 }
@@ -51,6 +51,11 @@ function closeModal() {
 
 document.addEventListener('DOMContentLoaded', function () {
     $('.container').hide();
+    // body starts hidden (display:none in style.css) so the page isn't
+    // visible before the shop opens -- but it must be shown again the
+    // moment we actually want to draw the panel, or NUI focus activates
+    // (cursor appears) while the whole page stays invisible.
+    $('body').hide();
 });
 
 $(document).keyup(function (e) {
@@ -65,11 +70,12 @@ window.addEventListener('message', function (event) {
         closeModal();
     }
     if (msg.display === true) {
+        $('body').show();
         $('.container').show().hide().fadeIn(100);
         if (msg.shopLabel) $('.shopName').text(msg.shopLabel);
     }
     if (msg.display === false) {
-        $('.container').fadeOut(100);
+        $('.container').fadeOut(100, function () { $('body').hide(); });
     }
     // one entry per accessible clothing type in this zone
     if (msg.type === 1) {

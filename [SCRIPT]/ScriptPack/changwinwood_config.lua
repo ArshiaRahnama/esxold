@@ -1,10 +1,10 @@
-Config = {}
+VinewoodConfig = {}
 
-Config.Framework = 'standalone' -- esx, qbcore, standalone or autodetect
+VinewoodConfig.Framework = 'standalone' -- esx, qbcore, standalone or autodetect
 
-Config.Command = 'vinewood' -- Command to open the menu
+VinewoodConfig.Command = 'vinewood' -- Command to open the menu
 
-Config.AuthorizedGroups = {
+VinewoodConfig.AuthorizedGroups = {
     group = { -- Only for esx and qbcore
         'user'
     },
@@ -13,7 +13,7 @@ Config.AuthorizedGroups = {
     }
 }
 
-Config.Locales = {
+VinewoodConfig.Locales = {
     ['vinewood'] = "Vinewood",
     ['sign'] = "Sign",
     ['text'] = "Text",
@@ -22,9 +22,9 @@ Config.Locales = {
     ['type_text'] = "Vinewood"
 }
 
-Config.FileName = 'textSettings.json'
+VinewoodConfig.FileName = 'textSettings.json'
 
-Config.Coords = {
+VinewoodConfig.Coords = {
     [1] = {
         coordinate = vector3(668.46820000, 1211.08500000, 326.05880000),
         heading = 343.5
