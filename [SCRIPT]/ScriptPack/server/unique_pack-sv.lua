@@ -857,7 +857,7 @@ RegisterCommand('joblist', function(source, args, rawCommand)
     local hasPermission = zPlayer.permission_level > 0
     local allowedJobs = {}
     if hasPermission or (zPlayer.job.name == 'fbi' and zPlayer.job.grade > 15) then
-        allowedJobs = {police = {}, mt = {}, ambulance = {}, sheriff = {}, metropolitan = {}, mechanic = {}, weazel = {}, fbi = {},taxi = {}}
+        allowedJobs = {police = {}, mt = {}, ambulance = {}, sheriff = {}, metropolitan = {}, mechanic = {}, weazel = {}, fbi = {}, taxi = {}, cid = {}, cia = {}, marshal = {}, judge = {}, doa = {}}
     else
         TriggerClientEvent('chat:addMessage', source, {args = {"^1[System]", "^3 Perm Nadary !"}})
         return
@@ -874,6 +874,11 @@ RegisterCommand('joblist', function(source, args, rawCommand)
         weazel = {},
         fbi = {},
         taxi = {},
+        cid = {},
+        cia = {},
+        marshal = {},
+        judge = {},
+        doa = {},
     }
 
     for _, PlayerID in ipairs(Players) do
@@ -1225,6 +1230,11 @@ ESX.RegisterServerCallback('checkJobAndBucket', function(source, cb)
         "sheriff", "offsheriff",
         "mt", "offmt",
         "fbi", "offfbi",
+        "cid", "offcid",
+        "cia", "offcia",
+        "marshal", "offmarshal",
+        "judge", "offjudge",
+        "doa", "offdoa",
         "taxi", "mechanic",
         "ambulance", "weazel"
     }
@@ -1255,7 +1265,9 @@ AddEventHandler('notifyPolice', function(location)
 
     for i = 1, #xPlayers, 1 do
         local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-        if xPlayer.job.name == 'police' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'mt' then
+        local jobName = xPlayer.job.name
+        if jobName == 'police' or jobName == 'sheriff' or jobName == 'fbi' or jobName == 'mt'
+            or jobName == 'cid' or jobName == 'cia' or jobName == 'marshal' or jobName == 'judge' or jobName == 'doa' then
             TriggerClientEvent('esx:showNotification', xPlayers[i], "یک نفر در حال پول‌شویی است!")
             TriggerClientEvent('createPoliceBlip', xPlayers[i], location.x, location.y, location.z) 
         end
@@ -1268,7 +1280,9 @@ AddEventHandler('removePoliceBlip', function()
 
     for i = 1, #xPlayers, 1 do
         local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-        if xPlayer.job.name == 'police' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'mt' then
+        local jobName = xPlayer.job.name
+        if jobName == 'police' or jobName == 'sheriff' or jobName == 'fbi' or jobName == 'mt'
+            or jobName == 'cid' or jobName == 'cia' or jobName == 'marshal' or jobName == 'judge' or jobName == 'doa' then
             TriggerClientEvent('removePoliceBlip', xPlayers[i]) 
         end
     end

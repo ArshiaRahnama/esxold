@@ -118,7 +118,13 @@ AddEventHandler('chatMessage', function(source, name, message)
 				sheriff = "rgba(254, 255, 254, 0.6)",     
 				fbi = "rgba(0, 0, 0, 0.6)",           
 				ambulance = "rgba(255, 0, 0, 0.6)",  
-				mechanic = "rgba(255, 165, 0, 0.6)"  
+				mechanic = "rgba(255, 165, 0, 0.6)",
+				-- Department Of Justice (see esx_uniquejobs/shared/departments.lua)
+				cid = "rgba(75, 0, 130, 0.6)",
+				cia = "rgba(25, 25, 25, 0.6)",
+				marshal = "rgba(139, 69, 19, 0.6)",
+				judge = "rgba(0, 100, 0, 0.6)",
+				doa = "rgba(128, 0, 0, 0.6)"
 			}
 	
 			local playerJob = xPlayer.job.name
