@@ -485,6 +485,7 @@ function CreatePlayer(
     end
     
     self.addInventoryItem = function(name, count)
+        count = tonumber(count) or 0 -- guard against a non-number count making item.count NaN (unsafe for net)
         local item, i = self.getInventoryItem(name)
         if not item then
             return
@@ -498,6 +499,7 @@ function CreatePlayer(
     end
 
     self.removeInventoryItem = function(name, count)
+        count = tonumber(count) or 0 -- same guard as addInventoryItem
         local item, i = self.getInventoryItem(name)
         local newCount = item.count - count
         item.count = newCount
@@ -701,6 +703,7 @@ function CreatePlayer(
     self.removeWeapon = function(weaponNamex, ammo)
 		weaponName = string.upper(weaponNamex)
         local weaponLabel
+        ammo = tonumber(ammo) or 0 -- guard against a non-number ammo value making the later TriggerClientEvent payload unsafe for net
 
         for i = 1, #self.loadout, 1 do
             if self.loadout[i].name == weaponName then
@@ -722,6 +725,7 @@ function CreatePlayer(
         end
 
         if weaponLabel then
+            weaponLabel = tostring(weaponLabel)
             TriggerClientEvent("esx:removeWeapon", self.source, weaponName, ammo)
             TriggerClientEvent("esx:removeInventoryItem", self.source, {label = weaponLabel}, 1)
         end

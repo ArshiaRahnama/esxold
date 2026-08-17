@@ -674,14 +674,45 @@ end)
 -- ------------------------------------------------------------
 -- Dropped items (thrown from the inventory)
 -- ------------------------------------------------------------
+local activeDropObjects = {} -- [id] = object handle
+
+local function spawnDropProp(id, coords)
+    local model = GetHashKey('prop_cs_package_01') -- generic small pickup-able package prop
+    RequestModel(model)
+    local timeout = GetGameTimer() + 3000
+    while not HasModelLoaded(model) and GetGameTimer() < timeout do Citizen.Wait(0) end
+    if not HasModelLoaded(model) then return end
+
+    local groundZ = coords.z
+    local found, z = GetGroundZFor_3dCoord(coords.x, coords.y, coords.z + 5.0, false)
+    if found then groundZ = z end
+
+    local obj = CreateObject(model, coords.x, coords.y, groundZ, false, false, false)
+    PlaceObjectOnGroundProperly(obj)
+    FreezeEntityPosition(obj, true)
+    SetEntityAsMissionEntity(obj, true, true)
+    SetModelAsNoLongerNeeded(model)
+    activeDropObjects[id] = obj
+end
+
+local function deleteDropProp(id)
+    local obj = activeDropObjects[id]
+    if obj and DoesEntityExist(obj) then
+        DeleteObject(obj)
+    end
+    activeDropObjects[id] = nil
+end
+
 RegisterNetEvent('inventory:core:spawnDrop')
 AddEventHandler('inventory:core:spawnDrop', function(id, itemName, coords)
     activeDrops[id] = coords
+    spawnDropProp(id, coords)
 end)
 
 RegisterNetEvent('inventory:core:removeDrop')
 AddEventHandler('inventory:core:removeDrop', function(id)
     activeDrops[id] = nil
+    deleteDropProp(id)
 end)
 
 Citizen.CreateThread(function()
