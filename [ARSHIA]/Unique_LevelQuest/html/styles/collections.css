@@ -72,12 +72,14 @@
   font-size: 34px;
   color: var(--steel);
   background: rgba(255, 255, 255, 0.03);
-  background-size: cover;
-  background-position: center;
 }
 
-.cardIcon.hasVehicleImage {
-  background-color: #000;
+.cardImg {
+  height: 110px;
+  width: 100%;
+  object-fit: cover;
+  background: #000;
+  display: block;
 }
 
 .imgCard .cap {

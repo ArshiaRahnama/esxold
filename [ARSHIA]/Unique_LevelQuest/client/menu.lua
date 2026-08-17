@@ -20,6 +20,9 @@ function UpdateProfile()
             local gangsection = 'No Gang'
             if data.job and data.job.name ~= 'nojob' then
                 jobsection = data.job.label .. " | " .. data.job.grade_label .. " (" .. data.job.grade .. ")"
+                if data.divisionLabel then
+                    jobsection = jobsection .. " — " .. data.divisionLabel
+                end
             end
             if data.gang and data.gang.name ~= 'nogang' then
                 gangsection = data.gang.name .. " | " .. data.gang.grade_label .. " (" .. data.gang.grade .. ")"

@@ -14,26 +14,34 @@ document.addEventListener('DOMContentLoaded', () => {
       data.vehicles.forEach(v => {
         const card = document.createElement('div');
         card.className = 'imgCard';
-        card.innerHTML = `
-          <div class="cardIcon"><i class="fa-solid fa-car-side"></i></div>
-          <div class="cap">${v.name}<br><small>${v.plate}</small></div>
-        `;
-        vehGrid.appendChild(card);
+        card.innerHTML = `<div class="cap">${v.name}<br><small>${v.plate}</small></div>`;
 
-        // Real preview images from FiveM's public vehicle database. Not
-        // every model is in there (custom/addon cars won't be), so we
-        // test-load first and just keep the icon card if it 404s.
+        // Real preview images from FiveM's public vehicle database, using
+        // a native <img loading="lazy"> instead of preloading everything
+        // up front — the browser only fetches what actually scrolls into
+        // view, instead of firing 15-20 requests the instant the menu
+        // opens. onerror swaps back to the icon for models that aren't
+        // in that database (custom/addon cars).
+        let mediaEl;
         if (v.slug) {
-          const cardIcon = card.querySelector('.cardIcon');
-          const imgPath = `https://docs.fivem.net/vehicles/${v.slug}.webp`;
-          const test = new Image();
-          test.onload = () => {
-            cardIcon.innerHTML = '';
-            cardIcon.style.backgroundImage = `url('${imgPath}')`;
-            cardIcon.classList.add('hasVehicleImage');
-          };
-          test.src = imgPath;
+          mediaEl = document.createElement('img');
+          mediaEl.className = 'cardImg';
+          mediaEl.loading = 'lazy';
+          mediaEl.src = `https://docs.fivem.net/vehicles/${v.slug}.webp`;
+          mediaEl.addEventListener('error', () => {
+            const fallback = document.createElement('div');
+            fallback.className = 'cardIcon';
+            fallback.innerHTML = '<i class="fa-solid fa-car-side"></i>';
+            mediaEl.replaceWith(fallback);
+          });
+        } else {
+          mediaEl = document.createElement('div');
+          mediaEl.className = 'cardIcon';
+          mediaEl.innerHTML = '<i class="fa-solid fa-car-side"></i>';
         }
+        card.prepend(mediaEl);
+
+        vehGrid.appendChild(card);
       });
     }
 

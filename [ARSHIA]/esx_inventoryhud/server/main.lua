@@ -150,3 +150,71 @@ ESX.RegisterServerCallback('inventory:core:getPlayerInventory', function(source,
     if not xTarget then cb(nil) return end
     cb({ items = xTarget.inventory, weapons = xTarget.loadout })
 end)
+
+-- ============================================================
+-- Weapon equip toggle: server-authoritative "which weapons are
+-- actually drawable" state, capped at Config.WeaponSlots count.
+-- In-memory only per session (mirrors usedClothe's pattern in
+-- Unique_clothe) -- on relog/spawn the client re-asks via
+-- inventory:getEquippedWeapons and starts clean, so nothing carries
+-- over incorrectly, and this never touches essentialmode's own
+-- weapon storage/DB at all.
+-- ============================================================
+local equippedWeapons = {} -- [source] = { [weaponName] = true }
+
+local function ownsWeapon(xPlayer, weaponName)
+    return xPlayer.getWeapon(weaponName) ~= nil
+end
+
+local function equippedCount(set)
+    local n = 0
+    for _ in pairs(set) do n = n + 1 end
+    return n
+end
+
+RegisterServerEvent('inventory:toggleWeaponEquip')
+AddEventHandler('inventory:toggleWeaponEquip', function(weaponName)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    if not xPlayer or not weaponName then return end
+    if not ownsWeapon(xPlayer, weaponName) then return end
+
+    equippedWeapons[src] = equippedWeapons[src] or {}
+    local set = equippedWeapons[src]
+
+    if set[weaponName] then
+        set[weaponName] = nil
+    else
+        local maxSlots = (Config.WeaponSlots and #Config.WeaponSlots) or 3
+        if equippedCount(set) >= maxSlots then
+            -- unequip whichever one was equipped first (oldest) to make room
+            local oldest = nil
+            for name in pairs(set) do oldest = name break end
+            if oldest then set[oldest] = nil end
+        end
+        set[weaponName] = true
+    end
+
+    TriggerClientEvent('inventory:weaponEquipChanged', src, set)
+end)
+
+ESX.RegisterServerCallback('inventory:getEquippedWeapons', function(source, cb)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if not xPlayer then cb({}) return end
+
+    equippedWeapons[source] = equippedWeapons[source] or {}
+    local set = equippedWeapons[source]
+
+    -- drop anything the player no longer actually owns (sold/dropped/etc)
+    for weaponName in pairs(set) do
+        if not ownsWeapon(xPlayer, weaponName) then
+            set[weaponName] = nil
+        end
+    end
+
+    cb(set)
+end)
+
+AddEventHandler('playerDropped', function()
+    equippedWeapons[source] = nil
+end)

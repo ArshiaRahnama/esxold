@@ -12,6 +12,7 @@ local secondActive = false
 local secondCallback = nil
 local activeDrops = {}
 local blurEnabled = true -- toggled via the NUI 'blurState' callback (Settings)
+local equippedWeaponsCache = {} -- kept in sync via inventory:weaponEquipChanged, read by sortItems() to label rows
 
 -- ------------------------------------------------------------
 -- ESX helpers other modules call but which may not exist on
@@ -142,10 +143,11 @@ function sortItems(raw, isTrunk)
     end
 
     local function addWeapon(entry)
+        local isEquipped = equippedWeaponsCache[entry.name] == true
         table.insert(rows, {
             unique = entry.name,
             name = entry.name,
-            label = entry.label or entry.name,
+            label = (entry.label or entry.name) .. (isEquipped and ' [Kashide Shode]' or ''),
             image = 'img/items/' .. entry.name:lower() .. '.png',
             count = 1,
             ammo = entry.ammo or 0,
@@ -153,7 +155,9 @@ function sortItems(raw, isTrunk)
             slot = entry.slot,
             locked = entry.locked or false,
             itemdata = { description = entry.label or entry.name },
-            visible = true
+            visible = true,
+            weapon = true,
+            equipped = isEquipped
         })
     end
 
@@ -324,8 +328,72 @@ end
 
 AddEventHandler('esx:addInventoryItem', function(item, count) refreshMainInventoryIfOpen() end)
 AddEventHandler('esx:removeInventoryItem', function(item, count) refreshMainInventoryIfOpen() end)
-AddEventHandler('esx:addWeapon', function(weaponName, ammo) refreshMainInventoryIfOpen() end)
-AddEventHandler('esx:removeWeapon', function(weaponName, ammo) refreshMainInventoryIfOpen() end)
+
+-- ------------------------------------------------------------
+-- Weapon equip toggle: only weapons the server confirms as
+-- "equipped" (max Config.WeaponSlots count, server-enforced) are
+-- actually given to the ped natively, so only THOSE show up in the
+-- game's own weapon wheel. Everything else stays fully owned (still
+-- in your inventory, still shows in the panel, just not drawable
+-- until you use it again). This never touches essentialmode's own
+-- addWeapon/removeWeapon -- it purely corrects the ped's actual
+-- weapon set after the fact, client-side, on top of whatever
+-- essentialmode already did.
+-- ------------------------------------------------------------
+local currentlyGiven = {} -- [weaponName] = true, mirrors what's actually on the ped right now
+
+RegisterNetEvent('inventory:weaponEquipChanged')
+AddEventHandler('inventory:weaponEquipChanged', function(equippedSet)
+    local ped = PlayerPedId()
+    equippedSet = equippedSet or {}
+
+    for weaponName in pairs(currentlyGiven) do
+        if not equippedSet[weaponName] then
+            RemoveWeaponFromPed(ped, GetHashKey(weaponName))
+            currentlyGiven[weaponName] = nil
+        end
+    end
+
+    for weaponName in pairs(equippedSet) do
+        if not currentlyGiven[weaponName] then
+            local weapon = nil
+            for _, w in ipairs((ESX.GetPlayerData() or {}).loadout or {}) do
+                if w.name == weaponName then weapon = w break end
+            end
+            GiveWeaponToPed(ped, GetHashKey(weaponName), (weapon and weapon.ammo) or 0, false, false)
+            currentlyGiven[weaponName] = true
+        end
+    end
+
+    equippedWeaponsCache = equippedSet
+    refreshMainInventoryIfOpen()
+end)
+
+AddEventHandler('esx:addWeapon', function(weaponName, ammo)
+    refreshMainInventoryIfOpen()
+    -- a freshly-acquired weapon is native-given automatically by
+    -- essentialmode; immediately reconcile against the server's real
+    -- equipped set so a newly picked-up weapon doesn't stay drawable
+    -- unless it's actually one of the equipped slots
+    ESX.TriggerServerCallback('inventory:getEquippedWeapons', function(equippedSet)
+        TriggerEvent('inventory:weaponEquipChanged', equippedSet)
+    end)
+end)
+AddEventHandler('esx:removeWeapon', function(weaponName, ammo)
+    refreshMainInventoryIfOpen()
+    currentlyGiven[weaponName] = nil
+end)
+
+-- on spawn/relog, correct the ped to match the server's real equipped
+-- set (a freshly-spawned ped starts with no weapons regardless of what
+-- was equipped before, essentialmode re-gives everything from loadout
+-- on load, so this immediately strips back down to just the equipped ones)
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded', function()
+    ESX.TriggerServerCallback('inventory:getEquippedWeapons', function(equippedSet)
+        TriggerEvent('inventory:weaponEquipChanged', equippedSet)
+    end)
+end)
 
 -- client/clothe.lua's ChangeClothe callback (kept from the original
 -- code) calls this exact name after equipping/unequipping something;
@@ -450,6 +518,13 @@ end)
 -- inventory:useItem's payload is the item name as a plain STRING
 -- (JS does sendEvent('inventory:useItem', itemName), not an object) --
 -- confirmed by reading html/js/app.js directly, not guessed.
+local weaponNameSet = {}
+CreateThread(function()
+    for _, w in ipairs(ESX.GetWeaponList() or {}) do
+        weaponNameSet[w.name] = true
+    end
+end)
+
 RegisterNUICallback('inventory:useItem', function(data, cb)
     -- confirmed via console: JS sends a raw item-name string here, but
     -- can send [] (empty) if item.name was undefined client-side (now
@@ -459,7 +534,15 @@ RegisterNUICallback('inventory:useItem', function(data, cb)
         itemName = itemName:gsub('^"(.*)"$', '%1') -- defensive: strip stray JSON quotes if not fully decoded
     end
     if itemName then
-        TriggerServerEvent('esx:useItem', itemName)
+        if weaponNameSet[itemName] then
+            -- weapons aren't real inventory items in essentialmode (no
+            -- ESX.Items entry, no RegisterUsableItem) -- esx:useItem
+            -- would just no-op for them. "Use" on a weapon instead
+            -- toggles whether it's actually drawable (max 3 at once).
+            TriggerServerEvent('inventory:toggleWeaponEquip', itemName)
+        else
+            TriggerServerEvent('esx:useItem', itemName)
+        end
     end
     cb('ok')
 end)

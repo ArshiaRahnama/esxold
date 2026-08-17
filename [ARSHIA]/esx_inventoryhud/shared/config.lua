@@ -5,6 +5,13 @@ Config = {}
 -- keybind that opens the player's own inventory
 Config.OpenInventoryKey = 'F2'
 
+-- Weapon equip toggle: right-click ("Use") any weapon in your
+-- inventory to toggle whether it's actually drawable (shows up in
+-- the game's own weapon-select wheel). Owning a weapon no longer
+-- automatically makes it drawable -- only up to this many can be
+-- equipped at once; equipping past the limit unequips the oldest one.
+Config.WeaponSlots = { 1, 2, 3 }
+
 -- the main inventory panel appears to be a FIXED-size slot grid
 -- (isEmpty(a) checks, per-index slot numbers in the template), not a
 -- variable-length list of only-owned items -- this is how many total

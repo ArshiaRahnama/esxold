@@ -13,9 +13,28 @@ ESX.RegisterServerCallback("HUD_Menu:GetAcc", function(source, cb)
     if not xPlayer then return cb(nil) end
 
     GetXPRankCached(source, function(xp, rank)
-        MySQL.Async.fetchScalar('SELECT Profile_Pic FROM users WHERE identifier = @identifier', {
+        MySQL.Async.fetchAll('SELECT Profile_Pic, divisions FROM users WHERE identifier = @identifier', {
             ['@identifier'] = xPlayer.identifier
-        }, function(profilePic)
+        }, function(result)
+            local row = result[1] or {}
+            local profilePic = row.Profile_Pic
+
+            -- Real division system already used by esx_society: users.divisions
+            -- is a JSON array of {label, status, job, name}. We only care
+            -- about one that's active (status == true) for the player's
+            -- CURRENT job.
+            local divisionLabel = nil
+            if row.divisions and row.divisions ~= '' then
+                local ok, divisions = pcall(json.decode, row.divisions)
+                if ok and type(divisions) == 'table' then
+                    for _, div in pairs(divisions) do
+                        if div.status and div.job == xPlayer.job.name then
+                            divisionLabel = div.label
+                            break
+                        end
+                    end
+                end
+            end
 
             local function withGangLogo(gangLogo)
                 cb({
@@ -30,6 +49,7 @@ ESX.RegisterServerCallback("HUD_Menu:GetAcc", function(source, cb)
                     aduty            = xPlayer.aduty,
                     avatarUrl        = (profilePic ~= nil and profilePic ~= '') and profilePic or nil,
                     gangLogoUrl      = gangLogo,
+                    divisionLabel    = divisionLabel,
                 })
             end
 
