@@ -278,7 +278,7 @@ AddEventHandler('AH_uwucafejob:OpenMenuSefaresh', function()
         if tojob then 
             lib.showContext('uwu_menu')
         else
-            ExecuteCommand('asdfghjkl;sfsdfsdfzxcvnads23adfghuwu')
+            ExecuteCommand('cafemarketaction')
         end
     end)
 end)
@@ -304,7 +304,7 @@ function UwUCafeMenuAction()
             title = 'Action House', 
             value = 'menu_Action', 
             onSelect = function()
-                ExecuteCommand('asdfghjkl;sfsdfsdfzxcvnads23adfghuwu')
+                ExecuteCommand('cafemarketaction')
             end
         })
     end

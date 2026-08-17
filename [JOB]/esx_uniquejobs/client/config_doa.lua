@@ -32,7 +32,7 @@ Config_doa.doaStations = {
 			    Pos     ={ x = 1852.655, y = 3687.546, z = 34.286 },
 			    Sprite  = 60,
 			    Display = 4,
-			    Scale   = 1.2,
+			    Scale   = 0.6,
 			    Colour  = 31,
 		},
 		

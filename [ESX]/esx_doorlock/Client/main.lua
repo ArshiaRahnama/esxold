@@ -39,7 +39,7 @@ RegisterNetEvent("NUI_doorlock:client:setUpDoor", function()
     ESX.UI.Menu.Open('default',GetCurrentResourceName(),"menu_door",
     { 
     title = "Door Menu", 
-    align = "center", 
+    align = "top-right", 
     elements = elements, 
     }, function(data, menu)
         local v = data.current.value
@@ -47,7 +47,7 @@ RegisterNetEvent("NUI_doorlock:client:setUpDoor", function()
             ESX.UI.Menu.Open('default',GetCurrentResourceName(),"menu_door2",
             { 
             title = "Type Menu", 
-            align = "center", 
+            align = "top-right", 
             elements = {
                 {label = "Slider", value = "slide"},
                 {label = "Normal", value = "normal"},

@@ -537,7 +537,7 @@ function HandleMarkers()
 
         blip2 = AddBlipForCoord(PlayerCaptureInf.ZoneCoord.x,PlayerCaptureInf.ZoneCoord.y,PlayerCaptureInf.ZoneCoord.z)
         SetBlipSprite(blip2, Config.CapturePointBlip.Model)
-        SetBlipScale(blip2, 0.7)
+        SetBlipScale(blip2, 0.6)
         SetBlipColour(blip2, Config.CapturePointBlip.Color)
         SetBlipAsShortRange(blip2, false)
         BeginTextCommandSetBlipName("STRING")
@@ -651,7 +651,7 @@ function GotoMenu()
             'default', GetCurrentResourceName(), 'CaptureMenu',
             {
                 title    = 'Capture Menu',
-                align    = "center",
+                align    = "top-right",
                 elements = elements
             },
             function(data, menu)
@@ -769,7 +769,7 @@ function ZoneSelectorMenu()
                     'default', GetCurrentResourceName(), 'ZoneSelectorCaptureSystem',
                     {
                         title    = 'Capture Menu',
-                        align    = "center",
+                        align    = "top-right",
                         elements = elements
                     },
                     function(data, menu)
@@ -1171,7 +1171,7 @@ function GotoAdminMenu()
             'default', GetCurrentResourceName(), 'CaptureAdminMenu',
             {
                 title    = 'Capture Admin Menu',
-                align    = "center",
+                align    = "top-right",
                 elements = elements
             },
             function(data, menu)
@@ -1271,7 +1271,7 @@ AddEventHandler("Violet-Capture:OpenStatsMenu", function()
             'default', GetCurrentResourceName(), 'CaptureStatsMenu',
             {
                 title    = 'Capture Stats',
-                align    = "center",
+                align    = "top-right",
                 elements = elements
             },
             function(data, menu) end,
@@ -1307,7 +1307,7 @@ AddEventHandler("Violet-Capture:OpenHistoryMenu", function()
             'default', GetCurrentResourceName(), 'CaptureHistoryMenu',
             {
                 title    = 'Capture History',
-                align    = "center",
+                align    = "top-right",
                 elements = elements
             },
             function(data, menu)
@@ -1345,7 +1345,7 @@ function OpenHistoryRoundDetail(round)
         'default', GetCurrentResourceName(), 'CaptureHistoryDetail',
         {
             title    = tostring(round.round_date),
-            align    = "center",
+            align    = "top-right",
             elements = elements
         },
         function(data, menu) end,
@@ -1457,7 +1457,7 @@ function OpenWeaponGroupMenu()
     PlayerCaptureInf.InMenu = "WeaponMenu"
     ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'WeaponMenu', {
         title    = "Weapon Menu",
-        align    = 'center',
+        align    = 'top-right',
         elements = elements
     }, function(data, menu)
         if data.current.access then

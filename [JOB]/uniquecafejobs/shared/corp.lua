@@ -24,7 +24,7 @@ Corp = {
 		Label   = 'Meridian Holdings',
 
 		HQ = { x = -75.3, y = -818.3, z = 243.8 }, -- Maze Bank Tower area (placeholder)
-		Blip = { Sprite = 476, Color = 2, Scale = 1.0 },
+		Blip = { Sprite = 476, Color = 2, Scale = 0.6 },
 
 		BossAction = { Pos = { x = -75.3, y = -818.3, z = 243.8 }, Name = 'Portfolio Dashboard', Icon = 'fa-solid fa-chart-line' },
 		CloackRoom = { Pos = { x = -71.3, y = -818.3, z = 243.8 }, Name = 'Cloack Room', Icon = 'fa-solid fa-shirt' },
@@ -65,7 +65,7 @@ Corp = {
 		Label   = 'Blacktide Logistics',
 
 		HQ = { x = 1207.0, y = -3129.0, z = 5.9 }, -- docks (placeholder)
-		Blip = { Sprite = 478, Color = 1, Scale = 1.0 },
+		Blip = { Sprite = 478, Color = 1, Scale = 0.6 },
 
 		BossAction = { Pos = { x = 1207.0, y = -3129.0, z = 5.9 }, Name = 'Boss Action', Icon = 'fa-solid fa-gear' },
 		CloackRoom = { Pos = { x = 1211.0, y = -3129.0, z = 5.9 }, Name = 'Cloack Room', Icon = 'fa-solid fa-shirt' },
@@ -88,7 +88,7 @@ Corp = {
 		Label   = 'Crate & Carry Distribution',
 
 		HQ = { x = 1210.0, y = -3050.0, z = 5.0 }, -- warehouse (placeholder)
-		Blip = { Sprite = 473, Color = 5, Scale = 1.0 },
+		Blip = { Sprite = 473, Color = 5, Scale = 0.6 },
 
 		Freezer    = { Pos = { x = 1210.0, y = -3050.0, z = 5.0 }, Name = 'Warehouse Stock', Icon = 'fa-regular fa-box' },
 		ResaleShop = { Pos = { x = 1214.0, y = -3050.0, z = 5.0 }, Name = 'Resale Counter',  Icon = 'fa-solid fa-cash-register' },

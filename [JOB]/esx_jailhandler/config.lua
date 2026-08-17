@@ -10,7 +10,8 @@ Config.BlipHospital = {
 	Sprite = 403,
 	Color = 2,
 	Display = 2,
-	Scale = 1.0
+	Scale = 0.6
+
 }
 
 Config.Price = 1000 -- Edit this to your liking.

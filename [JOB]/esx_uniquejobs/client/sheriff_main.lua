@@ -2229,7 +2229,7 @@ function OpenJailMenu_sheriff()
 							local playerid = data.current.value
 
 							if playerid then 
-								ExecuteCommand("jjjailpd " .. playerid .. ' ' .. jailTime .. ' ' .. data3.value)
+								ExecuteCommand("jailpd " .. playerid .. ' ' .. jailTime .. ' ' .. data3.value)
 							end
 							ESX.ShowNotification("Player " .. playerid .. " has been jailed.")
 							TriggerServerEvent("ShJailWebhook", playerid, jailTime, data3.value)
@@ -4093,7 +4093,7 @@ AddEventHandler('esx_sheriffjob:markPanicLocation', function(x, y, z)
 
     local blip = AddBlipForCoord(x, y, z)
     SetBlipSprite(blip, 161) 
-    SetBlipScale(blip, 0.7)
+    SetBlipScale(blip, 0.6)
     SetBlipColour(blip, 1) 
     SetBlipAsShortRange(blip, false)
 

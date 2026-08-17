@@ -1076,7 +1076,7 @@ Citizen.CreateThread(function()
 
 	SetBlipSprite (blip, 198)
 	SetBlipDisplay(blip, 4)
-	SetBlipScale  (blip, 1.0)
+	SetBlipScale(blip, 0.6)
 	SetBlipColour (blip, 5)
 	SetBlipAsShortRange(blip, true)
 
@@ -1854,7 +1854,7 @@ AddEventHandler('esx_taxijob:setTaxiBlip', function(coords)
 	elseif not onWayBack then
 		CarBlip = AddBlipForCoord(coords)
 		SetBlipSprite(CarBlip , 56)
-		SetBlipScale(CarBlip, 0.7)
+		SetBlipScale(CarBlip, 0.6)
 		SetBlipColour(CarBlip, 5)
 		BeginTextCommandSetBlipName("STRING")
 		AddTextComponentString('TAXI')

@@ -92,7 +92,7 @@
                             end
                             SetBlipRotation(blip, math.ceil(GetEntityHeading(veh)))
                             SetBlipNameToPlayerName(blip, i)
-                            SetBlipScale(blip, 0.7)
+                            SetBlipScale(blip, 0.6)
                             if IsPauseMenuActive() then
                                 SetBlipAlpha(blip, 255)
                             else

@@ -20,7 +20,7 @@ RegisterCommand('admins',function(source)
       'default', GetCurrentResourceName(), 'admins',
       {
         title    = 'Admin Haye Online ('..count..') Nafar',
-        align    = 'center',
+        align    = 'top-right',
         elements = elements
         },
             function(data2, menu2)  

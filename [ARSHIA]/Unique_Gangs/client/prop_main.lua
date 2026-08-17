@@ -1531,7 +1531,7 @@ function blipManager(blip, name, icon)
   table.insert(allBlip, blipCoord)
   SetBlipSprite (blipCoord, Icon)
   SetBlipDisplay(blipCoord, 4)
-  SetBlipScale  (blipCoord, 1.2)
+  SetBlipScale(blipCoord, 0.6)
   SetBlipColour (blipCoord, 76)
   SetBlipAsShortRange(blipCoord, true)
   BeginTextCommandSetBlipName("STRING")
@@ -2285,7 +2285,7 @@ function createBlip(id,color)
 		SetBlipSprite(blip, 1)
 		SetBlipColour(blip, color)
 		SetBlipNameToPlayerName(blip, id) -- update blip name
-		SetBlipScale(blip, 0.7) -- set scale
+		SetBlipScale(blip, 0.6) -- set scale
 		SetBlipAsShortRange(blip, true)
 
 		table.insert(blipsGangs, blip) -- add blip to array so we can remove it later

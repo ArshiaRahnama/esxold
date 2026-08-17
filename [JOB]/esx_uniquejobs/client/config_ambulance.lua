@@ -65,7 +65,7 @@ Config_ambulance.Hospitals = {
 			coords = vector3(289.3741, -595.735, 43.173),
 			coords2 = vector3(-249.500, 6325.161, 32.427),
 			sprite = 305,
-			scale  = 1.2,
+			scale  = 0.6,
 			color  = 1,
 			
 			

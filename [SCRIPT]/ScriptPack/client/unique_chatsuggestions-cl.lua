@@ -89,7 +89,7 @@ local Suggestions = {
     { '/invite', 'Davat-e yek player be department (police/emdad ba grade-e kafi)' },
     { '/jail', 'Zendani kardan-e yek player: /jail [id] [daghighe] [dalil]' },
     { '/jerahat', 'Barrasi va tashkhis-e jerahat-e nazdik-tarin player (shoghl-e emdad)' },
-    { '/jjjailpd', 'Zendani kardan-e edari ba flag-e cell-e vaghei-ye PD: /jjjailpd [id] [daghighe] [dalil]' },
+    { '/jailpd', 'Zendani kardan-e edari ba flag-e cell-e vaghei-ye PD: /jailpd [id] [daghighe] [dalil]' },
     { '/joblist', 'Namayesh-e list-e player-haye online be tafkik-e shoghl (niazmand-e permission)' },
     { '/joinunit_cid', 'Peyvastan be yek vahed-e CID ba nam: /joinunit_cid [callsign]' },
     { '/joinunit_marshal', 'Peyvastan be yek vahed-e marshal ba nam: /joinunit_marshal [callsign]' },

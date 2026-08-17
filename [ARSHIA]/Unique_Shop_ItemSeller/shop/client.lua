@@ -292,7 +292,7 @@ function CreateShopBlip()
 
         SetBlipSprite (blip, 110)
         SetBlipDisplay(blip, 4)
-        SetBlipScale  (blip, 0.8)
+        SetBlipScale(blip, 0.6)
         SetBlipColour (blip, 81)
         SetBlipAsShortRange(blip, true)
         BeginTextCommandSetBlipName("STRING")

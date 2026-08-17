@@ -69,7 +69,7 @@ for k, v in pairs(Config.Locations) do
 	rent = AddBlipForCoord(v.coords.x, v.coords.y, v.coords.z)
 	SetBlipSprite (rent, v.blips.spawn.sprite)
 	SetBlipDisplay(rent, 4)
-	SetBlipScale  (rent, 0.65)
+	SetBlipScale(rent, 0.6)
 	SetBlipAsShortRange(rent, true)
 	SetBlipColour(rent, v.blips.spawn.color)
 	BeginTextCommandSetBlipName("STRING")

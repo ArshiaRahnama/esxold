@@ -29,7 +29,7 @@ Config_fbi.fbiStations = {
 			Pos     = { x = 115.08, y = -748.52, z = 45.76 },
 			Sprite  = 88,
 			Display = 4,
-			Scale   = 0.8,
+			Scale   = 0.6,
 			Colour  = 38,
 		},
 

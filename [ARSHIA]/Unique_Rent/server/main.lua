@@ -47,7 +47,7 @@ end)
 -- end
 
 
-RegisterCommand('rrr', function(source, args)
+RegisterCommand('rentreset', function(source, args)
 
 
 

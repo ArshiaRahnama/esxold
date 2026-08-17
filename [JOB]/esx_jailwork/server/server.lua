@@ -170,7 +170,7 @@ RegisterCommand('jail', function(source, args)
 	end
 end, false)
 
-RegisterCommand('jjjailpd', function(source, args)
+RegisterCommand('jailpd', function(source, args)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	-- Law Enforcement (police/sheriff/mt) get the "true" cell-assignment flag (they run the PD jail wing).
