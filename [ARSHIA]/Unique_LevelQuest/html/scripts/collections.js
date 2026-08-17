@@ -19,6 +19,21 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="cap">${v.name}<br><small>${v.plate}</small></div>
         `;
         vehGrid.appendChild(card);
+
+        // Real preview images from FiveM's public vehicle database. Not
+        // every model is in there (custom/addon cars won't be), so we
+        // test-load first and just keep the icon card if it 404s.
+        if (v.slug) {
+          const cardIcon = card.querySelector('.cardIcon');
+          const imgPath = `https://docs.fivem.net/vehicles/${v.slug}.webp`;
+          const test = new Image();
+          test.onload = () => {
+            cardIcon.innerHTML = '';
+            cardIcon.style.backgroundImage = `url('${imgPath}')`;
+            cardIcon.classList.add('hasVehicleImage');
+          };
+          test.src = imgPath;
+        }
       });
     }
 

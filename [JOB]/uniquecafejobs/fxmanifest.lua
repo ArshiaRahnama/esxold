@@ -74,5 +74,11 @@ dependencies {
 	'ox_lib',
 	'ox_target',
 	'esx_inventoryhud',
-	'gangaccount',
 }
+
+-- NOTE: the gang-account resource (Unique_Gangs, event 'gangaccount:getGangAccount')
+-- is used by Turf Wars' map-rental payment, but is intentionally NOT a hard
+-- dependency above - a missing/late-loading gang resource would otherwise
+-- block this ENTIRE resource (all 17 businesses) from starting. Turf Wars
+-- checks for it at runtime instead (GetResourceState('Unique_Gangs')) and
+-- just shows a clear error if it's not running.

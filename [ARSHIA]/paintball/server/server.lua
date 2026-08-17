@@ -309,7 +309,10 @@ ESX.RegisterServerCallback('esx_paintball:CreateLobby', function(source, cb, dat
 
 	-- Turf Wars Inc. integration: if this map is currently rented to a gang,
 	-- only that gang's members can host a lobby on it.
-	local reservedGang = exports['uniquecafejobs']:GetMapReservation(tostring(data.mapName))
+	local ok, reservedGang = pcall(function()
+		return exports['uniquecafejobs']:GetMapReservation(tostring(data.mapName))
+	end)
+	reservedGang = ok and reservedGang or nil
 	if reservedGang and (not xPlayer.gang or xPlayer.gang.name ~= reservedGang) then
 		TriggerClientEvent('esx_paintball:Notify', source, ('This map is rented exclusively to %s right now.'):format(reservedGang))
 		cb({})

@@ -82,6 +82,7 @@ server_scripts {
 	'@mysql-async/lib/MySQL.lua',
     'server/*.lua'
 }
-dependencies {
-	'uniquecafejobs', -- Turf Wars Inc. map-rental integration (see server/server.lua CreateLobby)
-}
+-- NOTE: uniquecafejobs is NOT listed as a hard dependency here on purpose -
+-- CreateLobby calls its export through a pcall (see server/server.lua), so
+-- paintball still starts fine even if uniquecafejobs is missing/late/down;
+-- the Turf Wars map-reservation check just silently skips in that case.

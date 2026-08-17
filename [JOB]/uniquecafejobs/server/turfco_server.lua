@@ -80,6 +80,11 @@ AddEventHandler('uniquecafejobs:turfco:rentMap', function(mapName, gangName, min
 		return
 	end
 
+	if GetResourceState('Unique_Gangs') ~= 'started' then
+		TriggerClientEvent('esx:showNotification', src, 'Gang account system is not available right now.')
+		return
+	end
+
 	local cost = minutes * TurfCo.RentCostPerMinute
 
 	TriggerEvent('gangaccount:getGangAccount', gangName, function(gangAccount)
