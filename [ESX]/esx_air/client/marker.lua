@@ -187,7 +187,7 @@ end)
 -- 	local blip = AddBlipForCoord(coords.x, coords.y)
 
 -- 	SetBlipSprite(blip, sprite)
--- 	SetBlipScale(blip, scale)
+-- 	SetBlipScale(blip, 0.7)
 -- 	SetBlipColour(blip, color)
 
 -- 	SetBlipAsShortRange(blip, true)

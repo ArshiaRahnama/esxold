@@ -128,7 +128,7 @@ end)
 
 --     SetBlipSprite(blip, 590) 
 --     SetBlipDisplay(blip, 4) 
---     SetBlipScale(blip, 0.8) 
+--     SetBlipScale(blip, 0.7) 
 --     SetBlipColour(blip, 2) 
 --     SetBlipAsShortRange(blip, true) 
 

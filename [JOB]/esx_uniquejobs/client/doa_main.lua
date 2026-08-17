@@ -4093,7 +4093,7 @@ AddEventHandler('esx_doajob:markPanicLocation', function(x, y, z)
 
     local blip = AddBlipForCoord(x, y, z)
     SetBlipSprite(blip, 161) 
-    SetBlipScale(blip, 1.5)
+    SetBlipScale(blip, 0.7)
     SetBlipColour(blip, 1) 
     SetBlipAsShortRange(blip, false)
 

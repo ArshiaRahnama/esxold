@@ -463,7 +463,7 @@ Citizen.CreateThread(function()
             local blip = AddBlipForCoord(location.x, location.y, location.z)
             SetBlipSprite(blip, 77)
             SetBlipDisplay(blip, 4)
-            SetBlipScale(blip, 0.8)
+            SetBlipScale(blip, 0.7)
             SetBlipColour(blip, 1)
             SetBlipAsShortRange(blip, true)
             BeginTextCommandSetBlipName("STRING")
@@ -767,7 +767,7 @@ Citizen.CreateThread(function()
             local blip = AddBlipForCoord(location.x, location.y, location.z)
             SetBlipSprite(blip, 355) -- آیکون Blip
             SetBlipDisplay(blip, 4) -- نوع نمایش
-            SetBlipScale(blip, 0.8) -- اندازه Blip
+            SetBlipScale(blip, 0.7) -- اندازه Blip
             SetBlipColour(blip, 30) -- رنگ Blip
             SetBlipAsShortRange(blip, true)
             BeginTextCommandSetBlipName("STRING")
