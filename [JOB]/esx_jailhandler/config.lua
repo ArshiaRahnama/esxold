@@ -10,7 +10,7 @@ Config.BlipHospital = {
 	Sprite = 403,
 	Color = 2,
 	Display = 2,
-	Scale = 0.6
+	Scale = 0.7
 
 }
 

@@ -837,7 +837,7 @@ local Keys = {
   
 	  SetBlipSprite (blip, 326)
 	  SetBlipDisplay(blip, 4)
-	  SetBlipScale(blip, 0.6)
+	  SetBlipScale(blip, 0.7)
 	  SetBlipAsShortRange(blip, true)
   
 	  BeginTextCommandSetBlipName("STRING")

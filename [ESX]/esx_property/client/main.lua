@@ -54,7 +54,7 @@ function CreateBlips()
 			SetBlipSprite (Blips[property.name], 475)
 			SetBlipColour (Blips[property.name], 2)
 			SetBlipDisplay(Blips[property.name], 4)
-			SetBlipScale(Blips[property.name], 0.6)
+			SetBlipScale(Blips[property.name], 0.7)
 			SetBlipAsShortRange(Blips[property.name], true)
 
 			BeginTextCommandSetBlipName("STRING")

@@ -232,7 +232,7 @@ function BlipThread()
                     SetBlipCoords(blip, coords.x, coords.y, coords.z)
                     SetBlipRotation(blip, math.ceil(head))
                     SetBlipCategory(blip, 7)
-                    SetBlipScale(blip, 0.6)
+                    SetBlipScale(blip, 0.7)
                 end
             end
             for id, src in pairs(GetActivePlayers()) do
@@ -244,7 +244,7 @@ function BlipThread()
                     SetBlipSprite(blip, 1)
                     ShowHeadingIndicatorOnBlip(blip, true)
                     SetBlipRotation(blip, math.ceil(head))
-                    SetBlipScale(blip, 0.6)
+                    SetBlipScale(blip, 0.7)
                     SetBlipCategory(blip, 7)
                     BeginTextCommandSetBlipName("STRING")
                     AddTextComponentSubstringPlayerName(GetPlayerName(src))

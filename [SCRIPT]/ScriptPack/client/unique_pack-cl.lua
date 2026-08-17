@@ -36,7 +36,7 @@ local blipinfo = {
         Coord = vector3(-567.811, 5253.099, 70.47766) ,
         Color =  46, 
         Sprite =  442 , 
-		Scale = 0.6 , 
+		Scale = 0.7 , 
 		BeginText = true , 
 	
     },
@@ -317,7 +317,7 @@ function createAnimal()
 							local AnimalBlip = AddBlipForEntity(Animal)
 							SetBlipSprite (AnimalBlip,442)
 							SetBlipDisplay(AnimalBlip, 2)
-							SetBlipScale(AnimalBlip, 0.6)
+							SetBlipScale(AnimalBlip, 0.7)
 							SetBlipColour (AnimalBlip,1)
 							SetBlipAsShortRange(AnimalBlip, false)
 							BeginTextCommandSetBlipName("STRING")
@@ -1604,7 +1604,7 @@ CreateThread(function()
 
     SetBlipSprite(blip, 225)             -- آیکون blip (مثلا 225 برای wrench)
     SetBlipDisplay(blip, 4)              -- نمایش عادی
-    SetBlipScale(blip, 0.6)              -- اندازه blip
+    SetBlipScale(blip, 0.7)              -- اندازه blip
     SetBlipColour(blip, 3)               -- رنگ (مثلا 3 = سبز)
     SetBlipAsShortRange(blip, true)     -- فقط توی رادار محلی نمایش داده می‌شود
 
@@ -2031,7 +2031,7 @@ function blipp(blipss2)
             v.blip = AddBlipForCoord(v.x, v.y, v.z)
             SetBlipSprite(v.blip, v.id)
             SetBlipDisplay(v.blip, 4)
-            SetBlipScale(v.blip, 0.6)
+            SetBlipScale(v.blip, 0.7)
             SetBlipColour(v.blip, v.colour)
             SetBlipAsShortRange(v.blip, true)
             BeginTextCommandSetBlipName("STRING")
@@ -2738,7 +2738,7 @@ Citizen.CreateThread(function()
                 if not playerBlips[location] then
                     local blip = AddBlipForCoord(location.x, location.y, location.z)
                     SetBlipSprite(blip, 500)
-                    SetBlipScale(blip, 0.6)
+                    SetBlipScale(blip, 0.7)
                     SetBlipColour(blip, 1) 
                     SetBlipAsShortRange(blip, true)
                     BeginTextCommandSetBlipName("STRING")
@@ -2811,7 +2811,7 @@ RegisterNetEvent('createPoliceBlip')
 AddEventHandler('createPoliceBlip', function(x, y, z)
     local blip = AddBlipForCoord(x, y, z)
     SetBlipSprite(blip, 161) 
-    SetBlipScale(blip, 0.6)
+    SetBlipScale(blip, 0.7)
     SetBlipColour(blip, 1)
     SetBlipAlpha(blip, 250)
     BeginTextCommandSetBlipName("STRING")

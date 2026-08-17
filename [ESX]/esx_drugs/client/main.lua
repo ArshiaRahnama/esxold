@@ -57,7 +57,7 @@ function CreateBlipCircle(coords, text, radius, color, sprite)
 
     SetBlipHighDetail(blip, true)
     SetBlipSprite (blip, sprite)
-    SetBlipScale(blip, 0.6)
+    SetBlipScale(blip, 0.7)
     SetBlipColour (blip, color)
     SetBlipAsShortRange(blip, true)
 

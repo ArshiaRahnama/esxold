@@ -40,13 +40,13 @@ Config.Locations = {
             spawn = {
                 name = 'Rent Vehicle', -- name of the blip in map.
                 sprite = 523, -- sprite of the blip.
-                scale = 0.6, -- scale of the.
+                scale = 0.7, -- scale of the.
                 color = 2 -- color of the. 
             },
             return_spot = {
                 name = 'Return rented Vehicle', -- name of the return blip in map.
                 sprite = 523, -- sprite of the return blip.
-                scale = 0.6, -- scale of the return blip.
+                scale = 0.7, -- scale of the return blip.
                 color = 4 -- color of the return blip. 
             }
             

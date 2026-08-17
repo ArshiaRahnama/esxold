@@ -67,7 +67,7 @@ Config_weazel.Blips = {
 		Pos     = { x = -586.21, y = -935.42, z = 23.82},
 		Sprite  = 184,
 		Display = 4,
-		Scale   = 0.6,
+		Scale   = 0.7,
 		Colour  = 49,
 	}
 }

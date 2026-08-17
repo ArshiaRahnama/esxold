@@ -32,7 +32,7 @@ Config_sheriff.sheriffStations = {
 			    Pos     ={ x = 1852.655, y = 3687.546, z = 34.286 },
 			    Sprite  = 60,
 			    Display = 4,
-			    Scale   = 0.6,
+			    Scale   = 0.7,
 			    Colour  = 31,
 		},
 		
