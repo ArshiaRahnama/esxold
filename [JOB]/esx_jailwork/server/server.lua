@@ -29,10 +29,10 @@ AddEventHandler('playerDropped', function()
 	local identifier = GetPlayerIdentifier(source)
 	 if sentences[identifier] then
 		local sentence = {time = sentences[identifier].time, type = sentences[identifier].type, part = sentences[identifier].part or 0}
-		exports.ghmattimysql:execute('UPDATE users SET jail = @data WHERE `identifier` = @identifier', 
+		exports.oxmysql:execute('UPDATE users SET jail = ? WHERE identifier = ?',
 		{
-			['identifier'] = identifier,
-			['data'] = json.encode(sentence)
+			json.encode(sentence),
+			identifier
 		})
 		
 		local type = sentences[identifier].type
@@ -51,8 +51,8 @@ end)
 ESX.RegisterServerCallback("esx_jail:retriveJail", function(source, cb)
 	local source = source 
 	local identifier = GetPlayerIdentifier(source)
-	exports.ghmattimysql:scalar("SELECT jail FROM users WHERE identifier = @identifier",{
-		["@identifier"] = identifier
+	exports.oxmysql:scalar("SELECT jail FROM users WHERE identifier = ?", {
+		identifier
 	}, function(jail)
 		local sentence = json.decode(jail)
 		if sentence.time > 0 then
@@ -512,10 +512,10 @@ end
 
 function Unjail(target, identifier)
 	local sentence = {time = 0, type = 0, part = 0}
-	exports.ghmattimysql:execute('UPDATE users SET jail = @data WHERE `identifier` = @identifier', 
+	exports.oxmysql:execute('UPDATE users SET jail = ? WHERE identifier = ?',
 	{
-		['@identifier'] = identifier,
-		['@data'] = json.encode(sentence)
+		json.encode(sentence),
+		identifier
 	})
 
 	local type = sentences[identifier].type 
@@ -535,10 +535,10 @@ end
 
 function SqlSync(identifier, type, time, part)
 	local sentence = {time = time, type = type, part = part}
-	exports.ghmattimysql:execute('UPDATE users SET jail = @data WHERE `identifier` = @identifier', 
+	exports.oxmysql:execute('UPDATE users SET jail = ? WHERE identifier = ?',
 	{
-		['@identifier'] = identifier,
-		['@data'] = json.encode(sentence)
+		json.encode(sentence),
+		identifier
 	})
 end
 
@@ -556,14 +556,14 @@ function SendToLog(type, source, target, reason, time)
 	local atarget = GetPlayerName(target)
 	if type == "admin" then
 		TriggerEvent('DiscordBot:ToDiscord', 'ajail', 'Jail Log', string.gsub(getName(target), "_", " ") .. " (" .. atarget .. ")" .. ' tavasot ' .. string.gsub(getName(source), "_", " ") .. " (" .. asource .. ")" .. ' jail shod be modat ' .. time .. ' daghighe be dalil: ' .. reason,'user', true, source, false)
-		exports.ghmattimysql:execute('INSERT INTO adminjaillog (identifier, name, jailreason, jailtime, punisher, date) VALUES (@identifier, @name, @reason, @jailtime, @punisher, @date)', 
+		exports.oxmysql:execute('INSERT INTO adminjaillog (identifier, name, jailreason, jailtime, punisher, date) VALUES (?, ?, ?, ?, ?, ?)',
 		{
-			['@identifier'] = GetPlayerIdentifier(target), 
-			['@name'] = atarget,
-			['@jailtime'] = time,
-			['@reason'] = reason,
-			['@punisher'] = asource,
-			['@date'] = os.time()
+			GetPlayerIdentifier(target),
+			atarget,
+			reason,
+			time,
+			asource,
+			os.time()
 		})
 	elseif type == "solitary" then
 		TriggerEvent('DiscordBot:ToDiscord', 'jail', 'Jail Log', string.gsub(getName(target), "_", " ") .. " (" .. atarget .. ")" .. ' tavasot ' .. string.gsub(getName(source), "_", " ") .. " (" .. asource .. ")" .. ' be enferadi ferestade shod va ' .. time .. ' daghighe be zaman zendan ezafe shod be dalil: ' .. reason,'user', true, source, false)

@@ -218,3 +218,45 @@ end)
 AddEventHandler('playerDropped', function()
     equippedWeapons[source] = nil
 end)
+
+-- ============================================================
+-- Real slot persistence for both items AND weapons. essentialmode's
+-- inventory/loadout entries have no slot field at all by default
+-- (confirmed: self.inventory[i]/self.loadout[i] are just flat
+-- {name,count,...} tables looked up by name, not by position) --
+-- this adds a 'slot' key directly onto each entry's own table.
+-- essentialmode saves self.inventory via json.encode(self.inventory)
+-- (see server/main.lua's SaveUser), so an extra key on each item just
+-- rides along in that same JSON blob -- no schema change, nothing
+-- else that only reads .name/.count is affected.
+-- ============================================================
+
+local function findEntry(xPlayer, name, isWeapon)
+    local list = isWeapon and xPlayer.loadout or xPlayer.inventory
+    for i = 1, #list do
+        if list[i].name == name then return list[i] end
+    end
+    return nil
+end
+
+RegisterServerEvent('inventory:core:swapItemSlots')
+AddEventHandler('inventory:core:swapItemSlots', function(fromName, fromIsWeapon, toName, toIsWeapon, targetSlot)
+    local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+    if not xPlayer or not fromName then return end
+
+    local fromEntry = findEntry(xPlayer, fromName, fromIsWeapon)
+    if not fromEntry then return end
+
+    local oldSlot = fromEntry.slot
+    fromEntry.slot = targetSlot
+
+    if toName and toName ~= fromName then
+        local toEntry = findEntry(xPlayer, toName, toIsWeapon)
+        if toEntry then
+            toEntry.slot = oldSlot
+        end
+    end
+
+    TriggerClientEvent('inventory:core:refreshInventory', src)
+end)

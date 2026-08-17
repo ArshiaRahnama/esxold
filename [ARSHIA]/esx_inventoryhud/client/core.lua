@@ -148,7 +148,7 @@ function sortItems(raw, isTrunk)
             unique = entry.name,
             name = entry.name,
             label = (entry.label or entry.name) .. (isEquipped and ' [Kashide Shode]' or ''),
-            image = 'img/items/' .. entry.name:lower() .. '.png',
+            image = 'img/items/' .. entry.name .. '.png', -- icons are stored uppercase (WEAPON_PISTOL.png); lowercasing broke the match
             count = 1,
             ammo = entry.ammo or 0,
             weight = ESX.getWeaponWeight(entry.name, isTrunk),
@@ -388,6 +388,11 @@ end)
 -- set (a freshly-spawned ped starts with no weapons regardless of what
 -- was equipped before, essentialmode re-gives everything from loadout
 -- on load, so this immediately strips back down to just the equipped ones)
+RegisterNetEvent('inventory:core:refreshInventory')
+AddEventHandler('inventory:core:refreshInventory', function()
+    refreshMainInventoryIfOpen()
+end)
+
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function()
     ESX.TriggerServerCallback('inventory:getEquippedWeapons', function(equippedSet)
@@ -603,6 +608,18 @@ end
 RegisterNUICallback('inventory:moveInside', function(data, cb)
     if secondActive then
         forwardToSecond('moveInside', data)
+    elseif data and data.index and data.droppedTo then
+        -- reordering within the main inventory itself: swap the slot
+        -- numbers of whatever's currently at these two UI positions
+        -- (confirmed via app.js: index/droppedTo are 1-based)
+        local current = buildMainInventoryItems()
+        local fromItem = current[tonumber(data.index)]
+        local toItem = current[tonumber(data.droppedTo)]
+        if fromItem and fromItem.unique then
+            TriggerServerEvent('inventory:core:swapItemSlots', fromItem.unique, fromItem.weapon or false,
+                toItem and toItem.unique or nil, toItem and toItem.weapon or false,
+                tonumber(data.droppedTo))
+        end
     end
     cb('ok')
 end)
