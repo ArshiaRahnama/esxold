@@ -63,13 +63,17 @@ CreateThread(function()
     -- job_skill table: per-player, per-job minutes worked (drives the
     -- Skill tab). Not shared with anything else on this server.
     tableExists('job_skill', function(exists)
-        if exists then return end
+        if exists then
+            ensureColumn('job_skill', 'milestones_paid', "`milestones_paid` VARCHAR(50) NOT NULL DEFAULT ''")
+            return
+        end
 
         MySQL.Async.execute([[
             CREATE TABLE `job_skill` (
-                `identifier` VARCHAR(60) NOT NULL,
-                `job`        VARCHAR(50) NOT NULL,
-                `minutes`    INT(11)     NOT NULL DEFAULT 0,
+                `identifier`       VARCHAR(60) NOT NULL,
+                `job`              VARCHAR(50) NOT NULL,
+                `minutes`          INT(11)     NOT NULL DEFAULT 0,
+                `milestones_paid`  VARCHAR(50) NOT NULL DEFAULT '',
                 PRIMARY KEY (`identifier`, `job`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         ]], {}, function()

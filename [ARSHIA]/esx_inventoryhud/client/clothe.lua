@@ -103,7 +103,7 @@ function getOwnedClotheByType(clotheType)
                 table.insert(rows, {
                     name = entry.name,
                     label = entry.label or entry.name,
-                    image = 'img/items/' .. entry.name .. '.png',
+                    image = ESX.GetItemImagePath(entry.name),
                     type = clotheType,
                     used = wornClothes[clotheType] == entry.name
                 })

@@ -214,3 +214,295 @@ if Config.GodmodeCheck.Enable then
         end
     end)
 end
+
+-- ============================================================
+-- Teleport / raw position-delta check (independent from Speed above)
+-- ============================================================
+if Config.TeleportCheck.Enable then
+    local lastPos, lastTime = nil, nil
+    Citizen.CreateThread(function()
+        while true do
+            Citizen.Wait(Config.TeleportCheck.SampleIntervalMs)
+            local ped = PlayerPedId()
+            if ped and ped ~= 0 and not IsEntityDead(ped) then
+                local pos = GetEntityCoords(ped)
+                local now = GetGameTimer()
+
+                if lastPos and lastTime then
+                    local dt = (now - lastTime) / 1000.0
+                    if dt > 0 then
+                        local dist = #(pos - lastPos)
+                        local mps = dist / dt
+
+                        local skip = false
+                        if Config.TeleportCheck.IgnoreIfInAircraft and IsPedInAnyVehicle(ped, false) then
+                            local veh = GetVehiclePedIsIn(ped, false)
+                            local vClass = GetVehicleClass(veh)
+                            if vClass == 15 or vClass == 16 then skip = true end
+                        end
+
+                        if not skip and mps > Config.TeleportCheck.MaxMetersPerSecond then
+                            report('teleport', { distance = dist, seconds = dt, mps = mps })
+                        end
+                    end
+                end
+
+                lastPos = pos
+                lastTime = now
+            end
+        end
+    end)
+end
+
+-- ============================================================
+-- Super Jump
+-- ============================================================
+if Config.SuperJumpCheck.Enable then
+    local occurrences = {}
+    Citizen.CreateThread(function()
+        while true do
+            Citizen.Wait(Config.SuperJumpCheck.SampleIntervalMs)
+            local ped = PlayerPedId()
+            if ped and ped ~= 0 and not IsEntityDead(ped) and not IsPedInAnyVehicle(ped, false) then
+                if IsPedJumping(ped) then
+                    local vel = GetEntityVelocity(ped)
+                    if vel.z > Config.SuperJumpCheck.MaxVerticalVelocity then
+                        local now = GetGameTimer()
+                        table.insert(occurrences, now)
+                        for i = #occurrences, 1, -1 do
+                            if now - occurrences[i] > Config.SuperJumpCheck.WindowMs then
+                                table.remove(occurrences, i)
+                            end
+                        end
+                        if #occurrences >= Config.SuperJumpCheck.RequiredOccurrences then
+                            report('superjump', { verticalVelocity = vel.z, occurrences = #occurrences })
+                            occurrences = {}
+                        end
+                    end
+                end
+            end
+        end
+    end)
+end
+
+-- ============================================================
+-- Invisibility
+-- ============================================================
+if Config.InvisibilityCheck.Enable then
+    Citizen.CreateThread(function()
+        local streak = 0
+        while true do
+            Citizen.Wait(Config.InvisibilityCheck.SampleIntervalMs)
+            local ped = PlayerPedId()
+            if ped and ped ~= 0 and not IsEntityDead(ped) and not inSpawnProtection() then
+                if not IsEntityVisible(ped) then
+                    streak = streak + 1
+                    if streak >= Config.InvisibilityCheck.RequiredOccurrences then
+                        report('invisibility', { streak = streak })
+                        streak = 0
+                    end
+                else
+                    streak = 0
+                end
+            end
+        end
+    end)
+end
+
+-- ============================================================
+-- Infinite Ammo + Fire Rate (share the same "shot fired" edge detector)
+-- ============================================================
+if Config.InfiniteAmmoCheck.Enable or Config.FireRateCheck.Enable then
+    Citizen.CreateThread(function()
+        local wasShooting = false
+        local lastAmmo = nil
+        local lastWeapon = nil
+        local lastShotTime = nil
+
+        local ammoOccurrences = {}
+        local fireRateOccurrences = {}
+
+        local function isIgnoredAmmoWeapon(weaponHash)
+            for _, w in ipairs(Config.InfiniteAmmoCheck.IgnoreWeapons) do
+                if w == weaponHash then return true end
+            end
+            return false
+        end
+
+        while true do
+            Citizen.Wait(0) -- shooting edges are fast; needs to run every frame
+            local ped = PlayerPedId()
+            if ped and ped ~= 0 and not IsEntityDead(ped) then
+                local shooting = IsPedShooting(ped)
+
+                if shooting and not wasShooting then
+                    -- rising edge: a shot was just fired
+                    local hasWeapon, weaponHash = GetCurrentPedWeapon(ped, true)
+                    local now = GetGameTimer()
+
+                    if hasWeapon and weaponHash and weaponHash ~= GetHashKey('WEAPON_UNARMED') then
+                        -- Fire rate
+                        if Config.FireRateCheck.Enable and lastShotTime and lastWeapon == weaponHash then
+                            local gap = now - lastShotTime
+                            local minCycle = Config.FireRateCheck.WeaponMinCycleMs[weaponHash] or Config.FireRateCheck.DefaultMinCycleMs
+                            if gap < minCycle then
+                                table.insert(fireRateOccurrences, now)
+                                for i = #fireRateOccurrences, 1, -1 do
+                                    if now - fireRateOccurrences[i] > Config.FireRateCheck.WindowMs then
+                                        table.remove(fireRateOccurrences, i)
+                                    end
+                                end
+                                if #fireRateOccurrences >= Config.FireRateCheck.RequiredOccurrences then
+                                    report('firerate', { weapon = weaponHash, gapMs = gap, minCycleMs = minCycle })
+                                    fireRateOccurrences = {}
+                                end
+                            end
+                        end
+
+                        -- Infinite ammo
+                        if Config.InfiniteAmmoCheck.Enable and not isIgnoredAmmoWeapon(weaponHash) then
+                            local ammoNow = GetAmmoInPedWeapon(ped, weaponHash)
+                            if lastWeapon == weaponHash and lastAmmo ~= nil and ammoNow >= lastAmmo and lastAmmo > 0 then
+                                table.insert(ammoOccurrences, now)
+                                for i = #ammoOccurrences, 1, -1 do
+                                    if now - ammoOccurrences[i] > Config.InfiniteAmmoCheck.WindowMs then
+                                        table.remove(ammoOccurrences, i)
+                                    end
+                                end
+                                if #ammoOccurrences >= Config.InfiniteAmmoCheck.RequiredOccurrences then
+                                    report('infiniteammo', { weapon = weaponHash, ammo = ammoNow })
+                                    ammoOccurrences = {}
+                                end
+                            end
+                            lastAmmo = ammoNow
+                        end
+
+                        lastWeapon = weaponHash
+                        lastShotTime = now
+                    end
+                end
+
+                wasShooting = shooting
+            end
+        end
+    end)
+end
+
+-- ============================================================
+-- Weapon Blacklist
+-- ============================================================
+if Config.WeaponBlacklistCheck.Enable then
+    Citizen.CreateThread(function()
+        while true do
+            Citizen.Wait(Config.WeaponBlacklistCheck.SampleIntervalMs)
+            local ped = PlayerPedId()
+            if ped and ped ~= 0 and not IsEntityDead(ped) then
+                for _, weaponHash in ipairs(Config.WeaponBlacklistCheck.Weapons) do
+                    if HasPedGotWeapon(ped, weaponHash, false) then
+                        report('weaponblacklist', { weapon = weaponHash })
+                    end
+                end
+            end
+        end
+    end)
+end
+
+-- ============================================================
+-- Vehicle Handling Anomaly (acceleration, not top speed)
+-- ============================================================
+if Config.VehicleHandlingCheck.Enable then
+    local lastSpeed, lastTime = nil, nil
+    local occurrences = {}
+    Citizen.CreateThread(function()
+        while true do
+            Citizen.Wait(Config.VehicleHandlingCheck.SampleIntervalMs)
+            local ped = PlayerPedId()
+            if ped and ped ~= 0 and IsPedInAnyVehicle(ped, false) then
+                local veh = GetVehiclePedIsIn(ped, false)
+                local speed = GetEntitySpeed(veh)
+                local now = GetGameTimer()
+
+                if lastSpeed ~= nil and lastTime ~= nil and GetPedInVehicleSeat(veh, -1) == ped then
+                    local dt = (now - lastTime) / 1000.0
+                    if dt > 0 then
+                        local accel = (speed - lastSpeed) / dt
+                        if accel > Config.VehicleHandlingCheck.MaxAccelMPS2 then
+                            table.insert(occurrences, now)
+                            for i = #occurrences, 1, -1 do
+                                if now - occurrences[i] > Config.VehicleHandlingCheck.WindowMs then
+                                    table.remove(occurrences, i)
+                                end
+                            end
+                            if #occurrences >= Config.VehicleHandlingCheck.RequiredOccurrences then
+                                report('vehiclehandling', { accel = accel, speed = speed })
+                                occurrences = {}
+                            end
+                        end
+                    end
+                end
+
+                lastSpeed = speed
+                lastTime = now
+            else
+                lastSpeed, lastTime = nil, nil
+            end
+        end
+    end)
+end
+
+-- ============================================================
+-- Instant Armor/Health Refill
+-- ============================================================
+if Config.InstantRefillCheck.Enable then
+    local lastHealth, lastArmor = nil, nil
+    local occurrences = {}
+    Citizen.CreateThread(function()
+        while true do
+            Citizen.Wait(Config.InstantRefillCheck.SampleIntervalMs)
+            local ped = PlayerPedId()
+            if ped and ped ~= 0 and not IsEntityDead(ped) then
+                local health = GetEntityHealth(ped)
+                local armor = GetPedArmour(ped)
+
+                if lastHealth ~= nil and (health - lastHealth) >= Config.InstantRefillCheck.MinJump then
+                    local now = GetGameTimer()
+                    table.insert(occurrences, now)
+                elseif lastArmor ~= nil and (armor - lastArmor) >= Config.InstantRefillCheck.MinJump then
+                    local now = GetGameTimer()
+                    table.insert(occurrences, now)
+                end
+
+                local now = GetGameTimer()
+                for i = #occurrences, 1, -1 do
+                    if now - occurrences[i] > Config.InstantRefillCheck.WindowMs then
+                        table.remove(occurrences, i)
+                    end
+                end
+                if #occurrences >= Config.InstantRefillCheck.RequiredOccurrences then
+                    report('instantrefill', { health = health, armor = armor })
+                    occurrences = {}
+                end
+
+                lastHealth, lastArmor = health, armor
+            end
+        end
+    end)
+end
+
+-- ============================================================
+-- Resource Whitelist (see the honest caveat in config.lua)
+-- ============================================================
+if Config.ResourceWhitelistCheck.Enable then
+    Citizen.CreateThread(function()
+        while true do
+            Citizen.Wait(Config.ResourceWhitelistCheck.SampleIntervalMs)
+            local list = {}
+            local count = GetNumResources()
+            for i = 0, count - 1 do
+                local name = GetResourceByFindIndex(i)
+                if name then table.insert(list, name) end
+            end
+            TriggerServerEvent('AntiCheat:resourceList', list)
+        end
+    end)
+end

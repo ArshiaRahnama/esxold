@@ -115,6 +115,22 @@ if not ESX.SetPedArmour then
 end
 
 -- ------------------------------------------------------------
+-- Dynamic clothing items are named 'clothe_<type>_<drawable>_<texture>'
+-- (see unique_clothestore) -- there will never be a PNG file matching
+-- that exact name (that would mean thousands of icon files, one per
+-- drawable/texture combo). Fall back to ONE shared icon per clothing
+-- TYPE instead (img/items/clothe_tshirt.png, clothe_pants.png, ...)
+-- so these items always show a real icon instead of a broken image.
+-- ------------------------------------------------------------
+function ESX.GetItemImagePath(name)
+    local clotheType = name:match('^clothe_([a-z]+)_%d+_%d+$')
+    if clotheType then
+        return 'img/items/clothe_' .. clotheType .. '.png'
+    end
+    return 'img/items/' .. name .. '.png'
+end
+
+-- ------------------------------------------------------------
 -- sortItems: normalizes whatever shape a module hands us into
 -- the flat slot list the NUI (ui/js/app.js) expects to render.
 -- Accepts either a flat array of {name,count,...} rows, or a
@@ -129,7 +145,7 @@ function sortItems(raw, isTrunk)
             unique = entry.name,
             name = entry.name, -- the NUI's own JS reads item.name (use/throw/drag/give), not just .unique
             label = entry.label or (item and item.label) or entry.name,
-            image = 'img/items/' .. entry.name .. '.png',
+            image = ESX.GetItemImagePath(entry.name),
             count = entry.count or 1,
             weight = ESX.getItemWeight(entry.name, isTrunk),
             limit = entry.limit,
@@ -326,7 +342,9 @@ function refreshMainInventoryIfOpen()
     })
 end
 
+RegisterNetEvent('esx:addInventoryItem')
 AddEventHandler('esx:addInventoryItem', function(item, count) refreshMainInventoryIfOpen() end)
+RegisterNetEvent('esx:removeInventoryItem')
 AddEventHandler('esx:removeInventoryItem', function(item, count) refreshMainInventoryIfOpen() end)
 
 -- ------------------------------------------------------------

@@ -96,14 +96,21 @@ local function correlate(kind, src)
 end
 
 local penaltyByKind = {
-    speed   = Config.SpeedCheck.ScorePenalty,
-    noclip  = Config.NoclipCheck.ScorePenalty,
-    godmode = Config.GodmodeCheck.ScorePenalty,
+    speed           = Config.SpeedCheck.ScorePenalty,
+    noclip          = Config.NoclipCheck.ScorePenalty,
+    godmode         = Config.GodmodeCheck.ScorePenalty,
+    teleport        = Config.TeleportCheck.ScorePenalty,
+    superjump       = Config.SuperJumpCheck.ScorePenalty,
+    invisibility    = Config.InvisibilityCheck.ScorePenalty,
+    infiniteammo    = Config.InfiniteAmmoCheck.ScorePenalty,
+    firerate        = Config.FireRateCheck.ScorePenalty,
+    weaponblacklist = Config.WeaponBlacklistCheck.ScorePenalty,
+    vehiclehandling = Config.VehicleHandlingCheck.ScorePenalty,
+    instantrefill   = Config.InstantRefillCheck.ScorePenalty,
+    resourcewhitelist = Config.ResourceWhitelistCheck.ScorePenalty,
 }
 
-RegisterNetEvent('AntiCheat:flag')
-AddEventHandler('AntiCheat:flag', function(kind, evidence)
-    local src = source
+local function applyFlag(src, kind, evidence)
     if type(kind) ~= 'string' or not penaltyByKind[kind] then return end
     if type(evidence) ~= 'table' then evidence = {} end
 
@@ -143,6 +150,45 @@ AddEventHandler('AntiCheat:flag', function(kind, evidence)
         if Config.Debug then
             print(('[AntiCheat] KICKED %s (score reached %s)'):format(GetPlayerName(src) or src, data.score))
         end
+    end
+end
+
+RegisterNetEvent('AntiCheat:flag')
+AddEventHandler('AntiCheat:flag', function(kind, evidence)
+    applyFlag(source, kind, evidence)
+end)
+
+-- ============================================================
+-- Resource Whitelist — compares the client-reported running-resource
+-- list against everything the SERVER itself has loaded (the server's
+-- own resource list is the ground truth; anything the client reports
+-- that the server doesn't know about is the only thing that's actually
+-- suspicious — a resource simply being loaded/started is expected).
+-- ============================================================
+RegisterNetEvent('AntiCheat:resourceList')
+AddEventHandler('AntiCheat:resourceList', function(list)
+    local src = source
+    if type(list) ~= 'table' then return end
+
+    local knownCount = GetNumResources()
+    local known = {}
+    for i = 0, knownCount - 1 do
+        local name = GetResourceByFindIndex(i)
+        if name then known[name] = true end
+    end
+    for _, name in ipairs(Config.ResourceWhitelistCheck.ExtraAllowed or {}) do
+        known[name] = true
+    end
+
+    local unknown = {}
+    for _, name in ipairs(list) do
+        if not known[name] then
+            table.insert(unknown, name)
+        end
+    end
+
+    if #unknown > 0 then
+        applyFlag(src, 'resourcewhitelist', { unknownResources = unknown })
     end
 end)
 

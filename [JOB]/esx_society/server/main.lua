@@ -140,8 +140,8 @@ AddEventHandler('esx_society:withdrawMoney', function(society, amount)
 	local society = GetSociety(society)
 	amount = ESX.Math.Round(tonumber(amount))
 
-	if xPlayer.job.name ~= society.name then
-		print(('esx_society: %s attempted to call withdrawMoney!'):format(xPlayer.identifier))
+	if xPlayer.job.name ~= society.name or xPlayer.job.grade_name ~= 'boss' then
+		print(('esx_society: %s attempted to call withdrawMoney without being boss!'):format(xPlayer.identifier))
 		return
 	end
 
@@ -212,12 +212,21 @@ end)
 
 RegisterServerEvent('esx_society:depositMoney2')
 AddEventHandler('esx_society:depositMoney2', function(xPlayer2, society, account, amount)
+	-- SECURITY: xPlayer2 must be the calling player's own source. Without this, any
+	-- client could pass someone else's id/an arbitrary account and (since money was
+	-- never actually deducted below) mint unlimited money into any society account.
+	if tonumber(xPlayer2) ~= tonumber(source) then
+		print(('esx_society: %s attempted to call depositMoney2 for another player (%s)!'):format(source, tostring(xPlayer2)))
+		return
+	end
+
 	local xPlayer = ESX.GetPlayerFromId(xPlayer2)
 	local society = GetSociety(society)
 	amount = ESX.Math.Round(tonumber(amount))
 
-	if amount > 0 and xPlayer.money >= amount then
+	if xPlayer and amount > 0 and xPlayer.money >= amount then
 		TriggerEvent('esx_addonaccount:getSharedAccount', account, function(account)
+			xPlayer.removeMoney(tonumber(amount))
 			account.addMoney(tonumber(amount))
 
 			JobsLog('Deposit Money', true, xPlayer.job.name, 'money', {
@@ -419,6 +428,13 @@ end)
 
 ESX.RegisterServerCallback('esx_society:setJobDivision', function(source, cb, identifier, job, Divisvorodi, type)
 	local xPlayer  = ESX.GetPlayerFromId(source)
+
+	if not isPlayerBoss(source, job) then
+		print(('esx_society: %s attempted to setJobDivision'):format(xPlayer.identifier))
+		cb(false)
+		return
+	end
+
 	local xTarget  = ESX.GetPlayerFromIdentifier(identifier)
 	local IsOnline = "Offline"
 
@@ -591,12 +607,27 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 	}, function(rowsChanged2)
 		local xTarget = ESX.GetPlayerFromIdentifier(identifier)
 		local xPlayer = ESX.GetPlayerFromId(source)
-		local isBoss = xPlayer.job.grade_name == 'boss'
 		local grren = true
 		local titele = ""
 		local messagess = {}
 
 		if xTarget then
+			-- Authorization: hiring requires being boss of the job being hired into;
+			-- promoting/firing requires being boss of the employee's CURRENT job
+			-- (job/grade params for 'fire' are 'nojob'/0 and can't be used for the check).
+			local isAuthorized = false
+			if type == 'hire' then
+				isAuthorized = isPlayerBoss(source, job)
+			elseif type == 'promote' or type == 'fire' then
+				isAuthorized = isPlayerBoss(source, xTarget.job.name)
+			end
+
+			if not isAuthorized then
+				print(('esx_society: %s attempted to setJob (%s) without being boss'):format(xPlayer.identifier, type or 'unknown'))
+				cb()
+				return
+			end
+
 			LastGrade = xTarget.job.grade
 			if grade < LastGrade then 
 				grren  = false
@@ -829,12 +860,75 @@ AddEventHandler('esx_society:changeBranchJob', function(newJob)
 	})
 end)
 
+-- ---------------------------------------------------------------------------------
+-- Swap Employee Job: a boss moves ONE OF THEIR EMPLOYEES (not themselves) directly
+-- to a sibling job in the same Config.JobGroups branch (e.g. Police -> Sheriff),
+-- instead of firing + re-hiring separately. Employee starts at grade 0 in the new
+-- job - the boss can promote them from the normal employee list afterward.
+-- Server re-validates: caller must be boss of the employee's CURRENT job, and both
+-- jobs must be in the same branch group. Never trusts the client for either.
+-- ---------------------------------------------------------------------------------
+ESX.RegisterServerCallback('esx_society:swapEmployeeJob', function(source, cb, identifier, fromJob, toJob)
+	local xPlayer = ESX.GetPlayerFromId(source)
+	if not xPlayer then cb(false) return end
+
+	if not isPlayerBoss(source, fromJob) then
+		print(('esx_society: %s attempted swapEmployeeJob without being boss of %s'):format(xPlayer.identifier, fromJob))
+		cb(false)
+		return
+	end
+
+	local xTarget = ESX.GetPlayerFromIdentifier(identifier)
+	if not xTarget then
+		cb(false)
+		return
+	end
+
+	if xTarget.job.name ~= fromJob then
+		print(('esx_society: %s attempted swapEmployeeJob on a target not in %s'):format(xPlayer.identifier, fromJob))
+		cb(false)
+		return
+	end
+
+	local sameGroup = false
+	for i = 1, #Config.JobGroups do
+		local grp = Config.JobGroups[i]
+		local hasFrom, hasTo = false, false
+		for j = 1, #grp.jobs do
+			if grp.jobs[j] == fromJob then hasFrom = true end
+			if grp.jobs[j] == toJob then hasTo = true end
+		end
+		if hasFrom and hasTo then
+			sameGroup = true
+			break
+		end
+	end
+
+	if not sameGroup then
+		print(('esx_society: %s attempted swapEmployeeJob outside the branch (%s -> %s)'):format(xPlayer.identifier, fromJob, toJob))
+		cb(false)
+		return
+	end
+
+	xTarget.setJob(toJob, 0)
+	TriggerClientEvent('esx:showNotification', xTarget.source, 'You have been moved to: ' .. toJob)
+
+	JobsLog('Swap Employee Job', true, toJob, 'manage', {
+		{["name"] = "👤 Boss", ["value"] = xPlayer.name, ["inline"] = false},
+		{["name"] = "🎮 Boss Steam Hex", ["value"] = xPlayer.identifier, ["inline"] = false},
+		{["name"] = "👤 Employee", ["value"] = xTarget.name, ["inline"] = false},
+		{["name"] = "🔁 From -> To", ["value"] = fromJob .. ' -> ' .. toJob, ["inline"] = false},
+	})
+
+	cb(true)
+end)
+
 -- set salar in DB and table
 ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job, grade, salary)
-	-- local isBoss = isPlayerBoss(source, job)
+	local isBoss = isPlayerBoss(source, job)
 	local identifier = GetPlayerIdentifier(source, tonumber(0))
 
-	-- if isBoss then
+	if isBoss then
 		if salary <= Config.MaxSalary then
 			MySQL.Async.execute('UPDATE job_grades SET salary = @salary WHERE job_name = @job_name AND grade = @grade', {
 				['@salary']   = salary,
@@ -868,10 +962,10 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 			print(('esx_society: %s attempted to setJobSalary over config limit!'):format(identifier))
 			cb()
 		end
-	-- else
-	-- 	print(('esx_society: %s attempted to setJobSalary'):format(identifier))
-	-- 	cb()
-	-- end
+	else
+		print(('esx_society: %s attempted to setJobSalary'):format(identifier))
+		cb()
+	end
 end)
 
 
@@ -1078,6 +1172,13 @@ end)
 ESX.RegisterServerCallback('esx_society:setDivisionItemPerm', function(source, cb, job, DIVIName, items, status, choice, ItemLabel)
 	local identifier = GetPlayerIdentifier(source, tonumber(0))
 	local xPlayer    = ESX.GetPlayerFromId(source)
+
+	if not isPlayerBoss(source, job) then
+		print(('esx_society: %s attempted to setDivisionItemPerm'):format(identifier))
+		cb()
+		return
+	end
+
 	local itemtable = {}
 
 	for _, item in ipairs(items) do
@@ -1175,10 +1276,11 @@ ESX.RegisterServerCallback('esx_society:setSocietyVehdivisionPerm', function(sou
 	local vehtable = {}
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	local result = MySQL.Sync.fetchAll("SELECT vehicles FROM divisions WHERE owner = @owner And name = @name", {
-		['@owner'] = job,
-		['@name'] = division
-	})
+	if not isPlayerBoss(source, job) then
+		print(('esx_society: %s attempted to setSocietyVehdivisionPerm'):format(identifier))
+		cb()
+		return
+	end
 
 	
 	for _, veh in ipairs(vehs) do
@@ -1244,16 +1346,16 @@ end)
 
 
 ESX.RegisterServerCallback('esx_society:setSocietyHelidivisionPerm', function(source, cb, job, divisioname, helis, status, choice, VehLabels)
-	-- local isBoss = isPlayerBoss(source, job)
+	local isBoss = isPlayerBoss(source, job)
 	local identifier = GetPlayerIdentifier(source, tonumber(0))
 	local xPlayer    = ESX.GetPlayerFromId(source)
 	local helitable = {}
 
-	local result = MySQL.Sync.fetchAll("SELECT helis FROM divisions WHERE owner = @owner And name = @name", {
-		['@owner'] = job,
-		['@name'] = division
-	})
-
+	if not isBoss then
+		print(('esx_society: %s attempted to setSocietyHelidivisionPerm'):format(identifier))
+		cb()
+		return
+	end
 
 	for _, heli in ipairs(helis) do
 		if heli.model ~= choice then
@@ -1320,6 +1422,13 @@ end)
 ESX.RegisterServerCallback('esx_society:setDivisionWeapPerm', function(source, cb, job, division, weapons, status, choice)
 	local identifier = GetPlayerIdentifier(source, tonumber(0))
 	local xPlayer    = ESX.GetPlayerFromId(source)
+
+	if not isPlayerBoss(source, job) then
+		print(('esx_society: %s attempted to setDivisionWeapPerm'):format(identifier))
+		cb()
+		return
+	end
+
 	local weapontable = {}
 
 	for _, weapon in ipairs(weapons) do
@@ -1459,9 +1568,9 @@ end)
 ESX.RegisterServerCallback('esx_society:setSocietyItemPerm', function(source, cb, job, rank, items, status, choice, ItemLabel)
 	local identifier = GetPlayerIdentifier(source, tonumber(0))
 	local xPlayer = ESX.GetPlayerFromId(source)
-	-- local isBoss = isPlayerBoss(source, job)
+	local isBoss = isPlayerBoss(source, job)
 	local itemtable = {}
-	-- if isBoss then
+	if isBoss then
 		for _, item in ipairs(items) do
 			if item.name ~= choice then
 				table.insert(itemtable,{
@@ -1516,18 +1625,18 @@ ESX.RegisterServerCallback('esx_society:setSocietyItemPerm', function(source, cb
 
 			cb(true)
 		end)
-	-- else
-	-- 	print(('esx_society: %s attempted to setSocietyVehPerm'):format(identifier))
-	-- 	cb()
-	-- end
+	else
+		print(('esx_society: %s attempted to setSocietyItemPerm'):format(identifier))
+		cb()
+	end
 end)
 
 ESX.RegisterServerCallback('esx_society:setSocietyWeapPerm', function(source, cb, job, rank, weapons, status, choice)
-	-- local isBoss = isPlayerBoss(source, job)
+	local isBoss = isPlayerBoss(source, job)
 	local identifier = GetPlayerIdentifier(source, tonumber(0))
 	local xPlayer    = ESX.GetPlayerFromId(source)
 	local weapontable = {}
-	-- if isBoss then
+	if isBoss then
 		for _, weapon in ipairs(weapons) do
 			if weapon.model ~= choice then
 				table.insert(weapontable,{
@@ -1590,21 +1699,21 @@ ESX.RegisterServerCallback('esx_society:setSocietyWeapPerm', function(source, cb
 
 			cb(true)
 		end)
-	-- else
-	-- 	print(('esx_society: %s attempted to setSocietyVehPerm'):format(identifier))
-	-- 	cb()
-	-- end
+	else
+		print(('esx_society: %s attempted to setSocietyWeapPerm'):format(identifier))
+		cb()
+	end
 end)
 
 
 
 
 ESX.RegisterServerCallback('esx_society:setSocietyVehPerm', function(source, cb, job, rank, vehs, status, choice, vehlabel)
-	-- local isBoss = isPlayerBoss(source, job)
+	local isBoss = isPlayerBoss(source, job)
 	local identifier = GetPlayerIdentifier(source, tonumber(0))
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local vehtable = {}
-	-- if isBoss then
+	if isBoss then
 		for _, veh in ipairs(vehs) do
 			if veh.model ~= choice then
 				table.insert(vehtable,{
@@ -1666,18 +1775,18 @@ ESX.RegisterServerCallback('esx_society:setSocietyVehPerm', function(source, cb,
 
 			cb(true)
 		end)
-	-- else
-	-- 	print(('esx_society: %s attempted to setSocietyVehPerm'):format(identifier))
-	-- 	cb()
-	-- end
+	else
+		print(('esx_society: %s attempted to setSocietyVehPerm'):format(identifier))
+		cb()
+	end
 end)
 
 ESX.RegisterServerCallback('esx_society:setSocietyHeliPerm', function(source, cb, job, rank, helis, status, choice, heliLabel)
-	-- local isBoss = isPlayerBoss(source, job)
+	local isBoss = isPlayerBoss(source, job)
 	local identifier = GetPlayerIdentifier(source, tonumber(0))
 	local xPlayer    = ESX.GetPlayerFromId(source)
 	local helitable = {}
-	-- if isBoss then
+	if isBoss then
 		for _, veh in ipairs(helis) do
 			if veh.model ~= choice then
 				table.insert(helitable,{
@@ -1740,17 +1849,21 @@ ESX.RegisterServerCallback('esx_society:setSocietyHeliPerm', function(source, cb
 
 			cb(true)
 		end)
-	-- else
-	-- 	print(('esx_society: %s attempted to setSocietyHeliPerm'):format(identifier))
-	-- 	cb()
-	-- end
+	else
+		print(('esx_society: %s attempted to setSocietyHeliPerm'):format(identifier))
+		cb()
+	end
 end)
 
 ESX.RegisterServerCallback('esx_society:setUniform', function(source, cb, job, rank, gender, model)
-	-- local isBoss = isPlayerBoss(source, job)
 	local identifier = GetPlayerIdentifier(source, tonumber(0))
 	local xPlayer    = ESX.GetPlayerFromId(source)
 
+	if not isPlayerBoss(source, job) then
+		print(('esx_society: %s attempted to setUniform'):format(identifier))
+		cb()
+		return
+	end
 
 	if gender == 'male' then
 		MySQL.Async.execute('UPDATE job_grades SET skin_male = @skin_male WHERE job_name = @job_name AND grade = @grade', {
@@ -1793,9 +1906,14 @@ ESX.RegisterServerCallback('esx_society:setUniform', function(source, cb, job, r
 end)
 
 ESX.RegisterServerCallback('esx_society:setUniformdivision', function(source, cb, job, division, gender, model)
-	-- local isBoss = isPlayerBoss(source, job)
 	local identifier = GetPlayerIdentifier(source, tonumber(0))
 	local sPlayer    = ESX.GetPlayerFromId(source)
+
+	if not isPlayerBoss(source, job) then
+		print(('esx_society: %s attempted to setUniformdivision'):format(identifier))
+		cb()
+		return
+	end
 
 	if gender == 'male' then
 		MySQL.Async.execute('UPDATE divisions SET skin_male = @skin_male WHERE owner = @owner AND name = @name', {
@@ -1847,6 +1965,12 @@ ESX.RegisterServerCallback('esx_society:CreateDivision', function(source, cb, di
 	local sPlayer = ESX.GetPlayerFromId(source)
 	local playerjname = sPlayer.job.name
 	local creatediv = true
+
+	if not isPlayerBoss(source, playerjname) then
+		print(('esx_society: %s attempted to CreateDivision'):format(sPlayer.identifier))
+		cb(false)
+		return
+	end
 
 	exports.oxmysql:execute("SELECT * FROM divisions WHERE owner = ? ",{
 		playerjname,
@@ -1904,6 +2028,11 @@ ESX.RegisterServerCallback('esx_society:RemoveDivision', function(source, cb, di
     local sPlayer = ESX.GetPlayerFromId(source)
     local playerjname = sPlayer.job.name
 
+    if not isPlayerBoss(source, playerjname) then
+        print(('esx_society: %s attempted to RemoveDivision'):format(sPlayer.identifier))
+        cb(false)
+        return
+    end
 
     local allUsers = MySQL.Sync.fetchAll('SELECT identifier, divisions FROM users')
 
@@ -1987,6 +2116,12 @@ ESX.RegisterServerCallback('esx_society:ChangeDivision', function(source, cb, so
     local sPlayer = ESX.GetPlayerFromId(source)
     local playerjname = sPlayer.job.name
     local creatediv = true
+
+    if not isPlayerBoss(source, playerjname) then
+        print(('esx_society: %s attempted to ChangeDivision'):format(sPlayer.identifier))
+        cb(false)
+        return
+    end
 
     exports.oxmysql:execute("SELECT * FROM divisions WHERE owner = ? ", {
         playerjname,
@@ -2110,6 +2245,11 @@ AddEventHandler('esx_society:SetPermWash', function(JobName, Status)
 	local green = true
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local OffOn = "Faal"
+
+	if not isPlayerBoss(source, JobName) then
+		print(('esx_society: %s attempted to SetPermWash'):format(xPlayer.identifier))
+		return
+	end
 
 	if Status == "false" then
 		green = false

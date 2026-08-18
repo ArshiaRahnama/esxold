@@ -37,20 +37,47 @@ if Config.Core == "ESX" then
         end)
     end
 
+    -- ============================================================
+    -- giveClotheItems is a plain RegisterServerEvent, which any client
+    -- can fire directly (e.g. from a trainer) with an arbitrary
+    -- boughtItems table -- without this guard, that would mint free
+    -- clothing items with no payment involved at all. A token is
+    -- granted for exactly one use, right when payForClothes actually
+    -- charges the player successfully, and is consumed (cleared)
+    -- the instant giveClotheItems runs, so it can never be replayed.
+    -- ============================================================
+    local PendingClothePurchase = {}
+
+    AddEventHandler('playerDropped', function()
+        PendingClothePurchase[source] = nil
+    end)
+
     RegisterServerEvent('unique_clothestore:giveClotheItems')
     AddEventHandler('unique_clothestore:giveClotheItems', function(boughtItems)
         local xPlayer = ESX.GetPlayerFromId(source)
         if not xPlayer or type(boughtItems) ~= 'table' then return end
 
+        if not PendingClothePurchase[source] then
+            print(('[unique_clothestore] ^3WARNING^7: player %d tried to claim clothing items with no matching successful purchase -- ignored.'):format(source))
+            return
+        end
+        PendingClothePurchase[source] = nil -- single-use, consume immediately
+
+        local given = 0
         for _, entry in ipairs(boughtItems) do
+            if given >= 20 then break end -- sane ceiling, there are ~15 clothing categories total
+
             local clotheType = entry.type
             local drawable = tonumber(entry.drawable)
             local texture = tonumber(entry.texture) or 0
 
-            if type(clotheType) == 'string' and KnownClotheTypes[clotheType] and drawable and drawable >= 0 then
+            if type(clotheType) == 'string' and KnownClotheTypes[clotheType]
+                and drawable and drawable >= 0 and drawable <= 999
+                and texture >= 0 and texture <= 999 then
                 local itemName = ('clothe_%s_%d_%d'):format(clotheType, drawable, texture)
                 ensureClotheItemRegistered(itemName, clotheType, drawable, texture)
                 xPlayer.addInventoryItem(itemName, 1)
+                given = given + 1
             end
         end
     end)
@@ -61,6 +88,7 @@ if Config.Core == "ESX" then
         if type == "cash" then
             if xPlayer.money >= price then
                 xPlayer.removeMoney(price)
+                PendingClothePurchase[source] = true
                 TriggerClientEvent('unique_clothestore:notification', source, Config.Translate["you_paid"]:format(price), 5000, 'success')
                 cb(true)
             else
@@ -72,6 +100,7 @@ if Config.Core == "ESX" then
 
             if xPlayer.bank >= price then
                 xPlayer.removeBank(price)
+                PendingClothePurchase[source] = true
                 TriggerClientEvent('unique_clothestore:notification', source, Config.Translate["you_paid"]:format(price), 5000, 'success')
                 cb(true)
             else

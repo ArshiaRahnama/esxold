@@ -2012,6 +2012,8 @@ function OpenEmployeeList(society)
 		local editIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>'
 		local kickIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="17" y1="11" x2="23" y2="11"></line></svg>'
 
+		local siblings = GetBranchSiblings(society)
+
 		local elements = {
 			head = {_U('employee'), _U('grade'), _U('actions')},
 			rows = {}
@@ -2025,7 +2027,11 @@ function OpenEmployeeList(society)
 				
 				table.insert(elements.rows, {data = employees[i], cols = {photoHtml, employees[i].name, gradeLabel, 'DISABLE'}})
 			else
-				table.insert(elements.rows, {data = employees[i], cols = {photoHtml, employees[i].name, gradeLabel, '{{' .. editIcon .. '|promote}} {{' .. kickIcon .. '|fire}}'}})
+				local actions = '{{' .. editIcon .. '|promote}} {{' .. kickIcon .. '|fire}}'
+				if siblings then
+					actions = actions .. ' {{Swap|swap}}'
+				end
+				table.insert(elements.rows, {data = employees[i], cols = {photoHtml, employees[i].name, gradeLabel, actions}})
 			end
 		end
 
@@ -2041,6 +2047,9 @@ function OpenEmployeeList(society)
 				ESX.TriggerServerCallback('esx_society:setJob', function()
 					OpenEmployeeList(society)
 				end, employee.identifier, 'nojob', tonumber(0), 'fire')
+			elseif data.value == 'swap' then
+				menu.close()
+				OpenSwapEmployeeMenu(society, employee, siblings)
 			end
 		end, function(data, menu)
 			menu.close()
@@ -2050,6 +2059,39 @@ function OpenEmployeeList(society)
 	end, society)
 
 end
+
+-- ---------------------------------------------------------------------------------
+-- Swap Employee: move an employee directly to a sibling job in the same
+-- Config.JobGroups branch (e.g. Police -> Sheriff), instead of firing + re-hiring.
+-- Server re-validates the branch membership and that the caller is boss of the
+-- employee's CURRENT job - never trusts the client for either.
+-- ---------------------------------------------------------------------------------
+function OpenSwapEmployeeMenu(society, employee, siblings)
+	local elements = {}
+	for i = 1, #siblings do
+		local niceLabel = (Config.JobDisplayLabels and Config.JobDisplayLabels[siblings[i]]) or siblings[i]
+		table.insert(elements, {label = 'Swap to ' .. niceLabel, value = siblings[i]})
+	end
+
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'swap_employee_' .. society, {
+		title    = 'Swap ' .. employee.name .. ' to...',
+		align    = 'top-left',
+		elements = elements
+	}, function(data, menu)
+		menu.close()
+		ESX.TriggerServerCallback('esx_society:swapEmployeeJob', function(ok)
+			if ok then
+				ESX.ShowNotification(employee.name .. ' moved to ' .. data.current.value)
+			end
+			OpenEmployeeList(society)
+		end, employee.identifier, society, data.current.value)
+	end, function(data, menu)
+		menu.close()
+		OpenEmployeeList(society)
+	end)
+end
+
+
 
 function OpenRecruitMenu(society)
 

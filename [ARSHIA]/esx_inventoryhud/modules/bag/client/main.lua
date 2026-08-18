@@ -1,9 +1,3 @@
--- FIXED: every call in this file used to say ESX.TriggerServerEvent(...), a function
--- that does not exist anywhere in essentialmode (confirmed against both this
--- server and the real ArshiaRahnama/Sunset repo, where the same typo exists
--- in every inventory module) -- every put/get/updateSlot silently failed to
--- ever reach the server. Changed to plain TriggerServerEvent throughout.
-
 local doesHaveBag = false
 local currentBag = nil
 local inSearch = nil
@@ -19,14 +13,14 @@ function openBag(bagId, maxWeight)
             return sortItems(getBagInventory(bagId))
         elseif data.type == 'moveInside' then
             if not inSearch then
-                TriggerServerEvent('inventory-bag:updateSlot', bagId, data.data)
+                ESX.TriggerServerEvent('inventory-bag:updateSlot', bagId, data.data)
             end
         elseif data.type == 'moveToOther' then
             if ESX.isDead() or inSearch then return end
-            TriggerServerEvent('inventory-bag:put', bagId, data.data, inSearch)
+            ESX.TriggerServerEvent('inventory-bag:put', bagId, data.data, inSearch)
         elseif data.type == 'moveToMain' then
             if ESX.isDead() then return end
-            TriggerServerEvent('inventory-bag:get', bagId, data.data, inSearch)
+            ESX.TriggerServerEvent('inventory-bag:get', bagId, data.data, inSearch)
             Wait(500)
             if data.data.droppedTo then
                 data.data.inventoryType = 'main'
@@ -77,11 +71,11 @@ RegisterNetEvent('esx:addInventoryItem', function(label, count, name)
         ESX.SetPlayerState('bag', bagId)
     elseif name and name:find('kool') then
         Wait(1000)
-        TriggerServerEvent('esx:useItem', name)
+        ESX.TriggerServerEvent('esx:useItem', name)
     end
 end)
 
-RegisterNetEvent('esx:removeInventoryItemss', function(label, count, name)
+RegisterNetEvent('esx:removeInventoryItem', function(label, count, name)
     if name and name:find('kif_') then
         if currentBag == name then
             closeInventory()

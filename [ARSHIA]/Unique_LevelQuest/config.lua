@@ -179,3 +179,13 @@ Config.TrackedJobs = {
     mechanic     = "Mechanic",
     taxi         = "Taxi",
 }
+
+-- Coin rewards paid once when a skill first crosses each threshold —
+-- same idea as quest rewards, granted through the same CoinSystem
+-- export, tracked per-job so each milestone only ever pays out once.
+Config.SkillMilestones = {
+    { percent = 25,  coin = 0.10 },
+    { percent = 50,  coin = 0.20 },
+    { percent = 75,  coin = 0.35 },
+    { percent = 100, coin = 0.75 },
+}

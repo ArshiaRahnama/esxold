@@ -88,6 +88,164 @@ Config.GodmodeCheck = {
 }
 
 -- ============================================================
+-- Teleport / Position Desync
+-- Independent from the Speed check above: this one doesn't care what
+-- GetEntitySpeed() *reports*, it just measures raw straight-line
+-- distance between two samples and compares it to the maximum any
+-- legit ped/vehicle could possibly cover in that time. Catches
+-- teleport-style hacks that jump position without ever "moving"
+-- through intermediate speed.
+-- ============================================================
+Config.TeleportCheck = {
+    Enable            = true,
+    SampleIntervalMs  = 1000,
+    MaxMetersPerSecond = 140.0, -- generous ceiling above even a fast plane
+    IgnoreIfInAircraft = true,
+    ScorePenalty      = 40,
+}
+
+-- ============================================================
+-- Super Jump
+-- Legit jumps (even with sprint-jump momentum) have a fairly bounded
+-- apex vertical velocity. A sustained pattern of way-higher-than-normal
+-- jump velocity is the classic "super jump" mod.
+-- ============================================================
+Config.SuperJumpCheck = {
+    Enable              = true,
+    SampleIntervalMs    = 250,
+    MaxVerticalVelocity = 9.0,   -- m/s, normal jump peak is roughly 4-5
+    RequiredOccurrences = 3,     -- need a pattern, not one lucky ledge-grab
+    WindowMs            = 20000,
+    ScorePenalty        = 22,
+}
+
+-- ============================================================
+-- Invisibility
+-- IsEntityVisible() is normally true for a controlled, alive ped.
+-- A handful of legit exceptions (character creation/cutscenes) are
+-- excluded via the ignore flags below.
+-- ============================================================
+Config.InvisibilityCheck = {
+    Enable                = true,
+    SampleIntervalMs      = 1000,
+    RequiredOccurrences   = 5,   -- consecutive samples, not one loading-screen frame
+    IgnoreDuringSpawnProtectionMs = 10000,
+    ScorePenalty          = 25,
+}
+
+-- ============================================================
+-- Infinite Ammo
+-- Tracks total ammo for the currently-held weapon; every time a shot
+-- is confirmed fired (IsPedShooting edge), ammo should go down by
+-- exactly 1 (or stay the same only for unlimited-ammo weapons like
+-- the stun gun, which are excluded). A repeated "fired but ammo
+-- unchanged" pattern is infinite ammo.
+-- ============================================================
+Config.InfiniteAmmoCheck = {
+    Enable              = true,
+    RequiredOccurrences = 6,
+    WindowMs            = 15000,
+    IgnoreWeapons       = { GetHashKey('WEAPON_STUNGUN'), GetHashKey('WEAPON_FIREEXTINGUISHER'), GetHashKey('WEAPON_PETROLCAN') },
+    ScorePenalty        = 28,
+}
+
+-- ============================================================
+-- Weapon Fire Rate
+-- Every weapon has a natural minimum time between shots (its cycle
+-- time). This just measures the gap between consecutive confirmed
+-- shots and flags a sustained pattern of firing faster than that.
+-- Values are intentionally generous (well above real cycle times) to
+-- absorb network jitter — tune per-weapon in WeaponMinCycleMs if you
+-- get false positives on a specific gun.
+-- ============================================================
+Config.FireRateCheck = {
+    Enable               = true,
+    DefaultMinCycleMs    = 80,   -- generic floor for anything not listed below
+    WeaponMinCycleMs = {
+        [GetHashKey('WEAPON_PISTOL')]     = 260,
+        [GetHashKey('WEAPON_COMBATPISTOL')] = 220,
+        [GetHashKey('WEAPON_MICROSMG')]   = 90,
+        [GetHashKey('WEAPON_SMG')]        = 90,
+        [GetHashKey('WEAPON_ASSAULTRIFLE')] = 95,
+        [GetHashKey('WEAPON_CARBINERIFLE')] = 95,
+        [GetHashKey('WEAPON_PUMPSHOTGUN')] = 700,
+        [GetHashKey('WEAPON_SNIPERRIFLE')] = 900,
+    },
+    RequiredOccurrences  = 4,
+    WindowMs             = 8000,
+    ScorePenalty         = 24,
+}
+
+-- ============================================================
+-- Weapon Blacklist
+-- Weapons a civilian on an RP server shouldn't be carrying at all
+-- (military-grade weapons). Purely a possession check — doesn't care
+-- how they got it, since the server is the only source of truth on
+-- what a player is holding.
+-- ============================================================
+Config.WeaponBlacklistCheck = {
+    Enable          = true,
+    SampleIntervalMs = 3000,
+    Weapons = {
+        GetHashKey('WEAPON_RPG'), GetHashKey('WEAPON_MINIGUN'), GetHashKey('WEAPON_RAILGUN'),
+        GetHashKey('WEAPON_HOMINGLAUNCHER'), GetHashKey('WEAPON_GRENADELAUNCHER'),
+        GetHashKey('WEAPON_COMPACTLAUNCHER'), GetHashKey('WEAPON_RAYMINIGUN'),
+    },
+    ScorePenalty    = 45,
+}
+
+-- ============================================================
+-- Vehicle Handling Anomaly
+-- Compares tick-to-tick SPEED CHANGE (acceleration), not top speed
+-- (already covered by Speed/Teleport checks above), against a
+-- generous ceiling by vehicle class. Catches "speedo" style handling
+-- mods that let a car hit 100km/h in half a second.
+-- ============================================================
+Config.VehicleHandlingCheck = {
+    Enable              = true,
+    SampleIntervalMs    = 300,
+    MaxAccelMPS2        = 22.0,  -- m/s^2 — a supercar is roughly 8-10
+    RequiredOccurrences = 3,
+    WindowMs            = 10000,
+    ScorePenalty        = 20,
+}
+
+-- ============================================================
+-- Instant Armor/Health Refill
+-- A jump from low to (near) max armor or health with no matching
+-- pickup/heal action in the same window is suspicious. This is a
+-- soft signal (armor pickups are legitimately instant too), so the
+-- penalty is low and it mainly feeds correlation rather than kicking
+-- alone.
+-- ============================================================
+Config.InstantRefillCheck = {
+    Enable              = true,
+    SampleIntervalMs    = 500,
+    MinJump             = 80,    -- ignore small top-ups
+    RequiredOccurrences = 3,
+    WindowMs            = 15000,
+    ScorePenalty         = 12,
+}
+
+-- ============================================================
+-- Resource Whitelist (HONESTLY LIMITED — read this)
+-- GetNumResources()/GetResourceByFindIndex() only sees resources
+-- registered through the normal FiveM resource system. Popular
+-- memory-injected mod menus do NOT show up here at all — this check
+-- only catches someone running an actual unauthorized *resource*
+-- (a leftover debug/dev resource, a leaked script someone dropped in
+-- their own resources folder, etc). It's a free, low-risk extra
+-- layer, not a replacement for the real detections above.
+-- ============================================================
+Config.ResourceWhitelistCheck = {
+    Enable          = true,
+    SampleIntervalMs = 60000,
+    ScorePenalty    = 15,
+    -- resources allowed to be client-side-active that this list doesn't
+    -- need to know about individually (add your own exceptions here)
+    ExtraAllowed = {},
+}
+-- ============================================================
 -- Cross-player correlation (same idea as UNIQUE_AC.BehavioralClustering):
 -- if 2+ different players trip the SAME category within a short window,
 -- it's likely a shared/leaked tool spreading on the server. Only raises

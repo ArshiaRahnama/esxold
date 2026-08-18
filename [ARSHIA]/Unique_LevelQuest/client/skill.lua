@@ -11,8 +11,12 @@ function UpdateSkills()
         local formatted = {}
         for _, s in ipairs(skills) do
             table.insert(formatted, {
-                title = s.label,
-                value = s.target > 0 and (s.minutes / s.target) or 0,
+                title       = s.label,
+                jobName     = s.jobName,
+                value       = s.target > 0 and (s.minutes / s.target) or 0,
+                hours       = math.floor(s.minutes / 60),
+                targetHours = math.floor(s.target / 60),
+                isCurrent   = s.isCurrent,
             })
         end
         SendNUIMessage({ type = "loadSkills", skills = formatted })
