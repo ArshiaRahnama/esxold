@@ -20,4 +20,3 @@ files {
 	'html/js/app.js',
 	'html/fonts/AdventPro-Bold.ttf',
 }
-

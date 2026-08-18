@@ -6,7 +6,6 @@ Citizen.CreateThread(function()
 	GUI.Time          = 0
 	local MenuType    = 'dialog'
 	local OpenedMenus = {}
-	local soundOn = true
 
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -24,10 +23,10 @@ Citizen.CreateThread(function()
 			action    = 'openMenu',
 			namespace = namespace,
 			name      = name,
-			data      = data
+			data      = data,
 		})
 
-		local timeoutId = ESX.SetTimeout(200, function()
+		Citizen.SetTimeout(200, function()
 			SetNuiFocus(true, true)
 		end)
 
@@ -42,7 +41,7 @@ Citizen.CreateThread(function()
 			action    = 'closeMenu',
 			namespace = namespace,
 			name      = name,
-			data      = data
+			data      = data,
 		})
 
 		for k,v in pairs(OpenedMenus) do
@@ -69,7 +68,7 @@ Citizen.CreateThread(function()
 			if tonumber(data.value) ~= nil then
 
 				-- Round float values
-				data.value = ESX.Math.Round(tonumber(data.value))
+				data.value = round(tonumber(data.value))
 
 				-- Check for negative value
 				if tonumber(data.value) <= 0 then
@@ -77,16 +76,11 @@ Citizen.CreateThread(function()
 				end
 			end
 
-			data.value = ESX.Math.Trim(data.value)
-
 			-- Don't post if the value is negative or if it's 0
 			if post then
 				menu.submit(data, menu)
-				if soundOn == true then
-					PlaySound(0, "Menu_Accept", "Phone_SoundSet_Default", 0, 0, 1);
-				end
 			else
-				ESX.ShowNotification('~r~Error Da !')
+				ESX.ShowNotification('That input is invalid!')
 			end
 		end
 
@@ -98,9 +92,6 @@ Citizen.CreateThread(function()
 
 		if menu.cancel ~= nil then
 			menu.cancel(data, menu)
-			if soundOn == true then
-				PlaySound(0, "Click_Fail", "WEB_NAVIGATION_SOUNDS_PHONE", 0, 0, 1);			
-			end
 		end
 
 		cb('OK')
@@ -127,6 +118,7 @@ Citizen.CreateThread(function()
 				end
 			end
 
+
 			if OpenedMenuCount > 0 then
 				DisableControlAction(0, 1,   true) -- LookLeftRight
 				DisableControlAction(0, 2,   true) -- LookUpDown
@@ -138,8 +130,12 @@ Citizen.CreateThread(function()
 				DisableControlAction(0, 16, true) -- SelectNextWeapon
 				DisableControlAction(0, 17, true) -- SelectPrevWeapon
 			else
-				Citizen.Wait(500)
+				Citizen.Wait(1000)
 			end
 		end
 	end)
+
+	function round(x)
+		return x>=0 and math.floor(x+0.5) or math.ceil(x-0.5)
+	end
 end)

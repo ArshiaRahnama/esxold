@@ -1,23 +1,21 @@
-(function(){
 
+
+(function(){
 	let MenuTpl =
 		'<div id="menu_{{_namespace}}_{{_name}}" class="menu{{#align}} align-{{align}}{{/align}}">' +
-			'<div class="head">'+
-			'<img src="nui://[ARSHIA]/Unique_Pack/logo_64x64.png" alt="logo">' +
-			'<h1>{{title}}</h1>'+
-			'<img src="nui://[ARSHIA]/Unique_Pack/logo_64x64.png" alt="logo">' +
-			'</div>' +
-				'<div class="menu-items">' +
-					'{{#elements}}' +
-						'<div class="menu-item {{#selected}}selected{{/selected}}">' +
-							'{{{label}}}{{#isSlider}} : &lt;{{{sliderLabel}}}&gt;{{/isSlider}}' +
-						'</div>' +
-					'{{/elements}}' +
+		'<div class="head"><div class="headtitle">{{{title}}}</div></div>' +
+		'<div class ="pos"><hr></div>'+
+				'<div class="menu-items">' + 
+							'{{#elements}}' +
+							'<div class="menu-item {{#selected}}selected{{/selected}}">' +
+								'{{{label}}}{{#isSlider}} : &lt;{{{sliderLabel}}}&gt;{{/isSlider}}' +
+							'</div>' +
+						'{{/elements}}' +
 				'</div>'+
 			'</div>' +
 		'</div>'
 	;
-
+	
 	window.ESX_MENU       = {};
 	ESX_MENU.ResourceName = 'esx_menu_default';
 	ESX_MENU.opened       = {};
@@ -69,37 +67,34 @@
 			name     : name
 		});
 		
-		current_name = name
-		ESX_MENU.render(true, false);
-		$('#menu_' + namespace + '_' + name).find('.menu-item.selected')[0].scrollIntoView();
+		ESX_MENU.render(true);
+		var menuSelected = $('#menu_' + namespace + '_' + name).find('.menu-item.selected')
+		if(menuSelected.length == 1)
+		{
+			menuSelected[0].scrollIntoView();
+		}
 	};
 
 	ESX_MENU.close = function(namespace, name) {
-
 		delete ESX_MENU.opened[namespace][name];
-
 		for (let i=0; i<ESX_MENU.focus.length; i++) {
 			if (ESX_MENU.focus[i].namespace == namespace && ESX_MENU.focus[i].name == name) {
 				ESX_MENU.focus.splice(i, 1);
 				break;
 			}
 		}
-
-		ESX_MENU.render(false, true);
-
+		ESX_MENU.render(false);
 	};
 
-	ESX_MENU.render = function(first, close, name) {
-		if (current_name === 'skin') {
-			first = false
-		}
-		
+	ESX_MENU.render = function(fade = false) {
 
 		let menuContainer       = document.getElementById('menus');
 		let focused             = ESX_MENU.getFocused();
 		menuContainer.innerHTML = '';
 
+
 		$(menuContainer).hide();
+
 
 		for (let namespace in ESX_MENU.opened) {
 			for (let name in ESX_MENU.opened[namespace]) {
@@ -109,17 +104,17 @@
 
 				for (let i=0; i<menuData.elements.length; i++) {
 					let element = view.elements[i];
-
 					switch (element.type) {
 						case 'default' : break;
-
 						case 'slider' : {
 							element.isSlider    = true;
 							element.sliderLabel = (typeof element.options == 'undefined') ? element.value : element.options[element.value];
-
 							break;
 						}
-
+						case 'html' :
+							{
+								break;
+							}
 						default : break;
 					}
 
@@ -133,23 +128,21 @@
 				menuContainer.appendChild(menu);
 			}
 		}
-		
-		if (typeof focused != 'undefined') {
-			$('#menu_' + focused.namespace + '_' + focused.name).show();
+		if(fade == false){
+			if (typeof focused != 'undefined') {
+				$('#menu_' + focused.namespace + '_' + focused.name).show();
+			}
+		}else{
+			if (typeof focused != 'undefined') {
+				if(focused.name == 'skin'){
+					$('#menu_' + focused.namespace + '_' + focused.name).show();
+				}else{
+					$('#menu_' + focused.namespace + '_' + focused.name).fadeIn();
+				}
+			}
 		}
-		if (first) {
-			const audio = new Audio('./sounds/Open.mp3');
-			audio.play();
 
-		    $(menuContainer).fadeIn(200)
-		} else {
-            if (current_name !== 'skin') {
-				const audio = new Audio('./sounds/Press.ogg');
-			    audio.play();
-            }
-			
-			$(menuContainer).show();
-		}
+		$(menuContainer).show();
 
 	};
 
@@ -309,13 +302,20 @@
 
 								case 'slider': {
 									let min = (typeof elem.min == 'undefined') ? 0 : elem.min;
-
+								
 									if (elem.value > min) {
-										elem.value--;
+										let scriptClotheMin = (typeof elem.scriptClotheMin == 'undefined') ? -1 : elem.scriptClotheMin;
+										let scriptClotheMax = (typeof elem.scriptClotheMax == 'undefined') ? -1 : elem.scriptClotheMax;
+										if(scriptClotheMin != -1 && scriptClotheMax != -1 && elem.value == scriptClotheMax){
+											elem.value = scriptClotheMin;
+										}
+										else{
+											elem.value--;
+										}
 										ESX_MENU.change(focused.namespace, focused.name, elem);
 									}
 
-									ESX_MENU.render(false, false);
+									ESX_MENU.render();
 									break;
 								}
 
@@ -327,7 +327,6 @@
 
 						break;
 					}
-
 
 					case 'RIGHT' : {
 
@@ -342,17 +341,33 @@
 								case 'default': break;
 
 								case 'slider': {
+									let scriptClotheMin = (typeof elem.scriptClotheMin == 'undefined') ? -1 : elem.scriptClotheMin;
+									let scriptClotheMax = (typeof elem.scriptClotheMax == 'undefined') ? -1 : elem.scriptClotheMax;
 									if (typeof elem.options != 'undefined' && elem.value < elem.options.length - 1) {
-										elem.value++;
+										if(scriptClotheMin != -1 && scriptClotheMax != -1 && elem.value == scriptClotheMin)
+										{
+											elem.value = scriptClotheMax;
+										}
+										else
+										{
+											elem.value++;
+										}
 										ESX_MENU.change(focused.namespace, focused.name, elem);
 									}
 
 									if (typeof elem.max != 'undefined' && elem.value < elem.max) {
-										elem.value++;
+										if(scriptClotheMin != -1 && scriptClotheMax != -1 && elem.value == scriptClotheMin)
+										{
+											elem.value = scriptClotheMax;
+										}
+										else
+										{
+											elem.value++;
+										}
 										ESX_MENU.change(focused.namespace, focused.name, elem);
 									}
 
-									ESX_MENU.render(false, false);
+									ESX_MENU.render();
 									break;
 								}
 
@@ -375,11 +390,10 @@
 		}
 
 	};
-
 	window.onload = function(e){
 		window.addEventListener('message', (event) => {
 			onData(event.data);
+			// console.log(onData())
 		});
 	};
-
 })();

@@ -1,137 +1,166 @@
-@font-face {
-	font-family: AdventPro;
-	src: url('../fonts/AdventPro-Bold.ttf');
+/* Coded by Jaareet#0097 */
+html{
+	transform: scale(1.1); /* Modifica el tamaño del menu, el valor 1.0 es un tamaño normal, el 1.1 es el mediano, ya que fue el del estilo creado por nosotros */
 }
 
-h1{ margin:0; padding: 0.8rem 0; text-transform: capitalize;font-size:2vh; }
-.menu {
-	background-color: rgba(28, 28, 29, 0.6);
-	font-family: AdventPro;
-	min-width: 400px;
-	color: #ffffff;
-	box-shadow: 0px 0px 50px 0px #000;
-	position: absolute;
-	top:1%;
-	left:1%;
-	width: fit-content;
-	max-width:20%;
-	height: fit-content;
-	border-radius: 10px;
+@font-face {
+	font-family: BoxedRound;
+	src: url("https://cdn.discordapp.com/attachments/886714318471712798/896824121164451900/BoxedRound.ttf");
+}
+
+*{
+	font-family: BoxedRound;
 	overflow: hidden;
 }
-
-.menu.align-left {
-	left: 40;
-	top: 50%;
-	transform: translate(0, -50%);
+.pos {
+	position: relative;
+	bottom: 15px;
 }
-
-.menu.align-top-left {
-	left: 40;
-	top: 40;
+hr{
+	border: none;
+	background: white;
+	width: 300px;
+	height: 0.5px;
 }
-
-.menu.align-top {
-	left: 50%;
-	top: 40;
-	transform: translate(-50%, 0);
-}
-
-.menu.align-top-right {
-	right: 10;
-	top: 40;
-}
-
-.menu.align-right {
-	right: 40;
-	top: 50%;
-	transform: translate(0, -50%);
-}
-
-.menu.align-bottom-right {
-	right: 40;
-	bottom: 40;
-}
-
-.menu.align-bottom {
-	left: 50%;
-	bottom: 40;
-	transform: translate(-50%, 0);
-}
-
-.menu.align-bottom-left {
-	left: 40;
-	bottom: 40;
-}
-
-.menu.align-center {
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
-}
-
-.menu .head {
-	background: radial-gradient(#2d2d2e, #252525);
-	color: rgb(251, 251, 251);
-	text-align: center;
-	line-height: 40px;
+.menu{
+	min-width: 330px;
+	color: #fff;
+	position: absolute;
 	padding: 10px;
-	display: flex;
-	align-items: center;
-	gap: 12px;
-	justify-content: space-around;
-}
-.menu .head img{
-	width: 40px;
-}
-
-.menu .menu-items {
-	max-height: 600px;
-	overflow-y: hidden;
+	background: #030303c2;
 	border-radius: 10px;
-	padding: 10px;
+	-webkit-box-shadow: 10px 9px 42px -5px rgba(0, 0, 0, 0.52);
+	-moz-box-shadow: 10px 9px 42px -5px rgba(0, 0, 0, 0.52);
+	box-shadow: 10px 9px 42px -5px rgba(0, 0, 0, 0.397);
+	position: absolute;
+	left: 5%;
+	top: 10%;
 }
-
-.menu .menu-items .menu-item {
-	height: 40px;
+.head{
 	display: block;
-	background-color: #171718c4;
-	-box-shadow: inset 1px 0px 0px 1px rgba(1, 76, 180, 0.6);
-	height: 32px;
-	line-height: 32px;
-	color: #ffffff;
 	text-align: center;
-	font-size: 1.3rem;
-  	padding: 5px;
-	text-transform: capitalize;
-	border: 1.2px solid #1b1b1b;
-	margin: 5px;
-	border-radius: 10px;
+	overflow: hidden;
+	white-space: nowrap;
+	margin-left: 10px;
+	margin-right: 10px;
 }
-
-.menu .menu-items .menu-item.selected {
-	background-color: #ffffff;
-	color: #000000;
-	border: #000000b9 solid 2px;
-
+.menu .head{
+	background: #03030300;
+	padding-left: 5px;
+	text-align: left;
+	height: 50px;
+	color: #fcf8f8;
+	font-weight: 300;
+	line-height: 35px;
+	font-size: 2.3vh;
 }
-
-.menu .head h1 {
-    border-radius: 10px;
-    margin: 0;
-	color: rgb(255, 255, 255);
-    /* background: #001f4c91; */
-	text-shadow: 0 2px #000000b0, 0 -2px #000000b0, 2px 0px #000000b0, -2px 0px #000000b0;
+.menu .menu-items{
+	max-height: 525px;
+	overflow-y: auto;
+	font-weight: 500;
+	background: #21212100;
 }
-.menu .head h1:before {
-    content: '';
-    width: 50px;
-    height: 50px;
-    display: block;
-    position: absolute;
-    left: 20px;
-    top: 17px;
-    /* background: url('/html/js/logo.png'); */
-    z-index: 999999;
-    background-size: cover;
+.menu .menu-items .menu-item{
+	display: block;
+	padding: 7px;
+	font-size: 14px;
+	text-align: left;
+	text-indent: 5px;
+	margin-top: 5px;
+	background: #8181811c;
+	color: #fdfdfd;
+	border-radius: 5px;
+	border: 2px solid #35353500;
 }
+.menu .menu-items .menu-item.selected{
+	background: #ffffff5d;
+	border: 1.0px solid #ffffffe1;
+	border-radius: 5px;
+	color: #ffffffe3;
+	animation: fadeIn 0.3s;
+}
+.head > span{
+	position: relative;
+	display: inline-block;
+}
+.head > span::before, .head > span::after{
+	content: "";
+	position: absolute;
+	top: 52%;
+	width: 9999px;
+	height: 0.7px;
+	background: #ffffff;
+}
+.head > span::before{
+	right: 105%;
+	margin-right: 15px;
+}
+.head > span::after{
+	left: 105%;
+	margin-left: 15px;
+}
+.align-left{
+	position: absolute;
+	left: 5%;
+	top: 10%;
+}
+.align-right{
+	position: absolute;
+	left: 5%;
+	top: 10%;
+}
+.align-top-left{
+	position: absolute;
+	left: 5%;
+	top: 10%;
+}
+.align-top-right{
+	position: absolute;
+	left: 5%;
+	top: 10%;
+}
+.align-bottom-left{
+	position: absolute;
+	left: 5%;
+	top: 10%;
+}
+.align-bottom-right{
+	position: absolute;
+	left: 5%;
+	top: 10%;
+}
+.align-bottom{
+	position: absolute;
+	bottom: 5%;
+	left: 50%;
+}
+.align-center{
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%,50%);
+}
+::-webkit-scrollbar{
+	width: 8px;
+	border-left: 4px solid #27273300;
+}
+::-webkit-scrollbar-track{
+	background: #27273300;
+	border-left: 4px solid #27273300;
+}
+::-webkit-scrollbar-thumb{
+	background: #1a242d00;
+	border-left: 4px solid #27273300;
+}
+::-webkit-scrollbar-thumb:hover{
+	background: #1a242d00;
+	border-left: 4px solid #27273300;
+}
+/* @keyframes fadeIn{
+	from{
+		opacity:0;
+   }
+	to{
+		opacity:1;
+   }
+} */
