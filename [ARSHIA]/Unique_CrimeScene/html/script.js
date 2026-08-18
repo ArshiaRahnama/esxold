@@ -2,6 +2,13 @@
 	'use strict';
 
 	const board = document.getElementById('board');
+	const topbarLabel = document.getElementById('topbarLabel');
+	const liveDot = document.getElementById('liveDot');
+
+	const tabCases = document.getElementById('tabCases');
+	const tabWanted = document.getElementById('tabWanted');
+	const tabBolo = document.getElementById('tabBolo');
+
 	const caseList = document.getElementById('caseList');
 	const emptyState = document.getElementById('emptyState');
 	const caseContent = document.getElementById('caseContent');
@@ -15,13 +22,18 @@
 	const closeRow = document.getElementById('closeRow');
 	const wantedList = document.getElementById('wantedList');
 
+	const boloList = document.getElementById('boloList');
+	const checkVehicleBtn = document.getElementById('checkVehicleBtn');
+	const plateResult = document.getElementById('plateResult');
+
 	let state = {
+		isDojJob: false,
+		isLawJob: false,
 		isReferralJob: false,
 		playerJob: null,
 		referralJobs: [],
 		cases: [],
 		selectedCaseId: null,
-		selectedCaseStatus: null,
 	};
 
 	const STATUS_LABELS = {
@@ -48,18 +60,54 @@
 	}
 
 	function post(name, data) {
-		return fetch(`https://${GetParentResourceName()}/${name}`, {
+		return fetch(`https://${resourceName()}/${name}`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json; charset=UTF-8' },
 			body: JSON.stringify(data || {}),
 		}).catch(() => {});
 	}
 
-	function GetParentResourceName() {
+	function resourceName() {
 		return window.GetParentResourceName ? window.GetParentResourceName() : 'Unique_CrimeScene';
 	}
 
-	// ===== Rendering =====
+	function escapeHtml(str) {
+		if (str === null || str === undefined) return '';
+		return String(str)
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;');
+	}
+
+	// ===== Tiny synthesized beep (no audio files needed) =====
+
+	let audioCtx = null;
+	function beep(freq, duration, type) {
+		try {
+			audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+			const osc = audioCtx.createOscillator();
+			const gain = audioCtx.createGain();
+			osc.type = type || 'square';
+			osc.frequency.value = freq;
+			gain.gain.value = 0.06;
+			osc.connect(gain);
+			gain.connect(audioCtx.destination);
+			osc.start();
+			gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+			osc.stop(audioCtx.currentTime + duration);
+		} catch (e) { /* audio not available, ignore */ }
+	}
+
+	function playMatchSound() {
+		beep(880, 0.12, 'square');
+		setTimeout(() => beep(1180, 0.15, 'square'), 130);
+	}
+
+	function playSirenBlip() {
+		beep(660, 0.1, 'sawtooth');
+	}
+
+	// ===== Rendering: Cases =====
 
 	function renderCaseList() {
 		caseList.innerHTML = '';
@@ -92,8 +140,6 @@
 			return;
 		}
 
-		state.selectedCaseStatus = data.case.status;
-
 		emptyState.classList.add('hidden');
 		caseContent.classList.remove('hidden');
 
@@ -101,7 +147,6 @@
 		caseStatus.textContent = STATUS_LABELS[data.case.status] || data.case.status;
 		caseStatus.className = 'status-pill ' + statusClass(data.case.status);
 
-		// evidence
 		evidenceList.innerHTML = '';
 		if (!data.evidence.length) {
 			evidenceList.innerHTML = '<div class="empty-note">Hanoz Madraki Peida Nashode</div>';
@@ -118,7 +163,6 @@
 			});
 		}
 
-		// notes
 		notesList.innerHTML = '';
 		if (!data.notes.length) {
 			notesList.innerHTML = '<div class="empty-note">Yaddashti Sabt Nashode</div>';
@@ -134,7 +178,6 @@
 			});
 		}
 
-		// referral buttons
 		referButtons.innerHTML = '';
 		matchRow.innerHTML = '';
 		closeRow.innerHTML = '';
@@ -146,19 +189,24 @@
 				const btn = document.createElement('button');
 				btn.className = 'btn btn-outline';
 				btn.textContent = 'Ersal Be ' + job.toUpperCase();
-				btn.addEventListener('click', () => {
-					post('referCase', { id: data.case.id, job });
-				});
+				btn.addEventListener('click', () => post('referCase', { id: data.case.id, job }));
 				referButtons.appendChild(btn);
 			});
 
 			const matchBtn = document.createElement('button');
 			matchBtn.className = 'btn btn-gold';
 			matchBtn.textContent = 'Tatbighe Asare Angosht';
-			matchBtn.addEventListener('click', () => {
-				post('runMatch', { id: data.case.id });
-			});
+			matchBtn.addEventListener('click', () => post('runMatch', { id: data.case.id }));
 			matchRow.appendChild(matchBtn);
+
+			const hasVehicleEvidence = data.evidence.some((ev) => ev.type === 'vehicle');
+			if (hasVehicleEvidence) {
+				const boloBtn = document.createElement('button');
+				boloBtn.className = 'btn btn-outline';
+				boloBtn.textContent = 'Sodore BOLO';
+				boloBtn.addEventListener('click', () => post('issueBOLO', { id: data.case.id }));
+				matchRow.appendChild(boloBtn);
+			}
 		}
 
 		if (state.isReferralJob && data.case.status === ('referred_' + state.playerJob)) {
@@ -172,6 +220,8 @@
 			closeRow.appendChild(verdictBtn);
 		}
 	}
+
+	// ===== Rendering: Wanted =====
 
 	function renderWanted(list) {
 		wantedList.innerHTML = '';
@@ -191,26 +241,67 @@
 		});
 	}
 
-	function escapeHtml(str) {
-		if (str === null || str === undefined) return '';
-		return String(str)
-			.replace(/&/g, '&amp;')
-			.replace(/</g, '&lt;')
-			.replace(/>/g, '&gt;');
+	// ===== Rendering: BOLO =====
+
+	function renderBolos(list) {
+		boloList.innerHTML = '';
+		if (!list.length) {
+			boloList.innerHTML = '<div class="empty-note">Hich BOLO-i Faal Nist</div>';
+			return;
+		}
+		list.forEach((row) => {
+			const el = document.createElement('div');
+			el.className = 'bolo-card';
+			el.innerHTML = `
+				<div class="bolo-plate">${escapeHtml(row.plate)}</div>
+				<div class="bolo-meta">Parvande #${row.caseId} - Sader Konande: ${escapeHtml(row.issuedBy || '?')}</div>
+			`;
+			boloList.appendChild(el);
+		});
 	}
+
+	function showPlateResult(found, noVehicle) {
+		plateResult.classList.remove('hidden', 'match', 'clean');
+		if (noVehicle) {
+			plateResult.textContent = 'Khodroi Dar In Nazdiki Peida Nashod';
+			plateResult.classList.add('clean');
+		} else if (found) {
+			plateResult.textContent = '🚨 MATCH! In Khodro BOLO Darad';
+			plateResult.classList.add('match');
+			playMatchSound();
+		} else {
+			plateResult.textContent = '✔ Pak Ast - Hich BOLO-i Baraye In Pelak Nist';
+			plateResult.classList.add('clean');
+		}
+		setTimeout(() => plateResult.classList.add('hidden'), 6000);
+	}
+
+	checkVehicleBtn.addEventListener('click', () => {
+		checkVehicleBtn.disabled = true;
+		post('checkNearestVehicle', {});
+		setTimeout(() => { checkVehicleBtn.disabled = false; }, 1500);
+	});
 
 	// ===== Tabs =====
 
-	document.getElementById('tabCases').addEventListener('click', () => switchTab('cases'));
-	document.getElementById('tabWanted').addEventListener('click', () => switchTab('wanted'));
-
 	function switchTab(tab) {
-		document.getElementById('tabCases').classList.toggle('active', tab === 'cases');
-		document.getElementById('tabWanted').classList.toggle('active', tab === 'wanted');
+		tabCases.classList.toggle('active', tab === 'cases');
+		tabWanted.classList.toggle('active', tab === 'wanted');
+		tabBolo.classList.toggle('active', tab === 'bolo');
+
 		document.getElementById('viewCases').classList.toggle('active', tab === 'cases');
 		document.getElementById('viewWanted').classList.toggle('active', tab === 'wanted');
+		document.getElementById('viewBolo').classList.toggle('active', tab === 'bolo');
+
 		if (tab === 'wanted') post('loadWanted', {});
+		if (tab === 'bolo') post('loadBolos', {});
+
+		topbarLabel.textContent = tab === 'bolo' ? 'LAW ENFORCEMENT // BOLO' : 'DOJ // Parvande Haye Baz';
 	}
+
+	tabCases.addEventListener('click', () => switchTab('cases'));
+	tabWanted.addEventListener('click', () => switchTab('wanted'));
+	tabBolo.addEventListener('click', () => switchTab('bolo'));
 
 	// ===== Actions =====
 
@@ -241,16 +332,26 @@
 		if (!msg || !msg.action) return;
 
 		switch (msg.action) {
-			case 'open':
+			case 'open': {
+				state.isDojJob = !!msg.isDojJob;
+				state.isLawJob = !!msg.isLawJob;
 				state.isReferralJob = !!msg.isReferralJob;
 				state.playerJob = msg.playerJob || null;
 				state.referralJobs = msg.referralJobs || [];
 				state.selectedCaseId = null;
+
+				tabCases.classList.toggle('hidden', !state.isDojJob);
+				tabWanted.classList.toggle('hidden', !state.isDojJob);
+				tabBolo.classList.toggle('hidden', !state.isLawJob);
+
 				board.classList.remove('hidden');
-				switchTab('cases');
+				switchTab(state.isDojJob ? 'cases' : 'bolo');
+
 				emptyState.classList.remove('hidden');
 				caseContent.classList.add('hidden');
+				plateResult.classList.add('hidden');
 				break;
+			}
 
 			case 'close':
 				board.classList.add('hidden');
@@ -267,6 +368,18 @@
 
 			case 'wanted':
 				renderWanted(msg.list || []);
+				break;
+
+			case 'bolos':
+				renderBolos(msg.list || []);
+				break;
+
+			case 'boloAlert':
+				playSirenBlip();
+				break;
+
+			case 'plateCheckResult':
+				showPlateResult(msg.found, msg.noVehicle);
 				break;
 		}
 	});

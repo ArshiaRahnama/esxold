@@ -7,6 +7,11 @@ Citizen.CreateThread(function()
     end
   end)
 
+-- min server-side permission_level required (must match server/babiczhandling-sv.lua's
+-- BABICZ_REQUIRED_PERM - this client copy is only used for the initial /handling name
+-- prompt UX and is never trusted on its own; the server re-checks everything itself)
+local BABICZ_REQUIRED_PERM = 5
+
 local values = {
     fMass = {
         type = "float",
@@ -196,7 +201,9 @@ local values = {
 local class = "CHandlingData"
 local accuracy = 10
 local opened = false
+local dirty = false -- BUGFIX/IMPROVEMENT: only re-clone the vehicle on close if a value actually changed
 local handling, currentVehicle, handlingName, lastModel = {}, nil, false, nil
+local checkingPermission = false -- prevents spamming the server callback if the key/command is mashed
 
 local RoundValue = function(val)
     return tostring(math.floor((val*10^accuracy)+.5)/10^accuracy)
@@ -207,134 +214,6 @@ local ShowNotification = function(text)
     AddTextComponentString(text)
     DrawNotification(true, false)
 end
-
-
-RegisterCommand("handling", function(_, args)
-    if ESX.GetPlayerData().perm >= 5 then
-
-        if opened then
-        SendNUIMessage({
-            action = "hide"
-        })
-        SetNuiFocus(false, false)
-        opened = false
-    else
-        local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
-        if DoesEntityExist(vehicle) then
-            if not args[1] then
-                handlingName = false
-                ShowNotification("~r~Handling name~w~ not specified - some values may ~r~not work~w~!")
-            else
-                handlingName, lastModel = args[1], GetEntityModel(vehicle)
-            end
-            handling, currentVehicle = {}, vehicle
-            for k, v in pairs(values) do
-                if v.type == "int" then
-                    handling[k] = GetVehicleHandlingInt(vehicle, class, k)
-                elseif v.type == "float" then
-                    handling[k] = RoundValue(GetVehicleHandlingFloat(vehicle, class, k))
-                elseif v.type == "vector" then
-                    local value = GetVehicleHandlingVector(vehicle, class, k)
-                    handling[k.."_x"] = RoundValue(value.x)
-                    handling[k.."_y"] = RoundValue(value.y)
-                    handling[k.."_z"] = RoundValue(value.z)
-                end
-            end
-            SendNUIMessage({
-                action =  "show",
-                handling = handling
-            })
-            SetNuiFocus(true, true)
-            opened = true
-        else
-            ShowNotification("Vehicle not found!")
-        end
-    end
-end
-end, false)
-
-
-RegisterCommand("*BabiczHandlingEditor", function()
-    
-    if not opened and ESX.GetPlayerData().perm >= 5 then
-        local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
-        if DoesEntityExist(vehicle) then
-            if GetEntityModel(vehicle) ~= lastModel then
-                handlingName = nil
-            end
-            handling, currentVehicle = {}, vehicle
-            for k, v in pairs(values) do
-                if v.type == "int" then
-                    handling[k] = GetVehicleHandlingInt(vehicle, class, k)
-                elseif v.type == "float" then
-                    handling[k] = RoundValue(GetVehicleHandlingFloat(vehicle, class, k))
-                elseif v.type == "vector" then
-                    local value = GetVehicleHandlingVector(vehicle, class, k)
-                    handling[k.."_x"] = RoundValue(value.x)
-                    handling[k.."_y"] = RoundValue(value.y)
-                    handling[k.."_z"] = RoundValue(value.z)
-                end
-            end
-            SendNUIMessage({
-                action =  "show",
-                handling = handling
-            })
-            SetNuiFocus(true, true)
-            opened = true
-            if not handlingName then
-                ShowNotification("~r~Handling name~w~ not specified - some values may ~r~not work~w~!")
-            end
-        else
-            ShowNotification("Vehicle not found!")
-        end
-    end
-end)
-RegisterKeyMapping("*BabiczHandlingEditor", "Handling Editor", "keyboard", "END")
-
-local UpdateHandling = function(target, value)
-    if values[target].type == "int" then
-        value = math.floor(value)
-        handling[target] = value
-        if handlingName then
-            SetHandlingInt(handlingName, class, target, value)
-        end
-        SetVehicleHandlingInt(currentVehicle, class, target, value)
-    elseif values[target].type == "float" then
-        value = value*1.0
-        handling[target] = value
-        if handlingName then
-            SetHandlingFloat(handlingName, class, target, value)
-        end
-        SetVehicleHandlingFloat(currentVehicle, class, target, value)
-    elseif values[target].type == "vector" then
-        handling[target] = value
-        local target = target:gsub("_x", "")
-        if handlingName then
-            SetHandlingVector(handlingName, class, target, vector3(handling[k.."_x"], handling[k.."_y"], handling[k.."_z"]))
-        end
-        SetVehicleHandlingVector(currentVehicle, class, target, vector3(handling[k.."_x"], handling[k.."_y"], handling[k.."_z"]))
-    end
-    return tostring(handling[target])
-end
-
-RegisterNUICallback("update", function(data, cb)
-    if data.target and values[data.target] and tonumber(data.value) and handling[data.target] then
-        UpdateHandling(data.target, data.value)
-    end
-    cb(true)
-end)
-
-RegisterNUICallback("change", function(data, cb)
-    if data.target and values[data.target] and handling[data.target] then
-        local value = handling[data.target]
-        if data.type == "add" then
-            return cb(UpdateHandling(data.target, value + values[data.target].change))
-        elseif data.type == "substract" then
-            return cb(UpdateHandling(data.target, value - values[data.target].change))
-        end
-    end
-    cb(false)
-end)
 
 -- vehicle properties taken from ESX framework
 local CloneVehicle = function(veh)
@@ -647,9 +526,176 @@ local CloneVehicle = function(veh)
     end
 end
 
-RegisterNUICallback("close", function(data, cb)
-    if handlingName then Citizen.CreateThread(function()CloneVehicle(currentVehicle)end) end
+-- REFACTOR: both entry points (the /handling command AND the END keybind)
+-- used to duplicate this exact block. Pulled out into one function so there's
+-- only one place left to maintain/fix.
+local function ReadVehicleHandlingInto(vehicle)
+    handling, currentVehicle, dirty = {}, vehicle, false
+    for k, v in pairs(values) do
+        if v.type == "int" then
+            handling[k] = GetVehicleHandlingInt(vehicle, class, k)
+        elseif v.type == "float" then
+            handling[k] = RoundValue(GetVehicleHandlingFloat(vehicle, class, k))
+        elseif v.type == "vector" then
+            local value = GetVehicleHandlingVector(vehicle, class, k)
+            handling[k.."_x"] = RoundValue(value.x)
+            handling[k.."_y"] = RoundValue(value.y)
+            handling[k.."_z"] = RoundValue(value.z)
+        end
+    end
+end
+
+local function OpenEditor(handlingNameArg)
+    if opened or checkingPermission then return end
+    local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+    if not DoesEntityExist(vehicle) then
+        ShowNotification("~r~Vehicle not found!")
+        return
+    end
+
+    -- SECURITY FIX: ask the server whether this player is actually allowed to
+    -- open the editor, instead of only trusting our own local perm value
+    -- (which any mod menu can freely lie about).
+    checkingPermission = true
+    ESX.TriggerServerCallback('babiczhandling:checkPermission', function(allowed)
+        checkingPermission = false
+        if not allowed then
+            ShowNotification("~r~شما دسترسی استفاده از Handling Editor را ندارید.")
+            return
+        end
+
+        if GetEntityModel(vehicle) ~= lastModel then
+            handlingName = nil
+        end
+        if handlingNameArg ~= nil then
+            if handlingNameArg == false then
+                handlingName = false
+                ShowNotification("~r~Handling name~w~ not specified - some values may ~r~not work~w~!")
+            else
+                handlingName, lastModel = handlingNameArg, GetEntityModel(vehicle)
+            end
+        elseif not handlingName then
+            ShowNotification("~r~Handling name~w~ not specified - some values may ~r~not work~w~!")
+        end
+
+        ReadVehicleHandlingInto(vehicle)
+        SendNUIMessage({
+            action  = "show",
+            handling = handling
+        })
+        SetNuiFocus(true, true)
+        opened = true
+
+        TriggerServerEvent('babiczhandling:logOpen', GetVehicleNumberPlateText(vehicle))
+    end)
+end
+
+-- REFACTOR + BUGFIX: closing via the /handling toggle used to skip this
+-- clone/bake-in step entirely (only the NUI "X" button did it), so a named
+-- handling change wouldn't actually persist if you closed with the command.
+-- Also only clones the vehicle if something was actually changed (`dirty`),
+-- instead of unconditionally respawning it (which reset engine state/mods
+-- on every single close, even ones with zero edits).
+local function CloseEditor()
+    SendNUIMessage({ action = "hide" })
     SetNuiFocus(false, false)
     opened = false
+    if handlingName and dirty and currentVehicle then
+        TriggerServerEvent('babiczhandling:logSave', handlingName, GetVehicleNumberPlateText(currentVehicle))
+        Citizen.CreateThread(function() CloneVehicle(currentVehicle) end)
+    end
+    dirty = false
+end
+
+RegisterCommand("handling", function(_, args)
+    if opened then
+        CloseEditor()
+        return
+    end
+
+    if not args[1] then
+        OpenEditor(false)
+    else
+        OpenEditor(args[1])
+    end
+end, false)
+
+RegisterCommand("*BabiczHandlingEditor", function()
+    OpenEditor(nil) -- nil = keep whatever handlingName was already set, matches original keybind behaviour
+end)
+RegisterKeyMapping("*BabiczHandlingEditor", "Handling Editor", "keyboard", "END")
+
+local UpdateHandling = function(target, value)
+    if values[target].type == "int" then
+        value = math.floor(value)
+        handling[target] = value
+        if handlingName then
+            SetHandlingInt(handlingName, class, target, value)
+        end
+        SetVehicleHandlingInt(currentVehicle, class, target, value)
+    elseif values[target].type == "float" then
+        value = value*1.0
+        handling[target] = value
+        if handlingName then
+            SetHandlingFloat(handlingName, class, target, value)
+        end
+        SetVehicleHandlingFloat(currentVehicle, class, target, value)
+    elseif values[target].type == "vector" then
+        handling[target] = value
+        -- BUGFIX: original code referenced an undefined global `k` here
+        -- (leftover from the unrelated `for k, v in pairs(values)` loop
+        -- elsewhere in the file) instead of the local `target` it just
+        -- computed below - this threw "attempt to concatenate a nil value"
+        -- and made both vector fields (vecCentreOfMassOffset /
+        -- vecInertiaMultiplier) completely unusable.
+        local baseName = target:gsub("_x", ""):gsub("_y", ""):gsub("_z", "")
+        local vec = vector3(
+            tonumber(handling[baseName.."_x"]) or 0.0,
+            tonumber(handling[baseName.."_y"]) or 0.0,
+            tonumber(handling[baseName.."_z"]) or 0.0
+        )
+        if handlingName then
+            SetHandlingVector(handlingName, class, baseName, vec)
+        end
+        SetVehicleHandlingVector(currentVehicle, class, baseName, vec)
+    end
+    dirty = true
+    return tostring(handling[target])
+end
+
+RegisterNUICallback("update", function(data, cb)
+    if opened and data.target and values[data.target] and tonumber(data.value) and handling[data.target] then
+        UpdateHandling(data.target, data.value)
+    end
     cb(true)
+end)
+
+RegisterNUICallback("change", function(data, cb)
+    if opened and data.target and values[data.target] and handling[data.target] then
+        local value = tonumber(handling[data.target]) or 0
+        if data.type == "add" then
+            return cb(UpdateHandling(data.target, value + values[data.target].change))
+        elseif data.type == "substract" then
+            return cb(UpdateHandling(data.target, value - values[data.target].change))
+        end
+    end
+    cb(false)
+end)
+
+RegisterNUICallback("close", function(data, cb)
+    CloseEditor()
+    cb(true)
+end)
+
+-- IMPROVEMENT: previously if you got out of the vehicle (or it got deleted/
+-- despawned) while the editor was still open, the UI just stayed open and
+-- floating with a dead currentVehicle reference. Now it closes itself.
+Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(1000)
+        if opened and (not currentVehicle or not DoesEntityExist(currentVehicle) or GetVehiclePedIsIn(PlayerPedId(), false) ~= currentVehicle) then
+            CloseEditor()
+            ShowNotification("~r~Handling editor closed - you left the vehicle.")
+        end
+    end
 end)

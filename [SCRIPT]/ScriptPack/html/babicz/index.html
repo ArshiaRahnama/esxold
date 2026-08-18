@@ -3,7 +3,14 @@
 <head>
     <meta charset="utf-8">
     <title>Babicz Handling Editor</title>
-    <script>if (typeof GetParentResourceName !== 'function') { window.GetParentResourceName = function () { return 'ScriptPack'; }; }</script>
+    <script>
+        // FIX: GetParentResourceName() isn't auto-injected into nested iframes
+        // (this page runs inside one, as part of ScriptPack's merged NUI shell).
+        // Polyfill it so script.js's fetch('https://<name>/cb') calls still work.
+        if (typeof GetParentResourceName !== 'function') {
+            window.GetParentResourceName = function () { return 'ScriptPack'; };
+        }
+    </script>
     <script src="script.js" defer></script>
     <style>
         body {

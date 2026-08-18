@@ -12,11 +12,13 @@
 	<div id="topbar">
 		<div class="topbar-title">
 			<span class="badge-icon">&#9878;</span>
-			<span>DOJ // Parvande Haye Baz</span>
+			<span id="topbarLabel">DOJ // Parvande Haye Baz</span>
+			<span id="liveDot" class="live-dot"></span>
 		</div>
 		<div class="topbar-tabs">
 			<button id="tabCases" class="tab-btn active">Parvande Ha</button>
 			<button id="tabWanted" class="tab-btn">Takhte Taghib</button>
+			<button id="tabBolo" class="tab-btn">BOLO Ha</button>
 		</div>
 		<button id="closeBtn" class="close-btn">&times;</button>
 	</div>
@@ -72,6 +74,24 @@
 				<div class="wanted-sub">Har Chi Adad Bishtar, Ehtemale Yek Mozaneh Sabet Bishtare</div>
 			</div>
 			<div id="wantedList" class="wanted-grid"></div>
+		</div>
+
+		<!-- BOLO VIEW -->
+		<div id="viewBolo" class="view">
+			<div class="bolo-header">
+				<div class="siren-strip"></div>
+				<div class="bolo-header-text">
+					<div class="section-title">BOLO Haye Faal</div>
+					<div class="wanted-sub">Pelak Haye Sadereh Az Parvande Haye DOJ</div>
+				</div>
+			</div>
+
+			<div class="bolo-check-row">
+				<button id="checkVehicleBtn" class="btn btn-primary">&#128269; Barresi Nazdiktarin Khodro</button>
+				<div id="plateResult" class="plate-result hidden"></div>
+			</div>
+
+			<div id="boloList" class="bolo-grid"></div>
 		</div>
 
 	</div>

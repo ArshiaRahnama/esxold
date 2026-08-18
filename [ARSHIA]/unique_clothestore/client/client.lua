@@ -5,6 +5,55 @@ local handsup = false
 local gender = nil
 ESX = nil
 
+-- ============================================================
+-- Itemization support (added on top of the original script).
+-- This shop buys/wears the WHOLE current outfit at once (skinchanger
+-- skin table), it never sold individual pieces as inventory items.
+-- To make bought clothes real, giveable/tradeable inventory items
+-- (and keep them recognised by the server's usable-item system), we
+-- diff the skin table from right before the shop opened (lastSkin)
+-- against right after a successful purchase, and turn every slot that
+-- actually changed into one 'clothe_<type>_<drawable>_<texture>' item.
+-- Slot ids match essentialmode's own skinchanger
+-- ([SCRIPT]/skinchanger/client/main.lua) and this resource's own
+-- components.lua exactly -- do not change these without updating both.
+-- ============================================================
+local ClotheItemSlots = {
+    { type = 'tshirt',    d = 'tshirt_1',    t = 'tshirt_2',    prop = false },
+    { type = 'torso',     d = 'torso_1',     t = 'torso_2',     prop = false },
+    { type = 'arms',      d = 'arms',        t = 'arms_2',      prop = false },
+    { type = 'decals',    d = 'decals_1',    t = 'decals_2',    prop = false },
+    { type = 'pants',     d = 'pants_1',     t = 'pants_2',     prop = false },
+    { type = 'shoes',     d = 'shoes_1',     t = 'shoes_2',     prop = false },
+    { type = 'mask',      d = 'mask_1',      t = 'mask_2',      prop = false },
+    { type = 'bproof',    d = 'bproof_1',    t = 'bproof_2',    prop = false },
+    { type = 'chain',     d = 'chain_1',     t = 'chain_2',     prop = false },
+    { type = 'bags',      d = 'bags_1',      t = 'bags_2',      prop = false },
+    { type = 'helmet',    d = 'helmet_1',    t = 'helmet_2',    prop = true },
+    { type = 'glasses',   d = 'glasses_1',   t = 'glasses_2',   prop = true },
+    { type = 'watches',   d = 'watches_1',   t = 'watches_2',   prop = true },
+    { type = 'bracelets', d = 'bracelets_1', t = 'bracelets_2', prop = true },
+    { type = 'ears',      d = 'ears_1',      t = 'ears_2',      prop = true },
+}
+
+-- returns a list of {type, drawable, texture} for every slot that
+-- differs between the pre-shop skin and the post-purchase skin
+local function computeBoughtClotheItems(before, after)
+    local bought = {}
+    if not before or not after then return bought end
+    for _, slot in ipairs(ClotheItemSlots) do
+        local beforeD, beforeT = before[slot.d], before[slot.t]
+        local afterD, afterT = after[slot.d], after[slot.t]
+        if afterD ~= nil and (afterD ~= beforeD or afterT ~= beforeT) then
+            -- props use -1 to mean "nothing worn" -- not a purchase
+            if not (slot.prop and (afterD == -1 or afterD == nil)) then
+                bought[#bought + 1] = { type = slot.type, drawable = afterD, texture = afterT or 0 }
+            end
+        end
+    end
+    return bought
+end
+
 if Config.Core == "ESX" then
     Citizen.CreateThread(function()
         while ESX == nil do
@@ -32,6 +81,34 @@ Citizen.CreateThread(function()
     end
 end)
 
+-- Applies one purchased piece to the ped and re-saves the whole skin,
+-- matching this resource's own whole-skin persistence model. Used by
+-- the server when a player "uses" a clothing item from their inventory.
+RegisterNetEvent('unique_clothestore:wearClotheItem')
+AddEventHandler('unique_clothestore:wearClotheItem', function(clotheType, drawable, texture)
+    local slot
+    for _, s in ipairs(ClotheItemSlots) do
+        if s.type == clotheType then slot = s break end
+    end
+    if not slot then return end
+
+    local ped = PlayerPedId()
+    local componentIds = { tshirt = 8, torso = 11, arms = 3, decals = 10, pants = 4, shoes = 6, mask = 1, bproof = 9, chain = 7, bags = 5 }
+    local propIds = { helmet = 0, glasses = 1, watches = 6, bracelets = 7, ears = 2 }
+
+    if slot.prop then
+        SetPedPropIndex(ped, propIds[clotheType], drawable, texture, true)
+    else
+        SetPedComponentVariation(ped, componentIds[clotheType], drawable, texture, 2)
+    end
+
+    if Config.SkinManager == 'esx_skin' then
+        TriggerEvent('skinchanger:getSkin', function(skin)
+            TriggerServerEvent('esx_skin:save', skin)
+        end)
+    end
+end)
+
 RegisterNUICallback('buyClothes', function(data)
 
     if Config.Core == "ESX" then
@@ -44,6 +121,7 @@ RegisterNUICallback('buyClothes', function(data)
                     TriggerEvent('skinchanger:getSkin', function(skin)
                         if Config.SkinManager == "esx_skin" then
                             TriggerServerEvent('esx_skin:save', skin)
+                            TriggerServerEvent('unique_clothestore:giveClotheItems', computeBoughtClotheItems(lastSkin, skin))
                         elseif Config.SkinManager == "fivem-appearance" then
                             TriggerEvent('fivem-appearance:setOutfit', Character_AP)
                             TriggerServerEvent('fivem-appearance:save', Character_AP)
@@ -68,6 +146,7 @@ RegisterNUICallback('buyClothes', function(data)
                     TriggerEvent('skinchanger:getSkin', function(skin)
                         if Config.SkinManager == "esx_skin" then
                             TriggerServerEvent('esx_skin:save', skin)
+                            TriggerServerEvent('unique_clothestore:giveClotheItems', computeBoughtClotheItems(lastSkin, skin))
                         elseif Config.SkinManager == "fivem-appearance" then
                             TriggerEvent('fivem-appearance:setOutfit', Character_AP)
                             TriggerServerEvent('fivem-appearance:save', Character_AP)

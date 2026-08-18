@@ -8,20 +8,25 @@
 
     Flow:
       1. Robbery succeeds -> a crime scene with a few evidence points
-         spawns around where the robber finished.
-      2. DOJ members (Config.DOJJobs) walk up to evidence points and
+         spawns around where the robber finished, UNSECURED.
+      2. Law Enforcement (Config.LawEnforcementJobs: police/sheriff/mt) is
+         first on scene and secures it. Until they do, evidence DOJ
+         collects has a chance of coming back contaminated (weaker).
+      3. DOJ members (Config.DOJJobs) walk up to evidence points and
          collect them. Each point rolls into a hint / vehicle plate /
          strong lead (partial real suspect identifier).
-      3. DOJ members can add free-text notes to build the case out.
-      4. Once there's something to work with, the case gets referred to
-         Judge, CIA or FBI (Config.ReferralJobs) who prosecute/investigate
-         further and close the case.
+      4. DOJ members can add free-text notes, issue a BOLO on a found
+         plate (Law Enforcement gets it and can check plates from the /doj panel
+         against it), and refer the case to Judge, CIA or FBI
+         (Config.ReferralJobs) who prosecute/investigate further and
+         close the case.
 ]]
 
 ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-local ActiveScenes = {} -- [caseId] = { robname, family, coords, plate, suspectIdentifier, suspectName, points = { [pointId] = {coords, collected} }, createdAt }
+local ActiveScenes = {} -- [caseId] = { robname, family, coords, plate, secured, suspectIdentifier, suspectName, points = { [pointId] = {coords, collected} }, createdAt }
+local ActiveBOLOs = {} -- [plate] = { caseId, issuedBy, issuedAt }
 local NextPointId = 0
 
 -- ============================================================
@@ -31,6 +36,13 @@ local NextPointId = 0
 local function IsDOJJob(job)
     for i = 1, #Config.DOJJobs do
         if Config.DOJJobs[i] == job then return true end
+    end
+    return false
+end
+
+local function IsLawEnforcementJob(job)
+    for i = 1, #Config.LawEnforcementJobs do
+        if Config.LawEnforcementJobs[i] == job then return true end
     end
     return false
 end
@@ -75,6 +87,14 @@ local function NotifyJobs(jobs, msg, msgType)
                     break
                 end
             end
+        end
+    end
+end
+
+local function ClearBOLOsForCase(caseId)
+    for plate, info in pairs(ActiveBOLOs) do
+        if info.caseId == caseId then
+            ActiveBOLOs[plate] = nil
         end
     end
 end
@@ -144,19 +164,24 @@ AddEventHandler('Morphy_RobSystem:robberySuccess', function(robname, robberyCode
                 family             = family,
                 coords             = coords,
                 plate              = plate,
+                secured            = false,
                 suspectIdentifier  = xPlayer.identifier,
                 suspectName        = xPlayer.name,
                 points             = points,
                 createdAt          = os.time(),
             }
 
-            BroadcastToJobs(Config.DOJJobs, 'CrimeScene:sceneCreated', caseId, coords, pointsForClient)
-            NotifyJobs(Config.DOJJobs, 'Yek Sahne Jorm Jadid Sabt Shod. Baraye Didan /cases Bezanid.', 'info')
+            BroadcastToJobs(Config.DOJJobs, 'CrimeScene:sceneCreated', caseId, coords, pointsForClient, false)
+            BroadcastToJobs(Config.LawEnforcementJobs, 'CrimeScene:sceneCreated', caseId, coords, pointsForClient, false)
+            NotifyJobs(Config.DOJJobs, 'Yek Sahne Jorm Jadid Sabt Shod. Baraye Didan /doj Bezanid.', 'info')
+            NotifyJobs(Config.LawEnforcementJobs, 'Yek Sahne Jorm Niaz Be Emn Sazi Darad.', 'info')
 
             SetTimeout(Config.SceneLifetimeMinutes * 60000, function()
                 if ActiveScenes[caseId] then
                     ActiveScenes[caseId] = nil
                     BroadcastToJobs(Config.DOJJobs, 'CrimeScene:sceneExpired', caseId)
+                    BroadcastToJobs(Config.LawEnforcementJobs, 'CrimeScene:sceneExpired', caseId)
+                    ClearBOLOsForCase(caseId)
                     MySQL.Async.execute(
                         "UPDATE doj_cases SET status = @newstatus WHERE id = @id AND status = @openstatus",
                         { ['@newstatus'] = 'cold', ['@id'] = caseId, ['@openstatus'] = 'open' }
@@ -164,6 +189,40 @@ AddEventHandler('Morphy_RobSystem:robberySuccess', function(robname, robberyCode
                 end
             end)
         end
+    )
+end)
+
+-- ============================================================
+-- Scene lockdown (Law Enforcement secures the scene first)
+-- ============================================================
+
+RegisterServerEvent('CrimeScene:secureScene')
+AddEventHandler('CrimeScene:secureScene', function(caseId)
+    local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
+    if not xPlayer or not IsLawEnforcementJob(xPlayer.job.name) then return end
+
+    local scene = ActiveScenes[caseId]
+    if not scene or scene.secured then return end
+
+    local ped = GetPlayerPed(_source)
+    local pCoords = GetEntityCoords(ped)
+    if #(pCoords - scene.coords) > Config.SceneLockdown.radius then
+        TriggerClientEvent('esx:showNotification', _source, 'Shoma Be Markaze Sahne Nazdik Nistid', 'error')
+        return
+    end
+
+    scene.secured = true
+
+    BroadcastToJobs(Config.LawEnforcementJobs, 'CrimeScene:sceneSecured', caseId)
+    BroadcastToJobs(Config.DOJJobs, 'CrimeScene:sceneSecured', caseId)
+    NotifyJobs(Config.DOJJobs, xPlayer.name .. ' Sahne Ra Emn Kard. Madarek Alan Kamele Ghabele Etemad Hastand.', 'success')
+    NotifyJobs(Config.LawEnforcementJobs, xPlayer.name .. ' Sahne Ra Emn Kard.', 'success')
+
+    TriggerEvent(
+        'DiscordBot:ToDiscord', 'rob', "Crime Scene",
+        "```css\n[Case] : " .. caseId .. "\n[Secured By] : " .. xPlayer.name .. "\n```",
+        'user', _source, true, false
     )
 end)
 
@@ -196,7 +255,7 @@ AddEventHandler('CrimeScene:collectEvidence', function(caseId, pointId, skillChe
     point.collected = true
 
     local roll = math.random()
-    local evType, content, hintId
+    local evType, content, hintId, evPlate
 
     if roll < Config.StrongLeadChance then
         evType = 'strong_lead'
@@ -213,22 +272,30 @@ AddEventHandler('CrimeScene:collectEvidence', function(caseId, pointId, skillChe
         evType = 'hint'
     end
 
+    -- Scene wasn't secured by Law Enforcement yet: chance the evidence got
+    -- contaminated/trampled before DOJ got a clean read on it.
+    if not scene.secured and evType ~= 'hint' and math.random() < Config.UnsecuredContaminationChance then
+        evType = 'hint'
+    end
+
     if evType == 'strong_lead' then
         hintId = scene.suspectIdentifier and scene.suspectIdentifier:sub(-6) or '??????'
         content = 'Sarnakh Ghavi: Yek Fard Ba Code Shenasaei Payan Be ^3' .. hintId .. '^0 Peida Shod'
     elseif evType == 'vehicle' then
+        evPlate = scene.plate
         content = 'Pelake Khodroye Mashkook: ^3' .. scene.plate .. '^0'
     else
         content = Config.SuspectHints[math.random(1, #Config.SuspectHints)]
     end
 
     MySQL.Async.insert(
-        'INSERT INTO doj_case_evidence (case_id, type, content, suspect_hint_id, found_by, found_by_name) VALUES (@case_id, @type, @content, @hint_id, @found_by, @found_by_name)',
+        'INSERT INTO doj_case_evidence (case_id, type, content, suspect_hint_id, plate, found_by, found_by_name) VALUES (@case_id, @type, @content, @hint_id, @plate, @found_by, @found_by_name)',
         {
             ['@case_id']       = caseId,
             ['@type']          = evType,
             ['@content']       = content,
             ['@hint_id']       = hintId,
+            ['@plate']         = evPlate,
             ['@found_by']      = xPlayer.identifier,
             ['@found_by_name'] = xPlayer.name,
         }
@@ -291,7 +358,7 @@ AddEventHandler('CrimeScene:referCase', function(caseId, targetJob)
 
             NotifyJobs(
                 { targetJob },
-                'Yek Parvande Jadid Baraye Vahede Shoma Ersal Shod. /cases Bezanid.',
+                'Yek Parvande Jadid Baraye Vahede Shoma Ersal Shod. /doj Bezanid.',
                 'info'
             )
             TriggerClientEvent('esx:showNotification', _source, 'Parvande Ba Movafaghiat Ersal Shod', 'success')
@@ -318,6 +385,8 @@ AddEventHandler('CrimeScene:closeCase', function(caseId, verdict)
     if not xPlayer or not IsReferralJob(xPlayer.job.name) then return end
 
     MySQL.Async.execute('UPDATE doj_cases SET status = @newstatus WHERE id = @id', { ['@newstatus'] = 'closed', ['@id'] = caseId })
+    ClearBOLOsForCase(caseId)
+    BroadcastToJobs(Config.LawEnforcementJobs, 'CrimeScene:boloListUpdated')
 
     if verdict and verdict ~= '' then
         MySQL.Async.execute(
@@ -333,6 +402,104 @@ AddEventHandler('CrimeScene:closeCase', function(caseId, verdict)
 
     TriggerClientEvent('esx:showNotification', _source, 'Parvande Baste Shod', 'success')
     TriggerClientEvent('CrimeScene:refreshCase', _source, caseId)
+end)
+
+-- ============================================================
+-- BOLOs -- DOJ issues them off a case's vehicle plate, Law
+-- Enforcement (police/sheriff/mt) acts on them from the /doj panel
+-- ============================================================
+
+RegisterServerEvent('CrimeScene:issueBOLO')
+AddEventHandler('CrimeScene:issueBOLO', function(caseId)
+    local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
+    if not xPlayer or not IsDOJJob(xPlayer.job.name) then return end
+
+    MySQL.Async.fetchAll(
+        "SELECT plate FROM doj_case_evidence WHERE case_id = @id AND type = 'vehicle' AND plate IS NOT NULL ORDER BY created_at DESC LIMIT 1",
+        { ['@id'] = caseId },
+        function(rows)
+            if not rows or not rows[1] or not rows[1].plate then
+                TriggerClientEvent('esx:showNotification', _source, 'In Parvande Hich Pelaki Sabt Nashode', 'error')
+                return
+            end
+
+            local plate = rows[1].plate
+            ActiveBOLOs[plate] = { caseId = caseId, issuedBy = xPlayer.name, issuedAt = os.time() }
+
+            BroadcastToJobs(Config.LawEnforcementJobs, 'CrimeScene:newBOLO', plate, caseId)
+            BroadcastToJobs(Config.LawEnforcementJobs, 'CrimeScene:boloListUpdated')
+            NotifyJobs(Config.LawEnforcementJobs, 'BOLO Jadid: Pelake ^1' .. plate .. '^0 - Az Panel Check Konid', 'error')
+            TriggerClientEvent('esx:showNotification', _source, 'BOLO Baraye Pelake ' .. plate .. ' Sadar Shod', 'success')
+
+            SetTimeout(Config.BOLOLifetimeMinutes * 60000, function()
+                if ActiveBOLOs[plate] and ActiveBOLOs[plate].caseId == caseId then
+                    ActiveBOLOs[plate] = nil
+                    BroadcastToJobs(Config.LawEnforcementJobs, 'CrimeScene:boloListUpdated')
+                end
+            end)
+
+            TriggerEvent(
+                'DiscordBot:ToDiscord', 'rob', "Crime Scene",
+                "```css\n[Case] : " .. caseId .. "\n[BOLO Issued By] : " .. xPlayer.name .. "\n[Plate] : " .. plate .. "\n```",
+                'user', _source, true, false
+            )
+        end
+    )
+end)
+
+RegisterServerEvent('CrimeScene:checkPlate')
+AddEventHandler('CrimeScene:checkPlate', function(plate)
+    local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
+    if not xPlayer or not IsLawEnforcementJob(xPlayer.job.name) then return end
+    if not plate then return end
+
+    plate = plate:gsub('^%s+', ''):gsub('%s+$', '')
+    local bolo = ActiveBOLOs[plate]
+
+    if not bolo then
+        TriggerClientEvent('CrimeScene:plateCheckResult', _source, false, plate, nil)
+        return
+    end
+
+    TriggerClientEvent('CrimeScene:plateCheckResult', _source, true, plate, bolo.caseId)
+
+    MySQL.Async.execute(
+        'INSERT INTO doj_case_notes (case_id, author, author_name, note) VALUES (@case_id, @author, @author_name, @note)',
+        {
+            ['@case_id']     = bolo.caseId,
+            ['@author']      = 'SYSTEM',
+            ['@author_name'] = 'Law Enforcement',
+            ['@note']        = xPlayer.name .. ' Khodroye BOLO (Pelake ' .. plate .. ') Ra Peida Kard',
+        }
+    )
+
+    -- solved: this BOLO doesn't need to be checked for anymore, take it off
+    -- the board for everyone
+    ActiveBOLOs[plate] = nil
+    BroadcastToJobs(Config.LawEnforcementJobs, 'CrimeScene:boloListUpdated')
+
+    TriggerEvent(
+        'DiscordBot:ToDiscord', 'rob', "Crime Scene",
+        "```css\n[Case] : " .. bolo.caseId .. "\n[BOLO Hit By] : " .. xPlayer.name .. "\n[Plate] : " .. plate .. "\n```",
+        'user', _source, true, false
+    )
+end)
+
+ESX.RegisterServerCallback('CrimeScene:getActiveBOLOs', function(source, cb)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if not xPlayer or not IsLawEnforcementJob(xPlayer.job.name) then
+        cb({})
+        return
+    end
+
+    local list = {}
+    for plate, info in pairs(ActiveBOLOs) do
+        list[#list + 1] = { plate = plate, caseId = info.caseId, issuedBy = info.issuedBy, issuedAt = info.issuedAt }
+    end
+    table.sort(list, function(a, b) return a.issuedAt > b.issuedAt end)
+    cb(list)
 end)
 
 -- ============================================================
@@ -422,7 +589,7 @@ ESX.RegisterServerCallback('CrimeScene:getWantedBoard', function(source, cb)
 end)
 
 -- ============================================================
--- Callbacks for the /cases menu
+-- Callbacks for the /doj panel
 -- ============================================================
 
 ESX.RegisterServerCallback('CrimeScene:getCases', function(source, cb)

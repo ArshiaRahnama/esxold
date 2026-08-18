@@ -8,11 +8,43 @@ Config = {}
 -- collect evidence, and expand a case (add investigative notes).
 Config.DOJJobs = { 'cid', 'cia', 'marshal', 'fbi', 'judge', 'doa' }
 
+-- Law Enforcement -- NOT part of DOJ. They're first on scene: they secure
+-- it before DOJ can investigate cleanly, and they're the ones who act on
+-- BOLOs that DOJ issues once a vehicle plate turns up in a case.
+Config.LawEnforcementJobs = { 'police', 'sheriff', 'mt' }
+
 -- Once a case has evidence in it, a DOJ member can formally refer it to one
 -- of these jobs for prosecution / specialized follow-up. These jobs also
--- get a notification + can see the case in /cases once it's referred to
+-- get a notification + can see the case in /doj once it's referred to
 -- them, and are the only ones who can close a case with a verdict.
 Config.ReferralJobs = { 'judge', 'cia', 'fbi' }
+
+-- ============================================================
+-- Scene lockdown (Law Enforcement's job)
+-- ============================================================
+
+-- Until Police/Sheriff/MT secures a fresh crime scene, evidence DOJ
+-- collects there has a chance of coming back contaminated (silently
+-- downgraded to a plain hint, no strong lead/vehicle plate). DOJ can still
+-- work an unsecured scene -- it's just worse. This is what makes Law
+-- Enforcement showing up first actually matter.
+Config.SceneLockdown = {
+	skillCheck = { 'easy', 'easy' },
+	radius     = 2.5, -- how close Law Enforcement needs to be to secure it
+}
+Config.UnsecuredContaminationChance = 0.5
+
+-- ============================================================
+-- BOLOs (Law Enforcement's job)
+-- ============================================================
+
+-- How long (minutes) a BOLO issued from a case stays active before it
+-- expires automatically.
+Config.BOLOLifetimeMinutes = 30
+
+-- How close (meters) Police/Sheriff/MT need to be to a vehicle to run
+-- can check a nearby vehicle from the /doj panel.
+Config.PlateCheckDistance = 5.0
 
 -- ============================================================
 -- Crime scene generation
@@ -20,7 +52,7 @@ Config.ReferralJobs = { 'judge', 'cia', 'fbi' }
 
 -- How long (minutes) a crime scene stays active before evidence goes cold
 -- and the interaction points disappear. If nothing was found by then the
--- case is marked 'cold' instead of deleted (still visible in /cases).
+-- case is marked 'cold' instead of deleted (still visible in /doj).
 Config.SceneLifetimeMinutes = 20
 
 -- How far (meters) around the spot the robber finished the job at,

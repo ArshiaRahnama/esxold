@@ -191,7 +191,12 @@ ESX.RegisterUsableItem = function(item, cb)
 end
 
 ESX.UseItem = function(source, item)
-    ESX.UsableItemsCallbacks[item](source)
+    local callback = ESX.UsableItemsCallbacks[item]
+    if callback then
+        callback(source)
+    else
+        print(("[essentialmode] ^3WARNING^7: item '%s' has no usable handler registered (ESX.RegisterUsableItem was never called for it, or the resource that owns it restarted) -- ignoring instead of crashing."):format(tostring(item)))
+    end
 end
 
 ESX.GetItemLabel = function(item)

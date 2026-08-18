@@ -2,6 +2,59 @@ if Config.Core == "ESX" then
     ESX = nil
     TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
+    -- ============================================================
+    -- Itemization: turns bought clothing into real inventory items
+    -- shaped 'clothe_<type>_<drawable>_<texture>'. Every item this
+    -- shop ever gives is ALWAYS paired with ESX.RegisterUsableItem --
+    -- this is what the "attempt to call a nil value" UseItem crash
+    -- was actually caused by: the old clothing shop called
+    -- esx:CreateItem (adds the item to ESX.Items) but never called
+    -- ESX.RegisterUsableItem for it, so ESX.UsableItemsCallbacks[item]
+    -- stayed nil forever and using the item from the inventory crashed
+    -- essentialmode every single time.
+    -- ============================================================
+    local ClotheTypeLabel = {
+        tshirt = 'Tishert', torso = 'Lebas', arms = 'Dastkesh', decals = 'Neshan',
+        pants = 'Shalvar', shoes = 'Kafsh', mask = 'Mask', bproof = 'Jelighe',
+        chain = 'Gardanband', bags = 'Kif', helmet = 'Kolah', glasses = 'Eynak',
+        watches = 'Saat', bracelets = 'Dastband', ears = 'Gushvare',
+    }
+    local KnownClotheTypes = {}
+    for t in pairs(ClotheTypeLabel) do KnownClotheTypes[t] = true end
+
+    local function ensureClotheItemRegistered(itemName, clotheType, drawable, texture)
+        local label = (ClotheTypeLabel[clotheType] or clotheType) .. (' #%d'):format(drawable)
+        if ESX.Items[itemName] == nil then
+            TriggerEvent('esx:CreateItem', itemName, label, -1, false, true)
+        end
+        -- always (re-)pair a usable handler, even if the item already
+        -- existed in ESX.Items -- ESX.UsableItemsCallbacks is a
+        -- SEPARATE table that resets on every resource restart, while
+        -- an item can still be sitting in a player's saved inventory
+        -- from before that restart.
+        ESX.RegisterUsableItem(itemName, function(playerId)
+            TriggerClientEvent('unique_clothestore:wearClotheItem', playerId, clotheType, drawable, texture)
+        end)
+    end
+
+    RegisterServerEvent('unique_clothestore:giveClotheItems')
+    AddEventHandler('unique_clothestore:giveClotheItems', function(boughtItems)
+        local xPlayer = ESX.GetPlayerFromId(source)
+        if not xPlayer or type(boughtItems) ~= 'table' then return end
+
+        for _, entry in ipairs(boughtItems) do
+            local clotheType = entry.type
+            local drawable = tonumber(entry.drawable)
+            local texture = tonumber(entry.texture) or 0
+
+            if type(clotheType) == 'string' and KnownClotheTypes[clotheType] and drawable and drawable >= 0 then
+                local itemName = ('clothe_%s_%d_%d'):format(clotheType, drawable, texture)
+                ensureClotheItemRegistered(itemName, clotheType, drawable, texture)
+                xPlayer.addInventoryItem(itemName, 1)
+            end
+        end
+    end)
+
     ESX.RegisterServerCallback('unique_clothestore:payForClothes', function(source, cb, price, type, number, pin)
         local xPlayer = ESX.GetPlayerFromId(source)
         local price = tonumber(price)

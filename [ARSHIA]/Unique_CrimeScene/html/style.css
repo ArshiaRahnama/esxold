@@ -53,6 +53,20 @@ html, body {
 
 .badge-icon { font-size: 20px; }
 
+.live-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: #4caf50;
+	box-shadow: 0 0 8px rgba(76, 175, 80, 0.9);
+	animation: livePulse 1.6s ease-in-out infinite;
+}
+
+@keyframes livePulse {
+	0%, 100% { opacity: 1; transform: scale(1); }
+	50% { opacity: 0.4; transform: scale(0.7); }
+}
+
 .topbar-tabs { display: flex; gap: 8px; }
 
 .tab-btn {
@@ -91,7 +105,8 @@ html, body {
 #body { flex: 1; overflow: hidden; position: relative; }
 
 .view { display: none; height: 100%; }
-.view.active { display: flex; }
+.view.active { display: flex; flex-direction: column; }
+#viewCases.active { flex-direction: row; }
 
 /* ===== Case list sidebar ===== */
 .sidebar {
@@ -186,6 +201,12 @@ html, body {
 	font-size: 12px;
 	line-height: 1.6;
 	color: #d8cdb8;
+	animation: cardIn 0.35s ease both;
+}
+
+@keyframes cardIn {
+	from { opacity: 0; transform: translateY(6px) scale(0.98); }
+	to { opacity: 1; transform: translateY(0) scale(1); }
 }
 .evidence-card::before {
 	content: '';
@@ -268,6 +289,8 @@ html, body {
 	grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
 	gap: 12px;
 	width: 100%;
+	flex: 1;
+	min-height: 0;
 }
 
 .wanted-card {
@@ -292,3 +315,82 @@ html, body {
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #4a3f2e; border-radius: 4px; }
+
+/* ===== BOLO view ===== */
+.bolo-header {
+	position: relative;
+	padding: 20px 24px 6px;
+	overflow: hidden;
+}
+
+.siren-strip {
+	position: absolute;
+	top: 0; left: 0; right: 0;
+	height: 4px;
+	background: linear-gradient(90deg, #c0392b 0%, #c0392b 48%, #2b5fc0 52%, #2b5fc0 100%);
+	background-size: 200% 100%;
+	animation: sirenSweep 1.4s linear infinite;
+}
+
+@keyframes sirenSweep {
+	0% { background-position: 0% 0; }
+	100% { background-position: -200% 0; }
+}
+
+.bolo-header-text { padding-top: 6px; }
+
+.bolo-check-row {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 4px 24px 16px;
+	flex-wrap: wrap;
+}
+
+.plate-result {
+	font-family: 'JetBrains Mono', monospace;
+	font-size: 13px;
+	font-weight: 700;
+	padding: 8px 14px;
+	border-radius: 6px;
+	animation: cardIn 0.25s ease both;
+}
+.plate-result.match {
+	background: rgba(192, 57, 43, 0.18);
+	border: 1px solid #c0392b;
+	color: #ff8a80;
+}
+.plate-result.clean {
+	background: rgba(76, 175, 80, 0.12);
+	border: 1px solid #3a5f3d;
+	color: #9be09b;
+}
+
+.bolo-grid {
+	padding: 10px 24px 24px;
+	overflow-y: auto;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+	gap: 12px;
+	width: 100%;
+	flex: 1;
+	min-height: 0;
+}
+
+.bolo-card {
+	background: #221b13;
+	border: 1px solid #4a3f2e;
+	border-left: 4px solid #2b5fc0;
+	border-radius: 6px;
+	padding: 14px;
+	animation: cardIn 0.3s ease both;
+}
+.bolo-plate {
+	font-family: 'JetBrains Mono', monospace;
+	font-size: 17px;
+	font-weight: 700;
+	color: #f2c14e;
+	letter-spacing: 1px;
+	margin-bottom: 6px;
+}
+.bolo-meta { font-size: 11.5px; color: #8a7d63; }

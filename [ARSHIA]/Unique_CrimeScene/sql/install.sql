@@ -22,12 +22,14 @@ CREATE TABLE IF NOT EXISTS `doj_case_evidence` (
   `type` VARCHAR(32) NOT NULL, -- hint | vehicle | strong_lead
   `content` TEXT NOT NULL,
   `suspect_hint_id` VARCHAR(6) DEFAULT NULL, -- only set on strong_lead rows, used for wanted-board / fingerprint matching
+  `plate` VARCHAR(10) DEFAULT NULL, -- only set on vehicle rows, used for BOLOs
   `found_by` VARCHAR(64) DEFAULT NULL,
   `found_by_name` VARCHAR(64) DEFAULT NULL,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_case_id` (`case_id`),
   KEY `idx_hint_id` (`suspect_hint_id`),
+  KEY `idx_plate` (`plate`),
   CONSTRAINT `fk_evidence_case` FOREIGN KEY (`case_id`) REFERENCES `doj_cases` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -42,3 +44,9 @@ CREATE TABLE IF NOT EXISTS `doj_case_notes` (
   KEY `idx_case_id` (`case_id`),
   CONSTRAINT `fk_notes_case` FOREIGN KEY (`case_id`) REFERENCES `doj_cases` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- If you already ran an earlier version of this file (without the `plate`
+-- column on doj_case_evidence), run this once to upgrade instead of
+-- dropping/recreating the table:
+-- ALTER TABLE `doj_case_evidence` ADD COLUMN `plate` VARCHAR(10) DEFAULT NULL AFTER `suspect_hint_id`;
+-- ALTER TABLE `doj_case_evidence` ADD KEY `idx_plate` (`plate`);
