@@ -93,8 +93,12 @@ ESX.RegisterServerCallback('Unique_Garage:storeVehicle', function(source, cb, ve
 			}, function (result)
 				-- print(json.encode(result))
 				if result[1] ~= nil then
-					local plakmalit_dare_miad_vaght_chize = result[1].plate.sub(result[1].plate, 1, (string.len("result[1].plate"))-1  )
-					if plakmalit_dare_miad_vaght_chize == vehplate then
+					-- BUGFIX: this used to call string.len() on the literal
+					-- text "result[1].plate" instead of the actual plate
+					-- value, so the trimmed comparison below never lined up
+					-- and this whole fallback path silently failed.
+					local trimmedKeyPlate = result[1].plate:match("^%s*(.-)%s*$")
+					if trimmedKeyPlate == vehplate then
 						MySQL.Async.execute("UPDATE owned_vehicles SET vehicle = @vehicle WHERE (owner = @player OR LOWER(`owner`) = @gang) AND plate = @plate", {
 							["@player"] = xPlayer.identifier,
 							["@gang"] = string.lower(xPlayer.gang.name),

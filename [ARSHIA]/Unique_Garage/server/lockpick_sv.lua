@@ -8,9 +8,16 @@ end)
 
 RegisterNetEvent('esx_lockpick:unlockVehicleWithAlarm')
 AddEventHandler('esx_lockpick:unlockVehicleWithAlarm', function(vehicleNetId)
-    local vehicle = NetworkGetEntityFromNetworkId(vehicleNetId) 
+    -- SECURITY NOTE (fixed): this previously trusted whatever netId the
+    -- client sent with no distance check at all, so any exploit could call
+    -- this event directly and instantly unlock (+ alarm) ANY vehicle on the
+    -- server, bypassing the skill-check minigame entirely. Now it verifies
+    -- the requesting player is actually standing near that vehicle.
+    local vehicle = NetworkGetEntityFromNetworkId(vehicleNetId)
+    local ped = GetPlayerPed(source)
 
-    if DoesEntityExist(vehicle) then
+    if DoesEntityExist(vehicle) and ped and ped ~= 0
+        and #(GetEntityCoords(ped) - GetEntityCoords(vehicle)) <= 6.0 then
         SetVehicleDoorsLocked(vehicle, 1)
         TriggerClientEvent('esx:showNotification', source, "Dar mashin baz shod.")
 

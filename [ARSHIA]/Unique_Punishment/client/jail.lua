@@ -167,6 +167,10 @@ end
 RegisterNetEvent("arshia_jail:factionjail")
 AddEventHandler("arshia_jail:factionjail", function(target)
 	-- local target = tonumber(args[1])
+	if not PlayerData or not PlayerData.job then
+		TriggerEvent('chatMessage', "[SYSTEM]", {255, 0, 0}, "Etelaate Player Hanooz Load Nashode, Chand Sanie Sabr Konid")
+		return
+	end
 	if IsJobAllowed(PlayerData.job.name) then
         local canopen = false
         local unjail = 0
@@ -220,6 +224,8 @@ AddEventHandler("arshia_jail:factionjail", function(target)
         else
             TriggerEvent('chatMessage', "[SYSTEM]", {255, 0, 0}, "Shoma Dar Station Nistid")
         end
+	else
+		TriggerEvent('chatMessage', "[SYSTEM]", {255, 0, 0}, "Shoma Shoghle Jail Kardan Ra Nadarid (police/sheriff)")
 	end
 end)
 

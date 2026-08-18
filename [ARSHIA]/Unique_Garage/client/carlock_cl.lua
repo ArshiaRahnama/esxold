@@ -1,9 +1,33 @@
 -- ESX is already initialized globally by client.lua; no need to re-fetch it here.
 local DisableOnKey = false
-local hotwireActive = {} 
+local hotwireActive = {}
 local showHotwireText = false
 local canHotwireVehicle = false
 local hotwireText = "~r~[H] ~w~Baraye Pich Goshti Kardan"
+
+-- Same list as the server (carlock_sv.lua RESTRICTED_HOTWIRE_PREFIXES) --
+-- kept here too purely so the player gets an instant, local "no" instead of
+-- waiting on a round trip. The SERVER is the one that actually enforces
+-- this now; this client copy is UX-only and is never trusted for security.
+local restrictedPrefixes = {
+    ["FBI"] = true,
+    ["PD"] = true,
+    ["MT"] = true,
+    ["SH"] = true,
+    ["TX"] = true,
+    ["MD"] = true,
+    ["MC"] = true,
+    ["WZ"] = true
+}
+
+local function flashOutline(vehicle)
+    SetEntityDrawOutline(vehicle, true)
+    SetTimeout(1000, function()
+        if DoesEntityExist(vehicle) then
+            SetEntityDrawOutline(vehicle, false)
+        end
+    end)
+end
 
 CreateThread(function()
     while ESX == nil do Citizen.Wait(100) end
@@ -12,7 +36,7 @@ CreateThread(function()
         local vehicle = GetVehiclePedIsIn(ped, false)
         local plate = vehicle ~= 0 and GetVehicleNumberPlateText(vehicle) or nil
 
-        if vehicle ~= 0 then 
+        if vehicle ~= 0 then
             if GetPedInVehicleSeat(vehicle, -1) == ped then
                 ESX.TriggerServerCallback('CarLock:haskey', function(haskey)
                     if not haskey and not (plate and hotwireActive[plate]) then
@@ -22,23 +46,23 @@ CreateThread(function()
                         showHotwireText = true
                         canHotwireVehicle = true
                     else
-                        DisableOnKey = false 
+                        DisableOnKey = false
                         StopBringVehicleToHalt(vehicle)
                         showHotwireText = false
                         canHotwireVehicle = false
                     end
                 end, plate)
-            else 
+            else
                 Wait(2000)
                 showHotwireText = false
                 canHotwireVehicle = false
             end
-        else 
+        else
             Wait(2000)
             showHotwireText = false
             canHotwireVehicle = false
-        end 
-        Wait(3000) 
+        end
+        Wait(3000)
     end
 end)
 
@@ -67,31 +91,20 @@ function UseHotwireKit()
 
     local ped = PlayerPedId()
     local vehicle = GetVehiclePedIsIn(ped, false)
-    
+
     if vehicle == 0 then
         SafeNotify("~r~Shoma Savar Mashin nistid")
         return
     end
-    
+
     local plate = GetVehicleNumberPlateText(vehicle)
-    local globalplate = string.gsub(plate, "%s+", "")  
-    
-    local prefix3 = string.upper(string.sub(globalplate, 1, 3)) 
-    local prefix2 = string.upper(string.sub(globalplate, 1, 2))  
-    
-    local restrictedPrefixes = {
-        ["FBI"] = true,  
-        ["PD"] = true,   
-        ["MT"] = true,
-        ["SH"] = true,
-        ["TX"] = true,
-        ["MD"] = true,
-        ["MC"] = true,
-        ["WZ"] = true
-    }
-    
+    local globalplate = string.gsub(plate, "%s+", "")
+
+    local prefix3 = string.upper(string.sub(globalplate, 1, 3))
+    local prefix2 = string.upper(string.sub(globalplate, 1, 2))
+
     if restrictedPrefixes[prefix3] or restrictedPrefixes[prefix2] then
-        SafeNotify("~r~Nemitanid in mashin ra hotwire konid!")
+        SafeNotify("~r~In yek vasile edari ast, nemitanid hotwire konid!")
         return
     end
 
@@ -100,14 +113,17 @@ function UseHotwireKit()
             SafeNotify("~r~Shoma Pich Goshti Nadarid!")
             return
         end
-        
+
         local success = lib.skillCheck(
-            {'easy', 'easy', {areaSize = 60, speedMultiplier = 2}, 'hard'}, 
+            {'easy', 'easy', {areaSize = 60, speedMultiplier = 2}, 'hard'},
             {'w', 'a', 's', 'd'}
         )
-        
+
         if success then
-            TriggerServerEvent('CarLock:useHotwireKit')
+            -- The plate is sent so the server can independently re-verify
+            -- (a) the player is actually in that vehicle and (b) its plate
+            -- isn't a restricted org prefix, instead of trusting this client.
+            TriggerServerEvent('CarLock:useHotwireKit', globalplate)
             SafeNotify("~g~Mashin ba movafaghiat roshan shod!")
         else
             SafeNotify("~r~Pich Goshti Shekast!")
@@ -120,11 +136,11 @@ AddEventHandler('CarLock:enableVehicleTemporarily', function()
     local ped = PlayerPedId()
     local vehicle = GetVehiclePedIsIn(ped, false)
     local plate = vehicle ~= 0 and GetVehicleNumberPlateText(vehicle) or nil
-    
+
     if not plate then return end
-    
-    hotwireActive[plate] = true 
-    showHotwireText = false 
+
+    hotwireActive[plate] = true
+    showHotwireText = false
 
     DisableOnKey = false
     StopBringVehicleToHalt(vehicle)
@@ -137,7 +153,7 @@ Citizen.CreateThread(function()
         Citizen.Wait(0)
         local ped = PlayerPedId()
         local vehicle = GetVehiclePedIsIn(ped, false)
-        
+
         if vehicle ~= 0 and GetPedInVehicleSeat(vehicle, -1) == ped then
             if IsControlJustReleased(0, 74) and showHotwireText then -- فقط وقتی متن نمایش داده می‌شود فعال شود
                 UseHotwireKit()
@@ -149,25 +165,38 @@ Citizen.CreateThread(function()
 end)
 
 
+-- Is this plate one of the organizational (job) vehicles? UI-only helper --
+-- purely so the lock/unlock notification can call it out; access itself is
+-- still decided by the server's CarLock:haskey callback.
+local function GetOrgLabel(plate)
+    local p3 = string.upper(string.sub(plate, 1, 3))
+    local p2 = string.upper(string.sub(plate, 1, 2))
+    local orgNames = {
+        FBI = "FBI", PD = "Police", MT = "MT", SH = "Sheriff",
+        TX = "Taxi", MD = "Ambulance", MC = "Mechanic", WZ = "Weazel",
+    }
+    return orgNames[p3] or orgNames[p2]
+end
+
 function unlockVehicle(vehicle)
     local ply = PlayerPedId()
     local vehicleModel = GetEntityModel(vehicle)
     local vehicleName = GetDisplayNameFromVehicleModel(vehicleModel)
     local vehicleLabel = GetLabelText(vehicleName)
     local plate = GetVehicleNumberPlateText(vehicle)
+    local orgLabel = GetOrgLabel(plate)
+    local tag = orgLabel and (" ~b~[" .. orgLabel .. "]~w~") or ""
+
+    SetVehicleDoorsLocked(vehicle, 1)
+    SetVehicleAlarm(vehicle, 0)
+    flashOutline(vehicle)
+    SafeNotify("~w~Shoma Dar ~b~" .. vehicleLabel .. tag .. " ~w~(" .. plate .. ") ~w~Ra ~g~Baz ~w~Kardid!")
+    lockStatus = 1
 
     if IsPedInAnyVehicle(ply, true) then
-        SetVehicleDoorsLocked(vehicle, 1)
-        SetVehicleAlarm(vehicle, 0)
-        SafeNotify("~w~Shoma Dar ~b~" .. vehicleLabel .. " ~w~(" .. plate .. ") ~w~Ra ~g~Baz ~w~Kardid!")
-        lockStatus = 1
-        TriggerEvent('InteractSound_CL:PlayOnOne' , 'unlock', 1.0)
+        TriggerEvent('InteractSound_CL:PlayOnOne', 'unlock', 1.0)
     else
         playAnimation(false)
-        SetVehicleDoorsLocked(vehicle, 1)
-        SetVehicleAlarm(vehicle, 0)
-        SafeNotify("~w~Shoma Dar ~b~" .. vehicleLabel .. " ~w~(" .. plate .. ") ~w~Ra ~g~Baz ~w~Kardid!")
-        lockStatus = 1
     end
 end
 
@@ -179,17 +208,24 @@ function lockVehicle(vehicle)
     local vehicleName = GetDisplayNameFromVehicleModel(vehicleModel)
     local vehicleLabel = GetLabelText(vehicleName)
     local plate = GetVehicleNumberPlateText(vehicle)
+    local orgLabel = GetOrgLabel(plate)
+    local tag = orgLabel and (" ~b~[" .. orgLabel .. "]~w~") or ""
+
+    -- Make sure the doors are actually shut before locking, same as the
+    -- reference implementation, so the lock doesn't visually clip an open door.
+    SetVehicleDoorShut(vehicle, 0, false)
+    SetVehicleDoorShut(vehicle, 1, false)
+    SetVehicleDoorShut(vehicle, 2, false)
+    SetVehicleDoorShut(vehicle, 3, false)
+    SetVehicleDoorsLocked(vehicle, 2)
+    flashOutline(vehicle)
+    SafeNotify("~w~Shoma Dar ~b~" .. vehicleLabel .. tag .. " ~w~(" .. plate .. ") ~w~Ra ~r~Gofl ~w~Kardid!")
+    lockStatus = 2
 
     if IsPedInAnyVehicle(ply, true) then
-        SetVehicleDoorsLocked(vehicle, 2)
-        SafeNotify("~w~Shoma Dar ~b~" .. vehicleLabel .. " ~w~(" .. plate .. ") ~w~Ra ~r~Gofl ~w~Kardid!")
-        lockStatus = 2
-        TriggerEvent('InteractSound_CL:PlayOnOne' , 'lock', 1.0)
+        TriggerEvent('InteractSound_CL:PlayOnOne', 'lock', 1.0)
     else
         playAnimation(true)
-        SetVehicleDoorsLocked(vehicle, 2)
-        SafeNotify("~w~Shoma Dar ~b~" .. vehicleLabel .. " ~w~(" .. plate .. ") ~w~Ra ~r~Gofl ~w~Kardid!")
-        lockStatus = 2
     end
 end
 
@@ -209,14 +245,13 @@ function playAnimation(lock)
 	local ply = PlayerPedId()
 	local lib = "anim@mp_player_intmenu@key_fob@"
 	local anim = "fob_click"
-	-- lock.ogg
 
 	ESX.Streaming.RequestAnimDict(lib, function()
-		if lock then 
+		if lock then
 			TriggerEvent('InteractSound_CL:PlayOnOne' , 'lock', 1.0)
-		else 
+		else
 			TriggerEvent('InteractSound_CL:PlayOnOne' , 'unlock', 1.0)
-		end 
+		end
 		TaskPlayAnim(ply, lib, anim, 8.0, -8.0, -1, 0, 0, false, false, false)
 	end)
 end
@@ -234,16 +269,18 @@ RegisterCommand("uniquegarage_carlock_toggle", function()
 				else
 					lockVehicle(vehicle)
 				end
+			else
+				SafeNotify("~r~Shoma kilid in mashin ra nadarid")
 			end
 		end, plate)
 	else
 		local coordA = GetEntityCoords(ply, 1)
 		local coordB = GetOffsetFromEntityInWorldCoords(ply, 0.0, 8.0, 0.0)
-		
+
 		local vehicle = ESX.Game.GetClosestVehicle(coordA)
-		local vehicleDistance = #(GetEntityCoords(ply) - GetEntityCoords(vehicle))
-		local plate = GetVehicleNumberPlateText(vehicle)
-		if vehicle and vehicleDistance <= 10.0 then
+		local vehicleDistance = vehicle and vehicle ~= 0 and #(GetEntityCoords(ply) - GetEntityCoords(vehicle)) or nil
+		if vehicle and vehicle ~= 0 and vehicleDistance and vehicleDistance <= 10.0 then
+			local plate = GetVehicleNumberPlateText(vehicle)
 			ESX.TriggerServerCallback('CarLock:haskey', function(result)
 				if result then
 					lockStatus     = GetVehicleDoorLockStatus(vehicle)
@@ -252,8 +289,8 @@ RegisterCommand("uniquegarage_carlock_toggle", function()
 					else
 						lockVehicle(vehicle)
 					end
-			
-					
+				else
+					SafeNotify("~r~Shoma kilid in mashin ra nadarid")
 				end
 			end, plate)
 		else
@@ -316,40 +353,21 @@ end
 function CarLock_EnumerateVehicles()
 	return CarLock_EnumerateEntities(FindFirstVehicle, FindNextVehicle, EndFindVehicle)
 end
+
 RegisterNetEvent('givekey_Cl')
 AddEventHandler('givekey_Cl',function(target)
 	GiveCarkey(target)
 end)
+
 function GiveCarkey(target)
 	local ped = PlayerPedId()
 	local vehicle = GetVehiclePedIsIn(ped, true)
+	if not IsPedInAnyVehicle(ped) then return SafeNotify('~r~ Zamani Ke Savar Mashin Hastid mitvanid Give Key Konid') end
+	if not vehicle or vehicle == 0 then return SafeNotify('~r~ Mashin Peyda Nashod') end
+	if #(GetEntityCoords(vehicle)  - GetEntityCoords(ped)    ) > 15.0 then return SafeNotify('~r~ Fasle Shoma Ba Akharin Mashin Ke Savar Shodid Besyar Zeyad Ast') end
 	local plate = GetVehicleNumberPlateText(vehicle)
-	if not IsPedInAnyVehicle(ped) then return SafeNotify('~r~ Zamani Ke Savar Mashin Hastid mitvanid Give Key Konid') end 
-	if not vehicle then return SafeNotify('~r~ Mashin Peyda Nashod') end 
-	if #(GetEntityCoords(vehicle)  - GetEntityCoords(ped)    ) > 15.0 then return SafeNotify('~r~ Fasle Shoma Ba Akharin Mashin Ke Savar Shodid Besyar Zeyad Ast') end 
-	--ESX.TriggerServerCallback('CarLock:haskey', function(haskey)
-	--	if haskey then 
-		--	TriggerServerEvent('CarLock:ToggleKey', false ,plate )
-			TriggerServerEvent('CarLock:ToggleKey2', true ,plate , target )
-	--	else 
-	--		SafeNotify('~r~Klid Mashin ke Akharin Bar Savar Shodid Ra Nadarid')
---		end 
---	end, plate)
+	-- Server independently re-checks that the SENDER actually has access to
+	-- this plate before honoring the grant (see carlock_sv.lua ToggleKey2) --
+	-- this client can no longer mint keys for arbitrary plates/targets.
+	TriggerServerEvent('CarLock:ToggleKey2', true, plate, target)
 end
--- Citizen.CreateThread(function()
--- 	local isRadarExtended =false 
--- 	AddEventHandler('onKeyDown',function(key)
--- 		if key == 'z' then -- 20 is z
-	
--- 			if not isRadarExtended then
--- 				SetRadarBigmapEnabled(true, false)
-			
--- 				isRadarExtended = true
--- 			elseif isRadarExtended then
--- 				SetRadarBigmapEnabled(false, false)
-				
--- 				isRadarExtended = false
--- 			end
--- 		end
--- 	end)
--- end)
