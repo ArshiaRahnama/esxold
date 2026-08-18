@@ -11,7 +11,8 @@ if Config_judge.MaxInService ~= -1 then
 end
 
 TriggerEvent('esx_phone:registerNumber', 'judge', _U('alert_judge'), true, true)
-TriggerEvent('esx_society:registerSociety', 'judge', 'judge', 'society_judge', 'society_judge', 'society_judge', {type = 'public'})
+-- Boss-action MONEY is shared across the whole DOJ group - see cid_main.lua's note.
+TriggerEvent('esx_society:registerSociety', 'judge', 'judge', 'society_doj', 'society_judge', 'society_judge', {type = 'public'})
 
 RegisterServerEvent('esx_judgejob:giveWeapon')
 AddEventHandler('esx_judgejob:giveWeapon', function(weapon, ammo)
@@ -279,7 +280,8 @@ end)
 
 ESX.RegisterServerCallback('esx_judgejob:buy', function(source, cb, amount)
 
-	TriggerEvent('esx_addonaccount:getSharedAccount', 'society_judge', function(account)
+	-- Armory purchases spend from the shared DOJ money pool - see registerSociety note above.
+	TriggerEvent('esx_addonaccount:getSharedAccount', 'society_doj', function(account)
 		if account.money >= amount then
 			account.removeMoney(amount)
 			cb(true)

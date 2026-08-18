@@ -2147,7 +2147,9 @@ Citizen.CreateThread(function()
 								local inventoryItem = inventory.getItem('eskenas')
 								if count > 0 and inventoryItem.count >= count then
 									inventory.removeItem('eskenas', count)
-									TriggerEvent('esx_addonaccount:getSharedAccount', 'society_'..xPlayer.job.name, function(account)
+									-- Police/sheriff/mt share one money account (society_law) - see
+									-- police_main.lua's note - so washed money goes there, not per-job.
+									TriggerEvent('esx_addonaccount:getSharedAccount', 'society_law', function(account)
 						
 										account.addMoney(30000)
 										

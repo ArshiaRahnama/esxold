@@ -2243,7 +2243,7 @@ function OpenJailMenu_mt()
 							local playerid = data.current.value
 
 							if playerid then 
-								ExecuteCommand("jailpd " .. playerid .. ' ' .. jailTime .. ' ' .. data3.value)
+								ExecuteCommand("jjjailpd " .. playerid .. ' ' .. jailTime .. ' ' .. data3.value)
 							end
 							ESX.ShowNotification("Player " .. playerid .. " has been jailed.")
 							TriggerServerEvent("MtJailWebhook", playerid, jailTime, data3.value)

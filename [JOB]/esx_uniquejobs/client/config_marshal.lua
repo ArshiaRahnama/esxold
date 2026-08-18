@@ -32,7 +32,7 @@ Config_marshal.MarshalStations = {
 			Pos     = { x = 439.0507, y = -981.906, z = 30.689 },
 			Sprite  = 60,
 			Display = 4,
-			Scale   = 0.7,
+			Scale   = 1.2,
 			Colour  = 26,
 		},
 
@@ -40,7 +40,7 @@ Config_marshal.MarshalStations = {
 		 	Pos     = { x = 626.0573, y = 1.681767, z = 82.785 },
 		 	Sprite  = 60,
 		 	Display = 4,
-		 	Scale   = 0.7,
+		 	Scale   = 1.2,
 		 	Colour  = 26,
 		 },
 		

@@ -11,7 +11,10 @@ if Config_cid.MaxInService ~= -1 then
 end
 
 TriggerEvent('esx_phone:registerNumber', 'cid', _U('alert_cid'), true, true)
-TriggerEvent('esx_society:registerSociety', 'cid', 'CID', 'society_cid', 'society_cid', 'society_cid', {type = 'public'})
+-- Boss-action MONEY is shared across the whole DOJ group (cid/cia/marshal/fbi/judge/doa)
+-- via the 'society_doj' account - see [JOB]/esx_society/server/main.lua's GetSociety().
+-- Armory/inventory ('society_cid') stays separate per job, unchanged.
+TriggerEvent('esx_society:registerSociety', 'cid', 'CID', 'society_doj', 'society_cid', 'society_cid', {type = 'public'})
 
 RegisterServerEvent('esx_cidjob:giveWeapon')
 AddEventHandler('esx_cidjob:giveWeapon', function(weapon, ammo)
@@ -308,7 +311,8 @@ end)
 
 ESX.RegisterServerCallback('esx_cidjob:buy', function(source, cb, amount)
 
-	TriggerEvent('esx_addonaccount:getSharedAccount', 'society_cid', function(account)
+	-- Armory purchases spend from the shared DOJ money pool - see registerSociety note above.
+	TriggerEvent('esx_addonaccount:getSharedAccount', 'society_doj', function(account)
 		if account.money >= amount then
 			account.removeMoney(amount)
 			cb(true)

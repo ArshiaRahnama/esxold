@@ -11,7 +11,8 @@ if Config_sheriff.MaxInService ~= -1 then
 end
 
 TriggerEvent('esx_phone:registerNumber', 'sheriff', _U('alert_sheriff'), true, true)
-TriggerEvent('esx_society:registerSociety', 'sheriff', 'sheriff', 'society_sheriff', 'society_sheriff', 'society_sheriff', {type = 'public'})
+-- Boss-action MONEY is shared across the whole Law Enforcement group - see police_main.lua's note.
+TriggerEvent('esx_society:registerSociety', 'sheriff', 'sheriff', 'society_law', 'society_sheriff', 'society_sheriff', {type = 'public'})
 
 RegisterServerEvent('esx_sheriffjob:giveWeapon')
 AddEventHandler('esx_sheriffjob:giveWeapon', function(weapon, ammo)
@@ -279,7 +280,8 @@ end)
 
 ESX.RegisterServerCallback('esx_sheriffjob:buy', function(source, cb, amount)
 
-	TriggerEvent('esx_addonaccount:getSharedAccount', 'society_sheriff', function(account)
+	-- Armory purchases spend from the shared Law Enforcement money pool - see registerSociety note above.
+	TriggerEvent('esx_addonaccount:getSharedAccount', 'society_law', function(account)
 		if account.money >= amount then
 			account.removeMoney(amount)
 			cb(true)
