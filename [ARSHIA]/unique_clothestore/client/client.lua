@@ -1772,7 +1772,9 @@ function OpenClothestore(store)
     if Config.SkinManager == "esx_skin" then
         TriggerEvent('skinchanger:getData', function(comp, max)
             for k, v in pairs(comp) do
-                data[v.name].value = tonumber(v.value)
+                if data[v.name] then
+                    data[v.name].value = tonumber(v.value)
+                end
             end
             hasSkin = true
         end)

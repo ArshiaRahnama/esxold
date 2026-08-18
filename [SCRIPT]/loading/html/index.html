@@ -22,9 +22,14 @@
 
 <body class="form-v6" style="display:none;">
 
+	<!-- purely decorative ambient layers, filled by script.js -->
+	<div class="ambient-glow"></div>
+	<div class="ambient-particles" id="ambientParticles"></div>
+	<div class="ambient-vignette"></div>
+
 	<div class="page-content">
 
-		<div class="form-v6-content">
+		<div class="form-v6-content" id="formCard">
 
 			<div class="form1">
 
@@ -103,6 +108,7 @@
 	  <div class="modal-dialog modal-dialog-centered" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">
+	        <span class="modal-icon" aria-hidden="true">!</span>
 	        <h5 class="modal-title" id="modalTitle"></h5>
 	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	          <span aria-hidden="true">&times;</span>

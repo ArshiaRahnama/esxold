@@ -1,10 +1,13 @@
 ESX = nil
-Citizen.CreateThread(function()
-	while ESX == nil do
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
-	end
-end)
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+-- BUGFIX: server-side, essentialmode answers 'esx:getSharedObject' synchronously
+-- (unlike the client, which has to wait a tick for the network round-trip).
+-- The previous version of this file wrapped this in a Citizen.CreateThread
+-- wait-loop (copying the client-side idiom), which meant ESX.RegisterServerCallback
+-- below ran on the SAME tick, before the thread ever got a chance to run once -
+-- so it crashed with "attempt to index a nil value (global 'ESX')" on resource
+-- start, the callback never got registered, and every /handling attempt just
+-- hung forever waiting for a server response that would never come.
 
 -- SECURITY FIX: the original resource only checked ESX.GetPlayerData().perm
 -- CLIENT-SIDE, which is trivially spoofable by any mod menu / cheat client -

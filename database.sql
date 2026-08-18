@@ -29,30 +29,52 @@ CREATE TABLE IF NOT EXISTS `addon_account` (
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table essentialmode.addon_account: ~23 rows (approximately)
+-- Dumping data for table essentialmode.addon_account: ~45 rows (approximately)
 REPLACE INTO `addon_account` (`name`, `label`, `shared`) VALUES
 	('caution', 'Caution', 0),
 	('society_ambulance', 'ambulance', 1),
+	('society_anchor', 'anchor', 1),
+	('society_blacktide', 'blacktide', 1),
 	('society_burgershot', 'Burgershot', 1),
 	('society_cafe', 'Cafe', 1),
 	('society_cardealer', 'Cardealer', 1),
+	('society_carwash', 'carwash', 1),
 	('society_catcafe', 'Cat Cafe', 1),
 	('society_cia', 'CIA', 1),
 	('society_cid', 'CID', 1),
 	('society_concess', 'Concessionnaire', 1),
+	('society_cratecarry', 'cratecarry', 1),
+	('society_crimson', 'crimson', 1),
 	('society_doa', 'DOA', 1),
+	('society_doj', 'Department Of Justice', 1),
+	('society_ember', 'ember', 1),
 	('society_fbi', 'FBI', 1),
+	('society_firebrick', 'firebrick', 1),
+	('society_flourish', 'flourish', 1),
 	('society_forces', 'Forces', 1),
+	('society_frostbite', 'frostbite', 1),
+	('society_goldcrust', 'goldcrust', 1),
 	('society_judge', 'Judge', 1),
+	('society_koi', 'koi', 1),
+	('society_law', 'Law Enforcement', 1),
 	('society_marshal', 'Marshal', 1),
 	('society_mechanic', 'Mechanic', 1),
+	('society_meridian', 'meridian', 1),
 	('society_mt', 'Metropolitan', 1),
+	('society_nightjar', 'nightjar', 1),
 	('society_nojob', 'nojob', 1),
+	('society_obsidian', 'obsidian', 1),
 	('society_police', 'police', 1),
 	('society_resturan', 'Resturan', 1),
 	('society_sheriff', 'sheriff', 1),
+	('society_slice', 'slice', 1),
+	('society_static', 'static', 1),
+	('society_sundae', 'sundae', 1),
 	('society_taxi', 'taxi', 1),
+	('society_turfco', 'turfco', 1),
 	('society_uwucafe', 'uwucafe', 1),
+	('society_voltage', 'voltage', 1),
+	('society_wasabi', 'wasabi', 1),
 	('society_weazel', 'reporterr', 1);
 
 -- Dumping structure for table essentialmode.addon_account_data
@@ -65,9 +87,9 @@ CREATE TABLE IF NOT EXISTS `addon_account_data` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_addon_account_data_account_name_owner` (`account_name`,`owner`),
   KEY `index_addon_account_data_account_name` (`account_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=9742 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9765 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table essentialmode.addon_account_data: ~143 rows (approximately)
+-- Dumping data for table essentialmode.addon_account_data: ~170 rows (approximately)
 REPLACE INTO `addon_account_data` (`id`, `account_name`, `money`, `owner`) VALUES
 	(1, 'society_uwucafe', 0, NULL),
 	(2, 'society_ambulance', 0, NULL),
@@ -75,9 +97,9 @@ REPLACE INTO `addon_account_data` (`id`, `account_name`, `money`, `owner`) VALUE
 	(4, 'society_concess', 0, NULL),
 	(5, 'society_fbi', 0, NULL),
 	(6, 'society_mechanic', 0, NULL),
-	(7, 'society_mt', 9956880, NULL),
-	(8, 'society_police', 13, NULL),
-	(9, 'society_sheriff', 1, NULL),
+	(7, 'society_mt', 0, NULL),
+	(8, 'society_police', 0, NULL),
+	(9, 'society_sheriff', 0, NULL),
 	(10, 'society_taxi', 0, NULL),
 	(11, 'society_weazel', 0, NULL),
 	(12, 'caution', 0, 'steam:11000014bf543e0'),
@@ -90,7 +112,7 @@ REPLACE INTO `addon_account_data` (`id`, `account_name`, `money`, `owner`) VALUE
 	(9566, 'society_forces', 0, NULL),
 	(9567, 'society_mechanic', 21, NULL),
 	(9569, 'society_nojob', 0, NULL),
-	(9570, 'society_police', 13, NULL),
+	(9570, 'society_police', 0, NULL),
 	(9571, 'society_resturan', 0, NULL),
 	(9572, 'society_sheriff', 0, NULL),
 	(9573, 'society_taxi', 2300000, NULL),
@@ -215,7 +237,30 @@ REPLACE INTO `addon_account_data` (`id`, `account_name`, `money`, `owner`) VALUE
 	(9738, 'society_cid', 0, NULL),
 	(9739, 'society_doa', 0, NULL),
 	(9740, 'society_judge', 0, NULL),
-	(9741, 'society_marshal', 0, NULL);
+	(9741, 'society_marshal', 0, NULL),
+	(9742, 'society_uwucafe', 0, NULL),
+	(9743, 'society_obsidian', 0, NULL),
+	(9744, 'society_voltage', 0, NULL),
+	(9745, 'society_ember', 0, NULL),
+	(9746, 'society_anchor', 0, NULL),
+	(9747, 'society_crimson', 0, NULL),
+	(9748, 'society_flourish', 0, NULL),
+	(9749, 'society_goldcrust', 0, NULL),
+	(9750, 'society_static', 0, NULL),
+	(9751, 'society_nightjar', 0, NULL),
+	(9752, 'society_firebrick', 0, NULL),
+	(9753, 'society_slice', 0, NULL),
+	(9754, 'society_frostbite', 0, NULL),
+	(9755, 'society_sundae', 0, NULL),
+	(9756, 'society_koi', 0, NULL),
+	(9757, 'society_wasabi', 0, NULL),
+	(9758, 'society_carwash', 0, NULL),
+	(9759, 'society_meridian', 0, NULL),
+	(9760, 'society_blacktide', 0, NULL),
+	(9761, 'society_cratecarry', 0, NULL),
+	(9762, 'society_turfco', 0, NULL),
+	(9763, 'society_doj', 100, NULL),
+	(9764, 'society_law', 9956907, NULL);
 
 -- Dumping structure for table essentialmode.addon_inventory
 DROP TABLE IF EXISTS `addon_inventory`;
@@ -226,7 +271,7 @@ CREATE TABLE IF NOT EXISTS `addon_inventory` (
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table essentialmode.addon_inventory: ~29 rows (approximately)
+-- Dumping data for table essentialmode.addon_inventory: ~49 rows (approximately)
 REPLACE INTO `addon_inventory` (`name`, `label`, `shared`) VALUES
 	('gang_a', 'gang', 1),
 	('gang_apadax', 'gang', 1),
@@ -241,21 +286,41 @@ REPLACE INTO `addon_inventory` (`name`, `label`, `shared`) VALUES
 	('gang_timarestan', 'gang', 1),
 	('property', 'House', 0),
 	('society_ambulance', 'Ambulance', 1),
+	('society_anchor', 'anchor', 1),
+	('society_blacktide', 'blacktide', 1),
 	('society_burgershot', 'Burgershot', 1),
 	('society_cafe', 'Cafe', 1),
 	('society_cardealer', 'Cardealer', 1),
+	('society_carwash', 'carwash', 1),
 	('society_catcafe', 'Cat Cafe', 1),
 	('society_cia', 'CIA', 1),
 	('society_concess', 'Concessionnaire', 1),
+	('society_cratecarry', 'cratecarry', 1),
+	('society_crimson', 'crimson', 1),
+	('society_ember', 'ember', 1),
 	('society_fbi', 'fbi', 1),
+	('society_firebrick', 'firebrick', 1),
+	('society_flourish', 'flourish', 1),
 	('society_forces', 'Forces', 1),
+	('society_frostbite', 'frostbite', 1),
+	('society_goldcrust', 'goldcrust', 1),
+	('society_koi', 'koi', 1),
 	('society_mechanic', 'Mechanic', 1),
+	('society_meridian', 'meridian', 1),
 	('society_mt', 'Metropolitan', 1),
+	('society_nightjar', 'nightjar', 1),
+	('society_obsidian', 'obsidian', 1),
 	('society_police', 'police', 1),
 	('society_resturan', 'Resturan', 1),
 	('society_sheriff', 'sheriff', 1),
+	('society_slice', 'slice', 1),
+	('society_static', 'static', 1),
+	('society_sundae', 'sundae', 1),
 	('society_taxi', 'taxi', 1),
+	('society_turfco', 'turfco', 1),
 	('society_uwucafe', 'uwucafe', 1),
+	('society_voltage', 'voltage', 1),
+	('society_wasabi', 'wasabi', 1),
 	('society_weazel', 'reporterr', 1);
 
 -- Dumping structure for table essentialmode.addon_inventory_items
@@ -296,11 +361,12 @@ CREATE TABLE IF NOT EXISTS `admin_action_log` (
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `target_identifier` (`target_identifier`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table essentialmode.admin_action_log: ~1 rows (approximately)
+-- Dumping data for table essentialmode.admin_action_log: ~2 rows (approximately)
 REPLACE INTO `admin_action_log` (`id`, `admin_identifier`, `admin_name`, `target_identifier`, `target_name`, `action`, `details`, `created_at`) VALUES
-	(1, 'steam:11000014bf543e0', 'GD', 'steam:11000014bf543e0', 'GD', 'give-money', 'target: GD | money: +1000 | reason: No reason specified', '2026-08-16 00:48:09');
+	(1, 'steam:11000014bf543e0', 'GD', 'steam:11000014bf543e0', 'GD', 'give-money', 'target: GD | money: +1000 | reason: No reason specified', '2026-08-16 00:48:09'),
+	(2, 'steam:11000014bf543e0', 'GD', 'steam:11000014bf543e0', 'GD', 'ban', 'target: GD | 1 minutes | reason: 1', '2026-08-17 08:31:02');
 
 -- Dumping structure for table essentialmode.admin_ip_log
 DROP TABLE IF EXISTS `admin_ip_log`;
@@ -315,12 +381,12 @@ CREATE TABLE IF NOT EXISTS `admin_ip_log` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `identifier_ip` (`identifier`,`ip`),
   KEY `ip` (`ip`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table essentialmode.admin_ip_log: ~1 rows (approximately)
 REPLACE INTO `admin_ip_log` (`id`, `identifier`, `license`, `discord`, `ip`, `playername`, `last_seen`) VALUES
 	(1, 'steam:11000014bf543e0', 'license:153122398469261248', 'no info', '192.168.1.110', 'GD', '2026-08-16 00:41:01'),
-	(2, 'steam:11000014bf543e0', 'license:153122398469261248', 'no info', '172.20.10.2', 'GD', '2026-08-16 16:10:56');
+	(2, 'steam:11000014bf543e0', 'license:153122398469261248', 'no info', '172.20.10.2', 'GD', '2026-08-18 09:56:34');
 
 -- Dumping structure for table essentialmode.admin_player_notes
 DROP TABLE IF EXISTS `admin_player_notes`;
@@ -381,9 +447,31 @@ CREATE TABLE IF NOT EXISTS `adminjaillog` (
   `punisher` varchar(60) DEFAULT NULL,
   `date` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table essentialmode.adminjaillog: ~0 rows (approximately)
+-- Dumping data for table essentialmode.adminjaillog: ~4 rows (approximately)
+REPLACE INTO `adminjaillog` (`id`, `identifier`, `name`, `oocname`, `jailreason`, `jailtime`, `punisher`, `date`) VALUES
+	(1, 'steam:11000014bf543e0', 'Arshia_Mtz', NULL, '1', 1, 'Arshia_Mtz', '1787030024'),
+	(2, 'steam:11000014bf543e0', 'Arshia_Mtz', NULL, '1', 1, 'Arshia_Mtz', '1787030336'),
+	(3, 'steam:11000014bf543e0', 'Arshia_Mtz', NULL, 'unjail (manual)', 0, 'Arshia_Mtz', '1787030355'),
+	(4, 'steam:11000014bf543e0', 'Arshia_Mtz', NULL, '1', 1, 'Arshia_Mtz', '1787030358');
+
+-- Dumping structure for table essentialmode.anticheat_flags
+DROP TABLE IF EXISTS `anticheat_flags`;
+CREATE TABLE IF NOT EXISTS `anticheat_flags` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `identifier` varchar(128) NOT NULL,
+  `player_name` varchar(128) DEFAULT NULL,
+  `kind` varchar(32) NOT NULL,
+  `score_after` int(11) NOT NULL,
+  `evidence` longtext DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_anticheat_identifier` (`identifier`),
+  KEY `idx_anticheat_kind` (`kind`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- Dumping data for table essentialmode.anticheat_flags: ~0 rows (approximately)
 
 -- Dumping structure for table essentialmode.audit
 DROP TABLE IF EXISTS `audit`;
@@ -395,9 +483,9 @@ CREATE TABLE IF NOT EXISTS `audit` (
   `timestamp` varchar(50) DEFAULT NULL,
   `type` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`log_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=254 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=286 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table essentialmode.audit: ~242 rows (approximately)
+-- Dumping data for table essentialmode.audit: ~258 rows (approximately)
 REPLACE INTO `audit` (`log_id`, `id`, `identifier`, `oname`, `timestamp`, `type`) VALUES
 	(1, 1, 'steam:11000014bf543e0', 'AghaT BardiA', '1785397967', 'Enter'),
 	(2, 2, 'steam:11000014bf543e0', 'AghaT BardiA', '1785398099', 'Exit([txAdmin] You have been kicked: for unknown r'),
@@ -651,7 +739,39 @@ REPLACE INTO `audit` (`log_id`, `id`, `identifier`, `oname`, `timestamp`, `type`
 	(250, 1, 'steam:11000014bf543e0', 'GD', '1786867186', 'Enter'),
 	(251, 1, 'steam:11000014bf543e0', 'GD', '1786869639', 'Exit(Server shutting down: SIGHUP received)'),
 	(252, 1, 'steam:11000014bf543e0', 'GD', '1786884058', 'Enter'),
-	(253, 1, 'steam:11000014bf543e0', 'GD', '1786889490', 'Exit(Exiting)');
+	(253, 1, 'steam:11000014bf543e0', 'GD', '1786889490', 'Exit(Exiting)'),
+	(254, 1, 'steam:11000014bf543e0', 'GD', '1786905708', 'Enter'),
+	(255, 1, 'steam:11000014bf543e0', 'GD', '1786907199', 'Exit(Server shutting down: SIGHUP received)'),
+	(256, 1, 'steam:11000014bf543e0', 'GD', '1786907555', 'Enter'),
+	(257, 1, 'steam:11000014bf543e0', 'GD', '1786907844', 'Exit(Exiting)'),
+	(258, 1, 'steam:11000014bf543e0', 'GD', '1786939211', 'Enter'),
+	(259, 1, 'steam:11000014bf543e0', 'GD', '1786942067', 'Exit(Exiting)'),
+	(260, 1, 'steam:11000014bf543e0', 'GD', '1786942800', 'Enter'),
+	(261, 1, 'steam:11000014bf543e0', 'GD', '1786942862', 'Exit(You have been banned for 1 minutes.\nReason: 1'),
+	(262, 2, 'steam:11000014bf543e0', 'GD', '1786942918', 'Enter'),
+	(263, 2, 'steam:11000014bf543e0', 'GD', '1786944436', 'Exit(Server->client connection timed out. Last see'),
+	(264, 1, 'steam:11000014bf543e0', 'GD', '1786958518', 'Enter'),
+	(265, 1, 'steam:11000014bf543e0', 'GD', '1786961823', 'Exit(Server shutting down: SIGHUP received)'),
+	(266, 1, 'steam:11000014bf543e0', 'GD', '1786964588', 'Enter'),
+	(267, 1, 'steam:11000014bf543e0', 'GD', '1786965684', 'Exit(Server shutting down: SIGHUP received)'),
+	(268, 1, 'steam:11000014bf543e0', 'GD', '1786966342', 'Enter'),
+	(269, 1, 'steam:11000014bf543e0', 'GD', '1786966594', 'Exit(Server shutting down: SIGHUP received)'),
+	(270, 1, 'steam:11000014bf543e0', 'GD', '1786967688', 'Enter'),
+	(271, 1, 'steam:11000014bf543e0', 'GD', '1786968156', 'Exit(Server shutting down: SIGHUP received)'),
+	(272, 1, 'steam:11000014bf543e0', 'GD', '1786968606', 'Enter'),
+	(273, 1, 'steam:11000014bf543e0', 'GD', '1786968656', 'Exit(Server shutting down: SIGHUP received)'),
+	(274, 1, 'steam:11000014bf543e0', 'GD', '1786981503', 'Enter'),
+	(275, 1, 'steam:11000014bf543e0', 'GD', '1786982220', 'Exit(Server shutting down: SIGHUP received)'),
+	(276, 1, 'steam:11000014bf543e0', 'GD', '1787029777', 'Enter'),
+	(277, 1, 'steam:11000014bf543e0', 'GD', '1787031101', 'Exit(Server shutting down: SIGHUP received)'),
+	(278, 1, 'steam:11000014bf543e0', 'GD', '1787032360', 'Enter'),
+	(279, 1, 'steam:11000014bf543e0', 'GD', '1787032990', 'Exit(Server shutting down: SIGHUP received)'),
+	(280, 1, 'steam:11000014bf543e0', 'GD', '1787033109', 'Enter'),
+	(281, 1, 'steam:11000014bf543e0', 'GD', '1787033286', 'Exit(Server shutting down: SIGHUP received)'),
+	(282, 1, 'steam:11000014bf543e0', 'GD', '1787033706', 'Enter'),
+	(283, 1, 'steam:11000014bf543e0', 'GD', '1787034258', 'Exit(Server shutting down: SIGHUP received)'),
+	(284, 1, 'steam:11000014bf543e0', 'GD', '1787034396', 'Enter'),
+	(285, 1, 'steam:11000014bf543e0', 'GD', '1787034628', 'Exit(Server shutting down: SIGHUP received)');
 
 -- Dumping structure for table essentialmode.bag_inventories
 DROP TABLE IF EXISTS `bag_inventories`;
@@ -701,6 +821,8 @@ CREATE TABLE IF NOT EXISTS `banlist` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- Dumping data for table essentialmode.banlist: ~0 rows (approximately)
+REPLACE INTO `banlist` (`identifier`, `license`, `liveid`, `xblid`, `discord`, `playerip`, `targetplayername`, `sourceplayername`, `reason`, `timeat`, `expiration`, `permanent`) VALUES
+	('steam:11000014bf543e0', 'license:153122398469261248', 'no info', 'no info', 'no info', '172.20.10.2', 'GD', 'GD', '1', '1786942862', '1786942922', 0);
 
 -- Dumping structure for table essentialmode.banlisthistory
 DROP TABLE IF EXISTS `banlisthistory`;
@@ -720,9 +842,11 @@ CREATE TABLE IF NOT EXISTS `banlisthistory` (
   `expiration` int(11) NOT NULL,
   `permanent` int(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- Dumping data for table essentialmode.banlisthistory: ~0 rows (approximately)
+REPLACE INTO `banlisthistory` (`id`, `identifier`, `license`, `liveid`, `xblid`, `discord`, `playerip`, `targetplayername`, `sourceplayername`, `reason`, `timeat`, `added`, `expiration`, `permanent`) VALUES
+	(1, 'steam:11000014bf543e0', 'license:153122398469261248', 'no info', 'no info', 'no info', '172.20.10.2', 'GD', 'GD', '1', 1786942862, '2026-08-17 08:31:02', 1786942922, 0);
 
 -- Dumping structure for table essentialmode.billing
 DROP TABLE IF EXISTS `billing`;
@@ -832,7 +956,7 @@ CREATE TABLE IF NOT EXISTS `capture_history` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table essentialmode.capture_history: ~3 rows (approximately)
+-- Dumping data for table essentialmode.capture_history: ~2 rows (approximately)
 REPLACE INTO `capture_history` (`id`, `round_date`, `winner_gang`, `winner_points`, `top_killer_name`, `top_killer_kills`, `top_gangs_json`, `top_killers_json`) VALUES
 	(1, '2026-08-09 01:32:21', 'A', 52, NULL, 0, '[{"Name":"A","Logo":"defaultlogo","Points":52}]', '[]'),
 	(2, '2026-08-09 01:51:32', 'A', 4, NULL, 0, '[{"Points":4,"Logo":"defaultlogo","Name":"A"}]', '[]'),
@@ -1053,7 +1177,7 @@ REPLACE INTO `datastore_data` (`id`, `name`, `owner`, `data`) VALUES
 	(14, 'user_mask', 'steam:11000014bf543e0', '{}'),
 	(15, 'user_ears', 'steam:11000014bf543e0', '{}'),
 	(16, 'gang_a', NULL, '[]'),
-	(17, 'property', 'steam:11000014bf543e0', '{}');
+	(17, 'property', 'steam:11000014bf543e0', '{"dressing":[{"skin":{"glasses_2":-1,"makeup_4":0,"ears_1":-1,"mask_1":0,"eye_color":5,"moles_1":0,"skin":14,"mask_2":0,"makeup_3":0,"beard_2":10,"age_1":0,"hair_color_1":0,"chain_1":0,"arms_2":0,"hair_2":0,"beard_4":0,"watches_1":-1,"moles_2":1,"helmet_1":-1,"sex":0,"bags_2":0,"face_2":21,"age_2":0,"bproof_1":0,"ears_2":-1,"eyebrows_4":0,"eyebrows_1":0,"complexion_2":1,"bproof_2":0,"complexion_1":0,"lipstick_2":0,"eyebrows_2":10,"shoes_2":0,"tshirt_2":0,"decals_1":0,"makeup_2":0,"hair_1":0,"pants_2":4,"face_3":5,"torso_1":137,"torso_2":0,"eyebrows_3":0,"chain_2":0,"decals_2":0,"hair_color_2":0,"watches_2":-1,"makeup_1":0,"shoes_1":34,"glasses_1":-1,"lipstick_3":0,"helmet_2":0,"arms":15,"face_1":3,"pants_1":61,"beard_1":0,"lipstick_1":0,"tshirt_1":15,"bags_1":0,"lipstick_4":0,"beard_3":0},"label":"1"}]}');
 
 -- Dumping structure for table essentialmode.division_grades
 DROP TABLE IF EXISTS `division_grades`;
@@ -1090,6 +1214,61 @@ REPLACE INTO `divisions` (`id`, `owner`, `name`, `label`, `skin_male`, `skin_fem
 	(1, 'police', 'Arshia', '1', '{"helmet_1":-1,"bags_2":0,"ears_2":-1,"hair_2":0,"lipstick_4":0,"makeup_3":0,"age_1":0,"mask_2":2,"lipstick_1":0,"tshirt_2":0,"hair_color_1":0,"shoes_2":0,"lipstick_3":0,"eyebrows_1":0,"bproof_1":0,"decals_2":0,"arms":15,"glasses_1":-1,"lipstick_2":0,"makeup_1":0,"eyebrows_3":12,"beard_2":10,"ears_1":-1,"eye_color":12,"watches_2":-1,"moles_1":0,"eyebrows_2":10,"age_2":0,"chain_1":0,"eyebrows_4":12,"tshirt_1":15,"pants_1":61,"hair_color_2":0,"mask_1":0,"beard_3":0,"face_1":19,"makeup_4":0,"complexion_2":1,"chain_2":0,"glasses_2":-1,"bags_1":0,"face_3":10,"complexion_1":0,"hair_1":0,"sex":0,"beard_1":0,"moles_2":1,"helmet_2":-1,"makeup_2":0,"beard_4":0,"pants_2":4,"decals_1":0,"shoes_1":34,"torso_2":0,"arms_2":0,"watches_1":-1,"face_2":21,"bproof_2":0,"torso_1":15,"skin":19}', '[]', '[]', '[]', '[]', '[]'),
 	(2, 'doa', 'test', 'Test', '{"eye_color":5,"face_1":0,"age_1":0,"pants_1":61,"hair_color_1":0,"mask_1":0,"glasses_2":-1,"lipstick_4":0,"torso_2":0,"eyebrows_1":0,"bags_2":0,"watches_2":-1,"beard_1":0,"pants_2":4,"lipstick_2":0,"lipstick_1":0,"helmet_2":-1,"lipstick_3":0,"sex":0,"decals_1":0,"complexion_1":0,"arms_2":0,"mask_2":2,"beard_2":10,"shoes_1":34,"makeup_3":0,"chain_1":0,"makeup_4":0,"hair_2":0,"complexion_2":1,"hair_1":10,"shoes_2":0,"eyebrows_4":12,"bags_1":0,"beard_4":0,"makeup_2":0,"chain_2":0,"arms":15,"moles_2":1,"eyebrows_2":10,"tshirt_2":0,"bproof_2":0,"ears_2":-1,"glasses_1":-1,"beard_3":0,"face_2":21,"skin":12,"makeup_1":0,"watches_1":-1,"decals_2":0,"bproof_1":0,"eyebrows_3":12,"moles_1":0,"hair_color_2":0,"tshirt_1":59,"helmet_1":-1,"ears_1":-1,"age_2":0,"torso_1":15,"face_3":5}', '[]', '[]', '[]', '[]', '[]');
 
+-- Dumping structure for table essentialmode.doj_case_evidence
+DROP TABLE IF EXISTS `doj_case_evidence`;
+CREATE TABLE IF NOT EXISTS `doj_case_evidence` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `case_id` int(11) NOT NULL,
+  `type` varchar(32) NOT NULL,
+  `content` text NOT NULL,
+  `suspect_hint_id` varchar(6) DEFAULT NULL,
+  `found_by` varchar(64) DEFAULT NULL,
+  `found_by_name` varchar(64) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_case_id` (`case_id`),
+  KEY `idx_hint_id` (`suspect_hint_id`),
+  CONSTRAINT `fk_evidence_case` FOREIGN KEY (`case_id`) REFERENCES `doj_cases` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table essentialmode.doj_case_evidence: ~0 rows (approximately)
+
+-- Dumping structure for table essentialmode.doj_case_notes
+DROP TABLE IF EXISTS `doj_case_notes`;
+CREATE TABLE IF NOT EXISTS `doj_case_notes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `case_id` int(11) NOT NULL,
+  `author` varchar(64) DEFAULT NULL,
+  `author_name` varchar(64) DEFAULT NULL,
+  `note` text NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_case_id` (`case_id`),
+  CONSTRAINT `fk_notes_case` FOREIGN KEY (`case_id`) REFERENCES `doj_cases` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table essentialmode.doj_case_notes: ~0 rows (approximately)
+
+-- Dumping structure for table essentialmode.doj_cases
+DROP TABLE IF EXISTS `doj_cases`;
+CREATE TABLE IF NOT EXISTS `doj_cases` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `rob_name` varchar(64) NOT NULL,
+  `rob_family` varchar(64) NOT NULL,
+  `status` varchar(32) NOT NULL DEFAULT 'open',
+  `suspect_identifier` varchar(64) DEFAULT NULL,
+  `suspect_name` varchar(64) DEFAULT NULL,
+  `coords_x` float DEFAULT NULL,
+  `coords_y` float DEFAULT NULL,
+  `coords_z` float DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table essentialmode.doj_cases: ~0 rows (approximately)
+
 -- Dumping structure for table essentialmode.duckcad_data
 DROP TABLE IF EXISTS `duckcad_data`;
 CREATE TABLE IF NOT EXISTS `duckcad_data` (
@@ -1118,9 +1297,9 @@ CREATE TABLE IF NOT EXISTS `duty_logs` (
   `date` date DEFAULT NULL,
   `total_time` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=230 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=236 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table essentialmode.duty_logs: ~43 rows (approximately)
+-- Dumping data for table essentialmode.duty_logs: ~49 rows (approximately)
 REPLACE INTO `duty_logs` (`id`, `steamhex`, `ic_name`, `job_name`, `job_grade`, `date`, `total_time`) VALUES
 	(186, 'steam:110000146d830cd', 'Sohrab_Qaderi', 'police', 'Chief', '2025-02-06', 7800),
 	(187, 'steam:110000146d830cd', 'Sohrab_Qaderi', 'police', 'Chief', '2025-02-07', 2400),
@@ -1164,7 +1343,13 @@ REPLACE INTO `duty_logs` (`id`, `steamhex`, `ic_name`, `job_name`, `job_grade`, 
 	(226, 'steam:11000014bf543e0', 'Arshia_Mtz', 'police', 'Commissioner', '2026-08-15', 4500),
 	(227, 'steam:11000014bf543e0', 'Arshia_Mtz', 'sheriff', 'Deputy', '2026-08-15', 6300),
 	(228, 'steam:11000014bf543e0', 'Arshia_Mtz', 'cid', 'Chief of CID', '2026-08-15', 4500),
-	(229, 'steam:11000014bf543e0', 'Arshia_Mtz', 'cid', 'CID Officer 1', '2026-08-16', 3000);
+	(229, 'steam:11000014bf543e0', 'Arshia_Mtz', 'cid', 'CID Officer 1', '2026-08-16', 3900),
+	(230, 'steam:11000014bf543e0', 'Arshia_Mtz', 'cid', 'CID Officer 1', '2026-08-17', 3900),
+	(231, 'steam:11000014bf543e0', 'Arshia_Mtz', 'mt', 'Officer I', '2026-08-17', 3600),
+	(232, 'steam:11000014bf543e0', 'Arshia_Mtz', 'police', 'Commissioner', '2026-08-17', 1800),
+	(233, 'steam:11000014bf543e0', 'Arshia_Mtz', 'ambulance', 'Intern', '2026-08-17', 1500),
+	(234, 'steam:11000014bf543e0', 'Arshia_Mtz', 'police', 'Commissioner', '2026-08-18', 1500),
+	(235, 'steam:11000014bf543e0', 'Arshia_Mtz', 'marshal', 'Deputy Chief', '2026-08-18', 1200);
 
 -- Dumping structure for table essentialmode.fightbans
 DROP TABLE IF EXISTS `fightbans`;
@@ -1346,22 +1531,24 @@ CREATE TABLE IF NOT EXISTS `items` (
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table essentialmode.items: ~194 rows (approximately)
+-- Dumping data for table essentialmode.items: ~238 rows (approximately)
 REPLACE INTO `items` (`name`, `label`, `limit`, `rare`, `can_remove`) VALUES
 	('aard', 'Aard', 30, 0, 1),
 	('abporteghal', 'Ab Porteghal', 10, 0, 1),
+	('air_freshener_pine', 'Air Freshener Pine', 10, 0, 1),
 	('alive_chicken', 'ElÃ¤vÃ¤ kana', 20, 0, 1),
 	('armor', 'Armor', -1, 0, 1),
 	('bakingpowder', 'Baking Powder', 30, 0, 1),
 	('bandage', 'Bandage', 20, 0, 1),
 	('bastani', 'Bastani', 10, 0, 1),
 	('beer', 'Beer', 30, 0, 1),
+	('berenj_sushi', 'Berenj Sushi', 30, 0, 1),
 	('blackmoney', 'Black Money', -1, 1, 1),
 	('blowpipe', 'Chalumeaux', 10, 0, 1),
 	('blowtorch', 'Blowtorch', -1, 0, 1),
 	('bobal_tea_matcha', 'Bobal Tea Matcha', 10, 0, 1),
 	('bobal_tea_tamshak', 'Bobal Tea Tamshak', 10, 0, 1),
-	('boba_milk_tea_caramel', 'boba milk tea caramel', 10, 0, 1),
+	('boba_milk_tea_caramel', 'Boba Milk Tea Caramel', 10, 0, 1),
 	('boba_milk_tea_matcha', 'Boba Milk Tea Matcha', 10, 0, 1),
 	('bread', 'Bread', -1, 0, 1),
 	('breathalyzer', 'Test Alchol', 10, 0, 1),
@@ -1371,17 +1558,21 @@ REPLACE INTO `items` (`name`, `label`, `limit`, `rare`, `can_remove`) VALUES
 	('caketotfarangi', 'Cake Totfarangi', 10, 0, 1),
 	('cake_bastani_vanili', 'Cake Bastani Vanili', 10, 0, 1),
 	('cake_limoii', 'Cake Limoii', 10, 0, 1),
+	('calzone', 'Calzone', 10, 0, 1),
 	('cannabis', 'Hashish', 50, 0, 1),
 	('carokit', 'Kit carosserie', 3, 0, 1),
 	('carotool', 'outils carosserie', 4, 0, 1),
+	('ceramic_coat', 'Ceramic Coat', 10, 0, 1),
 	('chaee', 'Chaee', 10, 0, 1),
 	('clip', 'Clip', -1, 0, 1),
 	('clothe', 'Vaate', 40, 0, 1),
 	('coca', 'Tokhm Kokayin', 150, 0, 1),
 	('cocaine', 'Kokayin', 50, 0, 1),
 	('coin', 'Coin', -1, 0, 1),
+	('cookie_shekari', 'Cookie Shekari', 10, 0, 1),
 	('copper', 'Kupari', 56, 0, 1),
 	('crack', 'Crack', 25, 0, 1),
+	('croissant_kareii', 'Croissant Kareii', 10, 0, 1),
 	('cupcake', 'Cup Cake', 10, 0, 1),
 	('cupcake_shokolati', 'Cupcake Shokolati', 10, 0, 1),
 	('customcoupon', 'Coupon', -1, 0, 1),
@@ -1397,6 +1588,7 @@ REPLACE INTO `items` (`name`, `label`, `limit`, `rare`, `can_remove`) VALUES
 	('ebitenrol', 'Ebi Tenrol', -1, 0, 1),
 	('eclip', 'Extended Clip', -1, 0, 1),
 	('egg', 'Tokhm Morgh', 30, 0, 1),
+	('energy_mix', 'Energy Mix', 10, 0, 1),
 	('engine', 'Engine', -1, 0, 1),
 	('engine1', 'Engine Scrap X1', -1, 0, 1),
 	('engine2', 'Engine Scrap X2', -1, 0, 1),
@@ -1417,6 +1609,9 @@ REPLACE INTO `items` (`name`, `label`, `limit`, `rare`, `can_remove`) VALUES
 	('fixkit', 'Kit rÃ©paration', 5, 0, 1),
 	('fixtool', 'outils rÃ©paration', 6, 0, 1),
 	('fountain', 'Fountain Firework', 3, 0, 1),
+	('froyo_mango', 'Froyo Mango', 10, 0, 1),
+	('fruit_punch', 'Fruit Punch', 10, 0, 1),
+	('garlic_bread', 'Garlic Bread', 10, 0, 1),
 	('gazbottle', 'bouteille de gaz', 11, 0, 1),
 	('gazellemeet', 'Gazelle Meat', -1, 0, 1),
 	('ghahve100', 'Ghahve 100', 10, 0, 1),
@@ -1446,14 +1641,23 @@ REPLACE INTO `items` (`name`, `label`, `limit`, `rare`, `can_remove`) VALUES
 	('hifi', 'HiFi', 1, 0, 1),
 	('hotwire', 'Pich Goshti', -1, 0, 1),
 	('hot_chocolate', 'Hot Chocolate', 10, 0, 1),
+	('icecream_chocolate_cone', 'Icecream Chocolate Cone', 10, 0, 1),
+	('icecream_sandwich', 'Icecream Sandwich', 10, 0, 1),
+	('icecream_vanilla_cone', 'Icecream Vanilla Cone', 10, 0, 1),
 	('ice_coffee_matcha', 'Ice Coffee Matcha', 10, 0, 1),
+	('ice_tea_special', 'Ice Tea Special', 10, 0, 1),
+	('interior_cleaner', 'Interior Cleaner Kit', 10, 0, 1),
 	('iron', 'Rauta', 42, 0, 1),
 	('joje', 'Joje', -1, 0, 1),
 	('kabab', 'Kabab', -1, 0, 1),
 	('kare', 'Kare', 30, 0, 1),
 	('kase', 'Kase', 30, 0, 1),
 	('kasekasif', 'Kase Kasif', 30, 0, 1),
+	('keik_shokolat', 'Keik Shokolat', 10, 0, 1),
 	('khame', 'Khame', 30, 0, 1),
+	('khame_yakhi', 'Khame Yakhi', 30, 0, 1),
+	('khamir_pizza', 'Khamir Pizza', 30, 0, 1),
+	('khamir_shirini', 'Khamir Shirini', 30, 0, 1),
 	('laptophack', 'Hacking Laptop', -1, 0, 1),
 	('lasheaho', 'Lashe Aho', 20, 0, 1),
 	('lashecougar', 'Lashe Cougar', 20, 0, 1),
@@ -1470,14 +1674,21 @@ REPLACE INTO `items` (`name`, `label`, `limit`, `rare`, `can_remove`) VALUES
 	('limo', 'Limo', 30, 0, 1),
 	('lockpick', 'Lockpick', -1, 0, 1),
 	('lsd', 'LSD', -1, 0, 1),
+	('maahi_khaam', 'Maahi Khaam', 30, 0, 1),
 	('mahighezel', 'Mahi Ghezel', -1, 0, 1),
 	('mahigolip', 'Mahi Golip', -1, 0, 1),
 	('mahihamoor', 'Mahi Hamoor', -1, 0, 1),
 	('marijuana', 'Marijuana', 250, 0, 1),
 	('medikit', 'Medikit', 5, 0, 1),
 	('meth', 'Meth', 25, 0, 1),
+	('microfiber_cloth', 'Microfiber Cloth', 30, 0, 1),
 	('milkshake', 'Milk Shake', 10, 0, 1),
+	('milkshake_strawberry', 'Milkshake Strawberry', 10, 0, 1),
 	('milk_shake_shokolati', 'Milk Shake Shokolati', 10, 0, 1),
+	('miso_soup', 'Miso Soup', 10, 0, 1),
+	('mive_mix', 'Mive Mix', 30, 0, 1),
+	('mocktail_mojito', 'Virgin Mojito', 10, 0, 1),
+	('mocktail_pinacolada', 'Virgin Pina Colada', 10, 0, 1),
 	('mufchocolate', 'Mufchocolate', 10, 0, 1),
 	('muffin_tamshak', 'Muffin Tamshak', 10, 0, 1),
 	('mushroom', 'Mushroom', -1, 0, 1),
@@ -1485,7 +1696,9 @@ REPLACE INTO `items` (`name`, `label`, `limit`, `rare`, `can_remove`) VALUES
 	('net_cracker', 'Net Cracker', -1, 0, 1),
 	('nodel', 'Nodel', 10, 0, 1),
 	('nodel_kham', 'Nodel Kham', 30, 0, 1),
+	('non_baget', 'Non Baget', 10, 0, 1),
 	('noodles', 'Noodles', 10, 0, 1),
+	('nori', 'Nori', 30, 0, 1),
 	('noshab', 'Noshabe', -1, 0, 1),
 	('nutela', 'Nutela', 10, 0, 1),
 	('opium', 'Teryak', 50, 0, 1),
@@ -1493,6 +1706,7 @@ REPLACE INTO `items` (`name`, `label`, `limit`, `rare`, `can_remove`) VALUES
 	('packaged_chicken', 'Kananfilee', 100, 0, 1),
 	('packaged_plank', 'Paketoitu Lankku', 100, 0, 1),
 	('painkiller', 'Painkiller', 10, 0, 1),
+	('panir_pizza', 'Panir Pizza', 30, 0, 1),
 	('pankik', 'Pankik', 10, 0, 1),
 	('pankik_nutella', 'Pankik Nutella', 10, 0, 1),
 	('pankik_oreo', 'Pankik Oreo', 10, 0, 1),
@@ -1502,6 +1716,10 @@ REPLACE INTO `items` (`name`, `label`, `limit`, `rare`, `can_remove`) VALUES
 	('phone', 'Goshi', -1, 0, 1),
 	('pizzama', 'Pizza Ma', -1, 0, 1),
 	('pizzamo', 'Pizza Mo', -1, 0, 1),
+	('pizza_bbq_chicken', 'Pizza BBQ Chicken', 10, 0, 1),
+	('pizza_margherita', 'Pizza Margherita', 10, 0, 1),
+	('pizza_mushroom', 'Pizza Mushroom', 10, 0, 1),
+	('pizza_pepperoni', 'Pizza Pepperoni', 10, 0, 1),
 	('podrcacao', 'Podr Cacao', 30, 0, 1),
 	('poppy', 'KhashKhaash', 25, 0, 1),
 	('posteaho', 'Poste Aho', 20, 0, 1),
@@ -1513,14 +1731,18 @@ REPLACE INTO `items` (`name`, `label`, `limit`, `rare`, `can_remove`) VALUES
 	('poster', 'Poster', -1, 0, 1),
 	('posterottweiler', 'Poste Rottweiler', 20, 0, 1),
 	('powdr_matcha', 'Powdr Matcha', 30, 0, 1),
+	('premium_wax', 'Premium Wax', 10, 0, 1),
 	('rabbitmeat', 'Rabbit Meat', -1, 0, 1),
 	('radio', 'Radio', -1, 0, 1),
+	('rim_polish', 'Rim Polish', 10, 0, 1),
+	('roll_darchin', 'Roll Darchin', 10, 0, 1),
 	('scope', 'Scope', -1, 0, 1),
 	('sf', 'SF', -1, 0, 1),
 	('sh', 'SH', -1, 0, 1),
 	('shahkelid', 'Shah Kelid', -1, 0, 1),
 	('shekar', 'Shekar', 30, 0, 1),
 	('shir', 'Shir', 30, 0, 1),
+	('shirini_khamei', 'Shirini Khamei', 10, 0, 1),
 	('shokolat', 'Shokolat', 10, 0, 1),
 	('shotburst', 'Shotburst Firework', 3, 0, 1),
 	('sianor', 'Sianor', -1, 0, 1),
@@ -1528,13 +1750,24 @@ REPLACE INTO `items` (`name`, `label`, `limit`, `rare`, `can_remove`) VALUES
 	('silencer', 'Silencer', -1, 0, 1),
 	('slaughtered_chicken', 'Teurastettu kana', 20, 0, 1),
 	('sm', 'SM', -1, 0, 1),
+	('soap_foam', 'Soap Foam', 30, 0, 1),
+	('soda_lime', 'Soda Lime', 10, 0, 1),
+	('soda_water', 'Soda Water', 30, 0, 1),
+	('sos_gojeh', 'Sos Gojeh', 30, 0, 1),
 	('ss', 'SS', -1, 0, 1),
 	('starburst', 'Starburst Firework', 3, 0, 1),
 	('stone', 'Kivi', 7, 0, 1),
+	('sundae_caramel', 'Sundae Caramel', 10, 0, 1),
 	('suop', 'Suop', 10, 0, 1),
+	('sushi_california', 'Sushi California', 10, 0, 1),
+	('sushi_dragon_roll', 'Sushi Dragon Roll', 10, 0, 1),
+	('sushi_salmon_nigiri', 'Sushi Salmon Nigiri', 10, 0, 1),
+	('sushi_spicy_tuna', 'Sushi Spicy Tuna', 10, 0, 1),
+	('sushi_veggie_roll', 'Sushi Veggie Roll', 10, 0, 1),
 	('tamshak', 'Tamshak', 30, 0, 1),
 	('tequila', 'Tequila', 10, 0, 1),
 	('tiramisuye_toot_farangi', 'Tiramisuye TotFarangi', 10, 0, 1),
+	('tire_shine', 'Tire Shine', 10, 0, 1),
 	('totfarangi', 'Tot Farangi', 30, 0, 1),
 	('trailburst', 'Trailburst Firework', 3, 0, 1),
 	('unagieelroll', 'Unagi Eel Roll', -1, 0, 1),
@@ -1568,7 +1801,7 @@ CREATE TABLE IF NOT EXISTS `job_grades` (
   PRIMARY KEY (`job_name`,`grade`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table essentialmode.job_grades: ~422 rows (approximately)
+-- Dumping data for table essentialmode.job_grades: ~524 rows (approximately)
 REPLACE INTO `job_grades` (`job_name`, `grade`, `name`, `label`, `salary`, `skin_male`, `skin_female`, `vehicles`, `helis`, `weapons`, `items`) VALUES
 	('ambulance', 0, 'ambulance', 'Ambulancier', 20, '{"tshirt_2":0,"hair_color_1":5,"glasses_2":3,"shoes":9,"torso_2":3,"hair_color_2":0,"pants_1":24,"glasses_1":4,"hair_1":2,"sex":0,"decals_2":0,"tshirt_1":15,"helmet_1":8,"helmet_2":0,"arms":92,"face":19,"decals_1":60,"torso_1":13,"hair_2":0,"skin":34,"pants_2":5}', '{"tshirt_2":3,"decals_2":0,"glasses":0,"hair_1":2,"torso_1":73,"shoes":1,"hair_color_2":0,"glasses_1":19,"skin":13,"face":6,"pants_2":5,"tshirt_1":75,"pants_1":37,"helmet_1":57,"torso_2":0,"arms":14,"sex":1,"glasses_2":0,"decals_1":0,"hair_2":0,"helmet_2":0,"hair_color_1":0}', NULL, NULL, NULL, NULL),
 	('ambulance', 1, 'intern', 'Intern', 3000, '{"mask_1":0,"jaw_1":0,"age_1":0,"lip_thickness":0,"ears_1":-1,"face_2":21,"moles_2":1,"glasses_2":-1,"blush_1":-1,"nose_5":0,"beard_3":0,"sex":0,"tshirt_2":0,"beard_1":0,"face_md_weight":50.0,"chin_3":0,"beard_4":0,"bags_2":0,"decals_1":0,"neck_thickness":0,"eye_squint":0,"beard_2":10,"hair_2":0,"blush_2":10,"eyebrows_3":12,"lipstick_1":0,"shoes_2":0,"jaw_2":0,"complexion_1":0,"watches_2":-1,"blush_3":0,"skin":12,"hair_color_2":0,"watches_1":-1,"ears_2":-1,"chest_1":-1,"hair_color_1":0,"arms":85,"shoes_1":179,"age_2":0,"chin_4":0,"bodyb_1":-1,"cheeks_2":0,"lipstick_4":0,"lipstick_3":0,"makeup_2":0,"makeup_4":0,"chain_1":126,"sun_1":-1,"torso_2":4,"bodyb_3":-1,"chin_1":0,"blemishes_1":-1,"nose_4":0,"bracelets_1":-1,"helmet_1":-1,"eyebrows_2":10,"eye_color":0,"moles_1":0,"bproof_1":0,"eyebrows_6":0,"bags_1":0,"eyebrows_4":12,"hair_1":10,"bproof_2":0,"glasses_1":-1,"decals_2":0,"bracelets_2":0,"makeup_1":0,"tshirt_1":15,"dad":0,"bodyb_4":0,"face_1":0,"bodyb_2":0,"face_3":5,"pants_1":279,"mom":21,"blemishes_2":10,"complexion_2":1,"cheeks_3":0,"eyebrows_5":0,"sun_2":10,"chin_2":0,"nose_2":0,"helmet_2":-1,"nose_3":0,"nose_6":0,"torso_1":791,"pants_2":4,"arms_2":0,"makeup_3":0,"nose_1":0,"chain_2":0,"cheeks_1":0,"mask_2":0,"lipstick_2":0,"chest_2":10,"skin_md_weight":6,"chest_3":0,"eyebrows_1":0}', '{}', '[{"status":true,"model":"ambulance"},{"status":true,"model":"1200rt"},{"status":true,"model":"corvette"},{"status":false,"model":"motorpm"},{"status":false,"model":"orbmwm5"},{"status":false,"model":"polkch"},{"status":false,"model":"poljug"},{"status":false,"model":"polkmd"},{"status":false,"model":"polreb"},{"status":false,"model":"polros"}]', NULL, '', '[]'),
@@ -1589,7 +1822,14 @@ REPLACE INTO `job_grades` (`job_name`, `grade`, `name`, `label`, `salary`, `skin
 	('ambulance', 16, 'lparamedic', 'Assistant Chief', 18000, '{}', '{}', '[]', NULL, '', '[]'),
 	('ambulance', 17, 'boss', 'Advisor', 19000, '{}', '{}', '[]', NULL, '', '[]'),
 	('ambulance', 18, 'boss', 'Chief', 20000, '{"bproof_1":123,"lipstick_2":0,"bodyb_1":-1,"chin_1":0,"moles_2":1,"age_1":0,"lipstick_4":0,"bags_2":0,"beard_1":0,"shoes_1":10,"blush_2":10,"glasses_2":-1,"bracelets_1":-1,"face_3":5,"mask_2":2,"eyebrows_1":0,"arms":77,"lip_thickness":0,"torso_2":2,"eye_squint":0,"lipstick_1":0,"moles_1":0,"makeup_3":0,"hair_2":0,"face_1":0,"chain_1":0,"bodyb_3":-1,"chain_2":0,"hair_color_1":0,"tshirt_2":3,"makeup_1":0,"helmet_2":-1,"nose_4":0,"mom":21,"nose_5":0,"arms_2":0,"complexion_2":1,"face_md_weight":50.0,"ears_2":-1,"nose_2":0,"sun_1":-1,"chin_3":0,"beard_3":0,"skin":12,"bproof_2":4,"decals_1":0,"pants_2":0,"chest_1":-1,"helmet_1":-1,"bags_1":0,"beard_4":0,"blemishes_1":-1,"nose_3":0,"tshirt_1":72,"chest_2":10,"watches_1":-1,"chin_2":0,"bodyb_4":0,"nose_1":0,"cheeks_2":0,"pants_1":28,"skin_md_weight":6,"hair_color_2":0,"dad":0,"makeup_4":0,"makeup_2":0,"complexion_1":0,"sun_2":10,"mask_1":0,"sex":0,"eyebrows_2":10,"nose_6":0,"eyebrows_3":12,"blush_1":-1,"blemishes_2":10,"beard_2":10,"neck_thickness":0,"glasses_1":-1,"eyebrows_4":12,"jaw_2":0,"watches_2":-1,"torso_1":750,"eye_color":0,"cheeks_3":0,"chin_4":0,"lipstick_3":0,"ears_1":-1,"face_2":21,"age_2":0,"blush_3":0,"bracelets_2":0,"eyebrows_6":0,"jaw_1":0,"cheeks_1":0,"chest_3":0,"eyebrows_5":0,"shoes_2":0,"hair_1":10,"decals_2":0,"bodyb_2":0}', '{"bproof_1":0,"lipstick_2":10,"bodyb_1":-1,"chin_1":0,"moles_2":1,"age_1":0,"lipstick_4":0,"bags_2":0,"beard_1":0,"shoes_1":184,"blush_2":10,"glasses_2":-1,"bracelets_1":-1,"face_3":6,"mask_2":2,"eyebrows_1":1,"arms":101,"lip_thickness":0,"torso_2":2,"eye_squint":0,"lipstick_1":3,"moles_1":0,"makeup_3":0,"hair_2":0,"face_1":0,"chain_1":0,"bodyb_3":-1,"chain_2":0,"hair_color_1":0,"tshirt_2":3,"makeup_1":5,"helmet_2":-1,"nose_4":0,"mom":21,"nose_5":0,"arms_2":0,"complexion_2":1,"face_md_weight":50.0,"ears_2":-1,"nose_2":0,"sun_1":-1,"chin_3":0,"beard_3":0,"skin":12,"bproof_2":0,"decals_1":0,"pants_2":0,"chest_1":-1,"helmet_1":-1,"bags_1":0,"beard_4":0,"blemishes_1":-1,"nose_3":0,"tshirt_1":67,"chest_2":10,"watches_1":-1,"chin_2":0,"bodyb_4":0,"nose_1":0,"cheeks_2":0,"pants_1":34,"skin_md_weight":6,"hair_color_2":0,"dad":0,"makeup_4":0,"makeup_2":10,"complexion_1":0,"sun_2":10,"mask_1":0,"sex":1,"eyebrows_2":10,"nose_6":0,"eyebrows_3":26,"blush_1":-1,"blemishes_2":10,"beard_2":0,"neck_thickness":0,"glasses_1":-1,"eyebrows_4":12,"jaw_2":0,"watches_2":-1,"torso_1":707,"eye_color":0,"cheeks_3":0,"chin_4":0,"lipstick_3":20,"ears_1":-1,"face_2":21,"age_2":0,"blush_3":0,"bracelets_2":0,"eyebrows_6":0,"jaw_1":0,"cheeks_1":0,"chest_3":0,"eyebrows_5":0,"shoes_2":0,"hair_1":30,"decals_2":0,"bodyb_2":0}', '[{"status":true,"model":"ambulance"},{"status":true,"model":"1200rt"},{"status":true,"model":"corvette"},{"status":true,"model":"motorpm"},{"status":true,"model":"orbmwm5"},{"status":true,"model":"polkch"},{"status":true,"model":"poljug"},{"status":true,"model":"polkmd"},{"status":true,"model":"polreb"},{"status":true,"model":"polros"}]', NULL, '', '[{"name":"medikit","status":true},{"name":"bandage","status":true}]'),
+	('anchor', 1, 'rank1', 'Rank1', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('anchor', 2, 'rank2', 'Rank2', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('anchor', 3, 'rank3', 'Rank3', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('anchor', 4, 'boss', 'Rank4', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('artesh', 0, 'employee', 'Employee', 200, '{}', '{}', NULL, NULL, NULL, NULL),
+	('blacktide', 1, 'rank1', 'Runner', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('blacktide', 2, 'rank2', 'Enforcer', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('blacktide', 3, 'boss', 'Boss', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('burgershot', 0, 'trainee', 'Trainee', 0, '{}', '{}', NULL, NULL, NULL, NULL),
 	('burgershot', 1, 'com', 'Cashier', 0, '{"face":0,"watches_2":-1,"watches_1":-1,"mom":21,"eyebrows_2":10,"bproof_1":0,"makeup_3":0,"beard_4":0,"face_1":0,"cheeks_2":0,"lipstick_3":0,"bodyb_2":0,"torso_1":15,"face_md_weight":50.0,"face_3":5,"eye_color":0,"chin_4":0,"bulletproof_vest_1":79,"cheeks_1":0,"chain_2":0,"decals_2":0,"skin_md_weight":6,"lipstick_2":0,"shoes_1":34,"sun_1":-1,"beard_3":0,"arms":15,"eyebrows_3":12,"chin_2":0,"eyebrows_1":0,"bracelets_1":-1,"bodyb_1":-1,"blush_1":-1,"torso_2":0,"moles_1":0,"eye_squint":0,"nose_5":0,"blemishes_1":-1,"makeup_1":0,"sex":0,"chin_1":0,"pants_1":61,"blemishes_2":10,"glasses_2":-1,"arms_2":0,"bulletproof_vest_2":0,"glasses_1":-1,"helmet_1":-1,"neck_thickness":0,"ears_1":-1,"nose_1":0,"makeup_2":0,"age_2":0,"eyebrows_6":0,"bodyb_3":-1,"hair_color_1":0,"hair_color_2":0,"tshirt_1":15,"moles_2":1,"ears_2":-1,"helmet_2":-1,"bulletproof_2":0,"lip_thickness":0,"jaw_2":0,"nose_2":0,"bulletproof_1":79,"jaw_1":0,"blush_2":10,"complexion_1":0,"dad":0,"nose_6":0,"bags_2":0,"mask_1":0,"eyebrows_5":0,"blush_3":0,"eyebrows_4":12,"beard_2":10,"cheeks_3":0,"complexion_2":1,"decals_1":0,"face_2":21,"chest_3":0,"bags_1":0,"hair_2":0,"lipstick_1":0,"sun_2":10,"beard_1":0,"shoes_2":0,"bracelets_2":0,"chest_2":10,"chest_1":-1,"chain_1":0,"age_1":0,"skin":12,"bproof_2":0,"nose_4":0,"pants_2":1,"hair_1":10,"tshirt_2":0,"chin_3":0,"makeup_4":0,"mask_2":2,"bodyb_4":0,"lipstick_4":0,"nose_3":0}', '{}', '[]', NULL, '', ''),
 	('burgershot', 2, 'com', 'Visitor', 0, '{}', '{}', '[]', NULL, '', ''),
@@ -1602,6 +1842,10 @@ REPLACE INTO `job_grades` (`job_name`, `grade`, `name`, `label`, `salary`, `skin
 	('cardealer', 1, 'novice', 'Novice', 25, '{}', '{}', NULL, NULL, NULL, NULL),
 	('cardealer', 2, 'experienced', 'Experienced', 40, '{}', '{}', NULL, NULL, NULL, NULL),
 	('cardealer', 3, 'boss', 'Boss', 0, '{}', '{}', NULL, NULL, NULL, NULL),
+	('carwash', 1, 'rank1', 'Rank1', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('carwash', 2, 'rank2', 'Rank2', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('carwash', 3, 'rank3', 'Rank3', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('carwash', 4, 'boss', 'Rank4', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('cia', 0, 'trainee', 'Trainee', 0, '{}', '{}', NULL, NULL, NULL, NULL),
 	('cia', 1, 'com', 'Agent', 1000, '{}', '{}', '[]', NULL, '[]', ''),
 	('cia', 2, 'com', 'Field Agent ', 1500, '{}', '{}', '[]', NULL, '[]', ''),
@@ -1647,6 +1891,13 @@ REPLACE INTO `job_grades` (`job_name`, `grade`, `name`, `label`, `salary`, `skin
 	('cid', 20, 'assistantboss', 'Assistant Chief of CID', 13200, '{}', '{}', NULL, NULL, NULL, NULL),
 	('cid', 21, 'boss', 'Chief of CID', 14000, '{}', '{}', NULL, NULL, NULL, NULL),
 	('coffee', 0, 'employee', 'Employee', 200, '{}', '{}', NULL, NULL, NULL, NULL),
+	('cratecarry', 1, 'rank1', 'Driver', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('cratecarry', 2, 'rank2', 'Manager', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('cratecarry', 3, 'boss', 'Owner', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('crimson', 1, 'rank1', 'Rank1', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('crimson', 2, 'rank2', 'Rank2', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('crimson', 3, 'rank3', 'Rank3', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('crimson', 4, 'boss', 'Rank4', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('dadgostari', 0, 'employee', 'Employee', 200, '{}', '{}', NULL, NULL, NULL, NULL),
 	('doa', 0, 'cadet', 'Cadet', 7500, '{}', '{}', NULL, NULL, NULL, NULL),
 	('doa', 1, 'po1', 'DOA Officer 1', 7760, '{}', '{}', NULL, NULL, NULL, NULL),
@@ -1671,6 +1922,10 @@ REPLACE INTO `job_grades` (`job_name`, `grade`, `name`, `label`, `salary`, `skin
 	('doa', 20, 'assistantboss', 'Assistant Director of DOA', 13200, '{}', '{}', NULL, NULL, NULL, NULL),
 	('doa', 21, 'boss', 'Director of DOA', 14000, '{}', '{}', NULL, NULL, NULL, NULL),
 	('doc', 0, 'employee', 'Employee', 200, '{}', '{}', NULL, NULL, NULL, NULL),
+	('ember', 1, 'rank1', 'Rank1', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('ember', 2, 'rank2', 'Rank2', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('ember', 3, 'rank3', 'Rank3', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('ember', 4, 'boss', 'Rank4', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('fbi', 0, 'agent', 'Agent', 20, '{}', '{}', NULL, NULL, NULL, NULL),
 	('fbi', 1, 'cadet', 'Agent', 30000, '{"torso_1":349,"mom":21,"lip_thickness":0,"blush_1":-1,"cheeks_1":-0.1,"jaw_2":0,"arms":25,"lipstick_1":0,"eyebrows_5":0,"tshirt_2":0,"makeup_1":0,"sun_2":10,"blemishes_2":10,"face_3":5,"decals_2":0,"eyebrows_6":-10,"decals_1":0,"blush_3":0,"eyebrows_2":10,"bodyb_3":-1,"nose_1":0,"chin_1":3.59999999999999,"moles_1":0,"bodyb_2":0,"eyebrows_1":0,"bproof_2":0,"bodyb_4":0,"makeup_2":0,"bproof_1":53,"eyebrows_3":12,"skin_md_weight":0,"eye_color":0,"nose_6":0,"bulletproof_vest_1":79,"makeup_4":0,"glasses_2":2,"torso_2":15,"beard_4":0,"bags_2":0,"chain_1":226,"shoes_2":0,"face_2":21,"watches_2":-1,"lipstick_3":0,"bracelets_2":0,"bulletproof_2":0,"nose_5":0,"chin_2":0,"cheeks_2":0,"bulletproof_vest_2":0,"chain_2":0,"age_1":0,"eyebrows_4":12,"blemishes_1":-1,"bulletproof_1":79,"face_1":0,"arms_2":0,"shoes_1":20,"chest_2":10,"dad":0,"neck_thickness":0,"moles_2":1,"ears_2":0,"helmet_2":0,"lipstick_4":0,"complexion_1":0,"hair_color_2":0,"bodyb_1":-1,"tshirt_1":15,"eye_squint":0,"chest_3":0,"nose_3":0,"nose_2":0,"jaw_1":0,"pants_1":28,"age_2":0,"hair_color_1":0,"pants_2":0,"face":0,"hair_2":0,"helmet_1":-1,"skin":12,"blush_2":10,"bracelets_1":-1,"mask_2":0,"glasses_1":5,"hair_1":10,"mask_1":121,"watches_1":-1,"chin_3":0,"beard_2":10,"bags_1":0,"chin_4":0,"nose_4":0,"cheeks_3":0,"sex":0,"ears_1":-1,"beard_3":0,"sun_1":-1,"beard_1":0,"lipstick_2":0,"chest_1":-1,"makeup_3":0,"complexion_2":1,"face_md_weight":50}', '{}', '', NULL, '[{"status":false,"model":"WEAPON_SMG"},{"status":false,"model":"WEAPON_MICROSMG"},{"status":false,"model":"WEAPON_PISTOL"},{"status":false,"model":"WEAPON_APPISTOL"},{"status":false,"model":"WEAPON_CERAMICPISTOL"},{"status":false,"model":"WEAPON_COMBATPISTOL"},{"status":false,"model":"WEAPON_HEAVYPISTOL"},{"status":false,"model":"WEAPON_SNSPISTOL"},{"status":false,"model":"WEAPON_PISTOL50"},{"status":false,"model":"WEAPON_NIGHTSTICK"},{"status":false,"model":"WEAPON_STUNGUN"},{"status":false,"model":"WEAPON_FLASHLIGHT"},{"status":false,"model":"WEAPON_COMBATPDW"},{"status":false,"model":"WEAPON_CARBINERIFLE"},{"status":false,"model":"WEAPON_ADVANCEDRIFLE"},{"status":false,"model":"WEAPON_SPECIALCARBINE"},{"status":false,"model":"WEAPON_SPECIALCARBINE_MK2"},{"status":false,"model":"WEAPON_BULLPOPRIFLE_MK2"},{"status":false,"model":"WEAPON_PISTOL_MK2"},{"status":false,"model":"WEAPON_SMG_MK2"},{"status":false,"model":"WEAPON BZGAS"},{"status":false,"model":"WEAPON_ASSAULTRIFLE_MK2"},{"status":false,"model":"WEAPON_CARBINERIFLE_MK2"},{"status":false,"model":"wWEAPON_knuckle"},{"status":false,"model":"WEAPON_SNSPISTOL_MK2"}]', ''),
 	('fbi', 2, 'po1', 'Senior Agent', 14000, '{}', '{}', '[{"status":true,"model":"escalade"},{"status":true,"model":"pf"},{"status":true,"model":"sunbmfbi"},{"status":true,"model":"riot2"},{"status":false,"model":"polgt17"},{"status":false,"model":"porsche"},{"status":false,"model":"lsfdpickup"},{"status":false,"model":"cla45"},{"status":false,"model":"ateamvan"}]', NULL, '[{"model":"WEAPON_SMG","status":true},{"model":"WEAPON_MICROSMG","status":true},{"model":"WEAPON_PISTOL","status":true},{"model":"WEAPON_APPISTOL","status":false},{"model":"WEAPON_CERAMICPISTOL","status":false},{"model":"WEAPON_COMBATPISTOL","status":false},{"model":"WEAPON_HEAVYPISTOL","status":false},{"model":"WEAPON_SNSPISTOL","status":false},{"model":"WEAPON_PISTOL50","status":true},{"model":"WEAPON_NIGHTSTICK","status":false},{"model":"WEAPON_STUNGUN","status":false},{"model":"WEAPON_FLASHLIGHT","status":false},{"model":"WEAPON_COMBATPDW","status":true},{"model":"WEAPON_CARBINERIFLE","status":false},{"model":"WEAPON_ADVANCEDRIFLE","status":false},{"model":"WEAPON_SPECIALCARBINE","status":false},{"model":"WEAPON_SPECIALCARBINE_MK2","status":false},{"model":"WEAPON_BULLPOPRIFLE_MK2","status":false},{"model":"WEAPON_PISTOL_MK2","status":false},{"model":"WEAPON_SMG_MK2","status":false},{"model":"WEAPON BZGAS","status":true},{"model":"WEAPON_ASSAULTRIFLE_MK2","status":false},{"model":"WEAPON_CARBINERIFLE_MK2","status":false},{"model":"wWEAPON_knuckle","status":false},{"model":"WEAPON_SNSPISTOL_MK2","status":false}]', ''),
@@ -1680,10 +1935,26 @@ REPLACE INTO `job_grades` (`job_name`, `grade`, `name`, `label`, `salary`, `skin
 	('fbi', 6, 'boss', 'Deputy Chief', 18000, '{"eyebrows_3":12,"blush_1":-1,"chest_1":-1,"eyebrows_6":0,"beard_2":10,"eyebrows_2":10,"cheeks_2":0,"makeup_1":0,"glasses_1":5,"ears_2":-1,"torso_1":606,"blush_3":0,"bracelets_1":-1,"skin":12,"age_2":0,"moles_2":1,"bulletproof_1":79,"bodyb_4":0,"bags_1":0,"helmet_2":0,"bulletproof_vest_2":0,"face_3":5,"torso_2":6,"sun_2":10,"lipstick_1":0,"lipstick_4":0,"face_md_weight":50.0,"sex":0,"arms":25,"glasses_2":1,"bproof_2":0,"chin_4":0,"skin_md_weight":6,"neck_thickness":0,"chest_3":0,"tshirt_2":0,"shoes_1":25,"bproof_1":54,"jaw_2":0,"watches_1":14,"chin_3":0,"shoes_2":0,"blush_2":10,"bulletproof_vest_1":79,"mask_2":0,"bulletproof_2":0,"beard_1":0,"makeup_4":0,"nose_4":0,"jaw_1":0,"bags_2":0,"eyebrows_1":0,"face":0,"bracelets_2":0,"face_2":21,"pants_1":33,"ears_1":-1,"makeup_3":0,"watches_2":0,"mom":45,"beard_3":0,"chain_2":0,"cheeks_1":0,"nose_1":0,"cheeks_3":0,"makeup_2":0,"bodyb_2":0,"eye_squint":0,"sun_1":-1,"beard_4":0,"blemishes_2":10,"chin_2":0,"hair_1":10,"dad":8,"decals_2":0,"lipstick_3":0,"chest_2":10,"decals_1":0,"tshirt_1":250,"age_1":0,"chin_1":0,"bodyb_3":-1,"hair_2":0,"nose_3":0,"complexion_1":0,"nose_2":0,"pants_2":0,"bodyb_1":-1,"arms_2":0,"nose_5":0,"eye_color":0,"complexion_2":1,"helmet_1":-1,"chain_1":180,"lipstick_2":0,"face_1":0,"nose_6":0,"blemishes_1":-1,"eyebrows_5":0,"moles_1":0,"hair_color_2":0,"mask_1":121,"lip_thickness":0,"eyebrows_4":12,"hair_color_1":0}', '{}', '[{"status":true,"model":"escalade"},{"status":true,"model":"pf"},{"status":true,"model":"sunbmfbi"},{"status":true,"model":"riot2"},{"status":true,"model":"polgt17"},{"status":true,"model":"porsche"},{"status":true,"model":"lsfdpickup"},{"status":true,"model":"cla45"},{"status":true,"model":"ateamvan"}]', NULL, '[{"status":true,"model":"WEAPON_SMG"},{"status":true,"model":"WEAPON_MICROSMG"},{"status":true,"model":"WEAPON_PISTOL"},{"status":true,"model":"WEAPON_APPISTOL"},{"status":true,"model":"WEAPON_CERAMICPISTOL"},{"status":true,"model":"WEAPON_COMBATPISTOL"},{"status":true,"model":"WEAPON_HEAVYPISTOL"},{"status":true,"model":"WEAPON_SNSPISTOL"},{"status":true,"model":"WEAPON_PISTOL50"},{"status":true,"model":"WEAPON_NIGHTSTICK"},{"status":true,"model":"WEAPON_STUNGUN"},{"status":true,"model":"WEAPON_FLASHLIGHT"},{"status":true,"model":"WEAPON_COMBATPDW"},{"status":true,"model":"WEAPON_CARBINERIFLE"},{"status":true,"model":"WEAPON_ADVANCEDRIFLE"},{"status":true,"model":"WEAPON_SPECIALCARBINE"},{"status":true,"model":"WEAPON_SPECIALCARBINE_MK2"},{"status":true,"model":"WEAPON_BULLPOPRIFLE_MK2"},{"status":true,"model":"WEAPON_PISTOL_MK2"},{"status":true,"model":"WEAPON_SMG_MK2"},{"status":true,"model":"WEAPON BZGAS"},{"status":true,"model":"WEAPON_ASSAULTRIFLE_MK2"},{"status":true,"model":"WEAPON_CARBINERIFLE_MK2"},{"status":true,"model":"wWEAPON_knuckle"},{"status":true,"model":"WEAPON_SNSPISTOL_MK2"}]', '[{"status":true,"name":"blackmoney"},{"status":true,"name":"bread"},{"status":true,"name":"clip"},{"status":true,"name":"grip"},{"status":true,"name":"lsd"},{"status":true,"name":"phone"},{"status":true,"name":"pizza"},{"status":true,"name":"radio"},{"status":true,"name":"silencer"},{"status":true,"name":"water"}]'),
 	('fbi', 7, 'boss', 'Chief', 19000, '{"bodyb_4":0,"helmet_2":0,"neck_thickness":0,"mom":21,"blemishes_1":-1,"beard_1":0,"bodyb_2":0,"skin":12,"makeup_2":0,"hair_color_1":0,"lipstick_1":0,"bulletproof_vest_1":79,"face_1":0,"bulletproof_2":0,"chin_2":0,"nose_3":0,"chain_1":226,"lipstick_2":0,"blush_2":10,"jaw_1":0,"cheeks_2":0,"decals_2":0,"bproof_1":54,"eyebrows_6":0,"chin_4":0,"nose_4":0,"face_3":5,"eyebrows_1":0,"beard_3":0,"sun_1":-1,"face":0,"arms_2":0,"cheeks_1":0,"mask_2":8,"lip_thickness":0,"hair_color_2":0,"chin_3":0,"shoes_2":1,"moles_2":1,"arms":19,"eye_color":0,"ears_2":-1,"beard_2":10,"makeup_3":0,"mask_1":239,"bodyb_3":-1,"tshirt_2":0,"jaw_2":0,"nose_1":0,"nose_6":0,"dad":13,"chin_1":0,"beard_4":0,"glasses_1":5,"sun_2":10,"torso_2":0,"bracelets_2":0,"bags_2":0,"chain_2":0,"complexion_2":1,"chest_3":0,"eyebrows_4":12,"lipstick_3":0,"bracelets_1":-1,"bodyb_1":-1,"ears_1":-1,"moles_1":0,"face_2":21,"torso_1":613,"bags_1":0,"tshirt_1":210,"eyebrows_2":10,"lipstick_4":0,"nose_5":0,"complexion_1":0,"pants_2":0,"sex":0,"face_md_weight":50.0,"eye_squint":0,"makeup_4":0,"chest_2":10,"glasses_2":1,"makeup_1":0,"eyebrows_3":12,"blush_3":0,"skin_md_weight":9,"bproof_2":0,"bulletproof_1":79,"eyebrows_5":0,"cheeks_3":0,"bulletproof_vest_2":0,"age_2":0,"age_1":0,"shoes_1":99,"helmet_1":83,"hair_2":0,"blush_1":-1,"nose_2":0,"decals_1":0,"watches_1":4,"pants_1":4,"watches_2":1,"hair_1":10,"chest_1":-1,"blemishes_2":10}', '{}', '[{"status":true,"model":"escalade"},{"status":true,"model":"pf"},{"status":true,"model":"sunbmfbi"},{"status":true,"model":"riot2"},{"status":true,"model":"polgt17"},{"status":true,"model":"porsche"},{"status":true,"model":"lsfdpickup"},{"status":true,"model":"cla45"},{"status":true,"model":"ateamvan"}]', NULL, '[{"status":true,"model":"WEAPON_SMG"},{"status":true,"model":"WEAPON_MICROSMG"},{"status":true,"model":"WEAPON_PISTOL"},{"status":true,"model":"WEAPON_APPISTOL"},{"status":true,"model":"WEAPON_CERAMICPISTOL"},{"status":true,"model":"WEAPON_COMBATPISTOL"},{"status":true,"model":"WEAPON_HEAVYPISTOL"},{"status":true,"model":"WEAPON_SNSPISTOL"},{"status":true,"model":"WEAPON_PISTOL50"},{"status":true,"model":"WEAPON_NIGHTSTICK"},{"status":true,"model":"WEAPON_STUNGUN"},{"status":true,"model":"WEAPON_FLASHLIGHT"},{"status":true,"model":"WEAPON_COMBATPDW"},{"status":true,"model":"WEAPON_CARBINERIFLE"},{"status":true,"model":"WEAPON_ADVANCEDRIFLE"},{"status":true,"model":"WEAPON_SPECIALCARBINE"},{"status":true,"model":"WEAPON_SPECIALCARBINE_MK2"},{"status":true,"model":"WEAPON_BULLPOPRIFLE_MK2"},{"status":true,"model":"WEAPON_PISTOL_MK2"},{"status":true,"model":"WEAPON_SMG_MK2"},{"status":true,"model":"WEAPON BZGAS"},{"status":true,"model":"WEAPON_ASSAULTRIFLE_MK2"},{"status":true,"model":"WEAPON_CARBINERIFLE_MK2"},{"status":true,"model":"wWEAPON_knuckle"},{"status":true,"model":"WEAPON_SNSPISTOL_MK2"}]', '[{"status":true,"name":"blackmoney"},{"status":true,"name":"bread"},{"status":true,"name":"clip"},{"status":true,"name":"grip"},{"status":true,"name":"lsd"},{"status":true,"name":"phone"},{"status":true,"name":"pizza"},{"status":true,"name":"radio"},{"status":true,"name":"silencer"},{"status":true,"name":"water"}]'),
 	('fbi', 8, 'boss', 'General', 20000, '{"makeup_1":0,"age_2":0,"cheeks_2":0,"decals_2":0,"bulletproof_1":79,"nose_4":0,"nose_6":0,"mask_2":0,"nose_5":0,"eye_squint":0,"face_2":21,"bodyb_4":0,"eyebrows_3":12,"bodyb_1":-1,"watches_1":-1,"eyebrows_1":0,"nose_3":0,"bracelets_1":-1,"shoes_1":57,"sun_2":10,"hair_color_1":0,"arms":52,"bulletproof_vest_1":79,"bags_2":0,"face_1":0,"bracelets_2":0,"chest_1":-1,"beard_4":0,"pants_1":4,"eyebrows_6":0,"glasses_2":0,"moles_1":0,"pants_2":0,"watches_2":-1,"chin_2":0,"eyebrows_5":0,"cheeks_3":0,"bproof_1":117,"sex":0,"jaw_2":0,"makeup_3":0,"ears_1":-1,"decals_1":0,"lipstick_2":0,"beard_2":10,"chain_2":0,"torso_2":15,"jaw_1":0,"bulletproof_vest_2":0,"beard_1":0,"chin_4":0,"hair_1":10,"blush_1":-1,"mask_1":121,"cheeks_1":0,"nose_2":0,"eye_color":0,"face_3":5,"bodyb_2":0,"chin_1":0,"nose_1":0,"blemishes_1":-1,"eyebrows_4":12,"face":0,"complexion_1":0,"torso_1":574,"chain_1":296,"bproof_2":1,"helmet_2":-1,"hair_color_2":0,"dad":0,"bags_1":0,"tshirt_1":214,"bodyb_3":-1,"skin":12,"lip_thickness":0,"blush_2":10,"lipstick_4":0,"skin_md_weight":6,"chin_3":0,"bulletproof_2":0,"chest_3":0,"makeup_4":0,"lipstick_1":0,"face_md_weight":50.0,"chest_2":10,"helmet_1":-1,"glasses_1":5,"makeup_2":0,"complexion_2":1,"shoes_2":9,"beard_3":0,"age_1":0,"eyebrows_2":10,"hair_2":0,"arms_2":0,"lipstick_3":0,"tshirt_2":0,"moles_2":1,"sun_1":-1,"mom":21,"neck_thickness":0,"blush_3":0,"ears_2":-1,"blemishes_2":10}', '{}', '[{"status":true,"model":"escalade"},{"status":true,"model":"pf"},{"status":true,"model":"sunbmfbi"},{"status":true,"model":"riot2"},{"status":true,"model":"polgt17"},{"status":true,"model":"porsche"},{"status":true,"model":"lsfdpickup"},{"status":true,"model":"cla45"},{"status":true,"model":"ateamvan"}]', NULL, '[{"status":true,"model":"WEAPON_SMG"},{"status":true,"model":"WEAPON_MICROSMG"},{"status":true,"model":"WEAPON_PISTOL"},{"status":true,"model":"WEAPON_APPISTOL"},{"status":true,"model":"WEAPON_CERAMICPISTOL"},{"status":true,"model":"WEAPON_COMBATPISTOL"},{"status":true,"model":"WEAPON_HEAVYPISTOL"},{"status":true,"model":"WEAPON_SNSPISTOL"},{"status":true,"model":"WEAPON_PISTOL50"},{"status":true,"model":"WEAPON_NIGHTSTICK"},{"status":true,"model":"WEAPON_STUNGUN"},{"status":true,"model":"WEAPON_FLASHLIGHT"},{"status":true,"model":"WEAPON_COMBATPDW"},{"status":true,"model":"WEAPON_CARBINERIFLE"},{"status":true,"model":"WEAPON_ADVANCEDRIFLE"},{"status":true,"model":"WEAPON_SPECIALCARBINE"},{"status":true,"model":"WEAPON_SPECIALCARBINE_MK2"},{"status":true,"model":"WEAPON_BULLPOPRIFLE_MK2"},{"status":true,"model":"WEAPON_PISTOL_MK2"},{"status":true,"model":"WEAPON_SMG_MK2"},{"status":true,"model":"WEAPON BZGAS"},{"status":true,"model":"WEAPON_ASSAULTRIFLE_MK2"},{"status":true,"model":"WEAPON_CARBINERIFLE_MK2"},{"status":true,"model":"wWEAPON_knuckle"},{"status":true,"model":"WEAPON_SNSPISTOL_MK2"}]', '[{"status":true,"name":"blackmoney"},{"status":true,"name":"bread"},{"status":true,"name":"clip"},{"status":true,"name":"grip"},{"status":true,"name":"lsd"},{"status":true,"name":"phone"},{"status":true,"name":"pizza"},{"status":true,"name":"radio"},{"status":true,"name":"silencer"},{"status":true,"name":"water"}]'),
+	('firebrick', 1, 'rank1', 'Rank1', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('firebrick', 2, 'rank2', 'Rank2', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('firebrick', 3, 'rank3', 'Rank3', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('firebrick', 4, 'boss', 'Rank4', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('fisherman', 0, 'employee', 'Karmand', 1500, '', '', '', NULL, '', ''),
+	('flourish', 1, 'rank1', 'Rank1', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('flourish', 2, 'rank2', 'Rank2', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('flourish', 3, 'rank3', 'Rank3', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('flourish', 4, 'boss', 'Rank4', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('food', 0, 'employee', 'Employee', 200, '{}', '{}', NULL, NULL, NULL, NULL),
 	('forces', 0, 'employee', 'Employee', 200, '{}', '{}', NULL, NULL, NULL, NULL),
+	('frostbite', 1, 'rank1', 'Rank1', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('frostbite', 2, 'rank2', 'Rank2', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('frostbite', 3, 'rank3', 'Rank3', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('frostbite', 4, 'boss', 'Rank4', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('fueler', 0, 'employee', 'Karmand', 1500, '', '', '', NULL, '', ''),
+	('goldcrust', 1, 'rank1', 'Rank1', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('goldcrust', 2, 'rank2', 'Rank2', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('goldcrust', 3, 'rank3', 'Rank3', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('goldcrust', 4, 'boss', 'Rank4', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('government', 0, 'employee', 'Employee', 200, '{}', '{}', NULL, NULL, NULL, NULL),
 	('judge', 0, 'cadet', 'Cadet', 7500, '{}', '{}', NULL, NULL, NULL, NULL),
 	('judge', 1, 'po1', 'Judge Officer 1', 7760, '{}', '{}', NULL, NULL, NULL, NULL),
@@ -1707,6 +1978,10 @@ REPLACE INTO `job_grades` (`job_name`, `grade`, `name`, `label`, `salary`, `skin
 	('judge', 19, 'deputychief', 'Deputy Chief', 12800, '{}', '{}', NULL, NULL, NULL, NULL),
 	('judge', 20, 'assistantboss', 'Assistant Chief Justice', 13200, '{}', '{}', NULL, NULL, NULL, NULL),
 	('judge', 21, 'boss', 'Chief Justice', 14000, '{}', '{}', NULL, NULL, NULL, NULL),
+	('koi', 1, 'rank1', 'Rank1', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('koi', 2, 'rank2', 'Rank2', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('koi', 3, 'rank3', 'Rank3', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('koi', 4, 'boss', 'Rank4', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('lumberjack', 0, 'employee', 'Karmand', 1500, '', '', '', NULL, '', ''),
 	('marshal', 0, 'cadet', 'Cadet', 7500, '{}', '{}', NULL, NULL, NULL, NULL),
 	('marshal', 1, 'po1', 'Marshal Officer 1', 7760, '{}', '{}', NULL, NULL, NULL, NULL),
@@ -1749,6 +2024,9 @@ REPLACE INTO `job_grades` (`job_name`, `grade`, `name`, `label`, `salary`, `skin
 	('mechanic', 16, 'boss', 'Rank 16', 18000, '{"makeup_1":0,"age_2":0,"cheeks_2":0,"decals_2":0,"nose_4":0,"nose_6":0,"mask_2":2,"nose_5":0,"bproof_1":0,"face_2":21,"bodyb_4":0,"eyebrows_3":12,"bodyb_1":-1,"neck_thickness":6.2,"eyebrows_1":0,"nose_3":0,"bracelets_1":-1,"shoes_1":10,"sun_2":10,"hair_color_1":0,"arms":30,"bags_2":0,"face_1":0,"bracelets_2":0,"tshirt_1":15,"eyebrows_6":0,"glasses_2":-1,"lipstick_1":0,"watches_2":-1,"chin_2":0,"chest_1":-1,"nose_2":0,"eyebrows_2":10,"cheeks_3":0,"jaw_2":0,"sex":0,"ears_1":-1,"decals_1":0,"makeup_3":0,"lipstick_2":0,"chain_2":0,"torso_2":0,"sun_1":3,"jaw_1":0,"beard_1":0,"chin_4":0,"pants_2":0,"blush_1":-1,"eye_squint":0,"cheeks_1":-3.3,"eyebrows_4":12,"eye_color":0,"face_3":5,"bodyb_2":0,"moles_1":0,"chin_1":0,"chin_3":0,"nose_1":0,"blemishes_1":-1,"complexion_1":0,"torso_1":597,"chain_1":0,"pants_1":28,"makeup_2":0,"bodyb_3":-1,"dad":44,"bags_1":0,"hair_color_2":0,"age_1":0,"skin":12,"lip_thickness":0,"blush_2":10,"lipstick_4":0,"skin_md_weight":10,"eyebrows_5":4.0,"hair_1":10,"blush_3":0,"chest_3":0,"tshirt_2":0,"face_md_weight":20.0,"mask_1":0,"helmet_1":-1,"glasses_1":-1,"helmet_2":-1,"complexion_2":1,"beard_2":10,"shoes_2":0,"beard_3":0,"hair_2":0,"beard_4":0,"arms_2":0,"lipstick_3":0,"makeup_4":0,"moles_2":1,"chest_2":10,"mom":21,"watches_1":-1,"bproof_2":0,"ears_2":-1,"blemishes_2":10}', '{}', '[{"model":"1200rt","status":true},{"model":"motorpm","status":true},{"model":"orbmwm5","status":true},{"model":"polkch","status":true},{"model":"poljug","status":true},{"model":"polkmd","status":true},{"model":"polreb","status":true},{"model":"polros","status":true}]', NULL, '', '[]'),
 	('mechanic', 17, 'boss', 'Rank 17', 19000, '{"makeup_1":0,"age_2":0,"cheeks_2":0,"decals_2":0,"nose_4":0,"nose_6":0,"mask_2":2,"nose_5":0,"bproof_1":0,"face_2":21,"bodyb_4":0,"eyebrows_3":12,"bodyb_1":-1,"neck_thickness":6.2,"eyebrows_1":0,"nose_3":0,"bracelets_1":-1,"shoes_1":10,"sun_2":10,"hair_color_1":0,"arms":19,"bags_2":0,"face_1":0,"bracelets_2":0,"tshirt_1":15,"eyebrows_6":0,"glasses_2":-1,"lipstick_1":0,"watches_2":-1,"chin_2":0,"chest_1":-1,"nose_2":0,"eyebrows_2":10,"cheeks_3":0,"jaw_2":0,"sex":0,"ears_1":-1,"decals_1":0,"makeup_3":0,"lipstick_2":0,"chain_2":0,"torso_2":0,"sun_1":3,"jaw_1":0,"beard_1":0,"chin_4":0,"pants_2":0,"blush_1":-1,"eye_squint":0,"cheeks_1":-3.3,"eyebrows_4":12,"eye_color":0,"face_3":5,"bodyb_2":0,"moles_1":0,"chin_1":0,"chin_3":0,"nose_1":0,"blemishes_1":-1,"complexion_1":0,"torso_1":597,"chain_1":0,"pants_1":28,"makeup_2":0,"bodyb_3":-1,"dad":44,"bags_1":0,"hair_color_2":0,"age_1":0,"skin":12,"lip_thickness":0,"blush_2":10,"lipstick_4":0,"skin_md_weight":10,"eyebrows_5":4.0,"hair_1":10,"blush_3":0,"chest_3":0,"tshirt_2":0,"face_md_weight":20.0,"mask_1":0,"helmet_1":-1,"glasses_1":-1,"helmet_2":0,"complexion_2":1,"beard_2":10,"shoes_2":0,"beard_3":0,"hair_2":0,"beard_4":0,"arms_2":0,"lipstick_3":0,"makeup_4":0,"moles_2":1,"chest_2":10,"mom":21,"watches_1":-1,"bproof_2":0,"ears_2":-1,"blemishes_2":10}', '{}', '[{"status":true,"model":"1200rt"},{"status":true,"model":"motorpm"},{"status":true,"model":"orbmwm5"},{"status":true,"model":"polkch"},{"status":true,"model":"poljug"},{"status":true,"model":"polkmd"},{"status":true,"model":"polreb"},{"status":true,"model":"polros"}]', NULL, '', '[]'),
 	('mechanic', 18, 'boss', 'Rank 18', 20000, '{}', '{}', '[{"status":true,"model":"1200rt"},{"status":true,"model":"motorpm"},{"status":true,"model":"orbmwm5"},{"status":true,"model":"polkch"},{"status":true,"model":"poljug"},{"status":true,"model":"polkmd"},{"status":true,"model":"polreb"},{"status":true,"model":"polros"}]', NULL, '', '[]'),
+	('meridian', 1, 'rank1', 'Analyst', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('meridian', 2, 'rank2', 'Director', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('meridian', 3, 'boss', 'CEO', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('miner', 0, 'employee', 'Karmand', 1500, '', '', '', NULL, '', ''),
 	('mt', 1, 'com', 'Officer I', 3000, '{"decals_1":0,"lipstick_2":0,"nose_5":0,"dad":0,"mask_2":0,"chin_3":0,"bulletproof_2":0,"cheeks_1":0,"watches_1":-1,"hair_color_1":0,"hair_color_2":0,"torso_1":569,"glasses_1":5,"eye_squint":0,"moles_2":1,"chest_1":-1,"chin_2":0,"eyebrows_4":12,"bags_1":0,"complexion_1":0,"neck_thickness":0,"jaw_2":0,"lip_thickness":0,"face_1":0,"nose_3":0,"lipstick_3":0,"makeup_4":0,"eyebrows_5":0,"skin":12,"sun_2":10,"shoes_1":25,"pants_2":1,"makeup_1":0,"glasses_2":1,"nose_1":0,"beard_4":0,"hair_1":10,"bracelets_1":-1,"bracelets_2":0,"eyebrows_2":10,"bulletproof_vest_2":0,"bproof_2":0,"lipstick_1":0,"tshirt_1":208,"jaw_1":0,"bproof_1":115,"mask_1":0,"face":0,"eyebrows_1":0,"sun_1":-1,"torso_2":1,"face_3":5,"pants_1":130,"moles_1":0,"beard_1":0,"blush_3":0,"mom":25,"nose_6":0,"blush_1":-1,"chest_2":10,"sex":0,"watches_2":-1,"beard_2":10,"bodyb_1":-1,"cheeks_2":0,"nose_4":0,"tshirt_2":0,"decals_2":0,"nose_2":0,"bodyb_3":-1,"face_md_weight":50,"age_1":0,"complexion_2":1,"helmet_2":-1,"lipstick_4":0,"ears_1":-1,"eyebrows_6":0,"beard_3":0,"chain_2":2,"chin_1":0,"bulletproof_1":79,"chain_1":112,"bulletproof_vest_1":79,"arms_2":0,"blemishes_1":-1,"face_2":21,"hair_2":0,"eye_color":0,"blemishes_2":10,"skin_md_weight":2,"bodyb_4":0,"arms":30,"age_2":0,"ears_2":-1,"makeup_2":0,"bags_2":0,"helmet_1":-1,"cheeks_3":0,"chin_4":0,"makeup_3":0,"chest_3":0,"blush_2":10,"eyebrows_3":12,"bodyb_2":0,"shoes_2":0}', '{}', '[{"model":"1200rt","status":false},{"model":"sunsetsp","status":false},{"model":"sunsetpv","status":false},{"model":"shacara","status":true},{"model":"polreb","status":false},{"model":"polneon","status":false},{"model":"polros","status":false},{"model":"polkmd","status":false},{"model":"polkch","status":true},{"model":"poljug","status":false},{"model":"vvpi","status":false},{"model":"pf","status":false},{"model":"pdbuff","status":true},{"model":"sunsetfbi","status":false},{"model":"polgt17","status":false},{"model":"lsfdpickup","status":false},{"model":"riot","status":false},{"model":"fchal","status":false}]', NULL, '[{"model":"WEAPON_NIGHTSTICK","status":true},{"model":"WEAPON_STUNGUN","status":false},{"model":"WEAPON_FLASHLIGHT","status":false},{"model":"WEAPON_PISTOL","status":true},{"model":"WEAPON_COMBATPISTOL","status":false},{"model":"WEAPON_PISTOL50","status":true},{"model":"WEAPON_SMG","status":true},{"model":"WEAPON_ASSAULTRIFLE","status":false},{"model":"WEAPON_GUSENBERG","status":false},{"model":"WEAPON_SPECIALCARBINE","status":false},{"model":"WEAPON_CARBINERIFLE","status":false},{"model":"WEAPON_ASSAULTSMG","status":true},{"model":"WEAPON_BULLPUPRIFLE","status":true}]', '[{"status":false,"name":"blackmoney"},{"status":false,"name":"bread"},{"status":true,"name":"clip"},{"status":true,"name":"grip"},{"status":true,"name":"silencer"},{"status":false,"name":"water"}]'),
 	('mt', 2, 'com', 'Officer II', 4000, '{"ears_1":-1,"mask_2":0,"chest_3":0,"decals_2":0,"torso_2":1,"beard_2":10,"age_2":0,"makeup_3":0,"beard_1":0,"glasses_2":1,"shoes_2":0,"torso_1":576,"lipstick_2":0,"pants_2":1,"hair_color_1":0,"bodyb_4":0,"chest_2":10,"eyebrows_6":0,"eye_squint":0,"bproof_1":66,"lipstick_3":0,"eyebrows_2":10,"makeup_2":0,"bproof_2":0,"dad":0,"mask_1":0,"tshirt_2":0,"eye_color":0,"chain_1":112,"bags_2":0,"age_1":0,"face":0,"chest_1":-1,"nose_2":0,"lipstick_1":0,"sex":0,"helmet_1":142,"watches_2":-1,"shoes_1":25,"watches_1":-1,"face_3":5,"makeup_1":0,"eyebrows_4":12,"chin_4":0,"eyebrows_1":0,"beard_3":0,"complexion_1":0,"blush_3":0,"nose_4":0,"bags_1":0,"eyebrows_3":12,"blush_1":-1,"ears_2":-1,"eyebrows_5":0,"neck_thickness":0,"blush_2":10,"nose_1":0,"tshirt_1":208,"bracelets_1":-1,"complexion_2":1,"hair_2":0,"skin_md_weight":6,"chin_2":0,"sun_1":-1,"lipstick_4":0,"cheeks_2":0,"bulletproof_vest_2":0,"bodyb_2":0,"blemishes_2":10,"cheeks_3":0,"makeup_4":0,"nose_5":0,"chin_3":0,"cheeks_1":0,"arms_2":0,"face_2":21,"face_md_weight":50.0,"hair_1":10,"bulletproof_1":79,"decals_1":0,"face_1":0,"nose_3":0,"skin":12,"bodyb_1":-1,"jaw_1":0,"bulletproof_vest_1":79,"hair_color_2":0,"bracelets_2":0,"arms":19,"sun_2":10,"chin_1":0,"pants_1":130,"moles_1":0,"helmet_2":0,"moles_2":1,"nose_6":0,"mom":21,"bodyb_3":-1,"lip_thickness":0,"glasses_1":5,"jaw_2":0,"bulletproof_2":0,"beard_4":0,"blemishes_1":12,"chain_2":2}', '{}', '[{"model":"1200rt","status":false},{"model":"sunsetsp","status":false},{"model":"sunsetpv","status":false},{"model":"shacara","status":true},{"model":"polreb","status":false},{"model":"polneon","status":false},{"model":"polros","status":false},{"model":"polkmd","status":true},{"model":"polkch","status":false},{"model":"poljug","status":false},{"model":"vvpi","status":false},{"model":"pf","status":false},{"model":"pdbuff","status":true},{"model":"sunsetfbi","status":false},{"model":"polgt17","status":false},{"model":"lsfdpickup","status":false},{"model":"riot","status":false},{"model":"fchal","status":false}]', NULL, '[{"model":"WEAPON_SMOKEGRENADE","status":false},{"model":"WEAPON_NIGHTSTICK","status":true},{"model":"WEAPON_STUNGUN","status":true},{"model":"WEAPON_FLASHLIGHT","status":false},{"model":"WEAPON_PISTOL","status":true},{"model":"WEAPON_COMBATPISTOL","status":false},{"model":"WEAPON_PISTOL50","status":true},{"model":"WEAPON_SMG","status":true},{"model":"WEAPON_ASSAULTRIFLE","status":false},{"model":"WEAPON_GUSENBERG","status":false},{"model":"WEAPON_SPECIALCARBINE","status":false},{"model":"WEAPON_CARBINERIFLE","status":false},{"model":"WEAPON_ASSAULTSMG","status":false},{"model":"WEAPON_BULLPUPRIFLE","status":true}]', '[{"status":false,"name":"blackmoney"},{"status":true,"name":"bread"},{"status":true,"name":"clip"},{"status":false,"name":"eclip"},{"status":true,"name":"grip"},{"status":true,"name":"radio"},{"status":true,"name":"silencer"},{"status":true,"name":"water"},{"status":false,"name":"xpshop"},{"status":false,"name":"lsd"}]'),
@@ -1770,7 +2048,15 @@ REPLACE INTO `job_grades` (`job_name`, `grade`, `name`, `label`, `salary`, `skin
 	('mt', 18, 'boss', 'Chief', 20000, '{"blemishes_1":-1,"bags_1":0,"decals_1":0,"bulletproof_vest_2":0,"lipstick_2":10,"helmet_1":175,"jaw_2":0,"bags_2":0,"eye_squint":0,"eyebrows_6":0,"makeup_3":0,"bulletproof_2":0,"nose_6":0,"beard_1":11,"age_2":10,"bproof_2":1,"bulletproof_vest_1":79,"face_3":5,"blemishes_2":10,"moles_1":-1,"face_1":0,"torso_2":2,"beard_2":10,"face_2":21,"tshirt_1":208,"chin_4":0,"lip_thickness":0,"nose_1":0,"decals_2":0,"eyebrows_2":10,"lipstick_1":-1,"bulletproof_1":79,"mom":25,"pants_2":1,"jaw_1":0,"sun_1":-1,"dad":0,"chin_1":0,"makeup_2":10,"eye_color":0,"bodyb_1":-1,"mask_1":168,"bodyb_2":0,"lipstick_3":0,"arms":19,"eyebrows_5":0,"glasses_2":1,"chain_2":2,"face_md_weight":50,"watches_2":-1,"hair_2":0,"age_1":-1,"torso_1":568,"arms_2":0,"hair_color_2":0,"neck_thickness":0,"chin_3":0,"nose_4":0,"pants_1":130,"cheeks_3":0,"nose_5":0,"hair_1":10,"lipstick_4":0,"hair_color_1":0,"chest_2":10,"face":0,"shoes_2":0,"makeup_4":0,"moles_2":10,"eyebrows_4":0,"cheeks_1":0,"shoes_1":25,"cheeks_2":0,"mask_2":15,"chin_2":0,"ears_1":-1,"bracelets_2":0,"watches_1":-1,"tshirt_2":0,"chain_1":112,"bodyb_3":-1,"bodyb_4":0,"complexion_1":-1,"blush_2":10,"makeup_1":-1,"chest_1":-1,"nose_2":0,"glasses_1":5,"skin_md_weight":2,"helmet_2":0,"blush_1":-1,"beard_3":29,"skin":12,"ears_2":-1,"bracelets_1":-1,"sun_2":10,"eyebrows_1":0,"sex":0,"blush_3":0,"eyebrows_3":0,"complexion_2":10,"chest_3":0,"nose_3":0,"bproof_1":64,"beard_4":29}', '{}', '[{"status":true,"model":"1200rt"},{"status":true,"model":"sunsetsp"},{"status":true,"model":"sunsetpv"},{"status":true,"model":"shacara"},{"status":true,"model":"polreb"},{"status":true,"model":"polneon"},{"status":true,"model":"polros"},{"status":true,"model":"polkmd"},{"status":true,"model":"polkch"},{"status":true,"model":"poljug"},{"status":true,"model":"vvpi"},{"status":true,"model":"pf"},{"status":true,"model":"pdbuff"},{"status":true,"model":"sunsetfbi"},{"status":true,"model":"polgt17"},{"status":true,"model":"lsfdpickup"},{"status":true,"model":"riot"},{"status":true,"model":"fchal"}]', NULL, '[{"model":"WEAPON_SMOKEGRENADE","status":true},{"model":"WEAPON_NIGHTSTICK","status":true},{"model":"WEAPON_STUNGUN","status":true},{"model":"WEAPON_FLASHLIGHT","status":true},{"model":"WEAPON_PISTOL","status":true},{"model":"WEAPON_COMBATPISTOL","status":true},{"model":"WEAPON_PISTOL50","status":true},{"model":"WEAPON_SMG","status":true},{"model":"WEAPON_ASSAULTRIFLE","status":true},{"model":"WEAPON_GUSENBERG","status":true},{"model":"WEAPON_SPECIALCARBINE","status":true},{"model":"WEAPON_CARBINERIFLE","status":true},{"model":"WEAPON_ASSAULTSMG","status":true},{"model":"WEAPON_BULLPUPRIFLE","status":true}]', '[{"name":"blackmoney","status":true},{"name":"bread","status":true},{"name":"clip","status":true},{"name":"eclip","status":true},{"name":"grip","status":true},{"name":"lsd","status":true},{"name":"radio","status":true},{"name":"silencer","status":true},{"name":"water","status":true},{"name":"xpbank","status":true},{"name":"xpshop","status":true},{"name":"scope","status":true}]'),
 	('mt', 19, 'boss', 'Commissioner', 20000, '{"bodyb_4":0,"bracelets_2":0,"chain_1":226,"makeup_2":0,"moles_1":0,"moles_2":1,"blemishes_1":1,"tshirt_2":0,"lipstick_1":0,"sun_2":10,"arms_2":0,"eye_color":0,"helmet_1":58,"eyebrows_6":0,"jaw_1":0,"chin_4":0,"beard_3":0,"neck_thickness":0,"chain_2":0,"lipstick_3":0,"hair_1":10,"chest_2":10,"shoes_1":25,"chin_3":0,"face_1":0,"beard_4":0,"nose_4":0,"blemishes_2":10,"cheeks_2":0,"jaw_2":0,"blush_1":0,"blush_3":0,"watches_1":-1,"nose_1":0,"hair_color_2":0,"tshirt_1":212,"mask_2":13,"nose_3":0,"eyebrows_4":12,"skin":12,"sex":0,"bproof_2":1,"makeup_1":0,"chin_2":0,"bodyb_1":-1,"bulletproof_vest_1":79,"cheeks_1":0,"bulletproof_1":79,"lipstick_2":0,"dad":0,"bags_1":0,"face_2":21,"sun_1":-1,"nose_2":0,"face_md_weight":51,"chin_1":0,"pants_1":130,"nose_5":0,"nose_6":0,"complexion_2":1,"ears_2":-1,"mask_1":169,"makeup_3":0,"glasses_2":0,"bulletproof_2":0,"cheeks_3":0,"makeup_4":0,"bproof_1":64,"watches_2":-1,"skin_md_weight":6,"age_2":0,"ears_1":-1,"mom":21,"bodyb_2":0,"bulletproof_vest_2":0,"shoes_2":0,"decals_2":0,"chest_3":0,"bodyb_3":-1,"lipstick_4":0,"chest_1":-1,"eyebrows_2":10,"pants_2":1,"eyebrows_3":12,"arms":19,"bags_2":0,"age_1":0,"lip_thickness":0,"glasses_1":5,"blush_2":0,"face":0,"beard_1":0,"hair_2":0,"eyebrows_5":0,"beard_2":10,"bracelets_1":-1,"helmet_2":2,"torso_2":15,"eyebrows_1":0,"face_3":5,"decals_1":0,"eye_squint":0,"hair_color_1":0,"torso_1":574,"complexion_1":0}', '{}', '[{"model":"1200rt","status":true},{"model":"sunsetsp","status":true},{"model":"sunsetpv","status":true},{"model":"shacara","status":true},{"model":"polreb","status":true},{"model":"polneon","status":true},{"model":"polros","status":true},{"model":"polkmd","status":true},{"model":"polkch","status":true},{"model":"poljug","status":true},{"model":"vvpi","status":true},{"model":"pf","status":true},{"model":"pdbuff","status":true},{"model":"sunsetfbi","status":true},{"model":"polgt17","status":true},{"model":"lsfdpickup","status":true},{"model":"riot","status":true},{"model":"fchal","status":true}]', NULL, '[{"status":true,"model":"WEAPON_SMOKEGRENADE"},{"status":true,"model":"WEAPON_NIGHTSTICK"},{"status":true,"model":"WEAPON_STUNGUN"},{"status":true,"model":"WEAPON_FLASHLIGHT"},{"status":true,"model":"WEAPON_PISTOL"},{"status":true,"model":"WEAPON_COMBATPISTOL"},{"status":true,"model":"WEAPON_PISTOL50"},{"status":true,"model":"WEAPON_SMG"},{"status":true,"model":"WEAPON_ASSAULTRIFLE"},{"status":true,"model":"WEAPON_GUSENBERG"},{"status":true,"model":"WEAPON_SPECIALCARBINE"},{"status":true,"model":"WEAPON_CARBINERIFLE"},{"status":true,"model":"WEAPON_ASSAULTSMG"},{"status":true,"model":"WEAPON_BULLPUPRIFLE"}]', '[{"name":"blackmoney","status":true},{"name":"bread","status":true},{"name":"clip","status":true},{"name":"eclip","status":true},{"name":"grip","status":true},{"name":"lsd","status":true},{"name":"radio","status":true},{"name":"silencer","status":true},{"name":"water","status":true},{"name":"xpbank","status":true},{"name":"xpshop","status":true},{"name":"scope","status":true}]'),
 	('nightclub', 0, 'employee', 'Employee', 200, '{}', '{}', NULL, NULL, NULL, NULL),
+	('nightjar', 1, 'rank1', 'Rank1', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('nightjar', 2, 'rank2', 'Rank2', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('nightjar', 3, 'rank3', 'Rank3', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('nightjar', 4, 'boss', 'Rank4', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('nojob', 0, 'Bikar', 'nojob', 500, '', '', '', NULL, '', ''),
+	('obsidian', 1, 'rank1', 'Rank1', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('obsidian', 2, 'rank2', 'Rank2', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('obsidian', 3, 'rank3', 'Rank3', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('obsidian', 4, 'boss', 'Rank4', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('offambulance', 0, 'off_grade_0', 'Off Duty 0', 0, '{}', '{}', NULL, NULL, NULL, NULL),
 	('offambulance', 1, 'intern', 'Ambulance', 0, '{}', '{}', '[]', NULL, '', '[]'),
 	('offambulance', 2, 'intern', 'Ambulance', 0, '{}', '{}', '[]', NULL, '', '[]'),
@@ -1980,6 +2266,18 @@ REPLACE INTO `job_grades` (`job_name`, `grade`, `name`, `label`, `salary`, `skin
 	('sheriff', 21, 'boss', 'Chief', 20000, '{"chest_1":-1,"bproof_1":64,"beard_1":0,"pants_1":4,"face_2":21,"hair_1":10,"cheeks_2":0,"decals_2":0,"glasses_1":8,"bodyb_3":-1,"tshirt_1":208,"makeup_2":0,"nose_5":0,"age_2":0,"pants_2":2,"bags_2":8,"lipstick_1":0,"hair_color_1":0,"bracelets_2":0,"cheeks_1":0,"blush_3":0,"sex":0,"helmet_2":0,"neck_thickness":-10,"torso_2":1,"face_3":5,"beard_4":0,"bulletproof_vest_2":0,"chain_1":227,"mask_1":121,"eyebrows_4":12,"lip_thickness":0,"face_1":0,"skin":12,"makeup_3":0,"cheeks_3":-10,"decals_1":0,"eyebrows_2":10,"age_1":0,"blemishes_1":-1,"bracelets_1":3,"eyebrows_1":0,"arms":26,"ears_1":-1,"bags_1":125,"arms_2":0,"chin_4":0,"bodyb_1":-1,"eyebrows_5":0,"mask_2":0,"sun_2":10,"eye_squint":0,"blush_2":10,"dad":0,"beard_2":10,"shoes_2":0,"makeup_1":0,"eyebrows_6":0,"nose_2":0,"moles_2":1,"helmet_1":-1,"chin_1":-5.5,"lipstick_3":0,"chin_3":0,"complexion_1":0,"tshirt_2":0,"moles_1":0,"bodyb_2":0,"lipstick_2":0,"beard_3":0,"shoes_1":35,"hair_color_2":0,"nose_1":0,"bulletproof_1":79,"chest_2":10,"chest_3":0,"watches_1":6,"hair_2":0,"chin_2":0,"mom":21,"watches_2":0,"chain_2":2,"nose_4":0,"skin_md_weight":0,"glasses_2":3,"face":0,"bulletproof_2":0,"nose_3":0,"face_md_weight":50.0,"bproof_2":2,"jaw_1":0,"nose_6":0,"blush_1":-1,"eyebrows_3":12,"bulletproof_vest_1":79,"ears_2":-1,"blemishes_2":10,"lipstick_4":0,"eye_color":0,"complexion_2":1,"jaw_2":0,"bodyb_4":0,"sun_1":-1,"makeup_4":0,"torso_1":95}', '', '[{"model":"1200rt","status":true},{"model":"sunsetsp","status":true},{"model":"sunsetpv","status":true},{"model":"shacara","status":true},{"model":"polreb","status":true},{"model":"polneon","status":true},{"model":"polros","status":true},{"model":"polkmd","status":true},{"model":"polkch","status":true},{"model":"poljug","status":true},{"model":"vvpi","status":true},{"model":"pf","status":true},{"model":"pdbuff","status":true},{"model":"sunsetfbi","status":true},{"model":"polgt17","status":true},{"model":"lsfdpickup","status":true},{"model":"riot","status":true},{"model":"fchal","status":true}]', NULL, '[{"status":true,"model":"WEAPON_SMOKEGRENADE"},{"status":true,"model":"WEAPON_NIGHTSTICK"},{"status":true,"model":"WEAPON_STUNGUN"},{"status":true,"model":"WEAPON_FLASHLIGHT"},{"status":true,"model":"WEAPON_PISTOL"},{"status":true,"model":"WEAPON_COMBATPISTOL"},{"status":true,"model":"WEAPON_PISTOL50"},{"status":true,"model":"WEAPON_SMG"},{"status":true,"model":"WEAPON_ASSAULTRIFLE"},{"status":true,"model":"WEAPON_GUSENBERG"},{"status":true,"model":"WEAPON_SPECIALCARBINE"},{"status":true,"model":"WEAPON_CARBINERIFLE"},{"status":true,"model":"WEAPON_ASSAULTSMG"},{"status":true,"model":"WEAPON_BULLPUPRIFLE"}]', '[{"status":true,"name":"blackmoney"},{"status":true,"name":"bread"},{"status":true,"name":"burger"},{"status":true,"name":"chburger"},{"status":true,"name":"clip"},{"status":true,"name":"cocacola"},{"status":false,"name":"eclip"},{"status":true,"name":"fanta"},{"status":true,"name":"grip"},{"status":true,"name":"radio"},{"status":false,"name":"scope"},{"status":false,"name":"scope"},{"status":true,"name":"silencer"},{"status":false,"name":"sprite"},{"status":true,"name":"water"},{"status":true,"name":"cburger"}]'),
 	('sheriff', 22, 'boss', 'Commissioner', 20000, '{"bodyb_4":0,"helmet_2":0,"neck_thickness":-10,"moles_1":0,"blemishes_1":-1,"beard_1":0,"bodyb_2":0,"jaw_2":0,"makeup_2":0,"hair_color_1":0,"lipstick_1":0,"bulletproof_vest_1":79,"face_1":0,"bulletproof_2":0,"helmet_1":-1,"nose_3":0,"chain_1":227,"watches_2":0,"blush_2":10,"jaw_1":0,"cheeks_2":0,"decals_2":0,"bproof_1":0,"eyebrows_6":0,"chin_4":0,"nose_4":0,"face_3":5,"eyebrows_1":0,"beard_3":0,"sun_1":-1,"face":0,"bracelets_2":0,"cheeks_1":0,"mask_2":0,"arms_2":0,"hair_color_2":0,"chin_3":0,"bulletproof_vest_2":0,"moles_2":1,"blush_3":0,"eye_color":0,"makeup_3":0,"beard_2":10,"eyebrows_3":12,"mask_1":121,"bodyb_3":-1,"tshirt_2":0,"nose_6":0,"pants_1":4,"lipstick_3":0,"bags_1":0,"chin_1":0,"complexion_1":0,"nose_1":0,"sun_2":10,"torso_2":15,"dad":0,"bags_2":0,"chain_2":0,"complexion_2":1,"glasses_1":5,"eyebrows_4":12,"shoes_2":1,"chest_3":0,"bodyb_1":-1,"arms":52,"ears_1":-1,"face_2":21,"torso_1":574,"lipstick_4":0,"tshirt_1":230,"eyebrows_2":10,"beard_4":0,"nose_5":0,"bracelets_1":-1,"skin":12,"sex":0,"face_md_weight":50.0,"eye_squint":0,"makeup_4":0,"chest_2":10,"glasses_2":4,"makeup_1":0,"mom":21,"lip_thickness":0,"skin_md_weight":6,"bproof_2":0,"bulletproof_1":79,"eyebrows_5":0,"cheeks_3":0,"lipstick_2":0,"age_2":0,"age_1":0,"shoes_1":99,"pants_2":0,"chin_2":0,"blush_1":-1,"ears_2":-1,"decals_1":0,"nose_2":0,"hair_2":0,"watches_1":20,"hair_1":10,"chest_1":-1,"blemishes_2":10}', '{"face_2":21,"tshirt_2":0,"bodyb_2":0,"chin_1":0,"beard_2":0,"glasses_2":0,"chain_2":0,"skin":12,"nose_2":0,"sun_2":10,"age_2":0,"beard_3":0,"bulletproof_vest_2":0,"neck_thickness":0,"bproof_2":1,"moles_1":0,"makeup_4":0,"watches_1":-1,"bags_1":0,"torso_2":3,"blemishes_2":10,"lipstick_3":20,"face_3":6,"shoes_2":1,"helmet_2":0,"watches_2":0,"eyebrows_1":1,"ears_2":-1,"blush_1":-1,"chin_2":0,"complexion_2":1,"bulletproof_2":0,"chest_2":10,"sun_1":-1,"chest_1":-1,"helmet_1":-1,"bodyb_3":-1,"chin_3":0,"hair_2":0,"blemishes_1":-1,"nose_1":0,"chain_1":1,"cheeks_2":0,"torso_1":26,"complexion_1":0,"lipstick_1":3,"blush_2":10,"bulletproof_vest_1":79,"ears_1":-1,"bodyb_4":0,"nose_5":0,"decals_2":0,"bracelets_2":0,"nose_3":0,"lipstick_2":10,"face_1":0,"makeup_3":0,"sex":1,"nose_4":0,"eye_squint":0,"skin_md_weight":7,"tshirt_1":156,"jaw_1":0,"bulletproof_1":79,"moles_2":1,"arms_2":0,"lipstick_4":0,"cheeks_1":0,"face":0,"beard_4":0,"bproof_1":7,"makeup_1":5,"hair_color_2":0,"jaw_2":0,"hair_color_1":0,"bags_2":0,"age_1":0,"eyebrows_2":10,"beard_1":0,"mask_1":22,"pants_2":5,"mom":21,"decals_1":0,"pants_1":50,"blush_3":0,"lip_thickness":0,"face_md_weight":50,"chest_3":0,"mask_2":13,"makeup_2":10,"eye_color":0,"nose_6":0,"chin_4":0,"eyebrows_3":26,"cheeks_3":0,"bracelets_1":10,"eyebrows_6":0,"shoes_1":36,"glasses_1":11,"hair_1":30,"eyebrows_4":12,"eyebrows_5":0,"bodyb_1":-1,"arms":23,"dad":0}', '[{"model":"1200rt","status":true},{"model":"sunsetsp","status":true},{"model":"sunsetpv","status":true},{"model":"shacara","status":true},{"model":"polreb","status":true},{"model":"polneon","status":true},{"model":"polros","status":true},{"model":"polkmd","status":true},{"model":"polkch","status":true},{"model":"poljug","status":true},{"model":"vvpi","status":true},{"model":"pf","status":true},{"model":"pdbuff","status":true},{"model":"sunsetfbi","status":true},{"model":"polgt17","status":true},{"model":"lsfdpickup","status":true},{"model":"riot","status":true},{"model":"fchal","status":true}]', NULL, '[{"status":true,"model":"WEAPON_NIGHTSTICK"},{"status":true,"model":"WEAPON_STUNGUN"},{"status":true,"model":"WEAPON_FLASHLIGHT"},{"status":true,"model":"WEAPON_PISTOL"},{"status":true,"model":"WEAPON_COMBATPISTOL"},{"status":true,"model":"WEAPON_PISTOL50"},{"status":true,"model":"WEAPON_SMG"},{"status":true,"model":"WEAPON_ASSAULTRIFLE"},{"status":true,"model":"WEAPON_GUSENBERG"},{"status":true,"model":"WEAPON_SPECIALCARBINE"},{"status":true,"model":"WEAPON_CARBINERIFLE"},{"status":true,"model":"WEAPON_ASSAULTSMG"},{"status":true,"model":"WEAPON_BULLPUPRIFLE"}]', '[{"name":"blackmoney","status":true},{"name":"bread","status":true},{"name":"clip","status":true},{"name":"grip","status":true},{"name":"radio","status":true},{"name":"silencer","status":true},{"name":"water","status":true},{"name":"chburger","status":false},{"name":"fanta","status":false},{"name":"cocacola","status":true},{"name":"sprite","status":false},{"name":"burger","status":false},{"name":"scope","status":true}]'),
 	('slaughterer', 0, 'employee', 'Karmand', 1500, '', '', '', NULL, '', ''),
+	('slice', 1, 'rank1', 'Rank1', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('slice', 2, 'rank2', 'Rank2', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('slice', 3, 'rank3', 'Rank3', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('slice', 4, 'boss', 'Rank4', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('static', 1, 'rank1', 'Rank1', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('static', 2, 'rank2', 'Rank2', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('static', 3, 'rank3', 'Rank3', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('static', 4, 'boss', 'Rank4', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('sundae', 1, 'rank1', 'Rank1', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('sundae', 2, 'rank2', 'Rank2', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('sundae', 3, 'rank3', 'Rank3', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('sundae', 4, 'boss', 'Rank4', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('tailor', 0, 'employee', 'Karmand', 1500, '', '', '', NULL, '', ''),
 	('taxi', 0, 'recrue', 'Rekrut', 12, '{"hair_2":0,"hair_color_2":0,"torso_1":32,"bags_1":0,"helmet_2":0,"chain_2":0,"eyebrows_3":0,"makeup_3":0,"makeup_2":0,"tshirt_1":31,"makeup_1":0,"bags_2":0,"makeup_4":0,"eyebrows_4":0,"chain_1":0,"lipstick_4":0,"bproof_2":0,"hair_color_1":0,"decals_2":0,"pants_2":0,"age_2":0,"glasses_2":0,"ears_2":0,"arms":27,"lipstick_1":0,"ears_1":-1,"mask_2":0,"sex":0,"lipstick_3":0,"helmet_1":-1,"shoes_2":0,"beard_2":0,"beard_1":0,"lipstick_2":0,"beard_4":0,"glasses_1":0,"bproof_1":0,"mask_1":0,"decals_1":1,"hair_1":0,"eyebrows_2":0,"beard_3":0,"age_1":0,"tshirt_2":0,"skin":0,"torso_2":0,"eyebrows_1":0,"face":0,"shoes_1":10,"pants_1":24}', '{"hair_2":0,"hair_color_2":0,"torso_1":57,"bags_1":0,"helmet_2":0,"chain_2":0,"eyebrows_3":0,"makeup_3":0,"makeup_2":0,"tshirt_1":38,"makeup_1":0,"bags_2":0,"makeup_4":0,"eyebrows_4":0,"chain_1":0,"lipstick_4":0,"bproof_2":0,"hair_color_1":0,"decals_2":0,"pants_2":1,"age_2":0,"glasses_2":0,"ears_2":0,"arms":21,"lipstick_1":0,"ears_1":-1,"mask_2":0,"sex":1,"lipstick_3":0,"helmet_1":-1,"shoes_2":0,"beard_2":0,"beard_1":0,"lipstick_2":0,"beard_4":0,"glasses_1":5,"bproof_1":0,"mask_1":0,"decals_1":1,"hair_1":0,"eyebrows_2":0,"beard_3":0,"age_1":0,"tshirt_2":0,"skin":0,"torso_2":0,"eyebrows_1":0,"face":0,"shoes_1":49,"pants_1":11}', NULL, NULL, NULL, NULL),
 	('taxi', 1, 'recrue', 'Training Era', 3000, '{"bproof_1":0,"lipstick_2":0,"bodyb_1":-1,"chin_1":9.9,"moles_2":1,"age_1":0,"lipstick_4":0,"bags_2":0,"beard_1":0,"shoes_1":50,"blush_2":10,"glasses_2":0,"face_2":21,"face_3":5,"mask_2":0,"eyebrows_1":0,"chin_3":8.2,"lip_thickness":9.9,"torso_2":2,"eye_squint":0,"lipstick_1":0,"moles_1":0,"makeup_3":0,"hair_2":0,"face_1":0,"chain_1":0,"bodyb_3":-1,"chain_2":0,"hair_color_1":0,"tshirt_2":0,"eyebrows_3":12,"bracelets_1":-1,"makeup_1":0,"mom":34,"nose_5":0.89999999999999,"dad":0,"complexion_2":1,"arms_2":0,"ears_2":-1,"nose_2":3.7,"eyebrows_2":10,"bags_1":0,"beard_3":0,"skin":12,"torso_1":113,"cheeks_3":-7.5,"cheeks_2":9.9,"age_2":0,"decals_1":0,"ears_1":-1,"eyebrows_4":12,"blemishes_1":-1,"nose_3":2.3,"tshirt_1":96,"helmet_2":0,"watches_1":-1,"chin_2":9.9,"bodyb_4":0,"nose_1":-5.6,"sun_1":-1,"pants_1":138,"arms":17,"chest_1":2,"bproof_2":0,"makeup_4":0,"makeup_2":0,"beard_4":0,"sun_2":10,"mask_1":0,"sex":0,"chin_4":1.5,"pants_2":1,"hair_color_2":0,"blush_1":-1,"blemishes_2":10,"beard_2":10,"helmet_1":-1,"nose_6":1.5,"face_md_weight":80.0,"glasses_1":0,"chest_3":0,"jaw_2":-4.3,"watches_2":0,"chest_2":10,"eye_color":0,"shoes_2":0,"nose_4":5.0,"neck_thickness":9.9,"lipstick_3":0,"blush_3":0,"bracelets_2":0,"eyebrows_6":-7.19999999999999,"jaw_1":-10,"cheeks_1":4.69999999999999,"bodyb_2":0,"eyebrows_5":-2.4,"complexion_1":0,"hair_1":10,"decals_2":0,"skin_md_weight":0}', '{}', '[{"status":false,"model":"1200rt"},{"status":false,"model":"motorpm"},{"status":false,"model":"poljug"},{"status":true,"model":"polkmd"},{"status":false,"model":"polreb"},{"status":false,"model":"polros"},{"status":false,"model":"polmav"},{"status":false,"model":"BUZZP"}]', NULL, '', '[]'),
@@ -2000,12 +2298,23 @@ REPLACE INTO `job_grades` (`job_name`, `grade`, `name`, `label`, `salary`, `skin
 	('taxi', 16, 'boss', 'Supervision II', 18000, '{}', '{}', '[{"status":false,"model":"1200rt"},{"status":true,"model":"motorpm"},{"status":true,"model":"poljug"},{"status":true,"model":"polkmd"},{"status":true,"model":"polreb"},{"status":true,"model":"polros"},{"status":false,"model":"polmav"},{"status":false,"model":"BUZZP"}]', NULL, '', '[]'),
 	('taxi', 17, 'boss', 'Manager', 19000, '{}', '{}', '[{"status":true,"model":"1200rt"},{"status":true,"model":"motorpm"},{"status":true,"model":"poljug"},{"status":true,"model":"polkmd"},{"status":true,"model":"polreb"},{"status":true,"model":"polros"},{"status":false,"model":"polmav"},{"status":false,"model":"BUZZP"}]', NULL, '', '[]'),
 	('taxi', 18, 'boss', 'Chief', 20000, '{}', '{}', '[{"status":true,"model":"1200rt"},{"status":true,"model":"motorpm"},{"status":true,"model":"poljug"},{"status":true,"model":"polkmd"},{"status":true,"model":"polreb"},{"status":true,"model":"polros"},{"status":false,"model":"polmav"},{"status":false,"model":"BUZZP"}]', NULL, '', '[]'),
+	('turfco', 1, 'rank1', 'Referee', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('turfco', 2, 'rank2', 'Manager', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('turfco', 3, 'boss', 'Owner', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('unemployed', 0, 'unemployed', 'Unemployed', 200, NULL, NULL, NULL, NULL, NULL, NULL),
 	('uwucafe', 0, 'rank0', 'Trainee', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('uwucafe', 1, 'rank1', 'Rank1', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('uwucafe', 2, 'rank2', 'Rank2', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('uwucafe', 3, 'rank3', 'Rank3', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('uwucafe', 4, 'boss', 'Rank4', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('voltage', 1, 'rank1', 'Rank1', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('voltage', 2, 'rank2', 'Rank2', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('voltage', 3, 'rank3', 'Rank3', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('voltage', 4, 'boss', 'Rank4', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('wasabi', 1, 'rank1', 'Rank1', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('wasabi', 2, 'rank2', 'Rank2', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('wasabi', 3, 'rank3', 'Rank3', 1, '{}', '{}', '[]', '[]', NULL, NULL),
+	('wasabi', 4, 'boss', 'Rank4', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('weazel', 0, 'reporter', 'Reporter', 200, '{}', '{}', NULL, NULL, NULL, NULL),
 	('weazel', 1, 'filmbardar', 'Trainee ', 0, '{}', '{}', '', NULL, '', ''),
 	('weazel', 2, 'filmbardar', 'Weazel 1', 0, '{}', '{}', '', NULL, '', ''),
@@ -2040,7 +2349,10 @@ CREATE TABLE IF NOT EXISTS `job_skill` (
   PRIMARY KEY (`identifier`,`job`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table essentialmode.job_skill: ~0 rows (approximately)
+-- Dumping data for table essentialmode.job_skill: ~2 rows (approximately)
+REPLACE INTO `job_skill` (`identifier`, `job`, `minutes`) VALUES
+	('steam:11000014bf543e0', 'ambulance', 15),
+	('steam:11000014bf543e0', 'police', 15);
 
 -- Dumping structure for table essentialmode.jobs
 DROP TABLE IF EXISTS `jobs`;
@@ -2056,33 +2368,47 @@ CREATE TABLE IF NOT EXISTS `jobs` (
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table essentialmode.jobs: ~50 rows (approximately)
+-- Dumping data for table essentialmode.jobs: ~70 rows (approximately)
 REPLACE INTO `jobs` (`name`, `label`, `whitelisted`, `washmoney`, `handyservice`, `hasapp`, `onlyboss`, `icon_url`) VALUES
 	('ambulance', 'Ambulance', 1, 0, '0', 0, 0, NULL),
+	('anchor', 'The Rusty Anchor', 1, 0, '0', 0, 0, NULL),
 	('artesh', 'Artesh', 0, 0, '0', 0, 0, NULL),
+	('blacktide', 'Blacktide Logistics', 1, 0, '0', 0, 0, NULL),
 	('burgershot', 'Burgershot', 1, 0, '0', 0, 0, NULL),
 	('cafe', 'Cafe', 1, 0, '0', 0, 0, NULL),
 	('cardealer', 'Cardealer', 0, 0, '0', 0, 0, NULL),
+	('carwash', 'Suds & Cash', 1, 0, '0', 0, 0, NULL),
 	('cia', 'CIA', 1, 0, '0', 0, 0, NULL),
 	('cid', 'CID', 1, 0, '0', 0, 0, NULL),
 	('coffee', 'Coffee Shop', 0, 0, '0', 0, 0, NULL),
+	('cratecarry', 'Crate & Carry Distribution', 1, 0, '0', 0, 0, NULL),
+	('crimson', 'Crimson Fork', 1, 0, '0', 0, 0, NULL),
 	('dadgostari', 'Dadgostari', 0, 0, '0', 0, 0, NULL),
 	('doa', 'DOA', 1, 0, '0', 0, 0, NULL),
 	('doc', 'Doctor', 0, 0, '0', 0, 0, NULL),
+	('ember', 'Ember & Ash', 1, 0, '0', 0, 0, NULL),
 	('fbi', 'FBI', 1, 0, '0', 0, 0, NULL),
+	('firebrick', 'Firebrick Pizza Co.', 1, 0, '0', 0, 0, NULL),
 	('fisherman', 'Mahi Gir', 0, 0, '0', 0, 0, NULL),
+	('flourish', 'Flourish Bakery', 1, 0, '0', 0, 0, NULL),
 	('food', 'Food Delivery', 0, 0, '0', 0, 0, NULL),
 	('forces', 'Special Forces', 0, 0, '0', 0, 0, NULL),
+	('frostbite', 'Frostbite Creamery', 1, 0, '0', 0, 0, NULL),
 	('fueler', 'Sherekat Naft', 0, 0, '0', 0, 0, NULL),
+	('goldcrust', 'Gold Crust Bakehouse', 1, 0, '0', 0, 0, NULL),
 	('government', 'Government', 0, 0, '0', 0, 0, NULL),
 	('judge', 'Judge', 1, 0, '0', 0, 0, NULL),
+	('koi', 'Koi Sushi House', 1, 0, '0', 0, 0, NULL),
 	('lumberjack', 'Najar', 0, 0, '0', 0, 0, NULL),
 	('marshal', 'Marshal', 1, 0, '0', 0, 0, NULL),
 	('mechanic', 'Mechanic', 1, 0, '0', 0, 0, NULL),
+	('meridian', 'Meridian Holdings', 1, 0, '0', 0, 0, NULL),
 	('miner', 'Madanchi', 0, 0, '0', 0, 0, NULL),
 	('mt', 'Metropolitan', 0, 0, '0', 0, 0, NULL),
 	('nightclub', 'Nightclub', 0, 0, '0', 0, 0, NULL),
+	('nightjar', 'Nightjar Pub', 1, 0, '0', 0, 0, NULL),
 	('nojob', 'Bikar', 0, 0, '0', 0, 0, NULL),
+	('obsidian', 'Obsidian Brew', 1, 0, '0', 0, 0, NULL),
 	('offambulance', 'Off-Duty', 1, 0, '0', 0, 0, NULL),
 	('offcatcafe', 'Off-Duty', 1, 0, '0', 0, 0, NULL),
 	('offcia', 'Off-Duty', 1, 0, '0', 0, 0, NULL),
@@ -2103,10 +2429,16 @@ REPLACE INTO `jobs` (`name`, `label`, `whitelisted`, `washmoney`, `handyservice`
 	('resturan', 'Resturan', 1, 0, '0', 0, 0, NULL),
 	('sheriff', 'Sheriff', 1, 0, '0', 0, 0, NULL),
 	('slaughterer', 'Qasab', 0, 0, '0', 0, 0, NULL),
+	('slice', 'Slice Society', 1, 0, '0', 0, 0, NULL),
+	('static', 'Static Lounge', 1, 0, '0', 0, 0, NULL),
+	('sundae', 'Sundae Funday', 1, 0, '0', 0, 0, NULL),
 	('tailor', 'Khayat', 0, 0, '0', 0, 0, NULL),
 	('taxi', 'Taxi', 1, 0, '0', 0, 0, NULL),
+	('turfco', 'Turf Wars Inc.', 1, 0, '0', 0, 0, NULL),
 	('unemployed', 'Unemployed', 0, 0, '0', 0, 0, NULL),
 	('uwucafe', 'UwU Cafe', 1, 0, '0', 0, 0, NULL),
+	('voltage', 'Voltage Coffee Co.', 1, 0, '0', 0, 0, NULL),
+	('wasabi', 'Wasabi & Co.', 1, 0, '0', 0, 0, NULL),
 	('weazel', 'Weazel News', 1, 0, '0', 0, 0, NULL);
 
 -- Dumping structure for table essentialmode.lapraces
@@ -2154,6 +2486,18 @@ CREATE TABLE IF NOT EXISTS `market` (
 
 -- Dumping data for table essentialmode.market: ~0 rows (approximately)
 
+-- Dumping structure for table essentialmode.meridian_portfolio
+DROP TABLE IF EXISTS `meridian_portfolio`;
+CREATE TABLE IF NOT EXISTS `meridian_portfolio` (
+  `business_job` varchar(50) NOT NULL,
+  `kind` varchar(10) NOT NULL,
+  `status` varchar(10) NOT NULL,
+  `rank` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`business_job`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table essentialmode.meridian_portfolio: ~0 rows (approximately)
+
 -- Dumping structure for table essentialmode.owned_peds
 DROP TABLE IF EXISTS `owned_peds`;
 CREATE TABLE IF NOT EXISTS `owned_peds` (
@@ -2192,9 +2536,8 @@ CREATE TABLE IF NOT EXISTS `owned_properties` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table essentialmode.owned_properties: ~4 rows (approximately)
+-- Dumping data for table essentialmode.owned_properties: ~3 rows (approximately)
 REPLACE INTO `owned_properties` (`id`, `name`, `price`, `rented`, `owner`, `storage_data`) VALUES
-	(1, 'trevor_trailer', 150000, 0, 'steam:11000014bf543e0', 'property'),
 	(2, 'Aqua3Apartment', 1500000, 0, 'steam:11000014bf543e0', NULL),
 	(3, 'NorthConkerAvenue2045', 1500000, 0, 'steam:11000014bf543e0', 'property'),
 	(4, 'HillcrestAvenue2862', 1500000, 0, 'steam:11000014bf543e0', 'property');
@@ -2458,7 +2801,7 @@ CREATE TABLE IF NOT EXISTS `quest` (
 
 -- Dumping data for table essentialmode.quest: ~0 rows (approximately)
 REPLACE INTO `quest` (`ID`, `identifier`, `daily_data`, `weekly_data`, `bigtime_data`, `quests`, `job`, `job2`, `job3`, `gang`, `gang2`, `farm`, `farm2`, `give`, `sell`, `dailyquests`, `date`) VALUES
-	(134, 'steam:11000014bf543e0', '{"AllEnd":false,"End":false,"Completed":0,"ID":0,"Trigger":"","Category":0,"Finish":0,"status":false}', '{"End":false,"Finish2":0,"Trigger":"","Completed2":0,"Finish":0,"status":false,"Completed":0,"Category":0,"ID":0}', '{"End":false,"Completed":0,"ID":0,"Trigger":"","Category":0,"Finish":0,"status":false}', '{"20":0,"5":0,"4":0,"15":0,"19":0,"17":0}', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2026/08/16');
+	(134, 'steam:11000014bf543e0', '{"AllEnd":false,"End":false,"Completed":0,"ID":0,"Trigger":"","Category":0,"Finish":0,"status":false}', '{"End":false,"Finish2":0,"Trigger":"","Completed2":0,"Finish":0,"status":false,"Completed":0,"Category":0,"ID":0}', '{"End":false,"Completed":0,"ID":0,"Trigger":"","Category":0,"Finish":0,"status":false}', '{"4":0,"23":0,"16":0,"13":0,"2":0,"15":0}', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2026/08/18');
 
 -- Dumping structure for table essentialmode.quest_list
 DROP TABLE IF EXISTS `quest_list`;
@@ -2854,7 +3197,7 @@ CREATE TABLE IF NOT EXISTS `uniqueac_trust` (
 
 -- Dumping data for table essentialmode.uniqueac_trust: ~0 rows (approximately)
 REPLACE INTO `uniqueac_trust` (`identifier`, `player_name`, `trust_score`, `risk_score`, `flag_count`, `quarantine_count`, `reconnect_count`, `last_reconnect_at`, `first_seen`, `last_seen`) VALUES
-	('license:153122398469261248', 'GD', 100, 30, 0, 0, 3, 624173, '2026-08-11 10:06:10', '2026-08-16 16:19:02');
+	('license:153122398469261248', 'GD', 100, 40, 0, 0, 4, 145527, '2026-08-11 10:06:10', '2026-08-18 08:41:10');
 
 -- Dumping structure for table essentialmode.uniqueac_unban
 DROP TABLE IF EXISTS `uniqueac_unban`;
@@ -2979,9 +3322,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `account_num` (`account_num`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table essentialmode.users: ~1 rows (approximately)
-REPLACE INTO `users` (`identifier`, `accounts`, `inventory`, `job`, `job_grade`, `group`, `gang`, `gang_grade`, `divisions`, `position`, `firstname`, `lastname`, `dateofbirth`, `sex`, `height`, `skin`, `is_dead`, `last_property`, `money`, `bank`, `black_money`, `loadout`, `disabled`, `disabled_reason`, `phone_number`, `steam`, `license`, `discord`, `fivem`, `xbl`, `live`, `ip`, `playtime`, `last_seen`, `created_at`, `coin`, `timercoin`, `score`, `skills`, `WantedLevel`, `Profile_Pic`, `token`, `tasks`, `tasks_completed`, `winnings`, `tattoos`, `status`, `name`, `playerName`, `discordid`, `subscription_uses`, `permission_level`, `phone`, `iban`, `badge`, `rank`, `jail`, `timePlay`, `level`, `R`, `starterpack`, `roles`, `xp`, `setwarn`, `division`, `account_num`) VALUES
-	('steam:11000014bf543e0', NULL, '[{"item":"hifi","count":0},{"item":"grip","count":0},{"item":"radio","count":1},{"item":"gold","count":0},{"item":"lockpick","count":0},{"item":"blowtorch","count":0},{"item":"silencer","count":1},{"item":"blackmoney","count":9021},{"item":"xpshop","count":2},{"item":"phone","count":1}]', 'cid', 1, 'user', 'A', 13, '[]', '{"z":327.6873474121094,"x":-428.528076171875,"y":1111.6768798828126}', NULL, NULL, '02/08/2000', '0', NULL, '{"torso_1":15,"bags_2":0,"ears_1":-1,"glasses_1":-1,"makeup_3":0,"shoes_2":0,"beard_1":0,"hair_color_2":0,"pants_1":61,"moles_1":0,"mask_1":0,"sex":0,"helmet_1":-1,"pants_2":4,"chain_2":0,"tshirt_2":0,"tshirt_1":15,"decals_1":0,"beard_3":0,"makeup_4":0,"face_3":5,"lipstick_3":0,"age_1":0,"watches_1":-1,"complexion_1":0,"decals_2":0,"bproof_1":0,"age_2":0,"bproof_2":0,"arms":15,"eyebrows_1":0,"lipstick_4":0,"beard_2":10,"glasses_2":-1,"makeup_1":0,"eyebrows_2":10,"makeup_2":0,"face_2":21,"chain_1":0,"face_1":3,"eyebrows_4":0,"arms_2":0,"bags_1":0,"lipstick_2":0,"skin":14,"eye_color":5,"hair_color_1":0,"beard_4":0,"lipstick_1":0,"hair_1":0,"mask_2":0,"moles_2":1,"watches_2":-1,"ears_2":-1,"complexion_2":1,"helmet_2":-1,"hair_2":0,"torso_2":0,"shoes_1":34,"eyebrows_3":0}', 0, NULL, 5350000, 1872020, 0, '[{"label":"Pistol","ammo":0,"name":"WEAPON_PISTOL","components":["clip_default"]},{"label":"SMG","ammo":0,"name":"WEAPON_SMG","components":["clip_default"]}]', 0, NULL, NULL, NULL, 'license:153122398469261248', NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-08-02 11:52:24', 35, 20, 1, '{"skills":[{"name":"Police","percent":0.03333333333333,"color":["#9cfcf8"],"minutes":1},{"name":"Medic","percent":0.03333333333333,"color":["#9cfcf8"]},{"name":"Taxi","percent":0.03333333333333,"color":["#9cfcf8"]},{"name":"Mechanic","percent":0.03333333333333,"color":["#9cfcf8"]},{"name":"Robbery","percent":0,"color":["#9cfcf8"]},{"name":"Farm","percent":0,"color":["#9cfcf8"]},{"name":"Job Azad","percent":0,"color":["#9cfcf8"]}],"weapon":[{"id":"pistol","value":0.0,"title":"Pistol"},{"id":"smg","value":0.0,"title":"SMG"},{"id":"assault_rifle","value":0.0,"title":"Assault Rifle"},{"id":"shotgun","value":0.0,"title":"Shotgun"}],"skill":[{"id":"police","value":0.0,"title":"Police"},{"id":"medic","value":0.0,"title":"Medic"},{"id":"taxi","value":0.0,"title":"Taxi"},{"id":"mechanic","value":0.0,"title":"Mechanic"},{"id":"robbery","value":0.0,"title":"Robbery"},{"id":"farm","value":0.0,"title":"Farm"},{"id":"farm2","value":0.0,"title":"Job Azad"}],"collections":[],"achievements":[{"count":1,"label":"+1 Players","point":1,"max":1},{"count":0,"label":"+100 Players","point":50,"max":100},{"count":0,"label":"Organ Services","point":700,"max":1},{"count":0,"label":"Police Master","point":300,"max":1},{"count":0,"label":"Farm Master","point":500,"max":1},{"count":0,"label":"Job Azad Master","point":300,"max":1},{"count":0,"label":"10 Quest","point":20,"max":10},{"count":0,"label":"100 Quest","point":50,"max":100},{"count":0,"label":"500 Quest","point":100,"max":500}]}', 'standard', '', 0, NULL, NULL, '', NULL, NULL, 'GD', 'Arshia_Mtz', 'N/A', 0, 16, '05232813391', '5959138', NULL, 13, 0, 96526, 100, 0, 'false', '', 80, '0', '', 1);
+-- Dumping data for table essentialmode.users: ~0 rows (approximately)
 
 -- Dumping structure for table essentialmode.uwumarket
 DROP TABLE IF EXISTS `uwumarket`;
