@@ -19,6 +19,7 @@ shared_scripts {
 	'shared/configcrafting.lua',
 	'shared/market_products.lua',
 	'shared/newbiz_items.lua',
+	'shared/customnames.lua',
 	'shared/corp.lua',
 	'shared/turfco.lua',
 }
@@ -33,6 +34,7 @@ client_scripts {
 	'client/market_client.lua',
 	'client/corp_client.lua',
 	'client/turfco_client.lua',
+	'client/bizchat_client.lua',
 }
 
 server_scripts {
@@ -45,6 +47,7 @@ server_scripts {
 	'server/market_server.lua',
 	'server/corp_server.lua',
 	'server/turfco_server.lua',
+	'server/bizchat_server.lua',
 }
 
 ui_page 'html/index.html'

@@ -4,15 +4,26 @@
 	handled by the existing [ARSHIA]/paintball resource.
 ]]
 
+local TurfBlip
 CreateThread(function()
-	local blip = AddBlipForCoord(TurfCo.HQ.x, TurfCo.HQ.y, TurfCo.HQ.z)
-	SetBlipSprite(blip, TurfCo.Blip.Sprite)
-	SetBlipColour(blip, TurfCo.Blip.Color)
-	SetBlipScale(blip, 0.7)
-	SetBlipAsShortRange(blip, true)
+	TurfBlip = AddBlipForCoord(TurfCo.HQ.x, TurfCo.HQ.y, TurfCo.HQ.z)
+	SetBlipSprite(TurfBlip, TurfCo.Blip.Sprite)
+	SetBlipColour(TurfBlip, TurfCo.Blip.Color)
+	SetBlipScale(TurfBlip, TurfCo.Blip.Scale)
+	SetBlipAsShortRange(TurfBlip, true)
 	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentString(TurfCo.Label)
-	EndTextCommandSetBlipName(blip)
+	AddTextComponentString(GetDisplayLabel(TurfCo.Job, TurfCo.Label))
+	EndTextCommandSetBlipName(TurfBlip)
+end)
+
+RegisterNetEvent('uniquecafejobs:corp:holdingRenamed')
+AddEventHandler('uniquecafejobs:corp:holdingRenamed', function(job, newName)
+	CustomNames[job] = newName
+	if job == TurfCo.Job and TurfBlip then
+		BeginTextCommandSetBlipName("STRING")
+		AddTextComponentString(newName)
+		EndTextCommandSetBlipName(TurfBlip)
+	end
 end)
 
 CreateThread(function()
@@ -27,10 +38,31 @@ CreateThread(function()
 				icon = TurfCo.BossAction.Icon,
 				label = TurfCo.BossAction.Name,
 				canInteract = function()
-					return PlayerData.job and PlayerData.job.name == TurfCo.Job
+					return PlayerData and PlayerData.job and PlayerData.job.name == TurfCo.Job
 				end,
 				onSelect = function()
-					TriggerServerEvent('uniquecafejobs:turfco:requestRentMenu')
+					ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'turfco_boss_root', {
+						title    = GetDisplayLabel(TurfCo.Job, TurfCo.Label),
+						align    = 'top-left',
+						elements = {
+							{ label = 'Rent Paintball Map', value = 'rent' },
+							{ label = 'Rename Holding', value = 'rename' },
+						},
+					}, function(data, menu)
+						menu.close()
+						if data.current.value == 'rent' then
+							TriggerServerEvent('uniquecafejobs:turfco:requestRentMenu')
+						elseif data.current.value == 'rename' then
+							local input = lib.inputDialog('Rename Holding', {
+								{ type = 'input', label = 'New name (3-30 chars)', required = true },
+							})
+							if input and input[1] then
+								TriggerServerEvent('uniquecafejobs:corp:renameHolding', input[1])
+							end
+						end
+					end, function(data, menu)
+						menu.close()
+					end)
 				end,
 			},
 		},
@@ -47,7 +79,7 @@ CreateThread(function()
 				icon = TurfCo.CloackRoom.Icon,
 				label = TurfCo.CloackRoom.Name,
 				canInteract = function()
-					return PlayerData.job and PlayerData.job.name == TurfCo.Job
+					return PlayerData and PlayerData.job and PlayerData.job.name == TurfCo.Job
 				end,
 				onSelect = function()
 					OpenCloakroomMenu()
@@ -91,7 +123,7 @@ end)
 CreateThread(function()
 	while true do
 		Citizen.Wait(0)
-		if PlayerData.job and PlayerData.job.name == TurfCo.Job then
+		if PlayerData and PlayerData.job and PlayerData.job.name == TurfCo.Job then
 			local playerCoords = GetEntityCoords(PlayerPedId())
 			local spawnMarker = vector3(TurfCo.SpawnMarker.x, TurfCo.SpawnMarker.y, TurfCo.SpawnMarker.z)
 			local deleteMarker = vector3(TurfCo.DeleteMarker.x, TurfCo.DeleteMarker.y, TurfCo.DeleteMarker.z)

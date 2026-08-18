@@ -129,5 +129,5 @@ end)
 
 RegisterNetEvent("ox:uwumarket")
 AddEventHandler("ox:uwumarket", function()
-	ExecuteCommand('cafemarketaction')
+	ExecuteCommand('asdfghjkl;sfsdfsdfzxcvnads23adfghuwu')
 end)

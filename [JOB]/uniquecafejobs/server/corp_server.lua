@@ -7,6 +7,50 @@ for _, corp in pairs({ Corp.Meridian, Corp.Blacktide, Corp.CrateCarry }) do
 	TriggerEvent('esx_society:registerSociety', corp.Job, corp.Label, 'society_' .. corp.Job, 'society_' .. corp.Job, 'society_' .. corp.Job, { type = 'public' })
 end
 
+CreateThread(function()
+	local rows = MySQL.Sync.fetchAll('SELECT * FROM custom_names', {})
+	for _, row in ipairs(rows) do
+		CustomNames[row.entity_job] = row.custom_label
+	end
+end)
+
+local function saveCustomName(entityJob, label)
+	CustomNames[entityJob] = label
+	MySQL.Async.execute('REPLACE INTO custom_names (entity_job, custom_label) VALUES (@job, @label)', {
+		['@job'] = entityJob, ['@label'] = label,
+	})
+end
+
+-- A holding's own top-grade Boss can rename their holding.
+RegisterNetEvent('uniquecafejobs:corp:renameHolding')
+AddEventHandler('uniquecafejobs:corp:renameHolding', function(newName)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	if not xPlayer then return end
+
+	local holding
+	if xPlayer.job.name == Corp.Meridian.Job then holding = Corp.Meridian
+	elseif xPlayer.job.name == Corp.Blacktide.Job then holding = Corp.Blacktide
+	elseif xPlayer.job.name == Corp.CrateCarry.Job then holding = Corp.CrateCarry
+	elseif xPlayer.job.name == TurfCo.Job then holding = TurfCo
+	end
+	if not holding then return end
+	if xPlayer.job.grade_name ~= 'boss' then
+		TriggerClientEvent('esx:showNotification', src, 'Only the Boss can rename this holding.')
+		return
+	end
+
+	newName = tostring(newName):sub(1, 30)
+	if #newName < 3 then
+		TriggerClientEvent('esx:showNotification', src, 'Name must be at least 3 characters.')
+		return
+	end
+
+	saveCustomName(holding.Job, newName)
+	TriggerClientEvent('uniquecafejobs:corp:holdingRenamed', -1, holding.Job, newName)
+	TriggerClientEvent('esx:showNotification', src, ('Holding renamed to "%s".'):format(newName))
+end)
+
 RegisterNetEvent('uniquecafejobs:corp:spawnVehicle')
 AddEventHandler('uniquecafejobs:corp:spawnVehicle', function(vehicleName)
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -74,7 +118,7 @@ AddEventHandler('uniquecafejobs:corp:requestPortfolio', function()
 			elseif state and state.status == 'partnered' then
 				tag = 'VIP Partner'
 			end
-			table.insert(rows, { label = ('%s [%s]'):format(cafe.Label, tag), balance = account.money })
+			table.insert(rows, { label = ('%s [%s]'):format(GetDisplayLabel(cafe.Job, cafe.Label), tag), balance = account.money })
 			pending = pending - 1
 			if pending == 0 then finish() end
 		end)
@@ -133,7 +177,7 @@ AddEventHandler('uniquecafejobs:corp:requestManagePortfolio', function()
 		local state = MeridianState[job]
 		table.insert(rows, {
 			job = job,
-			label = cafe and cafe.Label or job,
+			label = cafe and GetDisplayLabel(cafe.Job, cafe.Label) or job,
 			acquired = state ~= nil and state.status == 'acquired',
 			rank = state and state.rank or nil,
 		})
@@ -209,7 +253,7 @@ AddEventHandler('uniquecafejobs:corp:requestVIPPartnerships', function()
 		local state = MeridianState[job]
 		table.insert(rows, {
 			job = job,
-			label = cafe and cafe.Label or job,
+			label = cafe and GetDisplayLabel(cafe.Job, cafe.Label) or job,
 			partnered = state ~= nil and state.status == 'partnered',
 		})
 	end
@@ -262,7 +306,7 @@ AddEventHandler('uniquecafejobs:corp:requestManageStaffList', function()
 	for job, state in pairs(MeridianState) do
 		if state.status == 'acquired' or state.status == 'partnered' then
 			local cafe = GetCafeForJob(job)
-			table.insert(rows, { job = job, label = cafe and cafe.Label or job })
+			table.insert(rows, { job = job, label = cafe and GetDisplayLabel(cafe.Job, cafe.Label) or job })
 		end
 	end
 	TriggerClientEvent('uniquecafejobs:corp:showManageStaffList', src, rows)
@@ -299,6 +343,24 @@ AddEventHandler('uniquecafejobs:corp:appointManager', function(job, targetId)
 	target.setJob(job, 4)
 	TriggerClientEvent('esx:showNotification', src, ('%s appointed as Manager (Boss) of that business.'):format(target.name))
 	TriggerClientEvent('esx:showNotification', target.source, 'You have been appointed Manager (Boss) by Meridian Holdings.')
+end)
+
+RegisterNetEvent('uniquecafejobs:corp:renameBusiness')
+AddEventHandler('uniquecafejobs:corp:renameBusiness', function(job, newName)
+	local src = source
+	local xPlayer = ESX.GetPlayerFromId(src)
+	if not xPlayer or xPlayer.job.name ~= Corp.Meridian.Job or xPlayer.job.grade < 2 then return end
+	if not isMeridianAffiliated(job) then return end
+
+	newName = tostring(newName):sub(1, 40)
+	if #newName < 3 then
+		TriggerClientEvent('esx:showNotification', src, 'Name must be at least 3 characters.')
+		return
+	end
+
+	saveCustomName(job, newName)
+	TriggerClientEvent('uniquecafejobs:corp:businessRenamed', -1, job, newName)
+	TriggerClientEvent('esx:showNotification', src, ('Business renamed to "%s".'):format(newName))
 end)
 
 -- ══════════════════════════ Blacktide Logistics (laundering) ══════════════════════════
@@ -361,7 +423,7 @@ AddEventHandler('uniquecafejobs:corp:openWholesaleMenu', function(businessJob)
 				end
 			end
 		end
-		TriggerClientEvent('uniquecafejobs:corp:showWholesaleMenu', src, businessJob, cafe.Label, stock)
+		TriggerClientEvent('uniquecafejobs:corp:showWholesaleMenu', src, businessJob, GetDisplayLabel(cafe.Job, cafe.Label), stock)
 	end)
 end)
 

@@ -102,6 +102,12 @@ RegisterCommand('menu', function()
     UpdateCollections()
     UpdateLeaderboard()
     UiShow()
+
+    -- esx_dpemote is a real resource on this server. Wrapped in pcall so
+    -- if it's ever missing/renamed, the menu still opens fine either way.
+    pcall(function()
+        exports['esx_dpemote']:PlayEmote('think3')
+    end)
 end, false)
 
 AddEventHandler('onKeyDown', function(key)
@@ -112,5 +118,10 @@ end)
 
 RegisterNUICallback('menuClosed', function(_, cb)
     SetNuiFocus(false, false)
+
+    local ped = PlayerPedId()
+    ClearPedTasks(ped)
+    ClearPedTasksImmediately(ped)
+
     cb('ok')
 end)

@@ -11,10 +11,10 @@
 TurfCo = {
 	Job     = 'turfco',
 	Society = 'turfco',
-	Label   = 'Turf Wars Inc.',
+	Label   = 'Holding 2',
 
 	HQ = { x = 2565.0, y = 2585.0, z = 37.9 }, -- Grand Senora desert area (placeholder)
-	Blip = { Sprite = 84, Color = 5, Scale = 0.7 },
+	Blip = { Sprite = 84, Color = 5, Scale = 1.0 },
 
 	BossAction = { Pos = { x = 2565.0, y = 2585.0, z = 37.9 }, Name = 'Rent Paintball Map', Icon = 'fa-solid fa-flag' },
 	CloackRoom = { Pos = { x = 2569.0, y = 2585.0, z = 37.9 }, Name = 'Cloack Room', Icon = 'fa-solid fa-shirt' },

@@ -113,7 +113,7 @@ Citizen.CreateThread(
                 local blip = AddBlipForCoord(v.coords)
 
                 SetBlipSprite(blip, ConfigCrafting.BlipSprite)
-                SetBlipScale(blip, 0.7)
+                SetBlipScale(blip, 0.8)
                 SetBlipColour(blip, ConfigCrafting.BlipColor)
                 SetBlipAsShortRange(blip, true)
 

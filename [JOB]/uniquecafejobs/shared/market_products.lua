@@ -1,4 +1,4 @@
-Config = {}
+MarketConfig = {}
 local url = 'nui://esx_inventoryhud/html/img/items/'
 
 list_products = {
@@ -37,13 +37,13 @@ list_products = {
 }
 
 
-Config = {
+MarketConfig = {
     positionX   = "50%",
     positionY   = "50%",
     size        = "1.0",
 }
 
-Config.marketlocation = {
+MarketConfig.marketlocation = {
     {x = -583.113, y = -1062.19, z = 20.344, h = 42.5}, -- Shop 1
 }
 

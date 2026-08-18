@@ -20,13 +20,13 @@ Cafes = {
 		MenuGroup = 'cafe',
 		Job     = 'uwucafe',
 		Society = 'uwucafe',
-		Label   = 'UwU Café',
+		Label   = 'Cafe UwU',
 
 		Blip = {
 			Pos     = { x = -581.831, y = -1064.56, z = 22.347 },
 			Sprite  = 621,
 			Display = 4,
-			Scale   = 0.7,
+			Scale   = 1.0,
 			Colour  = 8, -- pink
 		},
 
@@ -66,13 +66,13 @@ Cafes = {
 		MenuGroup = 'cafe',
 		Job     = 'obsidian',
 		Society = 'obsidian',
-		Label   = 'Obsidian Brew',
+		Label   = 'Cafe Obsidian',
 
 		Blip = {
 			Pos     = { x = -1223.0, y = -906.0, z = 12.33 },
 			Sprite  = 621,
 			Display = 4,
-			Scale   = 0.7,
+			Scale   = 1.0,
 			Colour  = 27, -- dark purple / obsidian-ish
 		},
 
@@ -112,13 +112,13 @@ Cafes = {
 		MenuGroup = 'cafe',
 		Job     = 'voltage',
 		Society = 'voltage',
-		Label   = 'Voltage Coffee Co.',
+		Label   = 'Cafe Voltage',
 
 		Blip = {
 			Pos     = { x = 442.9, y = -1750.0, z = 29.5 },
 			Sprite  = 621,
 			Display = 4,
-			Scale   = 0.7,
+			Scale   = 1.0,
 			Colour  = 5, -- yellow / electric
 		},
 
@@ -158,13 +158,13 @@ Cafes = {
 		MenuGroup = 'cafe',
 		Job     = 'ember',
 		Society = 'ember',
-		Label   = 'Ember & Ash',
+		Label   = 'Restaurant Ember',
 
 		Blip = {
 			Pos     = { x = -1391.0, y = -583.0, z = 30.3 },
 			Sprite  = 93,
 			Display = 4,
-			Scale   = 0.7,
+			Scale   = 1.0,
 			Colour  = 1, -- red, fire theme
 		},
 
@@ -204,13 +204,13 @@ Cafes = {
 		MenuGroup = 'cafe',
 		Job     = 'anchor',
 		Society = 'anchor',
-		Label   = 'The Rusty Anchor',
+		Label   = 'Restaurant Anchor',
 
 		Blip = {
 			Pos     = { x = -1850.0, y = -1230.0, z = 13.0 },
 			Sprite  = 356,
 			Display = 4,
-			Scale   = 0.7,
+			Scale   = 1.0,
 			Colour  = 3, -- blue, seaside theme
 		},
 
@@ -250,13 +250,13 @@ Cafes = {
 		MenuGroup = 'cafe',
 		Job     = 'crimson',
 		Society = 'crimson',
-		Label   = 'Crimson Fork',
+		Label   = 'Restaurant Crimson',
 
 		Blip = {
 			Pos     = { x = -278.0, y = -720.0, z = 33.0 },
 			Sprite  = 93,
 			Display = 4,
-			Scale   = 0.7,
+			Scale   = 1.0,
 			Colour  = 18, -- dark purple / crimson-ish, upscale
 		},
 
@@ -296,13 +296,13 @@ Cafes = {
 		MenuGroup = 'bakery',
 		Job     = 'flourish',
 		Society = 'flourish',
-		Label   = 'Flourish Bakery',
+		Label   = 'Bakery Flourish',
 
 		Blip = {
 			Pos     = { x = -1100.0, y = 260.0, z = 69.0 },
 			Sprite  = 432,
 			Display = 4,
-			Scale   = 0.7,
+			Scale   = 1.0,
 			Colour  = 46,
 		},
 
@@ -341,13 +341,13 @@ Cafes = {
 		MenuGroup = 'bakery',
 		Job     = 'goldcrust',
 		Society = 'goldcrust',
-		Label   = 'Gold Crust Bakehouse',
+		Label   = 'Bakery GoldCrust',
 
 		Blip = {
 			Pos     = { x = 150.0, y = -1300.0, z = 29.0 },
 			Sprite  = 432,
 			Display = 4,
-			Scale   = 0.7,
+			Scale   = 1.0,
 			Colour  = 46,
 		},
 
@@ -386,13 +386,13 @@ Cafes = {
 		MenuGroup = 'bar',
 		Job     = 'static',
 		Society = 'static',
-		Label   = 'Static Lounge',
+		Label   = 'Bar Static',
 
 		Blip = {
 			Pos     = { x = -1385.0, y = -600.0, z = 30.5 },
 			Sprite  = 93,
 			Display = 4,
-			Scale   = 0.7,
+			Scale   = 1.0,
 			Colour  = 27,
 		},
 
@@ -431,13 +431,13 @@ Cafes = {
 		MenuGroup = 'bar',
 		Job     = 'nightjar',
 		Society = 'nightjar',
-		Label   = 'Nightjar Pub',
+		Label   = 'Bar Nightjar',
 
 		Blip = {
 			Pos     = { x = -560.0, y = 290.0, z = 82.5 },
 			Sprite  = 93,
 			Display = 4,
-			Scale   = 0.7,
+			Scale   = 1.0,
 			Colour  = 27,
 		},
 
@@ -476,13 +476,13 @@ Cafes = {
 		MenuGroup = 'pizza',
 		Job     = 'firebrick',
 		Society = 'firebrick',
-		Label   = 'Firebrick Pizza Co.',
+		Label   = 'Pizza Firebrick',
 
 		Blip = {
 			Pos     = { x = -710.0, y = -915.0, z = 19.2 },
 			Sprite  = 273,
 			Display = 4,
-			Scale   = 0.7,
+			Scale   = 1.0,
 			Colour  = 1,
 		},
 
@@ -521,13 +521,13 @@ Cafes = {
 		MenuGroup = 'pizza',
 		Job     = 'slice',
 		Society = 'slice',
-		Label   = 'Slice Society',
+		Label   = 'Pizza Slice',
 
 		Blip = {
 			Pos     = { x = -47.0, y = -1750.0, z = 29.5 },
 			Sprite  = 273,
 			Display = 4,
-			Scale   = 0.7,
+			Scale   = 1.0,
 			Colour  = 1,
 		},
 
@@ -566,13 +566,13 @@ Cafes = {
 		MenuGroup = 'icecream',
 		Job     = 'frostbite',
 		Society = 'frostbite',
-		Label   = 'Frostbite Creamery',
+		Label   = 'Bastani Frostbite',
 
 		Blip = {
 			Pos     = { x = -820.0, y = 180.0, z = 71.5 },
 			Sprite  = 314,
 			Display = 4,
-			Scale   = 0.7,
+			Scale   = 1.0,
 			Colour  = 27,
 		},
 
@@ -611,13 +611,13 @@ Cafes = {
 		MenuGroup = 'icecream',
 		Job     = 'sundae',
 		Society = 'sundae',
-		Label   = 'Sundae Funday',
+		Label   = 'Bastani Sundae',
 
 		Blip = {
 			Pos     = { x = -1090.0, y = -390.0, z = 36.7 },
 			Sprite  = 314,
 			Display = 4,
-			Scale   = 0.7,
+			Scale   = 1.0,
 			Colour  = 27,
 		},
 
@@ -656,13 +656,13 @@ Cafes = {
 		MenuGroup = 'sushi',
 		Job     = 'koi',
 		Society = 'koi',
-		Label   = 'Koi Sushi House',
+		Label   = 'Sushi Koi',
 
 		Blip = {
 			Pos     = { x = -560.0, y = -1250.0, z = 17.6 },
 			Sprite  = 88,
 			Display = 4,
-			Scale   = 0.7,
+			Scale   = 1.0,
 			Colour  = 2,
 		},
 
@@ -701,13 +701,13 @@ Cafes = {
 		MenuGroup = 'sushi',
 		Job     = 'wasabi',
 		Society = 'wasabi',
-		Label   = 'Wasabi & Co.',
+		Label   = 'Sushi Wasabi',
 
 		Blip = {
 			Pos     = { x = -1210.0, y = -450.0, z = 36.9 },
 			Sprite  = 88,
 			Display = 4,
-			Scale   = 0.7,
+			Scale   = 1.0,
 			Colour  = 2,
 		},
 
@@ -747,13 +747,13 @@ Cafes = {
 		MenuGroup = 'carwash',
 		Job     = 'carwash',
 		Society = 'carwash',
-		Label   = 'Suds & Cash',
+		Label   = 'Carwash Suds',
 
 		Blip = {
 			Pos     = { x = -207.0, y = -1330.0, z = 31.0 },
 			Sprite  = 402,
 			Display = 4,
-			Scale   = 0.7,
+			Scale   = 1.0,
 			Colour  = 46,
 		},
 

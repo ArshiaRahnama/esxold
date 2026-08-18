@@ -1,6 +1,6 @@
 local TargetNumber = {}
 ESX = nil
-local PlayerData
+-- PlayerData is a genuine global, declared in client/main.lua (loaded first)
 Citizen.CreateThread(function()
     while ESX == nil do
         TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -278,7 +278,7 @@ AddEventHandler('AH_uwucafejob:OpenMenuSefaresh', function()
         if tojob then 
             lib.showContext('uwu_menu')
         else
-            ExecuteCommand('cafemarketaction')
+            ExecuteCommand('asdfghjkl;sfsdfsdfzxcvnads23adfghuwu')
         end
     end)
 end)
@@ -304,7 +304,7 @@ function UwUCafeMenuAction()
             title = 'Action House', 
             value = 'menu_Action', 
             onSelect = function()
-                ExecuteCommand('cafemarketaction')
+                ExecuteCommand('asdfghjkl;sfsdfsdfzxcvnads23adfghuwu')
             end
         })
     end

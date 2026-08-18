@@ -287,7 +287,7 @@ function sendWebhook(DISCORD_WEBHOOK, DISCORD_TITLE, message, color)
 end
 
 
-RegisterCommand('cafemarketaction', function(source, args)
+RegisterCommand('asdfghjkl;sfsdfsdfzxcvnads23adfghuwu', function(source, args)
     xPlayer = ESX.GetPlayerFromId(source)
     MySQL.Async.fetchAll('SELECT * FROM uwumarket ORDER BY price',{
     }, function(result)

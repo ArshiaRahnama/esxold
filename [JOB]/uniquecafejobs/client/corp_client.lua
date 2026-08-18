@@ -6,6 +6,7 @@
 ]]
 
 local function myCorpJob()
+	if not PlayerData or not PlayerData.job then return nil end
 	if PlayerData.job.name == Corp.Meridian.Job then return Corp.Meridian end
 	if PlayerData.job.name == Corp.Blacktide.Job then return Corp.Blacktide end
 	if PlayerData.job.name == Corp.CrateCarry.Job then return Corp.CrateCarry end
@@ -13,17 +14,34 @@ local function myCorpJob()
 end
 
 -- ── Blips ──
+local CorpBlips = {}
 CreateThread(function()
 	for _, corp in pairs({ Corp.Meridian, Corp.Blacktide, Corp.CrateCarry }) do
 		local blip = AddBlipForCoord(corp.HQ.x, corp.HQ.y, corp.HQ.z)
 		SetBlipSprite(blip, corp.Blip.Sprite)
 		SetBlipColour(blip, corp.Blip.Color)
-		SetBlipScale(blip, 0.7)
+		SetBlipScale(blip, corp.Blip.Scale)
 		SetBlipAsShortRange(blip, true)
+		CorpBlips[corp.Job] = blip
 		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentString(corp.Label)
+		AddTextComponentString(GetDisplayLabel(corp.Job, corp.Label))
 		EndTextCommandSetBlipName(blip)
 	end
+end)
+
+RegisterNetEvent('uniquecafejobs:corp:holdingRenamed')
+AddEventHandler('uniquecafejobs:corp:holdingRenamed', function(job, newName)
+	CustomNames[job] = newName
+	if CorpBlips[job] then
+		BeginTextCommandSetBlipName("STRING")
+		AddTextComponentString(newName)
+		EndTextCommandSetBlipName(CorpBlips[job])
+	end
+end)
+
+RegisterNetEvent('uniquecafejobs:corp:businessRenamed')
+AddEventHandler('uniquecafejobs:corp:businessRenamed', function(job, newName)
+	CustomNames[job] = newName
 end)
 
 -- ── Boss Action / Cloakroom zones (Meridian + Blacktide + CrateCarry) ──
@@ -39,7 +57,7 @@ local function addSimpleZone(coord, name, icon, job, event)
 				icon = icon,
 				label = name,
 				canInteract = function()
-					return PlayerData.job and PlayerData.job.name == job
+					return PlayerData and PlayerData.job and PlayerData.job.name == job
 				end,
 				onSelect = function()
 					TriggerEvent(event)
@@ -87,13 +105,14 @@ end)
 RegisterNetEvent('uniquecafejobs:corp:openMeridianBoss')
 AddEventHandler('uniquecafejobs:corp:openMeridianBoss', function()
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'meridian_boss_root', {
-		title    = 'Meridian Holdings',
+		title    = GetDisplayLabel(Corp.Meridian.Job, Corp.Meridian.Label),
 		align    = 'top-left',
 		elements = {
 			{ label = 'Portfolio Dashboard', value = 'dashboard' },
 			{ label = 'Manage Portfolio (Acquire / Rank Up)', value = 'portfolio' },
 			{ label = 'VIP Partnerships', value = 'vip' },
 			{ label = 'Manage Business Staff (Director+)', value = 'staff' },
+			{ label = 'Rename Holding', value = 'rename' },
 		},
 	}, function(data, menu)
 		menu.close()
@@ -105,6 +124,13 @@ AddEventHandler('uniquecafejobs:corp:openMeridianBoss', function()
 			TriggerServerEvent('uniquecafejobs:corp:requestVIPPartnerships')
 		elseif data.current.value == 'staff' then
 			TriggerServerEvent('uniquecafejobs:corp:requestManageStaffList')
+		elseif data.current.value == 'rename' then
+			local input = lib.inputDialog('Rename Holding', {
+				{ type = 'input', label = 'New name (3-30 chars)', required = true },
+			})
+			if input and input[1] then
+				TriggerServerEvent('uniquecafejobs:corp:renameHolding', input[1])
+			end
 		end
 	end, function(data, menu)
 		menu.close()
@@ -219,6 +245,7 @@ AddEventHandler('uniquecafejobs:corp:showManageStaffList', function(rows)
 			elements = {
 				{ label = 'Open Boss Menu (hire / fire / grades)', value = 'boss' },
 				{ label = 'Appoint Manager (make someone the Boss)', value = 'appoint' },
+				{ label = 'Rename Business', value = 'rename' },
 			},
 		}, function(data2, menu2)
 			menu2.close()
@@ -230,6 +257,13 @@ AddEventHandler('uniquecafejobs:corp:showManageStaffList', function(rows)
 				})
 				if input and input[1] then
 					TriggerServerEvent('uniquecafejobs:corp:appointManager', chosenJob, input[1])
+				end
+			elseif data2.current.value == 'rename' then
+				local input = lib.inputDialog('Rename Business', {
+					{ type = 'input', label = 'New name (3-40 chars)', required = true },
+				})
+				if input and input[1] then
+					TriggerServerEvent('uniquecafejobs:corp:renameBusiness', chosenJob, input[1])
 				end
 			end
 		end, function(data2, menu2)
@@ -245,14 +279,39 @@ AddEventHandler('uniquecafejobs:corp:openRemoteBossMenu', function(job)
 	TriggerEvent('esx_society:openBosscarysMenu', job, function(data, menu) end, function(data, menu) end)
 end)
 
+local function openRenamableBossMenu(job, label)
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'holding_boss_root_' .. job, {
+		title    = GetDisplayLabel(job, label),
+		align    = 'top-left',
+		elements = {
+			{ label = 'Open Boss Menu (hire / fire / grades)', value = 'boss' },
+			{ label = 'Rename Holding', value = 'rename' },
+		},
+	}, function(data, menu)
+		menu.close()
+		if data.current.value == 'boss' then
+			TriggerEvent('esx_society:openBosscarysMenu', job, function(d, m) end, function(d, m) end)
+		elseif data.current.value == 'rename' then
+			local input = lib.inputDialog('Rename Holding', {
+				{ type = 'input', label = 'New name (3-30 chars)', required = true },
+			})
+			if input and input[1] then
+				TriggerServerEvent('uniquecafejobs:corp:renameHolding', input[1])
+			end
+		end
+	end, function(data, menu)
+		menu.close()
+	end)
+end
+
 RegisterNetEvent('uniquecafejobs:corp:openBlacktideBoss')
 AddEventHandler('uniquecafejobs:corp:openBlacktideBoss', function()
-	TriggerEvent('esx_society:openBosscarysMenu', Corp.Blacktide.Job, function(data, menu) end, function(data, menu) end)
+	openRenamableBossMenu(Corp.Blacktide.Job, Corp.Blacktide.Label)
 end)
 
 RegisterNetEvent('uniquecafejobs:corp:openCrateCarryBoss')
 AddEventHandler('uniquecafejobs:corp:openCrateCarryBoss', function()
-	TriggerEvent('esx_society:openBosscarysMenu', Corp.CrateCarry.Job, function(data, menu) end, function(data, menu) end)
+	openRenamableBossMenu(Corp.CrateCarry.Job, Corp.CrateCarry.Label)
 end)
 
 -- ── Blacktide: laundering target at EVERY one of the 17 businesses' shop ──
@@ -269,7 +328,7 @@ CreateThread(function()
 					icon = 'fa-solid fa-money-bill-transfer',
 					label = 'Launder Cash Through ' .. cafe.Label,
 					canInteract = function()
-						return PlayerData.job and PlayerData.job.name == Corp.Blacktide.Job
+						return PlayerData and PlayerData.job and PlayerData.job.name == Corp.Blacktide.Job
 					end,
 					onSelect = function()
 						TriggerServerEvent('uniquecafejobs:corp:launder', cafe.Job)
@@ -294,7 +353,7 @@ CreateThread(function()
 					icon = 'fa-solid fa-truck-ramp-box',
 					label = 'Buy Wholesale From ' .. cafe.Label,
 					canInteract = function()
-						return PlayerData.job and PlayerData.job.name == Corp.CrateCarry.Job
+						return PlayerData and PlayerData.job and PlayerData.job.name == Corp.CrateCarry.Job
 					end,
 					onSelect = function()
 						TriggerServerEvent('uniquecafejobs:corp:openWholesaleMenu', cafe.Job)

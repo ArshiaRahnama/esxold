@@ -1,9 +1,11 @@
 -- ============================================================
--- uniquecafejobs — COMPLETE database import
--- Covers: all 17 businesses (incl. the original UwU Café menu
--- items) + the 4 holding jobs (Meridian / Blacktide / Crate &
--- Carry / Turf Wars). Safe to re-run: REPLACE/IGNORE throughout,
--- and it will NEVER reset an existing business's bank balance.
+-- uniquecafejobs — COMPLETE database import (v2)
+-- Covers: all 17 businesses (incl. original UwU Café menu items)
+-- + the 4 holding jobs (Holding 1 / Blacktide / Crate & Carry /
+-- Holding 2). All 21 jobs are non-whitelisted (whitelisted=0) so
+-- they show up in the F6 job center / esx_joblisting menu.
+-- Safe to re-run: REPLACE/IGNORE throughout, and it will NEVER
+-- reset an existing business's bank balance.
 -- ============================================================
 
 -- Original UwU Café menu items (in case this is a fresh install without them already)
@@ -68,13 +70,19 @@ REPLACE INTO `items` (`name`, `label`, `limit`, `rare`, `can_remove`) VALUES
 	('yakh', 'Yakh', 30, 0, 1);
 
 
--- Tracks Meridian's acquired-portfolio / VIP-partner businesses
 CREATE TABLE IF NOT EXISTS `meridian_portfolio` (
 	`business_job` varchar(50) NOT NULL,
 	`kind` varchar(10) NOT NULL,
 	`status` varchar(10) NOT NULL,
 	`rank` varchar(10) DEFAULT NULL,
 	PRIMARY KEY (`business_job`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Custom names set by a holding's own Boss (holdings) or by Meridian (businesses)
+CREATE TABLE IF NOT EXISTS `custom_names` (
+	`entity_job` varchar(50) NOT NULL,
+	`custom_label` varchar(50) NOT NULL,
+	PRIMARY KEY (`entity_job`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- 36 finished items (30 bakery/bar/pizza/icecream/sushi + 6 car wash)
@@ -131,32 +139,32 @@ REPLACE INTO `items` (`name`, `label`, `limit`, `rare`, `can_remove`) VALUES
 	('soap_foam', 'Soap Foam', 30, 0, 1),
 	('microfiber_cloth', 'Microfiber Cloth', 30, 0, 1);
 
--- All 17 business jobs (uwucafe included via REPLACE - safe no-op if it already exists)
+-- All 17 business jobs (whitelisted=0 -> visible in the F6 job center)
 REPLACE INTO `jobs` (`name`, `label`, `whitelisted`, `handyservice`, `hasapp`, `onlyboss`) VALUES
-	('uwucafe', 'UwU Cafe', 1, '0', 0, 0),
-	('obsidian', 'Obsidian Brew', 1, '0', 0, 0),
-	('voltage', 'Voltage Coffee Co.', 1, '0', 0, 0),
-	('ember', 'Ember & Ash', 1, '0', 0, 0),
-	('anchor', 'The Rusty Anchor', 1, '0', 0, 0),
-	('crimson', 'Crimson Fork', 1, '0', 0, 0),
-	('flourish', 'Flourish Bakery', 1, '0', 0, 0),
-	('goldcrust', 'Gold Crust Bakehouse', 1, '0', 0, 0),
-	('static', 'Static Lounge', 1, '0', 0, 0),
-	('nightjar', 'Nightjar Pub', 1, '0', 0, 0),
-	('firebrick', 'Firebrick Pizza Co.', 1, '0', 0, 0),
-	('slice', 'Slice Society', 1, '0', 0, 0),
-	('frostbite', 'Frostbite Creamery', 1, '0', 0, 0),
-	('sundae', 'Sundae Funday', 1, '0', 0, 0),
-	('koi', 'Koi Sushi House', 1, '0', 0, 0),
-	('wasabi', 'Wasabi & Co.', 1, '0', 0, 0),
-	('carwash', 'Suds & Cash', 1, '0', 0, 0);
+	('uwucafe', 'Cafe UwU', 0, '0', 0, 0),
+	('obsidian', 'Cafe Obsidian', 0, '0', 0, 0),
+	('voltage', 'Cafe Voltage', 0, '0', 0, 0),
+	('ember', 'Restaurant Ember', 0, '0', 0, 0),
+	('anchor', 'Restaurant Anchor', 0, '0', 0, 0),
+	('crimson', 'Restaurant Crimson', 0, '0', 0, 0),
+	('flourish', 'Bakery Flourish', 0, '0', 0, 0),
+	('goldcrust', 'Bakery GoldCrust', 0, '0', 0, 0),
+	('static', 'Bar Static', 0, '0', 0, 0),
+	('nightjar', 'Bar Nightjar', 0, '0', 0, 0),
+	('firebrick', 'Pizza Firebrick', 0, '0', 0, 0),
+	('slice', 'Pizza Slice', 0, '0', 0, 0),
+	('frostbite', 'Bastani Frostbite', 0, '0', 0, 0),
+	('sundae', 'Bastani Sundae', 0, '0', 0, 0),
+	('koi', 'Sushi Koi', 0, '0', 0, 0),
+	('wasabi', 'Sushi Wasabi', 0, '0', 0, 0),
+	('carwash', 'Carwash Suds', 0, '0', 0, 0);
 
--- The 4 corp/holding jobs
+-- The 4 corp/holding jobs (also whitelisted=0)
 REPLACE INTO `jobs` (`name`, `label`, `whitelisted`, `handyservice`, `hasapp`, `onlyboss`) VALUES
-	('meridian', 'Meridian Holdings', 1, '0', 0, 0),
-	('blacktide', 'Blacktide Logistics', 1, '0', 0, 0),
-	('cratecarry', 'Crate & Carry Distribution', 1, '0', 0, 0),
-	('turfco', 'Turf Wars Inc.', 1, '0', 0, 0);
+	('meridian', 'Holding 1', 0, '0', 0, 0),
+	('blacktide', 'Blacktide Logistics', 0, '0', 0, 0),
+	('cratecarry', 'Crate & Carry Distribution', 0, '0', 0, 0),
+	('turfco', 'Holding 2', 0, '0', 0, 0);
 
 -- Grades for all 17 businesses (Rank1-3 + Boss)
 REPLACE INTO `job_grades` (`job_name`, `grade`, `name`, `label`, `salary`, `skin_male`, `skin_female`, `vehicles`, `helis`, `weapons`, `items`) VALUES
@@ -229,7 +237,7 @@ REPLACE INTO `job_grades` (`job_name`, `grade`, `name`, `label`, `salary`, `skin
 	('carwash', 3, 'rank3', 'Rank3', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('carwash', 4, 'boss',  'Rank4', 1, '{}', '{}', '[]', '[]', NULL, NULL);
 
--- Grades for the 4 corp/holding jobs
+-- Grades for the 4 corp/holding jobs (grade name 'boss' = the rename-authority tier)
 REPLACE INTO `job_grades` (`job_name`, `grade`, `name`, `label`, `salary`, `skin_male`, `skin_female`, `vehicles`, `helis`, `weapons`, `items`) VALUES
 	('meridian', 1, 'rank1', 'Analyst', 1, '{}', '{}', '[]', '[]', NULL, NULL),
 	('meridian', 2, 'rank2', 'Director', 1, '{}', '{}', '[]', '[]', NULL, NULL),
