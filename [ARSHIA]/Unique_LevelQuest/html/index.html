@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="styles/quest.css" />
   <link rel="stylesheet" href="styles/skill.css" />
   <link rel="stylesheet" href="styles/collections.css" />
+  <link rel="stylesheet" href="styles/leaderboard.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 
@@ -71,6 +72,9 @@
         <button class="tab" data-tab="collections">
           <i class="fa-solid fa-layer-group"></i> COLLECTIONS
         </button>
+        <button class="tab" data-tab="leaderboard">
+          <i class="fa-solid fa-trophy"></i> LEADERBOARD
+        </button>
       </div>
 
       <div class="content">
@@ -80,6 +84,21 @@
 
         <div class="panel hidden" id="tab_skill">
           <div class="skill-list"></div>
+        </div>
+
+        <div class="panel hidden" id="tab_leaderboard">
+          <div class="subtabs">
+            <button class="subtab active" data-lbsub="players">TOP 10 PLAYER</button>
+            <button class="subtab" data-lbsub="gangs">TOP GANG 10</button>
+          </div>
+
+          <div class="panel2" id="lb_players">
+            <div class="board-list" id="lb_players_list"></div>
+          </div>
+
+          <div class="panel2 hidden" id="lb_gangs">
+            <div class="board-list" id="lb_gangs_list"></div>
+          </div>
         </div>
 
         <div class="panel hidden" id="tab_collections">
@@ -115,5 +134,6 @@
   <script src="scripts/quest.js"></script>
   <script src="scripts/skill.js"></script>
   <script src="scripts/collections.js"></script>
+  <script src="scripts/leaderboard.js"></script>
 </body>
 </html>

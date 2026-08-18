@@ -1,3 +1,9 @@
+-- FIXED: every call in this file used to say ESX.TriggerServerEvent(...), a function
+-- that does not exist anywhere in essentialmode (confirmed against both this
+-- server and the real ArshiaRahnama/Sunset repo, where the same typo exists
+-- in every inventory module) -- every put/get/updateSlot silently failed to
+-- ever reach the server. Changed to plain TriggerServerEvent throughout.
+
 function openInventory(name, owner, label, searchKey)
     local items = sortItems(getPublicInventory(name, owner))
     openOtherInventory({items = items, timeout = 1000, label = label, searchKey = searchKey}, function(data)
@@ -5,13 +11,13 @@ function openInventory(name, owner, label, searchKey)
         elseif data.type == 'update' then
             return sortItems(getPublicInventory(name, owner))
         elseif data.type == 'moveInside' then
-            ESX.TriggerServerEvent('inventory-public:updateSlot', name, data.data)
+            TriggerServerEvent('inventory-public:updateSlot', name, data.data)
         elseif data.type == 'moveToOther' then
             if ESX.isDead() then return end
-            ESX.TriggerServerEvent('inventory-public:put', name, data.data)
+            TriggerServerEvent('inventory-public:put', name, data.data)
         elseif data.type == 'moveToMain' then
             if ESX.isDead() then return end
-            ESX.TriggerServerEvent('inventory-public:get', name, data.data)
+            TriggerServerEvent('inventory-public:get', name, data.data)
             Wait(500)
             if data.data.droppedTo then
                 data.data.inventoryType = 'main'

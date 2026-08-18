@@ -10,6 +10,14 @@ Config.OpenInventoryKey = 'F2'
 -- the game's own weapon-select wheel). Owning a weapon no longer
 -- automatically makes it drawable -- only up to this many can be
 -- equipped at once; equipping past the limit unequips the oldest one.
+--
+-- Confirmed against the real repo (ArshiaRahnama/Sunset,
+-- sun-inventory-hud/client/config.lua): reservedSlotForWeapon = 3 --
+-- same "3" limit, same underlying idea (only some weapons are ever
+-- actually drawable). That version enforces it through real per-slot
+-- reservation in client/main.lua, which isn't published (empty file
+-- in the repo) -- this click-toggle version reaches the same end
+-- result (max 3 drawable at once) without needing that missing file.
 Config.WeaponSlots = { 1, 2, 3 }
 
 -- the main inventory panel appears to be a FIXED-size slot grid

@@ -100,6 +100,7 @@ RegisterCommand('menu', function()
     UpdateProfile()
     UpdateSkills()
     UpdateCollections()
+    UpdateLeaderboard()
     UiShow()
 end, false)
 

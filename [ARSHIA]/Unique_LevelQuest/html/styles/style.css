@@ -322,6 +322,13 @@ html, body {
   overflow-y: auto;
 }
 
+/* Collections has its own inner scrolling sub-panel (.panel2) — the
+   outer tab panel must not ALSO scroll, or you get two nested
+   scrollbars fighting each other. */
+#tab_collections.panel {
+  overflow: hidden;
+}
+
 .hint {
   position: absolute;
   bottom: 8px;
