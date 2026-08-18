@@ -8,7 +8,7 @@ if ESX == nil then
 end
 
 CreateThread(function()
-    exports.oxmysql:execute([[
+    exports.litesql:execute([[
         CREATE TABLE IF NOT EXISTS `trunk_inventories` (
             `plate` VARCHAR(32) NOT NULL,
             `glove_box` TINYINT(1) NOT NULL DEFAULT 0,
@@ -20,7 +20,7 @@ CreateThread(function()
 end)
 
 local function loadTrunk(plate, gloveBox, cb)
-    exports.oxmysql:fetch('SELECT items, weapons FROM trunk_inventories WHERE plate = @plate AND glove_box = @gb', {
+    exports.litesql:fetch('SELECT items, weapons FROM trunk_inventories WHERE plate = @plate AND glove_box = @gb', {
         ['@plate'] = plate,
         ['@gb'] = gloveBox and 1 or 0
     }, function(result)
@@ -29,7 +29,7 @@ local function loadTrunk(plate, gloveBox, cb)
             local ok2, weapons = pcall(json.decode, result[1].weapons or '[]')
             cb(ok1 and items or {}, ok2 and weapons or {})
         else
-            exports.oxmysql:execute('INSERT INTO trunk_inventories (plate, glove_box, items, weapons) VALUES (@plate, @gb, @items, @weapons)', {
+            exports.litesql:execute('INSERT INTO trunk_inventories (plate, glove_box, items, weapons) VALUES (@plate, @gb, @items, @weapons)', {
                 ['@plate'] = plate,
                 ['@gb'] = gloveBox and 1 or 0,
                 ['@items'] = '[]',
@@ -41,7 +41,7 @@ local function loadTrunk(plate, gloveBox, cb)
 end
 
 local function saveTrunk(plate, gloveBox, items, weapons)
-    exports.oxmysql:execute('UPDATE trunk_inventories SET items = @items, weapons = @weapons WHERE plate = @plate AND glove_box = @gb', {
+    exports.litesql:execute('UPDATE trunk_inventories SET items = @items, weapons = @weapons WHERE plate = @plate AND glove_box = @gb', {
         ['@plate'] = plate,
         ['@gb'] = gloveBox and 1 or 0,
         ['@items'] = json.encode(items),

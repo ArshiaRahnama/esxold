@@ -1,9 +1,3 @@
--- FIXED: every call in this file used to say ESX.TriggerServerEvent(...), a function
--- that does not exist anywhere in essentialmode (confirmed against both this
--- server and the real ArshiaRahnama/Sunset repo, where the same typo exists
--- in every inventory module) -- every put/get/updateSlot silently failed to
--- ever reach the server. Changed to plain TriggerServerEvent throughout.
-
 RegisterNetEvent('inventory:admin:openInventory', function(target, permission)
     openOtherPlayerInventory(target, true)
 end)
@@ -22,9 +16,9 @@ function openOtherPlayerInventoryOffline(target)
             return sortItems(getOfflinePlayerItem(target))
         elseif data.type == 'moveInside' then
         elseif data.type == 'moveToOther' then
-            TriggerServerEvent('inventory:admin:put', target, data.data)
+            ESX.TriggerServerEvent('inventory:admin:put', target, data.data)
         elseif data.type == 'moveToMain' then
-            TriggerServerEvent('inventory:admin:get', target, data.data)
+            ESX.TriggerServerEvent('inventory:admin:get', target, data.data)
             Wait(500)
             if data.data.droppedTo then
                 data.data.inventoryType = 'main'

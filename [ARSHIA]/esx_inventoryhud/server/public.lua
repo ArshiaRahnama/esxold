@@ -8,7 +8,7 @@ if ESX == nil then
 end
 
 CreateThread(function()
-    exports.oxmysql:execute([[
+    exports.litesql:execute([[
         CREATE TABLE IF NOT EXISTS `public_inventories` (
             `name` VARCHAR(64) NOT NULL PRIMARY KEY,
             `items` LONGTEXT NOT NULL DEFAULT ('[]')
@@ -17,14 +17,14 @@ CreateThread(function()
 end)
 
 local function loadPublic(name, cb)
-    exports.oxmysql:fetch('SELECT items FROM public_inventories WHERE name = @name', {
+    exports.litesql:fetch('SELECT items FROM public_inventories WHERE name = @name', {
         ['@name'] = name
     }, function(result)
         if result and result[1] then
             local ok, items = pcall(json.decode, result[1].items or '[]')
             cb(ok and items or {})
         else
-            exports.oxmysql:execute('INSERT INTO public_inventories (name, items) VALUES (@name, @items)', {
+            exports.litesql:execute('INSERT INTO public_inventories (name, items) VALUES (@name, @items)', {
                 ['@name'] = name,
                 ['@items'] = '[]'
             })
@@ -34,7 +34,7 @@ local function loadPublic(name, cb)
 end
 
 local function savePublic(name, items)
-    exports.oxmysql:execute('UPDATE public_inventories SET items = @items WHERE name = @name', {
+    exports.litesql:execute('UPDATE public_inventories SET items = @items WHERE name = @name', {
         ['@name'] = name,
         ['@items'] = json.encode(items)
     })

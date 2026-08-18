@@ -6,7 +6,7 @@
 -- its own numbered storage, persisted in a `bag_inventories`
 -- table this file creates automatically if missing.
 --
--- Uses oxmysql's real export API directly (exports.oxmysql:execute/
+-- Uses oxmysql's real export API directly (exports.litesql:execute/
 -- fetch/insert) -- the legacy 'MySQL.Async' compatibility shim path
 -- (@oxmysql/lib/MySQL.lua) was found to fail to load on this server
 -- (confirmed in the console log, affecting other resources too), so
@@ -21,7 +21,7 @@ if ESX == nil then
 end
 
 CreateThread(function()
-    exports.oxmysql:execute([[
+    exports.litesql:execute([[
         CREATE TABLE IF NOT EXISTS `bag_inventories` (
             `bag_id` INT NOT NULL PRIMARY KEY,
             `items` LONGTEXT NOT NULL DEFAULT ('[]'),
@@ -51,15 +51,45 @@ CreateThread(function()
     end
 end)
 
+-- ------------------------------------------------------------
+-- Real kool1/kool2/kool3 bag types (modules/bag/common/config.lua's
+-- configBag -- confirmed real, but not connected to anything server-
+-- side before). Each is one distinct owned item (limit = 1, its own
+-- carry weight) that opens its OWN persistent storage (maxWeight from
+-- configBag), separate per player. Reuses the same bag_inventories
+-- table as kif_N, keyed by a stable hash of identifier+type instead
+-- of a sequential id, so no new table/schema is needed.
+-- ------------------------------------------------------------
+local function stableBagId(str)
+    local hash = 5381
+    for i = 1, #str do
+        hash = (hash * 33 + string.byte(str, i)) % 2147483647
+    end
+    return hash
+end
+
+CreateThread(function()
+    if type(configBag) ~= 'table' then return end
+    for bagType, def in pairs(configBag) do
+        TriggerEvent('esx:CreateItem', bagType, def.label or bagType, def.limit or 1, false, true)
+        ESX.RegisterUsableItem(bagType, function(playerId)
+            local xPlayer = ESX.GetPlayerFromId(playerId)
+            if not xPlayer then return end
+            local bagId = stableBagId(xPlayer.identifier .. '_' .. bagType)
+            TriggerClientEvent('inventory-bag:openBag', playerId, bagId, def.maxWeight or 50)
+        end)
+    end
+end)
+
 local function loadBag(bagId, cb)
-    exports.oxmysql:fetch('SELECT items, slots FROM bag_inventories WHERE bag_id = @id', {
+    exports.litesql:fetch('SELECT items, slots FROM bag_inventories WHERE bag_id = @id', {
         ['@id'] = bagId
     }, function(result)
         if result and result[1] then
             local ok, items = pcall(json.decode, result[1].items or '[]')
             cb(ok and items or {}, result[1].slots or 41)
         else
-            exports.oxmysql:execute('INSERT INTO bag_inventories (bag_id, items, slots) VALUES (@id, @items, @slots)', {
+            exports.litesql:execute('INSERT INTO bag_inventories (bag_id, items, slots) VALUES (@id, @items, @slots)', {
                 ['@id'] = bagId,
                 ['@items'] = '[]',
                 ['@slots'] = 41
@@ -70,7 +100,7 @@ local function loadBag(bagId, cb)
 end
 
 local function saveBag(bagId, items)
-    exports.oxmysql:execute('UPDATE bag_inventories SET items = @items WHERE bag_id = @id', {
+    exports.litesql:execute('UPDATE bag_inventories SET items = @items WHERE bag_id = @id', {
         ['@id'] = bagId,
         ['@items'] = json.encode(items)
     })

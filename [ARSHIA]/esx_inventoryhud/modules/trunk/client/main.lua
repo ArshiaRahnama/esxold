@@ -1,9 +1,3 @@
--- FIXED: every call in this file used to say ESX.TriggerServerEvent(...), a function
--- that does not exist anywhere in essentialmode (confirmed against both this
--- server and the real ArshiaRahnama/Sunset repo, where the same typo exists
--- in every inventory module) -- every put/get/updateSlot silently failed to
--- ever reach the server. Changed to plain TriggerServerEvent throughout.
-
 local currentVehicle = 0
 local ownedState = {}
 
@@ -76,7 +70,7 @@ function openTrunk(vehicle, gloveBox)
                             return sortItems(getVehicleTrunk(plate, gloveBox), 'trunk')
                         elseif data.type == 'moveInside' then
                             data.data.gloveBox = gloveBox
-                            TriggerServerEvent('inventory-trunk:updateSlot', plate, data.data)
+                            ESX.TriggerServerEvent('inventory-trunk:updateSlot', plate, data.data)
                         elseif data.type == 'moveToOther' then
                             if ESX.isDead() then return end
                             local used = calculateUsedWeight(plate, gloveBox)
@@ -91,15 +85,15 @@ function openTrunk(vehicle, gloveBox)
                                 if newCount > 0 then
                                     data.data.count = newCount
                                     data.data.realCount = newCount
-                                    TriggerServerEvent('inventory-trunk:put', plate, data.data)
+                                    ESX.TriggerServerEvent('inventory-trunk:put', plate, data.data)
                                 end
                             else
-                                TriggerServerEvent('inventory-trunk:put', plate, data.data)
+                                ESX.TriggerServerEvent('inventory-trunk:put', plate, data.data)
                             end
                         elseif data.type == 'moveToMain' then
                             if ESX.isDead() then return end
                             data.data.gloveBox = gloveBox
-                            TriggerServerEvent('inventory-trunk:get', plate, data.data)
+                            ESX.TriggerServerEvent('inventory-trunk:get', plate, data.data)
                             Wait(500)
                             if data.data.droppedTo then
                                 data.data.inventoryType = 'main'

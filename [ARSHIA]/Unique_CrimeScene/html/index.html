@@ -19,6 +19,9 @@
 			<button id="tabCases" class="tab-btn active">Parvande Ha</button>
 			<button id="tabWanted" class="tab-btn">Takhte Taghib</button>
 			<button id="tabBolo" class="tab-btn">BOLO Ha</button>
+			<button id="tabBooking" class="tab-btn">Bazdasht</button>
+			<button id="tabRecords" class="tab-btn">Sabeghe</button>
+			<button id="tabLeaderboard" class="tab-btn">Amar</button>
 		</div>
 		<button id="closeBtn" class="close-btn">&times;</button>
 	</div>
@@ -39,7 +42,10 @@
 					<div class="detail-header">
 						<div>
 							<div id="caseTitle" class="detail-title"></div>
-							<div id="caseStatus" class="status-pill"></div>
+							<div class="status-row">
+								<div id="caseStatus" class="status-pill"></div>
+								<div id="warrantPill" class="status-pill hidden"></div>
+							</div>
 						</div>
 					</div>
 
@@ -61,6 +67,7 @@
 						<div class="section-title">Eghdamat</div>
 						<div id="referButtons" class="action-row"></div>
 						<div id="matchRow" class="action-row"></div>
+						<div id="warrantRow" class="action-row"></div>
 						<div id="closeRow" class="action-row"></div>
 					</div>
 				</div>
@@ -92,6 +99,48 @@
 			</div>
 
 			<div id="boloList" class="bolo-grid"></div>
+		</div>
+
+		<!-- BOOKING VIEW -->
+		<div id="viewBooking" class="view">
+			<div class="wanted-header">
+				<div class="section-title">Sabte Bazdasht</div>
+				<div class="wanted-sub">Baraye Bazdashte Sahne (Case ID Ra Khali Bezarid) Ya Bazdashte Marboot Be Parvandeye Hokm-Dar</div>
+			</div>
+			<div class="booking-form">
+				<input id="bookingTargetId" type="number" placeholder="Player ID (Baraye Vasl Kardan Be Cad, Ekhtiyari)" />
+				<input id="bookingCaseId" type="number" placeholder="Case ID (Ekhtiyari)" />
+				<input id="bookingSuspect" type="text" placeholder="Esme Mozan" />
+				<textarea id="bookingCharges" placeholder="Ettehamat (Har Khat Yek Ettehame)"></textarea>
+				<div class="booking-form-row">
+					<input id="bookingFine" type="number" placeholder="Jarime ($)" />
+					<input id="bookingJail" type="number" placeholder="Zaman Zendan (Daghighe)" />
+				</div>
+				<button id="submitBookingBtn" class="btn btn-primary">Sabte Bazdasht</button>
+			</div>
+		</div>
+
+		<!-- RECORDS VIEW -->
+		<div id="viewRecords" class="view">
+			<div class="wanted-header">
+				<div class="section-title">Sabegheye Kayfari</div>
+				<div class="wanted-sub">Akharin Bazdasht Ha Va Mahkoomiat Ha</div>
+			</div>
+			<div id="recordsList" class="records-list"></div>
+		</div>
+
+		<!-- LEADERBOARD VIEW -->
+		<div id="viewLeaderboard" class="view">
+			<div class="leaderboard-columns">
+				<div class="leaderboard-col">
+					<div class="section-title">Bartarin Karagahan (DOJ)</div>
+					<div id="investigatorsList" class="leaderboard-list"></div>
+				</div>
+				<div class="leaderboard-col">
+					<div class="section-title">Bartarin Afsaran (Law)</div>
+					<div id="officersList" class="leaderboard-list"></div>
+				</div>
+			</div>
 		</div>
 
 	</div>

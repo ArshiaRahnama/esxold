@@ -1,28 +1,24 @@
 fx_version 'bodacious'
 game 'gta5'
 
-dependency 'oxmysql'
-
 server_scripts {
+    '@litesql/lib/MySQL.lua',
     'server/**.lua',
     'modules/**/server/**.lua'
 }
 client_scripts {
+    'shared/config.lua',
     'client/**.lua',
     'modules/**/client/**.lua'
-}
-
-shared_scripts {
-    'shared/**.lua'
 }
 
 shared_script {
     'modules/**/common/**.lua'
 }
 
-ui_page 'html/index.html'
+ui_page 'ui/index.html'
 
 
 files {
-    'html/**',
+    'ui/**',
 }

@@ -1,9 +1,3 @@
--- FIXED: every call in this file used to say ESX.TriggerServerEvent(...), a function
--- that does not exist anywhere in essentialmode (confirmed against both this
--- server and the real ArshiaRahnama/Sunset repo, where the same typo exists
--- in every inventory module) -- every put/get/updateSlot silently failed to
--- ever reach the server. Changed to plain TriggerServerEvent throughout.
-
 function openJobInventory()
     jobName = ESX.GetPlayerData().job.name
     ESX.UI.Menu.CloseAll()
@@ -13,18 +7,18 @@ function openJobInventory()
         elseif data.type == 'update' then
             return sortItems(getJobInventory(jobName))
         elseif data.type == 'moveInside' then
-            TriggerServerEvent('inventory-job:updateSlot', jobName, data.data)
+            ESX.TriggerServerEvent('inventory-job:updateSlot', jobName, data.data)
         elseif data.type == 'moveToOther' then
             if ESX.isDead() then return end
             local clotheData = exports['sunset_clothe']:getClotheData(data.data.name)
             if not clotheData then
-                TriggerServerEvent('inventory-job:put', jobName, data.data)
+                ESX.TriggerServerEvent('inventory-job:put', jobName, data.data)
             else
                 ESX.Alert('', 'Shoma nemitavanid dar komod job lebas bezarid!', 7000, 'error')
             end
         elseif data.type == 'moveToMain' then
             if ESX.isDead() then return end
-            TriggerServerEvent('inventory-job:get', jobName, data.data)
+            ESX.TriggerServerEvent('inventory-job:get', jobName, data.data)
             Wait(500)
             if data.data.droppedTo then
                 data.data.inventoryType = 'main'

@@ -7,13 +7,13 @@ if ESX == nil then
 end
 
 CreateThread(function()
-    exports.oxmysql:execute([[
+    exports.litesql:execute([[
         CREATE TABLE IF NOT EXISTS `player_worn_clothes` (
             `identifier` VARCHAR(64) NOT NULL PRIMARY KEY,
             `worn` LONGTEXT NOT NULL DEFAULT ('{}')
         )
     ]], {})
-    exports.oxmysql:execute([[
+    exports.litesql:execute([[
         CREATE TABLE IF NOT EXISTS `player_clothe_packs` (
             `pack_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `identifier` VARCHAR(64) NOT NULL,
@@ -29,14 +29,14 @@ local function getClotheType(itemName)
 end
 
 local function loadWorn(identifier, cb)
-    exports.oxmysql:fetch('SELECT worn FROM player_worn_clothes WHERE identifier = @id', {
+    exports.litesql:fetch('SELECT worn FROM player_worn_clothes WHERE identifier = @id', {
         ['@id'] = identifier
     }, function(result)
         if result and result[1] then
             local ok, worn = pcall(json.decode, result[1].worn or '{}')
             cb(ok and worn or {})
         else
-            exports.oxmysql:execute('INSERT INTO player_worn_clothes (identifier, worn) VALUES (@id, @worn)', {
+            exports.litesql:execute('INSERT INTO player_worn_clothes (identifier, worn) VALUES (@id, @worn)', {
                 ['@id'] = identifier,
                 ['@worn'] = '{}'
             })
@@ -46,7 +46,7 @@ local function loadWorn(identifier, cb)
 end
 
 local function saveWorn(identifier, worn)
-    exports.oxmysql:execute('UPDATE player_worn_clothes SET worn = @worn WHERE identifier = @id', {
+    exports.litesql:execute('UPDATE player_worn_clothes SET worn = @worn WHERE identifier = @id', {
         ['@id'] = identifier,
         ['@worn'] = json.encode(worn)
     })
@@ -101,7 +101,7 @@ AddEventHandler('sun-clothe:createPack', function(label)
             return
         end
 
-        exports.oxmysql:insert('INSERT INTO player_clothe_packs (identifier, label, contents) VALUES (@id, @label, @contents)', {
+        exports.litesql:insert('INSERT INTO player_clothe_packs (identifier, label, contents) VALUES (@id, @label, @contents)', {
             ['@id'] = xPlayer.identifier,
             ['@label'] = label,
             ['@contents'] = json.encode(worn)
@@ -114,7 +114,7 @@ AddEventHandler('sun-clothe:createPack', function(label)
                 if not usingPlayer then return end
                 usingPlayer.removeInventoryItem(itemName, 1)
 
-                exports.oxmysql:fetch('SELECT contents FROM player_clothe_packs WHERE pack_id = @pid', {
+                exports.litesql:fetch('SELECT contents FROM player_clothe_packs WHERE pack_id = @pid', {
                     ['@pid'] = packId
                 }, function(result)
                     if not result or not result[1] then return end
@@ -145,7 +145,7 @@ end)
 -- after a resource restart (usable-item registration is in-memory only)
 CreateThread(function()
     Citizen.Wait(2000)
-    exports.oxmysql:fetch('SELECT pack_id, label FROM player_clothe_packs', {}, function(result)
+    exports.litesql:fetch('SELECT pack_id, label FROM player_clothe_packs', {}, function(result)
         if not result then return end
         for _, row in ipairs(result) do
             local itemName = 'pack_' .. row.pack_id
@@ -155,7 +155,7 @@ CreateThread(function()
                 if not usingPlayer then return end
                 usingPlayer.removeInventoryItem(itemName, 1)
 
-                exports.oxmysql:fetch('SELECT contents FROM player_clothe_packs WHERE pack_id = @pid', {
+                exports.litesql:fetch('SELECT contents FROM player_clothe_packs WHERE pack_id = @pid', {
                     ['@pid'] = row.pack_id
                 }, function(res2)
                     if not res2 or not res2[1] then return end
@@ -186,7 +186,7 @@ ESX.RegisterServerCallback('sun-clothe:getPackLabels', function(source, cb, pack
         placeholders[i] = '@p' .. i
         params['@p' .. i] = id
     end
-    exports.oxmysql:fetch('SELECT pack_id, label FROM player_clothe_packs WHERE pack_id IN (' .. table.concat(placeholders, ',') .. ')', params, function(result)
+    exports.litesql:fetch('SELECT pack_id, label FROM player_clothe_packs WHERE pack_id IN (' .. table.concat(placeholders, ',') .. ')', params, function(result)
         local labels = {}
         for _, row in ipairs(result or {}) do
             labels[row.pack_id] = row.label

@@ -8,23 +8,40 @@
 	const tabCases = document.getElementById('tabCases');
 	const tabWanted = document.getElementById('tabWanted');
 	const tabBolo = document.getElementById('tabBolo');
+	const tabBooking = document.getElementById('tabBooking');
+	const tabRecords = document.getElementById('tabRecords');
+	const tabLeaderboard = document.getElementById('tabLeaderboard');
 
 	const caseList = document.getElementById('caseList');
 	const emptyState = document.getElementById('emptyState');
 	const caseContent = document.getElementById('caseContent');
 	const caseTitle = document.getElementById('caseTitle');
 	const caseStatus = document.getElementById('caseStatus');
+	const warrantPill = document.getElementById('warrantPill');
 	const evidenceList = document.getElementById('evidenceList');
 	const notesList = document.getElementById('notesList');
 	const noteInput = document.getElementById('noteInput');
 	const referButtons = document.getElementById('referButtons');
 	const matchRow = document.getElementById('matchRow');
+	const warrantRow = document.getElementById('warrantRow');
 	const closeRow = document.getElementById('closeRow');
 	const wantedList = document.getElementById('wantedList');
 
 	const boloList = document.getElementById('boloList');
 	const checkVehicleBtn = document.getElementById('checkVehicleBtn');
 	const plateResult = document.getElementById('plateResult');
+
+	const bookingTargetId = document.getElementById('bookingTargetId');
+	const bookingCaseId = document.getElementById('bookingCaseId');
+	const bookingSuspect = document.getElementById('bookingSuspect');
+	const bookingCharges = document.getElementById('bookingCharges');
+	const bookingFine = document.getElementById('bookingFine');
+	const bookingJail = document.getElementById('bookingJail');
+	const submitBookingBtn = document.getElementById('submitBookingBtn');
+
+	const recordsList = document.getElementById('recordsList');
+	const investigatorsList = document.getElementById('investigatorsList');
+	const officersList = document.getElementById('officersList');
 
 	let state = {
 		isDojJob: false,
@@ -34,6 +51,7 @@
 		referralJobs: [],
 		cases: [],
 		selectedCaseId: null,
+		currentTab: null,
 	};
 
 	const STATUS_LABELS = {
@@ -43,6 +61,12 @@
 		referred_cia: 'Ersal Be CIA',
 		referred_fbi: 'Ersal Be FBI',
 		closed: 'Baste Shode',
+	};
+
+	const WARRANT_LABELS = {
+		requested: 'Hokm: Darkhast Shode',
+		approved: 'Hokm: Tayid Shode',
+		denied: 'Hokm: Rad Shode',
 	};
 
 	const TYPE_LABELS = {
@@ -147,6 +171,14 @@
 		caseStatus.textContent = STATUS_LABELS[data.case.status] || data.case.status;
 		caseStatus.className = 'status-pill ' + statusClass(data.case.status);
 
+		if (data.case.warrant_status && data.case.warrant_status !== 'none') {
+			warrantPill.textContent = WARRANT_LABELS[data.case.warrant_status] || data.case.warrant_status;
+			warrantPill.className = 'status-pill warrant-' + data.case.warrant_status;
+			warrantPill.classList.remove('hidden');
+		} else {
+			warrantPill.classList.add('hidden');
+		}
+
 		evidenceList.innerHTML = '';
 		if (!data.evidence.length) {
 			evidenceList.innerHTML = '<div class="empty-note">Hanoz Madraki Peida Nashode</div>';
@@ -180,9 +212,11 @@
 
 		referButtons.innerHTML = '';
 		matchRow.innerHTML = '';
+		warrantRow.innerHTML = '';
 		closeRow.innerHTML = '';
 
 		const openLike = data.case.status === 'open' || data.case.status === 'cold';
+		const warrantStatus = data.case.warrant_status || 'none';
 
 		if (openLike) {
 			state.referralJobs.forEach((job) => {
@@ -207,6 +241,28 @@
 				boloBtn.addEventListener('click', () => post('issueBOLO', { id: data.case.id }));
 				matchRow.appendChild(boloBtn);
 			}
+
+			if (warrantStatus === 'none' || warrantStatus === 'denied') {
+				const warrantBtn = document.createElement('button');
+				warrantBtn.className = 'btn btn-outline';
+				warrantBtn.textContent = 'Darkhaste Hokme Bazdasht';
+				warrantBtn.addEventListener('click', () => post('requestWarrant', { id: data.case.id }));
+				warrantRow.appendChild(warrantBtn);
+			}
+		}
+
+		if (state.playerJob === 'judge' && warrantStatus === 'requested') {
+			const approveBtn = document.createElement('button');
+			approveBtn.className = 'btn btn-primary';
+			approveBtn.textContent = 'Tayide Hokm';
+			approveBtn.addEventListener('click', () => post('decideWarrant', { id: data.case.id, approved: true }));
+			warrantRow.appendChild(approveBtn);
+
+			const denyBtn = document.createElement('button');
+			denyBtn.className = 'btn btn-outline';
+			denyBtn.textContent = 'Rade Hokm';
+			denyBtn.addEventListener('click', () => post('decideWarrant', { id: data.case.id, approved: false }));
+			warrantRow.appendChild(denyBtn);
 		}
 
 		if (state.isReferralJob && data.case.status === ('referred_' + state.playerJob)) {
@@ -260,6 +316,56 @@
 		});
 	}
 
+	// ===== Rendering: Records =====
+
+	function renderRecords(list) {
+		recordsList.innerHTML = '';
+		if (!list.length) {
+			recordsList.innerHTML = '<div class="empty-note">Hich Sabeghei Sabt Nashode</div>';
+			return;
+		}
+		list.forEach((row) => {
+			const el = document.createElement('div');
+			el.className = 'record-card';
+			const caseTag = row.case_id ? ` &middot; Parvande #${row.case_id}` : '';
+			el.innerHTML = `
+				<div class="record-suspect">${escapeHtml(row.suspect_name)}${caseTag}</div>
+				<div class="record-charges">${escapeHtml(row.charges)}</div>
+				<div class="record-meta">
+					<span>Jarime: <b>$${escapeHtml(row.fine)}</b></span>
+					<span>Zendan: <b>${escapeHtml(row.jail_minutes)} Daghighe</b></span>
+					<span>Afsar: ${escapeHtml(row.booked_by_name || '?')}</span>
+				</div>
+			`;
+			recordsList.appendChild(el);
+		});
+	}
+
+	// ===== Rendering: Leaderboard =====
+
+	function renderLeaderboardList(container, list, emptyText) {
+		container.innerHTML = '';
+		if (!list.length) {
+			container.innerHTML = `<div class="empty-note">${emptyText}</div>`;
+			return;
+		}
+		list.forEach((row, i) => {
+			const el = document.createElement('div');
+			el.className = 'leaderboard-item';
+			el.innerHTML = `
+				<div class="leaderboard-rank">#${i + 1}</div>
+				<div class="leaderboard-name">${escapeHtml(row.name)}</div>
+				<div class="leaderboard-score">${row.score}</div>
+			`;
+			container.appendChild(el);
+		});
+	}
+
+	function renderLeaderboard(data) {
+		renderLeaderboardList(investigatorsList, data.investigators || [], 'Hanoz Amari Sabt Nashode');
+		renderLeaderboardList(officersList, data.officers || [], 'Hanoz Amari Sabt Nashode');
+	}
+
 	function showPlateResult(found, noVehicle) {
 		plateResult.classList.remove('hidden', 'match', 'clean');
 		if (noVehicle) {
@@ -282,26 +388,65 @@
 		setTimeout(() => { checkVehicleBtn.disabled = false; }, 1500);
 	});
 
+	submitBookingBtn.addEventListener('click', () => {
+		const suspectName = bookingSuspect.value.trim();
+		const charges = bookingCharges.value.trim();
+
+		if (!suspectName || !charges) {
+			alert('Esme Mozan Va Ettehamat Alzami Ast');
+			return;
+		}
+
+		post('createBooking', {
+			targetServerId: bookingTargetId.value ? parseInt(bookingTargetId.value, 10) : null,
+			caseId: bookingCaseId.value ? parseInt(bookingCaseId.value, 10) : null,
+			suspectName,
+			charges,
+			fine: bookingFine.value ? parseInt(bookingFine.value, 10) : 0,
+			jailMinutes: bookingJail.value ? parseInt(bookingJail.value, 10) : 0,
+		});
+
+		bookingTargetId.value = '';
+		bookingCaseId.value = '';
+		bookingSuspect.value = '';
+		bookingCharges.value = '';
+		bookingFine.value = '';
+		bookingJail.value = '';
+	});
+
 	// ===== Tabs =====
 
 	function switchTab(tab) {
 		tabCases.classList.toggle('active', tab === 'cases');
 		tabWanted.classList.toggle('active', tab === 'wanted');
 		tabBolo.classList.toggle('active', tab === 'bolo');
+		tabBooking.classList.toggle('active', tab === 'booking');
+		tabRecords.classList.toggle('active', tab === 'records');
+		tabLeaderboard.classList.toggle('active', tab === 'leaderboard');
 
 		document.getElementById('viewCases').classList.toggle('active', tab === 'cases');
 		document.getElementById('viewWanted').classList.toggle('active', tab === 'wanted');
 		document.getElementById('viewBolo').classList.toggle('active', tab === 'bolo');
+		document.getElementById('viewBooking').classList.toggle('active', tab === 'booking');
+		document.getElementById('viewRecords').classList.toggle('active', tab === 'records');
+		document.getElementById('viewLeaderboard').classList.toggle('active', tab === 'leaderboard');
+
+		state.currentTab = tab;
 
 		if (tab === 'wanted') post('loadWanted', {});
 		if (tab === 'bolo') post('loadBolos', {});
+		if (tab === 'records') post('loadRecords', {});
+		if (tab === 'leaderboard') post('loadLeaderboard', {});
 
-		topbarLabel.textContent = tab === 'bolo' ? 'LAW ENFORCEMENT // BOLO' : 'DOJ // Parvande Haye Baz';
+		topbarLabel.textContent = (tab === 'bolo' || tab === 'booking') ? 'LAW ENFORCEMENT // ' + tab.toUpperCase() : 'DOJ // ' + tab.toUpperCase();
 	}
 
 	tabCases.addEventListener('click', () => switchTab('cases'));
 	tabWanted.addEventListener('click', () => switchTab('wanted'));
 	tabBolo.addEventListener('click', () => switchTab('bolo'));
+	tabBooking.addEventListener('click', () => switchTab('booking'));
+	tabRecords.addEventListener('click', () => switchTab('records'));
+	tabLeaderboard.addEventListener('click', () => switchTab('leaderboard'));
 
 	// ===== Actions =====
 
@@ -343,6 +488,9 @@
 				tabCases.classList.toggle('hidden', !state.isDojJob);
 				tabWanted.classList.toggle('hidden', !state.isDojJob);
 				tabBolo.classList.toggle('hidden', !state.isLawJob);
+				tabBooking.classList.toggle('hidden', !state.isLawJob);
+				tabRecords.classList.toggle('hidden', !(state.isDojJob || state.isLawJob));
+				tabLeaderboard.classList.toggle('hidden', !(state.isDojJob || state.isLawJob));
 
 				board.classList.remove('hidden');
 				switchTab(state.isDojJob ? 'cases' : 'bolo');
@@ -372,6 +520,18 @@
 
 			case 'bolos':
 				renderBolos(msg.list || []);
+				break;
+
+			case 'records':
+				renderRecords(msg.list || []);
+				break;
+
+			case 'leaderboard':
+				renderLeaderboard(msg.data || { investigators: [], officers: [] });
+				break;
+
+			case 'recordsStale':
+				if (state.currentTab === 'records') post('loadRecords', {});
 				break;
 
 			case 'boloAlert':

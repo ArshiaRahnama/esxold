@@ -80,7 +80,7 @@ ESX.RegisterServerCallback('inventory:getOfflinePlayerInventory', function(sourc
         return
     end
 
-    exports.oxmysql:fetch('SELECT inventory, loadout FROM users WHERE identifier = @identifier', {
+    exports.litesql:fetch('SELECT inventory, loadout FROM users WHERE identifier = @identifier', {
         ['@identifier'] = target
     }, function(result)
         if not result or not result[1] then

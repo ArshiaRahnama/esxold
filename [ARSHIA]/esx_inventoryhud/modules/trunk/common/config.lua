@@ -1,6 +1,6 @@
 configTrunk = {}
 configTrunk.blackListVehicles = {
-    ['kcamozesh'] = true,
+    [`kcamozesh`] = true,
 }
 
 configTrunk.customLimit = {

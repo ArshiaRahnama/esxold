@@ -157,6 +157,8 @@ html, body {
 .detail-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
 .detail-title { font-size: 19px; font-weight: 800; color: #f2c14e; margin-bottom: 6px; }
 
+.status-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
 .status-pill {
 	display: inline-block;
 	padding: 3px 12px;
@@ -171,6 +173,9 @@ html, body {
 .status-pill.cold { background: #3a4a5c; }
 .status-pill.referred { background: #7a1f1f; }
 .status-pill.closed { background: #4a3f2e; }
+.status-pill.warrant-requested { background: #7a5c1f; color: #ffe9b3; }
+.status-pill.warrant-approved { background: #2c5f2d; }
+.status-pill.warrant-denied { background: #7a1f1f; }
 
 .section { margin-bottom: 22px; }
 .section-title {
@@ -394,3 +399,86 @@ html, body {
 	margin-bottom: 6px;
 }
 .bolo-meta { font-size: 11.5px; color: #8a7d63; }
+
+/* ===== Booking form ===== */
+.booking-form {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 6px 24px 24px;
+	max-width: 480px;
+}
+
+.booking-form input,
+.booking-form textarea {
+	background: #14110c;
+	border: 1px solid #3a3226;
+	border-radius: 6px;
+	color: #efe7d6;
+	font-family: inherit;
+	font-size: 12.5px;
+	padding: 9px 12px;
+}
+.booking-form textarea { min-height: 70px; resize: vertical; }
+
+.booking-form-row { display: flex; gap: 10px; }
+.booking-form-row input { flex: 1; }
+
+/* ===== Records ===== */
+.records-list {
+	padding: 6px 24px 24px;
+	overflow-y: auto;
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.record-card {
+	background: #221b13;
+	border: 1px solid #4a3f2e;
+	border-left: 4px solid #f2c14e;
+	border-radius: 6px;
+	padding: 12px 14px;
+	animation: cardIn 0.3s ease both;
+}
+.record-suspect { font-weight: 700; font-size: 14px; color: #efe7d6; margin-bottom: 4px; }
+.record-charges { font-size: 12px; color: #d8cdb8; white-space: pre-line; margin-bottom: 6px; }
+.record-meta { font-size: 11px; color: #8a7d63; display: flex; gap: 14px; flex-wrap: wrap; }
+.record-meta b { color: #f2c14e; }
+
+/* ===== Leaderboard ===== */
+.leaderboard-columns {
+	display: flex;
+	gap: 20px;
+	padding: 20px 24px;
+	height: 100%;
+	overflow-y: auto;
+}
+.leaderboard-col { flex: 1; }
+
+.leaderboard-list { display: flex; flex-direction: column; gap: 8px; }
+
+.leaderboard-item {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	background: #221b13;
+	border: 1px solid #4a3f2e;
+	border-radius: 6px;
+	padding: 10px 14px;
+	animation: cardIn 0.3s ease both;
+}
+.leaderboard-rank {
+	font-family: 'JetBrains Mono', monospace;
+	font-weight: 800;
+	font-size: 14px;
+	color: #6f6350;
+	width: 24px;
+}
+.leaderboard-item:nth-child(1) .leaderboard-rank { color: #f2c14e; }
+.leaderboard-item:nth-child(2) .leaderboard-rank { color: #c9c9c9; }
+.leaderboard-item:nth-child(3) .leaderboard-rank { color: #c98a4b; }
+.leaderboard-name { flex: 1; font-size: 13px; color: #efe7d6; }
+.leaderboard-score { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #f2c14e; }

@@ -54,6 +54,15 @@ local function IsReferralJob(job)
     return false
 end
 
+-- Gangs in this framework are registered as regular ESX jobs (see
+-- Unique_Gangs' essentialmode:addGang), so "is this person in a gang" is
+-- just "is their job anything other than a known legit job".
+local function GuessGangJob(jobName)
+    if not jobName or jobName == 'unemployed' then return nil end
+    if IsDOJJob(jobName) or IsLawEnforcementJob(jobName) or IsReferralJob(jobName) then return nil end
+    return jobName
+end
+
 -- Shop_3 -> Shop, Palateo_Bank -> Palateo_Bank, Jaw_Shahr -> Jaw
 local function GuessRobFamily(robname)
     if robname:find('^Jaw') then return 'Jaw' end
@@ -97,6 +106,34 @@ local function ClearBOLOsForCase(caseId)
             ActiveBOLOs[plate] = nil
         end
     end
+end
+
+-- ============================================================
+-- Unique_Cad (DuckMdt) integration helpers
+-- ============================================================
+-- These just TriggerEvent the same events Unique_Cad's own NUI calls
+-- server-side. If Unique_Cad isn't installed, nothing is listening for
+-- these event names and the call is a harmless no-op.
+
+local function PushCadVehicleStatus(plate, level)
+    if not Config.CadIntegration or not plate then return end
+    TriggerEvent('DuckMdt:UpdateCarStatus', level, plate)
+end
+
+local function PushCadCitizenStatus(identifier, level)
+    if not Config.CadIntegration or not identifier then return end
+    TriggerEvent('DuckMdt:UpdateCharacterStatus', level, identifier)
+end
+
+-- Unique_Cad's incident log (`duckcad_data`) is keyed by a real identifier,
+-- so this only ever gets called once we actually have one (e.g. an officer
+-- linked a booking to a specific online player).
+local function PushCadIncidentNote(identifier, authorName, note)
+    if not Config.CadIntegration or not identifier then return end
+    MySQL.Async.execute(
+        'INSERT INTO duckcad_data (secondryid, steam, reason, author) VALUES (0, @steam, @reason, @author)',
+        { ['@steam'] = identifier, ['@reason'] = note, ['@author'] = authorName }
+    )
 end
 
 local function FindNearbyVehiclePlate(coords)
@@ -340,6 +377,62 @@ AddEventHandler('CrimeScene:addNote', function(caseId, note)
 end)
 
 -- ============================================================
+-- Warrants -- DOJ requests, only Judge decides. Approval is required
+-- before a case's booking can be linked back to it (Config below).
+-- ============================================================
+
+RegisterServerEvent('CrimeScene:requestWarrant')
+AddEventHandler('CrimeScene:requestWarrant', function(caseId)
+    local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
+    if not xPlayer or not IsDOJJob(xPlayer.job.name) then return end
+
+    MySQL.Async.execute(
+        "UPDATE doj_cases SET warrant_status = 'requested', warrant_requested_by = @by WHERE id = @id AND warrant_status IN ('none','denied')",
+        { ['@by'] = xPlayer.name, ['@id'] = caseId },
+        function(rowsChanged)
+            if not rowsChanged or rowsChanged == 0 then
+                TriggerClientEvent('esx:showNotification', _source, 'In Parvande Hokme Darkhast Shode Ya Tayid Shode Darad', 'error')
+                return
+            end
+            NotifyJobs({ 'judge' }, xPlayer.name .. ' Darkhaste Hokm Baraye Parvande #' .. caseId .. ' Dad. /doj Bezanid.', 'info')
+            TriggerClientEvent('esx:showNotification', _source, 'Darkhaste Hokm Ersal Shod', 'success')
+            TriggerClientEvent('CrimeScene:refreshCase', _source, caseId)
+        end
+    )
+end)
+
+RegisterServerEvent('CrimeScene:decideWarrant')
+AddEventHandler('CrimeScene:decideWarrant', function(caseId, approved)
+    local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
+    if not xPlayer or xPlayer.job.name ~= 'judge' then return end
+
+    local newStatus = approved and 'approved' or 'denied'
+
+    MySQL.Async.execute(
+        "UPDATE doj_cases SET warrant_status = @status, warrant_decided_by = @by WHERE id = @id AND warrant_status = 'requested'",
+        { ['@status'] = newStatus, ['@by'] = xPlayer.name, ['@id'] = caseId },
+        function(rowsChanged)
+            if not rowsChanged or rowsChanged == 0 then return end
+
+            MySQL.Async.execute(
+                'INSERT INTO doj_case_notes (case_id, author, author_name, note) VALUES (@case_id, @author, @author_name, @note)',
+                {
+                    ['@case_id']     = caseId,
+                    ['@author']      = 'SYSTEM',
+                    ['@author_name'] = 'Judge',
+                    ['@note']        = 'Hokme Bazdasht ' .. (approved and 'TAYID' or 'RAD') .. ' Shod Tavasote ' .. xPlayer.name,
+                }
+            )
+
+            NotifyJobs(Config.DOJJobs, 'Hokme Parvande #' .. caseId .. ' ' .. (approved and 'Tayid' or 'Rad') .. ' Shod.', approved and 'success' or 'error')
+            BroadcastToJobs(Config.DOJJobs, 'CrimeScene:refreshCase', caseId)
+        end
+    )
+end)
+
+-- ============================================================
 -- Referral (CID/DOJ field jobs -> Judge/CIA/FBI)
 -- ============================================================
 
@@ -384,9 +477,25 @@ AddEventHandler('CrimeScene:closeCase', function(caseId, verdict)
     local xPlayer = ESX.GetPlayerFromId(_source)
     if not xPlayer or not IsReferralJob(xPlayer.job.name) then return end
 
-    MySQL.Async.execute('UPDATE doj_cases SET status = @newstatus WHERE id = @id', { ['@newstatus'] = 'closed', ['@id'] = caseId })
+    MySQL.Async.execute(
+        'UPDATE doj_cases SET status = @newstatus, closed_by_name = @closedBy WHERE id = @id',
+        { ['@newstatus'] = 'closed', ['@closedBy'] = xPlayer.name, ['@id'] = caseId }
+    )
     ClearBOLOsForCase(caseId)
     BroadcastToJobs(Config.LawEnforcementJobs, 'CrimeScene:boloListUpdated')
+
+    -- Case resolved: clear any wanted flags this investigation put on the
+    -- suspect / their vehicles in Unique_Cad's MDT.
+    MySQL.Async.fetchAll('SELECT suspect_identifier FROM doj_cases WHERE id = @id', { ['@id'] = caseId }, function(caseRows)
+        local identifier = caseRows and caseRows[1] and caseRows[1].suspect_identifier
+        PushCadCitizenStatus(identifier, Config.CadWantedLevels.standard)
+    end)
+    MySQL.Async.fetchAll("SELECT DISTINCT plate FROM doj_case_evidence WHERE case_id = @id AND plate IS NOT NULL", { ['@id'] = caseId }, function(plateRows)
+        if not plateRows then return end
+        for i = 1, #plateRows do
+            PushCadVehicleStatus(plateRows[i].plate, Config.CadWantedLevels.standard)
+        end
+    end)
 
     if verdict and verdict ~= '' then
         MySQL.Async.execute(
@@ -426,6 +535,7 @@ AddEventHandler('CrimeScene:issueBOLO', function(caseId)
 
             local plate = rows[1].plate
             ActiveBOLOs[plate] = { caseId = caseId, issuedBy = xPlayer.name, issuedAt = os.time() }
+            PushCadVehicleStatus(plate, Config.CadWantedLevels.wanted)
 
             BroadcastToJobs(Config.LawEnforcementJobs, 'CrimeScene:newBOLO', plate, caseId)
             BroadcastToJobs(Config.LawEnforcementJobs, 'CrimeScene:boloListUpdated')
@@ -478,6 +588,7 @@ AddEventHandler('CrimeScene:checkPlate', function(plate)
     -- solved: this BOLO doesn't need to be checked for anymore, take it off
     -- the board for everyone
     ActiveBOLOs[plate] = nil
+    PushCadVehicleStatus(plate, Config.CadWantedLevels.standard)
     BroadcastToJobs(Config.LawEnforcementJobs, 'CrimeScene:boloListUpdated')
 
     TriggerEvent(
@@ -500,6 +611,151 @@ ESX.RegisterServerCallback('CrimeScene:getActiveBOLOs', function(source, cb)
     end
     table.sort(list, function(a, b) return a.issuedAt > b.issuedAt end)
     cb(list)
+end)
+
+-- ============================================================
+-- Booking -- Law Enforcement logs an arrest (charges, fine, jail time).
+-- Linking it to a case requires an approved warrant on that case; a
+-- caught-red-handed arrest (no case) never needs one.
+-- ============================================================
+
+RegisterServerEvent('CrimeScene:createBooking')
+AddEventHandler('CrimeScene:createBooking', function(caseId, suspectName, charges, fine, jailMinutes, targetServerId)
+    local _source = source
+    local xPlayer = ESX.GetPlayerFromId(_source)
+    if not xPlayer or not IsLawEnforcementJob(xPlayer.job.name) then return end
+
+    if not suspectName or suspectName == '' or not charges or charges == '' then
+        TriggerClientEvent('esx:showNotification', _source, 'Esme Mozan Va Ettehamat Alzami Ast', 'error')
+        return
+    end
+
+    fine = tonumber(fine) or 0
+    jailMinutes = tonumber(jailMinutes) or 0
+
+    -- If the officer gave an in-game player id, resolve them so the booking
+    -- links to a real identifier -- this is what lets it sync into
+    -- Unique_Cad's MDT (wanted flag + incident log), not just our own tab.
+    local targetIdentifier, targetName, targetJobName = nil, nil, nil
+    targetServerId = tonumber(targetServerId)
+    if targetServerId then
+        local xTarget = ESX.GetPlayerFromId(targetServerId)
+        if xTarget then
+            targetIdentifier = xTarget.identifier
+            targetName = xTarget.name
+            targetJobName = xTarget.job.name
+            suspectName = targetName -- trust the real character name over free-typed text
+        end
+    end
+
+    local function insertBooking()
+        MySQL.Async.insert(
+            'INSERT INTO doj_criminal_records (case_id, suspect_identifier, suspect_name, charges, fine, jail_minutes, booked_by, booked_by_name) VALUES (@case_id, @suspect_identifier, @suspect_name, @charges, @fine, @jail_minutes, @booked_by, @booked_by_name)',
+            {
+                ['@case_id']            = caseId,
+                ['@suspect_identifier'] = targetIdentifier,
+                ['@suspect_name']       = suspectName,
+                ['@charges']            = charges,
+                ['@fine']               = fine,
+                ['@jail_minutes']       = jailMinutes,
+                ['@booked_by']          = xPlayer.identifier,
+                ['@booked_by_name']     = xPlayer.name,
+            },
+            function(recordId)
+                if not recordId or recordId == 0 then return end
+                TriggerClientEvent('esx:showNotification', _source, 'Bazdasht Sabt Shod', 'success')
+                BroadcastToJobs(Config.DOJJobs, 'CrimeScene:recordsUpdated')
+                BroadcastToJobs(Config.LawEnforcementJobs, 'CrimeScene:recordsUpdated')
+
+                if targetIdentifier then
+                    PushCadCitizenStatus(targetIdentifier, Config.CadWantedLevels.arrested)
+                    PushCadIncidentNote(
+                        targetIdentifier, xPlayer.name,
+                        'Bazdasht: ' .. charges .. ' | Jarime: $' .. fine .. ' | Zendan: ' .. jailMinutes .. ' daghighe'
+                        .. (caseId and caseId ~= 0 and (' | Parvande #' .. caseId) or '')
+                    )
+
+                    if Config.PrisonBreak.enabled and jailMinutes >= Config.PrisonBreak.minJailMinutesToTrigger then
+                        local gangJob = GuessGangJob(targetJobName)
+                        StartPrisonerTransport(_source, targetIdentifier, suspectName, gangJob, recordId)
+                    end
+                end
+
+                TriggerEvent(
+                    'DiscordBot:ToDiscord', 'rob', "Crime Scene",
+                    "```css\n[Booking] : " .. suspectName ..
+                    "\n[Charges] : " .. charges ..
+                    "\n[Fine] : " .. fine ..
+                    "\n[Jail] : " .. jailMinutes .. " min" ..
+                    "\n[Officer] : " .. xPlayer.name .. "\n```",
+                    'user', _source, true, false
+                )
+            end
+        )
+    end
+
+    if not caseId or caseId == 0 then
+        insertBooking()
+        return
+    end
+
+    MySQL.Async.fetchAll('SELECT warrant_status FROM doj_cases WHERE id = @id', { ['@id'] = caseId }, function(rows)
+        if not rows or not rows[1] or rows[1].warrant_status ~= 'approved' then
+            TriggerClientEvent('esx:showNotification', _source, 'In Parvande Hokme Tayid Shode Nadarad', 'error')
+            return
+        end
+        insertBooking()
+    end)
+end)
+
+-- ============================================================
+-- Criminal records -- shared "rap sheet" view for DOJ + Law Enforcement
+-- ============================================================
+
+ESX.RegisterServerCallback('CrimeScene:getRecords', function(source, cb)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if not xPlayer or not (IsDOJJob(xPlayer.job.name) or IsLawEnforcementJob(xPlayer.job.name)) then
+        cb({})
+        return
+    end
+
+    MySQL.Async.fetchAll(
+        'SELECT * FROM doj_criminal_records ORDER BY created_at DESC LIMIT 40',
+        {},
+        function(result) cb(result or {}) end
+    )
+end)
+
+-- ============================================================
+-- Leaderboard -- top investigators (DOJ) and top officers (Law)
+-- ============================================================
+
+ESX.RegisterServerCallback('CrimeScene:getLeaderboard', function(source, cb)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if not xPlayer or not (IsDOJJob(xPlayer.job.name) or IsLawEnforcementJob(xPlayer.job.name)) then
+        cb({ investigators = {}, officers = {} })
+        return
+    end
+
+    MySQL.Async.fetchAll([[
+        SELECT found_by_name AS name, COUNT(*) as score
+        FROM doj_case_evidence
+        WHERE found_by_name IS NOT NULL
+        GROUP BY found_by_name
+        ORDER BY score DESC
+        LIMIT 10
+    ]], {}, function(investigators)
+        MySQL.Async.fetchAll([[
+            SELECT booked_by_name AS name, COUNT(*) as score
+            FROM doj_criminal_records
+            WHERE booked_by_name IS NOT NULL
+            GROUP BY booked_by_name
+            ORDER BY score DESC
+            LIMIT 10
+        ]], {}, function(officers)
+            cb({ investigators = investigators or {}, officers = officers or {} })
+        end)
+    end)
 end)
 
 -- ============================================================
@@ -540,10 +796,11 @@ AddEventHandler('CrimeScene:runFingerprintMatch', function(caseId)
                     end
 
                     MySQL.Async.fetchAll(
-                        'SELECT c.suspect_name FROM doj_cases c JOIN doj_case_evidence e ON e.case_id = c.id WHERE e.suspect_hint_id = @hint_id ORDER BY e.created_at DESC LIMIT 1',
+                        'SELECT c.suspect_name, c.suspect_identifier FROM doj_cases c JOIN doj_case_evidence e ON e.case_id = c.id WHERE e.suspect_hint_id = @hint_id ORDER BY e.created_at DESC LIMIT 1',
                         { ['@hint_id'] = hintId },
                         function(matchRows)
                             local suspectName = matchRows and matchRows[1] and matchRows[1].suspect_name or 'Nashenakhte'
+                            local suspectIdentifier = matchRows and matchRows[1] and matchRows[1].suspect_identifier or nil
 
                             MySQL.Async.execute(
                                 'INSERT INTO doj_case_notes (case_id, author, author_name, note) VALUES (@case_id, @author, @author_name, @note)',
@@ -554,6 +811,8 @@ AddEventHandler('CrimeScene:runFingerprintMatch', function(caseId)
                                     ['@note']        = 'MATCH PEIDA SHOD (' .. hits .. ' Sarnakh Motabegh): Fard Mashkook Ehtemalan ^2' .. suspectName .. '^0 Ast',
                                 }
                             )
+
+                            PushCadCitizenStatus(suspectIdentifier, Config.CadWantedLevels.wanted)
 
                             TriggerClientEvent('esx:showNotification', _source, 'Match Peida Shod! Parvande Update Shod.', 'success')
                             TriggerClientEvent('CrimeScene:refreshCase', _source, caseId)
@@ -633,4 +892,145 @@ ESX.RegisterServerCallback('CrimeScene:getCaseDetail', function(source, cb, case
             end)
         end)
     end)
+end)
+
+-- ============================================================
+-- Prisoner Transport / Prison Break
+-- ============================================================
+-- Triggered from createBooking above when a booking has real jail time and
+-- is linked to a real online player. The escorting officer's client spawns
+-- a physical van + prisoner ped and has to drive it to the prison; the
+-- suspect's gang (if any, per GuessGangJob) gets a real window to fight
+-- their way to a disabled van and free them with /freeprisoner.
+-- Global (not local) on purpose: it's called from createBooking's callback
+-- above, which runs after this whole file has already loaded, so a plain
+-- global lookup at call time is safe -- same pattern this file already
+-- uses for GetPlayers()-style helpers.
+
+local ActiveTransports = {} -- [transportId] = { officerSource, suspectIdentifier, suspectName, gangJob, recordId, status, lastCoords, lastEngineHealth }
+local NextTransportId = 0
+
+function FinishTransport(transportId, outcome)
+    local t = ActiveTransports[transportId]
+    if not t or t.status ~= 'enroute' then return end
+    t.status = outcome
+
+    TriggerClientEvent('CrimeScene:transportEnded', -1, transportId, outcome)
+
+    if outcome == 'delivered' then
+        PushCadCitizenStatus(t.suspectIdentifier, Config.CadWantedLevels.in_prison)
+        NotifyJobs(Config.LawEnforcementJobs, 'Zendani ^2' .. t.suspectName .. '^0 Ba Movafaghiat Be Zendan Resid.', 'success')
+        MySQL.Async.execute(
+            'INSERT INTO doj_case_notes (case_id, author, author_name, note) SELECT case_id, "SYSTEM", "Prisoner Transport", @note FROM doj_criminal_records WHERE id = @id AND case_id IS NOT NULL',
+            { ['@id'] = t.recordId, ['@note'] = 'Enteghal Movafagh - Zendani Be Zendan Resid' }
+        )
+    elseif outcome == 'rescued' then
+        PushCadCitizenStatus(t.suspectIdentifier, Config.CadWantedLevels.wanted)
+        NotifyJobs(Config.LawEnforcementJobs, 'Zendani ^1' .. t.suspectName .. '^0 Tavasote Hamdastanash Azad Shod!', 'error')
+        if t.gangJob then
+            NotifyJobs({ t.gangJob }, 'Hamdastetun ^2' .. t.suspectName .. '^0 Azad Shod!', 'success')
+        end
+        MySQL.Async.execute('UPDATE doj_criminal_records SET jail_minutes = 0 WHERE id = @id', { ['@id'] = t.recordId })
+        MySQL.Async.execute(
+            'INSERT INTO doj_case_notes (case_id, author, author_name, note) SELECT case_id, "SYSTEM", "Prisoner Transport", @note FROM doj_criminal_records WHERE id = @id AND case_id IS NOT NULL',
+            { ['@id'] = t.recordId, ['@note'] = 'FARAR: Zendani Hangame Enteghal Tavasote Hamdastan Azad Shod' }
+        )
+    end
+
+    SetTimeout(60000, function() ActiveTransports[transportId] = nil end)
+end
+
+function StartPrisonerTransport(officerSource, suspectIdentifier, suspectName, gangJob, recordId)
+    local officerPed = GetPlayerPed(officerSource)
+    if not officerPed or officerPed == 0 then return end
+
+    NextTransportId = NextTransportId + 1
+    local transportId = NextTransportId
+    local startCoords = GetEntityCoords(officerPed)
+
+    ActiveTransports[transportId] = {
+        officerSource     = officerSource,
+        suspectIdentifier = suspectIdentifier,
+        suspectName       = suspectName,
+        gangJob           = gangJob,
+        recordId          = recordId,
+        status            = 'enroute',
+        lastCoords        = startCoords,
+        lastEngineHealth  = 1000.0,
+    }
+
+    TriggerClientEvent('CrimeScene:startPrisonTransport', officerSource, transportId, startCoords, Config.PrisonBreak.prisonCoords, suspectName)
+    BroadcastToJobs(Config.LawEnforcementJobs, 'CrimeScene:transportAlert', transportId, startCoords, Config.PrisonBreak.prisonCoords, suspectName)
+    NotifyJobs(Config.LawEnforcementJobs, 'Enteghale Zendani ^2' .. suspectName .. '^0 Shoro Shod - Eskort Konid!', 'info')
+
+    if gangJob then
+        BroadcastToJobs({ gangJob }, 'CrimeScene:transportAlert', transportId, startCoords, Config.PrisonBreak.prisonCoords, suspectName)
+        NotifyJobs({ gangJob }, 'Hamdaste Shoma ^1' .. suspectName .. '^0 Dare Montaghel Mishe Zendan! Vaghte Nejat Kame!', 'error')
+    end
+
+    SetTimeout(Config.PrisonBreak.windowSeconds * 1000, function()
+        FinishTransport(transportId, 'delivered')
+    end)
+end
+
+-- Officer's client reports the van's position/health every few seconds so
+-- the server has something to validate /freeprisoner against without
+-- needing a direct entity reference (entities aren't shared across the
+-- client/server boundary the same way).
+RegisterServerEvent('CrimeScene:transportTick')
+AddEventHandler('CrimeScene:transportTick', function(transportId, coords, engineHealth)
+    local _source = source
+    local t = ActiveTransports[transportId]
+    if not t or t.officerSource ~= _source or t.status ~= 'enroute' then return end
+    t.lastCoords = coords
+    t.lastEngineHealth = engineHealth
+end)
+
+RegisterServerEvent('CrimeScene:reportTransportArrived')
+AddEventHandler('CrimeScene:reportTransportArrived', function(transportId)
+    local _source = source
+    local t = ActiveTransports[transportId]
+    if not t or t.officerSource ~= _source then return end
+    FinishTransport(transportId, 'delivered')
+end)
+
+RegisterCommand('freeprisoner', function(source, args)
+    local transportId = tonumber(args[1])
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if not xPlayer or not transportId then return end
+
+    local t = ActiveTransports[transportId]
+    if not t or t.status ~= 'enroute' then
+        TriggerClientEvent('esx:showNotification', source, 'In Enteghal Digar Faal Nist', 'error')
+        return
+    end
+
+    if not t.gangJob or xPlayer.job.name ~= t.gangJob then
+        TriggerClientEvent('esx:showNotification', source, 'Shoma Dastresi Nadarid', 'error')
+        return
+    end
+
+    if t.lastEngineHealth > Config.PrisonBreak.engineHealthDisabledThreshold then
+        TriggerClientEvent('esx:showNotification', source, 'Avval Bayad Van Ra Az Kar Bendazid', 'error')
+        return
+    end
+
+    local ped = GetPlayerPed(source)
+    local pCoords = GetEntityCoords(ped)
+    if #(pCoords - t.lastCoords) > Config.PrisonBreak.freeDistance then
+        TriggerClientEvent('esx:showNotification', source, 'Shoma Be Van Nazdik Nistid', 'error')
+        return
+    end
+
+    FinishTransport(transportId, 'rescued')
+end, false)
+
+-- Safety net: if the escorting officer disconnects mid-transport, don't
+-- leave it stuck forever -- give benefit of the doubt and close it out.
+AddEventHandler('esx:playerDropped', function(playerId)
+    for transportId, t in pairs(ActiveTransports) do
+        if t.officerSource == playerId and t.status == 'enroute' then
+            FinishTransport(transportId, 'delivered')
+        end
+    end
 end)

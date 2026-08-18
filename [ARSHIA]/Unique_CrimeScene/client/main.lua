@@ -337,6 +337,40 @@ RegisterNUICallback('issueBOLO', function(data, cb)
     cb({})
 end)
 
+RegisterNUICallback('requestWarrant', function(data, cb)
+    TriggerServerEvent('CrimeScene:requestWarrant', data.id)
+    cb({})
+end)
+
+RegisterNUICallback('decideWarrant', function(data, cb)
+    TriggerServerEvent('CrimeScene:decideWarrant', data.id, data.approved)
+    cb({})
+end)
+
+RegisterNUICallback('createBooking', function(data, cb)
+    TriggerServerEvent('CrimeScene:createBooking', data.caseId, data.suspectName, data.charges, data.fine, data.jailMinutes, data.targetServerId)
+    cb({})
+end)
+
+RegisterNUICallback('loadRecords', function(data, cb)
+    ESX.TriggerServerCallback('CrimeScene:getRecords', function(list)
+        SendNUIMessage({ action = 'records', list = list })
+        cb({})
+    end)
+end)
+
+RegisterNUICallback('loadLeaderboard', function(data, cb)
+    ESX.TriggerServerCallback('CrimeScene:getLeaderboard', function(data2)
+        SendNUIMessage({ action = 'leaderboard', data = data2 })
+        cb({})
+    end)
+end)
+
+RegisterNetEvent('CrimeScene:recordsUpdated')
+AddEventHandler('CrimeScene:recordsUpdated', function()
+    SendNUIMessage({ action = 'recordsStale' })
+end)
+
 RegisterNUICallback('loadWanted', function(data, cb)
     ESX.TriggerServerCallback('CrimeScene:getWantedBoard', function(list)
         SendNUIMessage({ action = 'wanted', list = list })
@@ -357,4 +391,135 @@ end)
 RegisterNUICallback('close', function(data, cb)
     SetNuiFocus(false, false)
     cb({})
+end)
+
+-- ============================================================
+-- Prisoner Transport / Prison Break
+-- ============================================================
+
+local TransportBlips = {} -- [transportId] = { startBlip, destBlip }
+
+local function ClearTransportBlips(transportId)
+    local b = TransportBlips[transportId]
+    if not b then return end
+    if b.startBlip then RemoveBlip(b.startBlip) end
+    if b.destBlip then RemoveBlip(b.destBlip) end
+    TransportBlips[transportId] = nil
+end
+
+-- Shown to Law Enforcement (escort duty) and the suspect's gang (rescue
+-- window) alike -- just awareness blips, not the live van position.
+RegisterNetEvent('CrimeScene:transportAlert')
+AddEventHandler('CrimeScene:transportAlert', function(transportId, startCoords, prisonCoords, suspectName)
+    local startBlip = AddBlipForCoord(startCoords.x, startCoords.y, startCoords.z)
+    SetBlipSprite(startBlip, 280)
+    SetBlipColour(startBlip, 3)
+    SetBlipScale(startBlip, 0.8)
+    BeginTextCommandSetBlipName('STRING')
+    AddTextComponentString('Shoroe Enteghal: ' .. suspectName)
+    EndTextCommandSetBlipName(startBlip)
+
+    local destBlip = AddBlipForCoord(prisonCoords.x, prisonCoords.y, prisonCoords.z)
+    SetBlipSprite(destBlip, 351)
+    SetBlipColour(destBlip, 1)
+    SetBlipScale(destBlip, 0.9)
+    BeginTextCommandSetBlipName('STRING')
+    AddTextComponentString('Zendan')
+    EndTextCommandSetBlipName(destBlip)
+
+    TransportBlips[transportId] = { startBlip = startBlip, destBlip = destBlip }
+
+    if IsLawEnforcementJob() then
+        lib.notify({ title = 'Enteghale Zendani', description = suspectName .. ' - Eskort Konid', type = 'info', duration = 9000 })
+    else
+        lib.notify({
+            title = 'Forsate Nejat',
+            description = suspectName .. ' Dare Montaghel Mishe! Baraye Azad Kardan: /freeprisoner ' .. transportId,
+            type = 'error',
+            duration = 12000,
+        })
+    end
+end)
+
+RegisterNetEvent('CrimeScene:transportEnded')
+AddEventHandler('CrimeScene:transportEnded', function(transportId, outcome)
+    ClearTransportBlips(transportId)
+end)
+
+-- Only fires for the officer whose client actually spawned the convoy.
+RegisterNetEvent('CrimeScene:startPrisonTransport')
+AddEventHandler('CrimeScene:startPrisonTransport', function(transportId, startCoords, prisonCoords, suspectName)
+    local vanModelHash = GetHashKey(Config.PrisonBreak.vanModel)
+    local prisonerModelHash = GetHashKey(Config.PrisonBreak.prisonerPedModel)
+
+    RequestModel(vanModelHash)
+    RequestModel(prisonerModelHash)
+    local waited = 0
+    while (not HasModelLoaded(vanModelHash) or not HasModelLoaded(prisonerModelHash)) and waited < 5000 do
+        Citizen.Wait(50)
+        waited = waited + 50
+    end
+
+    if not HasModelLoaded(vanModelHash) or not HasModelLoaded(prisonerModelHash) then
+        lib.notify({ title = '', description = 'Khataye Bargozari Model - Enteghal Laghv Shod', type = 'error' })
+        TriggerServerEvent('CrimeScene:reportTransportArrived', transportId) -- fail safe, don't block the booking
+        return
+    end
+
+    local heading = GetEntityHeading(PlayerPedId())
+    local van = CreateVehicle(vanModelHash, startCoords.x, startCoords.y, startCoords.z, heading, true, false)
+    SetVehicleOnGroundProperly(van)
+    SetVehicleDoorsLocked(van, 1)
+
+    local prisoner = CreatePed(4, prisonerModelHash, startCoords.x + 1.0, startCoords.y, startCoords.z, heading, true, false)
+    SetEntityInvincible(prisoner, true) -- rescue is an interaction, not a kill -- keeps the focus on the van fight
+    SetBlockingOfNonTemporaryEvents(prisoner, true)
+    TaskWarpPedIntoVehicle(prisoner, van, 2) -- back seat
+
+    TaskWarpPedIntoVehicle(PlayerPedId(), van, -1) -- driver seat
+
+    SetModelAsNoLongerNeeded(vanModelHash)
+    SetModelAsNoLongerNeeded(prisonerModelHash)
+
+    local routeBlip = AddBlipForCoord(prisonCoords.x, prisonCoords.y, prisonCoords.z)
+    SetBlipRoute(routeBlip, true)
+    SetBlipSprite(routeBlip, 351)
+    BeginTextCommandSetBlipName('STRING')
+    AddTextComponentString('Zendan - Enteghale ' .. suspectName)
+    EndTextCommandSetBlipName(routeBlip)
+
+    lib.notify({ title = 'Enteghal Shoro Shod', description = 'Zendani Ra Be Zendan Beresanid.', type = 'info', duration = 8000 })
+
+    Citizen.CreateThread(function()
+        while DoesEntityExist(van) do
+            Citizen.Wait(4000)
+            if not DoesEntityExist(van) then break end
+
+            local vanCoords = GetEntityCoords(van)
+            local engineHealth = GetVehicleEngineHealth(van)
+            TriggerServerEvent('CrimeScene:transportTick', transportId, vanCoords, engineHealth)
+
+            if #(vanCoords - prisonCoords) <= Config.PrisonBreak.deliverDistance then
+                TriggerServerEvent('CrimeScene:reportTransportArrived', transportId)
+                break
+            end
+
+            if not DoesEntityExist(prisoner) or IsEntityDead(prisoner) then
+                break -- something went very wrong, stop reporting; server window timeout will resolve it
+            end
+        end
+    end)
+
+    local function CleanupConvoy()
+        RemoveBlip(routeBlip)
+        if DoesEntityExist(van) then DeleteVehicle(van) end
+        if DoesEntityExist(prisoner) then DeletePed(prisoner) end
+    end
+
+    local endedHandler
+    endedHandler = AddEventHandler('CrimeScene:transportEnded', function(endedId)
+        if endedId ~= transportId then return end
+        CleanupConvoy()
+        RemoveEventHandler(endedHandler)
+    end)
 end)

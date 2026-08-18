@@ -127,3 +127,63 @@ Config.EvidenceSkillCheck = { 'easy', 'easy', { areaSize = 60, speedMultiplier =
 -- the reveal earned through real repeat investigative work instead of
 -- being handed out on the very first clue.
 Config.FingerprintMatchThreshold = 2
+
+-- ============================================================
+-- Unique_Cad (DuckMdt) integration
+-- ============================================================
+
+-- If true, this resource pushes wanted/arrested status updates into the
+-- existing MDT (Unique_Cad) so officers checking a plate/citizen there see
+-- BOLOs, fingerprint matches, and bookings without needing this panel too.
+-- Safe to leave on even if Unique_Cad isn't installed -- TriggerEvent on a
+-- name nobody's listening for is a silent no-op, not an error.
+Config.CadIntegration = true
+
+-- Exact WantedLevel values Unique_Cad's UI understands (from its
+-- html/index.html <option> list) -- must match exactly.
+Config.CadWantedLevels = {
+	standard  = 'standard',
+	arrested  = 'arrested',
+	wanted    = 'wanted',
+	in_prison = 'in_prison',
+	special   = 'special',
+}
+
+-- ============================================================
+-- Prisoner Transport / Prison Break -- real PVP window between the
+-- escorting officer (Law Enforcement) and the booked suspect's gang.
+-- Triggers automatically off a booking that has real jail time AND is
+-- linked to a real online player.
+-- ============================================================
+
+Config.PrisonBreak = {
+	enabled = true,
+
+	-- Bolingbroke Penitentiary sally port. Change to wherever your
+	-- server's prison actually is.
+	prisonCoords = vector3(1846.31, 2585.19, 45.67),
+
+	vanModel         = 'policet',
+	prisonerPedModel = 'csb_prisoner',
+
+	-- Only bookings with at least this many jail minutes trigger a
+	-- transport. Short/symbolic sentences don't need a whole convoy.
+	minJailMinutesToTrigger = 1,
+
+	-- How long (seconds) the transport stays vulnerable before it
+	-- auto-resolves as "delivered" (benefit of the doubt to Law).
+	windowSeconds = 300,
+
+	-- How close (meters) the van needs to get to prisonCoords to count as
+	-- a successful delivery.
+	deliverDistance = 8.0,
+
+	-- Van engine health (out of 1000) has to drop below this before the
+	-- gang is allowed to free the prisoner -- so it takes an actual fight
+	-- to disable the escort, not just walking up to it.
+	engineHealthDisabledThreshold = 300.0,
+
+	-- How close (meters) a gang member needs to be to the van's last
+	-- reported position to run /freeprisoner.
+	freeDistance = 5.0,
+}
