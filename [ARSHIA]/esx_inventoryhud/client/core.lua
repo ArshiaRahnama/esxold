@@ -127,6 +127,9 @@ function ESX.GetItemImagePath(name)
     if clotheType then
         return 'img/items/clothe_' .. clotheType .. '.png'
     end
+    if name:match('^wpn_[a-z0-9]+_[A-Za-z0-9]+$') then
+        return 'img/items/wpn_generic.png'
+    end
     return 'img/items/' .. name .. '.png'
 end
 

@@ -75,7 +75,7 @@ RegisterNetEvent('esx:addInventoryItem', function(label, count, name)
     end
 end)
 
-RegisterNetEvent('esx:removeInventoryItemss', function(label, count, name)
+RegisterNetEvent('esx:removeInventoryItem', function(label, count, name)
     if name and name:find('kif_') then
         if currentBag == name then
             closeInventory()
