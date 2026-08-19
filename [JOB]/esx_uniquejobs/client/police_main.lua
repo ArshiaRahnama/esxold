@@ -2228,52 +2228,16 @@ function OpenJailMenu_police()
 		}, function(data, menu)
 
 			if data.current.value ~= " " then 
-				ESX.UI.Menu.Open(
-				'dialog', GetCurrentResourceName(), 'jail_choose_time_menu',
-				{
-					title = "Jail Time (minutes)"
-				},
-				function(data2, menu2)
-
-				local jailTime = tonumber(data2.value)
-
-				if jailTime == nil then
-					ESX.ShowNotification("The time needs to be in minutes!")
-				else
-					menu2.close()
-
-					local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
-
-					if closestPlayer == -1 or closestDistance > 3.0 then
-						ESX.ShowNotification("No players nearby!")
-					else
-						ESX.UI.Menu.Open(
-							'dialog', GetCurrentResourceName(), 'jail_choose_reason_menu',
-							{
-								title = "Jail Reason"
-							},
-						function(data3, menu3)
-
-
-							local playerid = data.current.value
-
-							if playerid then 
-								ExecuteCommand("jjjailpd " .. playerid .. ' ' .. jailTime .. ' ' .. data3.value)
-								TriggerServerEvent("PdJailWebhook", playerid, jailTime, data3.value)
-							end
-							ESX.ShowNotification("Player " .. playerid .. " has been jailed.")
-							stopActiveMarker_police()
-							menu3.close()
-							ESX.UI.Menu.CloseAll()
-							
-						end)
-					end
-				end
-			end, function(data2, menu2)
-				menu2.close()
-			end)
-		end
-			
+				local playerid = data.current.value
+				menu.close()
+				ESX.UI.Menu.CloseAll()
+				stopActiveMarker_police()
+				-- کامند jjjailpd دیگه وجود نداره (سیستم جیل عوض شده)؛ مستقیم به
+				-- arshia_jail:factionjail وصل شد که خودش دلیل/زمان رو می‌پرسه و
+				-- چک می‌کنه افسر توی یکی از Config.CanJail زون‌ها باشه
+				TriggerEvent('arshia_jail:factionjail', playerid)
+			end
+				
 		end, function(data, menu)
 			menu.close()
 
@@ -4173,7 +4137,7 @@ AddEventHandler('esx_policejob:markPanicLocation', function(x, y, ID, z)
 				SetNewWaypoint(x, y)
 				local blip = AddBlipForCoord(x, y, z)
 				SetBlipSprite(blip, 161)
-				SetBlipScale(blip, 0.7)
+				SetBlipScale(blip, 1.5)
 				SetBlipColour(blip, 1)
 				SetBlipAsShortRange(blip, false)
 

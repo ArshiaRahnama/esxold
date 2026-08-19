@@ -1,5 +1,6 @@
 fx_version 'cerulean'
 game 'gta5'
+lua54 'yes' -- required by ox_lib
 
 author 'Arshia | arshiahub.ir | Unique RP'
 description 'DOJ Crime Scene Investigation System - runs alongside Unique_RobSystem, does not modify it'

@@ -10,8 +10,17 @@ Config.AdminJail = {
 }
 
 Config.AllowedJobs = {
+	-- Law Enforcement
 	{name = 'police', unjailPerm = 15},
-	{name = 'sheriff', unjailPerm = 15}
+	{name = 'sheriff', unjailPerm = 15},
+	{name = 'mt', unjailPerm = 15},
+	-- Department Of Justice
+	{name = 'cid', unjailPerm = 15},
+	{name = 'cia', unjailPerm = 15},
+	{name = 'marshal', unjailPerm = 15},
+	{name = 'fbi', unjailPerm = 15},
+	{name = 'judge', unjailPerm = 15},
+	{name = 'doa', unjailPerm = 15},
 }
 
 Config.CanJail = {
