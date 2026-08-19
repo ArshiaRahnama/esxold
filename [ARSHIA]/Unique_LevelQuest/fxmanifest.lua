@@ -10,6 +10,7 @@ server_scripts {
     'server/migrations.lua',
     'config.lua',
     'server/core.lua',
+    'server/coin.lua',
     'server/xp.lua',
     'server/quest.lua',
     'server/bridges.lua',
@@ -21,6 +22,7 @@ server_scripts {
 
 client_scripts {
     'config.lua',
+    'client/coin.lua',
     'client/xp.lua',
     'client/quest.lua',
     'client/bridges.lua',

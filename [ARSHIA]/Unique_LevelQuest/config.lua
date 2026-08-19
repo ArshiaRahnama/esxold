@@ -43,9 +43,12 @@ Config = {}
 -- can never infinite-loop when a pool has fewer options than this).
 Config.QuestsPerDay = 6
 
--- Coins are granted directly server-side now via exports('CoinSystem'):AddCoin(...)
--- (see server/quest.lua). This is only kept so old references don't error.
-Config.AddCoinTrigger = "Coin-System:AddCoinCL" -- DEPRECATED, unused
+-- ===== Coin system (merged in from the standalone CoinSystem resource
+-- so it can be deleted; nothing else references it externally except
+-- esx_status, which still works unchanged — see server/coin.lua) ===== --
+Config.CoinAdminPermission = 8       -- minimum permission_level for /setcoin and the AddCoin/RemoveCoin/SetCoin events
+Config.CoinMaxValue        = 1000000 -- hard ceiling so no absurd/overflow values can be written
+Config.CoinItem            = false   -- false: coin lives in users.coin column. true: coin is an inventory item (not used on this server)
 
 Config.JobQuests = {
 

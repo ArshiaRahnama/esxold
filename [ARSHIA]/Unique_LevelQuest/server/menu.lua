@@ -13,7 +13,7 @@ ESX.RegisterServerCallback("HUD_Menu:GetAcc", function(source, cb)
     if not xPlayer then return cb(nil) end
 
     GetXPRankCached(source, function(xp, rank)
-        MySQL.Async.fetchAll('SELECT Profile_Pic, divisions FROM users WHERE identifier = @identifier', {
+        MySQL.Async.fetchAll('SELECT Profile_Pic, divisions, iban, account_num, DATE_FORMAT(created_at, "%Y-%m-%d") AS memberSince FROM users WHERE identifier = @identifier', {
             ['@identifier'] = xPlayer.identifier
         }, function(result)
             local row = result[1] or {}
@@ -50,6 +50,9 @@ ESX.RegisterServerCallback("HUD_Menu:GetAcc", function(source, cb)
                     avatarUrl        = (profilePic ~= nil and profilePic ~= '') and profilePic or nil,
                     gangLogoUrl      = gangLogo,
                     divisionLabel    = divisionLabel,
+                    iban             = row.iban,
+                    accountNum       = row.account_num,
+                    memberSince      = row.memberSince,
                 })
             end
 

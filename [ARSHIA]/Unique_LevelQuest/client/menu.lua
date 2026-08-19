@@ -43,6 +43,9 @@ function UpdateProfile()
                 coin       = Coin .. " Coin",
                 avatarUrl  = data.avatarUrl,
                 gangLogoUrl= data.gangLogoUrl,
+                iban       = data.iban,
+                accountNum = data.accountNum,
+                memberSince= data.memberSince,
             })
         end)
     end)

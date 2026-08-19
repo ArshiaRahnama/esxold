@@ -155,6 +155,51 @@ html, body {
 
 .pline i { color: var(--steel); font-size: 10px; }
 
+.memberSince {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.bankCard {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #232830, #14171c);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: fit-content;
+}
+
+.bankCard i {
+  color: var(--steel);
+  font-size: 13px;
+}
+
+.bankCardText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.iban_span {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  font-weight: 700;
+  color: #d8dbe4;
+  letter-spacing: 0.5px;
+}
+
+.accountNum_span {
+  font-family: var(--font-mono, monospace);
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
 /* ---- center level box ---- */
 .lvBox {
   width: 220px;

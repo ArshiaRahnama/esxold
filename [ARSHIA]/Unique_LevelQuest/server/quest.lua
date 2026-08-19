@@ -16,9 +16,8 @@
 --  3) Rewards used to go through 'XP_System:AddXP' (a network event,
 --     see xp.lua) and a client round-trip to the now-removed insecure
 --     'Coin-System:AddCoinCL'. Both are now granted directly, server
---     side: GrantXP() is a plain Lua call (xp.lua, same resource) and
---     coins go through the CoinSystem export (see CoinSystem's
---     Server/main.lua — 'exports("CoinSystem"):AddCoin(...)').
+--     side: GrantXP() and GrantCoin() are plain Lua calls (xp.lua and
+--     coin.lua, both in this same resource now).
 -- ================================================================= --
 
 local TRIGGER_COOLDOWN = 2 -- seconds; blocks raw event-spam farming
@@ -41,9 +40,9 @@ local function grantQuestReward(xPlayer, quest)
     GrantXP(xPlayer.source, quest.XP, nil)
 
     if quest.coin and quest.coin > 0 then
-        local ok = exports['CoinSystem']:AddCoin(xPlayer.source, quest.coin)
+        local ok = GrantCoin(xPlayer.source, quest.coin)
         if ok == false then
-            print(('[Unique_LevelQuest] CoinSystem export refused reward for %s (%s coin)'):format(xPlayer.identifier, tostring(quest.coin)))
+            print(('[Unique_LevelQuest] GrantCoin refused reward for %s (%s coin)'):format(xPlayer.identifier, tostring(quest.coin)))
         end
     end
 end

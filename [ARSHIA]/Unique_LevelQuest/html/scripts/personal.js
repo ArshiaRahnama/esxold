@@ -23,6 +23,9 @@ window.addEventListener('message', (event) => {
     const cashElem = document.querySelector('.cash_span');
     const bankElem = document.querySelector('.bank_span');
     const coinElem = document.querySelector('.coin_span');
+    const memberSinceElem = document.querySelector('.memberSince_span');
+    const ibanElem = document.querySelector('.iban_span');
+    const accountNumElem = document.querySelector('.accountNum_span');
     const levelElem = document.querySelector('.level-number');
     const xpFractionElem = document.querySelector('.xp-fraction');
     const xpFillElem = document.querySelector('.xp-fill');
@@ -33,6 +36,9 @@ window.addEventListener('message', (event) => {
     if (cashElem) cashElem.textContent = (data.cash ?? 0).toLocaleString();
     if (bankElem) bankElem.textContent = (data.bank ?? 0).toLocaleString();
     if (coinElem) coinElem.textContent = data.coin ?? 'Unknown';
+    if (memberSinceElem) memberSinceElem.textContent = data.memberSince || '-';
+    if (ibanElem) ibanElem.textContent = data.iban ? `IBAN ${data.iban}` : 'IBAN —';
+    if (accountNumElem) accountNumElem.textContent = data.accountNum ? `ACC #${data.accountNum}` : 'ACC #—';
 
     if (levelElem && data.level !== undefined) {
       levelElem.textContent = data.level;

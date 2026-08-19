@@ -7,8 +7,9 @@
 -- the real cadence (essentialmode's 15-minute paycheck interval).
 --
 -- Milestone rewards: paid once per threshold per job, via the same
--- safe CoinSystem export used by the quest system — never a network
--- event, so a client can never trigger this directly.
+-- safe GrantCoin function used by the quest system (coin.lua, same
+-- resource) — never a network event, so a client can never trigger
+-- this directly.
 -- ================================================================= --
 
 local SKILL_TICK_MINUTES  = 15
@@ -45,7 +46,7 @@ local function checkMilestones(xPlayer, job, minutes, paidCsv)
     })
 
     for _, milestone in ipairs(newlyPaid) do
-        exports['CoinSystem']:AddCoin(xPlayer.source, milestone.coin)
+        GrantCoin(xPlayer.source, milestone.coin)
         TriggerClientEvent('esx:showNotification', xPlayer.source,
             ('%s Skill reached %d%%! +%s coin'):format(Config.TrackedJobs[job], milestone.percent, milestone.coin),
             'success', 'Skill Milestone')
