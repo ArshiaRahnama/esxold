@@ -9,26 +9,38 @@
 -- lock system. Every path below now re-checks ownership/context on the
 -- server before granting or revoking a key.
 
-local RESTRICTED_HOTWIRE_PREFIXES = {
-    ["FBI"] = true,
-    ["PD"]  = true,
-    ["MT"]  = true,
-    ["SH"]  = true,
-    ["TX"]  = true,
-    ["MD"]  = true,
-    ["MC"]  = true,
-    ["WZ"]  = true,
-}
-
+-- Every plate prefix a job vehicle actually gets, taken straight from the
+-- server's own job scripts ([JOB]/esx_uniquejobs/client/*_main.lua,
+-- SetVehicleNumberPlateText calls) -- this is the full DOJ / Law
+-- Enforcement / Organ Services roster from notejobserver.txt:
+--   DOJ:              CID, CIA, Marshal, FBI, Judge, DOA
+--   Law Enforcement:  Police, Sheriff, MT
+--   Organ Services:   Taxi, Mechanic, Medic (ambulance), Weazel
 local JOB_PLATE_ACCESS = {
-    taxi      = "TX",
-    police    = "PD",
-    ambulance = "MD",
+    -- Department of Justice
+    cid       = "CID",
+    cia       = "CIA",
+    marshal   = "MS",
     fbi       = "FBI",
+    judge     = "JD",
+    doa       = "DOA",
+    -- Law Enforcement
+    police    = "PD",
     sheriff   = "SH",
+    mt        = "MT",
+    -- Organ Services
+    taxi      = "TX",
     mechanic  = "MC",
+    ambulance = "MD",
     weazel    = "WZ",
 }
+
+-- Org vehicles should never be hotwireable by an outsider -- same prefix set
+-- as JOB_PLATE_ACCESS above, just inverted into a lookup for the hotwire check.
+local RESTRICTED_HOTWIRE_PREFIXES = {}
+for _, prefix in pairs(JOB_PLATE_ACCESS) do
+    RESTRICTED_HOTWIRE_PREFIXES[prefix] = true
+end
 
 local function IsStaff(xPlayer)
     return xPlayer ~= nil and xPlayer.permission_level ~= nil and xPlayer.permission_level >= 1
@@ -44,6 +56,17 @@ local function HasJobPlateAccess(xPlayer, plate)
 
     local prefix = string.upper(string.sub(plate, 1, #requiredPrefix))
     return prefix == requiredPrefix
+end
+
+-- Checks a plate against every prefix in RESTRICTED_HOTWIRE_PREFIXES,
+-- regardless of whether the prefix is 2 or 3 characters long.
+local function MatchesRestrictedPrefix(plate)
+    for prefix in pairs(RESTRICTED_HOTWIRE_PREFIXES) do
+        if string.upper(string.sub(plate, 1, #prefix)) == prefix then
+            return true
+        end
+    end
+    return false
 end
 
 -- Async DB ownership check: personal owner OR gang owner. cb(isOwner, rowExists)
@@ -314,9 +337,7 @@ AddEventHandler('CarLock:useHotwireKit', function(plate)
         return
     end
 
-    local prefix3 = string.upper(string.sub(plate, 1, 3))
-    local prefix2 = string.upper(string.sub(plate, 1, 2))
-    if RESTRICTED_HOTWIRE_PREFIXES[prefix3] or RESTRICTED_HOTWIRE_PREFIXES[prefix2] then
+    if MatchesRestrictedPrefix(plate) then
         print(("[CarLock] Blocked hotwire attempt: %s (%s) tried to hotwire restricted plate '%s'.")
             :format(GetPlayerName(src) or "?", xPlayer.identifier or "?", plate))
         return

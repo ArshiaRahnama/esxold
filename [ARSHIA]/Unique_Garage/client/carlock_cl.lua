@@ -5,20 +5,38 @@ local showHotwireText = false
 local canHotwireVehicle = false
 local hotwireText = "~r~[H] ~w~Baraye Pich Goshti Kardan"
 
--- Same list as the server (carlock_sv.lua RESTRICTED_HOTWIRE_PREFIXES) --
--- kept here too purely so the player gets an instant, local "no" instead of
--- waiting on a round trip. The SERVER is the one that actually enforces
--- this now; this client copy is UX-only and is never trusted for security.
+-- Same prefix set as the server (carlock_sv.lua JOB_PLATE_ACCESS) -- the full
+-- DOJ / Law Enforcement / Organ Services roster. Kept here purely so the
+-- player gets an instant, local "no" instead of waiting on a round trip.
+-- The SERVER is the one that actually enforces this now; this client copy
+-- is UX-only and is never trusted for security.
 local restrictedPrefixes = {
+    -- Department of Justice
+    ["CID"] = true,
+    ["CIA"] = true,
+    ["MS"]  = true, -- Marshal
     ["FBI"] = true,
+    ["JD"]  = true, -- Judge
+    ["DOA"] = true,
+    -- Law Enforcement
     ["PD"] = true,
-    ["MT"] = true,
     ["SH"] = true,
+    ["MT"] = true,
+    -- Organ Services
     ["TX"] = true,
-    ["MD"] = true,
     ["MC"] = true,
-    ["WZ"] = true
+    ["MD"] = true, -- ambulance
+    ["WZ"] = true,
 }
+
+local function matchesRestrictedPrefix(plate)
+    for prefix in pairs(restrictedPrefixes) do
+        if string.upper(string.sub(plate, 1, #prefix)) == prefix then
+            return true
+        end
+    end
+    return false
+end
 
 local function flashOutline(vehicle)
     SetEntityDrawOutline(vehicle, true)
@@ -100,10 +118,7 @@ function UseHotwireKit()
     local plate = GetVehicleNumberPlateText(vehicle)
     local globalplate = string.gsub(plate, "%s+", "")
 
-    local prefix3 = string.upper(string.sub(globalplate, 1, 3))
-    local prefix2 = string.upper(string.sub(globalplate, 1, 2))
-
-    if restrictedPrefixes[prefix3] or restrictedPrefixes[prefix2] then
+    if matchesRestrictedPrefix(globalplate) then
         SafeNotify("~r~In yek vasile edari ast, nemitanid hotwire konid!")
         return
     end
@@ -167,14 +182,19 @@ end)
 
 -- Is this plate one of the organizational (job) vehicles? UI-only helper --
 -- purely so the lock/unlock notification can call it out; access itself is
--- still decided by the server's CarLock:haskey callback.
+-- still decided by the server's CarLock:haskey callback. Same 13-org roster
+-- as notejobserver.txt (DOJ / Law Enforcement / Organ Services).
 local function GetOrgLabel(plate)
+    local orgNames = {
+        -- Department of Justice
+        CID = "CID", CIA = "CIA", MS = "Marshal", FBI = "FBI", JD = "Judge", DOA = "DOA",
+        -- Law Enforcement
+        PD = "Police", SH = "Sheriff", MT = "MT",
+        -- Organ Services
+        TX = "Taxi", MC = "Mechanic", MD = "Ambulance", WZ = "Weazel",
+    }
     local p3 = string.upper(string.sub(plate, 1, 3))
     local p2 = string.upper(string.sub(plate, 1, 2))
-    local orgNames = {
-        FBI = "FBI", PD = "Police", MT = "MT", SH = "Sheriff",
-        TX = "Taxi", MD = "Ambulance", MC = "Mechanic", WZ = "Weazel",
-    }
     return orgNames[p3] or orgNames[p2]
 end
 
