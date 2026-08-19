@@ -15,6 +15,50 @@ local players = {}
 -- recentFlags[kind] = { {src=, time=}, ... }  -- for cross-player correlation
 local recentFlags = {}
 
+-- ============================================================
+-- Temporary exemptions -- lets other resources (job scripts doing a
+-- legitimate teleport, e.g. esx_uniquejobs' arrest/uncuff teleports)
+-- tell us "don't flag THIS player for THIS check for the next N ms".
+--
+-- exemptions[src] = { [kind] = expiresAtGameTimer }
+--
+-- SECURITY: ExemptPlayer is reachable indirectly from a plain client
+-- net event in other resources (esx_uniquejobs:AntiCheatExempt), which
+-- ANY player can fire on themselves with whatever (ms, kinds) they want
+-- -- there's no guarantee the caller is actually a job script. So this
+-- export enforces its own hard ceiling on duration and only ever
+-- exempts the two "a legit teleport can trip this" kinds, no matter
+-- what a caller asks for. It can never be used to silence noclip,
+-- godmode, weapon, or resource-whitelist flags.
+-- ============================================================
+local exemptions = {}
+local EXEMPTABLE_KINDS = { teleport = true, speed = true }
+local MAX_EXEMPT_MS = 10000
+
+local function isExempt(src, kind)
+    local playerExemptions = exemptions[src]
+    if not playerExemptions then return false end
+    local expiresAt = playerExemptions[kind]
+    return expiresAt ~= nil and GetGameTimer() < expiresAt
+end
+
+exports('ExemptPlayer', function(src, ms, kinds)
+    if type(src) ~= 'number' or type(kinds) ~= 'table' then return end
+
+    ms = tonumber(ms) or 5000
+    if ms > MAX_EXEMPT_MS then ms = MAX_EXEMPT_MS end
+    if ms <= 0 then return end
+
+    local expiresAt = GetGameTimer() + ms
+    exemptions[src] = exemptions[src] or {}
+
+    for kind, wanted in pairs(kinds) do
+        if wanted and EXEMPTABLE_KINDS[kind] then
+            exemptions[src][kind] = expiresAt
+        end
+    end
+end)
+
 local function getPlayer(src)
     if not players[src] then
         players[src] = { score = Config.TrustScore.StartingScore, history = {} }
@@ -24,6 +68,7 @@ end
 
 AddEventHandler('playerDropped', function()
     players[source] = nil
+    exemptions[source] = nil
 end)
 
 -- slow natural recovery so one old flag doesn't follow a legit player forever
@@ -113,6 +158,16 @@ local penaltyByKind = {
 local function applyFlag(src, kind, evidence)
     if type(kind) ~= 'string' or not penaltyByKind[kind] then return end
     if type(evidence) ~= 'table' then evidence = {} end
+
+    -- A legit job script (arrest/uncuff teleport, fast-travel, etc) told us
+    -- to hold off on this exact check for this exact player. Skip entirely --
+    -- no penalty, no history entry, no webhook -- same as if nothing happened.
+    if isExempt(src, kind) then
+        if Config.Debug then
+            print(('[AntiCheat] %s exempted from %s flag'):format(GetPlayerName(src) or src, kind))
+        end
+        return
+    end
 
     local data = getPlayer(src)
     local penalty = penaltyByKind[kind]

@@ -69,6 +69,24 @@ exports['AntiCheat']:GetTrustScore(playerId)   -- عدد ۰ تا ۱۰۰
 exports['AntiCheat']:GetTrustHistory(playerId) -- آرایه‌ی کامل پرچم‌ها
 ```
 
+## معافیت موقت برای تله‌پورت‌های قانونی (`ExemptPlayer`)
+
+اسکریپت‌های شغلی (مثلاً `esx_uniquejobs` موقع دستگیری/باز کردن دستبند) بازیکن
+رو جابه‌جا می‌کنن، که بدون این export به‌عنوان تله‌پورت/اسپیدهک فلگ می‌شه.
+هر ریسورس دیگه‌ای می‌تونه قبل از `SetEntityCoords` خودش این رو صدا بزنه:
+
+```lua
+exports['AntiCheat']:ExemptPlayer(source, 5000, { teleport = true, speed = true })
+```
+
+⚠️ چون این export از طریق یه net event معمولی (مثل
+`esx_uniquejobs:AntiCheatExempt`) به‌طور غیرمستقیم توسط هر بازیکنی هم قابل
+صداکردنه (نه فقط اسکریپت شغلی)، خودِ این export دو تا سقف سخت داره که هیچ
+فراخوانی‌ای نمی‌تونه دورشون بزنه:
+- حداکثر مدت معافیت **۱۰ ثانیه** (`MAX_EXEMPT_MS`)، فارغ از عددی که فراخوان می‌ده
+- فقط `teleport` و `speed` قابل معافیتن؛ noclip/godmode/weapon/... هیچ‌وقت با
+  این export خاموش نمی‌شن
+
 ## تنظیم فاین‌تیون
 
 همه‌ی آستانه‌ها (`ZScoreThreshold`, `RequireSignals`, `RequiredOccurrences`,
