@@ -4,22 +4,22 @@ local isPickingUp, isProcessing = false, false
 
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Citizen.Wait(1000)
 		local coords = GetEntityCoords(PlayerPedId())
 
 		if GetDistanceBetweenCoords(coords, Config.FieldZones.PoppyField.coords, true) < 45 then
 			-- TriggerEvent('esx:showNotification', _U('opium_field_close'))
 			SpawnPoppyPlants()
-			Citizen.Wait(500)
+			Citizen.Wait(1000)
 		else
-			Citizen.Wait(500)
+			Citizen.Wait(1000)
 		end
 	end
 end)
 
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Citizen.Wait(1000)
 		local playerPed = PlayerPedId()
 		local coords = GetEntityCoords(playerPed)
 

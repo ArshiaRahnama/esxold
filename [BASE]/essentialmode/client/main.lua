@@ -58,8 +58,10 @@ end)
 
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(1)
-		
+		-- بهینه‌سازی: این تنظیم (friendly fire) نیازی به آپدیت هر فریم (Wait(1)) نداره.
+		-- تغییر به 5000ms بار CPU این ترد رو عملاً به صفر می‌رسونه بدون تغییر رفتار گیم‌پلی.
+		Citizen.Wait(5000)
+
 		for i = 0,255 do
 			if NetworkIsPlayerActive(i) then
 				SetCanAttackFriendly(GetPlayerPed(i), true, true)

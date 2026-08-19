@@ -65,9 +65,15 @@ end
 function visibility()
     Citizen.CreateThread(function()
         while true do
-            Citizen.Wait(0)
             if visibilityEnabled then
+                Citizen.Wait(0)
                 SetEntityVisible(GetPlayerPed(-1), true, false)
+            else
+                -- بهینه‌سازی: این تابع فقط یک‌بار در ابتدای ریسورس صدا زده می‌شه
+                -- (نه هربار که وضعیت visibilityEnabled عوض می‌شه)، پس حلقه همیشه در
+                -- حال اجراست حتی وقتی visibilityEnabled خاموشه. وقتی خاموشه، دیگه
+                -- نیازی به چک هر فریم نیست.
+                Citizen.Wait(500)
             end
         end
     end)

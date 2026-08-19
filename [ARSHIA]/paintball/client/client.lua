@@ -1111,11 +1111,11 @@ function CreateBlip(coords, name)
 	SetNuiFocus(false,false)
 	NetworkSetInSpectatorMode(false, 0)
 	while true do
-	  Wait(0)
 	  local PlayerPed = GetPlayerPed(-1)
 	  local coords    = GetEntityCoords(PlayerPed)
-  
+
 	  if GetDistanceBetweenCoords(coords, PBMarker.Pos, false) < 100.0 then
+		Wait(0)
 		DrawMarker(tonumber(PBMarker.Type), tonumber(PBMarker.Pos.x), tonumber(PBMarker.Pos.y), tonumber(PBMarker.Pos.z), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 10.0, 10.0, 2.0, tonumber(PBMarker.Color.r), tonumber(PBMarker.Color.g), tonumber(PBMarker.Color.b), 100, false, true, 2, false, false, false, false)
 		if GetDistanceBetweenCoords(coords, PBMarker.Pos, false) < 5.0 then
 		  if not isLBOpen then
@@ -1129,6 +1129,10 @@ function CreateBlip(coords, name)
 		  isLBOpen = false
 		  OpenLobbyMenu(false)
 		end
+	  else
+		-- بهینه‌سازی: وقتی بازیکن بیشتر از ۱۰۰ متر از مارکر پینت‌بال دوره،
+		-- نیازی به چک هر فریم نیست (قبلاً بدون else-sleep بود).
+		Wait(1000)
 	  end
 	end
 end)

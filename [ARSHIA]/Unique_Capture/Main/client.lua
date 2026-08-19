@@ -330,7 +330,10 @@ if Config.EnableAcademy then
         Citizen.CreateThread(function()
             local safePoint = Config.AcademyCoord + Config.AcademySafeZoneOffset
             while AcademyActive do
-                Citizen.Wait(0)
+                -- بهینه‌سازی: این حلقه فقط فاصله رو چک می‌کنه (بدون تشخیص کلید)،
+                -- پس نیازی به دقت فریم‌به‌فریم نداره. تاخیر ۱۰۰ میلی‌ثانیه‌ای در
+                -- تشخیص ورود/خروج از سیف‌زون کاملاً غیرمحسوسه.
+                Citizen.Wait(100)
                 local dist = #(GetEntityCoords(PlayerPedId()) - safePoint)
                 local nowInSafeZone = dist <= Config.AcademySafeZoneRadius
                 if nowInSafeZone ~= AcademyInSafeZone then

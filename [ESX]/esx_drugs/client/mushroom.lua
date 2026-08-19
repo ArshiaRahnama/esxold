@@ -4,15 +4,15 @@ local isPickingUp, isProcessing = false, false
 
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(10)
+		Citizen.Wait(1000)
 		local coords = GetEntityCoords(PlayerPedId())
 
 		if GetDistanceBetweenCoords(coords, Config.FieldZones.MushroomField.coords, true) < 40 then
 			-- TriggerEvent('esx:showNotification', _U('mushroom_field_close'))
 			SpawnMushroomPlants()
-			Citizen.Wait(500)
+			Citizen.Wait(1000)
 		else
-			Citizen.Wait(500)
+			Citizen.Wait(1000)
 		end
 	end
 end)

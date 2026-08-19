@@ -1361,9 +1361,25 @@ local isProcessing = false
 
 CreateThread(function()
     while true do
-        Wait(0)
         local playerPed = PlayerPedId()
         local playerCoords = GetEntityCoords(playerPed)
+
+        -- بهینه‌سازی: قبلاً این حلقه با Wait(0) بی‌قید اجرا می‌شد و فاصله تا هردو
+        -- زون (چاپ‌شاپ + محل نصب انجین) رو هر فریم حساب می‌کرد، حتی وقتی بازیکن
+        -- کیلومترها دور بود. چون Config_Antipg.ChopShopEnabled پیش‌فرض false هست،
+        -- در عمل این حلقه فقط برای زون نصب انجین همیشه با سرعت فریم می‌چرخید.
+        -- حالا: نزدیک به هرکدوم از زون‌ها -> Wait(0) (برای دقت DrawMarker/کلید)،
+        -- دور از هردو -> Wait(500).
+        local nearChopShop = Config_Antipg.ChopShopEnabled
+            and (#(playerCoords - Config_Antipg.Marker.Position) < 20)
+        local nearInstall = #(playerCoords - Config_Antipg.InstallLocation) < 20
+
+        if nearChopShop or nearInstall then
+            Wait(0)
+        else
+            Wait(500)
+            goto continue_pack_loop
+        end
 
         -- ChopShop Marker (disabled — see Config_Antipg.ChopShopEnabled)
         if Config_Antipg.ChopShopEnabled then
@@ -1488,10 +1504,10 @@ CreateThread(function()
                 end
             end
         end
+
+        ::continue_pack_loop::
     end
 end)
-
-
 
 RegisterNetEvent('engine:startChopshopProcess', function(vehicle, plate)
     local playerPed = PlayerPedId()
@@ -3549,6 +3565,10 @@ Citizen.CreateThread(function()
                     OpenBoxingMenu()
                 end
             end
+        else
+            -- بهینه‌سازی: مشابه الگوی marker های دیگه‌ی پروژه، وقتی بازیکن دورتر از
+            -- ۱۰ متر از زون مسابقه‌ست، هر فریم محاسبه‌ی فاصله لازم نیست.
+            Citizen.Wait(500)
         end
     end
 end)
@@ -3759,9 +3779,12 @@ end)
 
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(0)
         if winnerText and GetGameTimer() < showWinnerUntil then
+            Citizen.Wait(0)
             DrawText3D(zoneCoords.x, zoneCoords.y, zoneCoords.z + 1.5, winnerText)
+        else
+            -- بهینه‌سازی: وقتی متنی برای نمایش نیست، نیازی به چک هر فریم نداریم.
+            Citizen.Wait(500)
         end
     end
 end)

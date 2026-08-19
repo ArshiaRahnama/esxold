@@ -198,6 +198,12 @@ function SpawnVeh()
         local spawnDistance = #(playerCoords - spawnMarker)
         local deleteDistance = #(playerCoords - deleteMarker)
 
+        -- بهینه‌سازی: برخلاف corp_client.lua و turfco_client.lua که همین الگو رو دارن،
+        -- این حلقه وقتی بازیکن از هر دو مارکر دور بود Wait(0) باقی می‌موند (بدون خوابیدن).
+        -- این خط دقیقاً همون else-sleep که توی نسخه‌های مشابه هست رو اضافه می‌کنه.
+        if spawnDistance >= 10.0 and deleteDistance >= 10.0 then
+            Citizen.Wait(1000)
+        end
 
         if spawnDistance < 10.0 then
             DrawMarker(36, spawnMarker.x, spawnMarker.y, spawnMarker.z - 1.0, 0, 0, 0, 0, 0, 0, 1.5, 1.5, 1.0, 0, 255, 0, 100, false, true, 2, false, nil, nil, false)

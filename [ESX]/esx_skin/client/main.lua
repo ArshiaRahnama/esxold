@@ -418,7 +418,9 @@ end)
 Citizen.CreateThread(function()
   while true do
 
-    Citizen.Wait(0)
+    -- بهینه‌سازی: چک مرگ بازیکن نیازی به هر فریم (Wait(0)) نداره؛ چند ده میلی‌ثانیه
+    -- تاخیر در تشخیص مرگ برای این فلگ (HasLoadedModel) قابل چشم‌پوشیه.
+    Citizen.Wait(250)
 
     local playerPed = GetPlayerPed(-1)
 
