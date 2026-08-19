@@ -13,9 +13,30 @@ Citizen.CreateThread(function()
 end)
 
 local spawnedAt = GetGameTimer()
+
+-- Checks below that compare "now" against "last sample" (position, health,
+-- armor, etc) register a reset closure here so esx:playerSpawned can wipe
+-- their stale state. Without this, the very first sample taken right after
+-- a respawn compares the NEW position/health against wherever the player
+-- was an instant before they died -- which reads as an enormous
+-- "teleport", a raycast punching through the whole map ("noclip"), and a
+-- dead-to-full health/armor jump ("instant refill"), ALL AT ONCE, on every
+-- single death. That combination (-40 teleport, -30 noclip) alone drops a
+-- clean 100 score to 30 on one respawn -- already past KickAtScore=35.
+-- This was almost certainly the actual cause behind "kicks people for no
+-- reason" reports: it fires on completely ordinary, frequent gameplay
+-- (dying and respawning), not on anything an actual cheater does.
+local spawnResetHooks = {}
+local function registerSpawnReset(fn)
+    table.insert(spawnResetHooks, fn)
+end
+
 RegisterNetEvent('esx:playerSpawned')
 AddEventHandler('esx:playerSpawned', function()
     spawnedAt = GetGameTimer()
+    for _, fn in ipairs(spawnResetHooks) do
+        fn()
+    end
 end)
 
 local function inSpawnProtection()
@@ -112,11 +133,12 @@ end
 -- ============================================================
 if Config.NoclipCheck.Enable then
     local lastPos = nil
+    registerSpawnReset(function() lastPos = nil end)
     Citizen.CreateThread(function()
         while true do
             Citizen.Wait(Config.NoclipCheck.SampleIntervalMs)
             local ped = PlayerPedId()
-            if ped and ped ~= 0 and not IsEntityDead(ped) then
+            if ped and ped ~= 0 and not IsEntityDead(ped) and not inSpawnProtection() then
                 local inVehicle = IsPedInAnyVehicle(ped, false)
                 local skip = (Config.NoclipCheck.IgnoreIfInVehicle and inVehicle)
                     or (Config.NoclipCheck.IgnoreIfSwimming and IsPedSwimming(ped))
@@ -220,11 +242,12 @@ end
 -- ============================================================
 if Config.TeleportCheck.Enable then
     local lastPos, lastTime = nil, nil
+    registerSpawnReset(function() lastPos, lastTime = nil, nil end)
     Citizen.CreateThread(function()
         while true do
             Citizen.Wait(Config.TeleportCheck.SampleIntervalMs)
             local ped = PlayerPedId()
-            if ped and ped ~= 0 and not IsEntityDead(ped) then
+            if ped and ped ~= 0 and not IsEntityDead(ped) and not inSpawnProtection() then
                 local pos = GetEntityCoords(ped)
                 local now = GetGameTimer()
 
@@ -390,16 +413,32 @@ end
 
 -- ============================================================
 -- Weapon Blacklist
+-- FIXED (was a real "kicks for no reason" cause): this used to re-report
+-- every single sample (every 3s) for as long as the player merely
+-- POSSESSED the weapon, with no occurrence window at all -- unlike every
+-- other check in this file. -45 every 3s meant just holding a restricted
+-- weapon for ~6-9 seconds alone was enough to hit KickAtScore=35 from a
+-- clean 100, regardless of whether anything actually suspicious happened.
+-- Now it's edge-triggered like the rest: report once when a given weapon
+-- is first detected, then stay silent about that same weapon until the
+-- player no longer has it (so a genuinely repeated pickup still flags
+-- again, but merely carrying it doesn't drain the score every tick).
 -- ============================================================
 if Config.WeaponBlacklistCheck.Enable then
     Citizen.CreateThread(function()
+        local alreadyFlagged = {} -- [weaponHash] = true while still possessed
         while true do
             Citizen.Wait(Config.WeaponBlacklistCheck.SampleIntervalMs)
             local ped = PlayerPedId()
             if ped and ped ~= 0 and not IsEntityDead(ped) then
                 for _, weaponHash in ipairs(Config.WeaponBlacklistCheck.Weapons) do
                     if HasPedGotWeapon(ped, weaponHash, false) then
-                        report('weaponblacklist', { weapon = weaponHash })
+                        if not alreadyFlagged[weaponHash] then
+                            report('weaponblacklist', { weapon = weaponHash })
+                            alreadyFlagged[weaponHash] = true
+                        end
+                    else
+                        alreadyFlagged[weaponHash] = nil
                     end
                 end
             end
@@ -456,11 +495,12 @@ end
 if Config.InstantRefillCheck.Enable then
     local lastHealth, lastArmor = nil, nil
     local occurrences = {}
+    registerSpawnReset(function() lastHealth, lastArmor = nil, nil end)
     Citizen.CreateThread(function()
         while true do
             Citizen.Wait(Config.InstantRefillCheck.SampleIntervalMs)
             local ped = PlayerPedId()
-            if ped and ped ~= 0 and not IsEntityDead(ped) then
+            if ped and ped ~= 0 and not IsEntityDead(ped) and not inSpawnProtection() then
                 local health = GetEntityHealth(ped)
                 local armor = GetPedArmour(ped)
 
@@ -491,6 +531,14 @@ end
 
 -- ============================================================
 -- Resource Whitelist (see the honest caveat in config.lua)
+-- FIXED (same class of bug as WeaponBlacklistCheck above): this used to
+-- re-report the SAME unknown resource every single sample (every 60s) for
+-- as long as it stayed loaded, with no dedup -- so one false-positive
+-- resource name meant a guaranteed kick a few minutes later no matter
+-- what it actually was. The dedup itself lives server-side (see
+-- AntiCheat:resourceList in server.lua) since the server is the
+-- authoritative, stateful side -- this client thread is unchanged from
+-- before other than this comment.
 -- ============================================================
 if Config.ResourceWhitelistCheck.Enable then
     Citizen.CreateThread(function()

@@ -62,7 +62,7 @@ end)
 
 local function getPlayer(src)
     if not players[src] then
-        players[src] = { score = Config.TrustScore.StartingScore, history = {} }
+        players[src] = { score = Config.TrustScore.StartingScore, history = {}, knownUnknownResources = {}, lastFlagAt = {} }
     end
     return players[src]
 end
@@ -171,6 +171,20 @@ local function applyFlag(src, kind, evidence)
     end
 
     local data = getPlayer(src)
+
+    -- Safety net (see Config.TrustScore.MinReflagIntervalMs): don't let the
+    -- same kind hit the same player twice within the cooldown window, no
+    -- matter what the individual check's own debouncing does or doesn't do.
+    local now = GetGameTimer()
+    local last = data.lastFlagAt[kind]
+    if last and (now - last) < (Config.TrustScore.MinReflagIntervalMs or 4000) then
+        if Config.Debug then
+            print(('[AntiCheat] %s: %s flag suppressed (reflag cooldown)'):format(GetPlayerName(src) or src, kind))
+        end
+        return
+    end
+    data.lastFlagAt[kind] = now
+
     local penalty = penaltyByKind[kind]
     data.score = math.max(Config.TrustScore.MinScore, data.score - penalty)
     table.insert(data.history, { kind = kind, time = os.time(), evidence = evidence })
@@ -236,12 +250,24 @@ AddEventHandler('AntiCheat:resourceList', function(list)
         known[name] = true
     end
 
+    -- FIXED: this used to re-flag every unknown name on every 60s report
+    -- for as long as it stayed loaded, with no dedup at all -- one
+    -- false-positive resource name was a guaranteed kick a few minutes
+    -- later. Now we remember (per player) which unknown names we've
+    -- already reported and only penalize genuinely NEW ones. If a name
+    -- disappears and later reappears, it's treated as new again.
+    local data = getPlayer(src)
+    local stillPresent = {}
     local unknown = {}
     for _, name in ipairs(list) do
         if not known[name] then
-            table.insert(unknown, name)
+            stillPresent[name] = true
+            if not data.knownUnknownResources[name] then
+                table.insert(unknown, name)
+            end
         end
     end
+    data.knownUnknownResources = stillPresent
 
     if #unknown > 0 then
         applyFlag(src, 'resourcewhitelist', { unknownResources = unknown })

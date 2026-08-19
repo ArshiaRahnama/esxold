@@ -30,6 +30,13 @@ Config.TrustScore = {
     WebhookAtScore    = 60,     -- report to Discord for a human to review
     MinScore          = 0,
     MaxScore          = 100,
+    -- Safety net: the SAME kind can never re-penalize the SAME player more
+    -- than once within this window, no matter what any individual check
+    -- does. This exists so a bug/edge-case in any one detector (present or
+    -- future) can never drain a clean 100 to a kick in a handful of
+    -- seconds by itself -- it caps the worst-case drain rate server-side,
+    -- on top of whatever debouncing each check does on its own.
+    MinReflagIntervalMs = 4000,
 }
 
 -- ============================================================
