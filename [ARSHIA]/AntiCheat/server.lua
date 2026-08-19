@@ -27,12 +27,13 @@ local recentFlags = {}
 -- ANY player can fire on themselves with whatever (ms, kinds) they want
 -- -- there's no guarantee the caller is actually a job script. So this
 -- export enforces its own hard ceiling on duration and only ever
--- exempts the two "a legit teleport can trip this" kinds, no matter
--- what a caller asks for. It can never be used to silence noclip,
--- godmode, weapon, or resource-whitelist flags.
+-- exempts the "a legit script action can trip this" kinds (teleport,
+-- speed, and invisibility — e.g. the jail arrest cutscene hiding the
+-- player), no matter what a caller asks for. It can never be used to
+-- silence noclip, godmode, weapon, or resource-whitelist flags.
 -- ============================================================
 local exemptions = {}
-local EXEMPTABLE_KINDS = { teleport = true, speed = true }
+local EXEMPTABLE_KINDS = { teleport = true, speed = true, invisibility = true }
 local MAX_EXEMPT_MS = 10000
 
 local function isExempt(src, kind)

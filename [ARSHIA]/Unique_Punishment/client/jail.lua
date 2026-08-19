@@ -412,10 +412,16 @@ function playCutscene()
     cutscene = true
     CreateThread(function()
         SetEntityVisible(PlayerPedId(), false, false)
+        TriggerServerEvent('Unique_Punishment:AntiCheatExempt', 5000, { teleport = true, speed = true, invisibility = true })
+        local exemptRefresh = GetGameTimer()
         while cutscene do
             Wait(0)
             DisableAllControlActions(0)
             SetPlayerVisibleLocally(PlayerId(), true)
+            if GetGameTimer() - exemptRefresh > 3000 then
+                TriggerServerEvent('Unique_Punishment:AntiCheatExempt', 4000, { teleport = true, speed = true, invisibility = true })
+                exemptRefresh = GetGameTimer()
+            end
         end
         SetEntityVisible(PlayerPedId(), true, false)
     end)
