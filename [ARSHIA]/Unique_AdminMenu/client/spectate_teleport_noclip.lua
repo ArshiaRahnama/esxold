@@ -93,6 +93,7 @@ function resetNormalCamera()
 
 	NetworkSetInSpectatorMode(false, 0)
   DetachEntity(playerPed, true, true)
+  TriggerServerEvent('Unique_AdminMenu:AntiCheatExempt', 5000, { teleport = true, speed = true, invisibility = true })
   SetEntityCoords(playerPed, LastPosition)
   
 	if not invisibility or not invisibility2 then
@@ -241,6 +242,7 @@ function teleportToPlayer(serverId)
   local playerPed = PlayerPedId()
   local targetPed = GetPlayerPed(targetId)
 
+  TriggerServerEvent('Unique_AdminMenu:AntiCheatExempt', 5000, { teleport = true, speed = true })
   NetworkSetInSpectatorMode(false, playerPed) -- turn off spectator mode just in case
   TriggerServerEvent('Admin_Menu:SpectStatus', nil)
   DetachEntity(playerPed, true, true)
@@ -301,6 +303,19 @@ function NoClipThread()
 
 		while IsNoclipActive do
 			local playerPed = PlayerPedId()
+
+			-- Keep an AntiCheat exemption alive for the whole noclip session —
+			-- this loop disables collision on the player's own ped every
+			-- frame (see SetEntityCollision(noclipEntity,...) below), which
+			-- would otherwise look identical to a noclip cheat. Refreshed
+			-- every 3s rather than every frame to avoid spamming the network.
+			noclipExemptRefresh = (noclipExemptRefresh or 0)
+			if GetGameTimer() - noclipExemptRefresh > 3000 then
+				TriggerServerEvent('Unique_AdminMenu:AntiCheatExempt', 4000,
+					{ noclip = true, teleport = true, speed = true, superjump = true })
+				noclipExemptRefresh = GetGameTimer()
+			end
+
         	if (not IsHudHidden()) then
                 BeginScaleformMovieMethod(Scale, "CLEAR_ALL")
                 EndScaleformMovieMethod()

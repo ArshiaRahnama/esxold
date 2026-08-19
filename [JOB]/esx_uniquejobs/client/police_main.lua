@@ -3329,6 +3329,7 @@ AddEventHandler('esx_policejob:getarrested', function(playerheading, playercoord
 	ESX.UI.Menu.CloseAll()
     ESX.SetPlayerData('isSentenced', true)
 	local x, y, z   = table.unpack(playercoords + playerlocation * 1.0)
+	TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, { teleport = true, speed = true })
 	SetEntityCoords(PlayerPedId(), x, y, z)
 	if front then
 		FrontHandCuffed = true
@@ -3454,6 +3455,7 @@ AddEventHandler('esx_policejob:getuncuffed', function(playerheading, playercoord
 	local x, y, z   = table.unpack(playercoords + playerlocation * 1.0)
 	TriggerEvent('esx_policejob:incuffhas', false)
 	TriggerEvent('Unique_Scripts_HuD:offandOnL', false)
+	TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, { teleport = true, speed = true })
 	SetEntityCoords(PlayerPedId(), x, y, z)
 	if not FrontHandCuffed then
 		SetEntityHeading(PlayerPedId(), playerheading)

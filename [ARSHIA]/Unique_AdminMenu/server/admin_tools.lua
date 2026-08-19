@@ -9,6 +9,21 @@
 local ServerStartTime = os.time()
 
 -- ============================================================================
+-- AntiCheat integration — call this right before ANY server-authoritative
+-- teleport/noclip/spectate action below so the (entirely legit) instant
+-- position jump doesn't get flagged as a teleport/speed/noclip hack by
+-- the AntiCheat resource. No-ops safely if AntiCheat isn't installed.
+-- Deliberately GLOBAL (no `local`) — used from both admin_tools.lua and
+-- main.lua, same as IsOnDutyAdmin/LogAdminAction elsewhere in this resource.
+-- ============================================================================
+function ExemptFromAntiCheat(targetId, ms, kinds)
+    if GetResourceState('AntiCheat') ~= 'started' then return end
+    pcall(function()
+        exports['AntiCheat']:ExemptPlayer(targetId, ms or 5000, kinds)
+    end)
+end
+
+-- ============================================================================
 -- PLAYER MANAGEMENT
 -- ============================================================================
 
@@ -416,9 +431,22 @@ AddEventHandler('Unique_AdminMenu:TeleportCoords', function(x, y, z)
     if not IsOnDutyAdmin(source) then return end
     x, y, z = tonumber(x), tonumber(y), tonumber(z)
     if not (x and y and z) then return end
+    ExemptFromAntiCheat(source, 5000, { teleport = true, speed = true })
     TriggerClientEvent('Unique_AdminMenu:ApplyTeleportCoords', source, x, y, z)
     LogAdminAction(source, "teleport-coords", ("%.2f, %.2f, %.2f"):format(x, y, z))
 end)
+
+-- Generic relay for the purely client-side teleport/noclip/spectate tools
+-- below (teleport-to-player, noclip fly, spectate) that don't otherwise
+-- make a server round-trip — the admin's own client calls this right
+-- before doing its own SetEntityCoords, purely to register the exemption.
+RegisterServerEvent('Unique_AdminMenu:AntiCheatExempt')
+AddEventHandler('Unique_AdminMenu:AntiCheatExempt', function(ms, kinds)
+    local source = source
+    if not IsOnDutyAdmin(source) then return end
+    ExemptFromAntiCheat(source, ms, kinds)
+end)
+
 
 -- Saved locations ---------------------------------------------------------
 -- Shared across all admins (INSERT/SELECT off `admin_saved_locations`).

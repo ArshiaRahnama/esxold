@@ -111,8 +111,20 @@ Citizen.CreateThread(function()
                 local coords = GetEntityCoords(ped)
                 local distance = GetDistanceBetweenCoords(coords, 1688.0815, 2513.3103, 45.5649, false)
 
+                -- Keep an AntiCheat exemption alive for the whole sentence —
+                -- the anti-escape snap-back below is a big, instant, entirely
+                -- legit teleport that can fire at any point during a jail
+                -- term (which may last many minutes), so a one-off exemption
+                -- from the moment they were jailed isn't enough on its own.
+                jailExemptRefresh = (jailExemptRefresh or 0)
+                if GetGameTimer() - jailExemptRefresh > 3000 then
+                    TriggerServerEvent('Unique_Punishment:AntiCheatExempt', 4000, { teleport = true, speed = true })
+                    jailExemptRefresh = GetGameTimer()
+                end
+
                 if distance > sentence.distance then
                     DetachEntity(ped, true, true)
+                    TriggerServerEvent('Unique_Punishment:AntiCheatExempt', 5000, { teleport = true, speed = true })
                     SetEntityCoords(ped, vector3(1691.65,2564.72,45.56))
                     ESX.ShowNotification("Nemitoni Az Zendan Farar Koni!")
                 end
@@ -155,6 +167,7 @@ function UnJail()
     sentence.type = 0
     sentence.active = false
     local ped = GetPlayerPed(-1)
+    TriggerServerEvent('Unique_Punishment:AntiCheatExempt', 5000, { teleport = true, speed = true })
     SetEntityCoords(ped, tonumber(sentence.unjail.x),tonumber(sentence.unjail.y),tonumber(sentence.unjail.z))
     -- ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
     -- 	TriggerEvent('skinchanger:loadSkin', skin)
@@ -409,8 +422,10 @@ function playCutscene()
     DoScreenFadeOut(1000)
     RequestAnimDict('mp_character_creation@customise@male_a')
     Wait(3000)
+    TriggerServerEvent('Unique_Punishment:AntiCheatExempt', 5000, { teleport = true, speed = true })
     SetEntityCoords(ped, Config.cutscene.cuff)
     Wait(500)
+    TriggerServerEvent('Unique_Punishment:AntiCheatExempt', 5000, { teleport = true, speed = true })
     SetEntityCoords(ped, Config.cutscene.cuff)
     RequestModel(Config.cutscene.guardModel)
     while not HasModelLoaded(Config.cutscene.guardModel) do
@@ -531,6 +546,7 @@ function playCutscene()
     DestroyCam(cam, false)
     -- SetFocusPosAndVel(Config.cutscene.camCoords2, Config.cutscene.camCoords2)
     createCam(Config.cutscene.camCoords2, Config.cutscene.camRot2)
+    TriggerServerEvent('Unique_Punishment:AntiCheatExempt', 5000, { teleport = true, speed = true })
     ESX.Game.Teleport(ped, Config.cutscene.spawnCoords2, function()
         RequestModel('s_m_y_swat_01')
         while not HasModelLoaded('s_m_y_swat_01') do
@@ -590,6 +606,7 @@ end
 
 function SendJail()
     local ped = PlayerPedId()
+    TriggerServerEvent('Unique_Punishment:AntiCheatExempt', 5000, { teleport = true, speed = true })
     SetEntityCoords(ped, vector3(1691.65,2564.72,45.56))
     trigtimer()
 end

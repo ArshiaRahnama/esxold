@@ -138,12 +138,16 @@ function OpenTeleportMenu(currentLocation)
             if not status then
                 -- انتقال بازیکن به مکان انتخاب شده بعد از 5 ثانیه
                 if data.current.value == "toB" then
+                    TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, { teleport = true, speed = true })
                     SetEntityCoords(PlayerPedId(), markerCoordsB.x, markerCoordsB.y, markerCoordsB.z, false, false, false, true)
                 elseif data.current.value == "toA" then
+                    TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, { teleport = true, speed = true })
                     SetEntityCoords(PlayerPedId(), markerCoordsA.x, markerCoordsA.y, markerCoordsA.z, false, false, false, true)
                 elseif data.current.value == "toC" then
+                    TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, { teleport = true, speed = true })
                     SetEntityCoords(PlayerPedId(), markerCoordsC.x, markerCoordsC.y, markerCoordsC.z, false, false, false, true)
                 elseif data.current.value == "toD" then
+                    TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, { teleport = true, speed = true })
                     SetEntityCoords(PlayerPedId(), markerCoordsD.x, markerCoordsD.y, markerCoordsD.z, false, false, false, true)
                 end
             end

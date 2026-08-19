@@ -124,12 +124,16 @@ function OpenTeleportMenuTaxi(currentLocation)
         }, function(status)
             if not status then
                 if data.current.value == "to2" then
+                    TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, { teleport = true, speed = true })
                     SetEntityCoords(PlayerPedId(), markerCoords2.x, markerCoords2.y, markerCoords2.z, false, false, false, true)
                 elseif data.current.value == "to1" then
+                    TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, { teleport = true, speed = true })
                     SetEntityCoords(PlayerPedId(), markerCoords1.x, markerCoords1.y, markerCoords1.z, false, false, false, true)
                 elseif data.current.value == "to3" then
+                    TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, { teleport = true, speed = true })
                     SetEntityCoords(PlayerPedId(), markerCoords3.x, markerCoords3.y, markerCoords3.z, false, false, false, true)
                 elseif data.current.value == "to4" then
+                    TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, { teleport = true, speed = true })
                     SetEntityCoords(PlayerPedId(), markerCoords4.x, markerCoords4.y, markerCoords4.z, false, false, false, true)
                 end
             end

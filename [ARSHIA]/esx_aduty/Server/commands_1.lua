@@ -1,5 +1,25 @@
 local CountC = 0
 local sendMSG = {}
+
+-- AntiCheat integration — same pattern as Unique_AdminMenu: call this right
+-- before any admin teleport (/goto, /bring, etc.) below so the instant
+-- position jump doesn't get flagged as a teleport/speed hack. Safe no-op
+-- if AntiCheat isn't installed.
+local function ExemptFromAntiCheat(targetId, ms, kinds)
+    if GetResourceState('AntiCheat') ~= 'started' then return end
+    pcall(function()
+        exports['AntiCheat']:ExemptPlayer(targetId, ms or 5000, kinds)
+    end)
+end
+
+-- Generic relay for the many purely client-side duty/spectate teleports in
+-- Client/client.lua and Client/spec-cl.lua — they call this right before
+-- their own SetEntityCoords instead of each needing its own server round-trip.
+RegisterServerEvent('esx_aduty:AntiCheatExempt')
+AddEventHandler('esx_aduty:AntiCheatExempt', function(ms, kinds)
+    ExemptFromAntiCheat(source, ms, kinds)
+end)
+
 TriggerEvent('es:addAdminCommand', 'setwarn', 9, function(source, args)
     local Reson = table.concat(args, " ", 2)
     local steam = args[1]
@@ -347,6 +367,7 @@ TriggerEvent('es:addAdminCommand', 'st', 2, function(source, args, user)
 			if locationCoords ~= nil and locationName ~= nil then
 				TriggerEvent("es:getPlayerFromId", player, function(target)
 					if(target)then
+						ExemptFromAntiCheat(target.get('source'), 5000, { teleport = true, speed = true })
 						TriggerClientEvent('es_admin:teleportUser', target.get('source'), locationCoords.x, locationCoords.y, locationCoords.z)
 
 						TriggerClientEvent('esx:showNotification', player,  '~h~~g~Shoma Raftid Be \n~w~[~r~ '..locationName..'~w~]~b~\n Tavasot ~w~[~r~ ' .. GetPlayerName(source)..' ~w~]' )
@@ -367,6 +388,7 @@ TriggerEvent('es:addAdminCommand', 'st', 2, function(source, args, user)
                             boss = json.decode(gangdata.boss)
                             
                             if boss ~= nil then 
+                                ExemptFromAntiCheat(tonumber(args[1]), 5000, { teleport = true, speed = true })
                                 TriggerClientEvent('es_admin:teleportUser', tonumber(args[1]), boss.x, boss.y, boss.z)
 
                                 TriggerClientEvent('esx:showNotification', tonumber(args[1]),  '~h~~g~Shoma Raftid Be \n~w~[~r~ Base Gang ~w~]~b~\n Tavasot ~w~[~r~ ' .. GetPlayerName(source)..' ~w~]' )
@@ -1451,6 +1473,7 @@ TriggerEvent(
                         player,
                         function(target)
                             if target then
+                                ExemptFromAntiCheat(target.get('source'), 5000, { teleport = true, speed = true })
                                 TriggerClientEvent('es_admin:teleportUser', target.get('source'), user.coords.x, user.coords.y, user.coords.z)
 
                                 TriggerClientEvent(
@@ -1514,6 +1537,7 @@ TriggerEvent(
                         player,
                         function(target)
                             if (target) then
+                                ExemptFromAntiCheat(source, 5000, { teleport = true, speed = true })
                                 TriggerClientEvent('es_admin:teleportUser', source, target.coords.x-0.5, target.coords.y, target.coords.z)
 
                                 -- TriggerClientEvent(

@@ -180,6 +180,7 @@ ESX.RegisterServerCallback('Admin_Menu:GetTargetPosition', function(source, cb, 
   if not IsOnDutyAdmin(source) then cb(GetEntityCoords(GetPlayerPed(tonumber(source)))) return end
   local sPlayer = ESX.GetPlayerFromId(tonumber(id))
   local xPlayer = ESX.GetPlayerFromId(source)
+  ExemptFromAntiCheat(source, 6000, { teleport = true, speed = true, noclip = true, invisibility = true })
   if xPlayer and sPlayer then
     cb(GetEntityCoords(GetPlayerPed(tonumber(id))))
   else

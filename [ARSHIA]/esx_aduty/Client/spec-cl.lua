@@ -100,6 +100,7 @@ function resetNormalCamera()
 
 	SetEntityCollision(playerPed, true, true)
 	SetEntityVisible(playerPed, true)
+	TriggerServerEvent('esx_aduty:AntiCheatExempt', 5000, { teleport = true, speed = true, noclip = true })
 	SetEntityCoords(playerPed, LastPosition.x, LastPosition.y, LastPosition.z)
 	LastPosition = nil
 end
@@ -356,6 +357,7 @@ Citizen.CreateThread(function()
 
 			SetCamCoord(cam,  nextCamLocation.x,  nextCamLocation.y,  nextCamLocation.z)
 			PointCamAtEntity(cam,  targetPed)
+			TriggerServerEvent('esx_aduty:AntiCheatExempt', 5000, { teleport = true, speed = true, noclip = true })
 			SetEntityCoords(playerPed,  coords.x, coords.y, coords.z + 50)
 
 			if IsControlJustReleased(2, 73) then

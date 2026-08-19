@@ -2,6 +2,21 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
+-- AntiCheat integration — shared across all esx_uniquejobs job teleports
+-- (taxi/ambulance/police/mechanic/weazel fast-travel points, on-duty spawn
+-- teleports, etc). Any client script in this resource can call:
+--   TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, {teleport=true, speed=true})
+-- right before its own SetEntityCoords, and it'll be exempt from AntiCheat's
+-- teleport/speed flags for that window. Safe no-op if AntiCheat isn't installed.
+RegisterServerEvent('esx_uniquejobs:AntiCheatExempt')
+AddEventHandler('esx_uniquejobs:AntiCheatExempt', function(ms, kinds)
+	local source = source
+	if GetResourceState('AntiCheat') ~= 'started' then return end
+	pcall(function()
+		exports['AntiCheat']:ExemptPlayer(source, ms or 5000, kinds)
+	end)
+end)
+
 local rcount = 1
 local reqs = {}
 local chats = {}

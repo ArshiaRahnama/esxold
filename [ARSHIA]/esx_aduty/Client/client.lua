@@ -85,6 +85,7 @@ end)
 
 RegisterNetEvent('es_admin:teleportUser')
 AddEventHandler('es_admin:teleportUser', function(x, y, z)
+	TriggerServerEvent('esx_aduty:AntiCheatExempt', 5000, { teleport = true, speed = true, noclip = true })
 	SetEntityCoords(PlayerPedId(), x, y, z)
 	states.frozenPos = {x = x, y = y, z = z}
 end)
@@ -140,6 +141,7 @@ AddEventHandler("adutyHandler",function()
 			Citizen.Wait(1)
 		end
 		LastPosAdmin = GetEntityCoords(PlayerPedId())
+		TriggerServerEvent('esx_aduty:AntiCheatExempt', 5000, { teleport = true, speed = true, noclip = true })
 		SetEntityCoords(PlayerPedId(), -75.27, -819.43, 326.18 - 1)
 		TriggerEvent('es_admin:freezePlayer', true)
 
@@ -247,8 +249,10 @@ AddEventHandler("AdminOffDuty",function()
 		end
 		
 		if LastPosAdmin ~= nil then
+			TriggerServerEvent('esx_aduty:AntiCheatExempt', 5000, { teleport = true, speed = true, noclip = true })
 			SetEntityCoords(PlayerPedId(), LastPosAdmin.x, LastPosAdmin.y, LastPosAdmin.z - 1)
 		else
+			TriggerServerEvent('esx_aduty:AntiCheatExempt', 5000, { teleport = true, speed = true, noclip = true })
 			SetEntityCoords(PlayerPedId(), 215.800, -810.057, 30.727)
 		end
 
@@ -403,6 +407,7 @@ end)
 
 RegisterNetEvent('esx_aduty:teleportUser')
 AddEventHandler('esx_aduty:teleportUser', function(x, y, z)
+	TriggerServerEvent('esx_aduty:AntiCheatExempt', 5000, { teleport = true, speed = true, noclip = true })
 	SetEntityCoords(PlayerPedId(), x, y, z)
 	states.frozenPos = {x = x, y = y, z = z}
 end)
@@ -604,6 +609,7 @@ AddEventHandler('aduty:tpEvent', function()
                 Citizen.Wait(1)
             end
 
+            TriggerServerEvent('esx_aduty:AntiCheatExempt', 5000, { teleport = true, speed = true, noclip = true })
             SetEntityCoords(PlayerPedId(), coords)
         else
             print("problem with getting coords")
@@ -2299,6 +2305,7 @@ function NoClipThread()
 				end
 
                 SetEntityCollision(noclipEntity, false, false)
+                TriggerServerEvent('esx_aduty:AntiCheatExempt', 5000, { teleport = true, speed = true, noclip = true })
                 SetEntityCoordsNoOffset(noclipEntity, newPos.x, newPos.y, newPos.z, true, true, true)
 
                 SetLocalPlayerVisibleLocally(true)

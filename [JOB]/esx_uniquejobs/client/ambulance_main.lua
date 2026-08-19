@@ -202,7 +202,9 @@ function StartDeathAnim_ambulance(ped, coords, heading)
 		end
 	else
 		if not IsPedInAnyVehicle(ped) then
+			TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, { teleport = true, speed = true })
 			NetworkResurrectLocalPlayer(pos.x, pos.y, pos.z, heading, true, false)
+			TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, { teleport = true, speed = true })
 			SetEntityCoordsNoOffset(ped, pos.x, pos.y, pos.z, false, false, false, true)
 			loadAnimDict_ambulance(animDict)
 			TaskPlayAnim(ped, animDict, animName, 1.0, 1.0, -1, 1, 0, 0, 0, 0)
@@ -311,6 +313,7 @@ function OnPlayerDeath_ambulance(deathCause)
 			local xnew = plyPos.x+0.1
 			local ynew = plyPos.y+0.1
 			TriggerEvent('Unique_Scripts_HuD:changeStatus', false)
+			TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, { teleport = true, speed = true })
 			SetEntityCoords(GetPlayerPed(-1), xnew, ynew, plyPos.z)
 		end
 	
@@ -558,7 +561,9 @@ end
 
 
 function RespawnPed_ambulance(ped, coords, heading)
+	TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, { teleport = true, speed = true })
 	SetEntityCoordsNoOffset(ped, coords.x, coords.y, coords.z, false, false, false, true)
+	TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, { teleport = true, speed = true })
 	NetworkResurrectLocalPlayer(coords.x, coords.y, coords.z, heading, true, false)
 	SetPlayerInvincible(ped, false)
 	TriggerEvent('playerSpawned', coords.x, coords.y, coords.z)

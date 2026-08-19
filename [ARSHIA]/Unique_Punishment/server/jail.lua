@@ -3,6 +3,29 @@ local sentences = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
+-- AntiCheat integration — jail involves several big, entirely legit,
+-- instant position jumps (cutscene start, send-to-jail, anti-escape
+-- snap-back, release) that would otherwise look identical to a
+-- teleport/speed hack to the AntiCheat resource. Safe no-op if
+-- AntiCheat isn't installed.
+local function ExemptFromAntiCheat(targetId, ms, kinds)
+	if GetResourceState('AntiCheat') ~= 'started' then return end
+	pcall(function()
+		exports['AntiCheat']:ExemptPlayer(targetId, ms or 5000, kinds)
+	end)
+end
+
+-- The anti-escape snap-back and cutscene run for the WHOLE jail sentence
+-- (which can be many minutes), so a one-off few-second exemption from the
+-- moment they're sent to jail isn't enough — client/jail.lua calls this
+-- every few seconds for as long as the player is jailed to keep the
+-- exemption window rolling forward.
+RegisterServerEvent('Unique_Punishment:AntiCheatExempt')
+AddEventHandler('Unique_Punishment:AntiCheatExempt', function(ms, kinds)
+	ExemptFromAntiCheat(source, ms, kinds)
+end)
+
+
 -- users.jail از قبل روی سرور هست (esx_aduty هم باهاش کار می‌کنه)؛ به‌جای جدول جدا
 -- مستقیم از همین ستون می‌خونیم/می‌نویسیم. مقادیر esx_aduty فقط {time,type,part}
 -- دارن (بدون unjail/reason)، پس اینجا با مقدار پیش‌فرض پرش می‌کنیم.
@@ -64,6 +87,7 @@ AddEventHandler('arshia_jail:sendto',function (target, type, time, reason, unjai
 	local sentence = {type = type, time = time, unjail = unjail, reason = reason}
 	sentences[identifier] = sentence
 	PersistJail(identifier, sentence)
+	ExemptFromAntiCheat(target, 12000, { teleport = true, speed = true, invisibility = true })
 	TriggerClientEvent('arshia_jail:SentencePlayer', target, type, time, unjail, false)
 	local yPlayer = ESX.GetPlayerFromId(target)
 	if type == 'faction' then
@@ -123,6 +147,7 @@ AddEventHandler("arshia_jail:UnjailPlayer", function(id)
 			TriggerClientEvent('chat:addMessage',xPlayers[i], {color = {0, 95, 254}, multiline = true ,args = {"[DISPATCH]", '^1'..yPlayer.name..'^0 tavasot ^2'..zPlayer.name..'^0 unjail shod !'}})
 		end
 	end
+    ExemptFromAntiCheat(id, 5000, { teleport = true, speed = true })
     TriggerClientEvent("arshia_jail:UnjailPlayer", id)
 end)
 
@@ -191,6 +216,7 @@ TriggerEvent('es:addAdminCommand', 'aunjail', 5, function(source, args, user)
 	if sentences[identifier] then
 		if sentences[identifier].time > 0 then
 			if sentences[identifier].type == 'admin' then
+				ExemptFromAntiCheat(target, 5000, { teleport = true, speed = true })
 				TriggerClientEvent("arshia_jail:UnjailPlayer", target)
 				TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, "Player Unjail Shod.")
 			else
@@ -219,6 +245,7 @@ TriggerEvent('es:addAdminCommand', 'icunjail', 8, function(source, args, user)
 	if sentences[identifier] then
 		if sentences[identifier].time > 0 then
 			if sentences[identifier].type == 'faction' then
+				ExemptFromAntiCheat(target, 5000, { teleport = true, speed = true })
 				TriggerClientEvent("arshia_jail:UnjailPlayer", target)
 				TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, "Player Unjail Shod.")
 			else
