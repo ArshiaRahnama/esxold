@@ -528,38 +528,73 @@ HZ.CreateThread(function()
     for index, esc in pairs(Customize.ImpoundGarages) do NPCLoad(esc) MapBlip(esc) end
 end)
 
--- [E] proximity prompt to actually open the garage menu (matches the '[E]' / fa-square-parking style)
+-- ox_target sphere zones for the garage NPC points, styled like Sunset's sun-garage
+-- (icon = 'fa-solid fa-square-parking fa-beat'). Replaces the old raw [E]-key polling
+-- loop with the same radius (5.0) and the exact same open logic (OpenMenuG).
+local GarageZoneRadius = 5.0
+
 HZ.CreateThread(function()
-    while true do
-        local sleep = 1000
-        local PlayerPed = PlayerPedId()
-        local PlayerCoord = GetEntityCoords(PlayerPed)
-        local nearestDist, nearestEvent, nearestPos = 999999.0, nil, nil
+    for index, esc in pairs(Customize.Garages) do
+        exports.ox_target:addSphereZone({
+            coords = esc.Npc.Pos,
+            radius = GarageZoneRadius,
+            debug = false,
+            drawSprite = true,
+            options = {
+                {
+                    name = 'unique_garage_open_' .. tostring(index),
+                    icon = 'fa-solid fa-square-parking fa-beat',
+                    label = esc.UIName or 'Garage',
+                    onSelect = function()
+                        OpenMenuG("garage")
+                    end,
+                }
+            }
+        })
+    end
 
-        for index, esc in pairs(Customize.Garages) do
-            local dist = #(PlayerCoord - esc.Npc.Pos)
-            if dist < nearestDist then nearestDist, nearestEvent, nearestPos = dist, "OpenGarage", esc.Npc.Pos end
-        end
-        for index, esc in pairs(Customize.JobGarages) do
-            if PlayerData ~= nil and PlayerData.job ~= nil and PlayerData.job.name == esc.PlayerJob then
-                local dist = #(PlayerCoord - esc.Npc.Pos)
-                if dist < nearestDist then nearestDist, nearestEvent, nearestPos = dist, "OpenJob", esc.Npc.Pos end
-            end
-        end
-        for index, esc in pairs(Customize.ImpoundGarages) do
-            local dist = #(PlayerCoord - esc.Npc.Pos)
-            if dist < nearestDist then nearestDist, nearestEvent, nearestPos = dist, "OpenImpound", esc.Npc.Pos end
-        end
+    for index, esc in pairs(Customize.JobGarages) do
+        exports.ox_target:addSphereZone({
+            coords = esc.Npc.Pos,
+            radius = GarageZoneRadius,
+            debug = false,
+            drawSprite = true,
+            options = {
+                {
+                    name = 'unique_garage_job_open_' .. tostring(index),
+                    icon = 'fa-solid fa-square-parking fa-beat',
+                    label = (esc.UIName or 'Job Garage'),
+                    -- Keeps the exact same job gate as before: the icon can be visible from
+                    -- a distance, but selecting it (or even seeing the prompt up close) still
+                    -- requires the matching job, checked live so a job change works immediately.
+                    canInteract = function()
+                        return PlayerData ~= nil and PlayerData.job ~= nil and PlayerData.job.name == esc.PlayerJob
+                    end,
+                    onSelect = function()
+                        OpenMenuG("job")
+                    end,
+                }
+            }
+        })
+    end
 
-        if nearestEvent ~= nil and nearestDist <= 5.0 then
-            sleep = 0
-            ShowHelpNotification("~INPUT_CONTEXT~ Baz Kardan Garage")
-            if IsControlJustReleased(0, 38) then -- INPUT_CONTEXT (E)
-                TriggerEvent(nearestEvent)
-            end
-        end
-
-        Wait(sleep)
+    for index, esc in pairs(Customize.ImpoundGarages) do
+        exports.ox_target:addSphereZone({
+            coords = esc.Npc.Pos,
+            radius = GarageZoneRadius,
+            debug = false,
+            drawSprite = true,
+            options = {
+                {
+                    name = 'unique_garage_impound_open_' .. tostring(index),
+                    icon = 'fa-solid fa-square-parking fa-beat',
+                    label = esc.UIName or 'Impound',
+                    onSelect = function()
+                        OpenMenuG()
+                    end,
+                }
+            }
+        })
     end
 end)
 
