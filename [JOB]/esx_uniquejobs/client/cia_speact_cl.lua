@@ -62,7 +62,7 @@ Citizen.CreateThread(function()
             local distance = #(playerCoords - markerCoords)
 
             if distance < 5.0 then
-                DrawMarker(1, markerCoords.x, markerCoords.y, markerCoords.z - 1.0, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 255, 0, 0, 150, false, true, 2, nil, nil, false)
+                DrawMarker(1, markerCoords.x, markerCoords.y, markerCoords.z - 1.0, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 255, 0, 0, 100, false, true, 2, nil, nil, false)
 
                 if distance < 1.5 then
                     ESX.ShowHelpNotification("~INPUT_CONTEXT~ Press to open job spectate menu.")

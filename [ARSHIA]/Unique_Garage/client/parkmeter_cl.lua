@@ -115,8 +115,8 @@ Citizen.CreateThread(function()
 
                 PosCorrds = {x = location.x, y = location.y, z = location.z}
 
-                DrawMarker(36, location.x, location.y, location.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, markerColor.r, markerColor.g, markerColor.b, 255, false, true, 2, false, false, false, false)
-                DrawMarker(6, location.x, location.y, location.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.5, markerColor.r, markerColor.g, markerColor.b, 255, false, true, 2, false, false, false, false)
+                DrawMarker(36, location.x, location.y, location.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, markerColor.r, markerColor.g, markerColor.b, 100, false, true, 2, false, false, false, false)
+                DrawMarker(6, location.x, location.y, location.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.5, markerColor.r, markerColor.g, markerColor.b, 100, false, true, 2, false, false, false, false)
 
                 SetBlipColour(ParkMeterBlips[i], blipColor)
             else

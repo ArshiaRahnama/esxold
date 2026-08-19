@@ -1176,7 +1176,7 @@ local PositionStrings = ""
                 end 
                 
                 if Stage == 4 then 
-                    DrawMarker(26, pEscena.x, pEscena.y, pEscena.z+0.1, 0, 0, 0, 0, 0, markerheading, size*3, size*3, size*3, 255, 4, 4, 255, false, false)
+                    DrawMarker(26, pEscena.x, pEscena.y, pEscena.z+0.1, 0, 0, 0, 0, 0, markerheading, size*3, size*3, size*3, 255, 4, 4, 100, false, false)
                 end 
                 DrawMarker(28, pEscena.x, pEscena.y, pEscena.z, 0, 0, 0, 0, 0, 0, size, size, size, Config.DebugMarkerColor, false, false)
             end

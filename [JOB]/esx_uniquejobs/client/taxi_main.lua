@@ -1516,7 +1516,7 @@ Citizen.CreateThread(function()
 							end
 
 							if targetCoords then
-								DrawMarker(36, targetCoords.x, targetCoords.y, targetCoords.z + 1.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 234, 223, 72, 155, false, false, 2, true, nil, nil, false)
+								DrawMarker(36, targetCoords.x, targetCoords.y, targetCoords.z + 1.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 234, 223, 72, 100, false, false, 2, true, nil, nil, false)
 							end
 						else
 							RemoveBlip(CurrentCustomerBlip)
@@ -1551,7 +1551,7 @@ Citizen.CreateThread(function()
 							CustomerEnteredVehicle = true
 						end
 					else
-						DrawMarker(36, customerCoords.x, customerCoords.y, customerCoords.z + 1.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 234, 223, 72, 155, false, false, 2, true, nil, nil, false)
+						DrawMarker(36, customerCoords.x, customerCoords.y, customerCoords.z + 1.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 234, 223, 72, 100, false, false, 2, true, nil, nil, false)
 
 						if not CustomerEnteredVehicle then
 							if customerDistance <= 40.0 then

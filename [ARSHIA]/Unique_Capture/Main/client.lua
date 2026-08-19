@@ -350,7 +350,7 @@ if Config.EnableAcademy then
                 end
                 if dist <= 25.0 then
                     DrawMarker(1, safePoint.x, safePoint.y, safePoint.z - 1.0, 0.0,0.0,0.0, 0.0,0.0,0.0,
-                        Config.AcademySafeZoneRadius*2, Config.AcademySafeZoneRadius*2, 2.0, 0,150,255,60, false,false,2,false,nil,nil,false)
+                        Config.AcademySafeZoneRadius*2, Config.AcademySafeZoneRadius*2, 2.0, 0,150,255,100, false,false,2,false,nil,nil,false)
                 else
                     Citizen.Wait(400)
                 end
@@ -484,7 +484,7 @@ if Config.EnableAcademy then
                 Citizen.Wait(0)
                 local dist = #(GetEntityCoords(PlayerPedId()) - point)
                 if dist <= 15.0 then
-                    DrawMarker(1, point.x, point.y, point.z - 1.0, 0.0,0.0,0.0, 0.0,0.0,0.0, 6.0,6.0,2.0, 0,255,0,80, false,false,2,false,nil,nil,false)
+                    DrawMarker(1, point.x, point.y, point.z - 1.0, 0.0,0.0,0.0, 0.0,0.0,0.0, 6.0,6.0,2.0, 0,255,0,100, false,false,2,false,nil,nil,false)
                     if dist <= 3.0 and not explained then
                         explained = true
                         TriggerEvent('chat:addMessage', {args = {"^2[Academy]", "This green circle is a practice capture point — this is EXACTLY what you'll stand in during a real round."}})

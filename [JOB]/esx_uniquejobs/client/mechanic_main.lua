@@ -2279,7 +2279,7 @@ end
 --             local vehicle = GetVehiclePedIsIn(playerPed, false)
 
 --             -- رسم مارکر در مختصات ثابت
---             DrawMarker(24, markerCoords.x, markerCoords.y, markerCoords.z - 1.0, 0, 0, 0, 0, 0, 0, 1.5, 1.5, 1.5, 0, 255, 0, 150, false, true, 2, false, nil, nil, false)
+--             DrawMarker(24, markerCoords.x, markerCoords.y, markerCoords.z - 1.0, 0, 0, 0, 0, 0, 0, 1.5, 1.5, 1.5, 0, 255, 0, 100, false, true, 2, false, nil, nil, false)
 
 --             -- بررسی فاصله بازیکن تا مارکر
 --             if #(GetEntityCoords(playerPed) - markerCoords) < markerActionDistance then

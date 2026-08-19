@@ -125,7 +125,7 @@ Citizen.CreateThread(function()
                 if distance > sentence.distance then
                     DetachEntity(ped, true, true)
                     TriggerServerEvent('Unique_Punishment:AntiCheatExempt', 5000, { teleport = true, speed = true })
-                    SetEntityCoords(ped, vector3(1691.65,2564.72,45.56))
+                    ESX.Game.Teleport(ped, vector3(1691.65,2564.72,45.56))
                     ESX.ShowNotification("Nemitoni Az Zendan Farar Koni!")
                 end
 
@@ -168,7 +168,8 @@ function UnJail()
     sentence.active = false
     local ped = GetPlayerPed(-1)
     TriggerServerEvent('Unique_Punishment:AntiCheatExempt', 5000, { teleport = true, speed = true })
-    SetEntityCoords(ped, tonumber(sentence.unjail.x),tonumber(sentence.unjail.y),tonumber(sentence.unjail.z))
+    local releaseCoords = (type(sentence.unjail) == "table" or type(sentence.unjail) == "vector3") and sentence.unjail or Config.AdminJail.unjail
+    ESX.Game.Teleport(ped, releaseCoords)
     -- ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
     -- 	TriggerEvent('skinchanger:loadSkin', skin)
     -- end)
@@ -607,7 +608,7 @@ end
 function SendJail()
     local ped = PlayerPedId()
     TriggerServerEvent('Unique_Punishment:AntiCheatExempt', 5000, { teleport = true, speed = true })
-    SetEntityCoords(ped, vector3(1691.65,2564.72,45.56))
+    ESX.Game.Teleport(ped, vector3(1691.65,2564.72,45.56))
     trigtimer()
 end
 

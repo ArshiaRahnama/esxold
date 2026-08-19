@@ -257,7 +257,7 @@ HZ.CreateThread(function()
             end
             if VehPutDistance <= 12.0 then
                 Sleep = 5
-                DrawMarker(2, esc.VehPutPos.x, esc.VehPutPos.y, esc.VehPutPos.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15, 255, 255, 255, 255, false, false, false, true, false, false, false)
+                DrawMarker(2, esc.VehPutPos.x, esc.VehPutPos.y, esc.VehPutPos.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15, 255, 255, 255, 100, false, false, false, true, false, false, false)
                 if VehPutDistance <= 4.0 and IsPedInAnyVehicle(PlayerPed, false) and GetPedInVehicleSeat(InVeh, -1) == PlayerPed then
                     ShowHelpNotification("~INPUT_CONTEXT~ Baraye Park Kardan Mashin")
                 end
@@ -305,7 +305,7 @@ HZ.CreateThread(function()
                     end
                     if VehPutDistance <= 12.0 then
                         Sleep = 5
-                        DrawMarker(2, esc.VehPutPos.x, esc.VehPutPos.y, esc.VehPutPos.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15, 255, 255, 255, 255, false, false, false, true, false, false, false)
+                        DrawMarker(2, esc.VehPutPos.x, esc.VehPutPos.y, esc.VehPutPos.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15, 255, 255, 255, 100, false, false, false, true, false, false, false)
                         if VehPutDistance <= 4.0 and IsPedInAnyVehicle(PlayerPed, false) and GetPedInVehicleSeat(InVeh, -1) == PlayerPed then
                             ShowHelpNotification("~INPUT_CONTEXT~ Baraye Park Kardan Mashin")
                         end

@@ -88,7 +88,7 @@ Citizen.CreateThread(function()
 			local distance = GetDistanceBetweenCoords(coords, Config.Zones.AirShops[i].Outside, true)
 
 			if distance < Config.DrawDistance then
-				DrawMarker(34, Config.Zones.AirShops[i].Outside, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4,0.4,0.4, 0, 0, 100, 500, true, true, 2, false, nil, nil, false)
+				DrawMarker(34, Config.Zones.AirShops[i].Outside, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4,0.4,0.4, 0, 0, 100, 100, true, true, 2, false, nil, nil, false)
 				letSleep = false
 			end
 
@@ -103,7 +103,7 @@ Citizen.CreateThread(function()
 			local distance = GetDistanceBetweenCoords(coords, Config.Zones.Garages[i].GaragePos, true)
 
 			if distance < Config.DrawDistance then
-				DrawMarker(29, Config.Zones.Garages[i].GaragePos, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4,0.4,0.4, 0, 255, 0, 500, true, true, 2, false, nil, nil, false)
+				DrawMarker(29, Config.Zones.Garages[i].GaragePos, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4,0.4,0.4, 0, 255, 0, 100, true, true, 2, false, nil, nil, false)
 				letSleep = false
 			end
 
@@ -116,7 +116,7 @@ Citizen.CreateThread(function()
 			distance = GetDistanceBetweenCoords(coords, Config.Zones.Garages[i].StorePos, true)
 
 			if distance < Config.DrawDistance then
-				DrawMarker(24, Config.Zones.Garages[i].StorePos, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.StoreMarker.r, Config.StoreMarker.g, Config.StoreMarker.b, 500, true, true, 2, false, nil, nil, false)
+				DrawMarker(24, Config.Zones.Garages[i].StorePos, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.StoreMarker.r, Config.StoreMarker.g, Config.StoreMarker.b, 100, true, true, 2, false, nil, nil, false)
 				letSleep = false
 			end
 

@@ -32,7 +32,7 @@ Citizen.CreateThread(function()
 		Citizen.Wait(1)
 
         if deleteLazer then
-            local color = {r = 255, g = 255, b = 255, a = 200}
+            local color = {r = 255, g = 255, b = 255, a = 100}
             local position = GetEntityCoords(PlayerPedId())
             local hit, coords, entity = RayCastGamePlayCamera(1000.0)
             

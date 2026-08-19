@@ -31,7 +31,7 @@ Config.OxTargetLabel = 'Seating Options '
 Config.AllowHeadingChange = true -- change heading by pressing A and D 
 Config.Debug = false -- commands "CreatePolyGonSeat" "SaveMyHeading" "fixchair"
 --"CreatePolyGonSeat"
-Config.DebugMarkerColor = vector4(150, 150, 200, 255)
+Config.DebugMarkerColor = vector4(150, 150, 200, 100)
 
 
 Config.AnimDescriptions = { -- this is all you need to edit for translations 

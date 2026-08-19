@@ -1888,13 +1888,13 @@ while true do
   local coords    = GetEntityCoords(playerPed)
   if Data.locker ~= nil then
     if GetDistanceBetweenCoords(coords,  Data.locker.x,  Data.locker.y,  Data.locker.z,  true) < PropConfig.DrawDistance then
-      DrawMarker(21, Data.locker.x,  Data.locker.y,  Data.locker.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.8,0.8,0.8, 0, 0, 255, 200, true, true, 2, true, false, false, false)
+      DrawMarker(21, Data.locker.x,  Data.locker.y,  Data.locker.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.8,0.8,0.8, 0, 0, 255, 100, true, true, 2, true, false, false, false)
     end
   end
 
   if Data.armory ~= nil then
     if GetDistanceBetweenCoords(coords,  Data.armory.x,  Data.armory.y,  Data.armory.z,  true) < PropConfig.DrawDistance then
-      DrawMarker(42, Data.armory.x,  Data.armory.y,  Data.armory.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.8,0.8,0.8, 150, 200, 150, 200, true, true, 2, true, false, false, false)
+      DrawMarker(42, Data.armory.x,  Data.armory.y,  Data.armory.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.8,0.8,0.8, 150, 200, 150, 100, true, true, 2, true, false, false, false)
     end
   end
 
@@ -1912,31 +1912,31 @@ while true do
 
   if Data.heli ~= nil then
     if GetDistanceBetweenCoords(coords,  Data.heli.x,  Data.heli.y,  Data.heli.z,  true) < PropConfig.DrawDistance then
-      DrawMarker(34, Data.heli.x,  Data.heli.y,  Data.heli.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.8,0.8,0.8, 0, 255, 0, 200, true, true, 2, true, false, false, false)
+      DrawMarker(34, Data.heli.x,  Data.heli.y,  Data.heli.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.8,0.8,0.8, 0, 255, 0, 100, true, true, 2, true, false, false, false)
     end
   end
 
   if Data.helidel ~= nil then
     if GetDistanceBetweenCoords(coords,   Data.helidel.x,  Data.helidel.y,  Data.helidel.z,  true) < PropConfig.DrawDistance then
-      DrawMarker(34, Data.helidel.x,  Data.helidel.y,  Data.helidel.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0,3.0,2.5, 255, 0, 0, 200, true, true, 2, false, false, false, false)
+      DrawMarker(34, Data.helidel.x,  Data.helidel.y,  Data.helidel.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0,3.0,2.5, 255, 0, 0, 100, true, true, 2, false, false, false, false)
     end
   end
 
   if Data.boat ~= nil then
     if GetDistanceBetweenCoords(coords,  Data.boat.x,  Data.boat.y,  Data.boat.z,  true) < PropConfig.DrawDistance then
-      DrawMarker(35, Data.boat.x,  Data.boat.y,  Data.boat.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.8,0.8,0.8, 0, 255, 0, 200, true, true, 2, true, false, false, false)
+      DrawMarker(35, Data.boat.x,  Data.boat.y,  Data.boat.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.8,0.8,0.8, 0, 255, 0, 100, true, true, 2, true, false, false, false)
     end
   end
 
   if Data.boatdel ~= nil then
     if GetDistanceBetweenCoords(coords,   Data.boatdel.x,  Data.boatdel.y,  Data.boatdel.z,  true) < PropConfig.DrawDistance then
-      DrawMarker(35, Data.boatdel.x,  Data.boatdel.y,  Data.boatdel.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0,3.0,2.5, 255, 0, 0, 200, true, true, 2, false, false, false, false)
+      DrawMarker(35, Data.boatdel.x,  Data.boatdel.y,  Data.boatdel.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0,3.0,2.5, 255, 0, 0, 100, true, true, 2, false, false, false, false)
     end
   end
 
   if Data.boss ~= nil then
     if GetDistanceBetweenCoords(coords,  Data.boss.x,  Data.boss.y,  Data.boss.z,  true) < PropConfig.DrawDistance then
-      DrawMarker(31, Data.boss.x,  Data.boss.y,  Data.boss.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.8,0.8,0.8, 255, 255, 255, 200, true, true, 2, true, false, false, false)
+      DrawMarker(31, Data.boss.x,  Data.boss.y,  Data.boss.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.8,0.8,0.8, 255, 255, 255, 100, true, true, 2, true, false, false, false)
     end
   end
     

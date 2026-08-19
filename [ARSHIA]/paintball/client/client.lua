@@ -862,7 +862,7 @@ Citizen.CreateThread(function()
         if PBData.InPB then
             if MapData[PBData.MapName]["area"] then
                 local AreaData = MapData[PBData.MapName]["area"]
-                DrawMarker(tonumber(PBMarker.Type), tonumber(AreaData.Pos.x), tonumber(AreaData.Pos.y), tonumber(AreaData.Pos.z), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, tonumber(AreaData.Size.x), tonumber(AreaData.Size.y), tonumber(AreaData.Size.z), 0, 150, 0, 50, false, true, 2, false, false, false, false)
+                DrawMarker(tonumber(PBMarker.Type), tonumber(AreaData.Pos.x), tonumber(AreaData.Pos.y), tonumber(AreaData.Pos.z), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, tonumber(AreaData.Size.x), tonumber(AreaData.Size.y), tonumber(AreaData.Size.z), 0, 150, 0, 100, false, true, 2, false, false, false, false)
             end
 		else
 			Citizen.Wait(500)

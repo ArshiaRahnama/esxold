@@ -3743,35 +3743,35 @@ function mainThreads_cid()
 				for i=1, #v.Cloakrooms, 1 do
 					if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()),  v.Cloakrooms[i].x,  v.Cloakrooms[i].y,  v.Cloakrooms[i].z,  true) < 5 then
 						canSleep = false
-						DrawMarker(22, v.Cloakrooms[i].x, v.Cloakrooms[i].y, v.Cloakrooms[i].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, Config_cid.MarkerColor.r, Config_cid.MarkerColor.g, Config_cid.MarkerColor.b, 255, false, true, 2, false, false, false, false)
+						DrawMarker(22, v.Cloakrooms[i].x, v.Cloakrooms[i].y, v.Cloakrooms[i].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, Config_cid.MarkerColor.r, Config_cid.MarkerColor.g, Config_cid.MarkerColor.b, 100, false, true, 2, false, false, false, false)
 					end
 				end
 
 				for i=1, #v.Armories, 1 do
 					if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()),  v.Armories[i].x,  v.Armories[i].y,  v.Armories[i].z,  true) < 5 then
 					canSleep = false
-						DrawMarker(22, v.Armories[i].x, v.Armories[i].y, v.Armories[i].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0,  1.0, 1.0, 1.0, Config_cid.MarkerColor.r, Config_cid.MarkerColor.g, Config_cid.MarkerColor.b, 255, false, true, 2, false, false, false, false)
+						DrawMarker(22, v.Armories[i].x, v.Armories[i].y, v.Armories[i].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0,  1.0, 1.0, 1.0, Config_cid.MarkerColor.r, Config_cid.MarkerColor.g, Config_cid.MarkerColor.b, 100, false, true, 2, false, false, false, false)
 					end
 				end
 
 				for i=1, #v.Vehicles, 1 do
 				canSleep = false
 					if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()),  v.Vehicles[i].Spawner.x,  v.Vehicles[i].Spawner.y,  v.Vehicles[i].Spawner.z,  true) < 5 then
-						DrawMarker(36, v.Vehicles[i].Spawner.x, v.Vehicles[i].Spawner.y, v.Vehicles[i].Spawner.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0,  1.0, 1.0, 1.0, 0, 255, 0, 255, false, true, 2, false, false, false, false)
+						DrawMarker(36, v.Vehicles[i].Spawner.x, v.Vehicles[i].Spawner.y, v.Vehicles[i].Spawner.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0,  1.0, 1.0, 1.0, 0, 255, 0, 100, false, true, 2, false, false, false, false)
 					end
 				end
 
 				for i=1, #v.Helicopters, 1 do
 					canSleep = false
 						if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()),  v.Helicopters[i].Spawner.x,  v.Helicopters[i].Spawner.y,  v.Helicopters[i].Spawner.z,  true) < 5 then
-							DrawMarker(34, v.Helicopters[i].Spawner.x, v.Helicopters[i].Spawner.y, v.Helicopters[i].Spawner.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0,  1.0, 1.0, 1.0, Config_cid.MarkerColor.r, Config_cid.MarkerColor.g, Config_cid.MarkerColor.b, 255, false, true, 2, false, false, false, false)
+							DrawMarker(34, v.Helicopters[i].Spawner.x, v.Helicopters[i].Spawner.y, v.Helicopters[i].Spawner.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0,  1.0, 1.0, 1.0, Config_cid.MarkerColor.r, Config_cid.MarkerColor.g, Config_cid.MarkerColor.b, 100, false, true, 2, false, false, false, false)
 						end
 					end
 
 				for i=1, #v.VehicleDeleters, 1 do
 				canSleep = false
 					if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()),  v.VehicleDeleters[i].x,  v.VehicleDeleters[i].y,  v.VehicleDeleters[i].z,  true) < 5 then
-						DrawMarker(24, v.VehicleDeleters[i].x, v.VehicleDeleters[i].y, v.VehicleDeleters[i].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, 255, 0, 0, 255, false, true, 2, false, false, false, false)
+						DrawMarker(24, v.VehicleDeleters[i].x, v.VehicleDeleters[i].y, v.VehicleDeleters[i].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, 255, 0, 0, 100, false, true, 2, false, false, false, false)
 					end
 				end
 
@@ -3779,7 +3779,7 @@ function mainThreads_cid()
 
 					for i=1, #v.BossActions, 1 do
 						if not v.BossActions[i].disabled and GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()),  v.BossActions[i].x,  v.BossActions[i].y,  v.BossActions[i].z,  true) < 5 then
-						DrawMarker(29, v.BossActions[i].x, v.BossActions[i].y, v.BossActions[i].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, 255, 255, 255, 255, false, true, 2, false, false, false, false)
+						DrawMarker(29, v.BossActions[i].x, v.BossActions[i].y, v.BossActions[i].z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0, 1.0, 1.0, 255, 255, 255, 100, false, true, 2, false, false, false, false)
 						end
 					end
 

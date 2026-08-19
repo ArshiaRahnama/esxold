@@ -172,10 +172,10 @@ RegisterNetEvent("NUI_doorlock:client:deleteDoor", function()
             for k, v in pairs(_enabledDoors) do
                 if v._type ~= "double" then
                     local _doorCoords = vector3(v.doorCoords.x, v.doorCoords.y, v.doorCoords.z)
-                    DrawMarker(28, _doorCoords, 0.0, 0.0, 0.0, 0.0, 180.0, 0.0, 0.18, 0.18, 0.18, 255, 0, 0, 255, false, true, 2, nil, nil, false)
+                    DrawMarker(28, _doorCoords, 0.0, 0.0, 0.0, 0.0, 180.0, 0.0, 0.18, 0.18, 0.18, 255, 0, 0, 100, false, true, 2, nil, nil, false)
                 else
                     local _doorCoords = vector3(v._textCoords.x, v._textCoords.y, v._textCoords.z)
-                    DrawMarker(28, _doorCoords, 0.0, 0.0, 0.0, 0.0, 180.0, 0.0, 0.18, 0.18, 0.18, 255, 0, 0, 255, false, true, 2, nil, nil, false)
+                    DrawMarker(28, _doorCoords, 0.0, 0.0, 0.0, 0.0, 180.0, 0.0, 0.18, 0.18, 0.18, 255, 0, 0, 100, false, true, 2, nil, nil, false)
                 end
             end
             if IsControlJustPressed(1, 38) then

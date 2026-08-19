@@ -31,7 +31,7 @@ Config.Rob = {}
 Config.Rob.PoliceJobs = { 'police', 'sheriff', 'fbi', 'mt', 'cid', 'cia', 'marshal', 'judge', 'doa' }
 
 Config.Rob.Marker = {
-	r = 0, g = 255, b = 0, a = 255,  -- green color
+	r = 0, g = 255, b = 0, a = 100,  -- green color
 	x = 0.5, y = 0.5, z = 0.5,       -- tiny, cylinder formed circle
 	DrawDistance = 15.0, Type = 6    -- default circle type, low draw distance due to indoors area
 }

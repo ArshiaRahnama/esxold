@@ -594,7 +594,7 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(PlayerPedId())
 		local distance = #(coords - Config.ClackLoc)
 		if distance < 20 then
-			DrawMarker(1, Config.ClackLoc, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.5, 1.5, 1.5, 255, 255, 255, 255, false, true, nil, false)
+			DrawMarker(1, Config.ClackLoc, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.5, 1.5, 1.5, 255, 255, 255, 100, false, true, nil, false)
 			if distance < 2.0 then
 				TriggerEvent('esx:showHelpNotification', 'Dokme ~INPUT_CONTEXT~ jahat dastresi be ~r~Rakhtkan~s~')
 				if IsControlJustReleased(1, 38) then
@@ -616,7 +616,7 @@ Citizen.CreateThread(function()
                 local coords = GetEntityCoords(PlayerPedId())
                 local distance = #(coords - Config.VehLoc)
                 if distance < 20 then
-                    DrawMarker(36, Config.VehLoc, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8, 0.8, 0.8, 255, 255, 255, 255, true, false, nil, true)
+                    DrawMarker(36, Config.VehLoc, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8, 0.8, 0.8, 255, 255, 255, 100, true, false, nil, true)
                     if distance < 2.0 then
                         TriggerEvent('esx:showHelpNotification', 'Dokme ~INPUT_CONTEXT~ jahat dastresi be ~b~Garage~s~')
                         if IsControlJustReleased(1, 38) then
@@ -648,7 +648,7 @@ Citizen.CreateThread(function()
                 local coords = GetEntityCoords(PlayerPedId())
                 local distance = #(coords - Config.VehDelLoc)
                 if distance < 20  then
-                    DrawMarker(1, Config.VehDelLoc, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.5, 2.5, 1.0, 255, 0, 0, 255, false, true, nil, false)
+                    DrawMarker(1, Config.VehDelLoc, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.5, 2.5, 1.0, 255, 0, 0, 100, false, true, nil, false)
                     if distance < 2.0 and IsPedInAnyVehicle(PlayerPedId(), false) then
                         TriggerEvent('esx:showHelpNotification', 'Dokme ~INPUT_CONTEXT~ jahat ~r~park kardan~s~')
                         if IsControlJustReleased(1, 38) then

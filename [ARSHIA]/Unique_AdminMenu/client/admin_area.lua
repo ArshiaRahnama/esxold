@@ -101,7 +101,7 @@ AddEventHandler("Fax:AdminAreaSet",function(v,w)
 	local x=e(1)
 	local y=v.radius
 	local i,j,k=table.unpack(GetEntityCoords(PlayerPedId(),true))
-	DrawMarker(28,b[v.index]["coords"],0.0,0.0,0.0,0,0.0,0.0,v.radius-1.5,v.radius-1.5,v.radius-1.5,x.r,x.g,x.b,190,false,false,2,false,false,false,false)DrawMarker(28,b[v.index]["coords"],0.0,0.0,0.0,0,0.0,0.0,v.radius+0.8,v.radius+0.8,v.radius+0.8,255,255,255,190,false,false,2,false,false,false,false)
+	DrawMarker(28,b[v.index]["coords"],0.0,0.0,0.0,0,0.0,0.0,v.radius-1.5,v.radius-1.5,v.radius-1.5,x.r,x.g,x.b,100,false,false,2,false,false,false,false)DrawMarker(28,b[v.index]["coords"],0.0,0.0,0.0,0,0.0,0.0,v.radius+0.8,v.radius+0.8,v.radius+0.8,255,255,255,100,false,false,2,false,false,false,false)
 	if b[v.index]["coords"]~=nil then
 	source=w
 	if #(GetEntityCoords(PlayerPedId()) - vector3(ax,ay,az)) <=y then 

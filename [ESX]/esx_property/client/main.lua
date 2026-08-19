@@ -810,7 +810,7 @@ Citizen.CreateThread(function()
 				local distance = GetDistanceBetweenCoords(coords, property.entering.x, property.entering.y, property.entering.z, true)
 
 				if distance < Config.DrawDistance then
-					DrawMarker(2, property.entering.x, property.entering.y, property.entering.z+1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4,0.4,0.4, 46, 204, 113, 200, true, true, 2, false, nil, nil, false)
+					DrawMarker(2, property.entering.x, property.entering.y, property.entering.z+1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4,0.4,0.4, 46, 204, 113, 100, true, true, 2, false, nil, nil, false)
 					letSleep = false
 				end
 
@@ -826,7 +826,7 @@ Citizen.CreateThread(function()
 				local distance = GetDistanceBetweenCoords(coords, property.exit.x, property.exit.y, property.exit.z, true)
 
 				if distance < Config.DrawDistance then
-					DrawMarker(21, property.exit.x, property.exit.y, property.exit.z+1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4,0.4,0.4, 255, 0, 0, 500, true, true, 2, false, nil, nil, false)
+					DrawMarker(21, property.exit.x, property.exit.y, property.exit.z+1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.4,0.4,0.4, 255, 0, 0, 100, true, true, 2, false, nil, nil, false)
 					letSleep = false
 				end
 
@@ -842,7 +842,7 @@ Citizen.CreateThread(function()
 				local distance = GetDistanceBetweenCoords(coords, property.roomMenu.x, property.roomMenu.y, property.roomMenu.z, true)
 
 				if distance < Config.DrawDistance then
-					DrawMarker(42, property.roomMenu.x, property.roomMenu.y, property.roomMenu.z+1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8, 0.8, 0.8, 255, 255, 255, 500, true, true, 2, false, nil, nil, false)
+					DrawMarker(42, property.roomMenu.x, property.roomMenu.y, property.roomMenu.z+1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.8, 0.8, 0.8, 255, 255, 255, 100, true, true, 2, false, nil, nil, false)
 					letSleep = false
 				end
 

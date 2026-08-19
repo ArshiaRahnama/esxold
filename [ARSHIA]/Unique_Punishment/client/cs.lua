@@ -78,17 +78,24 @@ AddEventHandler('esx_communityGGservice:inCommunityService', function(actions_re
     actionsRemaining = actions_remaining
     FillActionTable()
     ApplyPrisonerSkin()
+    TriggerServerEvent('Unique_Punishment:AntiCheatExempt', 5000, { teleport = true, speed = true })
     ESX.Game.Teleport(playerPed, Config.ServiceLocation)
     communityServiceFinished = false
     if not isSentenced then
         isSentenced = true
         Citizen.CreateThread(function()
+            local exemptRefresh = GetGameTimer()
             while actionsRemaining > 0 and communityServiceFinished ~= true do
                 if IsPedInAnyVehicle(playerPed, false) then
                     ClearPedTasksImmediately(playerPed)
                 end
                 dpemote(false)
+                if GetGameTimer() - exemptRefresh > 3000 then
+                    TriggerServerEvent('Unique_Punishment:AntiCheatExempt', 4000, { teleport = true, speed = true })
+                    exemptRefresh = GetGameTimer()
+                end
                 if GetDistanceBetweenCoords(GetEntityCoords(playerPed), Config.ServiceLocation.x, Config.ServiceLocation.y, Config.ServiceLocation.z,true) > Config.DistanceExtension then
+                    TriggerServerEvent('Unique_Punishment:AntiCheatExempt', 5000, { teleport = true, speed = true })
                     ESX.Game.Teleport(playerPed, Config.ServiceLocation)
                 end
                 Citizen.Wait(1000)
@@ -110,6 +117,7 @@ AddEventHandler('esx_communityGGservice:finishCommunityService', function(source
     ESX.SetPlayerData('jailed', false)
     ESX.SetPlayerData('inCS', false)
     actionsRemaining = 0
+    TriggerServerEvent('Unique_Punishment:AntiCheatExempt', 5000, { teleport = true, speed = true })
     ESX.Game.Teleport(PlayerPedId(), Config.ReleaseLocation)
     -- ریسورس 'sunset_clothe' وجود نداره؛ به‌جاش با esx_skin لباس واقعی برمی‌گرده
     ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)

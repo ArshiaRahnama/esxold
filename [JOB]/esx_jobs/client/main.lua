@@ -431,7 +431,7 @@ Citizen.CreateThread(function()
 		if v.Type == "cloakroom" then
 			
 				if Vdist(coords, v.Pos.x, v.Pos.y, v.Pos.z) < Config.DrawDistance then
-					DrawMarker(27, v.Pos.x, v.Pos.y, v.Pos.z+0.1, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0,  1.0,  1.0, 42, 255, 0, 255, false, true, 2, false, false, false, false)
+					DrawMarker(27, v.Pos.x, v.Pos.y, v.Pos.z+0.1, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0,  1.0,  1.0, 42, 255, 0, 100, false, true, 2, false, false, false, false)
 				end
 			end
 		end

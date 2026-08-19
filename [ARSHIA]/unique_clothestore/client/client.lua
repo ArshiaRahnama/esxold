@@ -1897,7 +1897,7 @@ Citizen.CreateThread(function()
             for _, v in ipairs(Config.Stores) do
                 local dst = #(vector3(coords.x, coords.y, coords.z) - vector3(v.coords.x, v.coords.y, v.coords.z))
                 if dst < 13 then
-                    DrawMarker(1, v.coords.x, v.coords.y, v.coords.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 2.0,2.0,0.3, 0, 213, 255, 500, false, false, 2, false, false, false, false)
+                    DrawMarker(1, v.coords.x, v.coords.y, v.coords.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 2.0,2.0,0.3, 0, 213, 255, 100, false, false, 2, false, false, false, false)
                     Sleep = 5
                 end
                 if dst < 5 then

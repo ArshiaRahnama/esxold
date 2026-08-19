@@ -378,10 +378,10 @@ function  KeysandMarker()
 			local Sleep = true
 			if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()),vector3(-567.811, 5253.099, 70.47766)  , true ) <= 15.0 then
 				Sleep = false 
-				DrawMarker(31, vector3(-567.811, 5253.099, 70.47766), 0, 0, 0, 0, 0, 0, 0.6, 0.6, 0.6, 255, 128, 0, 180, 0, 0, 1, 1, 0, 0, 0)
+				DrawMarker(31, vector3(-567.811, 5253.099, 70.47766), 0, 0, 0, 0, 0, 0, 0.6, 0.6, 0.6, 255, 128, 0, 100, 0, 0, 1, 1, 0, 0, 0)
 			elseif  GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()),vector3(-96.81758, 6205.78, 31.01538)  , true ) <= 15.0 then
 				Sleep = false 
-				DrawMarker(31, vector3(-96.81758, 6205.78, 31.01538), 0, 0, 0, 0, 0, 0, 0.6, 0.6, 0.6, 255, 128, 0, 180, 0, 0, 1, 1, 0, 0, 0)
+				DrawMarker(31, vector3(-96.81758, 6205.78, 31.01538), 0, 0, 0, 0, 0, 0, 0.6, 0.6, 0.6, 255, 128, 0, 100, 0, 0, 1, 1, 0, 0, 0)
 			 --elseif  GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()),vector3(-1546.708, -466.4572, 36.18823)  , true ) <= 15.0 then
 			 	--Sleep = false 
 			-- 	DrawMarker(31, vector3(-1546.708, -466.4572, 36.18823), 0, 0, 0, 0, 0, 0, 0.6, 0.6, 0.6, 255, 128, 0, 180, 0, 0, 1, 1, 0, 0, 0)
@@ -2215,7 +2215,7 @@ Citizen.CreateThread(function()
 
             if distance < 10.0 then
                 sleep = 0
-                DrawMarker(1, location.x, location.y, location.z - 1.0, 0, 0, 0, 0, 0, 0, 1.5, 1.5, 1.0, 0, 255, 0, 150, false, false, 2, false, nil, nil, false)
+                DrawMarker(1, location.x, location.y, location.z - 1.0, 0, 0, 0, 0, 0, 0, 1.5, 1.5, 1.0, 0, 255, 0, 100, false, false, 2, false, nil, nil, false)
 
                 if distance < 1.5 then
                     if name == "PedShop" then
@@ -3542,7 +3542,7 @@ Citizen.CreateThread(function()
         local playerCoords = GetEntityCoords(PlayerPedId())
         local dist = #(playerCoords - markerPos)
         if dist < 10.0 then
-            DrawMarker(4, markerPos.x, markerPos.y, markerPos.z - 1.0, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 255, 0, 0, 150, false, true, 2, nil, nil, false)
+            DrawMarker(4, markerPos.x, markerPos.y, markerPos.z - 1.0, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 255, 0, 0, 100, false, true, 2, nil, nil, false)
             if dist < 1.5 then
                 ESX.ShowHelpNotification("~INPUT_CONTEXT~ Jahat Shoroe Mosabeghe")
                 if IsControlJustReleased(0, 38) then
