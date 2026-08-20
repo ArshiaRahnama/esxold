@@ -4,11 +4,13 @@ local sendMSG = {}
 -- AntiCheat integration — same pattern as Unique_AdminMenu: call this right
 -- before any admin teleport (/goto, /bring, etc.) below so the instant
 -- position jump doesn't get flagged as a teleport/speed hack. Safe no-op
--- if AntiCheat isn't installed.
+-- if UNIQUE_AC isn't installed.
+-- بهینه‌سازی: قبلاً به ریسورس جدای AntiCheat وصل بود؛ حالا مستقیم به همون export
+-- که تازه به UNIQUE_AC اضافه شد وصله (دیگه نیازی به نگه‌داشتن دو ریسورس آنتی‌چیت نیست).
 local function ExemptFromAntiCheat(targetId, ms, kinds)
-    if GetResourceState('AntiCheat') ~= 'started' then return end
+    if GetResourceState('UNIQUE_AC') ~= 'started' then return end
     pcall(function()
-        exports['AntiCheat']:ExemptPlayer(targetId, ms or 5000, kinds)
+        exports['UNIQUE_AC']:ExemptPlayer(targetId, ms or 5000, kinds)
     end)
 end
 

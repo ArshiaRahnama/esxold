@@ -6,12 +6,13 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 -- AntiCheat integration — jail involves several big, entirely legit,
 -- instant position jumps (cutscene start, send-to-jail, anti-escape
 -- snap-back, release) that would otherwise look identical to a
--- teleport/speed hack to the AntiCheat resource. Safe no-op if
--- AntiCheat isn't installed.
+-- teleport/speed hack to UNIQUE_AC. Safe no-op if UNIQUE_AC isn't installed.
+-- بهینه‌سازی: قبلاً به ریسورس جدای AntiCheat وصل بود؛ حالا مستقیم به همون export
+-- که تازه به UNIQUE_AC اضافه شد وصله (دیگه نیازی به نگه‌داشتن دو ریسورس آنتی‌چیت نیست).
 local function ExemptFromAntiCheat(targetId, ms, kinds)
-	if GetResourceState('AntiCheat') ~= 'started' then return end
+	if GetResourceState('UNIQUE_AC') ~= 'started' then return end
 	pcall(function()
-		exports['AntiCheat']:ExemptPlayer(targetId, ms or 5000, kinds)
+		exports['UNIQUE_AC']:ExemptPlayer(targetId, ms or 5000, kinds)
 	end)
 end
 

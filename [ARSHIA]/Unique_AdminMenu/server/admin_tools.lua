@@ -12,14 +12,16 @@ local ServerStartTime = os.time()
 -- AntiCheat integration — call this right before ANY server-authoritative
 -- teleport/noclip/spectate action below so the (entirely legit) instant
 -- position jump doesn't get flagged as a teleport/speed/noclip hack by
--- the AntiCheat resource. No-ops safely if AntiCheat isn't installed.
+-- UNIQUE_AC. No-ops safely if UNIQUE_AC isn't installed.
 -- Deliberately GLOBAL (no `local`) — used from both admin_tools.lua and
 -- main.lua, same as IsOnDutyAdmin/LogAdminAction elsewhere in this resource.
+-- بهینه‌سازی: قبلاً به ریسورس جدای AntiCheat وصل بود؛ حالا مستقیم به همون export
+-- که تازه به UNIQUE_AC اضافه شد وصله (دیگه نیازی به نگه‌داشتن دو ریسورس آنتی‌چیت نیست).
 -- ============================================================================
 function ExemptFromAntiCheat(targetId, ms, kinds)
-    if GetResourceState('AntiCheat') ~= 'started' then return end
+    if GetResourceState('UNIQUE_AC') ~= 'started' then return end
     pcall(function()
-        exports['AntiCheat']:ExemptPlayer(targetId, ms or 5000, kinds)
+        exports['UNIQUE_AC']:ExemptPlayer(targetId, ms or 5000, kinds)
     end)
 end
 

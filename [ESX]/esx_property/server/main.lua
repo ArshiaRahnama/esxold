@@ -202,9 +202,11 @@ RegisterServerEvent('esx_property:saveLastProperty')
 AddEventHandler('esx_property:saveLastProperty', function(property)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	if GetResourceState('AntiCheat') == 'started' then
+	-- بهینه‌سازی: قبلاً به ریسورس جدای AntiCheat وصل بود؛ حالا مستقیم به همون export
+	-- که تازه به UNIQUE_AC اضافه شد وصله.
+	if GetResourceState('UNIQUE_AC') == 'started' then
 		pcall(function()
-			exports['AntiCheat']:ExemptPlayer(source, 5000, { teleport = true, speed = true })
+			exports['UNIQUE_AC']:ExemptPlayer(source, 5000, { teleport = true, speed = true })
 		end)
 	end
 
@@ -218,9 +220,11 @@ RegisterServerEvent('esx_property:deleteLastProperty')
 AddEventHandler('esx_property:deleteLastProperty', function()
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	if GetResourceState('AntiCheat') == 'started' then
+	-- بهینه‌سازی: قبلاً به ریسورس جدای AntiCheat وصل بود؛ حالا مستقیم به همون export
+	-- که تازه به UNIQUE_AC اضافه شد وصله.
+	if GetResourceState('UNIQUE_AC') == 'started' then
 		pcall(function()
-			exports['AntiCheat']:ExemptPlayer(source, 5000, { teleport = true, speed = true })
+			exports['UNIQUE_AC']:ExemptPlayer(source, 5000, { teleport = true, speed = true })
 		end)
 	end
 

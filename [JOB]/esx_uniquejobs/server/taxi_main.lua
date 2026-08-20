@@ -6,14 +6,16 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 -- (taxi/ambulance/police/mechanic/weazel fast-travel points, on-duty spawn
 -- teleports, etc). Any client script in this resource can call:
 --   TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, {teleport=true, speed=true})
--- right before its own SetEntityCoords, and it'll be exempt from AntiCheat's
--- teleport/speed flags for that window. Safe no-op if AntiCheat isn't installed.
+-- right before its own SetEntityCoords, and it'll be exempt from UNIQUE_AC's
+-- teleport/speed flags for that window. Safe no-op if UNIQUE_AC isn't installed.
+-- بهینه‌سازی: قبلاً به ریسورس جدای AntiCheat وصل بود؛ حالا مستقیم به همون export
+-- که تازه به UNIQUE_AC اضافه شد وصله (دیگه نیازی به نگه‌داشتن دو ریسورس آنتی‌چیت نیست).
 RegisterServerEvent('esx_uniquejobs:AntiCheatExempt')
 AddEventHandler('esx_uniquejobs:AntiCheatExempt', function(ms, kinds)
 	local source = source
-	if GetResourceState('AntiCheat') ~= 'started' then return end
+	if GetResourceState('UNIQUE_AC') ~= 'started' then return end
 	pcall(function()
-		exports['AntiCheat']:ExemptPlayer(source, ms or 5000, kinds)
+		exports['UNIQUE_AC']:ExemptPlayer(source, ms or 5000, kinds)
 	end)
 end)
 

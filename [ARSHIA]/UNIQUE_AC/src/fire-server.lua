@@ -3416,6 +3416,18 @@ function UNIQUE_AC_CHANGE_TEMP_WHITELIST(SRC, STATUS, DURATION_MS)
     return UNIQUE_AC_CHANGE_TEMP_WHHITELIST(SRC, STATUS, DURATION_MS)
 end
 
+-- بهینه‌سازی: این export اضافه شد تا ریسورس‌های دیگه (esx_uniquejobs, Unique_AdminMenu,
+-- Unique_Punishment, esx_aduty, esx_property) که قبلاً برای معافیت موقت از تشخیص
+-- تله‌پورت/سرعت به exports['AntiCheat']:ExemptPlayer(...) وصل بودن، حالا بتونن مستقیم
+-- از همین مکانیزم whitelist موقتِ داخلی UNIQUE_AC استفاده کنن — بدون نیاز به نگه‌داشتن
+-- یه ریسورس آنتی‌چیت جداگانه (AntiCheat) فقط برای همین یه قابلیت.
+-- تفاوت با AntiCheat: اینجا معافیت all-or-nothing است (کل تشخیص‌ها موقتاً خاموش
+-- می‌شه)، برخلاف AntiCheat که می‌تونست فقط دسته‌های خاص (kinds) رو معاف کنه. برای
+-- تله‌پورت‌های ادمین/جاب (که کوتاه‌مدت و بی‌خطرن) این تفاوت بی‌اهمیته.
+exports('ExemptPlayer', function(src, ms, kinds)
+    return UNIQUE_AC_CHANGE_TEMP_WHHITELIST(src, true, ms)
+end)
+
 function UNIQUE_AC_CHECK_TEMP_WHITELIST(SRC)
     local src = tonumber(SRC)
     if not src then return false end

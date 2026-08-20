@@ -1,37 +1,28 @@
 ESX = nil
 
-TriggerEvent('esx:getShunicornaredObjunicornect', function(obj) ESX = obj end)
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-RegisterServerEvent("saveHungerThirst")
-AddEventHandler("saveHungerThirst", function(hunger, thirst)
-  local _source = source
-  TriggerEvent('es:getPlayerFromId', _source, function(user)
-		local player = user.getIdentifier()
-		exports.ghmattimysql:execute("UPDATE users SET status=@status WHERE idSteam=@identifier", {['@identifier'] = player, ['@status'] = {['hunger']=hunger,['thirst']=thirst}})
-	end)
-end)
-
-RegisterServerEvent("getPlayerStatus")
-AddEventHandler("getPlayerStatus", function()
-  local _source = source
-  print(_source)
-  TriggerEvent('es:getPlayerFromId', _source, function(user)
-    local player = user.getIdentifier()
-    exports.ghmattimysql:execute('SELECT status FROM users WHERE identifier = @identifier', {['@identifier'] = player}, function(result)
-      if result[1].status then
-        data = json.decode(result[1].status)
-		TriggerClientEvent('PlayerStatus', _source, data)
-	  else
-		TriggerClientEvent('PlayerStatus', _source, {})
-      end
-    end)
-  end)
-end)
-
+-- reloaddata: the only server callback client.lua actually calls.
+-- 'coin' is pulled live from the real coin system (Unique_LevelQuest/server/coin.lua,
+-- callback 'Coin-System:GetCoin') instead of a fake/placeholder "tc" field.
+-- Server-side callbacks call each other directly through ESX.ServerCallbacks
+-- (ESX.TriggerServerCallback is the client-side version and isn't usable here).
 ESX.RegisterServerCallback('reloaddata', function(source, cb)
+	local xPlayer = ESX.GetPlayerFromId(source)
 
-  local xPlayer = ESX.GetPlayerFromId(source)
-  if xPlayer then
-    cb(xPlayer)
-  end
+	if xPlayer then
+		if ESX.ServerCallbacks['Coin-System:GetCoin'] then
+			ESX.ServerCallbacks['Coin-System:GetCoin'](source, function(coinAmount)
+				xPlayer.coin = coinAmount or 0
+				cb(xPlayer)
+			end)
+		else
+			xPlayer.coin = 0
+			cb(xPlayer)
+		end
+	end
 end)
+
+-- Note: 'gangs:getGangData' is intentionally NOT redefined here — it's already
+-- registered by [ARSHIA]/Unique_Gangs/server/main.lua, and client.lua calls it
+-- by that same name, so it's already wired up correctly as-is.

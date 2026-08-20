@@ -61,15 +61,7 @@ end
 -- my func
 
 function ToggleHUD()
-	exports.pNotify:SendNotification(
-       {
-         text = '<strong class="whit-text">تغییر وضعیت انجام شد</strong>',
-         type = "success",
-         timeout = 1000,
-         layout = "centerLeft",
-         queue = "ToggleHUD"
-       }
-     )
+	ESX.ShowNotification('تغییر وضعیت انجام شد')
 	SendNUIMessage({
     toggle = true
   })
@@ -83,7 +75,7 @@ function ReloadAllData()
  TriggerEvent('showStatus')
  pname = data.name
  SendNUIMessage({action = "playerName", value = string.gsub(data.name , "_"," ")})
- SendNUIMessage({action = "tc", valuetc = data.tc .." ₮₡",valuetctime = data.tctime})
+ SendNUIMessage({action = "tc", valuetc = tostring(data.coin or 0) .. " سکه",valuetctime = 0})
  SendNUIMessage({action = "playerId", value = GetPlayerServerId(PlayerId()) })
  SendNUIMessage({action = "cash", value = MakeDigit(data.money)})
  if string.lower(job.name) ~= 'nojob' and string.lower(job.name) ~= 'police' and string.lower(job.name) ~= 'sheriff' then
@@ -93,8 +85,8 @@ function ReloadAllData()
   else
 	 SendNUIMessage({action = "job", value = 'hide', icon = job.name})
   end
- if data.gang ~= 'nogang' then 
-	SendNUIMessage({action = "gang", value = string.gsub(data.gang, "_", " ") .. " | " .. data.ganggrade})
+ if gang and gang.name and gang.name ~= 'nogang' then
+	SendNUIMessage({action = "gang", value = string.gsub(gang.name, "_", " ") .. " | " .. (gang.grade_label or "")})
  else
 	SendNUIMessage({action = "gang", value = 'hide'})
  end
@@ -137,16 +129,12 @@ AddEventHandler('moneyUpdate', function(money)
   SendNUIMessage({action = "cash", value = MakeDigit(money)})
 end)
 
-RegisterNetEvent('tcUpdate')
-AddEventHandler('tcUpdate', function(tc,time2)
-  time1 = 0
-  if time2 ~= nil then time1 = time2 end
-  SendNUIMessage({action = "tc", valuetc = tc .." ₮₡",valuetctime = time1})
-end)
-
-RegisterNetEvent('tctimeUpdate')
-AddEventHandler('tctimeUpdate', function(tc)
-  SendNUIMessage({action = "tc", value = MakeDigit(tc)})
+-- Live coin balance updates: hooks the real coin system's broadcast event
+-- (fired by Unique_LevelQuest/server/coin.lua on every add/remove/set) so the
+-- HUD refreshes immediately instead of only on manual /reload.
+RegisterNetEvent('Coin-System:PlayerCoin')
+AddEventHandler('Coin-System:PlayerCoin', function(coinAmount)
+  SendNUIMessage({action = "tc", valuetc = tostring(coinAmount or 0) .. " سکه", valuetctime = 0})
 end)
 
 RegisterNetEvent('esx:setJob')
