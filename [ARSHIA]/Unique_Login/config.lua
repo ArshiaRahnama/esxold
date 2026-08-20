@@ -10,3 +10,17 @@ Config.SMS = {
     ApiKey    = "v16gfSyyi7z23aw74j4GsQRrdgMvwVLUCepqyqBMPEGVQIIY",
     TemplateId = 461982,
 }
+
+-- How many SMS codes a single phone number / connecting IP can request
+-- before being told to wait. Protects your sms.ir balance from being
+-- drained by spam and stops phone-number bombing.
+Config.SmsRateLimit = {
+    MaxPerPhonePerHour = 3,
+    MaxPerIpPerHour     = 5,
+}
+
+-- Username/password brute-force lockout.
+Config.LoginLockout = {
+    MaxAttempts  = 5,   -- failed attempts before locking
+    LockMinutes  = 15,  -- how long the username stays locked
+}

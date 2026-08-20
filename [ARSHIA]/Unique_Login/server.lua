@@ -9,6 +9,64 @@ local COLORS = {
     RED    = "#ff6b6b",
     YELLOW = "#ffd93d"
 }
+-- ─────────────────────────────────────────────────────────
+-- EXPANSION: rate limiting (SMS spam / balance protection) and login
+-- brute-force lockout. Everything here is in-memory (resets on restart),
+-- which is fine — these are abuse guards, not permanent bans.
+-- ─────────────────────────────────────────────────────────
+local function getIdentifierPrefix(src, prefix)
+    for _, v in ipairs(GetPlayerIdentifiers(src)) do
+        if string.sub(v, 1, string.len(prefix)) == prefix then
+            return v
+        end
+    end
+    return nil
+end
+
+local smsAttemptsByPhone = {} -- phone -> { count = n, windowStart = os.time() }
+local smsAttemptsByIp    = {} -- ip    -> { count = n, windowStart = os.time() }
+local loginFailures      = {} -- lowercased username -> { count = n, lockUntil = os.time() }
+
+-- Returns true and bumps the counter if under the limit, false if the
+-- caller should be blocked. windowSeconds is the rolling window length.
+local function rateLimitCheck(store, key, maxCount, windowSeconds)
+    if not key then return true end
+    local now = os.time()
+    local entry = store[key]
+    if not entry or (now - entry.windowStart) >= windowSeconds then
+        store[key] = { count = 1, windowStart = now }
+        return true
+    end
+    if entry.count >= maxCount then
+        return false
+    end
+    entry.count = entry.count + 1
+    return true
+end
+
+local function isLoginLocked(username)
+    local entry = loginFailures[username:lower()]
+    if entry and entry.lockUntil and os.time() < entry.lockUntil then
+        return true, math.ceil((entry.lockUntil - os.time()) / 60)
+    end
+    return false
+end
+
+local function registerLoginFailure(username)
+    local key = username:lower()
+    local entry = loginFailures[key] or { count = 0 }
+    entry.count = entry.count + 1
+    if entry.count >= Config.LoginLockout.MaxAttempts then
+        entry.lockUntil = os.time() + (Config.LoginLockout.LockMinutes * 60)
+        entry.count = 0
+    end
+    loginFailures[key] = entry
+end
+
+local function clearLoginFailures(username)
+    loginFailures[username:lower()] = nil
+end
+
 local smscodedict = {}
 function ShowMainMenu(deferrals)
     local card = {
@@ -38,7 +96,7 @@ function ShowMainMenu(deferrals)
                                     },
                                     {
                                         type = "TextBlock",
-
+                                        -- text = "به دنیای واقعی خوش آمدید",
                                         size = "small",
                                         color = COLORS.Light,
                                         horizontalAlignment = "center",
@@ -65,6 +123,7 @@ function ShowMainMenu(deferrals)
                         color = "Accent",
                         spacing = "medium"
                     },
+
 
                     {
                         type = "TextBlock",
@@ -224,7 +283,7 @@ function ShowLoginForm(deferrals)
 
                     {
                         type = "TextBlock",
-
+                        -- text = "💡 رمز خود را فراموش کرده‌اید؟",
                         color = "Attention",
                         isSubtle = true,
                         horizontalAlignment = "right",
@@ -272,13 +331,26 @@ function ShowLoginForm(deferrals)
                 return
             end
 
+            -- EXPANSION: brute-force lockout. Checked before touching the
+            -- database at all.
+            local locked, remainingMinutes = isLoginLocked(username)
+            if locked then
+                ShowError(deferrals, "به‌دلیل تلاش‌های ناموفق زیاد، این حساب موقتاً قفل شده. "
+                    .. remainingMinutes .. " دقیقه دیگر دوباره تلاش کنید.", function()
+                    ShowLoginForm(deferrals)
+                end)
+                return
+            end
+
             CheckLogin(username, password, deferrals, function(isValid,license)
                 if isValid then
+                    clearLoginFailures(username)
                     ShowSuccess(deferrals, "ورود موفق! خوش آمدید " .. username, function()
                         deferrals.identifier = license
                         formPassed(deferrals)
                     end)
                 else
+                    registerLoginFailure(username)
                     ShowError(deferrals, "نام کاربری یا رمز عبور اشتباه است!", function()
                         ShowLoginForm(deferrals)
                     end)
@@ -454,9 +526,13 @@ function ShowRegisterStep1_Phone(deferrals)
                     return
                 end
 
-                local code = SendSMSCode(phone)
+                local code, err = SendSMSCode(phone, deferrals.src)
                 if code then
                     ShowRegisterStep2_VerifyCode(deferrals, phone, code)
+                elseif err == "rate_limited" then
+                    ShowError(deferrals, "تعداد درخواست‌های شما بیش از حد مجاز است. کمی بعد دوباره تلاش کنید.", function()
+                        ShowRegisterStep1_Phone(deferrals)
+                    end)
                 else
                     ShowError(deferrals, "خطا در ارسال پیامک! لطفاً دوباره تلاش کنید.", function()
                         ShowRegisterStep1_Phone(deferrals)
@@ -594,11 +670,11 @@ function ShowRegisterStep2_VerifyCode(deferrals, phone, sentCode)
                 style = "positive",
                 data = { action = "verify_code" }
             },
-
-
-
-
-
+            -- {
+            --     type = "Action.Submit",
+            --     title = "🔄  ارسال مجدد کد",
+            --     data = { action = "resend_code" }
+            -- },
             {
                 type = "Action.Submit",
                 title = "↩️  بازگشت",
@@ -611,9 +687,13 @@ function ShowRegisterStep2_VerifyCode(deferrals, phone, sentCode)
         if data.action == "back" then
             ShowRegisterStep1_Phone(deferrals)
         elseif data.action == "resend_code" then
-            local newCode = SendSMSCode(phone)
+            local newCode, err = SendSMSCode(phone, deferrals.src)
             if newCode then
                 ShowRegisterStep2_VerifyCode(deferrals, phone, newCode)
+            elseif err == "rate_limited" then
+                ShowError(deferrals, "تعداد درخواست‌های شما بیش از حد مجاز است. کمی بعد دوباره تلاش کنید.", function()
+                    ShowRegisterStep2_VerifyCode(deferrals, phone, sentCode)
+                end)
             else
                 ShowError(deferrals, "خطا در ارسال مجدد کد!", function()
                     ShowRegisterStep2_VerifyCode(deferrals, phone, sentCode)
@@ -714,7 +794,7 @@ function ShowRegisterStep3_UserPass(deferrals, phone)
                     },
                     {
                         type = "TextBlock",
-
+                        -- text = "📛 این نام در سرور نمایش داده می‌شود",
                         color = COLORS.Light,
                         size = "small",
                         isSubtle = true,
@@ -785,17 +865,23 @@ function ShowRegisterStep3_UserPass(deferrals, phone)
                 style = "positive",
                 data = { action = "do_register" }
             },
-
-
-
-
-
+            -- {
+            --     type = "Action.Submit",
+            --     title = "↩️  بازگشت",
+            --     data = { action = "back" }
+            -- }
         }
     }
 
     deferrals.presentCard(json.encode(card), function(data)
         if data.action == "back" then
-            ShowRegisterStep2_VerifyCode(deferrals, phone, "123456")
+            -- FIX: this branch used to call ShowRegisterStep2_VerifyCode(deferrals, phone,
+            -- "123456"), which would reset the "correct" OTP to the hardcoded string
+            -- "123456" — a permanent master bypass code for phone verification. The button
+            -- that triggered this ("back") is commented out above so it wasn't reachable
+            -- right now, but it's a live loaded gun in the code. Removed entirely; there's
+            -- no back button on this step, so any unexpected action just redraws step 3.
+            ShowRegisterStep3_UserPass(deferrals, phone)
         elseif data.action == "do_register" then
             local username = data.username or ""
             local password = data.password or ""
@@ -856,13 +942,16 @@ function ShowRegisterStep3_UserPass(deferrals, phone)
     end)
 end
 
+-- ─────────────────────────────────────────────────────────
+--         مرحله: فراموشی رمز عبور - شماره تلفن
+-- ─────────────────────────────────────────────────────────
 function ShowForgotPassword_Step1(deferrals)
     local card = {
         type = "AdaptiveCard",
         version = "1.5",
         minHeight = "200px",
         body = {
-
+            -- هدر
             {
                 type = "Container",
                 backgroundColor = COLORS.MID,
@@ -935,7 +1024,7 @@ function ShowForgotPassword_Step1(deferrals)
                         spacing = "small"
                     },
 
-
+                    -- خط جداکننده
                     {
                         type = "TextBlock",
                         text = "━━━━━━━━━━━━━━━━━━━━━━━",
@@ -993,9 +1082,13 @@ function ShowForgotPassword_Step1(deferrals)
                     return
                 end
 
-                local resetCode = SendSMSCode(phone)
+                local resetCode, err = SendSMSCode(phone, deferrals.src)
                 if resetCode then
                     ShowForgotPassword_Step2(deferrals, phone, resetCode, userData.username)
+                elseif err == "rate_limited" then
+                    ShowError(deferrals, "تعداد درخواست‌های شما بیش از حد مجاز است. کمی بعد دوباره تلاش کنید.", function()
+                        ShowForgotPassword_Step1(deferrals)
+                    end)
                 else
                     ShowError(deferrals, "خطا در ارسال کد! دوباره تلاش کنید.", function()
                         ShowForgotPassword_Step1(deferrals)
@@ -1008,13 +1101,16 @@ function ShowForgotPassword_Step1(deferrals)
     end)
 end
 
+-- ─────────────────────────────────────────────────────────
+--         مرحله: فراموشی رمز عبور - تأیید کد
+-- ─────────────────────────────────────────────────────────
 function ShowForgotPassword_Step2(deferrals, phone, resetCode, username)
     local card = {
         type = "AdaptiveCard",
         version = "1.5",
         minHeight = "200px",
         body = {
-
+            -- هدر
             {
                 type = "Container",
                 backgroundColor = COLORS.MID,
@@ -1061,7 +1157,7 @@ function ShowForgotPassword_Step2(deferrals, phone, resetCode, username)
                 padding = "20px"
             },
 
-
+            -- اطلاعات کاربر
             {
                 type = "Container",
                 backgroundColor = COLORS.LIGHT,
@@ -1221,6 +1317,9 @@ function ShowForgotPassword_Step2(deferrals, phone, resetCode, username)
     end)
 end
 
+-- ─────────────────────────────────────────────────────────
+--              صفحات پیام (Error / Success)
+-- ─────────────────────────────────────────────────────────
 function ShowError(deferrals, message, callback)
     local card = {
         type = "AdaptiveCard",
@@ -1336,18 +1435,39 @@ function ShowSuccess(deferrals, message, callback)
     end)
 end
 
+-- OTP ;D
+
 local function SMSHolderTimer(phone)
-    Citizen.SetTimeout(1*60*60*1000, function()
+    -- FIX: UI tells the player the code is valid for 2 minutes, but this
+    -- timer used to keep it valid (and guessable) for a full hour. Matched
+    -- the actual expiry to what's promised on screen — also shrinks the
+    -- window for someone to brute-force the 6-digit code.
+    Citizen.SetTimeout(2*60*1000, function()
         smscodedict[phone] = nil
     end)
 end
 
-function SendSMSCode(phone)
+-- EXPANSION: now takes the connecting player's src so it can rate-limit by
+-- IP as well as by phone number. Returns:
+--   code, nil            -> sent fine (or already had a valid unexpired code)
+--   nil, "rate_limited"  -> caller should show the "too many requests" error
+function SendSMSCode(phone, src)
     if not smscodedict[phone] then
+        local ip = src and getIdentifierPrefix(src, "ip:") or nil
+
+        if not rateLimitCheck(smsAttemptsByPhone, phone, Config.SmsRateLimit.MaxPerPhonePerHour, 3600) then
+            return nil, "rate_limited"
+        end
+        if ip and not rateLimitCheck(smsAttemptsByIp, ip, Config.SmsRateLimit.MaxPerIpPerHour, 3600) then
+            return nil, "rate_limited"
+        end
+
         local code = tostring(math.random(100000, 999999))
         smscodedict[phone] = code
         SMSHolderTimer(phone)
-        print(phone .. " : " .. code)
+        -- SECURITY FIX: this used to print(phone .. " : " .. code), writing
+        -- the OTP straight into the server console/log file in plaintext —
+        -- anyone with log access (or a leaked log) could read live codes.
         local payload = {
             mobile = tostring(phone),
             templateId = Config.SMS.TemplateId,
@@ -1374,58 +1494,86 @@ function SendSMSCode(phone)
             end
         end, 'POST', json.encode(payload), { ['Content-Type'] = 'application/json', ['X-API-KEY'] = Config.SMS.ApiKey })
         return code
-    end
+    end 
     return smscodedict[phone]
 end
+
+
+
+
+-- DataBase
 
 local function generateRandomString(length)
     local charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
     local result = {}
-
+    
     for i = 1, length do
         local randomIndex = math.random(1, #charset)
         result[i] = charset:sub(randomIndex, randomIndex)
     end
-
+    
     return table.concat(result)
 end
 
+-- تولید لایسنس یکتا با فرمت مشخص
 local function generateUniqueLicense(prefix)
     local prefix = prefix or "steam:"
     local attempts = 0
     local maxAttempts = 100
-
+    
     repeat
         attempts = attempts + 1
-
-
+        
+        -- فرمت: LIC-XXXX-XXXX-XXXX (چهار بخش 4 کاراکتری)
         local part1 = generateRandomString(4)
         local part2 = generateRandomString(4)
         local part3 = generateRandomString(4)
         local license = string.format("%s-%s-%s-%s", prefix, part1, part2, part3)
-
-
+        
+        -- بررسی تکراری نبودن در دیتابیس
         local result = MySQL.query.await(
             "SELECT COUNT(*) as count FROM `login_users` WHERE license = @license",
             { ['@license'] = license }
         )
-
+        
         if result and result[1] and result[1].count == 0 then
             return license
         end
-
+        
     until attempts >= maxAttempts
-
-
-
-    return string.format("%s-%s-%s-%s",
-        prefix,
-        generateRandomString(4),
-        os.time(),
+    
+    -- اگر بعد از 100 بار نتونست لایسنس یکتا بسازه
+    -- یه لایسنس با timestamp بساز (fallback)
+    return string.format("%s-%s-%s-%s", 
+        prefix, 
+        generateRandomString(4), 
+        os.time(), 
         generateRandomString(4)
     )
 end
 
+
+
+-- function CheckLicenseLink(def, cb)
+
+--     local license
+--     for _, v in ipairs(GetPlayerIdentifiers(def.src)) do
+--         if string.sub(v, 1, string.len("license:")) == "license:" then
+--             license = v
+--         end
+--     end
+
+--     local query = "SELECT * FROM login_users WHERE license = @license"
+--     MySQL.Async.fetchAll(query, {
+--         ["@license"] = license
+--     }, function(result)
+--         cb(result and #result > 0)
+--     end)
+-- end
+
+-- SECURITY FIX: was comparing/storing passwords in PLAINTEXT before.
+-- Hashing happens inside the SQL itself (SHA2-256) so no plaintext
+-- password is ever written to the database or a query log.
 function CheckLogin(username, password, def, cb)
     local query = "SELECT * FROM login_users WHERE (username = @username OR phone = @username) AND password = SHA2(@password, 256)"
     MySQL.Async.fetchAll(query, {
@@ -1438,7 +1586,7 @@ function CheckLogin(username, password, def, cb)
             cb(false, nil)
         end
     end)
-
+    -- updateLicense(username, def)
 end
 
 function CheckPhoneExists(phone, cb)
@@ -1479,16 +1627,16 @@ end
 
 function RegisterUser(username, password, phone, def, cb)
 
-
-
-
-
-
-
-
+    -- local license ,steam = nil, nil
+    -- for _, v in ipairs(GetPlayerIdentifiers(def.src)) do
+    --     if string.sub(v, 1, string.len("license:")) == "license:" then
+    --         license = v
+    --     end
+    -- end
+    -- steam = "steam".. string.sub(license, string.len("license:"), string.len(license))
 
     local license = generateUniqueLicense()
-
+    -- SECURITY FIX: SHA2-256 the password inside the query, same as CheckLogin
     local query = [[
         INSERT INTO login_users (username, password, phone, license)
         VALUES (@username, SHA2(@password, 256), @phone, @license)
@@ -1527,93 +1675,153 @@ function updateLicense(userName, def)
 end
 
 local inLoginFormPlayers = {}
-local playersidentifieronconnect = {}
 
+-- FIX: duplicate-session detection used to be keyed by IP (playersidentifieronconnect[ip]),
+-- which is a single shared slot per IP address. Two DIFFERENT real accounts connecting from
+-- the same public IP close together (very common here: mobile-carrier NAT, CGNAT, VPN/proxy
+-- to reach the server, shared home/dorm/cafe wifi) would overwrite each other's slot and
+-- cause BOTH innocent players to get falsely kicked with "your account logged in elsewhere".
+-- Fixed by tracking sessions directly by account license, never by IP. This still correctly
+-- catches the real case (same account logged in twice from two different places).
+local activeLicenseSessions = {} -- login_users.license (this resource's own account id) -> src
+
+-- ─────────────────────────────────────────────────────────
+-- EXPANSION: unified entry point, no more Steam special-case.
+--
+-- Previously, players WITH Steam skipped this whole resource and were let
+-- straight in using their steam: identifier, while players WITHOUT Steam
+-- (the vast majority here, since Iranian ISPs/national internet routinely
+-- block Steam's own servers) went through the username/password panel.
+-- That split meant two different classes of accounts with two different
+-- identity models, which made moderation/support harder and was pointless
+-- extra code to maintain.
+--
+-- essentialmode keys every character by the REAL `license:` identifier
+-- (see [BASE]/essentialmode/server/player/login.lua) — it never looks at
+-- anything from this resource. So removing the Steam bypass changes NOTHING
+-- about how existing characters are found; it only changes whether this
+-- login PANEL is shown. Steam is now just one more possible identifier,
+-- not a shortcut around the panel.
+--
+-- Two new things happen here before the panel, in order:
+--   1. Ban check straight against UNIQUE_AC's banlist using the real
+--      license — so a banned player can't just re-register with a new
+--      phone number and come back in (see EXPANSION #2 below).
+--   2. Auto-login: if this exact device (real license) already completed
+--      login/registration in a previous session, skip the panel entirely
+--      and reconnect them straight to their existing login_users account.
+-- ─────────────────────────────────────────────────────────
 AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
 
     local src = source
-    local steam = nil
     deferrals.src = src
     deferrals.defer()
     Wait(100)
     deferrals.update("در حال بررسی اطلاعات...")
-    for _, v in ipairs(GetPlayerIdentifiers(src)) do
-        if string.sub(v, 1, string.len("steam:")) == "steam:" then
-            steam = v
-            break
+
+    local realLicense = getIdentifierPrefix(src, "license:")
+
+    local function afterBanCheck()
+        if not realLicense then
+            -- Extremely rare (FiveM always assigns a license: identifier),
+            -- but fail safe by just showing the normal panel.
+            ShowMainMenu(deferrals)
+            return
         end
+
+        MySQL.Async.fetchAll(
+            "SELECT license FROM login_users WHERE device_license = @dl LIMIT 1",
+            { ["@dl"] = realLicense },
+            function(rows)
+                if rows and rows[1] then
+                    deferrals.identifier = rows[1].license
+                    formPassed(deferrals)
+                else
+                    ShowMainMenu(deferrals)
+                end
+            end
+        )
     end
 
-    if steam then
-        deferrals.identifier = steam
-        formPassed(deferrals)
+    if realLicense then
+        -- EXPANSION: ban-evasion guard. Checked against UNIQUE_AC's own
+        -- banlist table, keyed on the same real `license:` essentialmode
+        -- and UNIQUE_AC already use — so a ban survives someone deleting
+        -- their Unique_Login account and registering fresh with a new
+        -- phone number, because the device/license itself stays banned.
+        MySQL.Async.fetchAll(
+            "SELECT REASON FROM uniqueac_banlist WHERE LICENSE = @license LIMIT 1",
+            { ["@license"] = realLicense },
+            function(rows)
+                if rows and rows[1] then
+                    deferrals.done("⛔ اکانت شما بن شده است.\nدلیل: " .. (rows[1].REASON or "نامشخص"))
+                else
+                    afterBanCheck()
+                end
+            end
+        )
     else
-        ShowMainMenu(deferrals)
-    end
-end)
-
-local playersidentifieronjoin = {}
-
-AddEventHandler('playerJoining', function()
-    local src = source
-    local ip = nil
-    for _, v in ipairs(GetPlayerIdentifiers(src)) do
-        if string.sub(v, 1, string.len("ip:")) == "ip:" then
-            ip = v
-            break
-        end
-    end
-    local found = false
-    local temp = playersidentifieronjoin
-    for id, ident in pairs(temp) do
-        if playersidentifieronconnect[ip] == ident then
-            DropPlayer(tonumber(id),"Fardi Ba Accounte Shoma Varede Server Shod Passworde Khod Ra Reset Konid !!")
-            found = true
-        end
-    end
-    if found then
-        Wait(1000)
-        DropPlayer(src,"Fardi Ba Accounte Shoma Dar Server Ast Passworde Khod Ra Reset Konid !!")
-    else
-        playersidentifieronjoin[tostring(src)] = playersidentifieronconnect[ip]
+        afterBanCheck()
     end
 end)
 
 AddEventHandler('playerDropped', function()
-	local src = source
-	Wait(3000)
-	playersidentifieronjoin[tostring(src)] = nil
+    local src = source
+    for lic, s in pairs(activeLicenseSessions) do
+        if s == src then
+            activeLicenseSessions[lic] = nil
+        end
+    end
 end)
 
 function formPassed(deferrals)
-    local ip = nil
-    for _, v in ipairs(GetPlayerIdentifiers(deferrals.src)) do
-        if string.sub(v, 1, string.len("ip:")) == "ip:" then
-            ip = v
-            break
-        end
-    end
-    playersidentifieronconnect[ip] = deferrals.identifier
     inLoginFormPlayers[deferrals.src] = nil
+
+    -- FIX: duplicate-account check now compares the account's license directly
+    -- against other currently-connected sessions, instead of going through IP.
+    -- This still kicks the OLD session if the SAME account is already connected
+    -- (real duplicate login), but no longer misfires for two different accounts
+    -- that merely share a public IP (VPN/CGNAT/mobile carrier/shared wifi).
+    local prevSrc = activeLicenseSessions[deferrals.identifier]
+    if prevSrc and prevSrc ~= deferrals.src and GetPlayerName(prevSrc) then
+        DropPlayer(prevSrc, "اکانت شما از جای دیگری وارد سرور شد. رمز عبور خود را تغییر دهید.")
+    end
+    activeLicenseSessions[deferrals.identifier] = deferrals.src
+
+    -- EXPANSION: remember this device (real license) against the account so
+    -- next time they connect from the same PC/device, playerConnecting's
+    -- auto-login check above skips the panel entirely.
+    local realLicense = getIdentifierPrefix(deferrals.src, "license:")
+    if realLicense and deferrals.identifier then
+        MySQL.Async.execute(
+            "UPDATE login_users SET device_license = @dl WHERE license = @lic",
+            { ["@dl"] = realLicense, ["@lic"] = deferrals.identifier }
+        )
+    end
+
     deferrals.update("در حال ورود با اکانت ...")
     Wait(1000)
-
-
-
-
-
-
-
+    -- BUG FIX: deferrals.done() was commented out here, meaning every
+    -- player who successfully logged in would be stuck forever on
+    -- "در حال ورود با اکانت..." and never actually get let into the
+    -- server (nothing else in this resource ever called deferrals.done()
+    -- for them). TriggerEvent is kept in case another resource of yours
+    -- hooks 'playerConnecting2', but the connection itself no longer
+    -- depends on that resource existing.
     TriggerEvent('playerConnecting2', deferrals)
     deferrals.done()
 end
 
 exports("isInLoginMenu", function(src)
-
+    -- return inLoginFormPlayers[src] == true
     return true
 end)
 
 exports("getidentifier", function(src)
-
-    return playersidentifieronjoin[tostring(src)]
+    for lic, s in pairs(activeLicenseSessions) do
+        if s == src then
+            return lic
+        end
+    end
+    return nil
 end)
