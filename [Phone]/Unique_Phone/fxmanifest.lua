@@ -33,4 +33,3 @@ files {
     'html/img/apps/*.png',
 }
 
-

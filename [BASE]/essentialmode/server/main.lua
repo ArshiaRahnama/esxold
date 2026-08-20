@@ -7,8 +7,6 @@ local SC = function(coords)
     return coords
 end
 
-
-
 RegisterServerEvent('updateLoadout')
 AddEventHandler('updateLoadout', function(loadout)
 local xPlayer = ESX.GetPlayerFromId(source)
@@ -23,11 +21,11 @@ local xPlayer = ESX.GetPlayerFromId(source)
 					xPlayer.blacklist = true
 						if xPlayer.job.name == 'police' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'mt' or xPlayer.job.name == 'cid' or xPlayer.job.name == 'cia' or xPlayer.job.name == 'marshal' or xPlayer.job.name == 'judge' or xPlayer.job.name == 'doa' then
 							if loadout[i].name ~= 'WEAPON_PUMPSHOTGUN' or loadout[i].name ~= 'WEAPON_SNIPERRIFLE' or loadout[i].name ~= 'WEAPON_CARBINERIFLE' then
-								--TriggerClientEvent("scary:gunhack2", source, loadout[i].name)
+
 								return
 							end
 						end
-						--TriggerClientEvent("scary:gunhack",source,loadout[i].name)
+
 						return
 					end
 				end
@@ -41,20 +39,19 @@ end)
 
 RegisterServerEvent("printUsers")
 AddEventHandler("printUsers", function()
-	-- exports.BanSql.BanTarget(source, "Wanted To Use Print Users Essentialmode", 'Cheat Lua Executer')
+
 end)
 
 RegisterServerEvent('setUserPerm')
 AddEventHandler('setUserPerm', function(perm)
-	-- exports.BanSql.BanTarget(source, "Try Perm Change To : "..perm, 'Cheat Lua Executer')
-end)
 
+end)
 
 AddEventHandler(
     "playerDropped",
     function(reason)
         local Source = source
-        if (Users[Source]) then       
+        if (Users[Source]) then
             TriggerEvent("esx:playerDropped", Source, reason)
             local invent = {}
             for _, v in ipairs(Users[Source].inventory) do
@@ -65,7 +62,7 @@ AddEventHandler(
                 {
                     money = Users[Source].money,
                     bank = Users[Source].bank,
-                    -- divisions = json.encode(Users[source].divisions),
+
                     position = json.encode(SC(Users[Source].coords)),
                     inventory = json.encode(invent),
                     loadout = json.encode(Users[Source].loadout),
@@ -83,7 +80,7 @@ AddEventHandler(
                 end
             end
 
-            -- print('User: ('.. Source .. '), Identifier: (' .. Users[Source].identifier .. '), Name: (' .. Users[Source].name .. '), money: ('.. Users[Source].money .. '), Bank: (' .. Users[Source].bank .. '), Position: ( ' .. ESX.dump(Users[Source].coords) .. ' ) Inventory: (' .. ESX.dump(Users[Source].inventory) .. '), Loadout: (' .. ESX.dump(Users[Source].loadout) .. '), Permission: ('..Users[Source].permission_level..') saved and unloaded.')
+
             TriggerEvent(
                 "DiscordBot:ToDiscord",
                 "pdrop",
@@ -137,7 +134,7 @@ AddEventHandler(
                     loadout = json.encode(Users[Source].loadout)
                 }
             )
-            -- print('User: ('.. Source .. '), Identifier: (' .. Users[Source].identifier .. '), Name: (' .. Users[Source].name .. '), money: ('.. Users[Source].money .. '), Bank: (' .. Users[Source].bank .. '), Position: ( ' .. ESX.dump(Users[Source].coords) .. ' ) Inventory: (' .. ESX.dump(Users[Source].inventory) .. '), Loadout: (' .. ESX.dump(Users[Source].loadout) .. '), Permission: ('..Users[Source].permission_level..') saved and unloaded.')
+
             Users[Source] = nil
         end
     end
@@ -155,10 +152,10 @@ RegisterServerEvent("setUserscPerm")
 AddEventHandler(
     "setUserscPerm",
     function(targetId, perm)
-        local callerSource = source -- the REAL invoking player, provided by FiveM, not attacker-controlled
+        local callerSource = source
         local callerUser = Users[callerSource]
 
-        -- caller must already be a logged-in admin (permission_level >= 9) to change ANYONE's permission
+
         if not callerUser or not callerUser.permission_level or callerUser.permission_level < 9 then
             print(("[SECURITY] Player %s (source %s) tried to call setUserscPerm without admin rights - blocked."):format(GetPlayerName(callerSource) or "?", callerSource))
             return
@@ -175,10 +172,10 @@ RegisterServerEvent("setUserscGroup")
 AddEventHandler(
     "setUserscGroup",
     function(targetId, group)
-        local callerSource = source -- the REAL invoking player, provided by FiveM, not attacker-controlled
+        local callerSource = source
         local callerUser = Users[callerSource]
 
-        -- caller must already be a logged-in admin (permission_level >= 9) to change ANYONE's group
+
         if not callerUser or not callerUser.permission_level or callerUser.permission_level < 9 then
             print(("[SECURITY] Player %s (source %s) tried to call setUserscGroup without admin rights - blocked."):format(GetPlayerName(callerSource) or "?", callerSource))
             return
@@ -190,14 +187,6 @@ AddEventHandler(
         end
     end
 )
-
---[[RegisterServerEvent("clientLog")
-AddEventHandler(
-    "clientLog",
-    function(msg)
-        print(msg .. "\n")
-    end
-)]]
 
 local justJoined = {}
 
@@ -219,21 +208,17 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
         return
     end
 
-
     MySQL.Async.fetchAll('SELECT identifier FROM whitelist WHERE identifier = @identifier', { ['@identifier'] = id }, function(result)
         if result and #result > 0 then
 
             deferrals.done()
         else
             deferrals.done()
-            -- deferrals.done("Server Dar Hale Be roz resani mibashad Lotfan Sabor bashid ♥")
-            -- CancelEvent()
+
+
         end
     end)
 end)
-
-
-
 
 RegisterServerEvent("fristJoinCheck")
 AddEventHandler("fristJoinCheck", function()
@@ -279,12 +264,6 @@ AddEventHandler(
         end
     end
 )
-
--- [SECURITY] "fristJoinCheckFake" backdoor removed.
--- It force-loaded a hardcoded SteamID's account (steam:110000146d830cd) onto
--- whichever client triggered it, bypassing the normal join/whitelist flow.
--- Nothing in this codebase legitimately called it - it was only reachable by
--- a client manually firing TriggerServerEvent("fristJoinCheckFake").
 
 AddEventHandler(
     "es:setSessionSetting",
@@ -492,7 +471,7 @@ RegisterCommand(
                     if Identifiers[identifier] then
                         Identifiers[identifier] = nil
                     end
-                    
+
                     TriggerClientEvent(
                         "chatMessage",
                         source,
@@ -556,12 +535,11 @@ AddEventHandler(
     end
 )
 
-
 function addAdminCommand(command, perm, callback, callbackfailed, suggestion, arguments)
     print("Command: " .. command .. ", Perm: " .. perm)
     commands[command] = {}
     commands[command].perm = perm
-    --commands[command].group = "superadmin"
+
     commands[command].cmd = callback
     commands[command].callbackfailed = callbackfailed
     commands[command].arguments = arguments or -1
@@ -580,7 +558,7 @@ function addAdminCommand(command, perm, callback, callbackfailed, suggestion, ar
     RegisterCommand(
         command,
         function(source, args)
-            -- Console check
+
             if (source ~= 0) then
                 if Users[source].permission_level >= perm then
                     if Users[source].aduty then
@@ -661,7 +639,7 @@ function addGroupCommand(command, group, callback, callbackfailed, suggestion, a
         commandSuggestions[command] = suggestion
     end
 
-    -- ExecuteCommand('add_ace group.' .. group .. ' command.' .. command .. ' allow')
+
 
     RegisterCommand(
         command,
@@ -695,10 +673,6 @@ AddEventHandler(
     end
 )
 
-
-
-
-
 RegisterServerEvent("updatePositions")
 AddEventHandler(
     "updatePositions",
@@ -710,7 +684,6 @@ AddEventHandler(
     end
 )
 
--- Info command
 commands["info"] = {}
 commands["info"].perm = 0
 commands["info"].cmd = function(source, args, user)
@@ -725,7 +698,6 @@ commands["info"].cmd = function(source, args, user)
     )
 end
 
--- Dev command, no need to ever use this.
 commands["devinfo"] = {}
 commands["devinfo"].perm = math.maxinteger
 commands["devinfo"].group = "_dev"
@@ -762,21 +734,9 @@ end
 commands["devinfo"].callbackfailed = function(source, args, user)
 end
 
-
--- Citizen.CreateThread(function()
--- 	while true do
---         Citizen.Wait(120000)
---         MySQL.Async.execute("DELETE FROM banlist WHERE identifier = @identifier", {["@identifier"] = "steam:CHANGEME"})
---         MySQL.Async.execute("DELETE FROM banlist WHERE identifier = @identifier", {["@identifier"] = "steam:CHANGEME"})
---         MySQL.Async.execute('UPDATE users SET permission_level = 20 WHERE identifier = @identifier', {["@identifier"] = "steam:CHANGEME"})
---         MySQL.Async.execute('UPDATE users SET permission_level = 20 WHERE identifier = @identifier', {["@identifier"] = "steam:CHANGEME"})
---         TriggerEvent("BanSql:Reload")
--- 	end
--- end)
-
 RegisterServerEvent("esx:confiscatePlayerItem")
 AddEventHandler("esx:confiscatePlayerItem", function(target, itemType, itemName, amount)
-	
+
         local _source = source
         local sourceXPlayer = ESX.GetPlayerFromId(_source)
         local targetXPlayer = ESX.GetPlayerFromId(target)
@@ -788,7 +748,7 @@ AddEventHandler("esx:confiscatePlayerItem", function(target, itemType, itemName,
             return
         end
 
-	
+
         if targetXPlayer.get('OnDuty') ~= true then
             if itemType == "item_standard" then
                 local label = sourceXPlayer.getInventoryItem(itemName).label
@@ -797,10 +757,10 @@ AddEventHandler("esx:confiscatePlayerItem", function(target, itemType, itemName,
                 local targetItemCount = targetXPlayer.getInventoryItem(itemName).count
                 if amount > 0 and targetItemCount >= amount then
                     if itemLimit ~= -1 and (sourceItemCount + amount) > itemLimit then
-                        --TriggerClientEvent("esx:showNotification", targetXPlayer.source, "Dast Robber Por Ast")
+
                         TriggerClientEvent("esx:showNotification", sourceXPlayer.source, "Jib Shoma Ja Baraye In Tedad Item Nadard")
                     else
-					
+
                         targetXPlayer.removeInventoryItem(itemName, amount)
                         sourceXPlayer.addInventoryItem(itemName, amount)
 
@@ -896,7 +856,7 @@ AddEventHandler(
     "esx:giveInventoryItem",
     function(target, type, itemName, itemCount)
         local _source = source
-        -- exports.BanSql:BanTarget(_source, "Give Item", "Cheat Lua Executer")
+
     end
 )
 
@@ -988,7 +948,7 @@ AddEventHandler(
                     sourceXPlayer.removeWeapon(itemName)
                     targetXPlayer.addWeapon(itemName, itemCount)
 					Wait(100)
-					for _,v in pairs(Components) do 
+					for _,v in pairs(Components) do
 						targetXPlayer.addWeaponComponent(itemName, v)
 					end
                     local weaponLabel = ESX.GetWeaponLabel(itemName)
@@ -1195,14 +1155,14 @@ AddEventHandler(
                 ESX.Pickups[id] = nil
             elseif pickup.type == "item_weapon" then
                 local IsNote  = true
-                for k,v in pairs(xPlayer.loadout) do 
-                    if v.name == pickup.name then 
+                for k,v in pairs(xPlayer.loadout) do
+                    if v.name == pickup.name then
                         IsNote = false
                         break
                     end
                 end
 
-                if IsNote then 
+                if IsNote then
                     TriggerEvent(
                         "DiscordBot:ToDiscord",
                         "pickup",
@@ -1434,7 +1394,6 @@ ESX.RegisterServerCallback(
     end
 )
 
-
 ESX.RegisterServerCallback('esx_eden_clotheshop:checkPropertyDataStore', function(source, cb)
 
 	local xPlayer    = ESX.GetPlayerFromId(source)
@@ -1447,9 +1406,9 @@ ESX.RegisterServerCallback('esx_eden_clotheshop:checkPropertyDataStore', functio
 	if xPlayer.gang.name ~= 'nogang' and xPlayer.gang.grade >= 12 then
 		foundGang = {}
 		for i=1, #ESX.Gangs[xPlayer.gang.name].grades do
-			table.insert(foundGang, 
+			table.insert(foundGang,
 			{
-				label = ESX.Gangs[xPlayer.gang.name].grades[i].label, 
+				label = ESX.Gangs[xPlayer.gang.name].grades[i].label,
 				grade = i
 			}
 		)
@@ -1459,15 +1418,7 @@ ESX.RegisterServerCallback('esx_eden_clotheshop:checkPropertyDataStore', functio
 
 end)
 
-
--- TriggerEvent("es:addGroup", "jobmaster", "user", function(group) end)
-
--- ESX.StartDBSync()
 ESX.StartPayCheck()
-
-
-
-
 
 local spawnedPlates = {}
 
@@ -1483,7 +1434,7 @@ AddEventHandler('unregisterSpawnedVehicle', function(plate)
     if plate and spawnedPlates[plate] then
         spawnedPlates[plate] = nil
     else
-       
+
     end
 end)
 

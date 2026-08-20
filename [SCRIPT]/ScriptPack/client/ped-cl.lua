@@ -10,7 +10,7 @@ Citizen.CreateThread(function()
       while not HasModelLoaded(GetHashKey(v[7])) do
         Wait(1)
       end
-  
+
       RequestAnimDict("mini@strip_club@idles@bouncer@base")
       while not HasAnimDictLoaded("mini@strip_club@idles@bouncer@base") do
         Wait(1)

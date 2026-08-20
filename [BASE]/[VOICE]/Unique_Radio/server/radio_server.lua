@@ -98,7 +98,7 @@ function getDistance(objA, objB)
     local xDist = objB.x - objA.x
     local yDist = objB.y - objA.y
 
-    return math.sqrt( (xDist ^ 2) + (yDist ^ 2) ) 
+    return math.sqrt( (xDist ^ 2) + (yDist ^ 2) )
 end
 
 function requestCheck()

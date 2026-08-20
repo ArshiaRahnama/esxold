@@ -1,19 +1,4 @@
---[[
-    UNIQUE RP — OFFICIAL DOCUMENTS — Server
-    Author: Arshia | arshiahub.ir
 
-    This file didn't exist in the resource (fxmanifest.lua expected
-    Server/*.lua, but the folder was empty), so nothing server-side ever
-    ran: no permission checks, no database, no way to actually create,
-    save, close, copy, give, or delete a document.
-
-    Requires: es_extended (ESX Legacy) + mysql-async, both already
-    declared as dependencies via `@mysql-async/lib/MySQL.lua` in
-    fxmanifest.lua.
-
-    Run install.sql once (see file next to this one) before starting
-    the resource.
-]]
 
 ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -33,15 +18,10 @@ local function SafeDecode(str)
     return {}
 end
 
--- mysql-async can return TINYINT(1) as a Lua boolean, a number, or a
--- numeric string depending on driver config — normalize here.
 local function IsFlagTrue(v)
     return v == true or v == 1 or v == "1"
 end
 
--- ---------------------------------------------------------------------
--- Lists (models / department documents)
--- ---------------------------------------------------------------------
 ESX.RegisterServerCallback('Documents:getLists', function(source, cb, docType, search)
     local xPlayer = ESX.GetPlayerFromId(source)
     if not xPlayer then cb({}) return end
@@ -63,9 +43,6 @@ ESX.RegisterServerCallback('Documents:getLists', function(source, cb, docType, s
     cb(rows)
 end)
 
--- ---------------------------------------------------------------------
--- Open a single model/document for viewing or editing
--- ---------------------------------------------------------------------
 ESX.RegisterServerCallback('Documents:openItem', function(source, cb, docType, id)
     local xPlayer = ESX.GetPlayerFromId(source)
     if not xPlayer then cb(nil) return end
@@ -84,8 +61,8 @@ ESX.RegisterServerCallback('Documents:openItem', function(source, cb, docType, i
     }
 
     if docType == 'model' then
-        -- Sentinel the compiled front-end checks for to route saves back
-        -- to /saveModel instead of /saveDocument. Required — do not rename.
+
+
         infos_document.name = 'model'
     end
 
@@ -97,9 +74,6 @@ ESX.RegisterServerCallback('Documents:openItem', function(source, cb, docType, i
     })
 end)
 
--- ---------------------------------------------------------------------
--- Save (create/update) a model
--- ---------------------------------------------------------------------
 RegisterNetEvent('Documents:saveModel')
 AddEventHandler('Documents:saveModel', function(id, name, infos_document)
     local src = source
@@ -107,7 +81,7 @@ AddEventHandler('Documents:saveModel', function(id, name, infos_document)
     if not HasJob(xPlayer, jobs_SaveTemplate) then return end
     if type(infos_document) ~= 'table' then return end
 
-    infos_document.name = nil -- strip the routing sentinel before persisting
+    infos_document.name = nil
 
     local params = {
         ['@date']       = infos_document.date or '',
@@ -136,9 +110,6 @@ AddEventHandler('Documents:saveModel', function(id, name, infos_document)
     end
 end)
 
--- ---------------------------------------------------------------------
--- Save (create/update) a document
--- ---------------------------------------------------------------------
 RegisterNetEvent('Documents:saveDocument')
 AddEventHandler('Documents:saveDocument', function(id, name, modelId, infos_document)
     local src = source
@@ -174,9 +145,6 @@ AddEventHandler('Documents:saveDocument', function(id, name, modelId, infos_docu
     end
 end)
 
--- ---------------------------------------------------------------------
--- Close (finalize) a document — locks it from further edits
--- ---------------------------------------------------------------------
 RegisterNetEvent('Documents:closeDocument')
 AddEventHandler('Documents:closeDocument', function(id)
     local src = source
@@ -187,9 +155,6 @@ AddEventHandler('Documents:closeDocument', function(id)
     TriggerClientEvent('Documents:notify', src, translate.TR_CLOSED_DOCUMENT)
 end)
 
--- ---------------------------------------------------------------------
--- Copy a document ("(کپی برابر اصل)")
--- ---------------------------------------------------------------------
 RegisterNetEvent('Documents:copyDocument')
 AddEventHandler('Documents:copyDocument', function(id)
     local src = source
@@ -199,7 +164,7 @@ AddEventHandler('Documents:copyDocument', function(id)
     local rows = MySQL.Sync.fetchAll('SELECT * FROM sunset_documents WHERE id = @id AND owner IS NULL', { ['@id'] = id })
     local row = rows and rows[1]
     if not row then return end
-    if IsFlagTrue(row.is_copy) then return end -- don't allow copying a copy
+    if IsFlagTrue(row.is_copy) then return end
 
     MySQL.Sync.insert([[
         INSERT INTO sunset_documents (name, model_id, date, title, text, images, signatures, closed, is_copy, creator)
@@ -218,9 +183,6 @@ AddEventHandler('Documents:copyDocument', function(id)
     TriggerClientEvent('Documents:notify', src, translate.TR_COPIED_DOCUMENT)
 end)
 
--- ---------------------------------------------------------------------
--- Give a closed document to a nearby player (creates their own copy)
--- ---------------------------------------------------------------------
 RegisterNetEvent('Documents:giveDocument')
 AddEventHandler('Documents:giveDocument', function(id, targetId)
     local src = source
@@ -228,7 +190,7 @@ AddEventHandler('Documents:giveDocument', function(id, targetId)
     local xTarget = ESX.GetPlayerFromId(targetId)
     if not HasJob(xPlayer, jobs_GiveDocument) or not xTarget then return end
 
-    -- re-validate proximity server-side, never trust the client alone
+
     local srcPed, tgtPed = GetPlayerPed(src), GetPlayerPed(targetId)
     if srcPed == 0 or tgtPed == 0 then return end
     local dist = #(GetEntityCoords(srcPed) - GetEntityCoords(tgtPed))
@@ -257,9 +219,6 @@ AddEventHandler('Documents:giveDocument', function(id, targetId)
     TriggerClientEvent('Documents:notifyReceived', targetId)
 end)
 
--- ---------------------------------------------------------------------
--- Delete a model or a department document
--- ---------------------------------------------------------------------
 RegisterNetEvent('Documents:deleteItem')
 AddEventHandler('Documents:deleteItem', function(docType, id)
     local src = source
@@ -273,9 +232,6 @@ AddEventHandler('Documents:deleteItem', function(docType, id)
     TriggerClientEvent('Documents:notify', src, translate.TR_DELETED_DOCUMENT)
 end)
 
--- ---------------------------------------------------------------------
--- Citizens: documents that were given to them
--- ---------------------------------------------------------------------
 ESX.RegisterServerCallback('Documents:getMyDocuments', function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
     if not xPlayer then cb({}) return end
@@ -309,17 +265,11 @@ ESX.RegisterServerCallback('Documents:openMyDocument', function(source, cb, id)
     })
 end)
 
--- ---------------------------------------------------------------------
--- Startup banner
--- ---------------------------------------------------------------------
 AddEventHandler('onResourceStart', function(resourceName)
     if resourceName ~= GetCurrentResourceName() then return end
     print('^3Arshia Say :^7 [arshiahub.ir] Documents System Fix.')
 end)
 
--- ---------------------------------------------------------------------
--- Make sure the tables exist (also see install.sql for a manual option)
--- ---------------------------------------------------------------------
 CreateThread(function()
     MySQL.Sync.execute([[
         CREATE TABLE IF NOT EXISTS `sunset_doc_models` (
@@ -356,8 +306,8 @@ CreateThread(function()
         )
     ]])
 
-    -- Explicit column check instead of a blind ALTER — logs the outcome
-    -- either way instead of failing silently.
+
+
     local colCheck = MySQL.Sync.fetchAll([[
         SELECT COUNT(*) as cnt FROM information_schema.COLUMNS
         WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'sunset_documents' AND COLUMN_NAME = 'is_copy'

@@ -1,67 +1,44 @@
 SellerConfig = {}
 
--------------------- Khayad -----------------------
----
 SellerConfig.itemsForSaleTailor = {
     clothe = {price = 1500, image = url.."clothe.png"},
 }
-
 
 SellerConfig.sellingLocationTailor = {
     {x = 723.2226, y = -976.567, z = 24.134, h = 188.55, pedname = "csb_abigail", pedtype = 4},
 }
 
-
----------------------Sherkat naft------------------------
----
 SellerConfig.itemsForSaleFueler = {
     essence = {price = 300, image = url.."essence.png"},
 }
-
 
 SellerConfig.sellingLocationFueler = {
     {x = 555.0149, y = -2323.65, z = 5.8215, h = 302.55, pedname = "mp_m_waremech_01", pedtype = 4},
 }
 
-
----------------------------  Choob Bor --------------------------------
-
 SellerConfig.itemsForSaleLumberjack = {
     packaged_plank = {price = 1200, image = url.."packaged_plank.png"},
 }
-
 
 SellerConfig.sellingLocationLumberjack = {
     {x = 1200.412, y = -1300.46, z = 35.217, h = 267.75, pedname = "mp_m_exarmy_01", pedtype = 4},
 }
 
-
----------------------------------Ghassab------------------------------
-
 SellerConfig.itemsForSaleSlaughterer = {
     packaged_chicken = {price = 200, image = url.."packaged_chicken.png"},
 }
-
 
 SellerConfig.sellingLocationSlaughterer = {
     {x = -1071.50, y = -2011.15, z = 13.161, h = 224.36, pedname = "csb_chef", pedtype = 4},
 }
 
-
--------------------- Laster   -------------------
-
 SellerConfig.itemsForSaleLaster = {
     jewels = {price = 2000, image = url.."jewels.png"},
 }
 
-
 SellerConfig.sellingLocationLaster = {
     {x = 705.5633, y = -964.081, z = 30.395, h = 225.86, pedname = "cs_lestercrest", pedtype = 4, enableBlip = true},
 }
-
-
-
------------------ Miner  -----------------------
 
 SellerConfig.itemsForSaleMiner = {
     iron = {price = 12000, image = url.."iron.png"},
@@ -72,10 +49,6 @@ SellerConfig.itemsForSaleMiner = {
 SellerConfig.sellingLocationMiner = {
     {x = 926.9023, y = -1552.02, z = 30.814, h = 92.73, pedname = "cs_floyd", pedtype = 4},
 }
-
-
-
-------------------Mahi--------------------------
 
 SellerConfig.itemsForSaleSeparated = {
     mahigoli = {price = 800, image = url.."mahigoli.png"},
@@ -90,7 +63,7 @@ SellerConfig.itemsForSaleSeparated = {
     gazellemeet = {price = 20000, image = url.."gazellemeet.png"},
     eaglemeet = {price = 30000, image = url.."eaglemeet.png"},
 
-    -- Shekar
+
 
     headeoghab = {price = 40000, image = url.."headeoghab.png"},
     goshteoghab = {price = 10000, image = url.."goshteoghab.png"},
@@ -119,12 +92,8 @@ SellerConfig.itemsForSaleSeparated = {
 }
 
 SellerConfig.sellingLocationSeparated = {
-    {x = -1037.58, y = -1397.13, z = 5.5531, h = 69.39, pedname = "s_m_m_ammucountry", pedtype = 4}, 
+    {x = -1037.58, y = -1397.13, z = 5.5531, h = 69.39, pedname = "s_m_m_ammucountry", pedtype = 4},
 }
-
-
-
----------------------------- DrugDealer -----------------------------
 
 SellerConfig.itemsForSaleDrugdealer2 = {
     marijuana = {price = 320, image = url.."marijuana.png"},
@@ -136,5 +105,5 @@ SellerConfig.itemsForSaleDrugdealer2 = {
 }
 
 SellerConfig.sellingLocationDrugdealer2 = {
-    {x = -1174.66, y = -1571.32, z = 4.3569, h = 126.0, pedname = "csb_ramp_hic", pedtype = 4, enableBlip = true}, 
+    {x = -1174.66, y = -1571.32, z = 4.3569, h = 126.0, pedname = "csb_ramp_hic", pedtype = 4, enableBlip = true},
 }

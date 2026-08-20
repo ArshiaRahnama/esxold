@@ -26,9 +26,7 @@ AddEventHandler('esx_dispatch:assignBadge',function(label)
         TriggerServerEvent('esx_idoverhead:modifyLabel', id, label)
    end
 end)
--- ====================================================================
--- /badge - انیمیشن + پروپ فیزیکی بج (سرور بعد از تأیید عضویت ارگان صداش می‌زنه)
--- ====================================================================
+
 local badgeAnimBusy = false
 
 RegisterNetEvent('scriptpack:playBadgeAnim')
@@ -45,9 +43,9 @@ AddEventHandler('scriptpack:playBadgeAnim', function()
 
     local boneIndex = GetPedBoneIndex(playerPed, 28422)
 
-    -- FIX: model wasn't requested/streamed before CreateObject, so the badge
-    -- prop frequently failed to spawn (CreateObject returns an invalid
-    -- entity if the model isn't loaded yet).
+
+
+
     local badgeModel = GetHashKey('prop_fib_badge')
     RequestModel(badgeModel)
     local attempts = 0

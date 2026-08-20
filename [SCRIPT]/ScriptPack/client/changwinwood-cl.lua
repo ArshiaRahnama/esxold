@@ -1,18 +1,18 @@
 local ESX = nil
-local QBCore = nil 
+local QBCore = nil
 local FrameworkFound = nil
 local nuiOpen = false
 local modelCreated = {}
 
 LoadFramework = function()
-    if VinewoodConfig.Framework == 'esx' then 
+    if VinewoodConfig.Framework == 'esx' then
         ESX = exports['essentialmode']:getSharedObject()
         FrameworkFound = 'esx'
-    elseif VinewoodConfig.Framework == 'qbcore' then 
+    elseif VinewoodConfig.Framework == 'qbcore' then
         QBCore = exports["qb-core"]:GetCoreObject()
         FrameworkFound = 'qbcore'
     elseif VinewoodConfig.Framework == 'autodetect' then
-        if GetResourceState('essentialmode') == 'started' then 
+        if GetResourceState('essentialmode') == 'started' then
             ESX = exports['essentialmode']:getSharedObject()
             FrameworkFound = 'esx'
         elseif GetResourceState('qb-core') == 'started' then
@@ -58,7 +58,7 @@ end)
 RegisterNetEvent('ricky-vinewood:saveText')
 AddEventHandler('ricky-vinewood:saveText', function(data)
     UpdateMap(data)
-    if nuiOpen then 
+    if nuiOpen then
         SendNUIMessage({
             type = "UPDATE",
             text = data[1],
@@ -92,9 +92,9 @@ UpdateMap = function(data)
     if not data then return end
     local completeText = data[1]
     if not completeText then return end
-    for i=1, #completeText, 1 do 
-        if i > 8 then 
-            return 
+    for i=1, #completeText, 1 do
+        if i > 8 then
+            return
         end
         local string = completeText:sub(i, i)
         local model = string
@@ -126,6 +126,6 @@ SetColorModel = function(model, textureName, colorRgb)
     else
         SetRuntimeTexturePixel(texture, 0, 0, colorRgb.r, colorRgb.g, colorRgb.b, 255)
         CommitRuntimeTexture(texture)
-        AddReplaceTexture("mainTexture", textureName, txd, txn)  
-    end  
+        AddReplaceTexture("mainTexture", textureName, txd, txn)
+    end
 end

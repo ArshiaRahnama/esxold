@@ -9,7 +9,7 @@ ui_page 'html/index.html'
 dependency 'ox_lib'
 
 client_scripts {
-  '@ox_lib/init.lua', -- provides the global `lib` used by lib.notify
+  '@ox_lib/init.lua',
   'cl_chat.lua',
 }
 server_script 'sv_chat.lua'
@@ -18,7 +18,7 @@ files {
   'html/index.html',
   'html/index.css',
   'html/config.default.js',
-  -- 'html/config.js',
+
   'html/App.js',
   'html/Message.js',
   'html/Suggestions.js',
@@ -33,12 +33,4 @@ files {
   'html/vendor/fonts/LatoBold.woff2',
   'html/vendor/fonts/LatoBold2.woff2',
 }
-
-
-
-
-
-
-
-
 

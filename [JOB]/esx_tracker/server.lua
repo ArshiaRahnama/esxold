@@ -37,7 +37,7 @@ AddEventHandler('rflx_pdblips:setDuty', function(onDuty)
                 name = string.gsub(xPlayer.name, "_", " ") .. ' [' ..tostring(playerJob.label) .. '|' .. tostring(playerJob.grade_label) .. ']' ,
                 prefix = cfg.gradePrefix ~= nil and cfg.gradePrefix[playerJob.grade] ~= nil and cfg.gradePrefix[playerJob.grade] ~= nil and Config.namePrefix[playerJob.grade_name] or '',
             }
-            
+
             log('Setting on duty '..GetPlayerName(src))
         end
     else
@@ -117,6 +117,6 @@ end
 
 function log(...)
     if Config.prints then
-        -- print('^3[RFLX_PDBLIPS]^0', ...)
+
     end
 end

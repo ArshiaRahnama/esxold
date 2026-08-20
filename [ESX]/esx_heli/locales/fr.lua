@@ -1,5 +1,5 @@
 Locales['fr'] = {
-  -- shop
+
   ['air_shop'] = 'magasin de bateaux',
   ['air_shop_open'] = 'appuyez sur ~INPUT_CONTEXT~ pour accéder au ~y~magasin de bateaux~s~.',
   ['air_shop_confirm'] = 'voulez-vous acheter <span style="color: yellow;">%s</span> pour <span style="color: orange;">$%s</span>?',
@@ -8,7 +8,7 @@ Locales['fr'] = {
   ['confirm_no'] = 'non',
   ['confirm_yes'] = 'oui',
 
-  -- garage
+
   ['garage'] = 'garage à bateaux',
   ['garage_open'] = 'appuyez sur ~INPUT_CONTEXT~ pour accéder à votre ~y~garage à bateaux~s~.',
   ['garage_store'] = 'appuyez sur ~INPUT_CONTEXT~ pour ~y~ranger~s~ votre bateau dans votre garage.',
@@ -18,14 +18,14 @@ Locales['fr'] = {
   ['garage_blocked'] = 'le bateau ne peux pas être sorti car un autre véhicule bloque le point !',
   ['garage_notowner'] = 'ce bateau ne vous appartient pas !',
 
-  -- license
+
   ['license_menu'] = 'acheter un permis de naviguer',
   ['license_buy_no'] = 'non',
   ['license_buy_yes'] = 'acheter le permis pour <span style="color: green;">$%s</span>',
   ['license_bought'] = 'vous avez acheté le ~y~permis de naviguer~s~ pour ~g~$%s~s~',
   ['license_nomoney'] = 'vous n\'avez pas les moyens ~r~pour acheter~s~ ce permis !',
 
-  -- blips
+
   ['blip_garage'] = 'garage à bateaux',
   ['blip_shop'] = 'magasin de bateaux',
 }

@@ -16,20 +16,15 @@ RegisterServerEvent('_chat:messageEntered')
 RegisterServerEvent('chat:clear')
 RegisterServerEvent('__cfx_internal:commandFallback')
 
--- Helper: send a message to a specific chat tab.
--- channel: 'live' | 'system' | 'event' | 'tabligh'
--- target -1 broadcasts to everyone, or pass a player id
 function SendChannelMessage(target, channel, args, color)
     TriggerClientEvent('chat:addMessage', target, {
         channel = channel,
-        color = color or { 170, 102, 204 }, -- purple, matches color-6
+        color = color or { 170, 102, 204 },
         multiline = true,
         args = args
     })
 end
 
--- Helper: set/replace the pinned banner shown above the messages.
--- Pass nil to clear it.
 function SetChatPinned(target, author, text)
     TriggerClientEvent('chat:setPinned', target, author and {
         author = author,
@@ -37,7 +32,6 @@ function SetChatPinned(target, author, text)
     } or nil)
 end
 
--- Example (staff-only in a real setup): /pin <text>
 RegisterCommand('pin', function(source, args)
     local text = table.concat(args, ' ')
     SetChatPinned(-1, GetPlayerName(source), text)
@@ -49,8 +43,6 @@ AddEventHandler('chat:logMessage', function(message)
 TriggerEvent('DiscordBot:ToDiscord', 'chat', GetPlayerName(source), "```cs\nID: [ "..source.." ]\n[ Name : " .. GetPlayerName(source) .. " ]\n[ Message : ]  \n[ " .. message .. " ]```",'user', source, false, false)
 end)
 
-
--- command suggestions for clients
 local function refreshCommands(player)
     if GetRegisteredCommands then
         local registeredCommands = GetRegisteredCommands()
@@ -86,29 +78,12 @@ RegisterCommand('say', function(source, args, rawCommand)
     TriggerClientEvent('chatMessage', -1, (source == 0) and '[ System ] : ',{ 255,0,0 }, rawCommand:sub(5))
 end)
 
--- player join messages
 AddEventHandler('playerConnecting', function()
---TriggerClientEvent('esx:showNotification', -1,'~w~[ ~b~' .. GetPlayerName(source) .. ' ~w~] ~h~~g~ Vared Server Shod.')
+
 end)
- 
+
 AddEventHandler('playerDropped', function(reason)
---TriggerClientEvent('esx:showNotification', -1, '~w~[ ~b~' .. GetPlayerName(source) ..' ~w~] ~h~~r~Az Server Kharej Shod.')
+
 end)
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

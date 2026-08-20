@@ -63,19 +63,19 @@ Citizen.CreateThread(function()
         InvalidateIdleCam()
         N_0x9e4cfff989258472()
         N_0x4757f00bc6323cfe(-1553120962, 0.0)
-		
-		SetVehicleDensityMultiplierThisFrame(0.0) -- set traffic density to 0 
-		SetPedDensityMultiplierThisFrame(0.0) -- set npc/ai peds density to 0
-		SetRandomVehicleDensityMultiplierThisFrame(0.0) -- set random vehicles (car scenarios / cars driving off from a parking spot etc.) to 0
-		SetParkedVehicleDensityMultiplierThisFrame(0.0) -- set random parked vehicles (parked car scenarios) to 0
-		SetScenarioPedDensityMultiplierThisFrame(0.0, 0.0) -- set random npc/ai peds or scenario peds to 0
-		SetGarbageTrucks(false) -- Stop garbage trucks from randomly spawning
-		SetRandomBoats(false) -- Stop random boats from spawning in the water.
+
+		SetVehicleDensityMultiplierThisFrame(0.0)
+		SetPedDensityMultiplierThisFrame(0.0)
+		SetRandomVehicleDensityMultiplierThisFrame(0.0)
+		SetParkedVehicleDensityMultiplierThisFrame(0.0)
+		SetScenarioPedDensityMultiplierThisFrame(0.0, 0.0)
+		SetGarbageTrucks(false)
+		SetRandomBoats(false)
 		RemovePeskyVehicles(playerPed, 3000.0)
-		DisablePlayerVehicleRewards(playerPed)	
-		SetCreateRandomCops(false) -- disable random cops walking/driving around.
-		SetCreateRandomCopsNotOnScenarios(false) -- stop random cops (not in a scenario) from spawning.
-		SetCreateRandomCopsOnScenarios(false) -- stop random cops (in a scenario) from spawning.
+		DisablePlayerVehicleRewards(playerPed)
+		SetCreateRandomCops(false)
+		SetCreateRandomCopsNotOnScenarios(false)
+		SetCreateRandomCopsOnScenarios(false)
 		local x,y,z = table.unpack(GetEntityCoords(playerPed))
 		ClearAreaOfCops(x,y,z, 400.0)
         SetCanAttackFriendly(playerPed, true, false)
@@ -86,11 +86,11 @@ Citizen.CreateThread(function()
 		SetPedPopulationBudget(0)
 		SetVehiclePopulationBudget(0)
 		SetRandomEventFlag(false)
-		Citizen.Wait(sleep) -- prevent crashing
+		Citizen.Wait(sleep)
 	end
 end)
 function RemovePeskyVehicles(playerPed, range)
-    local pos = GetEntityCoords(playerPed) 
+    local pos = GetEntityCoords(playerPed)
     RemoveVehiclesFromGeneratorsInArea(pos.x - range, pos.y - range, pos.z - range, pos.x + range, pos.y + range, pos.z + range);
 end
 Citizen.CreateThread(function()
@@ -118,9 +118,9 @@ Citizen.CreateThread(function()
     local sleep = 5
     while true do
         sleep = 5
-        Citizen.Wait(sleep) -- A Short Daily of 5 MS
+        Citizen.Wait(sleep)
         if isAiming then
-            DisableControlAction(0, 140, true) -- Disable the Light Dmg Contr ol
+            DisableControlAction(0, 140, true)
             DisableControlAction(1, 141, true)
             DisableControlAction(1, 44, true)
             DisableControlAction(1, 142, true)
@@ -142,14 +142,14 @@ AddEventHandler("onKeyDown", function(key)
         holdingRight = true
     elseif key == "mouse_left" or key == "r" then
         if not holdingRight then
-            DisableControlAction(2, 263, true) -- R attack
-            DisableControlAction(2, 257, true) -- Left click mouse attack
-            DisableControlAction(0, 264, true) -- Disable melee
-            DisableControlAction(0, 257, true) -- Disable melee
-            DisableControlAction(0, 140, true) -- Disable melee
-            DisableControlAction(0, 141, true) -- Disable melee
-            DisableControlAction(0, 142, true) -- Disable melee
-            DisableControlAction(0, 143, true) -- Disable melee
+            DisableControlAction(2, 263, true)
+            DisableControlAction(2, 257, true)
+            DisableControlAction(0, 264, true)
+            DisableControlAction(0, 257, true)
+            DisableControlAction(0, 140, true)
+            DisableControlAction(0, 141, true)
+            DisableControlAction(0, 142, true)
+            DisableControlAction(0, 143, true)
         end
     end
 end)
@@ -160,43 +160,43 @@ AddEventHandler("onKeyUP",function(key)
 end)
 Citizen.CreateThread( function()
     local sleep = 5
-    
-    while true do 
+
+    while true do
         sleep = 5
         Citizen.Wait(sleep)
 		local ped = PlayerPedId()
-        if (DoesEntityExist(ped) and not IsEntityDead(ped)) then 
-            DisableControlAction( 0, 36, true ) -- INPUT_DUCK  
-            if ( not IsPauseMenuActive() ) then 
-                if ( IsDisabledControlJustPressed( 0, 36 ) ) then 
+        if (DoesEntityExist(ped) and not IsEntityDead(ped)) then
+            DisableControlAction( 0, 36, true )
+            if ( not IsPauseMenuActive() ) then
+                if ( IsDisabledControlJustPressed( 0, 36 ) ) then
                     RequestAnimSet( "move_ped_crouched" )
-                    while ( not HasAnimSetLoaded( "move_ped_crouched" ) ) do 
+                    while ( not HasAnimSetLoaded( "move_ped_crouched" ) ) do
                         sleep = 100
                         Citizen.Wait( sleep )
-                    end 
-                    if ( crouched == true ) then 
+                    end
+                    if ( crouched == true ) then
                         ResetPedMovementClipset( ped, 0 )
-                        crouched = false 
+                        crouched = false
                     elseif ( crouched == false ) then
                         SetPedMovementClipset( ped, "move_ped_crouched", 0.25 )
-                        crouched = true 
-                    end 
+                        crouched = true
+                    end
                 end
-            end 
-        end 
+            end
+        end
     end
 end)
 
 Citizen.CreateThread(function()
-    StartAudioScene("CHARACTER_CHANGE_IN_SKY_SCENE") -- Call it once.
+    StartAudioScene("CHARACTER_CHANGE_IN_SKY_SCENE")
     StartAudioScene("DLC_MPHEIST_TRANSITION_TO_APT_FADE_IN_RADIO_SCENE")
 end)
 
 Citizen.CreateThread(function()
     while true do
       InvalidateIdleCam()
-      N_0x9e4cfff989258472() -- Disable the vehicle idle camera
-      Wait(10000) --The idle camera activates after 30 second so we don't need to call this per frame
+      N_0x9e4cfff989258472()
+      Wait(10000)
     end
 end)
 
@@ -235,9 +235,9 @@ function GetPlayerByEntityID(id)
 end
 
 local vehWeapons = {
-	0x1D073A89, -- ShotGun
-	0x83BF0278, -- Carbine
-	0x5FC3C11, -- Sniper
+	0x1D073A89,
+	0x83BF0278,
+	0x5FC3C11,
 }
 
 local hasBeenInPoliceVehicle = false
@@ -313,12 +313,12 @@ CreateThread(function()
             if not islandLoaded then
                 islandLoaded = true
                 Citizen.InvokeNative(0x9A9D1BA639675CF1, "HeistIsland", 1)
-				Citizen.InvokeNative(0xF74B1FFA4A15FBEA, 1) -- island path nodes (from Disquse)
+				Citizen.InvokeNative(0xF74B1FFA4A15FBEA, 1)
 				SetScenarioGroupEnabled('Heist_Island_Peds', 1)
-				-- SetAudioFlag('PlayerOnDLCHeist4Island', 1)
+
 				SetAmbientZoneListStatePersistent('AZL_DLC_Hei4_Island_Zones', 1, 1)
 				SetAmbientZoneListStatePersistent('AZL_DLC_Hei4_Island_Disabled_Zones', 0, 1)
-				--Citizen.InvokeNative(0x5E1460624D194A38, true)
+
             end
         else
             if islandLoaded then
@@ -326,10 +326,10 @@ CreateThread(function()
                 Citizen.InvokeNative(0x9A9D1BA639675CF1, "HeistIsland", 0)
 				Citizen.InvokeNative(0xF74B1FFA4A15FBEA, 0)
 				SetScenarioGroupEnabled('Heist_Island_Peds', 0)
-				-- SetAudioFlag('PlayerOnDLCHeist4Island', 0)
+
 				SetAmbientZoneListStatePersistent('AZL_DLC_Hei4_Island_Zones', 0, 0)
 				SetAmbientZoneListStatePersistent('AZL_DLC_Hei4_Island_Disabled_Zones', 1, 0)
-				--Citizen.InvokeNative(0x5E1460624D194A38, false)
+
             end
         end
         Wait(5000)

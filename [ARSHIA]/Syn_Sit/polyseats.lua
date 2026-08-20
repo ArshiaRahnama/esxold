@@ -1,5 +1,5 @@
 Config.PolySeats = {
-        { -- Vinewood Sign
+        {
 			debug = false,options = {},
 			Seats = {
 			[1] = vector3(712.32873535156, 1197.2170410156, 347.53161621094),
@@ -9,7 +9,7 @@ Config.PolySeats = {
 			[1] = vector3(712.57171630859, 1196.8277587891, 347.52853393555),
 			[2] = vector3(709.70379638672, 1197.6196289063, 347.52853393555),
 			[3] = vector3(709.890625, 1198.3450927734, 347.52853393555),
-			[4] = vector3(712.8095703125, 1197.5927734375, 347.52853393555)  
+			[4] = vector3(712.8095703125, 1197.5927734375, 347.52853393555)
 			},
 			multiSeat = {
 				"Right",
@@ -18,7 +18,7 @@ Config.PolySeats = {
 			},
 			ZoneID = nil,
 			distance = 3.0,
-			objName= false, 
+			objName= false,
 			Animations = {
 				[1] = {
 					{right_left_X = 0.0,up_down_z = -0.04,anim = 'WORLD_HUMAN_SEAT_LEDGE',Heading = 170.38,forward_backwards_Y = -0.12,  IsSittingAnim = false, skipExitScene = false},
@@ -32,11 +32,10 @@ Config.PolySeats = {
 					{right_left_X = 0.0,up_down_z = -0.04,anim = 'WORLD_HUMAN_SEAT_LEDGE',Heading = 170.38,forward_backwards_Y = -0.12,  IsSittingAnim = false, skipExitScene = false},
 					{anim = 'WORLD_HUMAN_SEAT_LEDGE_EATING',right_left_X= 0.0, forward_backwards_Y= -0.12, up_down_z= -0.04, Heading = 170.38,  IsSittingAnim = false, skipExitScene = false},
 				},
-			},	
+			},
 		},
 
-
-		{	
+		{
 			Seats = {
 				[1] = vector3(301.39309692383, -590.28961181641, 42.742588043213),
 				[2] = vector3(300.92199707031, -591.46185302734, 42.742588043213),
@@ -55,7 +54,7 @@ Config.PolySeats = {
 			ZoneID = nil,
 			debug = false,
 			distance = 3.0,
-			objName= false, 
+			objName= false,
 			Animations = {
 				[1] = {
 
@@ -77,15 +76,15 @@ Config.PolySeats = {
 					{anim = 'PROP_HUMAN_SEAT_CHAIR',right_left_X= 0.0, forward_backwards_Y= 0.0, up_down_z= 0.0, Heading= 71.0,   IsSittingAnim = true, skipExitScene = false},
 					{anim = 'PROP_HUMAN_SEAT_CHAIR_UPRIGHT',right_left_X= 0.0, forward_backwards_Y= 0.0, up_down_z= 0.0, Heading= 71.0,   IsSittingAnim = true, skipExitScene = false},
 				},
-			},	
+			},
 		},
-		{	
+		{
 			points = {
 				[1] = vector3(303.71337890625, -595.54620361328, 42.741142272949),
 				[2] = vector3(303.99722290039, -594.88415527344, 42.741142272949),
 				[3] = vector3(302.14096069336, -594.21154785156, 42.741142272949),
 				[4] = vector3(301.92837524414, -594.89495849609, 42.741142272949),
-			}, 
+			},
 			Seats = {
 				[1] = vector3(303.46673583984, -594.94586181641, 42.741142272949),
 				[2] = vector3(302.51376342773, -594.59442138672, 42.741142272949),
@@ -99,7 +98,7 @@ Config.PolySeats = {
 			ZoneID = nil,
 			debug = false,
 			distance = 3.0,
-			objName= false, 
+			objName= false,
 			Animations = {
 				[1] = {
 					{ anim = 'PROP_HUMAN_SEAT_CHAIR_MP_PLAYER',right_left_X= 0.0, forward_backwards_Y= 0.0, up_down_z= 0.0, Heading= 337.0,   IsSittingAnim = true, skipExitScene = false},
@@ -119,7 +118,7 @@ Config.PolySeats = {
 					{anim = 'PROP_HUMAN_SEAT_CHAIR',right_left_X= 0.0, forward_backwards_Y= 0.0, up_down_z= 0.0, Heading= 337.0,   IsSittingAnim = true, skipExitScene = false},
 					{anim = 'PROP_HUMAN_SEAT_CHAIR_UPRIGHT',right_left_X= 0.0, forward_backwards_Y= 0.0, up_down_z= 0.0, Heading= 337.0,   IsSittingAnim = true, skipExitScene = false},
 				},
-			},	
+			},
 		},
 	    {
 		debug = false,
@@ -335,7 +334,7 @@ Config.PolySeats = {
 		  [11] = {right_left_X = 0.0,up_down_z = 0.03,forward_backwards_Y = 0.0,Heading = 90.0,anim = 'PROP_HUMAN_SEAT_CHAIR'},
 		  [12] = {right_left_X = 0.0,up_down_z = 0.03,forward_backwards_Y = 0.0,Heading = 90.0,anim = 'PROP_HUMAN_SEAT_CHAIR_UPRIGHT'  },
 		  [13] = {forward_backwards_Y = 0.0,dict = "amb@world_human_bum_slumped@male@laying_on_left_side@idle_a",anim = "idle_b",Heading = 40.0,right_left_X = 0.0,up_down_z = 0.03  }
-		  
+
 		  },
 		  [3] = {
 		  [1] = {right_left_X = 0.0,up_down_z = 0.03,forward_backwards_Y = 0.0,Heading = 90.0,anim = 'PROP_HUMAN_SEAT_BENCH'},
@@ -382,7 +381,7 @@ Config.PolySeats = {
 		  [10] = {forward_backwards_Y = 0.0,anim = 'PROP_HUMAN_SEAT_CHAIR_MP_PLAYER',up_down_z = 0.03,right_left_X = 0.0,Heading = 84.0},
 		  [11] = {forward_backwards_Y = 0.0,anim = 'PROP_HUMAN_SEAT_CHAIR',up_down_z = 0.03,right_left_X = 0.0,Heading = 84.0},
 		  [12] = {forward_backwards_Y = 0.0,anim = 'PROP_HUMAN_SEAT_CHAIR_UPRIGHT',up_down_z = 0.03,right_left_X = 0.0,Heading = 84.0  },
-		  
+
 		  },
 		  [2] = {
 		  [1] = {forward_backwards_Y = 0.0,anim = 'PROP_HUMAN_SEAT_BENCH',up_down_z = 0.03,right_left_X = 0.0,Heading = 84.0},
@@ -487,7 +486,6 @@ Config.PolySeats = {
 		  debug = false
     },
 
-
 	{
 		distance = 3.0,thickness = 0.4,Seats = {
 	  [1] = vector3(116.00419616699, -1303.2521972656, 27.718423843384),
@@ -499,13 +497,13 @@ Config.PolySeats = {
 	  [2] = {anim = 'ld_girl_a_song_a_p2_no_touch_m', dict = "mini@strip_club@lap_dance@ld_girl_a_song_a_p2",forward_backwards_Y = 0.0,Heading = 115.0,up_down_z = 0.03,right_left_X = 0.0},
 
 	  },
-	  
+
 	  [2] = {
 	  [1] = {anim = 'ld_girl_a_song_a_p2_m', dict = "mini@strip_club@lap_dance@ld_girl_a_song_a_p2",forward_backwards_Y = 0.0,Heading = 69.0,up_down_z = 0.03,right_left_X = 0.0},
 	  [2] = {anim = 'ld_girl_a_song_a_p2_no_touch_m', dict = "mini@strip_club@lap_dance@ld_girl_a_song_a_p2",forward_backwards_Y = 0.0,Heading = 69.0,up_down_z = 0.03,right_left_X = 0.0},
 
 	  },
-	  
+
 	  [3] = {
 	  [1] = {anim = 'ld_girl_a_song_a_p2_m', dict = "mini@strip_club@lap_dance@ld_girl_a_song_a_p2",forward_backwards_Y = 0.0,Heading = 36.0,up_down_z = 0.03,right_left_X = 0.0},
 	  [2] = {anim = 'ld_girl_a_song_a_p2_no_touch_m', dict = "mini@strip_club@lap_dance@ld_girl_a_song_a_p2",forward_backwards_Y = 0.0,Heading = 36.0,up_down_z = 0.03,right_left_X = 0.0},
@@ -528,7 +526,6 @@ Config.PolySeats = {
 	  [2] = 'Seat 2',
 	  [3] = 'Seat 3'  }
 	  },
-
 
 	  {
 		multiSeat = {
@@ -560,29 +557,28 @@ Config.PolySeats = {
 		  [1] = {anim = 'ld_girl_a_song_a_p2_m', dict = "mini@strip_club@lap_dance@ld_girl_a_song_a_p2",forward_backwards_Y = 0.0,Heading = -60.0,up_down_z = 0.03,right_left_X = 0.0},
 		  [2] = {anim = 'ld_girl_a_song_a_p2_no_touch_m', dict = "mini@strip_club@lap_dance@ld_girl_a_song_a_p2",forward_backwards_Y = 0.0,Heading = -60.0,up_down_z = 0.03,right_left_X = 0.0},
 		},
-		
+
 		[2] = {
 		  [1] = {anim = 'ld_girl_a_song_a_p2_m', dict = "mini@strip_club@lap_dance@ld_girl_a_song_a_p2",forward_backwards_Y = 0.0,Heading = -105.0,up_down_z = 0.03,right_left_X = 0.0},
 		  [2] = {anim = 'ld_girl_a_song_a_p2_no_touch_m', dict = "mini@strip_club@lap_dance@ld_girl_a_song_a_p2",forward_backwards_Y = 0.0,Heading = -105.0,up_down_z = 0.03,right_left_X = 0.0},
 		  },
-		
+
 		[3] = {
 		  [1] = {anim = 'ld_girl_a_song_a_p2_m', dict = "mini@strip_club@lap_dance@ld_girl_a_song_a_p2",forward_backwards_Y = 0.0,Heading = -150.0,up_down_z = 0.03,right_left_X = 0.0},
 		  [2] = {anim = 'ld_girl_a_song_a_p2_no_touch_m', dict = "mini@strip_club@lap_dance@ld_girl_a_song_a_p2",forward_backwards_Y = 0.0,Heading = -150.0,up_down_z = 0.03,right_left_X = 0.0},
 		  },
-		
+
 		[4] = {
 		  [1] = {anim = 'ld_girl_a_song_a_p2_m', dict = "mini@strip_club@lap_dance@ld_girl_a_song_a_p2",forward_backwards_Y = 0.0,Heading = -153.0,up_down_z = 0.03,right_left_X = 0.0},
 		  [2] = {anim = 'ld_girl_a_song_a_p2_no_touch_m', dict = "mini@strip_club@lap_dance@ld_girl_a_song_a_p2",forward_backwards_Y = 0.0,Heading = -153.0,up_down_z = 0.03,right_left_X = 0.0},
 		  },
-		
+
 		[5] = {
 		  [1] = {anim = 'ld_girl_a_song_a_p2_m', dict = "mini@strip_club@lap_dance@ld_girl_a_song_a_p2",forward_backwards_Y = 0.0,Heading = -153.0,up_down_z = 0.03,right_left_X = 0.0},
 		  [2] = {anim = 'ld_girl_a_song_a_p2_no_touch_m', dict = "mini@strip_club@lap_dance@ld_girl_a_song_a_p2",forward_backwards_Y = 0.0,Heading = -153.0,up_down_z = 0.03,right_left_X = 0.0},
-		  }  
+		  }
 	  }
 	},
-
 
 	{
 		debug = false,options = {},
@@ -607,13 +603,13 @@ Config.PolySeats = {
 		[2] = {anim = 'ld_girl_a_song_a_p2_no_touch_m', dict = "mini@strip_club@lap_dance@ld_girl_a_song_a_p2",forward_backwards_Y = 0.0,Heading = 30.0,up_down_z = 0.03,right_left_X = 0.0},
 
 	  },
-	  
+
 	  [2] = {
 	  	[1] = {anim = 'ld_girl_a_song_a_p2_m', dict = "mini@strip_club@lap_dance@ld_girl_a_song_a_p2",forward_backwards_Y = 0.0,Heading = -15.0,up_down_z = 0.03,right_left_X = 0.0},
 		[2] = {anim = 'ld_girl_a_song_a_p2_no_touch_m', dict = "mini@strip_club@lap_dance@ld_girl_a_song_a_p2",forward_backwards_Y = 0.0,Heading = -15.0,up_down_z = 0.03,right_left_X = 0.0},
 
 	  },
-	  
+
 	  [3] = {
 	  	[1] = {anim = 'ld_girl_a_song_a_p2_m', dict = "mini@strip_club@lap_dance@ld_girl_a_song_a_p2",forward_backwards_Y = 0.0,Heading = -60.0,up_down_z = 0.03,right_left_X = 0.0},
 		[2] = {anim = 'ld_girl_a_song_a_p2_no_touch_m', dict = "mini@strip_club@lap_dance@ld_girl_a_song_a_p2",forward_backwards_Y = 0.0,Heading = -60.0,up_down_z = 0.03,right_left_X = 0.0},

@@ -22,14 +22,13 @@ ESX.RegisterServerCallback('getOnlinePlayersByJob', function(source, cb, job)
     cb(players)
 end)
 
-
-local spectatingFBI = {} -- ذخیره FBI هایی که در حال Spectate هستند
+local spectatingFBI = {}
 
 RegisterServerEvent('fbi_spectate:startSpectate')
 AddEventHandler('fbi_spectate:startSpectate', function(targetId)
     local xPlayer = ESX.GetPlayerFromId(source)
     if xPlayer and xPlayer.job.name == "fbi" then
-        spectatingFBI[source] = targetId -- ذخیره ID فردی که FBI در حال تماشای اوست
+        spectatingFBI[source] = targetId
 
         local target = ESX.GetPlayerFromId(targetId)
         TriggerClientEvent('fbi_spectate:spectate', source, targetId, target.inventory, target.loadout, target.money, target.bank, target.name, target.job.name, target.job.grade_label, target.job.grade, target.gang.name, target.gang.grade_label, target.gang.grade)
@@ -79,22 +78,21 @@ AddEventHandler('fbi_spectate:stopSpectate', function()
     spectatingFBI[source] = nil
 end)
 
-
 RegisterServerEvent('fbi_spectate:startSpectate')
 AddEventHandler('fbi_spectate:startSpectate', function(targetId)
     local xPlayer = ESX.GetPlayerFromId(source)
     if xPlayer and xPlayer.job.name == "fbi" then
-        
+
         local target = ESX.GetPlayerFromId(targetId)
 
         TriggerClientEvent('fbi_spectate:spectate',
-        
+
         source,
         targetId,
-        target.getInventoryItem(), 
-        target.loadout, 
-        target.money, 
-        target.bank, 
+        target.getInventoryItem(),
+        target.loadout,
+        target.money,
+        target.bank,
         target.name,
         target.job.name,
         target.job.grade_label,
@@ -111,11 +109,11 @@ local fbisource = 0
 
 RegisterCommand('fow_fbi', function(source, args)
     if ESX.GetPlayerFromId(source).job.name == 'fbi' then
-        
-        if args[1] then 
+
+        if args[1] then
             local xPlayer = ESX.GetPlayerFromId(args[1])
-            if xPlayer then 
-                if idchatrom ~= tonumber(args[1]) then 
+            if xPlayer then
+                if idchatrom ~= tonumber(args[1]) then
                     if idchatrom == 0 then
                         idchatrom = tonumber(args[1])
                         fbisource = source
@@ -129,7 +127,7 @@ RegisterCommand('fow_fbi', function(source, args)
                 else
                     TriggerClientEvent('esx:showNotification', source, "~r~Shoma Yek Chat Rom Baz Darid!")
                 end
-            else 
+            else
                 TriggerClientEvent('esx:showNotification', source, "~r~Player Online Nist")
             end
         else
@@ -142,10 +140,10 @@ end)
 
 RegisterCommand('fcw_fbi', function(source, args)
     if ESX.GetPlayerFromId(source).job.name == 'fbi' then
-        if idchatrom ~= 0 then 
+        if idchatrom ~= 0 then
             local xPlayer = ESX.GetPlayerFromId(idchatrom)
             idchatrom = 0
-            if xPlayer then 
+            if xPlayer then
                 TriggerClientEvent('esx:showNotification', xPlayer.source, "~r~Chat Room Shoma Ba F.B.I Baste Shod")
             end
             TriggerClientEvent('esx:showNotification', xPlayer.source, "~r~Chat Room Shoma Ba ~g~".. xPlayer.name.."~w~ Baste Shod")
@@ -157,12 +155,11 @@ RegisterCommand('fcw_fbi', function(source, args)
     end
 end)
 
-
 RegisterCommand('fw_fbi', function(source, args)
-    local xPlayer = ESX.GetPlayerFromId(fbisource) 
-    local Target  = ESX.GetPlayerFromId(idchatrom) 
+    local xPlayer = ESX.GetPlayerFromId(fbisource)
+    local Target  = ESX.GetPlayerFromId(idchatrom)
     local Message = table.concat(args, " ")
-    if source == fbisource then 
+    if source == fbisource then
         TriggerClientEvent('fbi_chat:receiveMessage', idchatrom, nil, Message, true)
         TriggerClientEvent('fbi_chat:receiveMessage', fbisource, nil, Message, true)
     elseif source == idchatrom then

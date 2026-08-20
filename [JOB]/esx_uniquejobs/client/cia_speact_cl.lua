@@ -5,13 +5,12 @@ local spectatingTarget = nil
 local markerCoords = vector3(124.6018, -733.215, 242.15)
 local markerCoords2 = vector3(125.0708, -732.377, 242.15)
 
-
 local spectateData = {}
 
 Citizen.CreateThread(function()
     while ESX == nil do
         TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-        Citizen.Wait(200) 
+        Citizen.Wait(200)
     end
 
     local playerLoaded = false
@@ -27,8 +26,6 @@ Citizen.CreateThread(function()
     CheckPlayerJob_cia()
 end)
 
-
-
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
     isFBI = (job.name == "cia")
@@ -43,7 +40,6 @@ function CheckPlayerJob_cia()
         end)
     end
 end
-
 
 Citizen.CreateThread(function()
     while true do
@@ -67,7 +63,7 @@ Citizen.CreateThread(function()
                 if distance < 1.5 then
                     ESX.ShowHelpNotification("~INPUT_CONTEXT~ Press to open job spectate menu.")
 
-                    if IsControlJustReleased(0, 38) then 
+                    if IsControlJustReleased(0, 38) then
                         OpenJobSelectionMenu_cia()
                     end
                 end
@@ -75,7 +71,6 @@ Citizen.CreateThread(function()
         end
     end
 end)
-
 
 function OpenJobSelectionMenu_cia()
     ESX.TriggerServerCallback('getCiaRank', function(grade)
@@ -104,20 +99,19 @@ function OpenJobSelectionMenu_cia()
             }
         elseif grade == 7 then
             elements = { { label = "MT", value = "mt" } }
-        elseif grade == 6 then 
+        elseif grade == 6 then
             elements = { { label = "Police", value = "police" } }
-        elseif grade == 5 then 
+        elseif grade == 5 then
             elements = { { label = "Sheriff", value = "sheriff" } }
-        elseif grade == 4 then 
+        elseif grade == 4 then
             elements = { { label = "Ambulance", value = "ambulance" } }
-        elseif grade == 3 then 
+        elseif grade == 3 then
             elements = { { label = "Mechanic", value = "mechanic" } }
-        elseif grade == 2 then 
+        elseif grade == 2 then
             elements = { { label = "Taxi", value = "taxi" } }
-        elseif grade == 1 then 
+        elseif grade == 1 then
             elements = { { label = "Weazel", value = "weazel" } }
 			end
-
 
         ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'job_menu',
             { title = "Select Job", align = "top-left", elements = elements },
@@ -212,7 +206,7 @@ Citizen.CreateThread(function()
             OpenSpectateMenu_cia()
         end
 
-        if IsControlJustPressed(0, 177) and isSpectating then 
+        if IsControlJustPressed(0, 177) and isSpectating then
             StopSpectate_cia()
         end
     end
@@ -222,16 +216,16 @@ function OpenSpectateMenu_cia()
     if not isSpectating then return end
     local elements = {
         { label = "Name: " .. spectateData.PLName, value = nil },
-        { label = "Bank: $" .. spectateData.money, value = nil }, 
-        { label = "Cash: $" .. spectateData.PLCash, value = nil }, 
+        { label = "Bank: $" .. spectateData.money, value = nil },
+        { label = "Cash: $" .. spectateData.PLCash, value = nil },
         { label = "Job: " .. spectateData.JobName.." | "..spectateData.JobLabel.." | "..spectateData.JobGrade, value = nil },
         { label = "Gang: ".. spectateData.GangName.." | "..spectateData.GangLabel.." | "..spectateData.GangGrade, value = nil },
         { label = "-------Inventory------", value = nil }
     }
-    
-    
+
+
     for _, item in pairs(spectateData.inventory) do
-        if item.count ~= 0 then 
+        if item.count ~= 0 then
             table.insert(elements, { label = item.count .. "x " .. item.label, value = nil })
         end
     end
@@ -251,41 +245,36 @@ function OpenSpectateMenu_cia()
     )
 end
 
-
 function SpectatePlayer_cia(targetId)
     local playerPed = PlayerPedId()
     SetEntityCoords(playerPed, markerCoords2.x, markerCoords2.y, markerCoords2.z)
 
-    
+
     SetEntityVisible(playerPed, false, false)
     SetEntityAlpha(playerPed, 0, false)
 
-    
+
     TriggerServerEvent('cia_spectate:startSpectate', targetId)
 end
-
-
 
 function StopSpectate_cia()
     local playerPed = PlayerPedId()
 
-    
+
     NetworkSetInSpectatorMode(false, playerPed)
     isSpectating = false
     spectatingTarget = nil
 
-    
+
     SetEntityCoords(playerPed, markerCoords2.x, markerCoords2.y, markerCoords2.z)
 
-    
+
     SetEntityVisible(playerPed, true, false)
     ResetEntityAlpha(playerPed)
 
-   
+
     ESX.ShowNotification("Stopped Spectating ❌")
 end
-
-
 
 RegisterCommand("ciacsp", function(source, args, rawCommand)
     if isSpectating then
@@ -298,12 +287,9 @@ end, false)
 RegisterNetEvent('cia_chat:receiveMessage')
 AddEventHandler('cia_chat:receiveMessage', function(senderName, message, isfbi)
     if isfbi then
-        TriggerEvent('chatMessage', "[CIA] ", {255, 0, 0}, message) 
-    else 
-        TriggerEvent('chatMessage', "["..senderName.."] ", {255, 0, 0}, message) 
+        TriggerEvent('chatMessage', "[CIA] ", {255, 0, 0}, message)
+    else
+        TriggerEvent('chatMessage', "["..senderName.."] ", {255, 0, 0}, message)
     end
 end)
-
-
-
 

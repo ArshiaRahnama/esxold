@@ -1,6 +1,6 @@
 Locales['en'] = Locales['en'] or {}
 for k, v in pairs({
-  -- Cloakroom
+
   ['cloakroom'] = 'locker room',
   ['citizen_wear'] = 'Civilian Outfit',
   ['sheriff_wear'] = 'sheriff Outfit',
@@ -10,7 +10,7 @@ for k, v in pairs({
   ['bullet_unwear'] = 'unwear bulletproof vest',
   ['no_outfit'] = 'there\'s no uniform that fits you!',
   ['open_cloackroom'] = 'press ~INPUT_CONTEXT~ to change ~y~clothes~s~.',
-  -- Armory
+
   ['remove_object'] = 'withdraw Items',
   ['jail'] = 'z',
   ['deposit_object'] = 'deposit Items',
@@ -20,7 +20,7 @@ for k, v in pairs({
   ['buy_items'] = 'buy Items',
   ['armory'] = 'armory',
   ['open_armory'] = 'press ~INPUT_CONTEXT~ to access the armory',
-  -- Vehicles
+
   ['vehicle_menu'] = 'vehicle',
   ['vehicle_out'] = 'there is already a car out of the garage',
   ['heli_out'] = 'there is already a heli out of the garage',
@@ -28,7 +28,7 @@ for k, v in pairs({
   ['vehicle_spawner'] = 'press ~INPUT_CONTEXT~ to take out a vehicle',
   ['heli_spawner'] = 'press ~INPUT_CONTEXT~ to take out a heli',
   ['store_vehicle'] = 'press ~INPUT_CONTEXT~ to store the vehicle',
-  -- Service
+
   ['service_max'] = 'you cannot enter service, max officers in service: %s/%s',
   ['service_not'] = 'you have not entered service! You\'ll have to get changed first.',
   ['service_anonunce'] = 'service information',
@@ -36,7 +36,7 @@ for k, v in pairs({
   ['service_in_announce'] = 'operator ~y~%s~s~ has entered service!',
   ['service_out'] = 'you have left service.',
   ['service_out_announce'] = 'operator ~y~%s~s~ has left their service.',
-  -- Action Menu
+
   ['citizen_interaction'] = 'citizen Interaction',
   ['vehicle_interaction'] = 'vehicle Interaction',
   ['object_spawner'] = 'object Spawner',
@@ -58,7 +58,7 @@ for k, v in pairs({
   ['licence_you_revoked'] = 'you revoked a ~b~%s~s~ which belonged to ~y~%s~s~',
   ['no_players_nearby'] = 'there is no player(s) nearby!',
   ['being_searched'] = 'you are being ~y~searched~s~ by the ~b~sheriff~s~',
-  -- Vehicle interaction
+
   ['vehicle_info'] = 'vehicle Info',
   ['pick_lock'] = 'lockpick Vehicle',
   ['vehicle_unlocked'] = 'vehicle ~g~Unlocked~s~',
@@ -73,7 +73,7 @@ for k, v in pairs({
   ['search_database_error_invalid'] = 'that is ~r~not~s~ a ~y~valid~s~ registration number',
   ['search_database_error_not_found'] = 'that ~y~registration number~s~ is ~r~not~s~ registered to an vehicle!',
   ['search_database_found'] = 'the vehicle is ~y~registered~s~ to ~b~%s~s~',
-  -- Traffic interaction
+
   ['traffic_interaction'] = 'interaction Traffic',
   ['cone'] = 'cone',
   ['barrier'] = 'Road Barrier',
@@ -82,7 +82,7 @@ for k, v in pairs({
   ['spikestrips'] = 'spikestrips',
   ['box'] = 'box',
   ['cash'] = 'box of cash',
-  -- ID Card Menu
+
   ['name'] = 'name: %s',
   ['job'] = 'job: %s',
   ['sex'] = 'sex: %s',
@@ -93,7 +93,7 @@ for k, v in pairs({
   ['unknown'] = 'unknown',
   ['male'] = 'male',
   ['female'] = 'female',
-  -- Body Search Menu
+
   ['guns_label'] = '--- Guns ---',
   ['inventory_label'] = '--- Inventory ---',
   ['license_label'] = ' --- Licenses ---',
@@ -112,17 +112,17 @@ for k, v in pairs({
   ['average_offense'] = 'average Offense',
   ['major_offense'] = 'major Offense',
   ['fine_total'] = 'fine: %s',
-  -- Vehicle Info Menu
+
   ['plate'] = 'plate: %s',
   ['owner_unknown'] = 'owner: Unknown',
   ['owner'] = 'owner: %s',
-  -- Weapons Menus
+
   ['get_weapon_menu'] = 'armory - Withdraw Weapon',
   ['put_weapon_menu'] = 'armory - Deposit Weapon',
   ['buy_weapon_menu'] = 'armory - Buy Guns',
   ['buy_item_menu'] = 'armory - Buy Items',
   ['not_enough_money'] = 'you do not have enough money',
-  -- Boss Menu
+
   ['take_company_money'] = 'withdraw Company Money',
   ['deposit_money'] = 'deposit Money',
   ['amount_of_withdrawal'] = 'amount of Withdrawal',
@@ -135,21 +135,21 @@ for k, v in pairs({
   ['quantity'] = 'quantity',
   ['inventory'] = 'inventory',
   ['sheriff_stock'] = 'sheriff Stock',
-  -- Misc
+
   ['remove_prop'] = 'press ~INPUT_CONTEXT~ to delete the object',
   ['map_blip'] = 'sheriff Station',
   ['unrestrained_timer'] = 'you feel your handcuffs slowly losing grip and fading away.',
-  -- Notifications
+
   ['alert_sheriff'] = 'sheriff alert',
   ['phone_sheriff'] = 'sheriff',
-  -- Panic stuff
+
   ['distress_sent'] = 'Panic alarm shoma ferestade shod!',
   ['sheriff_distress_message'] = 'PANIC alarm tavasot yeki az sheriff ha feretade shod, CODE 1',
-  -- Sheriff stuff
+
   ['sbullet_wear'] = 'Sheriff Bullet Proof Vest',
   ['sheriff_wear'] = 'Sheriff Outfit',
 
-  --Jail 
+
   ['bazdashtgah'] = 'Zendan dar bazdashtgah',
   ['markazi'] = 'Zendan dar zendan Markazi',
 }) do Locales['en'][k] = v end

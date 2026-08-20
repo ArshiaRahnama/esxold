@@ -1,4 +1,4 @@
-ESX = nil 
+ESX = nil
 Citizen.CreateThread(function()
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -11,7 +11,7 @@ Citizen.CreateThread(function()
 
 	while true do
 		Citizen.Wait(1)
-		
+
 		if IsEntityDead(PlayerPedId()) then
 			Citizen.Wait(500)
 			local PedKiller = GetPedSourceOfDeath(PlayerPedId())
@@ -23,7 +23,7 @@ Citizen.CreateThread(function()
 			elseif IsEntityAVehicle(PedKiller) and IsEntityAPed(GetPedInVehicleSeat(PedKiller, -1)) and IsPedAPlayer(GetPedInVehicleSeat(PedKiller, -1)) then
 				Killer = NetworkGetPlayerIndexFromPed(GetPedInVehicleSeat(PedKiller, -1))
 			end
-			
+
 			if (Killer == PlayerId()) then
 				DeathReason = 'committed suicide'
 			elseif (Killer == nil) then
@@ -64,7 +64,7 @@ Citizen.CreateThread(function()
 
 			if DeathReason == 'committed suicide' or DeathReason == 'died' then
 				TriggerServerEvent('DiscordBot:plascaryyerDied', GetPlayerName(PlayerId()) .. ' ' .. DeathReason .. '.', Weapon)
-			else	
+			else
 				Wait(3000)
 				print(GetEntityHealth(PlayerPedId()))
 				if GetEntityHealth(PlayerPedId()) == 0 then
@@ -225,7 +225,6 @@ function IsVK(Weapon)
 	end
 	return false
 end
-
 
 AddEventHandler('gameEventTriggered', function(name, args)
     if name == 'CEventNetworkEntityDamage' then

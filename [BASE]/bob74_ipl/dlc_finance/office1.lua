@@ -1,5 +1,4 @@
 
--- Office 1: -141.1987, -620.913, 168.8205 (Arcadius Business Centre)
 
 exports('GetFinanceOffice1Object', function()
     return FinanceOffice1
@@ -8,7 +7,7 @@ end)
 FinanceOffice1 = {
     currentInteriorId = -1,
     currentSafeDoors = {hashL = "", hashR = ""},
-    
+
     Style = {
         Theme = {
             warm = {interiorId = 236289, ipl = "ex_dt1_02_office_01a", safe = "ex_prop_safedoor_office1a"},
@@ -46,13 +45,13 @@ FinanceOffice1 = {
         end
     },
     Safe = {
-        doorHeadingL = 96.0, -- Only need the heading of the Left door to get the Right ones
-        Position = {x = -124.25, y = -641.30, z = 168.870}, -- Approximately between the two doors
+        doorHeadingL = 96.0,
+        Position = {x = -124.25, y = -641.30, z = 168.870},
 
-        -- These values are checked from "doorHandler.lua" and
+
         isLeftDoorOpen = false, isRightDoorOpen = false,
 
-        -- Safe door API
+
         Open = function(doorSide)
             if (doorSide:lower() == "left") then FinanceOffice1.Safe.isLeftDoorOpen = true
             elseif (doorSide:lower() == "right") then FinanceOffice1.Safe.isRightDoorOpen = true
@@ -70,7 +69,7 @@ FinanceOffice1 = {
             end
         end,
 
-        -- Internal use only
+
         SetDoorState = function(doorSide, open)
             local doorHandle = 0
             local heading = FinanceOffice1.Safe.doorHeadingL
@@ -92,7 +91,7 @@ FinanceOffice1 = {
             SetEntityHeading(doorHandle, heading)
         end,
 
-        -- /!\ handle changes whenever the interior is refreshed /!\
+
         GetDoorHandle = function(doorHash)
             local timeout = 4
             local doorHandle = GetClosestObjectOfType(FinanceOffice1.Safe.Position.x, FinanceOffice1.Safe.Position.y, FinanceOffice1.Safe.Position.z, 5.0, doorHash, false, false, false)

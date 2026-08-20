@@ -6,7 +6,7 @@ Citizen.CreateThread(function ()
 	  TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 	  Citizen.Wait(100)
   end
-  
+
   while not ESX.GetPlayerData().job do
 	  Citizen.Wait(100)
   end
@@ -21,61 +21,14 @@ AddEventHandler('esx:setJob', function(job)
 	PlayerData.job = job
 end)
 
--- RegisterCommand('police', function(source, args)
---   local player = PlayerPedId()
---   if PlayerData.job.name == "police" then 
 
---     if (IsPedSittingInAnyVehicle(player)) then
-        
---       if contains(exports["ScriptPack"]:GetVehicles(PlayerData.job.name), GetEntityModel(GetVehiclePedIsIn(player))) then
-        
---         if args[1] then
---           TriggerServerEvent('mpCommand', table.concat(args," "), true)
---         else
---           ESX.ShowNotification('~r~~h~Shoma Hadeaghal bayad yek kalame type konid.')
---         end
 
---       else
---         ESX.ShowNotification('~r~~h~Shoma Savar mashin police nistid!')
---       end
 
---     else
---       TriggerServerEvent('mpCommand', table.concat(args," "), false)
---     end
 
---   else
---     ESX.ShowNotification('~r~~h~Shoma Police nistid!')
---   end
--- end, false)
 
--- RegisterCommand('sheriff', function(source, args)
---   local player = PlayerPedId()
---   if PlayerData.job.name == "sheriff" then 
 
---     if (IsPedSittingInAnyVehicle(player)) then
-        
---       if contains(exports["ScriptPack"]:GetVehicles(PlayerData.job.name), GetEntityModel(GetVehiclePedIsIn(player))) then
-        
---         if args[1] then
---           TriggerServerEvent('mpCommand2', table.concat(args," "), true)
---         else
---           ESX.ShowNotification('~r~~h~Shoma Hadeaghal bayad yek kalame type konid.')
---         end
 
---       else
---         ESX.ShowNotification('~r~~h~Shoma Savar mashin sheriff nistid!')
---       end
 
---     else
---       TriggerServerEvent('mpCommand2', table.concat(args," "), false)
---     end
-
---   else
---     ESX.ShowNotification('~r~~h~Shoma sheriff nistid!')
---   end
--- end, false)
-
--- [[ Prox Event ]]
 RegisterNetEvent('sendProximityMessage')
 AddEventHandler('sendProximityMessage', function(data)
   if data.id == id then
@@ -88,7 +41,7 @@ end)
 RegisterNetEvent('sendProximityMessageMP')
 AddEventHandler('sendProximityMessageMP', function(data)
   if data.id == id then
-    --TriggerEvent('chatMessage', data.prefix, data.color, data.message)
+
     if data.incar then
       TriggerEvent(
         "chat:addMessage",
@@ -107,7 +60,7 @@ AddEventHandler('sendProximityMessageMP', function(data)
       )
     end
   elseif Vdist(GetEntityCoords(PlayerPedId()), data.coords) <= data.distance then
-    --TriggerEvent('chatMessage', data.prefix, data.color, data.message)
+
     if data.incar then
       TriggerEvent(
         "chat:addMessage",
@@ -128,11 +81,10 @@ AddEventHandler('sendProximityMessageMP', function(data)
   end
 end)
 
-
 RegisterNetEvent('sendProximityMessageMP2')
 AddEventHandler('sendProximityMessageMP2', function(data)
   if data.id == id then
-    --TriggerEvent('chatMessage', data.prefix, data.color, data.message)
+
     if data.incar then
       TriggerEvent(
         "chat:addMessage",
@@ -151,7 +103,7 @@ AddEventHandler('sendProximityMessageMP2', function(data)
       )
     end
   elseif Vdist(GetEntityCoords(PlayerPedId()), data.coords) <= data.distance then
-    --TriggerEvent('chatMessage', data.prefix, data.color, data.message)
+
     if data.incar then
       TriggerEvent(
         "chat:addMessage",
@@ -190,13 +142,12 @@ AddEventHandler('sendProximityDep', function(data)
   end
 end)
 
--- [[ Dice Stuff ]]
 RegisterNetEvent('sendRollThatShit')
 AddEventHandler('sendRollThatShit', function()
 	RequestAnimDict('mp_player_int_upperwank')
 	if not HasAnimDictLoaded('mp_player_int_upperwank') then
-		RequestAnimDict('mp_player_int_upperwank') 
-		while not HasAnimDictLoaded('mp_player_int_upperwank') do 
+		RequestAnimDict('mp_player_int_upperwank')
+		while not HasAnimDictLoaded('mp_player_int_upperwank') do
 			Citizen.Wait(1)
 		end
 	end
@@ -213,7 +164,7 @@ end)
 
 function contains(table, val)
   for i=1,#table do
-     if table[i] == val then 
+     if table[i] == val then
       return true
      end
   end

@@ -1,4 +1,4 @@
--- 2018 Henric 'Kekke' Johansson
+
 
 local Keys = {
 	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
@@ -48,7 +48,7 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
-		
+
 		if isRagdoll then
 			SetPedToRagdoll(PlayerPedId(), 1000, 1000, 0, 0, 0, 0)
 		end
@@ -99,7 +99,6 @@ AddEventHandler('esx_kekke_tackle:playTackle', function()
 
 end)
 
--- Main thread
 Citizen.CreateThread(function()
 	while true do
 		Wait(1)
@@ -117,9 +116,6 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
-
-
--- 2018 Henric 'Kekke' Johansson
 
 local Keys = {
 	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
@@ -169,7 +165,7 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
-		
+
 		if isRagdoll then
 			SetPedToRagdoll(PlayerPedId(), 1000, 1000, 0, 0, 0, 0)
 		end
@@ -220,7 +216,6 @@ AddEventHandler('esx_kekke_tackle:playTackle', function()
 
 end)
 
--- Main thread
 Citizen.CreateThread(function()
 	while true do
 		Wait(1)
@@ -238,8 +233,6 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
-
--- 2018 Henric 'Kekke' Johansson
 
 local Keys = {
 	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
@@ -289,7 +282,7 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
-		
+
 		if isRagdoll then
 			SetPedToRagdoll(PlayerPedId(), 1000, 1000, 0, 0, 0, 0)
 		end
@@ -340,7 +333,6 @@ AddEventHandler('esx_kekke_tackle:playTackle', function()
 
 end)
 
--- Shift+G FBI
 Citizen.CreateThread(function()
 	while true do
 		Wait(1)

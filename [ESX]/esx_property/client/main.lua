@@ -24,7 +24,6 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 	end)
 end)
 
--- only used when script is restarting mid-session
 RegisterNetEvent('esx_property:sendProperties')
 AddEventHandler('esx_property:sendProperties', function(properties)
 	Config.Properties = properties
@@ -250,20 +249,17 @@ function OpenPropertyMenu(property)
 
 		if not Config.EnablePlayerManagement then
 
-			-- table.insert(elements, {label = _U('leave'), value = 'leave'})
+
 		end
 	else
 		if not Config.EnablePlayerManagement then
 			table.insert(elements, {label = _U('buy')..": " .. property.price .. " $", value = 'buy'})
 
-			-- table.insert(elements, {label = _U('rent')..": "..(property.price /200)..' $', value = 'rent'})
+
 		end
 
 		table.insert(elements, {label = _U('visit'), value = 'visit'})
 	end
-	
-
-
 
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'property', {
@@ -347,7 +343,7 @@ function OpenGatewayOwnedPropertiesMenu(property)
 		}
 
 		if not Config.EnablePlayerManagement then
-			-- table.insert(elements, {label = _U('leave'), value = 'leave'})
+
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gateway_owned_properties_actions', {
@@ -397,7 +393,7 @@ function OpenGatewayAvailablePropertiesMenu(property)
 			align    = 'left',
 			elements = {
 				{label = _U('buy'), value = 'buy'},
-				-- {label = _U('rent'), value = 'rent'},
+
 				{label = _U('visit'), value = 'visit'}
 		}}, function(data2, menu2)
 			menu2.close()
@@ -698,7 +694,7 @@ AddEventHandler('playerSpawned', function()
 
 						for i=1, #property.ipls, 1 do
 							RequestIpl(property.ipls[i])
-				
+
 							while not IsIplActive(property.ipls[i]) do
 								Citizen.Wait(0)
 							end
@@ -793,7 +789,6 @@ AddEventHandler('esx_property:hasExitedMarker', function(name, part)
 	CurrentAction = nil
 end)
 
--- Enter / Exit marker events & Draw markers
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
@@ -805,7 +800,7 @@ Citizen.CreateThread(function()
 		for i=1, #Config.Properties, 1 do
 			local property = Config.Properties[i]
 
-			-- Entering
+
 			if property.entering and not property.disabled then
 				local distance = GetDistanceBetweenCoords(coords, property.entering.x, property.entering.y, property.entering.z, true)
 
@@ -821,7 +816,7 @@ Citizen.CreateThread(function()
 				end
 			end
 
-			-- Exit
+
 			if property.exit and not property.disabled then
 				local distance = GetDistanceBetweenCoords(coords, property.exit.x, property.exit.y, property.exit.z, true)
 
@@ -837,7 +832,7 @@ Citizen.CreateThread(function()
 				end
 			end
 
-			-- Room menu
+
 			if property.roomMenu and hasChest and not property.disabled then
 				local distance = GetDistanceBetweenCoords(coords, property.roomMenu.x, property.roomMenu.y, property.roomMenu.z, true)
 
@@ -873,7 +868,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Key controls
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)

@@ -5,7 +5,7 @@ lua54 'yes'
 game "gta5"
 
 shared_script 'Customize.lua'
-shared_script '@ox_lib/init.lua' -- required for the hotwire (carlock_cl.lua) and lockpick (lockpick_cl.lua) skill-check minigames — make sure ox_lib is started before this resource
+shared_script '@ox_lib/init.lua'
 
 ui_page 'resources/build/index.html'
 
@@ -39,4 +39,3 @@ dependencies {
   'ox_target'
 }
 
--- escrow_ignore { 'Customize.lua' }

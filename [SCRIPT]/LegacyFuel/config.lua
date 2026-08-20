@@ -1,7 +1,7 @@
 Config = {}
 Config.UseESX = true
 Config.JerryCanCost = 2000
-Config.RefillCost = 1000.1 
+Config.RefillCost = 1000.1
 Config.FuelDecor = "_FUEL_LEVEL"
 Config.DisableKeys = {0, 22, 23, 24, 29, 30, 31, 37, 44, 56, 82, 140, 166, 167, 168, 170, 288, 289, 311, 323}
 Config.EnableHUD = false
@@ -39,34 +39,34 @@ Config.PumpModels = {
 }
 
 Config.Blacklist = {
-	--"Adder",
-	--276773164
+
+
 }
 
 Config.RemoveHUDForBlacklistedVehicle = true
 Config.Classes = {
-	[0] = 1.0, -- Compacts
-	[1] = 1.0, -- Sedans
-	[2] = 1.0, -- SUVs
-	[3] = 1.0, -- Coupes
-	[4] = 1.0, -- Muscle
-	[5] = 1.0, -- SPorts Classics
-	[6] = 1.0, -- SPorts
-	[7] = 1.0, -- Super
-	[8] = 1.0, -- Motorcycles
-	[9] = 1.0, -- Off-road
-	[10] = 1.0, -- Industrial
-	[11] = 1.0, -- Utility
-	[12] = 1.0, -- Vans
-	[13] = 0.0, -- Cycles
-	[14] = 1.0, -- Boats
-	[15] = 1.0, -- Helicopters
-	[16] = 1.0, -- Planes
-	[17] = 1.0, -- Service
-	[18] = 1.0, -- Emergency
-	[19] = 1.0, -- Military
-	[20] = 1.0, -- Commercial
-	[21] = 1.0, -- Trains
+	[0] = 1.0,
+	[1] = 1.0,
+	[2] = 1.0,
+	[3] = 1.0,
+	[4] = 1.0,
+	[5] = 1.0,
+	[6] = 1.0,
+	[7] = 1.0,
+	[8] = 1.0,
+	[9] = 1.0,
+	[10] = 1.0,
+	[11] = 1.0,
+	[12] = 1.0,
+	[13] = 0.0,
+	[14] = 1.0,
+	[15] = 1.0,
+	[16] = 1.0,
+	[17] = 1.0,
+	[18] = 1.0,
+	[19] = 1.0,
+	[20] = 1.0,
+	[21] = 1.0,
 }
 
 Config.FuelUsage = {

@@ -8,20 +8,19 @@ Citizen.CreateThread(function()
 end)
 
 function GettimeSkill(name, time)
-	-- Unique_Skills is optional; this pack no longer ships it, so guard the call
+
 	local ChekSkills = 0
 	if GetResourceState('Unique_Skills') == 'started' then
 		local ok, result = pcall(function() return exports['Unique_Skills']:CheckSkill(name) end)
 		if ok then ChekSkills = result end
 	end
-	if ChekSkills == 100 then 
+	if ChekSkills == 100 then
 		local time2 = tonumber(time) / 2
 		return time2
 	else
 		return time
 	end
 end
-
 
 Config.Jobs.lumberjack = {
 	JobName = 'lumberjack',
@@ -165,29 +164,29 @@ Config.Jobs.lumberjack = {
 			Teleport = 0
 		},
 
-		-- Delivery = {
-		-- 	Pos = {x = 1201.35, y = -1327.51, z = 34.22},
-		-- 	Color = {r = 204, g = 204, b = 0},
-		-- 	Size = {x = 5.0, y = 5.0, z = 3.0},
-		-- 	Marker = 1,
-		-- 	Blip = true,
-		-- 	Name = _U("delivery_point"),
-		-- 	Type = "delivery",
-		-- 	Spawner = 1,
-		-- 	Item = {
-		-- 		{
-		-- 			name = _U("delivery"),
-		-- 			time = 500,
-		-- 			remove = 5,
-		-- 			max = 100, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
-		-- 			price = 100,
-		-- 			requires = "packaged_plank",
-		-- 			requires_name = _U("lj_planks"),
-		-- 			drop = 100
-		-- 		}
-		-- 	},
-		-- 	Hint = _U("lj_deliver_button")
-		-- }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	}
 }

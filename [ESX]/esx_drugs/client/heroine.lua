@@ -8,7 +8,7 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(PlayerPedId())
 
 		if GetDistanceBetweenCoords(coords, Config.FieldZones.PoppyField.coords, true) < 45 then
-			-- TriggerEvent('esx:showNotification', _U('opium_field_close'))
+
 			SpawnPoppyPlants()
 			Citizen.Wait(1000)
 		else
@@ -24,7 +24,7 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(playerPed)
 
 		if GetDistanceBetweenCoords(coords, Config.ProcessZones.PoppyProcessing.coords, true) < 15 and GetDistanceBetweenCoords(coords, Config.ProcessZones.PoppyProcessing.coords, true) > 10 then
-			-- ESX.ShowNotification(_U('opium_process_close'))
+
 		end
 	end
 end)
@@ -53,13 +53,13 @@ Citizen.CreateThread(function()
 				ESX.TriggerServerCallback('esx_jk_drugs:canPickUp', function(canPickUp)
 					local TimeOut = math.random(3400,3500)
 					if canPickUp then
-						-- Unique_Skills is optional; guard the call so a missing resource doesn't crash
+
 						local ChekSkills = 0
 						if GetResourceState('Unique_Skills') == 'started' then
 							local ok, result = pcall(function() return exports['Unique_Skills']:CheckSkill('Heroine') end)
 							if ok then ChekSkills = result end
 						end
-						if ChekSkills == 100 then 
+						if ChekSkills == 100 then
 							TimeOut = TimeOut / 2
 						else
 							TimeOut = TimeOut
@@ -84,13 +84,13 @@ Citizen.CreateThread(function()
 								ClearPedTasksImmediately(playerPed)
 								table.remove(poppyPlants, nearbyID)
 								spawnedPoppy = spawnedPoppy - 1
-		
+
 								ClearPedTasks(playerPed)
 								ESX.Game.DeleteObject(nearbyObject)
 
 								TriggerServerEvent('esx_jk_drugs:pickedUpPoppy')
 								isPickingUp = false
-					
+
 							elseif status then
 
 								ClearPedTasksImmediately(playerPed)
@@ -199,7 +199,7 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(playerPed)
 
 		if GetDistanceBetweenCoords(coords, Config.ProcessZones.HeroineProcessing.coords, true) < 15 and GetDistanceBetweenCoords(coords, Config.ProcessZones.HeroineProcessing.coords, true) > 10 then
-		--	ESX.ShowNotification(_U('heroine_process_close'))
+
 		end
 	end
 end)

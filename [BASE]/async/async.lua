@@ -17,7 +17,7 @@ function Async.parallel(tasks, cb)
 		CreateThread(function()
 			tasks[i](function(result)
 				table.insert(results, result)
-				
+
 				remaining = remaining - 1;
 
 				if remaining == 0 then
@@ -49,12 +49,12 @@ function Async.parallelLimit(tasks, limit, cb)
 
 		while running < limit and #queue > 0 do
 			local task = table.remove(queue, 1)
-			
+
 			running = running + 1
 
 			task(function(result)
 				table.insert(results, result)
-				
+
 				remaining = remaining - 1;
 				running = running - 1
 

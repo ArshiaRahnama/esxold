@@ -1,27 +1,7 @@
--- ================================================================= --
--- Quest system (was QuestSystem)
--- ================================================================= --
--- FIXES:
---  1) GenerateQuests used to do `for i=1,6 do ... until not usedQuestIds[questid]`
---     with NO cap on retries. If a job's quest pool has fewer than 6
---     entries (several do, after trimming out unmapped quests — see
---     config.lua), every slot after the pool is exhausted retries
---     forever and hangs that coroutine. Now capped to pool size, with
---     a hard retry ceiling as a second safety net.
---  2) Every quest trigger was a raw RegisterServerEvent with no rate
---     limit, so a player could script-spam TriggerServerEvent(trigger)
---     to instantly farm a full day's worth of quest rewards without
---     doing anything. A short per-player-per-trigger cooldown is now
---     enforced.
---  3) Rewards used to go through 'XP_System:AddXP' (a network event,
---     see xp.lua) and a client round-trip to the now-removed insecure
---     'Coin-System:AddCoinCL'. Both are now granted directly, server
---     side: GrantXP() and GrantCoin() are plain Lua calls (xp.lua and
---     coin.lua, both in this same resource now).
--- ================================================================= --
 
-local TRIGGER_COOLDOWN = 2 -- seconds; blocks raw event-spam farming
-local lastTriggerAt = {} -- [source..":"..trigger] = os.time()
+
+local TRIGGER_COOLDOWN = 2
+local lastTriggerAt = {}
 
 local function onCooldown(source, trigger)
     local key = source .. ":" .. trigger

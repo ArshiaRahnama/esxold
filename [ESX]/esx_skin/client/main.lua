@@ -15,7 +15,7 @@ Citizen.CreateThread(function()
     Citizen.Wait(0)
   end
 
-  while ESX.GetPlayerData().job == nil do 
+  while ESX.GetPlayerData().job == nil do
     Citizen.Wait(20)
   end
 
@@ -36,15 +36,15 @@ function OpenMenu(submitCb, cancelCb, restrict)
     local elements    = {}
     local _components = {}
 
-    -- Restrict menu
+
     if restrict == nil then
       for i=1, #components, 1 do
         _components[i] = components[i]
-        
+
       end
     else
       for i=1, #components, 1 do
-      
+
         local found = false
 
         for j=1, #restrict, 1 do
@@ -52,7 +52,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
             found = true
           end
         end
-       
+
         if found then
           table.insert(_components, components[i])
         end
@@ -60,7 +60,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
       end
     end
 
-    -- Insert elements
+
     for i=1, #_components, 1 do
 
       local value       = _components[i].value
@@ -69,7 +69,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
       if componentId == 0 then
         value = GetPedPropIndex(playerPed,  _components[i].componentId)
       end
-     
+
       local data = {
         label     = _components[i].label,
         name      = _components[i].name,
@@ -90,7 +90,7 @@ function OpenMenu(submitCb, cancelCb, restrict)
       table.insert(elements, data)
 
     end
- 
+
     CreateSkinCam()
     zoomOffset = _components[1].zoomOffset
     camOffset = _components[1].camOffset
@@ -134,38 +134,37 @@ function OpenMenu(submitCb, cancelCb, restrict)
           if skin[data.current.name] ~= data.current.value then
             local values = tonumber(data.current.value)
 
-            
-            if PlayerData.perm >= 100 then 
 
+            if PlayerData.perm >= 100 then
 
-              for kk,vv in pairs(Config.whitelist['admins']) do 
-                if data.current.name == vv.name and values == vv.value then 
+              for kk,vv in pairs(Config.whitelist['admins']) do
+                if data.current.name == vv.name and values == vv.value then
 
                   values = tonumber(values + 1)
                 end
               end
-              
-            elseif PlayerData.job.name == "nojob" or PlayerData.job.name == "uwucafe" then 
 
-              for kk,vv in pairs(Config.whitelist['jobs']) do 
-                if data.current.name == vv.name and values == vv.value then 
+            elseif PlayerData.job.name == "nojob" or PlayerData.job.name == "uwucafe" then
+
+              for kk,vv in pairs(Config.whitelist['jobs']) do
+                if data.current.name == vv.name and values == vv.value then
 
                   values = tonumber(values + 1)
                 end
               end
 
             end
-           
+
 
             TriggerEvent('skinchanger:change', data.current.name, values)
 
-            -- Update max values
+
             TriggerEvent('skinchanger:getData', function(components, maxVals)
 
               for i=1, #elements, 1 do
 
                 local newData = {}
-              
+
                 newData.max = maxVals[elements[i].name]
 
                 if elements[i].textureof ~= nil and data.current.name == elements[i].textureof then
@@ -195,7 +194,7 @@ end
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
-  PlayerData.job = job 
+  PlayerData.job = job
 
 end)
 
@@ -228,8 +227,8 @@ Citizen.CreateThread(function()
       DisableControlAction(2, 34, true)
       DisableControlAction(2, 35, true)
 
-      DisableControlAction(0, 25,   true) -- Input Aim
-        DisableControlAction(0, 24,   true) -- Input Attack
+      DisableControlAction(0, 25,   true)
+        DisableControlAction(0, 24,   true)
 
       local playerPed = GetPlayerPed(-1)
       local coords    = GetEntityCoords(playerPed)
@@ -304,7 +303,7 @@ function OpenSaveableMenu(submitCb, cancelCb, restrict)
 
     TriggerEvent('skinchanger:getSkin', function(skin)
 
-      -- TriggerServerEvent('esx_skin:save', skin)
+
 
       if submitCb ~= nil then
         submitCb(data, menu)
@@ -401,16 +400,16 @@ end)
 
 RegisterNetEvent('esx_skin:changeVest')
 AddEventHandler('esx_skin:changeVest', function(value1, value2)
-  
+
 
   TriggerEvent('skinchanger:getSkin', function(skin)
-    --  male
-  
+
+
          local clothesSkin = {
          ['bproof_1'] = value1,  ['bproof_2'] = value2
          }
          TriggerEvent('skinchanger:loadClothes', skin, clothesSkin)
-       
+
     end)
 
 end)
@@ -418,8 +417,8 @@ end)
 Citizen.CreateThread(function()
   while true do
 
-    -- بهینه‌سازی: چک مرگ بازیکن نیازی به هر فریم (Wait(0)) نداره؛ چند ده میلی‌ثانیه
-    -- تاخیر در تشخیص مرگ برای این فلگ (HasLoadedModel) قابل چشم‌پوشیه.
+
+
     Citizen.Wait(250)
 
     local playerPed = GetPlayerPed(-1)

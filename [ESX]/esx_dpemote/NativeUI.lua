@@ -324,8 +324,6 @@ Colours = {
     Stunt2 = {224, 50, 50, 255},
 }
 
-
-
 function GetResolution()
     local W, H = GetActiveScreenResolution()
     if (W/H) > 3.5 then
@@ -391,7 +389,6 @@ function Controller()
     return not IsInputDisabled(2)
 end
 
-
 function UIResRectangle.New(X, Y, Width, Height, R, G, B, A)
     local _UIResRectangle = {
         X = tonumber(X) or 0,
@@ -447,7 +444,6 @@ function DrawRectangle(X, Y, Width, Height, R, G, B, A)
     DrawRect(X + Width * 0.5, Y + Height * 0.5, Width, Height, tonumber(R) or 255, tonumber(G) or 255, tonumber(B) or 255, tonumber(A) or 255)
 end
 
-
 function GetCharacterCount(str)
     local characters = 0
     for c in str:gmatch("[%z\1-\127\194-\244][\128-\191]*") do
@@ -483,7 +479,7 @@ end
 function AddLongStringForAscii(str)
     local maxbytelength = 99
     for i = 0, GetCharacterCount(str), 99 do
-        AddTextComponentSubstringPlayerName(string.sub(str, i, math.min(maxbytelength, GetCharacterCount(str) - i))) --needs changed
+        AddTextComponentSubstringPlayerName(string.sub(str, i, math.min(maxbytelength, GetCharacterCount(str) - i)))
     end
 end
 
@@ -507,7 +503,7 @@ function AddLongStringForUtf8(str)
         end
     end
     AddTextComponentSubstringPlayerName(string.sub(str, startIndex, GetCharacterCount(str) - startIndex))
-end 
+end
 
 function AddLongString(str)
     local bytecount = GetByteCount(str)
@@ -644,14 +640,13 @@ function RenderText(Text, X, Y, Font, Scale, R, G, B, A, Alignment, DropShadow, 
     EndTextCommandDisplayText(X, Y)
 end
 
-
 function Sprite.New(TxtDictionary, TxtName, X, Y, Width, Height, Heading, R, G, B, A)
     local _Sprite = {
         TxtDictionary = tostring(TxtDictionary),
         TxtName = tostring(TxtName),
         X = tonumber(X) or 0,
         Y = tonumber(Y) or 0,
-        Width = tonumber(Width) or 0, 
+        Width = tonumber(Width) or 0,
         Height = tonumber(Height) or 0,
         Heading = tonumber(Heading) or 0,
         _Colour = {R = tonumber(R) or 255, G = tonumber(G) or 255, B = tonumber(B) or 255, A = tonumber(A) or 255},
@@ -742,7 +737,6 @@ function GetBadgeColour(Badge, Selected)
         return 255, 255, 255, 255
     end
 end
-
 
 function UIMenuItem.New(Text, Description)
     _UIMenuItem = {
@@ -953,7 +947,6 @@ function UIMenuItem:Draw()
     self.Text:Draw()
 end
 
-
 function UIMenuCheckboxItem.New(Text, Check, Description)
     local _UIMenuCheckboxItem = {
         Base = UIMenuItem.New(Text or "", Description or ""),
@@ -1062,8 +1055,6 @@ function UIMenuCheckboxItem:Draw()
     end
     self.CheckedSprite:Draw()
 end
-
-
 
 function UIMenuListItem.New(Text, Items, Index, Description)
     if type(Items) ~= "table" then Items = {} end
@@ -1268,7 +1259,6 @@ function UIMenuListItem:Draw()
     self.ItemText:Draw()
 end
 
-
 function UIMenuSliderItem.New(Text, Items, Index, Description, Divider)
     if type(Items) ~= "table" then Items = {} end
     if Index == 0 then Index = 1 end
@@ -1418,7 +1408,7 @@ function UIMenuSliderItem:Draw()
         self.LeftArrow:Colour(163, 159, 148, 255)
         self.RightArrow:Colour(163, 159, 148, 255)
     end
-    
+
     local Offset = ((self.Background.Width - self.Slider.Width)/(#self.Items - 1)) * (self._Index-1)
 
     self.Slider:Position(250 + self.Base._Offset.X + Offset + self.Base.ParentMenu.WidthOffset, self.Slider.Y)
@@ -1434,7 +1424,6 @@ function UIMenuSliderItem:Draw()
         self.Divider:Draw()
     end
 end
-
 
 function UIMenuColouredItem.New(Text, Description, MainColour, HighlightColour)
     if type(Colour) ~= "table" then Colour = {R = 0, G = 0, B = 0, A = 255} end
@@ -1549,7 +1538,6 @@ function UIMenuColouredItem:Draw()
     self.Rectangle:Draw()
     self.Base:Draw()
 end
-
 
 function UIMenuProgressItem.New(Text, Items, Index, Description, Counter)
     if type(Items) ~= "table" then Items = {} end
@@ -1724,25 +1712,24 @@ function UIMenuProgressItem:Draw()
     self.Bar:Draw()
 end
 
-
 function UIMenuHeritageWindow.New(Mum, Dad)
     if not tonumber(Mum) then Mum = 0 end
     if not (Mum >= 0 and Mum <= 21) then Mum = 0 end
     if not tonumber(Dad) then Dad = 0 end
     if not (Dad >= 0 and Dad <= 23) then Dad = 0 end
     _UIMenuHeritageWindow = {
-        Background = Sprite.New("pause_menu_pages_char_mom_dad", "mumdadbg", 0, 0, 431, 228), -- Background is required, must be a sprite or a rectangle.
+        Background = Sprite.New("pause_menu_pages_char_mom_dad", "mumdadbg", 0, 0, 431, 228),
         MumSprite = Sprite.New("char_creator_portraits", ((Mum < 21) and "female_"..Mum or "special_female_"..(tonumber(string.sub(Mum, 2, 2)) - 1)), 0, 0, 228, 228),
         DadSprite = Sprite.New("char_creator_portraits", ((Dad < 21) and "male_"..Dad or "special_male_"..(tonumber(string.sub(Dad, 2, 2)) - 1)), 0, 0, 228, 228),
         Mum = Mum,
         Dad = Dad,
-        _Offset = {X = 0, Y = 0}, -- required
-        ParentMenu = nil, -- required
+        _Offset = {X = 0, Y = 0},
+        ParentMenu = nil,
     }
     return setmetatable(_UIMenuHeritageWindow, UIMenuHeritageWindow)
 end
 
-function UIMenuHeritageWindow:SetParentMenu(Menu) -- required
+function UIMenuHeritageWindow:SetParentMenu(Menu)
     if Menu() == "UIMenu" then
         self.ParentMenu = Menu
     else
@@ -1750,7 +1737,7 @@ function UIMenuHeritageWindow:SetParentMenu(Menu) -- required
     end
 end
 
-function UIMenuHeritageWindow:Offset(X, Y) -- required
+function UIMenuHeritageWindow:Offset(X, Y)
     if tonumber(X) or tonumber(Y) then
         if tonumber(X) then
             self._Offset.X = tonumber(X)
@@ -1763,7 +1750,7 @@ function UIMenuHeritageWindow:Offset(X, Y) -- required
     end
 end
 
-function UIMenuHeritageWindow:Position(Y) -- required
+function UIMenuHeritageWindow:Position(Y)
     if tonumber(Y) then
         self.Background:Position(self._Offset.X, 144 + Y + self._Offset.Y)
         self.MumSprite:Position(self._Offset.X + (self.ParentMenu.WidthOffset/2) + 25, 144 + Y + self._Offset.Y)
@@ -1784,7 +1771,7 @@ function UIMenuHeritageWindow:Index(Mum, Dad)
     self.DadSprite.TxtName = ((self.Dad < 21) and "male_"..self.Dad or "special_male_"..(tonumber(string.sub(Dad, 2, 2)) - 1))
 end
 
-function UIMenuHeritageWindow:Draw() -- required
+function UIMenuHeritageWindow:Draw()
     self.Background:Size(431 + self.ParentMenu.WidthOffset, 228)
     self.Background:Draw()
     self.DadSprite:Draw()
@@ -1815,7 +1802,7 @@ function UIMenuGridPanel.New(TopText, LeftText, RightText, BottomText)
     return setmetatable(_UIMenuGridPanel, UIMenuGridPanel)
 end
 
-function UIMenuGridPanel:SetParentItem(Item) -- required
+function UIMenuGridPanel:SetParentItem(Item)
     if Item() == "UIMenuItem" then
         self.ParentItem = Item
     else
@@ -1840,10 +1827,10 @@ function UIMenuGridPanel:CirclePosition(X, Y)
     end
 end
 
-function UIMenuGridPanel:Position(Y) -- required
+function UIMenuGridPanel:Position(Y)
     if tonumber(Y) then
         local ParentOffsetX, ParentOffsetWidth = self.ParentItem:Offset().X, self.ParentItem:SetParentMenu().WidthOffset
-        
+
         self.Background:Position(ParentOffsetX, Y)
         self.Grid:Position(ParentOffsetX + 115.5 + (ParentOffsetWidth/2), 37.5 + Y)
         self.Text.Top:Position(ParentOffsetX + 215.5 + (ParentOffsetWidth/2), 5 + Y)
@@ -1878,7 +1865,7 @@ function UIMenuGridPanel:UpdateParent(X, Y)
                 end
             end
             self.ParentItem.Base.ParentMenu.OnListChange(self.ParentItem.Base.ParentMenu, self.ParentItem, self.ParentItem._Index)
-            self.ParentItem.OnListChanged(self.ParentItem.Base.ParentMenu, self.ParentItem, self.ParentItem._Index)     
+            self.ParentItem.OnListChanged(self.ParentItem.Base.ParentMenu, self.ParentItem, self.ParentItem._Index)
         end
     elseif ParentType == "UIMenuItem" then
         self.ParentItem.ActivatedPanel(self.ParentItem.ParentMenu, self.ParentItem, self, {X = X, Y = Y})
@@ -1921,7 +1908,7 @@ function UIMenuGridPanel:Functions()
     end
 end
 
-function UIMenuGridPanel:Draw() -- required
+function UIMenuGridPanel:Draw()
     if self.Data.Enabled then
         self.Background:Size(431 + self.ParentItem:SetParentMenu().WidthOffset, 275)
 
@@ -1979,7 +1966,7 @@ function UIMenuColourPanel.New(Title, Colours)
     return setmetatable(_UIMenuColourPanel, UIMenuColourPanel)
 end
 
-function UIMenuColourPanel:SetParentItem(Item) -- required
+function UIMenuColourPanel:SetParentItem(Item)
     if Item() == "UIMenuItem" then
         self.ParentItem = Item
     else
@@ -1995,7 +1982,7 @@ function UIMenuColourPanel:Enabled(Enabled)
     end
 end
 
-function UIMenuColourPanel:Position(Y) -- required
+function UIMenuColourPanel:Position(Y)
     if tonumber(Y) then
         local ParentOffsetX, ParentOffsetWidth = self.ParentItem:Offset().X, self.ParentItem:SetParentMenu().WidthOffset
 
@@ -2060,7 +2047,7 @@ function UIMenuColourPanel:UpdateParent(Colour)
                 end
             end
             self.ParentItem.Base.ParentMenu.OnListChange(self.ParentItem.Base.ParentMenu, self.ParentItem, self.ParentItem._Index)
-            self.ParentItem.OnListChanged(self.ParentItem.Base.ParentMenu, self.ParentItem, self.ParentItem._Index)     
+            self.ParentItem.OnListChanged(self.ParentItem.Base.ParentMenu, self.ParentItem, self.ParentItem._Index)
         end
     elseif ParentType == "UIMenuItem" then
         self.ParentItem.ActivatedPanel(self.ParentItem.ParentMenu, self.ParentItem, self, Colour)
@@ -2085,7 +2072,6 @@ function UIMenuColourPanel:Functions()
     if self.ParentItem:SetParentMenu().Settings.ScaleWithSafezone then
        SafeZone = GetSafeZoneBounds()
     end
-
 
     if IsMouseInBounds(self.LeftArrow.X + SafeZone.X, self.LeftArrow.Y + SafeZone.Y, self.LeftArrow.Width, self.LeftArrow.Height) then
         if IsDisabledControlJustPressed(0, 24) then
@@ -2149,7 +2135,7 @@ function UIMenuColourPanel:Functions()
     end
 end
 
-function UIMenuColourPanel:Draw() -- required
+function UIMenuColourPanel:Draw()
     if self.Data.Enabled then
         self.Background:Size(431 + self.ParentItem:SetParentMenu().WidthOffset, 112)
 
@@ -2189,7 +2175,7 @@ function UIMenuPercentagePanel.New(MinText, MaxText)
     return setmetatable(_UIMenuPercentagePanel, UIMenuPercentagePanel)
 end
 
-function UIMenuPercentagePanel:SetParentItem(Item) -- required
+function UIMenuPercentagePanel:SetParentItem(Item)
     if Item() == "UIMenuItem" then
         self.ParentItem = Item
     else
@@ -2205,7 +2191,7 @@ function UIMenuPercentagePanel:Enabled(Enabled)
     end
 end
 
-function UIMenuPercentagePanel:Position(Y) -- required
+function UIMenuPercentagePanel:Position(Y)
     if tonumber(Y) then
         local ParentOffsetX, ParentOffsetWidth = self.ParentItem:Offset().X, self.ParentItem:SetParentMenu().WidthOffset
         self.Background:Position(ParentOffsetX, Y)
@@ -2226,7 +2212,7 @@ function UIMenuPercentagePanel:Percentage(Value)
         if self.ParentItem:SetParentMenu().Settings.ScaleWithSafezone then
            SafeZone = GetSafeZoneBounds()
         end
-        
+
         local Progress = (math.round(GetControlNormal(0, 239) * 1920) - SafeZone.X) - self.ActiveBar.X
         return math.round(((Progress >= 0 and Progress <= 413) and Progress or ((Progress < 0) and 0 or 413))/self.BackgroundBar.Width, 2)
     end
@@ -2252,7 +2238,7 @@ function UIMenuPercentagePanel:UpdateParent(Percentage)
                 end
             end
             self.ParentItem.Base.ParentMenu.OnListChange(self.ParentItem.Base.ParentMenu, self.ParentItem, self.ParentItem._Index)
-            self.ParentItem.OnListChanged(self.ParentItem.Base.ParentMenu, self.ParentItem, self.ParentItem._Index)     
+            self.ParentItem.OnListChanged(self.ParentItem.Base.ParentMenu, self.ParentItem, self.ParentItem._Index)
         end
     elseif ParentType == "UIMenuItem" then
         self.ParentItem.ActivatedPanel(self.ParentItem.ParentMenu, self.ParentItem, self, Percentage)
@@ -2294,7 +2280,7 @@ function UIMenuPercentagePanel:Functions()
     end
 end
 
-function UIMenuPercentagePanel:Draw() -- required
+function UIMenuPercentagePanel:Draw()
     if self.Data.Enabled then
         self.Background:Size(431 + self.ParentItem:SetParentMenu().WidthOffset, 76)
         self.Background:Draw()
@@ -2384,58 +2370,58 @@ function UIMenu.New(Title, Subtitle, X, Y, TxtDictionary, TxtName)
             },
             EnabledControls = {
                 Controller = {
-                    {0, 2}, -- Look Up and Down
-                    {0, 1}, -- Look Left and Right
-                    {0, 25}, -- Aim
-                    {0, 24}, -- Attack
+                    {0, 2},
+                    {0, 1},
+                    {0, 25},
+                    {0, 24},
                 },
                 Keyboard = {
-                    {0, 0}, -- Camera
-                    {0, 1}, -- Look Left and Right
-                    {0, 2}, -- Look Up and Down
-                    {0, 8}, -- Fly Up and Down
-                    {0, 9}, -- Fly Left and Right
-                    {0, 21}, -- Sprint
-                    {0, 22}, -- Jump
-                    {0, 23}, -- Enter
-                    {0, 24}, -- Attack
-                    {0, 25}, -- Aim
-                    {0, 26}, -- C
-                    {0, 30}, -- Move Left and Right
-                    {0, 31}, -- Move Up and Down
-                    {0, 47}, -- G
-                    {0, 59}, -- Move Vehicle Left and Right
-                    {0, 71}, -- Accelerate Vehicle
-                    {0, 72}, -- Vehicle Brake
-                    {0, 73}, -- X
-                    {0, 75}, -- Exit Vehicle
-                    {0, 76}, -- Vehicle Handbrake
-                    {0, 89}, -- Fly Yaw Left
-                    {0, 90}, -- Fly Yaw Right
-                    {0, 108}, -- Num Pad 4
-                    {0, 109}, -- Num Pad 6
-                    {0, 110}, -- Num Pad 5
-                    {0, 111}, -- Num Pad 8
-                    {0, 117}, -- Num Pad 7
-                    {0, 118}, -- Num Pad 9
-                    {0, 171}, -- CAPSLOCK
-                    {0, 187}, -- Down
-                    {0, 188}, -- Up
-                    {0, 189}, -- Left
-                    {0, 190}, -- Right
-                    {0, 195}, -- X axis
-                    {0, 196}, -- Y axis
-                    {0, 201}, -- Select
-                    {0, 202}, -- Back
-                    {0, 203},  -- Spacebar?
-                    {0, 217}, -- Select
-                    {0, 239}, -- Cursor X
-                    {0, 240}, -- Cursor Y
-                    {0, 241}, -- Scroll up
-                    {0, 242}, -- Scroll down
-                    {0, 249}, -- N
-                    {0, 305}, -- B
-                    {0, 306}, -- N
+                    {0, 0},
+                    {0, 1},
+                    {0, 2},
+                    {0, 8},
+                    {0, 9},
+                    {0, 21},
+                    {0, 22},
+                    {0, 23},
+                    {0, 24},
+                    {0, 25},
+                    {0, 26},
+                    {0, 30},
+                    {0, 31},
+                    {0, 47},
+                    {0, 59},
+                    {0, 71},
+                    {0, 72},
+                    {0, 73},
+                    {0, 75},
+                    {0, 76},
+                    {0, 89},
+                    {0, 90},
+                    {0, 108},
+                    {0, 109},
+                    {0, 110},
+                    {0, 111},
+                    {0, 117},
+                    {0, 118},
+                    {0, 171},
+                    {0, 187},
+                    {0, 188},
+                    {0, 189},
+                    {0, 190},
+                    {0, 195},
+                    {0, 196},
+                    {0, 201},
+                    {0, 202},
+                    {0, 203},
+                    {0, 217},
+                    {0, 239},
+                    {0, 240},
+                    {0, 241},
+                    {0, 242},
+                    {0, 249},
+                    {0, 305},
+                    {0, 306},
                 },
             }
         }
@@ -2452,7 +2438,7 @@ function UIMenu.New(Title, Subtitle, X, Y, TxtDictionary, TxtName)
         _UIMenu.PageCounter.Text = UIResText.New("", 425 + _UIMenu.Position.X, 110 + _UIMenu.Position.Y, 0.35, 245, 245, 245, 255, 0, "Right")
         _UIMenu.Subtitle.ExtraY = 37
     end
-    
+
     _UIMenu.ArrowSprite = Sprite.New("commonmenu", "shop_arrows_upanddown", 190 + _UIMenu.Position.X, 147 + 37 * (_UIMenu.Pagination.Total + 1) + _UIMenu.Position.Y - 37 + _UIMenu.Subtitle.ExtraY, 50, 50)
     _UIMenu.Extra.Up = UIResRectangle.New(0 + _UIMenu.Position.X, 144 + 38 * (_UIMenu.Pagination.Total + 1) + _UIMenu.Position.Y - 37 + _UIMenu.Subtitle.ExtraY, 431, 18, 0, 0, 0, 200)
     _UIMenu.Extra.Down = UIResRectangle.New(0 + _UIMenu.Position.X, 144 + 18 + 38 * (_UIMenu.Pagination.Total + 1) + _UIMenu.Position.Y - 37 + _UIMenu.Subtitle.ExtraY, 431, 18, 0, 0, 0, 200)
@@ -2480,7 +2466,7 @@ function UIMenu:SetMenuWidthOffset(Offset)
         self.Logo:Size(431 + self.WidthOffset, 107)
         self.Title:Position(((self.WidthOffset + 431)/2) + self.Position.X, 20 + self.Position.Y)
         if self.Subtitle.Rectangle ~= nil then
-            self.Subtitle.Rectangle:Size(431 + self.WidthOffset + 100, 37)            
+            self.Subtitle.Rectangle:Size(431 + self.WidthOffset + 100, 37)
             self.PageCounter.Text:Position(425 + self.Position.X + self.WidthOffset, 110 + self.Position.Y)
         end
         if self.Banner ~= nil then
@@ -2566,7 +2552,7 @@ function UIMenu:CurrentSelection(value)
         elseif self:CurrentSelection() < self.Pagination.Min then
             self.Pagination.Min = self:CurrentSelection()
             self.Pagination.Max = self:CurrentSelection() + self.Pagination.Total
-        end 
+        end
     else
         if #self.Items == 0 then
             return 1
@@ -2803,7 +2789,7 @@ function UIMenu:ProcessControl()
     if self.Controls.Back.Enabled and (IsDisabledControlJustReleased(0, 177) or IsDisabledControlJustReleased(1, 177) or IsDisabledControlJustReleased(2, 177) or IsDisabledControlJustReleased(0, 199) or IsDisabledControlJustReleased(1, 199) or IsDisabledControlJustReleased(2, 199)) then
         self:GoBack()
     end
-    
+
     if #self.Items == 0 then
         return
     end
@@ -2952,7 +2938,7 @@ function UIMenu:GoDownOverflow()
             self.Pagination.Min = self.Pagination.Max - (self.Pagination.Total + 1)
             self.Items[self:CurrentSelection()]:Selected(false)
             self.ActiveItem = self.ActiveItem + 1
-            self.Items[self:CurrentSelection()]:Selected(true)            
+            self.Items[self:CurrentSelection()]:Selected(true)
         end
     else
         self.Items[self:CurrentSelection()]:Selected(false)
@@ -2971,7 +2957,7 @@ function UIMenu:GoDown()
 
     self.Items[self:CurrentSelection()]:Selected(false)
     self.ActiveItem = self.ActiveItem + 1
-    self.Items[self:CurrentSelection()]:Selected(true) 
+    self.Items[self:CurrentSelection()]:Selected(true)
     PlaySoundFrontend(-1, self.Settings.Audio.UpDown, self.Settings.Audio.Library, true)
     self.OnIndexChange(self, self:CurrentSelection())
     self.ReDraw = true
@@ -2987,7 +2973,7 @@ function UIMenu:GoLeft()
         PlaySoundFrontend(-1, self.Settings.Audio.Error, self.Settings.Audio.Library, true)
         return
     end
-    
+
     if subtype == "UIMenuListItem" then
         local Item = self.Items[self:CurrentSelection()]
         Item:Index(Item._Index - 1)
@@ -3064,7 +3050,7 @@ function UIMenu:SelectItem()
     elseif subtype == "UIMenuProgressItem" then
         PlaySoundFrontend(-1, self.Settings.Audio.Select, self.Settings.Audio.Library, true)
         self.OnProgressSelect(self, Item, Item.Data.Index)
-        Item.OnProgressSelected(Item.Data.Index)        
+        Item.OnProgressSelected(Item.Data.Index)
     else
         PlaySoundFrontend(-1, self.Settings.Audio.Select, self.Settings.Audio.Library, true)
         self.OnItemSelect(self, Item, self:CurrentSelection())
@@ -3156,8 +3142,8 @@ function UIMenu:Draw()
     if #self.Windows ~= 0 then
         local WindowOffset = 0
         for index = 1, #self.Windows do
-            if self.Windows[index - 1] then 
-                WindowOffset = WindowOffset + self.Windows[index - 1].Background:Size().Height 
+            if self.Windows[index - 1] then
+                WindowOffset = WindowOffset + self.Windows[index - 1].Background:Size().Height
             end
             local Window = self.Windows[index]
             Window:Position(WindowOffset + self.Subtitle.ExtraY - 37)
@@ -3185,7 +3171,7 @@ function UIMenu:Draw()
         if #self.Items[CurrentSelection].Panels ~= 0 then
             local PanelOffset = self:CaclulatePanelPosition(self.Items[CurrentSelection]:Description() ~= "")
             for index = 1, #self.Items[CurrentSelection].Panels do
-                if self.Items[CurrentSelection].Panels[index - 1] then 
+                if self.Items[CurrentSelection].Panels[index - 1] then
                     PanelOffset = PanelOffset + self.Items[CurrentSelection].Panels[index - 1].Background:Size().Height + 5
                 end
                 self.Items[CurrentSelection].Panels[index]:Position(PanelOffset)
@@ -3267,7 +3253,7 @@ function UIMenu:ProcessMouse()
         SetCursorSprite(6)
     elseif IsMouseInBounds(1920 - 30, 0, 30, 1080) and self.Settings.MouseEdgeEnabled then
         SetGameplayCamRelativeHeading(GetGameplayCamRelativeHeading() - 5)
-        SetCursorSprite(7)  
+        SetCursorSprite(7)
     elseif self.Settings.MouseEdgeEnabled then
         SetCursorSprite(1)
     end
@@ -3363,7 +3349,7 @@ function UIMenu:ProcessMouse()
                             elseif not Item:Enabled() and Item:Selected() then
                                 PlaySoundFrontend(-1, self.Settings.Audio.Error, self.Settings.Audio.Library, true)
                             end
-                            Citizen.Wait(125)                       
+                            Citizen.Wait(125)
                         end
                         self.Controls.MousePressed = false
                     end)
@@ -3400,7 +3386,7 @@ function UIMenu:ProcessMouse()
                         end
                         Citizen.Wait(125)
                     end
-                    self.Controls.MousePressed = false              
+                    self.Controls.MousePressed = false
                 end)
             end
         end
@@ -3429,7 +3415,7 @@ function UIMenu:ProcessMouse()
                         end
                         Citizen.Wait(125)
                     end
-                    self.Controls.MousePressed = false              
+                    self.Controls.MousePressed = false
                 end)
             end
         end
@@ -3481,7 +3467,7 @@ function UIMenu:UpdateScaleform()
     if not self._Visible or not self.Settings.InstructionalButtons then
         return
     end
-    
+
     PushScaleformMovieFunction(self.InstructionalScaleform, "CLEAR_ALL")
     PopScaleformMovieFunction()
 

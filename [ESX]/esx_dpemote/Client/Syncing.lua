@@ -1,7 +1,6 @@
 local isRequestAnim = false
 local requestedemote = ''
 
-
 if Config.SharedEmotesEnabled then
     RegisterCommand('nearby', function(source, args, raw)
         if #args > 0 then

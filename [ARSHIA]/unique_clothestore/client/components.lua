@@ -6,13 +6,13 @@ local Components = {
 	{name = 'dad',				value = 0,		min = 0,},
 	{name = 'face_md_weight',	value = 50,		min = 0,},
 	{name = 'skin_md_weight',	value = 50,		min = 0,},
-	-- This server's skinchanger fork ([SCRIPT]/skinchanger/client/main.lua)
-	-- has these 4 extra fields that the original unique_clothestore
-	-- Components list never included. skinchanger:getData loops over
-	-- ITS OWN component list and returns any field matching one of
-	-- these names, so leaving them out here made 'data[v.name]' resolve
-	-- to nil for them and crash OpenClothestore. Values/min mirrored
-	-- exactly from skinchanger's own definitions.
+
+
+
+
+
+
+
 	{name = 'face_1',			value = 0,		min = 0,},
 	{name = 'face_2',			value = 0,		min = 0,},
 	{name = 'face_3',			value = 0,		min = 0,},

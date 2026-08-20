@@ -1,5 +1,4 @@
 
--- Weed farm: 1051.491, -3196.536, -39.14842
 
 exports('GetBikerWeedFarmObject', function()
     return BikerWeedFarm
@@ -368,10 +367,10 @@ BikerWeedFarm = {
         end
     },
     Details = {
-        production = "weed_production",		-- Weed on the tables
-        fans = "weed_set_up",				-- Fans + mold buckets
-        drying = "weed_drying",				-- Drying weed hooked to the ceiling
-        chairs = "weed_chairs",				-- Chairs at the tables
+        production = "weed_production",
+        fans = "weed_set_up",
+        drying = "weed_drying",
+        chairs = "weed_chairs",
         Enable = function (details, state, refresh)
             SetIplPropState(BikerWeedFarm.interiorId, details, state, refresh)
         end

@@ -1,12 +1,9 @@
-----------------------------------------    Weazel    ---------------------------------------------
 
--- Placeholder coordinates - station 1 is the real Weazel News building from
--- esx_duty's duty zone; the other 3 are rough placeholders, move them
--- in-game to wherever you actually want Weazel teleport stations.
-local markerCoords1 = vector3(-585.961, -934.131, 23.815) -- Station 1 Weazel HQ
-local markerCoords2 = vector3(-598.481, -930.876, 23.860) -- Station 2 Studio
-local markerCoords3 = vector3(129.4453, -800.5595, 30.28) -- Station 3 Downtown
-local markerCoords4 = vector3(1735.931, 3641.736, 35.640) -- Administatior Weazel
+
+local markerCoords1 = vector3(-585.961, -934.131, 23.815)
+local markerCoords2 = vector3(-598.481, -930.876, 23.860)
+local markerCoords3 = vector3(129.4453, -800.5595, 30.28)
+local markerCoords4 = vector3(1735.931, 3641.736, 35.640)
 
 local function isPlayerAllowedWeazel()
     local playerData = ESX.GetPlayerData()
@@ -24,7 +21,7 @@ Citizen.CreateThread(function()
         local playerCoords = GetEntityCoords(playerPed)
 
         if isPlayerAllowedWeazel() then
-            -- مارکر برای مکان 1
+
             if #(playerCoords - markerCoords1) < 10.0 then
                 DrawMarker(6, markerCoords1.x, markerCoords1.y, markerCoords1.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7, 0.7, 0.7, 0, 255, 0, 100, false, true, 2, nil, nil, false)
 
@@ -37,7 +34,7 @@ Citizen.CreateThread(function()
                 end
             end
 
-            -- مارکر برای مکان 2
+
             if #(playerCoords - markerCoords2) < 10.0 then
                 DrawMarker(6, markerCoords2.x, markerCoords2.y, markerCoords2.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7, 0.7, 0.7, 0, 255, 0, 100, false, true, 2, nil, nil, false)
 
@@ -50,7 +47,7 @@ Citizen.CreateThread(function()
                 end
             end
 
-            -- مارکر برای مکان 3
+
             if #(playerCoords - markerCoords3) < 10.0 then
                 DrawMarker(6, markerCoords3.x, markerCoords3.y, markerCoords3.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7, 0.7, 0.7, 0, 255, 0, 100, false, true, 2, nil, nil, false)
 
@@ -63,7 +60,7 @@ Citizen.CreateThread(function()
                 end
             end
 
-            -- مارکر برای مکان 4
+
             if #(playerCoords - markerCoords4) < 10.0 then
                 DrawMarker(6, markerCoords4.x, markerCoords4.y, markerCoords4.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7, 0.7, 0.7, 0, 255, 0, 100, false, true, 2, nil, nil, false)
 

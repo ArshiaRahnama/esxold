@@ -1,4 +1,4 @@
----@diagnostic disable: param-type-mismatch
+
 lib.marker = {}
 
 local defaultRotation = vector3(0, 0, 0)
@@ -55,67 +55,6 @@ local markerTypesMap = {
   Unknown43 = 43,
 }
 
----@alias MarkerType
----| "UpsideDownCone"
----| "VerticalCylinder"
----| "ThickChevronUp"
----| "ThinChevronUp"
----| "CheckeredFlagRect"
----| "CheckeredFlagCircle"
----| "VerticleCircle"
----| "PlaneModel"
----| "LostMCTransparent"
----| "LostMC"
----| "Number0"
----| "Number1"
----| "Number2"
----| "Number3"
----| "Number4"
----| "Number5"
----| "Number6"
----| "Number7"
----| "Number8"
----| "Number9"
----| "ChevronUpx1"
----| "ChevronUpx2"
----| "ChevronUpx3"
----| "HorizontalCircleFat"
----| "ReplayIcon"
----| "HorizontalCircleSkinny"
----| "HorizontalCircleSkinny_Arrow"
----| "HorizontalSplitArrowCircle"
----| "DebugSphere"
----| "DollarSign"
----| "HorizontalBars"
----| "WolfHead"
----| "QuestionMark"
----| "PlaneSymbol"
----| "HelicopterSymbol"
----| "BoatSymbol"
----| "CarSymbol"
----| "MotorcycleSymbol"
----| "BikeSymbol"
----| "TruckSymbol"
----| "ParachuteSymbol"
----| "Unknown41"
----| "SawbladeSymbol"
----| "Unknown43"
-
----@class MarkerProps
----@field type MarkerType | number
----@field coords { x: number, y: number, z: number }
----@field width? number
----@field height? number
----@field color? { r: number, g: number, b: number, a: number }
----@field rotation? { x: number, y: number, z: number }
----@field direction? { x: number, y: number, z: number }
----@field bobUpAndDown? boolean
----@field faceCamera? boolean
----@field rotate? boolean
----@field textureDict? string
----@field textureName? string
-
----@param self MarkerProps
 local function drawMarker(self)
   DrawMarker(
     self.type,
@@ -127,7 +66,6 @@ local function drawMarker(self)
     self.bobUpAndDown, self.faceCamera, 2, self.rotate, self.textureDict, self.textureName, false)
 end
 
----@param options MarkerProps
 function lib.marker.new(options)
   local markerType
   if type(options.type) == "string" then

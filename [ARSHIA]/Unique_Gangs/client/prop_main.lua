@@ -12,7 +12,6 @@ local Keys = {
   ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-
 local PlayerData              = {}
 local HasAlreadyEnteredMarker = false
 local LastStation             = nil
@@ -38,7 +37,6 @@ local callsign = nil
 local Draging 				  = false
 local dragiss                 = false
 
-
 local set                       = false
 local PlayerData                = {}
 local GUI                       = {}
@@ -58,7 +56,6 @@ local blipGangs                 = {}
 local blipsGangs                = {}
 local dragiss                 = false
 
-
 local DragStatus              = {}
 DragStatus.IsDragged          = false
 
@@ -70,7 +67,7 @@ Citizen.CreateThread(function()
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(10)
 	end
-	
+
 	while ESX.GetPlayerData().gang == nil do
 		Citizen.Wait(10)
 	end
@@ -82,12 +79,12 @@ end)
 
 AddEventHandler('esx:onPlayerDeath', function()
     IsDragged = false
-    TriggerEvent('gangprop:removeHandcuffFull') 
+    TriggerEvent('gangprop:removeHandcuffFull')
 end)
 
 AddEventHandler('playerSpawned', function()
     IsDragged = false
-    TriggerEvent('gangprop:removeHandcuffFull') 
+    TriggerEvent('gangprop:removeHandcuffFull')
 end)
 
 function OpenCloakroomMenu()
@@ -140,13 +137,13 @@ end
 
 function OpenArmoryMenu(station)
   local station = station
- 
+
    local elements = {
     {label = 'Inventory Gang', value = 'property_inventory'},
     {label = 'Armor | Price: $' ..Data.price ,  value = 'get_armor'},
     {label = 'Armor Makhfi | Price: $' ..Data.price + 2000 ,  value = 'get_armor_Makhfi'}
   }
-  
+
   ESX.UI.Menu.CloseAll()
 
   ESX.UI.Menu.Open(
@@ -169,8 +166,8 @@ function OpenArmoryMenu(station)
 
     if PlayerData.gang.grade >= Data.vest_access then
       local ped = GetPlayerPed(-1)
-      local armor = GetPedArmour(ped) 
-  
+      local armor = GetPedArmour(ped)
+
       if armor >= Data.bulletproof then
         ESX.ShowNotification("~g~Armor shoma por ast nemitavanid dobare armor kharidari konid!")
       else
@@ -178,14 +175,13 @@ function OpenArmoryMenu(station)
       end
     else
         ESX.ShowNotification("~h~Shoma Ejaze Gereftan Armor Nadarid")
-      
-    end
 
+    end
 
   elseif data.current.value == 'get_armor' then
 	if PlayerData.gang.grade >= Data.vest_access then
 		local ped = GetPlayerPed(-1)
-		local armor = GetPedArmour(ped) 
+		local armor = GetPedArmour(ped)
 
 		if armor >= Data.bulletproof then
 		  ESX.ShowNotification("~g~Armor shoma por ast nemitavanid dobare armor kharidari konid!")
@@ -209,21 +205,12 @@ function OpenArmoryMenu(station)
 
 end
 
-
-
-
-
-
-
 function OpenGangInventoryMenu(station)
   local playerdata = ESX.GetPlayerData()
   local gname      = playerdata.gang.name
   local ggrade     = playerdata.gang.grade
 
   ESX.TriggerServerCallback("gangs:getPropertyInventory2",function(inventory)
-
-
-
 
     TriggerEvent("esx_inventoryhud:openGangInventory", inventory)
   end, station)
@@ -250,12 +237,9 @@ carry = {
 	}
 }
 
-
-
-
 function ListOwnedCarsMenu()
 	local elements = {}
-	
+
 	table.insert(elements, {label = '| Pelak | Esm Mashin |'})
   local grank = PlayerData.gang.grade
   local gname = PlayerData.gang.name
@@ -268,7 +252,7 @@ function ListOwnedCarsMenu()
           if not vycars then
             return
           end
-          
+
           local mmodel = v.vehicle.model
           local classnumber = GetVehicleClassFromName(mmodel)
           if classnumber ~= 14 and classnumber ~= 15 and classnumber ~= 16 then
@@ -281,11 +265,11 @@ function ListOwnedCarsMenu()
                 local vehicleName  = aheadVehName
                 local plate2        = v.plate
                 labelvehicle = '| '..plate2..' | '..vehLabel..' |'
-                table.insert(elements, {label = labelvehicle, value = v})          
+                table.insert(elements, {label = labelvehicle, value = v})
               end
             end
           end
-          
+
         end
       end
 
@@ -300,14 +284,14 @@ function ListOwnedCarsMenu()
             Citizen.Wait(math.random(10,3000))
             Citizen.Wait(math.random(25,500))
             ESX.TriggerServerCallback('gangprop:carAvalible', function(avalibele)
-              if avalibele then 
+              if avalibele then
                 if data.current.value.stored then
                   TriggerServerEvent('esx_advancedgarage:setVehicleState', data.current.value.plate, false)
                   DeleteVehicle(localVeh)
                   localVeh = nil
                   ClearFocus()
                   RenderScriptCams(false, false, 0, true, false)
-                  DestroyCam(camera, false)    
+                  DestroyCam(camera, false)
                   SpawnVehicle(data.current.value.vehicle, data.current.value.plate, data.current.value.damage, data.current.value.engine)
                 else
                   ESX.ShowNotification('~r~In Mashin Dar Impound Ast!')
@@ -322,30 +306,30 @@ function ListOwnedCarsMenu()
         end, function(data, menu)
           menu.close()
         end, function(data, menu)
-          -- if GlobalPerview then
-          -- 	ESX.ClearTimeout(GlobalPerview)
-          -- 	GlobalPerview = nil
-          -- end
+
+
+
+
           if localVeh then
             DeleteVehicle(localVeh)
             localVeh = nil
           end
           if data.current.value then
-            
+
             local shokol = GetClosestVehicle(Data.vehspawn.x,  Data.vehspawn.y,  Data.vehspawn.z,  3.0,  0,  71)
             if not DoesEntityExist(shokol) then
               SetCamCoord(camera, Data.vehspawn.x + 3.0, Data.vehspawn.y + 5.0, Data.vehspawn.z+ 4.0)
               SetCamActive(camera, true)
               PointCamAtCoord(camera, Data.vehspawn.x, Data.vehspawn.y, Data.vehspawn.z)
               RenderScriptCams(true, true, 1000, true, false)
-    
+
                 ESX.TriggerServerCallback('esx_advancedgarage:GetVehiclePropsFromPlate', function(vehicle)
                 local vehicle = data.current.value.vehicle
                   if not localVeh then
                     ESX.Game.SpawnLocalVehicle(vehicle.model, Data.vehspawn, Data.vehspawn.a, function(callback_vehicle)
                       ESX.Game.SetVehicleProperties(callback_vehicle, vehicle)
-                      
-                      if data.current.value.damage ~= "" then 
+
+                      if data.current.value.damage ~= "" then
                         setDamages(callback_vehicle, data.current.value.damage)
                       end
                       if localVeh then
@@ -355,7 +339,7 @@ function ListOwnedCarsMenu()
                         vehicle.plate = data.current.value.plate
 
                         SetVehRadioStation(callback_vehicle, "OFF")
-                        
+
                         Citizen.CreateThread(function()
                           while DoesEntityExist(callback_vehicle) and localVeh == callback_vehicle and DoesCamExist(camera) do
                             Citizen.Wait(0)
@@ -378,24 +362,24 @@ function ListOwnedCarsMenu()
                                     end
                                 end
                             end
-                  
+
                             local enginheltss = tonumber(enginheltss) or 0
-                            -- local bodyhelss = tonumber(vehhh.body_health) or 0
+
                             local fuelhealthss = tonumber(fuelhealthss) or 0
 
                             enginheltss = enginheltss / 10
 
-                            fuelhealthss = fuelhealthss 
+                            fuelhealthss = fuelhealthss
                             local Engini = ""
-                            if data.current.value.engine then 
+                            if data.current.value.engine then
                               Engini = "Engine: ~g~Darad"
                             else
                               Engini = "Engine: ~r~Nadarad"
                             end
-                            
+
                             local vehpos = GetOffsetFromEntityInWorldCoords(callback_vehicle, 0.0, 0.0, 2.0)
                             ESX.Game.Utils.DrawText3D(vector3(vehpos.x, vehpos.y, vehpos.z - 0.5), 'Benzin : '.. ESX.Math.Round(fuelhealthss) .. '%', 1.5)
-                            --   ESX.Game.Utils.DrawText3D(vector3(vehpos.x, vehpos.y, vehpos.z - 0.75), 'Salamate Badane : ' .. math.floor(bodyhelss) .. '%', 1.5)
+
                             ESX.Game.Utils.DrawText3D(vector3(vehpos.x, vehpos.y, vehpos.z - 0.75), 'Salamate Motor : ' .. math.floor(enginheltss) .. '%', 1.5)
                             ESX.Game.Utils.DrawText3D(vector3(vehpos.x, vehpos.y, vehpos.z - 1.0), Engini, 1.5)
                             if not data.current.value.stored then
@@ -409,16 +393,16 @@ function ListOwnedCarsMenu()
                     end)
                   end
                 end, data.current.value.plate)
-              -- end)
+
             else
               ESX.ShowNotification('Mahale Spawm Mashin Por Ast!!')
             end
           end
         end, function()
-          -- if GlobalPerview then
-          -- 	ESX.ClearTimeout(GlobalPerview)
-          -- 	GlobalPerview = nil
-          -- end
+
+
+
+
           if localVeh then
             DeleteVehicle(localVeh)
             localVeh = nil
@@ -434,12 +418,11 @@ function ListOwnedCarsMenu()
 	end)
 end
 
--- -- Spawn Cars
 function SpawnVehicle(vehicle, plate, damages, Engini)
   local shokol = GetClosestVehicle(Data.vehspawn.x,  Data.vehspawn.y,  Data.vehspawn.z,  3.0,  0,  71)
   if not DoesEntityExist(shokol) then
 
-   
+
     ESX.Game.SpawnVehicle(vehicle.model, {
       x = Data.vehspawn.x,
       y = Data.vehspawn.y,
@@ -449,7 +432,7 @@ function SpawnVehicle(vehicle, plate, damages, Engini)
       SetVehRadioStation(callback_vehicle, "OFF")
       TaskWarpPedIntoVehicle(GetPlayerPed(-1), callback_vehicle, -1)
       setDamages(callback_vehicle, damages)
-      
+
       Wait(50)
 
       local engineHealth = GetVehicleEngineHealth(callback_vehicle)
@@ -460,15 +443,13 @@ function SpawnVehicle(vehicle, plate, damages, Engini)
       TriggerServerEvent('gangs:vehlogs', vehnname, vehicle.plate, 'veh', 'spawn', healthPercent, Engini)
     end)
 
-    
-      
+
+
   else
     ESX.ShowNotification('Mahale Spawn mashin ro Khali konid')
   end
 end
 
-
--- Spawn Heli
 function SpawnHeli(vehicle, plate)
   local shokol2 = GetClosestVehicle(Data.helispawn.x, Data.helispawn.y, Data.helispawn.z, 3.0, 0, 71)
   if not DoesEntityExist(shokol2) then
@@ -490,22 +471,16 @@ function SpawnHeli(vehicle, plate)
 
       TriggerServerEvent('gangs:vehlogs', vehnname, vehicle.plate, 'heli', 'spawn', healthPercent)
     end)
-    
+
     TriggerServerEvent('esx_advancedgarage:setVehicleState', plate, false)
   else
     ESX.ShowNotification('~h~~y~Mahale Spawn Heli Ro Khali konid')
   end
 end
 
-
-
---heli
-
-
-
 function ListOwnedAircraftsMenu()
 	local elements = {}
-	
+
 	table.insert(elements, {label = '| Pelak | Esm Heli |'})
   local grank = PlayerData.gang.grade
   local gname = PlayerData.gang.name
@@ -531,11 +506,11 @@ function ListOwnedAircraftsMenu()
                 local vehicleName  = aheadVehName
                 local plate        = v.plate
                 labelvehicle = '| '..plate..' | '..vehLabel..' |'
-                table.insert(elements, {label = labelvehicle, value = v})          
+                table.insert(elements, {label = labelvehicle, value = v})
               end
             end
           end
-          
+
         end
       end
 
@@ -549,13 +524,13 @@ function ListOwnedAircraftsMenu()
             menu.close()
             Citizen.Wait(math.random(0,1000))
             ESX.TriggerServerCallback('gangprop:carAvalible', function(avalibele)
-              if avalibele then 
+              if avalibele then
                 if data.current.value.stored then
                   DeleteVehicle(localVeh)
                   localVeh = nil
                   ClearFocus()
                   RenderScriptCams(false, false, 0, true, false)
-                  DestroyCam(camera, false)    
+                  DestroyCam(camera, false)
                   SpawnHeli(data.current.value.vehicle, data.current.value.plate, data.current.value.damage)
                 else
                   ESX.ShowNotification('~r~In Mashin Dar Impound Ast!')
@@ -570,29 +545,29 @@ function ListOwnedAircraftsMenu()
         end, function(data, menu)
           menu.close()
         end, function(data, menu)
-          -- if GlobalPerview then
-          -- 	ESX.ClearTimeout(GlobalPerview)
-          -- 	GlobalPerview = nil
-          -- end
+
+
+
+
           if localVeh then
             DeleteVehicle(localVeh)
             localVeh = nil
           end
           if data.current.value then
-    
+
             local shokol = GetClosestVehicle(Data.helispawn.x,  Data.helispawn.y,  Data.helispawn.z,  3.0,  0,  71)
             if not DoesEntityExist(shokol) then
               SetCamCoord(camera, Data.helispawn.x + 3.0, Data.helispawn.y + 5.0, Data.helispawn.z+ 4.0)
               SetCamActive(camera, true)
               PointCamAtCoord(camera, Data.helispawn.x, Data.helispawn.y, Data.helispawn.z)
               RenderScriptCams(true, true, 1000, true, false)
-    
+
 
                 ESX.TriggerServerCallback('esx_advancedgarage:GetVehiclePropsFromPlate', function(vehicle)
                 local vehicle = data.current.value.vehicle
                   if not localVeh then
                     ESX.Game.SpawnLocalVehicle(vehicle.model, Data.helispawn, Data.helispawn.a, function(callback_vehicle)
-                      
+
                       if localVeh then
                         DeleteVehicle(callback_vehicle)
                       else
@@ -600,7 +575,7 @@ function ListOwnedAircraftsMenu()
                         vehicle.plate = data.current.value.plate
 
                         SetVehRadioStation(callback_vehicle, "OFF")
-                        
+
                         Citizen.CreateThread(function()
                           while DoesEntityExist(callback_vehicle) and localVeh == callback_vehicle and DoesCamExist(camera) do
                             Citizen.Wait(0)
@@ -625,17 +600,17 @@ function ListOwnedAircraftsMenu()
                             end
 
                             local enginheltss = tonumber(enginheltss) or 0
-                            -- local bodyhelss = tonumber(vehhh.body_health) or 0
+
                             local fuelhealthss = tonumber(fuelhealthss) or 0
-                            
+
 
                             enginheltss = enginheltss / 10
 
-                            fuelhealthss = fuelhealthss 
-                            
+                            fuelhealthss = fuelhealthss
+
                             local vehpos = GetOffsetFromEntityInWorldCoords(callback_vehicle, 0.0, 0.0, 2.0)
                             ESX.Game.Utils.DrawText3D(vector3(vehpos.x, vehpos.y, vehpos.z - 0.5), 'Benzin : '.. ESX.Math.Round(fuelhealthss) .. '%', 1.5)
-                            --   ESX.Game.Utils.DrawText3D(vector3(vehpos.x, vehpos.y, vehpos.z - 0.75), 'Salamate Badane : ' .. math.floor(bodyhelss) .. '%', 1.5)
+
                             ESX.Game.Utils.DrawText3D(vector3(vehpos.x, vehpos.y, vehpos.z - 0.75), 'Salamate Motor : ' .. math.floor(enginheltss) .. '%', 1.5)
                             if not data.current.value.stored then
                               ESX.Game.Utils.DrawText3D(vector3(vehpos.x, vehpos.y, vehpos.z - 1.0), '~r~Impound', 1.5)
@@ -648,16 +623,16 @@ function ListOwnedAircraftsMenu()
                     end)
                   end
                 end, data.current.value.plate)
-              -- end)
+
             else
               ESX.ShowNotification('Mahale Spawm Mashin Por Ast!!')
             end
           end
         end, function()
-          -- if GlobalPerview then
-          -- 	ESX.ClearTimeout(GlobalPerview)
-          -- 	GlobalPerview = nil
-          -- end
+
+
+
+
           if localVeh then
             DeleteVehicle(localVeh)
             localVeh = nil
@@ -673,17 +648,9 @@ function ListOwnedAircraftsMenu()
 	end)
 end
 
-
-
-
-
-
-
-
--- Spawn Boat
 function SpawnBoat(vehicle, plate)
   local shokol2 = GetClosestVehicle(Data.boatspawn.x, Data.boatspawn.y, Data.boatspawn.z, 3.0, 0, 71)
-  
+
   if not DoesEntityExist(shokol2) then
     ESX.Game.SpawnVehicle(vehicle.model, {
       x = Data.boatspawn.x,
@@ -709,14 +676,10 @@ function SpawnBoat(vehicle, plate)
   end
 end
 
-
-
---boat
-
 function ListOwnedBoatsMenu()
-	
+
   local elements = {}
-  
+
   table.insert(elements, {label = '| Pelak | Esm Boat |'})
   local grank = PlayerData.gang.grade
   local gname = PlayerData.gang.name
@@ -742,11 +705,11 @@ function ListOwnedBoatsMenu()
                 local vehicleName  = aheadVehName
                 local plate        = v.plate
                 labelvehicle = '| '..plate..' | '..vehLabel..' |'
-                table.insert(elements, {label = labelvehicle, value = v})          
+                table.insert(elements, {label = labelvehicle, value = v})
               end
             end
           end
-          
+
         end
       end
 
@@ -760,13 +723,13 @@ function ListOwnedBoatsMenu()
             menu.close()
             Citizen.Wait(math.random(0,1000))
             ESX.TriggerServerCallback('gangprop:carAvalible', function(avalibele)
-              if avalibele then 
+              if avalibele then
                 if data.current.value.stored then
                   DeleteVehicle(localVeh)
                   localVeh = nil
                   ClearFocus()
                   RenderScriptCams(false, false, 0, true, false)
-                  DestroyCam(camera, false)    
+                  DestroyCam(camera, false)
                   SpawnBoat(data.current.value.vehicle, data.current.value.plate, data.current.value.damage)
                 else
                   ESX.ShowNotification('~r~In boat Dar Impound Ast!')
@@ -781,29 +744,29 @@ function ListOwnedBoatsMenu()
         end, function(data, menu)
           menu.close()
         end, function(data, menu)
-          -- if GlobalPerview then
-          -- 	ESX.ClearTimeout(GlobalPerview)
-          -- 	GlobalPerview = nil
-          -- end
+
+
+
+
           if localVeh then
             DeleteVehicle(localVeh)
             localVeh = nil
           end
           if data.current.value then
-    
+
             local shokol = GetClosestVehicle(Data.boatspawn.x,  Data.boatspawn.y,  Data.boatspawn.z,  3.0,  0,  71)
             if not DoesEntityExist(shokol) then
               SetCamCoord(camera, Data.boatspawn.x + 3.0, Data.boatspawn.y + 5.0, Data.boatspawn.z+ 4.0)
               SetCamActive(camera, true)
               PointCamAtCoord(camera, Data.boatspawn.x, Data.boatspawn.y, Data.boatspawn.z)
               RenderScriptCams(true, true, 1000, true, false)
-    
+
 
                 ESX.TriggerServerCallback('esx_advancedgarage:GetVehiclePropsFromPlate', function(vehicle)
                 local vehicle = data.current.value.vehicle
                   if not localVeh then
                     ESX.Game.SpawnLocalVehicle(vehicle.model, Data.boatspawn, Data.boatspawn.a, function(callback_vehicle)
-                      
+
                       if localVeh then
                         DeleteVehicle(callback_vehicle)
                       else
@@ -811,7 +774,7 @@ function ListOwnedBoatsMenu()
                         vehicle.plate = data.current.value.plate
 
                         SetVehRadioStation(callback_vehicle, "OFF")
-                        
+
                         Citizen.CreateThread(function()
                           while DoesEntityExist(callback_vehicle) and localVeh == callback_vehicle and DoesCamExist(camera) do
                             Citizen.Wait(0)
@@ -836,17 +799,17 @@ function ListOwnedBoatsMenu()
                             end
 
                             local enginheltss = tonumber(enginheltss) or 0
-                            -- local bodyhelss = tonumber(vehhh.body_health) or 0
+
                             local fuelhealthss = tonumber(fuelhealthss) or 0
-                            
+
 
                             enginheltss = enginheltss / 10
 
-                            fuelhealthss = fuelhealthss 
-                            
+                            fuelhealthss = fuelhealthss
+
                             local vehpos = GetOffsetFromEntityInWorldCoords(callback_vehicle, 0.0, 0.0, 2.0)
                             ESX.Game.Utils.DrawText3D(vector3(vehpos.x, vehpos.y, vehpos.z - 0.5), 'Benzin : '.. ESX.Math.Round(fuelhealthss) .. '%', 1.5)
-                            --   ESX.Game.Utils.DrawText3D(vector3(vehpos.x, vehpos.y, vehpos.z - 0.75), 'Salamate Badane : ' .. math.floor(bodyhelss) .. '%', 1.5)
+
                             ESX.Game.Utils.DrawText3D(vector3(vehpos.x, vehpos.y, vehpos.z - 0.75), 'Salamate Motor : ' .. math.floor(enginheltss) .. '%', 1.5)
                             if not data.current.value.stored then
                               ESX.Game.Utils.DrawText3D(vector3(vehpos.x, vehpos.y, vehpos.z - 1.0), '~r~Impound', 1.5)
@@ -859,16 +822,16 @@ function ListOwnedBoatsMenu()
                     end)
                   end
                 end, data.current.value.plate)
-              -- end)
+
             else
               ESX.ShowNotification('Mahale Spawm boat Por Ast!!')
             end
           end
         end, function()
-          -- if GlobalPerview then
-          -- 	ESX.ClearTimeout(GlobalPerview)
-          -- 	GlobalPerview = nil
-          -- end
+
+
+
+
           if localVeh then
             DeleteVehicle(localVeh)
             localVeh = nil
@@ -884,15 +847,12 @@ function ListOwnedBoatsMenu()
   end)
 end
 
-
-
-
-local uncuffcd = false 
+local uncuffcd = false
 function OpenGangActionsMenu()
-  ESX.UI.Menu.CloseAll()    
-  
+  ESX.UI.Menu.CloseAll()
 
-    
+
+
   local elements = {
     {label = "Cuff",        value = 'handcuff'},
     {label = "UnCuff",              value = 'uncuff'},
@@ -900,12 +860,12 @@ function OpenGangActionsMenu()
     {label = "Put In Vehicle",  value = 'put_in_vehicle'},
     {label = "Out The Vehicle", value = 'out_the_vehicle'},
   }
-  
+
   if Data.search then table.insert(elements, {label = 'Search', value = 'search_player'}) end
-  -- if Data.lockpick == 1 then table.insert(elements, {label = "LockPick Vehicle", value = 'lockpick'}) end
-  --if Data.lockpick then table.insert(elements, {label = 'LockPick', value = 'lockpick'}) end
-  -- if PlayerData.gang.grade >= Data.invite_access then table.insert(elements, {label = 'Invite Member', value = 'manage_user'}) end
-  
+
+
+
+
   ESX.UI.Menu.Open(
   'default', GetCurrentResourceName(), 'citizen_interaction',
   {
@@ -920,9 +880,9 @@ function OpenGangActionsMenu()
     if distance ~= -1 and distance <= 3.0 then
 
       	if data2.current.value == 'handcuff' and GetVehiclePedIsIn(PlayerPedId(), false) == 0 then
-			
+
         playerPed = PlayerPedId()
-        SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true) -- unarm player
+        SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true)
         local target, distance = ESX.Game.GetClosestPlayer()
         playerheading = GetEntityHeading(PlayerPedId())
         playerlocation = GetEntityForwardVector(PlayerPedId())
@@ -932,17 +892,17 @@ function OpenGangActionsMenu()
 
           if not IsPedSittingInAnyVehicle(GetPlayerPed(target)) and not IsPedSittingInAnyVehicle(PlayerPedId()) then
             ESX.TriggerServerCallback("PD_CuffStatus:GetPedHandsUpStatus", function(Cuff, IsInjure, IsDead)
-              if not Cuff then 
-                
-                if not IsInjure or not IsDead then 
-                  if IsEntityPlayingAnim(GetPlayerPed(target), "missminuteman_1ig_2","handsup_enter", 3) then 
+              if not Cuff then
+
+                if not IsInjure or not IsDead then
+                  if IsEntityPlayingAnim(GetPlayerPed(target), "missminuteman_1ig_2","handsup_enter", 3) then
                   TriggerServerEvent('esx:requestarrestpd', target_id, playerheading, playerCoords, playerlocation, false)
-                  
+
                   ESX.TriggerServerCallback('3dme:getIcName', function(PlayerName)
                     if PlayerName ~= nil then
                       local text = '* ' .. PlayerName .. ' Be Fard Dastbadn Mizane *'
                       TriggerServerEvent('3dme:shareDisplay', text, false)
-                    end			
+                    end
                     end)
 
                   else
@@ -965,22 +925,22 @@ function OpenGangActionsMenu()
 		elseif data2.current.value == 'uncuff' and GetVehiclePedIsIn(PlayerPedId(), false) == 0 then
 
       playerPed = PlayerPedId()
-      SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true) -- unarm player
+      SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true)
       local target, distance = ESX.Game.GetClosestPlayer()
       playerheading = GetEntityHeading(PlayerPedId())
       playerlocation = GetEntityForwardVector(PlayerPedId())
       playerCoords = GetEntityCoords(PlayerPedId())
       local target_id = GetPlayerServerId(target)
       if distance <= 2.0 then
-        if IsEntityPlayingAnim(GetPlayerPed(player), "mp_arresting","idle", 3) then 
+        if IsEntityPlayingAnim(GetPlayerPed(player), "mp_arresting","idle", 3) then
           TriggerServerEvent('esx_policejob:requestrelease', target_id, playerheading, playerCoords, playerlocation)
           ESX.TriggerServerCallback('3dme:getIcName', function(PlayerName)
 
             if PlayerName ~= nil then
               local text = '* ' .. PlayerName .. ' Dastband Fard Ro Baz Mikone *'
-  
+
               TriggerServerEvent('3dme:shareDisplay', text, false)
-            end			
+            end
           end)
         else
           ESX.ShowNotification("~r~Dast Fard dast Band Naze shode ")
@@ -993,16 +953,16 @@ function OpenGangActionsMenu()
 
       local target, distance = ESX.Game.GetClosestPlayer()
       if distance <= 2.0 then
-        
-        
+
+
         TriggerServerEvent('esx_policejob:drag', GetPlayerServerId(closestPlayer))
       else
         ESX.ShowNotification('Shakhsi nazdik shoma nist')
       end
 
 		elseif data2.current.value == 'put_in_vehicle' and GetVehiclePedIsIn(PlayerPedId(), false) == 0 then
-      
-      if dragiss then 
+
+      if dragiss then
         TriggerServerEvent('esx_policejob:putInVehicle', GetPlayerServerId(closestPlayer))
 
         ESX.TriggerServerCallback('3dme:getIcName', function(PlayerName)
@@ -1011,7 +971,7 @@ function OpenGangActionsMenu()
             local text = '* ' .. PlayerName .. ' Fard Ro Dakhel Mashin Mizare *'
 
             TriggerServerEvent('3dme:shareDisplay', text, false)
-          end			
+          end
         end)
 
       elseif IsEntityPlayingAnim(PlayerPedId(), carry.personCarrying.animDict, carry.personCarrying.anim, 3) then
@@ -1020,9 +980,9 @@ function OpenGangActionsMenu()
         TriggerServerEvent('carry:respone',false)
         TriggerServerEvent('citizen:stopcarry', targetSrc)
         TriggerEvent('carry:cascel', false)
-        
+
         ClearPedSecondaryTask(PlayerPedId())
-  
+
         DetachEntity(PlayerPedId(), true, false)
         TriggerServerEvent('policejob:putInVehiclecarry', GetPlayerServerId(closestPlayer))
 
@@ -1032,23 +992,23 @@ function OpenGangActionsMenu()
             local text = '* ' .. PlayerName .. ' Fard Ro Dakhel Mashin Mizare *'
 
             TriggerServerEvent('3dme:shareDisplay', text, false)
-          end			
+          end
         end)
 
-      else 
-        
+      else
+
         ESX.ShowNotification('~h~~r~Playeri Scort Nakardin!')
       end
 
-    elseif data2.current.value == 'out_the_vehicle' then 
+    elseif data2.current.value == 'out_the_vehicle' then
       local target, distance = ESX.Game.GetClosestPlayer()
 							ESX.TriggerServerCallback("PD_CuffStatus:GetPedHandsUpStatus", function(Cuff, IsInjure, IsDead)
-								if Cuff then 
+								if Cuff then
 									TriggerServerEvent('esx_policejob:OutVehicle', GetPlayerServerId(closestPlayer))
-                 
-								elseif IsDead then 
+
+								elseif IsDead then
 									TriggerServerEvent('policejob:OutVehiclecarry', GetPlayerServerId(closestPlayer))
-               
+
 								end
 							end, GetPlayerServerId(target))
       elseif data2.current.value == "search_player" and GetVehiclePedIsIn(PlayerPedId(), false) == 0 then
@@ -1060,7 +1020,7 @@ function OpenGangActionsMenu()
 							if PlayerName ~= nil then
 								local text = '* ' .. PlayerName .. ' Fard Ro Search Mikone *'
 								TriggerServerEvent('3dme:shareDisplay', text, false)
-							end			
+							end
 						end)
 						TriggerServerEvent('gangprop:messagex', GetPlayerServerId(player), 'Yek Frad Dar Hale ~y~Gashtan~s~ Shoma Ast')
 					else
@@ -1071,7 +1031,7 @@ function OpenGangActionsMenu()
 				ESX.ShowNotification('Gang Shoma Ghabeliyat Search Nadarad')
 			end
 		elseif data2.current.value == "manage_user" and GetVehiclePedIsIn(PlayerPedId(), false) == 0 then
-			if PlayerData.gang.grade >= Data.invite_access  then 
+			if PlayerData.gang.grade >= Data.invite_access  then
 					TriggerEvent('gangs:openInviteF5', PlayerData.gang.name, function(data, menu)
 					  menu.close()
 					  CurrentAction     = 'menu_boss_actions'
@@ -1087,12 +1047,12 @@ function OpenGangActionsMenu()
 		local playerPed = GetPlayerPed(-1)
 			local vehicle   = ESX.Game.GetVehicleInDirection()
 			local coords    = GetEntityCoords(playerPed)
-	
+
 			if IsPedSittingInAnyVehicle(playerPed) then
 				ESX.ShowNotification('~r~Shoma Svar Mashin Nemitonid In Karo Anjam Dahid!')
 				return
 			end
-	
+
 		if DoesEntityExist(vehicle) then
 
 				IsBusy = true
@@ -1115,11 +1075,11 @@ function OpenGangActionsMenu()
 					}
 				}, function(status)
 					if not status then
-			
+
 					SetVehicleDoorsLocked(vehicle, 1)
 					SetVehicleDoorsLockedForAllPlayers(vehicle, false)
 					ClearPedTasksImmediately(playerPed)
-			
+
 					ESX.ShowNotification('~g~Dar Mashin Baz Shod')
 					IsBusy = false
 					TriggerEvent('esx_customItems:checkVehicleStatus', false)
@@ -1129,7 +1089,7 @@ function OpenGangActionsMenu()
 					TriggerEvent('esx_customItems:checkVehicleStatus', false)
 					end
 				end)
-				
+
 			else
 				ESX.ShowNotification('~r~Mashin Nazdik Shoma Nist')
 			end
@@ -1148,20 +1108,19 @@ function OpenBodySearchMenu(player)
     ESX.TriggerServerCallback('esx:getOtherPlayerData', function(data)
 
         local elements = {}
-        --exports.gangprop:searching(player)
-	
+
+
         TriggerServerEvent("gangprop:notifySearch", GetPlayerServerId(player))
         table.insert(elements, {label = "----- Cash -----", value = nil})
         table.insert(elements, {
           label = 'Pul: $' .. ESX.Math.GroupDigits(data.money),
-          -- value = data.money,
+
           value = nil,
-          -- itemType = 'item_money',
-          -- amount = data.money
+
+
         })
 
 
-        
         table.insert(elements, {label = '--- Weapons ---', value = nil})
         for i = 1, #data.loadout, 1 do
           local inventoryweapon = data.loadout[i].name
@@ -1174,7 +1133,7 @@ function OpenBodySearchMenu(player)
                 })
             end
         end
-  
+
         table.insert(elements, {label = _U('inventory_label'), value = nil})
         for i = 1, #data.inventory, 1 do
           local inventoryitem = data.inventory[i].name
@@ -1197,9 +1156,9 @@ function OpenBodySearchMenu(player)
             local itemType = data.current.itemType
             local itemName = data.current.value
 			local amount = data.current.amount
-			
+
 			if itemType == 'item_standard' or itemType == 'item_money' then
-			
+
 				ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'Search', {
 				title = "Tedad Ra Vared Konid!"
 				}, function(data, menu2)
@@ -1211,8 +1170,8 @@ function OpenBodySearchMenu(player)
 					local coords = GetEntityCoords(GetPlayerPed(-1))
 					local coords2 = GetEntityCoords(GetPlayerPed(player))
 					if math.floor(Vdist2(coords.x, coords.y, coords.z, coords2.x, coords2.y, coords2.z)) < 3 then
-						local amounts = tonumber(data.value) 
-						TriggerServerEvent('esx:confiscatePlayerItem', GetPlayerServerId(player), itemType, itemName, amounts)  
+						local amounts = tonumber(data.value)
+						TriggerServerEvent('esx:confiscatePlayerItem', GetPlayerServerId(player), itemType, itemName, amounts)
 						OpenBodySearchMenu(player)
 						menu2.close()
 					else
@@ -1221,24 +1180,24 @@ function OpenBodySearchMenu(player)
 						menu2.close()
 					end
 				end
-			
+
 			end, function(data, menu2)
 					menu2.close()
 				end)
 			else
-				
+
 				local coords = GetEntityCoords(GetPlayerPed(-1))
 				local coords2 = GetEntityCoords(GetPlayerPed(player))
 					if math.floor(Vdist2(coords.x, coords.y, coords.z, coords2.x, coords2.y, coords2.z)) < 3 then
-						local amounts = tonumber(data.value) 
-						TriggerServerEvent('esx:confiscatePlayerItem', GetPlayerServerId(player), itemType, itemName, data.current.amount)  
+						local amounts = tonumber(data.value)
+						TriggerServerEvent('esx:confiscatePlayerItem', GetPlayerServerId(player), itemType, itemName, data.current.amount)
 						OpenBodySearchMenu(player)
 					else
 						ESX.ShowNotification("~r~Kasi Nazdik Shoma Nist!")
 						ESX.UI.Menu.CloseAll()
 					end
 				end
-			
+
 
         end, function(data, menu)
             menu.close()
@@ -1249,15 +1208,10 @@ function OpenBodySearchMenu(player)
 
 end
 
-
-
-
 function OpenGetStocksMenu(gang)
 local gang = gang
 
  ESX.TriggerServerCallback('gangs:getStockItems', function(items)
-
-
 
   local elements = {}
 
@@ -1415,7 +1369,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
         Data.blip_sprite    = data.blip_sprite
         Data.blip_color     = data.blip_color
 		ESX.SetPlayerData('CanGangLog', data.logpower)
-		ESX.SetPlayerData('CanGangVIP', data.vip) 
+		ESX.SetPlayerData('CanGangVIP', data.vip)
       else
         ESX.ShowNotification('Gang Shoma Disable Shode Ast Lotfan Be Staff Morajee Konid!')
       end
@@ -1429,7 +1383,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
     while PlayerData.gang.name ~= 'nogang' and Data.gang_name do
       Citizen.Wait(1)
       if IsControlJustReleased(0, Keys['F5']) then
-       
+
 		if GetVehiclePedIsIn(PlayerPedId(), false) == 0 then
 			OpenGangActionsMenu()
 		end
@@ -1437,8 +1391,8 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
       end
     end
   end)
-  
-  -- GPS
+
+
   TriggerServerEvent('gangprop:forceBlip')
 end)
 
@@ -1509,7 +1463,6 @@ AddEventHandler('esx:setGang', function(gang)
       Citizen.Wait(1)
       if IsControlJustReleased(0, Keys['F5']) then
 
-
 		if GetVehiclePedIsIn(PlayerPedId(), false) == 0 then
 			OpenGangActionsMenu()
 		end
@@ -1519,7 +1472,6 @@ AddEventHandler('esx:setGang', function(gang)
   end)
 end)
 
---  blips
 function blipManager(blip, name, icon)
   local Name = name or 'Gang'
   local Icon = icon or 674
@@ -1538,7 +1490,6 @@ function blipManager(blip, name, icon)
   AddTextComponentString(Name)
   EndTextCommandSetBlipName(blipCoord)
 end
-
 
 AddEventHandler('gangprop:hasEnteredMarker', function(station, part)
 
@@ -1631,13 +1582,10 @@ end
 end
 end)
 
-
-
 AddEventHandler('gangprop:hasExitedMarker', function(station, part)
 ESX.UI.Menu.CloseAll()
 CurrentAction = nil
 end)
-
 
 RegisterNetEvent('gangprop:handcuffx')
 AddEventHandler('gangprop:handcuffx', function()
@@ -1672,28 +1620,28 @@ local playerPed = GetPlayerPed(-1)
   end)
 end)
 
-  
-  
+
+
 RegisterNetEvent('gangprop:removeHandcuff')
 AddEventHandler('gangprop:removeHandcuff', function()
 	IsHandcuffed = false
 end)
-  
+
 RegisterNetEvent('gangprop:removeHandcuffFull')
 AddEventHandler('gangprop:removeHandcuffFull', function()
-  
+
   local playerPed = PlayerPedId()
-	  
+
   IsHandcuffed = false
-  
+
   ClearPedSecondaryTask(playerPed)
   SetEnableHandcuffs(playerPed, false)
   DisablePlayerFiring(playerPed, false)
   SetPedCanPlayGestureAnims(playerPed, true)
-	  
+
   TriggerEvent("gangprop:removeHandcuff")
 end)
-  
+
 RegisterNetEvent('gangprop:getarrestedx')
 AddEventHandler('gangprop:getarrestedx', function(playerheading, playercoords, playerlocation)
 	playerPed = GetPlayerPed(-1)
@@ -1705,9 +1653,9 @@ AddEventHandler('gangprop:getarrestedx', function(playerheading, playercoords, p
 		end)
 	end
   DisableControl2()
-  
+
 	TriggerServerEvent('InteractSound_SV:PlayWithinDistance', 5.0, 'cuff', 1.0)
-	SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true) -- unarm player
+	SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true)
 	local x, y, z   = table.unpack(playercoords + playerlocation * 1.0)
 	SetEntityCoords(GetPlayerPed(-1), x, y, z)
 	SetEntityHeading(GetPlayerPed(-1), playerheading)
@@ -1720,15 +1668,11 @@ AddEventHandler('gangprop:getarrestedx', function(playerheading, playercoords, p
 	TaskPlayAnim(GetPlayerPed(-1), 'mp_arresting', 'idle', 8.0, -8, -1, 49, 0.0, false, false, false)
 
   Citizen.Wait(3000)
-	
-	
+
+
 	DisableControl2 = function() return nil end
 
 end)
-
-
-
-
 
 RegisterNetEvent('gangprop:doarrestedx')
 AddEventHandler('gangprop:doarrestedx', function()
@@ -1745,17 +1689,13 @@ AddEventHandler('gangprop:doarrestedx', function()
 	TaskPlayAnim(GetPlayerPed(-1), 'mp_arrest_paired', 'cop_p2_back_right', 8.0, -8,3750, 2, 0, 0, 0, 0)
 
   Citizen.Wait(3000)
-	
-	
+
+
 	DisableControl2 = function() return nil end
 
-end) 
+end)
 
-
-
-
-
-RegisterNetEvent("gangprop:startAnim") 
+RegisterNetEvent("gangprop:startAnim")
 AddEventHandler("gangprop:startAnim", function(player)
     Citizen.CreateThread(function()
     	if not IsPedSittingInAnyVehicle(GetPlayerPed(-1)) then
@@ -1778,33 +1718,31 @@ end)
 
 function loadanimdict(dictname)
 	if not HasAnimDictLoaded(dictname) then
-		RequestAnimDict(dictname) 
-		while not HasAnimDictLoaded(dictname) do 
+		RequestAnimDict(dictname)
+		while not HasAnimDictLoaded(dictname) do
 			Citizen.Wait(1)
 		end
 	end
 end
-
-
 
 Citizen.CreateThread(function()
 	  local playerPed
 	  local targetPed
 		while true do
 		Citizen.Wait(1)
-  
+
 		if IsHandcuffed then
 			playerPed = PlayerPedId()
 			if IsDragged then
 				targetPed = GetPlayerPed(GetPlayerFromServerId(CopPed))
 				if not IsPedSittingInAnyVehicle(targetPed) then
-					-- AttachEntityToEntity(playerPed, targetPed, 11816, 0.54, 0.54, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
+
           AttachEntityToEntity(playerPed, targetPed, 11816, -0.06, 0.65, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
 				else
 					IsDragged = false
 					DetachEntity(playerPed, true, false)
 				end
-  
+
 				else
 					DetachEntity(playerPed, true, false)
 				end
@@ -1868,7 +1806,7 @@ end)
 RegisterNetEvent('gangprop:OutVehiclex')
 AddEventHandler('gangprop:OutVehiclex', function(t)
 local ped = GetPlayerPed(t)
---ClearPedTasksImmediately(ped)
+
 plyPos = GetEntityCoords(GetPlayerPed(-1),  true)
 local xnew = plyPos.x+2
 local ynew = plyPos.y+2
@@ -1876,9 +1814,6 @@ TriggerEvent('RV_HuD:chageStatus', false)
  SetEntityCoords(GetPlayerPed(-1), xnew, ynew, plyPos.z)
 end)
 
-
-
--- Display markers
 Citizen.CreateThread(function()
 while true do
 
@@ -1939,11 +1874,10 @@ while true do
       DrawMarker(31, Data.boss.x,  Data.boss.y,  Data.boss.z+1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 0.8,0.8,0.8, 255, 255, 255, 100, true, true, 2, true, false, false, false)
     end
   end
-    
+
 end
 end)
 
--- Enter / Exit marker events
 Citizen.CreateThread(function()
 
  while true do
@@ -1956,7 +1890,7 @@ Citizen.CreateThread(function()
     local isInMarker     = false
     local currentStation = nil
     local currentPart    = nil
-    
+
     if Data.locker ~= nil then
       if GetDistanceBetweenCoords(coords,  Data.locker.x,  Data.locker.y,  Data.locker.z,  true) < PropConfig.MarkerSize.x then
         isInMarker     = true
@@ -2018,7 +1952,7 @@ Citizen.CreateThread(function()
         isInMarker     = true
         currentStation = Data.gang_name
         currentPart    = 'HeliDeleter'
-        -- ESX.ShowHelpNotification('~INPUT_CONTEXT~ Baraye Park Heli')
+
       end
     end
 
@@ -2027,7 +1961,7 @@ Citizen.CreateThread(function()
         isInMarker     = true
         currentStation = Data.gang_name
         currentPart    = 'BoatSpawner'
-        -- ESX.ShowHelpNotification(' ~INPUT_CONTEXT~ Baraye Bardashte Boat')
+
       end
     end
 
@@ -2047,17 +1981,17 @@ Citizen.CreateThread(function()
         ESX.ShowHelpNotification(' ~INPUT_CONTEXT~ Baraye Park Boat')
       end
     end
-	
+
     if Data.boss ~= nil and PlayerData.gang ~= nil then
       if GetDistanceBetweenCoords(coords,   Data.boss.x,  Data.boss.y,  Data.boss.z,  true) < PropConfig.MarkerSize.x then
         isInMarker     = true
         currentStation = Data.gang_name
-        currentPart    = 'BossActions' 
+        currentPart    = 'BossActions'
       end
     end
 
     local hasExited = false
-    
+
     if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastStation ~= currentStation or LastPart ~= currentPart)) then
       if
         (LastStation ~= nil and LastPart ~= nil) and
@@ -2083,8 +2017,6 @@ Citizen.CreateThread(function()
  end
 end)
 
-
--- Key Controls
 Citizen.CreateThread(function()
 while true do
 
@@ -2100,11 +2032,11 @@ while true do
         elseif CurrentAction == 'menu_vehicle_spawner' then
 
 				  ListOwnedCarsMenu()
-	    elseif CurrentAction == 'menu_heli_spawner' then 
+	    elseif CurrentAction == 'menu_heli_spawner' then
 
 				ListOwnedAircraftsMenu()
 
-    elseif CurrentAction == 'menu_boat_spawner' then 
+    elseif CurrentAction == 'menu_boat_spawner' then
 			if PlayerData.gang.grade >= Data.boat_access then
 				ListOwnedBoatsMenu()
 			else
@@ -2133,15 +2065,15 @@ function StoreOwnedCarsMenu()
   	local coords       = GetEntityCoords(playerPed)
   	local vehicle      = CurrentActionData.vehicle
   	local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
-  	local engineHealth = GetVehicleEngineHealth(vehicle) 
-  	local healthPercent = (engineHealth / 1000) * 100 
+  	local engineHealth = GetVehicleEngineHealth(vehicle)
+  	local healthPercent = (engineHealth / 1000) * 100
   	local plate        = vehicleProps.plate
   	local vehicleModel = vehicleProps.model
     local engines      = false
 
-    ESX.TriggerServerCallback('gangprop:getCars', function(datas) 
+    ESX.TriggerServerCallback('gangprop:getCars', function(datas)
       for k,v in pairs(datas) do
-        if v.plate == plate then 
+        if v.plate == plate then
           engines = v.damage
         end
       end
@@ -2154,12 +2086,12 @@ function StoreOwnedCarsMenu()
         		reparation(apprasial, vehicle, vehicleProps)
       		else
         		putaway(vehicle, vehicleProps)
-      		end	
+      		end
       		Wait(50)
-      
+
       		local vehicleName = GetDisplayNameFromVehicleModel(vehicleModel)
       		local vehicleLabel = GetLabelText(vehicleName)
-      
+
       		TriggerServerEvent('gangs:vehlogs', vehicleLabel, vehicleProps.plate, 'veh', 'delete', healthPercent, engines)
 
     	else
@@ -2168,29 +2100,24 @@ function StoreOwnedCarsMenu()
   	end, vehicleProps)
 end
 
-
-
-
-
-
 function reparation(apprasial, vehicle, vehicleProps)
 	ESX.UI.Menu.CloseAll()
-	
+
 	local elements = {
 		{label = "Park kardane mashin va Pardakhte ($"..math.ceil(tonumber(apprasial)/2)..")", value = 'yes'},
 		{label = "Tamas Ba mechanic", value = 'no'},
 		{label = 'Park Kardan', value = 'Fuck'}
 	}
-	
+
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'delete_menu', {
 		title    = "Mashine shoma Zarbe Khorde",
 		align    = 'top-left',
 		elements = elements
 	}, function(data, menu)
 		menu.close()
-		
+
 		if data.current.value == 'yes' then
-			ESX.TriggerServerCallback('esx_advancedgarage:mechaniclive', function(count) 
+			ESX.TriggerServerCallback('esx_advancedgarage:mechaniclive', function(count)
 				if count >= 1 then
 					ESX.ShowNotification("~r~Mechanic Dar Shahr Hozoor Dard Nemitavinid Mashin Ro Salem Dar Parking Bezarid!")
 				else
@@ -2217,8 +2144,6 @@ function reparation(apprasial, vehicle, vehicleProps)
 	end)
 end
 
--- Put Away Vehicles
-
 function putaway(vehicle, vehicleProps)
 	local ped     = GetPlayerPed(-1)
   local coords  = GetEntityCoords(ped)
@@ -2235,21 +2160,15 @@ function putaway(vehicle, vehicleProps)
 		})
 	end
 end
----------------------------------------------------------------------------------------------------------
--- NB : gestion des menu
----------------------------------------------------------------------------------------------------------
 
--- RegisterNetEvent('NB:openMenuGang')
--- AddEventHandler('NB:openMenuGang', function()
-	-- if PlayerData.gang.name ~= 'nogang' then
-		-- OpenGangActionsMenu()
-	-- end
--- end)
+
+
+
 
 RegisterNetEvent("setArmorHandler")
 AddEventHandler("setArmorHandler",function()
   local ped = GetPlayerPed(-1)
-  SetPedArmour(ped, Data.bulletproof) 
+  SetPedArmour(ped, Data.bulletproof)
 
   TriggerEvent('skinchanger:getSkin', function(skin)
     if skin.sex == 0 then
@@ -2264,31 +2183,29 @@ AddEventHandler("setArmorHandler",function()
       TriggerEvent('skinchanger:loadClothes', skin, clothesSkin)
     end
   end)
-  
-end)
 
+end)
 
 RegisterNetEvent("setArmorHandlerMakhfi")
 AddEventHandler("setArmorHandlerMakhfi",function()
   local ped = GetPlayerPed(-1)
   SetPedArmour(ped, Data.bulletproof)
-  
+
 end)
 
--- GPS
 function createBlip(id,color)
 	local ped = GetPlayerPed(id)
 	local blip = GetBlipFromEntity(ped)
 
-	if not DoesBlipExist(blip) then -- Add blip and create head display on player
+	if not DoesBlipExist(blip) then
 		blip = AddBlipForEntity(ped)
 		SetBlipSprite(blip, 1)
 		SetBlipColour(blip, color)
-		SetBlipNameToPlayerName(blip, id) -- update blip name
-		SetBlipScale(blip, 0.7) -- set scale
+		SetBlipNameToPlayerName(blip, id)
+		SetBlipScale(blip, 0.7)
 		SetBlipAsShortRange(blip, true)
 
-		table.insert(blipsGangs, blip) -- add blip to array so we can remove it later
+		table.insert(blipsGangs, blip)
 	end
 end
 
@@ -2297,7 +2214,7 @@ AddEventHandler('gangprop:updateBlip', function()
 
 	blipsGangs = {}
   Wait(20000)
-	
+
 	if ESX.GetPlayerData().gang.name ~= 'nogang' then
 		ESX.TriggerServerCallback('gangprop:getOnlinePlayers', function(players)
 			for i=1, #players, 1 do
@@ -2333,7 +2250,7 @@ function setDamages(car, damages)
         end
 	end
 
-	for i = 0, GetNumberOfVehicleDoors(car) do 
+	for i = 0, GetNumberOfVehicleDoors(car) do
         if damages['broken_doors'] then
 			if damages['broken_doors'][i] then
                 SetVehicleDoorBroken(car, damages['broken_doors'][i], true)
@@ -2359,19 +2276,18 @@ end)
 function GetVehicleDamages(vehicle)
 	local damages 	   = {['damaged_windows'] = {}, ['burst_tires'] = {}, ['broken_doors'] = {}, ['body_health'] = GetVehicleBodyHealth(vehicle), ['engine_health'] = GetVehicleEngineHealth(vehicle), ['fuel_health'] = GetVehicleFuelLevel(vehicle)}
 	for i = 0, GetVehicleNumberOfWheels(vehicle) do
-		if IsVehicleTyreBurst(vehicle, i, false) then table.insert(damages['burst_tires'], i) end 
+		if IsVehicleTyreBurst(vehicle, i, false) then table.insert(damages['burst_tires'], i) end
 	end
 	for i = 0, 7 do
 		if not IsVehicleWindowIntact(vehicle, i) then table.insert(damages['damaged_windows'], i) end
 	end
-	for i = 0, GetNumberOfVehicleDoors(vehicle) do 
-		if IsVehicleDoorDamaged(vehicle, i) then table.insert(damages['broken_doors'], i) end 
+	for i = 0, GetNumberOfVehicleDoors(vehicle) do
+		if IsVehicleDoorDamaged(vehicle, i) then table.insert(damages['broken_doors'], i) end
 	end
 
 	return damages
 end
 
--- dare naringi ro map
 Citizen.CreateThread(function()
   while ESX == nil do Citizen.Wait(2500) end
   LoadBlips()
@@ -2385,7 +2301,7 @@ function LoadBlips()
           SetBlipHighDetail(blipCoord, true)
           SetBlipColour(blipCoord, 44)
           SetBlipAlpha(blipCoord, 100)
-          SetBlipAsShortRange(blipCoord, true)  
+          SetBlipAsShortRange(blipCoord, true)
           BeginTextCommandSetBlipName("STRING")
           AddTextComponentString('Gang')
           EndTextCommandSetBlipName(blipCoord)
@@ -2393,11 +2309,10 @@ function LoadBlips()
     end)
 end
 
--- ------CUFF------ --
 RegisterNetEvent('gangprop:getarrested')
 AddEventHandler('gangprop:getarrested', function(playerheading, playercoords, playerlocation, faction, front)
 	playerPed = PlayerPedId()
-	SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true) -- unarm player
+	SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true)
 	ESX.UI.Menu.CloseAll()
     ESX.SetPlayerData('isSentenced', true)
 	local x, y, z   = table.unpack(playercoords + playerlocation * 1.0)
@@ -2419,7 +2334,7 @@ AddEventHandler('gangprop:getarrested', function(playerheading, playercoords, pl
 	else
 		loadanimdict('anim@move_m@prisoner_cuffed')
 		TaskPlayAnim(PlayerPedId(), 'anim@move_m@prisoner_cuffed', 'idle', 8.0, -8, 6000 , 2, 0, 0, 0, 0)
-	end	
+	end
 	if not front then
 		Citizen.Wait(3760)
 	else
@@ -2447,7 +2362,6 @@ AddEventHandler('gangprop:getarrested', function(playerheading, playercoords, pl
 	ESX.UI.Menu.CloseAll()
 end)
 
-
 RegisterNetEvent('gangprop:doarrested')
 AddEventHandler('gangprop:doarrested', function(front)
 	ClearPedTasks(PlayerPedId())
@@ -2467,16 +2381,14 @@ AddEventHandler('gangprop:doarrested', function(front)
 	else
 		loadanimdict('mp_arresting')
 		TaskPlayAnim(PlayerPedId(), 'mp_arresting', 'a_uncuff', 8.0, -8,6000, 2, 0, 0, 0, 0)
-	end	
+	end
 	Citizen.Wait(3000)
-	
-	
+
+
 	DisableControl = function() return nil end
-	
-	
-end) 
 
 
+end)
 
 RegisterNetEvent('gangprop:getuncuffed')
 AddEventHandler('gangprop:getuncuffed', function(playerheading, playercoords, playerlocation)
@@ -2486,10 +2398,9 @@ AddEventHandler('gangprop:getuncuffed', function(playerheading, playercoords, pl
 	SetEntityCoords(PlayerPedId(), x, y, z)
 	if not FrontHandCuffed then
 		SetEntityHeading(PlayerPedId(), playerheading)
-		
+
 	else
 		SetEntityHeading(PlayerPedId(), playerheading - 180.0)
-
 
 	end
 	Citizen.Wait(250)
@@ -2497,16 +2408,16 @@ AddEventHandler('gangprop:getuncuffed', function(playerheading, playercoords, pl
 		loadanimdict('mp_arresting')
 		TaskPlayAnim(PlayerPedId(), 'mp_arresting', 'b_uncuff', 8.0, -8,-1, 2, 0, 0, 0, 0)
 		IsHandcuffed = false
-		
+
 	else
 		loadanimdict('anim@move_m@prisoner_cuffed')
 		TaskPlayAnim(PlayerPedId(), 'anim@move_m@prisoner_cuffed', 'idle', 8.0, -8,-1, 2, 0, 0, 0, 0)
 		IsHandcuffed = false
-		
+
 	end
 	Citizen.Wait(5500)
 	IsHandcuffed = false
-	
+
 	DragStatus.IsDragged = false
 	DetachEntity(playerPed, true, false)
 	TriggerServerEvent('gangprop:SetCuffStatus', false)
@@ -2514,11 +2425,9 @@ AddEventHandler('gangprop:getuncuffed', function(playerheading, playercoords, pl
 	ClearPedTasks(PlayerPedId())
 	SetPedComponentVariation(PlayerPedId(),7,0,0,0)
 	ESX.SetPlayerData('isSentenced', false)
-	
-	
+
+
 end)
-
-
 
 RegisterNetEvent('gangprop:douncuffing')
 AddEventHandler('gangprop:douncuffing', function()
@@ -2532,7 +2441,7 @@ AddEventHandler('gangprop:douncuffing', function()
 		end)
 	end
 	DisableControl()
-	SetCurrentPedWeapon(PlayerPedId(), GetHashKey('WEAPON_UNARMED'), true) -- unarm player
+	SetCurrentPedWeapon(PlayerPedId(), GetHashKey('WEAPON_UNARMED'), true)
 	Citizen.Wait(250)
 	loadanimdict('mp_arresting')
 	TaskPlayAnim(PlayerPedId(), 'mp_arresting', 'a_uncuff', 8.0, -8,-1, 2, 0, 0, 0, 0)
@@ -2552,9 +2461,9 @@ function TriggerCuffCitizen()
 			if DragStatus.IsDragged then
 				local targetPed = GetPlayerPed(GetPlayerFromServerId(DragStatus.CopId))
 
-				-- undrag if target is in an vehicle
+
 				if not IsPedSittingInAnyVehicle(targetPed) then
-					-- AttachEntityToEntity(playerPed, targetPed, 11816, 0.54, 0.54, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
+
 					AttachEntityToEntity(playerPed, targetPed, 11816, -0.06, 0.65, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
 				else
 					DragStatus.IsDragged = false
@@ -2567,54 +2476,54 @@ function TriggerCuffCitizen()
 		end
 	end)
 
-	-- Handcuff
+
 	Citizen.CreateThread(function()
 		while IsHandcuffed do
 			Citizen.Wait(2)
 
-			DisableControlAction(2, Keys['~'], true) -- HandsUP
-			DisableControlAction(2, Keys['X'], true) -- HandsUP
+			DisableControlAction(2, Keys['~'], true)
+			DisableControlAction(2, Keys['X'], true)
 			DisableControlAction(2, Keys['ESC'], true)
 			DisableControlAction(2, Keys['F6'], true)
 			DisableControlAction(2, Keys['F2'], true)
 			DisableControlAction(2, Keys['ENTER'], true)
-			DisableControlAction(2, Keys['LEFTSHIFT'], true) -- HandsUP
-			DisableControlAction(2, Keys['R'], true) -- Reload
-			DisableControlAction(2, Keys['TOP'], true) -- Open phone (not needed?)
-			DisableControlAction(2, Keys['TAB'], true) -- weapon
-			DisableControlAction(2, Keys['SPACE'], true) -- Jump
-			DisableControlAction(2, Keys['Q'], true) -- Cover
-			DisableControlAction(0, Keys['E'], true) --select
-			DisableControlAction(0, Keys['PAGEUP'], true) -- vehicle
-			DisableControlAction(0, Keys['K'], true) --lebas
-			DisableControlAction(2, Keys['TAB'], true) -- Select Weapon
-			DisableControlAction(2, Keys['F'], true) -- Also 'enter'?
-			DisableControlAction(0, Keys['F1'], true) -- Disable phone
-			DisableControlAction(2, Keys['F2'], true) -- Inventory
-			DisableControlAction(2, Keys['F3'], true) -- Animations
+			DisableControlAction(2, Keys['LEFTSHIFT'], true)
+			DisableControlAction(2, Keys['R'], true)
+			DisableControlAction(2, Keys['TOP'], true)
+			DisableControlAction(2, Keys['TAB'], true)
+			DisableControlAction(2, Keys['SPACE'], true)
+			DisableControlAction(2, Keys['Q'], true)
+			DisableControlAction(0, Keys['E'], true)
+			DisableControlAction(0, Keys['PAGEUP'], true)
+			DisableControlAction(0, Keys['K'], true)
+			DisableControlAction(2, Keys['TAB'], true)
+			DisableControlAction(2, Keys['F'], true)
+			DisableControlAction(0, Keys['F1'], true)
+			DisableControlAction(2, Keys['F2'], true)
+			DisableControlAction(2, Keys['F3'], true)
 			DisableControlAction(2, Keys['F5'], true)
 			DisableControlAction(2, Keys['F8'], true)
 			DisableControlAction(2, Keys['H'], true)
 			DisableControlAction(2, Keys['M'], true)
-			DisableControlAction(2, Keys['V'], true) -- Disable changing view
-			DisableControlAction(2, Keys['P'], true) -- Disable pause screen
-			DisableControlAction(2, Keys['L'], true) -- L
-			DisableControlAction(2, 59, true) -- Disable steering in vehicle
-			DisableControlAction(2, Keys['LEFTCTRL'], true) -- Disable going stealth
-			DisableControlAction(2, 24, true) -- Attack
-			DisableControlAction(2, 257, true) -- Attack 2
-			DisableControlAction(2, 25, true) -- Aim
-			DisableControlAction(2, 263, true) -- Melee Attack 1
-			DisableControlAction(2, 59, true) -- Disable steering in vehicle
-			DisableControlAction(0, 47, true)  -- Disable weapon
-			DisableControlAction(0, 264, true) -- Disable melee
-			DisableControlAction(0, 257, true) -- Disable melee
-			DisableControlAction(0, 140, true) -- Disable melee
-			DisableControlAction(0, 141, true) -- Disable melee
-			DisableControlAction(0, 142, true) -- Disable melee
-			DisableControlAction(0, 143, true) -- Disable melee
-			DisableControlAction(0, 75, true)  -- Disable exit vehicle
-			DisableControlAction(27, 75, true) -- Disable exit vehicle
+			DisableControlAction(2, Keys['V'], true)
+			DisableControlAction(2, Keys['P'], true)
+			DisableControlAction(2, Keys['L'], true)
+			DisableControlAction(2, 59, true)
+			DisableControlAction(2, Keys['LEFTCTRL'], true)
+			DisableControlAction(2, 24, true)
+			DisableControlAction(2, 257, true)
+			DisableControlAction(2, 25, true)
+			DisableControlAction(2, 263, true)
+			DisableControlAction(2, 59, true)
+			DisableControlAction(0, 47, true)
+			DisableControlAction(0, 264, true)
+			DisableControlAction(0, 257, true)
+			DisableControlAction(0, 140, true)
+			DisableControlAction(0, 141, true)
+			DisableControlAction(0, 142, true)
+			DisableControlAction(0, 143, true)
+			DisableControlAction(0, 75, true)
+			DisableControlAction(27, 75, true)
 			DisableControlAction(0, 107, true)
 			DisableControlAction(0, 108, true)
 			DisableControlAction(0, 109, true)
@@ -2624,7 +2533,7 @@ function TriggerCuffCitizen()
 			if IsPedInAnyVehicle(PlayerPedId(), false) then
 				SetCurrentPedWeapon(PlayerPedId(), GetHashKey("weapon_unarmed"), true)
 			end
-			if IsEntityPlayingAnim(PlayerPedId(), 'mp_arresting', 'idle', 3) then 
+			if IsEntityPlayingAnim(PlayerPedId(), 'mp_arresting', 'idle', 3) then
 			else
 				loadanimdict('mp_arresting')
 				TaskPlayAnim(playerPed, 'mp_arresting', 'idle', 8.0, -8, -1, 49, 0.0, false, false, false)
@@ -2633,9 +2542,6 @@ function TriggerCuffCitizen()
 	end)
 
 end
-
-
--- --------Drag---------- --
 
 RegisterNetEvent('gangprop:drag')
 AddEventHandler('gangprop:drag', function(copID)
@@ -2647,15 +2553,14 @@ AddEventHandler('gangprop:drag', function(copID)
 	end
 	DragStatus.IsDragged = not DragStatus.IsDragged
 	DragStatus.CopId     = tonumber(copID)
-	
-	
+
+
 end)
 
 RegisterNetEvent('gangprop:lastDragger')
 AddEventHandler('gangprop:lastDragger', function()
 	Draging = false
 end)
-
 
 RegisterNetEvent('gangprop:draging')
 AddEventHandler('gangprop:draging', function(copID)
@@ -2666,14 +2571,14 @@ AddEventHandler('gangprop:draging', function(copID)
 		Citizen.CreateThread(function()
 			while Draging do
 				Wait(0)
-				DisableControlAction(2, Keys['LEFTSHIFT'], true) -- HandsUP
-				DisableControlAction(2, Keys['SPACE'], true) -- Jump
-				DisableControlAction(0, Keys['LEFTSHIFT'], true) -- HandsUP
-				DisableControlAction(0, Keys['SPACE'], true) -- Jump
+				DisableControlAction(2, Keys['LEFTSHIFT'], true)
+				DisableControlAction(2, Keys['SPACE'], true)
+				DisableControlAction(0, Keys['LEFTSHIFT'], true)
+				DisableControlAction(0, Keys['SPACE'], true)
 				DisableControlAction(0, Keys['K'], true)
 				DisableControlAction(0, Keys['x'], true)
-				if IsEntityPlayingAnim(PlayerPedId(), 'switch@trevor@escorted_out', '001215_02_trvs_12_escorted_out_idle_guard2', 3) then 
-					
+				if IsEntityPlayingAnim(PlayerPedId(), 'switch@trevor@escorted_out', '001215_02_trvs_12_escorted_out_idle_guard2', 3) then
+
 				else
 					TaskPlayAnim(PlayerPedId(), 'switch@trevor@escorted_out', '001215_02_trvs_12_escorted_out_idle_guard2', 8.0, 1.0, -1, 49, 0, 0, 0, 0)
 				end
@@ -2685,8 +2590,6 @@ AddEventHandler('gangprop:draging', function(copID)
 		ClearPedTasks(PlayerPedId())
 	end
 end)
-
--- ------------ Put In Veh ------------- --
 
 RegisterNetEvent('gangprop:putInVehicle')
 AddEventHandler('gangprop:putInVehicle', function()
@@ -2723,10 +2626,6 @@ AddEventHandler('gangprop:putInVehicle', function()
 
 	end
 end)
-
-
--- --------------- out teh vehicle --------------- --
-
 
 RegisterNetEvent('gangprop:OutVehicle')
 AddEventHandler('gangprop:OutVehicle', function()

@@ -18,7 +18,6 @@ if config.AddonList.crewPhone then
     end)
 
 
-    -- Müzik çalma
     exports('Cal', function(link, mp3)
         local ped = PlayerPedId()
         local pos = GetEntityCoords(ped)
@@ -62,7 +61,7 @@ if config.AddonList.crewPhone then
         end
     end)
 
-    -- Müzik durdurma
+
     exports('Durdur', function(link)
         if musicOn then
             musicOn = false
@@ -78,7 +77,7 @@ if config.AddonList.crewPhone then
         end
     end)
 
-    -- Müzik duraklatma
+
     exports('Duraklat', function(link)
         local myId = tostring(GetPlayerServerId(PlayerId()))
         TriggerServerEvent("muzik-duraklat", myId)
@@ -94,7 +93,7 @@ if config.AddonList.crewPhone then
         end
     end)
 
-    -- Müzik duraklatma
+
     exports('Devamet', function(link)
         local myId = tostring(GetPlayerServerId(PlayerId()))
         TriggerServerEvent("muzik-devamet", myId)
@@ -110,7 +109,7 @@ if config.AddonList.crewPhone then
         end
     end)
 
-    -- Müzik Konum güncelleme
+
     local time = 100
     Citizen.CreateThread(function()
         while true do

@@ -1,9 +1,5 @@
--- UNIQUE_AC — customized by Arshia (arshiahub.ir)
--- Licensed under the GNU Affero General Public License v3.0
 
--- The /VERSION file at the project root is the single source of truth for the running
--- build number — it overrides the fallback default set in configs/fire-config.lua.
--- Bump it there (and in fxmanifest.lua, which can't read files at runtime) on every release.
+
 do
     local versionFile = LoadResourceFile(GetCurrentResourceName(), "VERSION")
     if versionFile then
@@ -16,11 +12,6 @@ end
 
 local COLORS = math.random(1, 9)
 
--- Server Health (approximate): FiveM doesn't expose real TPS/RAM to a resource's Lua
--- environment, so this is a proxy, not a true metric — it measures how much longer each
--- ~1-second wait actually takes than expected. A healthy server stays near 0ms drift;
--- rising drift usually means something (a resource, a query, a loop) is blocking the
--- main thread. Labelled "approximate" everywhere it's shown for that reason.
 local HEALTH_SAMPLES = {}
 local HEALTH_START_TIME = GetGameTimer()
 
@@ -60,7 +51,7 @@ local TRUSTED_ADMINS = {}
 local PENDING_QUARANTINE = {}
 local FRAMEWORK_PERM_CACHE = {}
 local PLAYER_BLIP_SUBSCRIBERS = {}
-local CLUSTER_RECENT_DETECTIONS = {} -- { {reason=, license=, at=}, ... } rolling window
+local CLUSTER_RECENT_DETECTIONS = {}
 local invalidatePermissionCache
 
 local function cfg(name, fallback)
@@ -194,8 +185,8 @@ local function UNIQUE_AC_PostConnectValidation(src, playerName)
         end
     end
 
-    -- Cross-Server Threat Intel: check if this identifier was banned on a sibling
-    -- server under the same license key. Opt-in — see UNIQUE_AC.CentralHub.ShareBans.
+
+
     if UNIQUE_AC.CentralHub and UNIQUE_AC.CentralHub.Enable and UNIQUE_AC.CentralHub.ShareBans then
         local license = uniqueacPlayerLicense(src)
         if license then
@@ -226,8 +217,6 @@ CreateThread(function()
     StartAntiCheat()
 end)
 
--- Integrity: hashes UNIQUE_AC's own resource files on boot, then periodically re-checks
--- them against disk so tampering (e.g. a menu-injector patching the anticheat) gets caught.
 local function uniqueacChecksum(text)
     local hash1, hash2 = 5381, 52711
     for i = 1, #text do
@@ -264,8 +253,6 @@ CreateThread(function()
     end
 end)
 
--- Config Backup: saves a timestamped copy of fire-config.lua whenever its content differs
--- from the last recorded hash, so a bad hand-edit can always be compared or restored.
 CreateThread(function()
     if not UNIQUE_AC.ConfigBackup or not UNIQUE_AC.ConfigBackup.Enable then return end
     Wait(4000)
@@ -277,15 +264,15 @@ CreateThread(function()
         local currentHash = uniqueacChecksum(current)
         local lastHash = LoadResourceFile(resourceName, "configs/backups/.last-hash")
 
-        if lastHash == currentHash then return end -- unchanged since last boot, nothing to do
+        if lastHash == currentHash then return end
 
         local stamp = os.date("%Y%m%d-%H%M%S")
         SaveResourceFile(resourceName, ("configs/backups/fire-config-%s.lua"):format(stamp), current, -1)
         SaveResourceFile(resourceName, "configs/backups/.last-hash", currentHash, -1)
         print(("^2[UNIQUE_AC]^0 fire-config.lua changed since last boot — backup saved as configs/backups/fire-config-%s.lua"):format(stamp))
 
-        -- Trim old backups beyond the configured Keep count. LoadResourceFile can't list a
-        -- directory, so we track the list of backup filenames ourselves in a small index file.
+
+
         local indexRaw = LoadResourceFile(resourceName, "configs/backups/.index") or ""
         local names = {}
         for line in indexRaw:gmatch("[^\r\n]+") do names[#names + 1] = line end
@@ -294,7 +281,7 @@ CreateThread(function()
         local keep = math.max(1, tonumber(UNIQUE_AC.ConfigBackup.Keep) or 20)
         while #names > keep do
             local oldest = table.remove(names, 1)
-            SaveResourceFile(resourceName, "configs/backups/" .. oldest, "", -1) -- overwrite with empty; FXServer has no delete native
+            SaveResourceFile(resourceName, "configs/backups/" .. oldest, "", -1)
         end
         SaveResourceFile(resourceName, "configs/backups/.index", table.concat(names, "\n"), -1)
     end)
@@ -370,8 +357,6 @@ local function uniqueacNotifyAdmins(text, color)
     end
 end
 
--- Risk Score: 0-100 informational figure combining Trust Score, past flags/quarantines,
--- account age, and rapid-reconnect behavior. Never punishes anyone by itself.
 local function uniqueacRecomputeRisk(st)
     local cfg = UNIQUE_AC.RiskScore
     if not cfg or not cfg.Enable or not st then return end
@@ -476,7 +461,7 @@ local function uniqueacLogDetection(src, reason, details, action)
         local now = os.time()
         local windowStart = now - math.floor((tonumber(UNIQUE_AC.BehavioralClustering.WindowMs) or 300000) / 1000)
 
-        -- Prune anything outside the window, then record this detection.
+
         for i = #CLUSTER_RECENT_DETECTIONS, 1, -1 do
             if CLUSTER_RECENT_DETECTIONS[i].at < windowStart then table.remove(CLUSTER_RECENT_DETECTIONS, i) end
         end
@@ -490,7 +475,7 @@ local function uniqueacLogDetection(src, reason, details, action)
         for _ in pairs(distinctPlayers) do count = count + 1 end
 
         local minPlayers = tonumber(UNIQUE_AC.BehavioralClustering.MinPlayers) or 2
-        if count == minPlayers then -- fire exactly once per cluster as it crosses the threshold
+        if count == minPlayers then
             uniqueacNotifyAdmins(("🧬 Possible pattern: %d different players triggered \"%s\" within a few minutes — could be alt accounts or a shared tool. Worth a look."):format(count, reason), { 148, 163, 184 })
         end
     end
@@ -541,8 +526,6 @@ local function enterQuarantine(src, action, reason, details)
     UNIQUE_AC_HUB_NOTIFY_QUARANTINE(reason)
 end
 
--- Trust Score + Quarantine: heuristic/probabilistic detections cost trust instead of instantly
--- punishing. Deterministic blacklist matches always bypass this and act immediately.
 function UNIQUE_AC_ENFORCE(src, action, reason, details)
     src = tonumber(src)
     if not src then return end
@@ -649,7 +632,6 @@ AddEventHandler("UNIQUE_AC:quarantineRelease", function(targetId)
     end
 end)
 
--- Player Profile: trust/risk/notes/detection-history for one player, shown from the panel.
 local function uniqueacSendPlayerProfile(src, targetId)
     if not GetPlayerName(targetId) then return end
     local st = playerState(targetId)
@@ -704,7 +686,6 @@ AddEventHandler("UNIQUE_AC:addPlayerNote", function(targetId, note)
     SetTimeout(300, function() uniqueacSendPlayerProfile(src, targetId) end)
 end)
 
--- Admin Action Log: read-only audit trail for the panel's Admin Log tab.
 RegisterNetEvent("UNIQUE_AC:getAdminLog")
 AddEventHandler("UNIQUE_AC:getAdminLog", function()
     local src = tonumber(source)
@@ -715,9 +696,6 @@ AddEventHandler("UNIQUE_AC:getAdminLog", function()
     end)
 end)
 
--- Ban Appeals: review queue fed by the standalone web form (see /appeal-form in the package).
--- Changelog: reads update.txt straight off disk so the panel always shows
--- whatever's actually shipped, with zero duplication to keep in sync.
 RegisterNetEvent("UNIQUE_AC:getChangelog")
 AddEventHandler("UNIQUE_AC:getChangelog", function()
     local src = tonumber(source)
@@ -726,8 +704,6 @@ AddEventHandler("UNIQUE_AC:getChangelog", function()
     TriggerClientEvent("UNIQUE_AC:updateChangelog", src, content)
 end)
 
--- White-Label: sends the configured brand strings so the panel can display them
--- without any HTML/CSS changes.
 RegisterNetEvent("UNIQUE_AC:getBranding")
 AddEventHandler("UNIQUE_AC:getBranding", function()
     local src = tonumber(source)
@@ -749,8 +725,6 @@ AddEventHandler("UNIQUE_AC:getAppeals", function()
     end)
 end)
 
--- Appeals arrive through the standalone PHP form, which writes straight to MySQL and never
--- touches the FiveM server directly — so new ones have to be discovered by polling.
 CreateThread(function()
     if not UNIQUE_AC.Appeals or not UNIQUE_AC.Appeals.Enable or not UNIQUE_AC.Appeals.NotifyAdminsOnNew then return end
     local lastKnownIds = {}
@@ -793,8 +767,6 @@ AddEventHandler("UNIQUE_AC:reviewAppeal", function(appealId, approve)
     end)
 end)
 
--- Central Hub reporter: optional periodic heartbeat to your own multi-server dashboard
--- (see /central-hub). Off unless UNIQUE_AC.CentralHub.Enable and a LicenseKey are set.
 local function uniqueacHubServerName()
     local cfg = UNIQUE_AC.CentralHub
     if cfg.ServerName and cfg.ServerName ~= "" then return cfg.ServerName end
@@ -824,7 +796,7 @@ end
 CreateThread(function()
     local cfg = UNIQUE_AC.CentralHub
     if not cfg or not cfg.Enable then return end
-    Wait(10000) -- let the resource finish booting before the first report
+    Wait(10000)
     local interval = math.max(20000, tonumber(cfg.HeartbeatIntervalMs) or 60000)
     while true do
         local quarantineCount = 0
@@ -850,9 +822,6 @@ CreateThread(function()
     end
 end)
 
--- Resource Monitor: flags any resource that starts after UNIQUE_AC's own baseline snapshot.
--- Purely informational — starting a resource is a server-owner action, so this never
--- bans/kicks anyone, it just tells admins something changed.
 local resourceBaseline = nil
 local resourceIgnoreSet = {}
 for _, name in ipairs((UNIQUE_AC.ResourceMonitor and UNIQUE_AC.ResourceMonitor.IgnoreList) or {}) do
@@ -872,8 +841,6 @@ CreateThread(function()
     print(("^2[UNIQUE_AC]^0 Resource baseline captured: %d resources."):format(GetNumResources()))
 end)
 
--- Known Conflicts check: runs early (doesn't wait for the full baseline delay) since a
--- known-malicious resource is worth flagging as fast as possible.
 CreateThread(function()
     local cfg = UNIQUE_AC.KnownConflicts
     if not cfg or not cfg.Enable then return end
@@ -894,7 +861,7 @@ CreateThread(function()
 end)
 
 AddEventHandler("onResourceStart", function(resourceName)
-    if not resourceBaseline then return end -- baseline not captured yet, this is normal startup
+    if not resourceBaseline then return end
     if resourceName == GetCurrentResourceName() then return end
     if resourceBaseline[resourceName] or resourceIgnoreSet[resourceName] then return end
 
@@ -946,7 +913,6 @@ local function acceptClientReport(src, requestedAction, reason, details)
     UNIQUE_AC_ENFORCE(src, action, reason, details)
 end
 
--- RP-Stop Zone: admins mark a radius that freezes/disarms roleplayers who enter it.
 local RP_ZONES = {}
 local RP_ZONE_NEXT_ID = 1
 
@@ -1008,9 +974,9 @@ RegisterNetEvent("UNIQUE_AC:clientReady", function(spawnSerial, reason)
     st.spawnSerial = tonumber(spawnSerial) or 0
     st.readyReason = reason
     broadcastRpZones(src)
-    -- clientReady fires on every respawn, not just the first spawn — only load persisted
-    -- trust once per session (guarded by st.license being unset), otherwise a respawn mid-session
-    -- would silently overwrite in-memory trust/flag/quarantine counters with the stale DB row.
+
+
+
     if not st.license then
         uniqueacLoadTrust(src)
     end
@@ -2095,7 +2061,7 @@ local function uniqueacBuildConnectCard(step, total, title, detail, accent)
     local safeDetail = uniqueacText(detail, "Please wait", 120)
     local color = uniqueacText(accent, "Accent", 16)
 
-    -- Segmented progress bar built from small colored blocks instead of plain ASCII text.
+
     local barSlots = 12
     local barFilled = math.floor((tonumber(step) or 1) / (tonumber(total) or 4) * barSlots + 0.5)
     if barFilled < 1 then barFilled = 1 end
@@ -2587,13 +2553,13 @@ function StartAntiCheat()
 
     print("^" .. COLORS .. "")
     print([[
-    #   # #   # #####  ###  #   # #####        ###   #### 
-    #   # ##  #   #   #   # #   # #           #   # #     
-    #   # # # #   #   #   # #   # #           #   # #     
-    #   # #  ##   #   #   # #   # ####        ##### #     
-    #   # #   #   #   # # # #   # #           #   # #     
-    #   # #   #   #   #  ## #   # #           #   # #     
-     ###  #   # #####  ####  ###  ##### ##### #   #  #### 
+    #   # #   # #####  ###  #   # #####        ###   ####
+    #   # ##  #   #   #   # #   # #           #   # #
+    #   # # # #   #   #   # #   # #           #   # #
+    #   # #  ##   #   #   # #   # ####        ##### #
+    #   # #   #   #   # # # #   # #           #   # #
+    #   # #   #   #   #  ## #   # #           #   # #
+     ###  #   # #####  ####  ###  ##### ##### #   #  ####
                     ]])
 
     local configuredPort = tostring(UNIQUE_AC.ServerConfig.Port or "auto")
@@ -2789,15 +2755,13 @@ invalidatePermissionCache = function(src)
     end
 end
 
--- Webhook Retry Queue: Discord requests fail sometimes (rate limits, brief
--- outages). This retries with backoff instead of silently losing the message.
 function UNIQUE_AC_DISCORD_SEND(url, payload, attemptsLeft)
     attemptsLeft = attemptsLeft or 3
     if type(url) ~= "string" or not url:match("^https?://") then return end
     PerformHttpRequest(url, function(statusCode)
         local failed = not statusCode or statusCode == 0 or statusCode >= 400
         if failed and attemptsLeft > 1 then
-            local delay = (4 - attemptsLeft) * 8000 -- 8s, then 16s
+            local delay = (4 - attemptsLeft) * 8000
             SetTimeout(delay, function()
                 UNIQUE_AC_DISCORD_SEND(url, payload, attemptsLeft - 1)
             end)
@@ -3385,9 +3349,6 @@ function UNIQUE_AC_SCREENSHOT(SRC, REASON, DETAILS, ACTION)
     return true
 end
 
--- Fires several UNIQUE_AC_SCREENSHOT calls a few seconds apart instead of one, for high-suspicion
--- moments (Quarantine entry). This is a burst-of-stills, not real video — see the config comment
--- on UNIQUE_AC.EvidenceBurst for why a FiveM resource can't do actual screen recording.
 function UNIQUE_AC_SCREENSHOT_BURST(SRC, REASON, DETAILS, ACTION)
     local cfg = UNIQUE_AC.EvidenceBurst
     if not cfg or not cfg.Enable then return end
@@ -3416,14 +3377,6 @@ function UNIQUE_AC_CHANGE_TEMP_WHITELIST(SRC, STATUS, DURATION_MS)
     return UNIQUE_AC_CHANGE_TEMP_WHHITELIST(SRC, STATUS, DURATION_MS)
 end
 
--- بهینه‌سازی: این export اضافه شد تا ریسورس‌های دیگه (esx_uniquejobs, Unique_AdminMenu,
--- Unique_Punishment, esx_aduty, esx_property) که قبلاً برای معافیت موقت از تشخیص
--- تله‌پورت/سرعت به exports['AntiCheat']:ExemptPlayer(...) وصل بودن، حالا بتونن مستقیم
--- از همین مکانیزم whitelist موقتِ داخلی UNIQUE_AC استفاده کنن — بدون نیاز به نگه‌داشتن
--- یه ریسورس آنتی‌چیت جداگانه (AntiCheat) فقط برای همین یه قابلیت.
--- تفاوت با AntiCheat: اینجا معافیت all-or-nothing است (کل تشخیص‌ها موقتاً خاموش
--- می‌شه)، برخلاف AntiCheat که می‌تونست فقط دسته‌های خاص (kinds) رو معاف کنه. برای
--- تله‌پورت‌های ادمین/جاب (که کوتاه‌مدت و بی‌خطرن) این تفاوت بی‌اهمیته.
 exports('ExemptPlayer', function(src, ms, kinds)
     return UNIQUE_AC_CHANGE_TEMP_WHHITELIST(src, true, ms)
 end)
@@ -3455,7 +3408,6 @@ RegisterNetEvent("UNIQUE_AC:adminState", function(enabled, durationMs)
     end
 end)
 
--- Player Blips: admins who enable this get a live-updated map blip for every connected player.
 RegisterNetEvent("UNIQUE_AC:setPlayerBlips")
 AddEventHandler("UNIQUE_AC:setPlayerBlips", function(enabled)
     local src = tonumber(source)
@@ -3616,8 +3568,6 @@ RegisterCommand('addunban', function(source, args)
     end
 end)
 
--- Data export/delete: console-only, for privacy requests (GDPR-style). Accepts either a
--- license identifier directly, or an online player's server ID (resolved automatically).
 local function uniqueacResolveIdentifierArg(arg)
     local asId = tonumber(arg)
     if asId and GetPlayerName(asId) then
@@ -3665,10 +3615,10 @@ RegisterCommand('deleteplayerdata', function(source, args)
         return
     end
 
-    -- Deliberately NOT touched: uniqueac_banlist (an active ban is a moderation record, not
-    -- just personal data — deleting it here would let a GDPR request be used to dodge a ban),
-    -- and admin_log rows where this identifier was the ADMIN (that's staff accountability,
-    -- not this person's own data). Admin_log rows where they were the TARGET are cleared.
+
+
+
+
     MySQL.Async.execute("DELETE FROM uniqueac_trust WHERE identifier = @id", { ["@id"] = identifier })
     MySQL.Async.execute("DELETE FROM uniqueac_notes WHERE target_identifier = @id", { ["@id"] = identifier })
     MySQL.Async.execute("DELETE FROM uniqueac_detections WHERE identifier = @id", { ["@id"] = identifier })
@@ -3678,7 +3628,6 @@ RegisterCommand('deleteplayerdata', function(source, args)
     print(("^2[UNIQUE_AC]^0 Deleted UNIQUE_AC-held data for %s (trust, notes, detections, appeals, and admin-log entries where they were the target). Ban records were NOT deleted — use /uniqueacunban separately if that's also intended."):format(identifier))
 end)
 
--- Player Transparency: lets any player check their own general standing.
 RegisterCommand((UNIQUE_AC.PlayerTransparency and UNIQUE_AC.PlayerTransparency.Command) or "mystatus", function(source)
     if not UNIQUE_AC.PlayerTransparency or not UNIQUE_AC.PlayerTransparency.Enable then return end
     local src = tonumber(source)

@@ -1,10 +1,9 @@
-----------------------------------------    Taxi    ---------------------------------------------
 
 
-local markerCoords1 = vector3(371.4842, -1612.67, 29.292) -- Station 1 Taxi
-local markerCoords2 = vector3(907.1732, -161.617, 74.127) -- Station 2 Taxi
-local markerCoords3 = vector3(-379.331, 6062.053, 31.500) -- Station 3 Paleto
-local markerCoords4 = vector3(1735.931, 3641.736, 35.640) -- Administatior Taxi
+local markerCoords1 = vector3(371.4842, -1612.67, 29.292)
+local markerCoords2 = vector3(907.1732, -161.617, 74.127)
+local markerCoords3 = vector3(-379.331, 6062.053, 31.500)
+local markerCoords4 = vector3(1735.931, 3641.736, 35.640)
 
 local function isPlayerAllowedTaxi()
     local playerData = ESX.GetPlayerData()
@@ -22,52 +21,52 @@ Citizen.CreateThread(function()
         local playerCoords = GetEntityCoords(playerPed)
 
         if isPlayerAllowedTaxi() then
-            -- مارکر برای مکان 1
+
             if #(playerCoords - markerCoords1) < 10.0 then
                 DrawMarker(6, markerCoords1.x, markerCoords1.y, markerCoords1.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7, 0.7, 0.7, 0, 255, 0, 100, false, true, 2, nil, nil, false)
 
                 if #(playerCoords - markerCoords1) < 1.5 then
                     ESX.ShowHelpNotification("~INPUT_CONTEXT~ Brai Teleport")
-                    
+
                     if IsControlJustReleased(0, 38) then
                         OpenTeleportMenuTaxi("1")
                     end
                 end
             end
 
-            -- مارکر برای مکان 2
+
             if #(playerCoords - markerCoords2) < 10.0 then
                 DrawMarker(6, markerCoords2.x, markerCoords2.y, markerCoords2.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7, 0.7, 0.7, 0, 255, 0, 100, false, true, 2, nil, nil, false)
 
                 if #(playerCoords - markerCoords2) < 1.5 then
                     ESX.ShowHelpNotification("~INPUT_CONTEXT~ Brai Teleport")
-                    
+
                     if IsControlJustReleased(0, 38) then
                         OpenTeleportMenuTaxi("2")
                     end
                 end
             end
 
-            -- مارکر برای مکان 3
+
             if #(playerCoords - markerCoords3) < 10.0 then
                 DrawMarker(6, markerCoords3.x, markerCoords3.y, markerCoords3.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7, 0.7, 0.7, 0, 255, 0, 100, false, true, 2, nil, nil, false)
 
                 if #(playerCoords - markerCoords3) < 1.5 then
                     ESX.ShowHelpNotification("~INPUT_CONTEXT~ Brai Teleport")
-                    
+
                     if IsControlJustReleased(0, 38) then
                         OpenTeleportMenuTaxi("3")
                     end
                 end
             end
 
-            -- مارکر برای مکان 4
+
             if #(playerCoords - markerCoords4) < 10.0 then
                 DrawMarker(6, markerCoords4.x, markerCoords4.y, markerCoords4.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7, 0.7, 0.7, 0, 255, 0, 100, false, true, 2, nil, nil, false)
 
                 if #(playerCoords - markerCoords4) < 1.5 then
                     ESX.ShowHelpNotification("~INPUT_CONTEXT~ Brai Teleport")
-                    
+
                     if IsControlJustReleased(0, 38) then
                         OpenTeleportMenuTaxi("4")
                     end
@@ -104,7 +103,7 @@ function OpenTeleportMenuTaxi(currentLocation)
         elements = elements
     }, function(data, menu)
         menu.close()
-        
+
         TriggerEvent('mythic_progbar:client:progress', {
             name = "teleport_progress",
             duration = 5000,
@@ -142,5 +141,4 @@ function OpenTeleportMenuTaxi(currentLocation)
         menu.close()
     end)
 end
-
 

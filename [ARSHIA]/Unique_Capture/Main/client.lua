@@ -1,4 +1,4 @@
--- ESX
+
 
 ESX = nil
 PlayerData = nil
@@ -17,10 +17,6 @@ Citizen.CreateThread(function()
     end
 end)
 
--- ============================================================================
--- Unified Notifications — every notification in this resource goes through
--- ox_lib now, positioned center-right.
--- ============================================================================
 function Notify(message, notifyType, title)
     local oxType = notifyType
     if oxType == 'error' then oxType = 'error'
@@ -41,7 +37,6 @@ AddEventHandler("Violet-Capture:OxNotify", function(message, notifyType, title)
     Notify(message, notifyType, title)
 end)
 
--- Event Theme (isolated - only read by HandleMarkers, no gameplay impact)
 local ActiveTheme = Config.Themes[Config.ActiveTheme] or Config.Themes.Default
 RegisterNetEvent("Violet-CaptureSystem:SetTheme")
 AddEventHandler("Violet-CaptureSystem:SetTheme", function(theme)
@@ -51,7 +46,6 @@ RegisterNetEvent('esx:setGang')
 AddEventHandler('esx:setGang',function(Gang)
     PlayerData.gang = Gang
 end)
--- Variables ========================================================================================
 
 CaptureDetails = {
     CaptureHolderGang = {}
@@ -59,7 +53,7 @@ CaptureDetails = {
 
 RegisterNetEvent("Violet-CaptureSystem:UpdateHolderGang")
 AddEventHandler("Violet-CaptureSystem:UpdateHolderGang",function(ZonesHolderGangs)
-    CaptureDetails.CaptureHolderGang = ZonesHolderGangs 
+    CaptureDetails.CaptureHolderGang = ZonesHolderGangs
 end)
 
 PlayerCaptureInf = {
@@ -74,16 +68,12 @@ PlayerCaptureInf = {
     ZoneCoord = nil
 }
 
--- Command
 RegisterCommand(Config.ReSpawnCaptureCommand,function()
     if PlayerCaptureInf.InCapture and PlayerCaptureInf.Alive then
         ReSpawn()
     end
 end,false)
 
--- ============================================================================
--- Full Stats Dashboard (isolated - own NUI focus, own callback, no capture-state deps)
--- ============================================================================
 RegisterCommand(Config.DashboardCommand, function()
     ESX.TriggerServerCallback('Violet-Capture:GetDashboard', function(data)
         SetNuiFocus(true, true)
@@ -117,12 +107,6 @@ RegisterNUICallback('dashboardAction', function(data, cb)
     cb('ok')
 end)
 
--- ============================================================================
--- Training Academy (isolated - never touches CaptureState/real stats. World
--- isolation (routing bucket) and NPC spawning are handled server-side; this
--- client only teleports itself and applies local combat AI to the peds the
--- server already created and networked for it.)
--- ============================================================================
 if Config.EnableAcademy then
     local AcademyActive = false
     local AcademyPeds = {}
@@ -174,7 +158,7 @@ if Config.EnableAcademy then
 
     RegisterCommand(Config.AcademyCommand, TryEnterAcademy, false)
 
-    -- ============ Instructor NPCs at each entry point (ox_target to enter) ============
+
     Citizen.CreateThread(function()
         RequestModel(GetHashKey(Config.AcademyInstructorPedModel))
         local timeout = 0
@@ -207,7 +191,7 @@ if Config.EnableAcademy then
         end
     end)
 
-    -- ============ Difficulty scaling ============
+
     function GetAcademyDifficulty()
         local tier = math.floor(AcademyTotalKills / Config.AcademyDifficultyStep)
         local accuracy = math.min(Config.AcademyBaseAccuracy + (tier * 5), Config.AcademyMaxAccuracy)
@@ -273,7 +257,7 @@ if Config.EnableAcademy then
         end
     end
 
-    -- NPCs can hurt you, but can never land the finishing blow - health is floored above zero
+
     function StartAcademyHealthFloor()
         Citizen.CreateThread(function()
             while AcademyActive do
@@ -290,8 +274,8 @@ if Config.EnableAcademy then
         end)
     end
 
-    -- Reliable death detection (polling, same pattern the real capture system already uses)
-    -- + revive through this server's actual revive trigger, not a generic native.
+
+
     function StartAcademyDeathWatch()
         Citizen.CreateThread(function()
             while AcademyActive do
@@ -303,7 +287,7 @@ if Config.EnableAcademy then
                     BeginTextCommandDisplayHelp("STRING")
                     AddTextComponentSubstringPlayerName("~r~You died in training.~s~ Press ~INPUT_CONTEXT~ to respawn")
                     EndTextCommandDisplayHelp(0, false, true, -1)
-                    if not AcademyReviveBusy and IsControlJustPressed(0, 38) then -- E
+                    if not AcademyReviveBusy and IsControlJustPressed(0, 38) then
                         AcademyReviveBusy = true
                         local ped = PlayerPedId()
                         SetEntityVisible(ped, false, false)
@@ -325,14 +309,14 @@ if Config.EnableAcademy then
         end)
     end
 
-    -- Safe zone: NPCs stop attacking while you're standing in it
+
     function StartAcademySafeZone()
         Citizen.CreateThread(function()
             local safePoint = Config.AcademyCoord + Config.AcademySafeZoneOffset
             while AcademyActive do
-                -- بهینه‌سازی: این حلقه فقط فاصله رو چک می‌کنه (بدون تشخیص کلید)،
-                -- پس نیازی به دقت فریم‌به‌فریم نداره. تاخیر ۱۰۰ میلی‌ثانیه‌ای در
-                -- تشخیص ورود/خروج از سیف‌زون کاملاً غیرمحسوسه.
+
+
+
                 Citizen.Wait(100)
                 local dist = #(GetEntityCoords(PlayerPedId()) - safePoint)
                 local nowInSafeZone = dist <= Config.AcademySafeZoneRadius
@@ -361,7 +345,7 @@ if Config.EnableAcademy then
         end)
     end
 
-    -- Reminder to go play a real round if someone camps the academy too long
+
     function StartAcademyTimeReminder()
         LastReminderInterval = 0
         Citizen.CreateThread(function()
@@ -431,7 +415,7 @@ if Config.EnableAcademy then
             end)
         end
 
-        -- Leave point inside the academy (ox_target)
+
         Citizen.CreateThread(function()
             RequestModel(GetHashKey(Config.AcademyInstructorPedModel))
             local timeout = 0
@@ -479,7 +463,7 @@ if Config.EnableAcademy then
             end
         end)
 
-        -- Practice capture point that just explains the mechanic visually - purely decorative marker
+
         Citizen.CreateThread(function()
             local point = Config.AcademyCoord + Config.AcademyTutorialPointOffset
             local explained = false
@@ -527,8 +511,6 @@ if Config.EnableAcademy then
     RegisterCommand(Config.AcademyLeaveCommand, LeaveAcademyNow, false)
 end
 
-
-
 function HandleMarkers()
     Citizen.CreateThread(function()
         local blip
@@ -536,7 +518,6 @@ function HandleMarkers()
         blip = AddBlipForRadius(PlayerCaptureInf.ZoneCoord.x,PlayerCaptureInf.ZoneCoord.y,PlayerCaptureInf.ZoneCoord.z,Config.ZoneSize)
         SetBlipAlpha(blip, Config.ZoneBlip.Alpha)
         SetBlipColour(blip, Config.ZoneBlip.Color)
-
 
         blip2 = AddBlipForCoord(PlayerCaptureInf.ZoneCoord.x,PlayerCaptureInf.ZoneCoord.y,PlayerCaptureInf.ZoneCoord.z)
         SetBlipSprite(blip2, Config.CapturePointBlip.Model)
@@ -546,11 +527,11 @@ function HandleMarkers()
         BeginTextCommandSetBlipName("STRING")
         AddTextComponentString(PlayerCaptureInf.InCapture)
         EndTextCommandSetBlipName(blip2)
-			
+
         while PlayerCaptureInf.InCapture do
             Citizen.Wait(0)
             if PlayerCaptureInf and PlayerCaptureInf.ZoneCoord and PlayerCaptureInf.InCapture and PlayerCaptureInf.Alive then
-                -- Capture Point
+
                 local PointColor = {Point = ActiveTheme.Point.Default, Zone = ActiveTheme.Zone.Default}
                 if (CaptureDetails.CaptureHolderGang[PlayerCaptureInf.InCapture] == PlayerData.gang.name) then
                     PointColor = {Point = ActiveTheme.Point.Owned, Zone = ActiveTheme.Zone.Owned}
@@ -565,7 +546,7 @@ function HandleMarkers()
                     false, true, 2, false, nil, nil, false
                 )
 
-                -- Capture Zone
+
                 DrawMarker(
                     28,
                     PlayerCaptureInf.ZoneCoord.x, PlayerCaptureInf.ZoneCoord.y, PlayerCaptureInf.ZoneCoord.z + 250.0,
@@ -583,9 +564,6 @@ function HandleMarkers()
     end)
 end
 
-
-
--- Triggers ========================================================================================
 RegisterNetEvent("Violet-Capture:JoinCapture")
 AddEventHandler("Violet-Capture:JoinCapture", function()
     if not PlayerCaptureInf.InCapture then
@@ -594,9 +572,6 @@ AddEventHandler("Violet-Capture:JoinCapture", function()
     end
 end)
 
-
-
--- Functions ========================================================================================
 function MenuSaver()
     Citizen.Wait(1000)
     Citizen.CreateThread(function()
@@ -616,7 +591,6 @@ function MenuSaver()
 
 end
 
-
 function GotoMenu()
     local PlayerPed = PlayerPedId()
     ESX.UI.Menu.CloseAll()
@@ -631,7 +605,7 @@ function GotoMenu()
 
         table.insert(elements, {label = '========== Your Current Data =========', value = nil})
 
-        
+
 
         if not Config.UsePersonalWeapons then
             if not PlayerCaptureInf.Weapon then PlayerCaptureInf.Weapon = {'WEAPON_CARBINERIFLE'} end
@@ -799,50 +773,45 @@ function ZoneSelectorMenu()
     end)
 end
 
-
-
-
-
 function SpawnInCapture()
     ShowUi(true)
     ESX.UI.Menu.CloseAll()
     local PlayerPed = PlayerPedId()
     TriggerServerEvent("Violet-CaptureSystem:PlayerEnterZone",PlayerCaptureInf.InCapture)
-    -- Prepare To Landing
+
     PlayerCaptureInf.OnGround = false
     PlayerCaptureInf.InMenu = false
     PlayerCaptureInf.Alive = true
-    -- Markers
+
     HandleMarkers()
-    -- Give Parchute and weapons
+
     if not Config.UsePersonalWeapons then
         if not PlayerCaptureInf.Weapon then PlayerCaptureInf.Weapon = {'WEAPON_CARBINERIFLE'} end
         SetCanPedEquipAllWeapons(PlayerPed, false)
-		
+
         for _, weapon in ipairs(PlayerCaptureInf.Weapon) do
             GiveWeaponToPed(PlayerPed, GetHashKey(weapon), 250, false, true)
             SetCanPedSelectWeapon(PlayerPed, GetHashKey(weapon), true)
         end
     end
     GiveWeaponToPed(PlayerPedId(), GetHashKey("GADGET_PARACHUTE"), 1, false, true)
-    -- Player Ped
+
 
     TriggerEvent('es_admin:freezePlayer', false)
     SetEntityVisible(PlayerPed, true, false)
     TpRandomOutCaptureCoord()
-    -- ====================================================================================================================================
-    -- Heal & Armor
+
+
     TriggerEvent('esx_status:set', 'hunger', 1000000)
 	TriggerEvent('esx_status:set', 'thirst', 1000000)
 	SetEntityHealth(PlayerPed, GetEntityMaxHealth(PlayerPed))
-    SetPedArmour(PlayerPed, PlayerCaptureInf.Armor) 
-    -- ====================================================================================================================================
-    
-    -- Need Functions
+    SetPedArmour(PlayerPed, PlayerCaptureInf.Armor)
+
+
+
     DeathLoop()
     LandingHandel()
 end
-
 
 function LeaveCapture(Voluntary)
     SendNUIMessage({action = "resetUi"})
@@ -875,13 +844,9 @@ function LeaveCapture(Voluntary)
             Group = nil,
             ZoneCoord = nil
         }
-    end 
-    
+    end
+
 end
-
-
-
-
 
 function LandingHandel()
     Citizen.CreateThread(function()
@@ -893,7 +858,7 @@ function LandingHandel()
             local PlayerX, PlayerY, PlayerZ = table.unpack(GetEntityCoords(PlayerPed))
             if #(vector2(PlayerX, PlayerY) - vector2(ZoneX, ZoneY)) <= Config.ZoneSize or PlayerZ <= Config.zToAutoTeleport and not PlayerCaptureInf.OnGround then
                 local newX, newY = GetRandomInCaptureCoord(ZoneX, ZoneY)
-                local zCoord = GetGroundZ(newX, newY) 
+                local zCoord = GetGroundZ(newX, newY)
                 if zCoord == nil then
                     Wait(150)
                     newX, newY = GetRandomInCaptureCoord(ZoneX, ZoneY)
@@ -916,7 +881,6 @@ function GetGroundZ(x, y)
     local zCoord = 0.0
     local found = false
 
-
     for i = 1, 100 do
         Citizen.Wait(2)
         found, zCoord = GetGroundZFor_3dCoord(x, y, 300.0, 0)
@@ -927,9 +891,6 @@ function GetGroundZ(x, y)
 
     return nil
 end
-
-
-
 
 function GetRandomInCaptureCoord(baseX, baseY)
     local angle = math.random() * 2 * math.pi
@@ -959,12 +920,12 @@ end
 
 function ReSpawn()
     if PlayerCaptureInf.InCapture and PlayerCaptureInf.Alive then
-        -- server-side fixes
+
         TriggerServerEvent("Violet-Capture:CaptureMarkerStatus", nil, false)
-        -- ==============================================================
+
 
         PlayerCaptureInf.Capture = nil
-        -- PlayerCaptureInf.ZoneCoord = nil 
+
         PlayerCaptureInf.Alive = false
         PlayerCaptureInf.OnGround = false
         SetEntityVisible(PlayerPedId(), false, false)
@@ -985,7 +946,7 @@ function DeathLoop()
                 if IsEntityAPed(PedKiller) and IsPedAPlayer(PedKiller) then
                     Killer = NetworkGetPlayerIndexFromPed(PedKiller)
                 end
-                
+
                 if Killer ~= nil then
                     if Killer ~= PlayerId() then
                         TriggerServerEvent('Violet-Capture:KillerPoint',GetPlayerServerId(Killer))
@@ -998,13 +959,10 @@ function DeathLoop()
     end)
 end
 
--- Kill Log Manager
--- TriggerClientEvent("Violet-CaptureSystem:ShowKillLog", -1, DamagedPlayer.source, KillerPlayer.source,
--- DamagedPlayer.gang.name, KillerPlayer.gang.name, GetPlayerName(DamagedPlayer.source), GetPlayerName(KillerPlayer.source), ZoneName)
 RegisterNetEvent("Violet-CaptureSystem:ShowKillLog")
 AddEventHandler("Violet-CaptureSystem:ShowKillLog", function(DamagedID, KillerID, DamagedGang, KillerGang, DamagedName, KillerName, ZoneName, KillTime, KillerRank, DamagedRank)
     if not PlayerCaptureInf.InCapture then return end
-    if Config.SplitZonesKillLog and ZoneName ~= PlayerCaptureInf.InCapture then return end 
+    if Config.SplitZonesKillLog and ZoneName ~= PlayerCaptureInf.InCapture then return end
 
     local SelfID = GetPlayerServerId(PlayerId())
     local DamagedTag,KillerTag
@@ -1036,7 +994,6 @@ AddEventHandler("Violet-CaptureSystem:ShowKillLog", function(DamagedID, KillerID
         }
     })
 end)
-
 
 local CapturingThreadActive = false
 local CancelLocalTimer = false
@@ -1093,23 +1050,21 @@ function StartCaptureZoneTimer()
     end)
 end
 
-
-
 function ZoneController()
     Citizen.CreateThread(function()
         local PlayerPed = PlayerPedId()
         Citizen.Wait(1000)
         while PlayerCaptureInf.InCapture and PlayerCaptureInf.Alive and PlayerCaptureInf.OnGround and PlayerCaptureInf.ZoneCoord do
             local Distance = #(GetEntityCoords(PlayerPed) - vector3(PlayerCaptureInf.ZoneCoord.x, PlayerCaptureInf.ZoneCoord.y, PlayerCaptureInf.ZoneCoord.z))
-            -- Out Of Zone Section
+
             if Distance >= Config.ZoneSize and PlayerCaptureInf.OnGround then
                 local Hp = GetEntityHealth(PlayerPed)
-                SetEntityHealth(PlayerPed, Hp - Config.OutOfZoneDamage)  
-                ShakeGameplayCam("SMALL_EXPLOSION_SHAKE", 0.1) 
+                SetEntityHealth(PlayerPed, Hp - Config.OutOfZoneDamage)
+                ShakeGameplayCam("SMALL_EXPLOSION_SHAKE", 0.1)
             end
-            -- Capture Zone Section
+
             if Distance <= 5 then
-                -- In Capture Marker
+
                 if not PlayerCaptureInf.IsOnMarker then
                     PlayerCaptureInf.IsOnMarker = true
                     TriggerServerEvent("Violet-Capture:CaptureMarkerStatus", PlayerCaptureInf.InCapture, true)
@@ -1126,20 +1081,15 @@ function ZoneController()
     end)
 end
 
-
-
 RegisterNetEvent("Violet-Capture:LeaveCapture")
 AddEventHandler("Violet-Capture:LeaveCapture", function(Voluntary)
     LeaveCapture(Voluntary)
 end)
--- =========================================================================================================================
 
--- Admin Config Command 
 RegisterNetEvent("Violet-Capture:OpenAdminMenu")
 AddEventHandler("Violet-Capture:OpenAdminMenu", function()
     GotoAdminMenu()
 end)
-
 
 function GotoAdminMenu()
     ESX.TriggerServerCallback('Violet-Capture:GetInfo', function(CaptureInfo)
@@ -1393,7 +1343,6 @@ AddEventHandler("Violet-CaptureSystem:TpPlayer",function(x,y,z)
     SetEntityCoords(player, x, y, z, false, false, false, true)
 end)
 
-
 RegisterNetEvent("Violet-CaptureSystem:ShowMessage")
 AddEventHandler("Violet-CaptureSystem:ShowMessage",function(text,time)
     if PlayerCaptureInf.InCapture then
@@ -1476,14 +1425,11 @@ function OpenWeaponGroupMenu()
     end)
 end
 
-
 RegisterNetEvent('Violet-CaptureSystem:ReceiveGroup')
 AddEventHandler('Violet-CaptureSystem:ReceiveGroup',function(group)
     PlayerCaptureInf.Group = group
 end)
--- ============================================================================
--- Spectator Mode (isolated - free camera only, never spawns/kills/scores anything)
--- ============================================================================
+
 if Config.EnableSpectate then
     local SpectateActive = false
     local SpectateCam = nil
@@ -1540,9 +1486,9 @@ if Config.EnableSpectate then
             while SpectateActive do
                 Citizen.Wait(0)
                 DisableAllControlActions(0)
-                EnableControlAction(0, 1, true)   -- LookLeftRight
-                EnableControlAction(0, 2, true)   -- LookUpDown
-                EnableControlAction(0, 200, true) -- ESC
+                EnableControlAction(0, 1, true)
+                EnableControlAction(0, 2, true)
+                EnableControlAction(0, 200, true)
 
                 if IsControlJustPressed(0, 200) then
                     ExecuteCommand(Config.SpectateLeaveCommand)
@@ -1557,15 +1503,15 @@ if Config.EnableSpectate then
 
                 local camCoord = GetCamCoord(SpectateCam)
                 local speed = Config.SpectateSpeed
-                if IsControlPressed(0, 21) then speed = speed * 3.0 end -- sprint
+                if IsControlPressed(0, 21) then speed = speed * 3.0 end
 
                 local forward, right, up = 0.0, 0.0, 0.0
-                if IsControlPressed(0, 32) then forward = forward + speed end -- W
-                if IsControlPressed(0, 33) then forward = forward - speed end -- S
-                if IsControlPressed(0, 34) then right = right - speed end -- A
-                if IsControlPressed(0, 35) then right = right + speed end -- D
-                if IsControlPressed(0, 22) then up = up + speed end -- SPACE
-                if IsControlPressed(0, 36) then up = up - speed end -- CTRL
+                if IsControlPressed(0, 32) then forward = forward + speed end
+                if IsControlPressed(0, 33) then forward = forward - speed end
+                if IsControlPressed(0, 34) then right = right - speed end
+                if IsControlPressed(0, 35) then right = right + speed end
+                if IsControlPressed(0, 22) then up = up + speed end
+                if IsControlPressed(0, 36) then up = up - speed end
 
                 if forward ~= 0.0 or right ~= 0.0 or up ~= 0.0 then
                     local rad = math.rad(SpectateHeading)
@@ -1599,7 +1545,7 @@ if Config.EnableSpectate then
         Notify("Spectator Mode OFF.", 'info')
     end, false)
 
-    -- If the round ends while someone is spectating, pull them out cleanly
+
     AddEventHandler("Violet-Capture:LeaveCapture", function()
         if SpectateActive then
             ExecuteCommand(Config.SpectateLeaveCommand)

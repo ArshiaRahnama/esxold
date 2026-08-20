@@ -8,7 +8,7 @@ Locales['es'] = {
   ['statepd_wear'] = 'State Police outfit',
   ['specops_wear'] = 'Spec OPS outfit',
   ['open_cloackroom'] = 'press ~INPUT_CONTEXT~ to change',
-  -- Armory
+
   ['get_weapon'] = 'Bardashtane Aslahe',
   ['get_armor'] = 'Poshidan Jelighe Price: $8,000',
   ['put_weapon'] = 'Gozashtane Aslahe',
@@ -17,16 +17,16 @@ Locales['es'] = {
   ['put_stock']   = 'Gozashtane Vasile',
   ['armory'] = 'armory',
   ['open_armory'] = 'press ~INPUT_CONTEXT~ to access the armory',
-  --stock
+
   ['gang_stock'] = 'Sandoghe Family',
-  -- Vehicles
+
   ['vehicle_menu'] = 'vehicle',
   ['vehicle_out'] = 'there is already a car out of the garage',
   ['vehicle_spawner'] = 'press ~INPUT_CONTEXT~ to take out a vehicle',
   ['boat_spawner'] = 'press ~INPUT_CONTEXT~ to take out a vehicle',
   ['store_vehicle'] = 'press ~INPUT_CONTEXT~ to store the vehicle',
   ['service_max'] = 'Max officers in service: ',
-  -- Action Menu
+
   ['citizen_interaction'] = 'citizen Interaction',
   ['vehicle_interaction'] = 'vehicle Interaction',
   ['object_spawner'] = 'object Spawner',
@@ -81,10 +81,10 @@ Locales['es'] = {
   ['exercise'] = 'Im tired',
   ['cancel_emote'] = 'Cancel animation',
   ['emotecanceled'] = 'Animation stoped',
-  -- ID Card Menu
+
   ['name'] = 'name : ',
   ['bac'] = 'bAC : ',
-  -- Body Search Menu
+
   ['confiscate_dirty'] = 'confiscate dirty money: $',
   ['guns_label'] = '--- Guns ---',
   ['confiscate'] = 'confiscate ',
@@ -96,16 +96,16 @@ Locales['es'] = {
   ['average_offense'] = 'average Offense',
   ['major_offense'] = 'major Offense',
   ['fine_total'] = 'fine: ',
-  -- Vehicle Info Menu
+
   ['plate'] = 'Plate: ',
   ['owner_unknown'] = 'owner: Unknown',
   ['owner'] = 'owner: ',
-  -- Weapons Menus
+
   ['get_weapon_menu'] = 'armory - Take Weapon',
   ['put_weapon_menu'] = 'armory - Put Weapon',
   ['buy_weapon_menu'] = 'armory - Buy Guns',
   ['not_enough_money'] = 'you do not have enough money',
-  -- Boss Menu
+
   ['take_company_money'] = 'withdraw Company Money',
   ['deposit_money'] = 'deposit Money',
   ['amount_of_withdrawal'] = 'amount of Withdrawal',
@@ -118,10 +118,10 @@ Locales['es'] = {
   ['quantity'] = 'quantity',
   ['inventory'] = 'inventory',
   ['police_stock'] = 'Police Stock',
-  -- Misc
+
   ['remove_object'] = 'press ~INPUT_CONTEXT~ to delete the object',
   ['map_blip'] = 'police Station',
-  -- Notifications
+
   ['from'] = '~s~ from ~b~',
   ['you_have_confinv'] = 'you have confiscated ~y~x',
   ['confinv'] = '~s~ confiscated from you ~y~x',
@@ -130,7 +130,7 @@ Locales['es'] = {
   ['you_have_confweapon'] = 'you have confiscated ~y~x1 ',
   ['confweapon'] = '~s~ confiscated from you ~y~x1 ',
   ['alert_police'] = 'alert police',
-  -- Authorized Vehicles
+
   ['police'] = 'patrol Vehicle 1',
   ['police2'] = 'patrol Vehicle 2',
   ['police3'] = 'patrol Vehicle 3',

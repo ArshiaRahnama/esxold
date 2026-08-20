@@ -14,7 +14,7 @@ client_scripts {
 server_scripts {
 	"@mysql-async/lib/MySQL.lua",
     'Server/*.lua'
-    -- "@mysql-async/lib/MySQL.lua"
+
 }
 
 shared_scripts {
@@ -30,5 +30,5 @@ files {
     'html/img/*.png',
     'html/img/*.jpg',
     'html/img/*.gif',
-    -- 'html/_sounds/*.mp3',
+
 }

@@ -1,5 +1,5 @@
 Locales['br'] = {
-  -- Global menus
+
   ['cloakroom']                 = 'vestiário',
   ['cloak_change']              = 'pressione ~INPUT_PICKUP~ mudar de roupa.',
   ['citizen_wear']              = 'retirar uniforme',
@@ -25,7 +25,7 @@ Locales['br'] = {
   ['public_enter']              = 'pressione ~INPUT_PICKUP~ para entrar no prédio.',
   ['public_leave']              = 'pressione ~INPUT_PICKUP~ para ir à entrada do edifício.',
 
-  -- Lumber Jack job
+
   ['lj_locker_room']            = 'vestiario Lenhador',
   ['lj_mapblip']                = 'pilha de madeira',
   ['lj_wood']                   = 'madeira',
@@ -38,7 +38,7 @@ Locales['br'] = {
   ['lj_pick_boards']            = 'pressione ~INPUT_PICKUP~ para recuperar tábuas.',
   ['lj_deliver_button']         = 'pressione ~INPUT_PICKUP~ para entregar as tábuas.',
 
-  -- Fisherman
+
   ['fm_fish_locker']            = 'vestiario Pescador',
   ['fm_fish']                   = 'peixe',
   ['fm_fish_area']              = 'area de pesca',
@@ -50,7 +50,7 @@ Locales['br'] = {
   ['fm_boat_return_button']     = 'Pressione ~INPUT_PICKUP~ para devolver o barco.',
   ['fm_deliver_fish']           = 'pressione ~INPUT_PICKUP~ para entregar os peixes.',
 
-  -- Fuel
+
   ['f_oil_refiner']             = 'vestiario Refinador',
   ['f_drill_oil']               = 'broca de óleo',
   ['f_fuel']                    = 'óleo',
@@ -63,7 +63,7 @@ Locales['br'] = {
   ['f_deliver_gas']             = 'entregar Gasolina',
   ['f_deliver_gas_button']      = 'pressione ~INPUT_PICKUP~ para entregar a gasolina.',
 
-  -- Miner
+
   ['m_miner_locker']            = 'vestiario Minerador',
   ['m_rock']                    = 'pedregulho',
   ['m_pickrocks']               = 'pressione ~INPUT_PICKUP~ para obter pedras.',
@@ -84,11 +84,11 @@ Locales['br'] = {
   ['m_deliver_diamond']         = 'pressione ~INPUT_PICKUP~ para entregar diamantes.',
   ['m_melt_button']             = 'pressione ~INPUT_PICKUP~ para derreter as pedras.',
 
-  -- Reporter
+
   ['reporter_name']             = 'globo News',
   ['reporter_garage']           = 'pressione ~INPUT_PICKUP~ para descer à garagem.',
 
-  -- Slaughterer
+
   ['s_slaughter_locker']        = 'vestiario Abatedor',
   ['s_hen']                     = 'galinheiro',
   ['s_alive_chicken']           = 'galinha viva',
@@ -102,7 +102,7 @@ Locales['br'] = {
   ['s_unpackaged_button']       = 'pressione ~INPUT_PICKUP~ para colocar o frango em uma bandeja.',
   ['s_deliver']                 = 'pressione ~INPUT_PICKUP~ para entregar as bandejas de frango.',
 
-  -- Dress Designer
+
   ['dd_dress_locker']           = 'vestiario Costureiro',
   ['dd_wool']                   = 'lã',
   ['dd_pickup']                 = 'pressione ~INPUT_PICKUP~ para obter lã.',

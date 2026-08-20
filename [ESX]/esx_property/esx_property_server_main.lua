@@ -14,7 +14,6 @@ RegisterServerEvent('esx_property:getstorage')
 AddEventHandler('esx_property:getstorage', function(datastorage)
 	Data_Storage = datastorage
 
-
 end)
 
 function SetPropertyOwned(name, price, rented, owner, storage_data)
@@ -66,15 +65,15 @@ MySQL.ready(function()
 			local isGateway = nil
 			local roomMenu  = nil
 			local storage_data = nil
-			-- local homeid    = {}
+
 
 			if properties[i].entering ~= nil then
 				entering = json.decode(properties[i].entering)
 			end
 
-			-- if properties[i].apid ~= nil then
-			-- 	homeid = properties[i].apid
-			-- end
+
+
+
 
 			if properties[i].exit ~= nil then
 				exit = json.decode(properties[i].exit)
@@ -113,7 +112,7 @@ MySQL.ready(function()
 			table.insert(Config.Properties, {
 				name      = properties[i].name,
 				label     = properties[i].label,
-				-- homeid    = properties[i].apid,
+
 				entering  = entering,
 				exit      = exit,
 				inside    = inside,
@@ -127,7 +126,7 @@ MySQL.ready(function()
 				price     = properties[i].price,
 				storage_data = properties[i].storage_data
 			})
-			-- print(homeid)
+
 		end
 
 		TriggerClientEvent('esx_property:sendProperties', -1, Config.Properties)
@@ -230,10 +229,10 @@ AddEventHandler('esx_property:getItem', function(owner, type, item, count)
 		TriggerEvent('esx_addoninventory:getInventory', Data_Storage, xPlayerOwner.identifier, function(inventory)
 			local inventoryItem = inventory.getItem(item)
 
-			-- is there enough in the property?
+
 			if count > 0 and inventoryItem.count >= count then
-			
-				-- can the player carry the said amount of x item?
+
+
 				if sourceItem.limit ~= -1 and (sourceItem.count + count) > sourceItem.limit then
 					TriggerClientEvent('esx:showNotification', _source, _U('player_cannot_hold'))
 				else
@@ -285,7 +284,6 @@ AddEventHandler('esx_property:getItem', function(owner, type, item, count)
 			local ok		   = false
 			local components   = nil
 
-
 			for i=1, #storeWeapons, 1 do
 				if storeWeapons[i].name == item then
 					ok = true
@@ -299,7 +297,7 @@ AddEventHandler('esx_property:getItem', function(owner, type, item, count)
 			if ok then
 				store.set('weapons', storeWeapons)
 				xPlayer.addWeapon(weaponName, ammo)
-				for k,v in pairs(components) do 
+				for k,v in pairs(components) do
 					xPlayer.addWeaponComponent(weaponName, v)
 				end
 				local weapon2Array = {
@@ -350,15 +348,15 @@ AddEventHandler('esx_property:putItem', function(owner, type, item, count)
 
 		if playerItemCount >= count and count > 0 then
 
-			local isvorod = false 
+			local isvorod = false
 			if string.sub(playerItem.name, 1, 7) == "CarKey|" and playerItemCount ~= 0 then
-				
-				isvorod = false 
+
+				isvorod = false
 			else
-				isvorod = true 
+				isvorod = true
 			end
 
-			if isvorod then 
+			if isvorod then
 				TriggerEvent('esx_addoninventory:getInventory', Data_Storage, xPlayerOwner.identifier, function(inventory)
 					xPlayer.removeInventoryItem(item, count)
 					inventory.addItem(item, count)
@@ -405,23 +403,22 @@ AddEventHandler('esx_property:putItem', function(owner, type, item, count)
 		if weapo then
 			TriggerEvent('esx_datastore:getDataStore', Data_Storage, xPlayerOwner.identifier, function(store)
 				local storeWeapons = store.get('weapons') or {}
-			
-				
 
-			
+
+
+
 				table.insert(storeWeapons, {
 					name 	   = item,
 					ammo   	   = weapo.ammo,
 					components = weapo.components
 				})
 
-
 				store.set('weapons', storeWeapons)
 				xPlayer.removeWeapon(item)
-			
 
-				
-			
+
+
+
 				local Item2Array = {
 					{
 					  ["color"] = "0059ff",
@@ -569,15 +566,15 @@ function PayRent(d, h, m)
 		for i=1, #result, 1 do
 			local xPlayer = ESX.GetPlayerFromIdentifier(result[i].owner)
 
-			-- message player if connected
+
 			if xPlayer then
 				xPlayer.removeBank(result[i].price)
 				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_rent', ESX.Math.GroupDigits(result[i].price)))
-			-- else -- pay rent either way
-			-- 	MySQL.Sync.execute('UPDATE users SET bank = bank - @bank WHERE identifier = @identifier', {
-			-- 		['@bank']       = result[i].price,
-			-- 		['@identifier'] = result[i].owner
-			-- 	})
+
+
+
+
+
 			end
 		end
 	end)
@@ -585,9 +582,5 @@ end
 
 TriggerEvent('cron:runAt', 22, 0, PayRent)
 
-
-
-
-	 
 
 

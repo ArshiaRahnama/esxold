@@ -1,9 +1,9 @@
 ESX = nil
 
-local markerCoordsA = vector3(-801.547, -1251.81, 7.3374) -- Station 1 Shar
-local markerCoordsB = vector3(1835.664, 3671.769, 34.276) -- Station 2 Sandy
-local markerCoordsC = vector3(-256.404, 6334.413, 32.427) -- Station 3 Paleto
-local markerCoordsD = vector3(1736.338, 3641.375, 35.640) -- Administatior
+local markerCoordsA = vector3(-801.547, -1251.81, 7.3374)
+local markerCoordsB = vector3(1835.664, 3671.769, 34.276)
+local markerCoordsC = vector3(-256.404, 6334.413, 32.427)
+local markerCoordsD = vector3(1736.338, 3641.375, 35.640)
 
 local function isPlayerAllowed()
     local playerData = ESX.GetPlayerData()
@@ -20,8 +20,8 @@ Citizen.CreateThread(function()
         Citizen.Wait(0)
     end
 
-    while ESX.GetPlayerData().job ~= nil do 
-        Wait(10)    
+    while ESX.GetPlayerData().job ~= nil do
+        Wait(10)
     end
 
     PlayerData = ESX.GetPlayerData()
@@ -35,29 +35,28 @@ Citizen.CreateThread(function()
         local playerPed = PlayerPedId()
         local playerCoords = GetEntityCoords(playerPed)
 
-        if isPlayerAllowed() then 
-        
+        if isPlayerAllowed() then
+
             if #(playerCoords - markerCoordsA) < 10.0 then
                 DrawMarker(6, markerCoordsA.x, markerCoordsA.y, markerCoordsA.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7, 0.7, 0.7, 0, 255, 0, 100, false, true, 2, nil, nil, false)
 
                 if #(playerCoords - markerCoordsA) < 1.5 then
                     ESX.ShowHelpNotification("~INPUT_CONTEXT~ Brai Teleport")
-                    
+
                     if IsControlJustReleased(0, 38) then
-                        OpenTeleportMenu("A") 
+                        OpenTeleportMenu("A")
                     end
                 end
             end
-
 
             if #(playerCoords - markerCoordsB) < 10.0 then
                 DrawMarker(6, markerCoordsB.x, markerCoordsB.y, markerCoordsB.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7, 0.7, 0.7, 0, 255, 0, 100, false, true, 2, nil, nil, false)
 
                 if #(playerCoords - markerCoordsB) < 1.5 then
                     ESX.ShowHelpNotification("~INPUT_CONTEXT~ Brai Teleport")
-                    
+
                     if IsControlJustReleased(0, 38) then
-                        OpenTeleportMenu("B") 
+                        OpenTeleportMenu("B")
                     end
                 end
             end
@@ -67,9 +66,9 @@ Citizen.CreateThread(function()
 
                 if #(playerCoords - markerCoordsC) < 1.5 then
                     ESX.ShowHelpNotification("~INPUT_CONTEXT~ Brai Teleport")
-                    
+
                     if IsControlJustReleased(0, 38) then
-                        OpenTeleportMenu("C") 
+                        OpenTeleportMenu("C")
                     end
                 end
             end
@@ -79,9 +78,9 @@ Citizen.CreateThread(function()
 
                 if #(playerCoords - markerCoordsD) < 1.5 then
                     ESX.ShowHelpNotification("~INPUT_CONTEXT~ Brai Teleport")
-                    
+
                     if IsControlJustReleased(0, 38) then
-                        OpenTeleportMenu("D") 
+                        OpenTeleportMenu("D")
                     end
                 end
             end
@@ -103,9 +102,9 @@ function OpenTeleportMenu(currentLocation)
     if currentLocation ~= "C" then
         table.insert(elements, {label = "Station 3 Paleto", value = "toC"})
     end
-    -- if currentLocation ~= "D" then
-    --     table.insert(elements, {label = "Administatior", value = "toD"})
-    -- end
+
+
+
     if currentLocation ~= "A" then
         table.insert(elements, {label = "Station 1 Shar", value = "toA"})
     end
@@ -116,11 +115,11 @@ function OpenTeleportMenu(currentLocation)
         elements = elements
     }, function(data, menu)
         menu.close()
-        
-        -- نمایش نوار پیشرفت با استفاده از mythic_progbar
+
+
         TriggerEvent('mythic_progbar:client:progress', {
             name = "teleport_progress",
-            duration = 5000, -- مدت زمان به میلی‌ثانیه (5 ثانیه)
+            duration = 5000,
             label = "",
             useWhileDead = false,
             canCancel = true,
@@ -136,7 +135,7 @@ function OpenTeleportMenu(currentLocation)
             },
         }, function(status)
             if not status then
-                -- انتقال بازیکن به مکان انتخاب شده بعد از 5 ثانیه
+
                 if data.current.value == "toB" then
                     TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, { teleport = true, speed = true })
                     SetEntityCoords(PlayerPedId(), markerCoordsB.x, markerCoordsB.y, markerCoordsB.z, false, false, false, true)
@@ -153,9 +152,7 @@ function OpenTeleportMenu(currentLocation)
             end
         end)
     end, function(data, menu)
-        menu.close() -- بستن منو در صورت کنسل شدن
+        menu.close()
     end)
 end
-
-
 

@@ -1,8 +1,8 @@
--- Global variables
+
 Global = {
     currentInteriorId = 0,
 
-    -- The current interior is set to True by 'interiorIdObserver'
+
     Online = {
         isInsideApartmentHi1 = false,
         isInsideApartmentHi2 = false,
@@ -34,12 +34,11 @@ Global = {
         isInsideApartment4 = false,
         isInsideApartment5 = false,
         isInsideApartment6 = false
-        
+
     },
 
 
-    -- Set all interiors variables to false
-    -- The loop inside 'interiorIdObserver' will set them to true
+
     ResetInteriorVariables = function()
         for _, parentKey in pairs{"Biker", "FinanceOffices", "HighLife"} do
             local t = Global[parentKey]
@@ -49,9 +48,6 @@ Global = {
         end
     end
 }
-
-
-
 
 exports('GVariables', function()
     return Global
@@ -65,7 +61,6 @@ exports('GetPedheadshotTexture', function(ped)
     return GetPedheadshotTexture(ped)
 end)
 
--- Load or remove IPL(s)
 function EnableIpl(ipl, activate)
     if IsTable(ipl) then
         for key, value in pairs(ipl) do
@@ -80,7 +75,6 @@ function EnableIpl(ipl, activate)
     end
 end
 
--- Enable or disable the specified props in an interior
 function SetIplPropState(interiorId, props, state, refresh)
     if refresh == nil then refresh = false end
     if IsTable(interiorId) then
@@ -225,11 +219,10 @@ function GetPedheadshotTexture(ped)
     return textureDict
 end
 
--- Check if a variable is a table
 function IsTable(T)
     return type(T) == 'table'
 end
--- Return the number of elements of the table
+
 function Tablelength(T)
     local count = 0
     for _ in pairs(T) do count = count + 1 end

@@ -1,18 +1,16 @@
 fx_version "bodacious"
 game "gta5"
 
-client_script('client/client.lua') --your NUI Lua File
+client_script('client/client.lua')
 server_script "@mysql-async/lib/MySQL.lua"
 server_script 'server.lua'
-ui_page('client/html/UI.html') --THIS IS IMPORTENT
+ui_page('client/html/UI.html')
 
 files {
     'client/html/UI.html',
     'client/html/style.css',
 	'client/html/img/*.png'
 
-
 }
 
--- ox_target حالا برای تعامل با خودپردازها لازمه (به‌جای زدن E)
 dependency 'ox_target'

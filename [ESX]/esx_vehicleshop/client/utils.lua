@@ -3,7 +3,6 @@ local Charset = {}
 
 math.randomseed(GetGameTimer() + GetPlayerServerId(PlayerId()))
 
-
 for i = 48,  57 do table.insert(NumberCharset, string.char(i)) end
 
 for i = 65,  90 do table.insert(Charset, string.char(i)) end
@@ -18,13 +17,13 @@ function GeneratePlate()
 			generatedPlate = string.upper(GetRandomLetter(Config.PlateLetters) .. GetRandomNumber(Config.PlateNumbers) .. GetRandomLetter(Config.PlateLetters) .. GetRandomNumber(Config.PlateNumbers) .. GetRandomLetter(Config.PlateLetters) .. GetRandomNumber(Config.PlateNumbers) .. GetRandomNumber(Config.PlateNumbers) .. GetRandomLetter(Config.PlateLetters))
 
 		else
-	
+
 			generatedPlate = string.upper(GetRandomLetter(Config.PlateLetters) .. GetRandomNumber(Config.PlateNumbers) .. GetRandomLetter(Config.PlateLetters) .. GetRandomNumber(Config.PlateNumbers) .. GetRandomLetter(Config.PlateLetters) .. GetRandomNumber(Config.PlateNumbers) .. GetRandomNumber(Config.PlateNumbers) .. GetRandomLetter(Config.PlateLetters))
 		end
 
-		-- Blocks until the server actually confirms THIS exact plate is free (old code could return
-		-- a plate that was never checked, because the async callback could resolve after the loop
-		-- had already moved on to generating a different candidate).
+
+
+
 		if not IsPlateTaken(generatedPlate) then
 			break
 		end
@@ -32,7 +31,6 @@ function GeneratePlate()
 	return generatedPlate
 end
 
--- mixing async with sync tasks
 function IsPlateTaken(plate)
 	local callback = 'waiting'
 

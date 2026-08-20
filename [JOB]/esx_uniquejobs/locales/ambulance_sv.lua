@@ -1,10 +1,10 @@
 Locales['sv'] = Locales['sv'] or {}
 for k, v in pairs({
-  -- Cloakroom
+
   ['cloakroom'] = 'omklädnignsrum',
   ['ems_clothes_civil'] = 'civilkläder',
   ['ems_clothes_ems'] = 'ambulanskläder',
-  -- Vehicles
+
   ['ambulance'] = 'ambulance',
   ['helicopter_prompt'] = 'press ~INPUT_CONTEXT~ to access the ~y~Helicopter Actions~s~.',
   ['helicopter_buy'] = 'helicopter shop',
@@ -36,7 +36,7 @@ for k, v in pairs({
   ['vehicleshop_awaiting_model'] = 'the vehicle is currently ~g~DOWNLOADING & LOADING~s~ please wait',
   ['confirm_no'] = 'no',
   ['confirm_yes'] = 'yes',
-  -- Action Menu
+
   ['hospital'] = 'sjukhus',
   ['revive_inprogress'] = 'en återupplivning har börjats',
   ['revive_complete'] = 'du har återupplivat ~y~%s~s~, bra jobbat!',
@@ -47,9 +47,9 @@ for k, v in pairs({
   ['no_vehicles'] = 'det finns inget fordon i närheten!',
   ['player_not_unconscious'] = 'spelaren är inte medvetslös!',
   ['player_not_conscious'] = 'spelaren är inte vid medvetande!',
-  -- Boss Menu
+
   ['boss_actions'] = 'chef meny',
-  -- Misc
+
   ['invalid_amount'] = '~r~Ogiltig mängd',
   ['actions_prompt'] = 'tryck ~INPUT_CONTEXT~ för att öppna menyn.',
   ['deposit_amount'] = 'mängd att sätta in',
@@ -61,16 +61,16 @@ for k, v in pairs({
   ['medikit'] = 'medicinkit',
   ['bandage'] = 'bandage',
   ['max_item'] = 'du har redan tillräckligt mycket på dig.',
-  -- F6 Menu
+
   ['ems_menu'] = 'ambulansmeny',
   ['ems_menu_title'] = 'ambulansmeny',
   ['ems_menu_revive'] = 'återuppliva spelare',
   ['ems_menu_putincar'] = 'sätt i fordon',
   ['ems_menu_small'] = 'behandla mindre skador',
   ['ems_menu_big'] = 'behandla svåra skador',
-  -- Phone
+
   ['alert_ambulance'] = 'ambulanssamtal',
-  -- Death
+
   ['respawn_available_in'] = 'respawn tillgänglig om ~b~%s:%s~s~',
   ['respawn_bleedout_in'] = 'du kommer att blöda ut om ~b~%s:%s~s~\n',
   ['respawn_bleedout_prompt'] = 'håll [~b~E~s~] för att respawna',
@@ -80,9 +80,9 @@ for k, v in pairs({
   ['distress_sent'] = 'nödsignal har skickats till samtliga enheter!',
   ['distress_message'] = 'läkarvård krävs: medvetslös medborgare!',
   ['combatlog_message'] = 'du har force-respawnats på grund av att du lämnat servern medans du var död',
-  -- revive
+
   ['revive_help'] = 'återuppliva en spelare',
-  -- Item
+
   ['used_medikit'] = 'du har använt ~y~1x~s~ ~b~Medecinkit~s~',
   ['used_bandage'] = 'du har använt ~y~1x~s~ ~b~Bandage~s~',
   ['not_enough_medikit'] = 'du har inget ~b~Medecinkit~s~.',

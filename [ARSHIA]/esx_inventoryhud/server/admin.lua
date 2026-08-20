@@ -11,9 +11,6 @@ local function hasAdminPermission(src)
     return IsPlayerAceAllowed(src, Config.AdminInventoryAce or 'inventory.admin')
 end
 
--- modules/admin calls: ESX.TriggerServerEvent('inventory:admin:get', target, data.data)
--- meaning: take `data.data` (an item/weapon the admin dropped INTO the
--- target's panel while it was open) FROM the target and GIVE it to the admin.
 RegisterServerEvent('inventory:admin:get')
 AddEventHandler('inventory:admin:get', function(targetId, data)
     local src = source
@@ -38,9 +35,6 @@ AddEventHandler('inventory:admin:get', function(targetId, data)
     xPlayer.addInventoryItem(data.name, count)
 end)
 
--- modules/admin calls: ESX.TriggerServerEvent('inventory:admin:put', target, data.data)
--- meaning: the admin dropped `data.data` FROM their own inventory INTO
--- the target's panel -- give it to the target.
 RegisterServerEvent('inventory:admin:put')
 AddEventHandler('inventory:admin:put', function(targetId, data)
     local src = source
@@ -65,9 +59,6 @@ AddEventHandler('inventory:admin:put', function(targetId, data)
     xTarget.addInventoryItem(data.name, count)
 end)
 
--- modules/admin calls: ESX.TriggerServerCallback('inventory:getOfflinePlayerInventory', cb, target)
--- `target` there is whatever identifier the admin UI passed in -- if the
--- player is online we just use their live data, otherwise read from `users`.
 ESX.RegisterServerCallback('inventory:getOfflinePlayerInventory', function(source, cb, target)
     if not hasAdminPermission(source) then
         cb({ items = {}, weapons = {} })

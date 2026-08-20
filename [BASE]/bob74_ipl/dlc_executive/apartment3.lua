@@ -1,5 +1,4 @@
 
--- Apartment 3: -787.78050000 334.92320000 186.11340000
 
 exports('GetExecApartment3Object', function()
 	return ExecApartment3
@@ -62,7 +61,7 @@ ExecApartment3 = {
         Clear = function(refresh)
             SetIplPropState(ExecApartment3.currentInteriorId, {ExecApartment3.Smoke.stage1, ExecApartment3.Smoke.stage2, ExecApartment3.Smoke.stage3}, false, refresh)
         end
-    }, 
+    },
     LoadDefault = function()
         ExecApartment3.Style.Set(ExecApartment3.Style.Theme.sharp, true)
         ExecApartment3.Strip.Enable({ExecApartment3.Strip.A, ExecApartment3.Strip.B, ExecApartment3.Strip.C}, false)

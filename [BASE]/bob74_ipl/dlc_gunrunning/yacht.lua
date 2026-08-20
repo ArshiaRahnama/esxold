@@ -1,5 +1,4 @@
 
--- Gunrunning Yacht: -1363.724, 6734.108, 2.44598
 
 exports('GetGunrunningYachtObject', function()
     return GunrunningYacht
@@ -29,7 +28,7 @@ GunrunningYacht = {
             local handle = GetClosestObjectOfType(-1369.0, 6736.0, 5.40, 5.0, GunrunningYacht.Water.modelHash, false, false, false)
 
             if (state) then
-                -- Enable
+
                 if (handle == 0) then
                     RequestModel(GunrunningYacht.Water.modelHash)
                     while not HasModelLoaded(GunrunningYacht.Water.modelHash) do
@@ -40,7 +39,7 @@ GunrunningYacht = {
                     SetEntityAsMissionEntity(water, false, false)
                 end
             else
-                -- Disable
+
                 if (handle ~= 0) then
                     SetEntityAsMissionEntity(handle, false, false)
                     DeleteEntity(handle)

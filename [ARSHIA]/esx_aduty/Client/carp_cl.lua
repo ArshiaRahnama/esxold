@@ -1,13 +1,4 @@
--- [SECURITY] This file used to fetch a Lua code string from the server at
--- resource start and execute it on the client via pcall(load(Code)) - an
--- anti-piracy "anti-dump" trap that also meant the server could push and run
--- ANY code on every connected client at any time (a remote code execution
--- channel). That mechanism has been removed.
---
--- The functions it used to load (SpawnVehicle, visibility, and a keybind
--- table) are now defined here directly as normal static code, so nothing
--- that depended on them (client.lua calls visibility() and relies on the
--- "Mid_Admin:SpawnVehicle" event for the /carp admin command) is broken.
+
 
 local keybinds = {
     ["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166,
@@ -69,10 +60,10 @@ function visibility()
                 Citizen.Wait(0)
                 SetEntityVisible(GetPlayerPed(-1), true, false)
             else
-                -- بهینه‌سازی: این تابع فقط یک‌بار در ابتدای ریسورس صدا زده می‌شه
-                -- (نه هربار که وضعیت visibilityEnabled عوض می‌شه)، پس حلقه همیشه در
-                -- حال اجراست حتی وقتی visibilityEnabled خاموشه. وقتی خاموشه، دیگه
-                -- نیازی به چک هر فریم نیست.
+
+
+
+
                 Citizen.Wait(500)
             end
         end

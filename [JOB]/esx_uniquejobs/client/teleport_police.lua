@@ -1,12 +1,10 @@
---------------------------------------------- Police and Sheriff -------------------------------------------
 
 
-local markerCoords1 = vector3(430.7576, -992.294, 31.194) -- Station Mission Row
-local markerCoords2 = vector3(1856.366, 3693.331, 34.286) -- Sandy Shores
-local markerCoords3 = vector3(-448.109, 6018.754, 31.716) -- Paleto
-local markerCoords4 = vector3(-2360.85, 3249.275, 32.810) -- Army
-local markerCoords5 = vector3(624.5064, -18.6185, 82.778) -- Vinewood
-
+local markerCoords1 = vector3(430.7576, -992.294, 31.194)
+local markerCoords2 = vector3(1856.366, 3693.331, 34.286)
+local markerCoords3 = vector3(-448.109, 6018.754, 31.716)
+local markerCoords4 = vector3(-2360.85, 3249.275, 32.810)
+local markerCoords5 = vector3(624.5064, -18.6185, 82.778)
 
 local function isPlayerAllowedPolice()
     local playerData = ESX.GetPlayerData()
@@ -15,7 +13,6 @@ local function isPlayerAllowedPolice()
     end
     return false
 end
-
 
 Citizen.CreateThread(function()
     while true do
@@ -31,7 +28,7 @@ Citizen.CreateThread(function()
 
                 if #(playerCoords - markerCoords1) < 1.5 then
                     ESX.ShowHelpNotification("~INPUT_CONTEXT~ Brai Teleport")
-                    
+
                     if IsControlJustReleased(0, 38) then
                         OpenTeleportMenuPolice("1")
                     end
@@ -43,7 +40,7 @@ Citizen.CreateThread(function()
 
                 if #(playerCoords - markerCoords2) < 1.5 then
                     ESX.ShowHelpNotification("~INPUT_CONTEXT~ Brai Teleport")
-                    
+
                     if IsControlJustReleased(0, 38) then
                         OpenTeleportMenuPolice("2")
                     end
@@ -55,33 +52,31 @@ Citizen.CreateThread(function()
 
                 if #(playerCoords - markerCoords3) < 1.5 then
                     ESX.ShowHelpNotification("~INPUT_CONTEXT~ Brai Teleport")
-                    
+
                     if IsControlJustReleased(0, 38) then
                         OpenTeleportMenuPolice("3")
                     end
                 end
             end
 
-
             if #(playerCoords - markerCoords4) < 10.0 then
                 DrawMarker(6, markerCoords4.x, markerCoords4.y, markerCoords4.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7, 0.7, 0.7, 0, 255, 0, 100, false, true, 2, nil, nil, false)
 
                 if #(playerCoords - markerCoords4) < 1.5 then
                     ESX.ShowHelpNotification("~INPUT_CONTEXT~ Brai Teleport")
-                    
+
                     if IsControlJustReleased(0, 38) then
                         OpenTeleportMenuPolice("4")
                     end
                 end
             end
 
-
             if #(playerCoords - markerCoords5) < 10.0 then
                 DrawMarker(6, markerCoords5.x, markerCoords5.y, markerCoords5.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7, 0.7, 0.7, 0, 255, 0, 100, false, true, 2, nil, nil, false)
 
                 if #(playerCoords - markerCoords5) < 1.5 then
                     ESX.ShowHelpNotification("~INPUT_CONTEXT~ Brai Teleport")
-                    
+
                     if IsControlJustReleased(0, 38) then
                         OpenTeleportMenuPolice("5")
                     end
@@ -121,7 +116,7 @@ function OpenTeleportMenuPolice(currentLocation)
         elements = elements
     }, function(data, menu)
         menu.close()
-        
+
         TriggerEvent('mythic_progbar:client:progress', {
             name = "teleport_progress",
             duration = 5000,
@@ -156,7 +151,7 @@ function OpenTeleportMenuPolice(currentLocation)
                     TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, { teleport = true, speed = true })
                     SetEntityCoords(PlayerPedId(), markerCoords5.x, markerCoords5.y, markerCoords5.z, false, false, false, true)
                 end
-                
+
             end
         end)
     end, function(data, menu)
@@ -164,16 +159,8 @@ function OpenTeleportMenuPolice(currentLocation)
     end)
 end
 
-
-
-
-
-
----------------------------- Heli
-
-local markerCoords1 = vector3(640.8580, 12.25663, 82.791) -- Pain
-local markerCoords2 = vector3(565.6870, 4.959659, 103.23) -- Bala
-
+local markerCoords1 = vector3(640.8580, 12.25663, 82.791)
+local markerCoords2 = vector3(565.6870, 4.959659, 103.23)
 
 local function isPlayerAllowedPoliceheli()
     local playerData = ESX.GetPlayerData()
@@ -182,7 +169,6 @@ local function isPlayerAllowedPoliceheli()
     end
     return false
 end
-
 
 Citizen.CreateThread(function()
     while true do
@@ -198,7 +184,7 @@ Citizen.CreateThread(function()
 
                 if #(playerCoords - markerCoords1) < 1.5 then
                     ESX.ShowHelpNotification("~INPUT_CONTEXT~ Brai Teleport")
-                    
+
                     if IsControlJustReleased(0, 38) then
                         OpenTeleportMenuPoliceheli("1")
                     end
@@ -210,7 +196,7 @@ Citizen.CreateThread(function()
 
                 if #(playerCoords - markerCoords2) < 1.5 then
                     ESX.ShowHelpNotification("~INPUT_CONTEXT~ Brai Teleport")
-                    
+
                     if IsControlJustReleased(0, 38) then
                         OpenTeleportMenuPoliceheli("2")
                     end
@@ -241,7 +227,7 @@ function OpenTeleportMenuPoliceheli(currentLocation)
         elements = elements
     }, function(data, menu)
         menu.close()
-        
+
         TriggerEvent('mythic_progbar:client:progress', {
             name = "teleport_progress",
             duration = 5000,
@@ -267,7 +253,7 @@ function OpenTeleportMenuPoliceheli(currentLocation)
                     TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, { teleport = true, speed = true })
                     SetEntityCoords(PlayerPedId(), markerCoords1.x, markerCoords1.y, markerCoords1.z, false, false, false, true)
                 end
-                
+
             end
         end)
     end, function(data, menu)

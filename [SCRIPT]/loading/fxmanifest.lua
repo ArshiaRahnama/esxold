@@ -26,4 +26,3 @@ files({
   'html/css/user_1.png',
 })
 
-

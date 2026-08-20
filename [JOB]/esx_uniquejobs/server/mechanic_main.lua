@@ -1,6 +1,5 @@
 
 
-
 ESX                = nil
 PlayersHarvesting  = {}
 PlayersHarvesting2 = {}
@@ -60,11 +59,11 @@ AddEventHandler('esx_mechanicjob:getStockItem', function(itemName, count)
 	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_mechanic', function(inventory)
 		local item = inventory.getItem(itemName)
 		local sourceItem = xPlayer.getInventoryItem(itemName)
-		
-		-- is there enough in the society?
+
+
 		if count > 0 and item.count >= count then
-		
-			-- can the player carry the said amount of x item?
+
+
 			if sourceItem.limit ~= -1 and (sourceItem.count + count) > sourceItem.limit then
 				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('player_cannot_hold'))
 			else
@@ -129,7 +128,7 @@ ESX.RegisterServerCallback('esx_mechanic:buyArmoryItem', function(source, cb, we
 				break
 			end
 		end
-		
+
 		if not foundWeapon then
 			table.insert(weapons, {
 				name  = weaponName,
@@ -175,7 +174,6 @@ ESX.RegisterServerCallback('esx_mechanicjob:getPlayerInventory', function(source
 
 end)
 
-
 RegisterNetEvent('esx_mechanicjob:buypetrol')
 AddEventHandler('esx_mechanicjob:buypetrol', function()
 	ESX.GetPlayerFromId(source).removeMoney(0)
@@ -195,7 +193,7 @@ ESX.RegisterServerCallback("esx_mechanicjob:ChekRequest", function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	if xPlayer then
 		local identifier = GetPlayerIdentifier(source)
-		if doesHaveReq_mechanic(identifier) then 
+		if doesHaveReq_mechanic(identifier) then
 			cb(false)
 		else
 			cb(true)
@@ -209,7 +207,7 @@ ESX.RegisterServerCallback("esx_mechanicjob:GetAccepterID", function(source, cb)
 	local xPlayer
 	local playerhast = true
 
-	for k,v in pairs(reqs) do 
+	for k,v in pairs(reqs) do
 		if v.owner.id == source then
 			xPlayer = ESX.GetPlayerFromIdentifier(v.respond.identifier)
 			if xPlayer then
@@ -218,7 +216,7 @@ ESX.RegisterServerCallback("esx_mechanicjob:GetAccepterID", function(source, cb)
 			else
 				playerhast = false
 			end
-			
+
 		end
 	end
 
@@ -248,7 +246,7 @@ function CloseRequest_mechanic(id)
 		local req = reqs[reqid]
 		local identifier = GetPlayerIdentifier(source)
 		local ridentifier = req.owner.identifier
-		-- chats[identifier] = nil
+
 		chats[ridentifier] = nil
 		xPlayer = ESX.GetPlayerFromIdentifier(req.owner.identifier)
 		if xPlayer then
@@ -256,11 +254,11 @@ function CloseRequest_mechanic(id)
 		end
 		reqs[reqid] = nil
 
-		for k,v in pairs(GetPlayers()) do 
+		for k,v in pairs(GetPlayers()) do
 			local xxPlayer = ESX.GetPlayerFromId(v)
 			Wait(20)
 			if xxPlayer then
-				if xxPlayer.job.name == 'mechanic' then 
+				if xxPlayer.job.name == 'mechanic' then
 					TriggerClientEvent('chatMessage', xxPlayer.source, "[SYSTEM]", {255, 0, 0}, "Request : ^2"..xPlayer.name.."^0 | ^2"..xPlayer.source.."^0 Baste Shod")
 				end
 			end
@@ -356,7 +354,7 @@ AddEventHandler("esx_mechanicjob:areqs", function(id)
 				req.respond.identifier = identifier
 				chats[identifier] = ridentifier
 				chats[ridentifier] = identifier
-				
+
 				TriggerClientEvent('esx:showNotification', source, "Shoma Dakhast " .. req.owner.name .. " Ra Ghabol Kardid!")
 				TriggerClientEvent("esx_mechanicjob:acceptreq", source, req.owner.coord)
 				xPlayer = ESX.GetPlayerFromIdentifier(req.owner.identifier)
@@ -364,7 +362,7 @@ AddEventHandler("esx_mechanicjob:areqs", function(id)
 					TriggerClientEvent('esx:showNotification', xPlayer.source, "Darkhast Shoma Ghabol Shod. Mechanic Dar Rah Ast")
 					TriggerClientEvent("esx_mechanicjob:addblip", xPlayer.source, source, coord)
 				end
-				
+
 			else
 				TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " In DarKhast Ghablan Tavasot Kasi Javab Dade Shode Ast!")
 			end
@@ -385,14 +383,14 @@ AddEventHandler("esx_mechanicjob:decline", function(id)
 		if reqs[reqid] then
 		local req = reqs[reqid]
 		local ridentifier = req.owner.identifier
-		
+
 		req.status = "open"
 		req.respond.name = "none"
 		req.respond.identifier = "none"
 		chats[identifier] = nil
 		chats[ridentifier] = nil
 		TriggerClientEvent('esx:showNotification', source, "Shoma DarKhast " .. req.owner.name .. " Ra Decline Kardid!")
-		
+
 		xPlayer = ESX.GetPlayerFromIdentifier(req.owner.identifier)
 		if xPlayer then
 			TriggerClientEvent('esx:showNotification', xPlayer.source, "Mechanic DarKhast Shoma Ro Cancel Kard Montazere Yek Mechanic Digar Bashid!")
@@ -441,7 +439,6 @@ ESX.RegisterServerCallback('esx_mechanicjob:getReqs', function(source, cb)
 	end
 end)
 
-
 ESX.RegisterServerCallback('esx_mechanicjob:getcoord', function(source, cb, id)
 	local coord = GetEntityCoords(GetPlayerPed(id))
 	cb(coord)
@@ -451,9 +448,9 @@ ESX.RegisterServerCallback('esx_mechanicjob:acceptername', function(source, cb, 
 	local reqid = id
 	local req = reqs[reqid]
 	local acceptername = req.respond.name
-	if req.respond.identifier ~= "none" then 
+	if req.respond.identifier ~= "none" then
 		local xPlayer = ESX.GetPlayerFromIdentifier(req.respond.identifier)
-		if xPlayer then 
+		if xPlayer then
 			cb(acceptername, xPlayer.source)
 		else
 			cb(acceptername, nil)
@@ -463,14 +460,12 @@ ESX.RegisterServerCallback('esx_mechanicjob:acceptername', function(source, cb, 
 	end
 end)
 
-
 ESX.RegisterServerCallback('esx_mechanicjob:icname', function(source, cb)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	local name = string.gsub(xPlayer.name, "_", " ")
 	cb(name)
 end)
-
 
 function canRespond_mechanic(identifier)
 	for k,v in pairs(reqs) do
@@ -491,8 +486,6 @@ function doesHaveReq_mechanic(identifier)
 
 	return false
 end
-
-
 
 function TableLength_mechanic(table)
 	local count = 0
@@ -546,15 +539,12 @@ end)
 RegisterNetEvent('esx_mechanicjob:ChatMessage')
 AddEventHandler('esx_mechanicjob:ChatMessage', function(target, player, Chek)
 
-	if Chek then 
+	if Chek then
 		TriggerClientEvent('chat:addMessage', target, { args = { '^1SYSTEM', 'Darkhast Ghabz Tavasot ID: ^2'..tonumber(player)..' ^0| ^2Ghabol ^0Shod' } })
 	else
 		TriggerClientEvent('chat:addMessage', target, { args = { '^1SYSTEM', 'Darkhast Ghabz Tavasot ID: ^1'..tonumber(player)..' ^0|^1Rad ^0Shod' } })
 	end
 end)
-
-
-
 
 RegisterServerEvent('logVehicleSpawn')
 AddEventHandler('logVehicleSpawn', function(playerName, serverID, steamHex, vehicleModel, plateText, isspawn)
@@ -586,25 +576,19 @@ AddEventHandler('logVehicleSpawn', function(playerName, serverID, steamHex, vehi
 
 end)
 
-
-
 function DiscordLogs_mechanic(messagess, titelss, grren)
 
 	local discordWebhook = "https:// arshiahub.ir/changeme/1345564719251066902/PMu_w-0tZqT3R5miaFBqpq2lwFLoZbcq_lFHS3FW0rqWZajCfVieivTqWBUkBQoMfCJw"
 
-
-
-
-
 	local colors = 0
-	
-	if grren then 
+
+	if grren then
 		colors = 65280
 	else
 		colors = 16711680
 	end
 
-	
+
 
     local logMessage = {
         {
@@ -618,10 +602,8 @@ function DiscordLogs_mechanic(messagess, titelss, grren)
         }
     }
 
-    PerformHttpRequest(discordWebhook, function(err, text, headers) 
-        
+    PerformHttpRequest(discordWebhook, function(err, text, headers)
+
     end, 'POST', json.encode({username = "Vehicle Logs", embeds = logMessage}), { ['Content-Type'] = 'application/json' })
-
-
 
 end

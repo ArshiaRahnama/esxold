@@ -4,7 +4,7 @@ configTrunk.blackListVehicles = {
 }
 
 configTrunk.customLimit = {
-    -- ic car 
+
     {model = 'rebel2', limit = 300},
     {model = 'riata', limit = 300},
     {model = 'sandking', limit = 300},
@@ -12,7 +12,7 @@ configTrunk.customLimit = {
     {model = 'caracara2', limit = 300},
     {model = 'contender', limit = 300},
 	{model = 'MOONBEAM2', limit = 100},
-    --mashin haye pd va sheriff
+
 	{model = 'polneon', limit = 300},
 	{model = 'polta', limit = 300},
 	{model = 'polrb', limit = 300},
@@ -22,7 +22,7 @@ configTrunk.customLimit = {
 	{model = 'pord', limit = 300},
     {model = 'POLJUG', limit = 300},
     {model = 'POLREB', limit = 300},
-	--
+
 	{model = 'pbus', limit = 300},
 	{model = 'policeb', limit = 300},
 	{model = 'policet', limit = 300},
@@ -50,8 +50,8 @@ configTrunk.customLimit = {
 	{model = 'pdodge', limit = 300},
 	{model = 'policeb1', limit = 150},
 	{model = 'shacara', limit = 300},
-    -- vip cars
-	{model = 'bodhi2', limit = 300}, -- mashin yalda
+
+	{model = 'bodhi2', limit = 300},
 	{model = 'TRX', limit = 600},
     {model = 'N17', limit = 600},
     {model = '19raptor', limit = 600},
@@ -80,14 +80,14 @@ configTrunk.customLimit = {
 }
 
 configTrunk.customLimitGlove = {
-    -- ic car 
+
     {model = 'rebel2', limit = 20},
     {model = 'riata', limit = 20},
     {model = 'sandking', limit = 20},
     {model = 'kamacho', limit = 20},
     {model = 'caracara2', limit = 20},
     {model = 'contender', limit = 20},
-    --mashin haye pd va sheriff
+
 	{model = 'polneon', limit = 20},
 	{model = 'polta', limit = 20},
 	{model = 'polrb', limit = 20},
@@ -97,7 +97,7 @@ configTrunk.customLimitGlove = {
 	{model = 'pord', limit = 20},
     {model = 'POLJUG', limit = 20},
     {model = 'POLREB', limit = 20},
-	--
+
 	{model = 'pbus', limit = 20},
 	{model = 'policeb', limit = 20},
 	{model = 'policet', limit = 20},
@@ -125,8 +125,8 @@ configTrunk.customLimitGlove = {
 	{model = 'pdodge', limit = 20},
 	{model = 'policeb1', limit = 20},
 	{model = 'shacara', limit = 20},
-    -- vip cars
-	{model = 'bodhi2', limit = 20}, -- mashin yalda
+
+	{model = 'bodhi2', limit = 20},
 	{model = 'TRX', limit = 20},
     {model = 'N17', limit = 20},
     {model = '19raptor', limit = 20},
@@ -154,64 +154,61 @@ configTrunk.customLimitGlove = {
 	{model = 'f350offroadspec',limit = 20},
 }
 
-
 configTrunk.noTrunkClass = {
-    --[14] = true,
-    --[15] = true,
+
+
     [16] = true,
 }
 
 configTrunk.vehicleLimit = {
-    [0] = 30, --Compact
-    [1] = 40, --Sedan
-    [2] = 70, --SUV
-    [3] = 25, --Coupes
-    [4] = 30, --Muscle
-    [5] = 10, --Sports Classics
-    [6] = 30, --Sports
-    [7] = 30, --Super
-    [8] = 5, --Motorcycles
-    [9] = 180, --Off-road
-    [10] = 300, --Industrial
-    [11] = 70, --Utility
-    [12] = 100, --Vans
-    [13] = 0, --Cycles
-    [14] = 150, --Boats
-    [15] = 100, --Helicopters
-    [16] = 150, --Planes
-    [17] = 40, --Service
-    [18] = 40, --Emergency
-    [19] = 0, --Military
-    [20] = 300, --Commercial
-    [21] = 0 --Trains
+    [0] = 30,
+    [1] = 40,
+    [2] = 70,
+    [3] = 25,
+    [4] = 30,
+    [5] = 10,
+    [6] = 30,
+    [7] = 30,
+    [8] = 5,
+    [9] = 180,
+    [10] = 300,
+    [11] = 70,
+    [12] = 100,
+    [13] = 0,
+    [14] = 150,
+    [15] = 100,
+    [16] = 150,
+    [17] = 40,
+    [18] = 40,
+    [19] = 0,
+    [20] = 300,
+    [21] = 0
 }
-
 
 configTrunk.vehicleLimitGlove = {
-    [0] = 15, --Compact
-    [1] = 15, --Sedan
-    [2] = 15, --SUV
-    [3] = 15, --Coupes
-    [4] = 15, --Muscle
-    [5] = 15, --Sports Classics
-    [6] = 15, --Sports
-    [7] = 15, --Super
-    [8] = 5, --Motorcycles
-    [9] = 15, --Off-road
-    [10] = 15, --Industrial
-    [11] = 15, --Utility
-    [12] = 15, --Vans
-    [13] = 0, --Cycles
-    [14] = 15, --Boats
-    [15] = 20, --Helicopters
-    [16] = 20, --Planes
-    [17] = 15, --Service
-    [18] = 15, --Emergency
-    [19] = 0, --Military
-    [20] = 20, --Commercial
-    [21] = 0 --Trains
+    [0] = 15,
+    [1] = 15,
+    [2] = 15,
+    [3] = 15,
+    [4] = 15,
+    [5] = 15,
+    [6] = 15,
+    [7] = 15,
+    [8] = 5,
+    [9] = 15,
+    [10] = 15,
+    [11] = 15,
+    [12] = 15,
+    [13] = 0,
+    [14] = 15,
+    [15] = 20,
+    [16] = 20,
+    [17] = 15,
+    [18] = 15,
+    [19] = 0,
+    [20] = 20,
+    [21] = 0
 }
-
 
 configTrunk.localWeight = {
 

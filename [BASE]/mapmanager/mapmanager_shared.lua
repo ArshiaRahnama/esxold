@@ -1,4 +1,4 @@
--- shared logic file for map manager - don't call any subsystem-specific functions here
+
 mapFiles = {}
 
 function addMap(file, owningResource)
@@ -63,7 +63,7 @@ function parseMap(file, owningResource)
         __index = function(t, k)
             if rawget(t, k) ~= nil then return rawget(t, k) end
 
-            -- as we're not going to return nothing here (to allow unknown directives to be ignored)
+
             local f = function()
                 return f
             end
@@ -73,7 +73,7 @@ function parseMap(file, owningResource)
     }
 
     setmetatable(env, mt)
-    
+
     local fileData = LoadResourceFile(owningResource, file)
     local mapFunction, err = load(fileData, file, 't', env)
 

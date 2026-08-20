@@ -2,14 +2,6 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
--- AntiCheat integration — shared across all esx_uniquejobs job teleports
--- (taxi/ambulance/police/mechanic/weazel fast-travel points, on-duty spawn
--- teleports, etc). Any client script in this resource can call:
---   TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, {teleport=true, speed=true})
--- right before its own SetEntityCoords, and it'll be exempt from UNIQUE_AC's
--- teleport/speed flags for that window. Safe no-op if UNIQUE_AC isn't installed.
--- بهینه‌سازی: قبلاً به ریسورس جدای AntiCheat وصل بود؛ حالا مستقیم به همون export
--- که تازه به UNIQUE_AC اضافه شد وصله (دیگه نیازی به نگه‌داشتن دو ریسورس آنتی‌چیت نیست).
 RegisterServerEvent('esx_uniquejobs:AntiCheatExempt')
 AddEventHandler('esx_uniquejobs:AntiCheatExempt', function(ms, kinds)
 	local source = source
@@ -33,9 +25,8 @@ TriggerEvent('esx_society:registerSociety', 'taxi', 'Taxi', 'society_taxi', 'soc
 RegisterServerEvent('esx_taxijob:success')
 AddEventHandler('esx_taxijob:success', function()
 	local source = source
-	-- exports.BanSql:BanTarget(source, "Triggered blacklisted event: esx_taxijob:success", "Cheat Lua executor")
-end)
 
+end)
 
 AddEventHandler('playerDropped', function (reason, resourceName, clientDropReason)
 	for k,v in pairs(reqs) do
@@ -55,10 +46,10 @@ AddEventHandler('esx_taxijob:getStockItem', function(itemName, count)
 
 		local inventoryItem = inventory.getItem(itemName)
 
-		-- is there enough in the society?
+
 		if count > 0 and inventoryItem.count >= count then
-		
-			-- can the player carry the said amount of x item?
+
+
 			if sourceItem.limit ~= -1 and (sourceItem.count + count) > sourceItem.limit then
 				TriggerClientEvent('esx:showNotification', _source, _U('quantity_invalid'))
 			else
@@ -87,7 +78,7 @@ AddEventHandler('esx_taxijob:putStockItems', function(itemName, count)
 
 		local inventoryItem = inventory.getItem(itemName)
 
-		-- does the player have enough of the item?
+
 		if sourceItem.count >= count and count > 0 then
 			xPlayer.removeInventoryItem(itemName, count)
 			inventory.addItem(itemName, count)
@@ -140,7 +131,7 @@ ESX.RegisterServerCallback('esx_taxi:buyArmoryItem', function(source, cb, weapon
 				break
 			end
 		end
-		
+
 		if not foundWeapon then
 			table.insert(weapons, {
 				name  = weaponName,
@@ -175,8 +166,6 @@ ESX.RegisterServerCallback('esx_taxijob:getitem', function(source, cb, item)
 	cb(quantity)
 end)
 
-
-
 AddEventHandler('esx:playerLoaded', function(source)
 	local identifier = GetPlayerIdentifier(source)
 	for k,v in pairs(reqs) do
@@ -199,7 +188,7 @@ function CoutnTaxi_taxi()
 end
 function CoutnTaxi2_taxi()
 	local xPlayers = ESX.GetPlayers()
-	local Taxis = 0 
+	local Taxis = 0
 	for i=1, #xPlayers, 1 do
 		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
 		if xPlayer.job.name == "taxi" then
@@ -209,16 +198,15 @@ function CoutnTaxi2_taxi()
 	return Taxis
 end
 
-
 RegisterServerEvent("esx_taxijob:addreq")
 AddEventHandler("esx_taxijob:addreq", function(reason)
-	
-	
+
+
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local xPlayers = ESX.GetPlayers()
 	if xPlayer then
 		for i=1, #xPlayers, 1 do
-			local xPlayer = ESX.GetPlayerFromId(xPlayers[i])	
+			local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
 			if xPlayer.job.name ~= "tax" then
 				if xPlayer then
 					local identifier = GetPlayerIdentifier(source)
@@ -306,7 +294,7 @@ AddEventHandler("esx_taxijob:areqs", function(id)
 				req.respond.identifier = identifier
 				chats[identifier] = ridentifier
 				chats[ridentifier] = identifier
-				
+
 				TriggerClientEvent('esx:showNotification', source, "Shoma DarKhast " .. req.owner.name .. " Ra Ghabol Kardid!")
 				TriggerClientEvent("esx_taxijob:acceptreq", source, req.owner.coord)
 				xPlayer = ESX.GetPlayerFromIdentifier(req.owner.identifier)
@@ -314,7 +302,7 @@ AddEventHandler("esx_taxijob:areqs", function(id)
 					TriggerClientEvent('esx:showNotification', xPlayer.source, "DarKhast Shoma Ghabol Shod. Taxi Officer Dar Rah Ast")
 					TriggerClientEvent("esx_taxijob:addblip", xPlayer.source, source, coord)
 				end
-				
+
 			else
 				TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " In DarKhast Ghablan Tavasot Kasi Accept Shode Ast!")
 			end
@@ -335,14 +323,14 @@ AddEventHandler("esx_taxijob:decline", function(id)
 		if reqs[reqid] then
 		local req = reqs[reqid]
 		local ridentifier = req.owner.identifier
-		
+
 		req.status = "open"
 		req.respond.name = "none"
 		req.respond.identifier = "none"
 		chats[identifier] = nil
 		chats[ridentifier] = nil
 		TriggerClientEvent('esx:showNotification', source, "Shoma DarKhast " .. req.owner.name .. " Ra Decline Kardid!")
-		
+
 		xPlayer = ESX.GetPlayerFromIdentifier(req.owner.identifier)
 		if xPlayer then
 			TriggerClientEvent('esx:showNotification', xPlayer.source, "Taxi Officer DarKhast Shoma Ro Cancel Kard Montazere Yek Taxi Digar Bashid!")
@@ -401,9 +389,9 @@ ESX.RegisterServerCallback('esx_taxijob:acceptername', function(source, cb, id)
 	local reqid = id
 	local req = reqs[reqid]
 	local acceptername = req.respond.name
-	if req.respond.identifier ~= "none" then 
+	if req.respond.identifier ~= "none" then
 		local xPlayer = ESX.GetPlayerFromIdentifier(req.respond.identifier)
-		if xPlayer then 
+		if xPlayer then
 			cb(acceptername, xPlayer.source)
 		else
 			cb(acceptername, nil)
@@ -419,7 +407,6 @@ ESX.RegisterServerCallback('esx_taxijob:icname', function(source, cb)
 	local name = string.gsub(xPlayer.name, "_", " ")
 	cb(name)
 end)
-
 
 function canRespond_taxi(identifier)
 	for k,v in pairs(reqs) do
@@ -440,8 +427,6 @@ function doesHaveReq_taxi(identifier)
 
 	return false
 end
-
-
 
 function TableLength_taxi(table)
 	local count = 0
@@ -479,7 +464,7 @@ function getNumberPhone_taxi(identifier)
     if result[1] ~= nil then
         return result[1].phone
     end
-	
+
     return nil
 end
 
@@ -501,8 +486,6 @@ AddEventHandler('esx_taxijob:pay', function(price)
 	})
 end)
 
-
-
 RegisterNetEvent('esx_taxijob:blingrequest')
 AddEventHandler('esx_taxijob:blingrequest', function(player, target, ammont)
 
@@ -512,7 +495,7 @@ end)
 RegisterNetEvent('esx_taxijob:ChatMessage')
 AddEventHandler('esx_taxijob:ChatMessage', function(target, player, Chek)
 
-	if Chek then 
+	if Chek then
 		TriggerClientEvent('chat:addMessage', target, { args = { '^1SYSTEM', 'Darkhast Ghabz Tavasot ID: ^2'..tonumber(player)..' ^0| ^2Ghabol ^0Shod' } })
 	else
 		TriggerClientEvent('chat:addMessage', target, { args = { '^1SYSTEM', 'Darkhast Ghabz Tavasot ID: ^1'..tonumber(player)..' ^0|^1Rad ^0Shod' } })
@@ -523,7 +506,7 @@ ESX.RegisterServerCallback("esx_taxijob:ChekRequest", function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	if xPlayer then
 		local identifier = GetPlayerIdentifier(source)
-		if doesHaveReq_taxi(identifier) then 
+		if doesHaveReq_taxi(identifier) then
 			cb(false)
 		else
 			cb(true)
@@ -537,7 +520,7 @@ ESX.RegisterServerCallback("esx_taxijob:GetAccepterID", function(source, cb)
 	local xPlayer
 	local playerhast = true
 
-	for k,v in pairs(reqs) do 
+	for k,v in pairs(reqs) do
 		if v.owner.id == source then
 			xPlayer = ESX.GetPlayerFromIdentifier(v.respond.identifier)
 			if xPlayer then
@@ -546,7 +529,7 @@ ESX.RegisterServerCallback("esx_taxijob:GetAccepterID", function(source, cb)
 			else
 				playerhast = false
 			end
-			
+
 		end
 	end
 
@@ -576,7 +559,7 @@ function CloseRequest_taxi(id)
 		local req = reqs[reqid]
 		local identifier = GetPlayerIdentifier(source)
 		local ridentifier = req.owner.identifier
-		-- chats[identifier] = nil
+
 		chats[ridentifier] = nil
 		xPlayer = ESX.GetPlayerFromIdentifier(req.owner.identifier)
 		if xPlayer then
@@ -584,11 +567,11 @@ function CloseRequest_taxi(id)
 		end
 		reqs[reqid] = nil
 
-		for k,v in pairs(GetPlayers()) do 
+		for k,v in pairs(GetPlayers()) do
 			local xxPlayer = ESX.GetPlayerFromId(v)
 			Wait(20)
 			if xxPlayer then
-				if xxPlayer.job.name == 'taxi' then 
+				if xxPlayer.job.name == 'taxi' then
 					TriggerClientEvent('chatMessage', xxPlayer.source, "[SYSTEM]", {255, 0, 0}, "Request : ^2"..xPlayer.name.."^0 | ^2"..xPlayer.source.."^0 Baste Shod")
 				end
 			end

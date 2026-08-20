@@ -3,12 +3,6 @@ local sentences = {}
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
--- AntiCheat integration — jail involves several big, entirely legit,
--- instant position jumps (cutscene start, send-to-jail, anti-escape
--- snap-back, release) that would otherwise look identical to a
--- teleport/speed hack to UNIQUE_AC. Safe no-op if UNIQUE_AC isn't installed.
--- بهینه‌سازی: قبلاً به ریسورس جدای AntiCheat وصل بود؛ حالا مستقیم به همون export
--- که تازه به UNIQUE_AC اضافه شد وصله (دیگه نیازی به نگه‌داشتن دو ریسورس آنتی‌چیت نیست).
 local function ExemptFromAntiCheat(targetId, ms, kinds)
 	if GetResourceState('UNIQUE_AC') ~= 'started' then return end
 	pcall(function()
@@ -16,20 +10,11 @@ local function ExemptFromAntiCheat(targetId, ms, kinds)
 	end)
 end
 
--- The anti-escape snap-back and cutscene run for the WHOLE jail sentence
--- (which can be many minutes), so a one-off few-second exemption from the
--- moment they're sent to jail isn't enough — client/jail.lua calls this
--- every few seconds for as long as the player is jailed to keep the
--- exemption window rolling forward.
 RegisterServerEvent('Unique_Punishment:AntiCheatExempt')
 AddEventHandler('Unique_Punishment:AntiCheatExempt', function(ms, kinds)
 	ExemptFromAntiCheat(source, ms, kinds)
 end)
 
-
--- users.jail از قبل روی سرور هست (esx_aduty هم باهاش کار می‌کنه)؛ به‌جای جدول جدا
--- مستقیم از همین ستون می‌خونیم/می‌نویسیم. مقادیر esx_aduty فقط {time,type,part}
--- دارن (بدون unjail/reason)، پس اینجا با مقدار پیش‌فرض پرش می‌کنیم.
 local function DecodeJailData(raw, identifier)
 	if not raw or raw == '' or raw == '0' then return nil end
 
@@ -54,7 +39,6 @@ MySQL.ready(function()
 		end
 	end
 end)
-
 
 local function IsJobAllowed(jobname)
 	for _, job in pairs(Config.AllowedJobs) do
@@ -107,7 +91,6 @@ AddEventHandler('arshia_jail:sendto',function (target, type, time, reason, unjai
 	end
 end)
 
-
 RegisterServerEvent('arshia_jail:UpdateTime')
 AddEventHandler('arshia_jail:UpdateTime',function (time)
 	local source = source
@@ -152,7 +135,6 @@ AddEventHandler("arshia_jail:UnjailPlayer", function(id)
     TriggerClientEvent("arshia_jail:UnjailPlayer", id)
 end)
 
-
 TriggerEvent('es:addAdminCommand', 'ajail', 2, function(source, args, user)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local target = tonumber(args[1])
@@ -172,7 +154,6 @@ TriggerEvent('es:addAdminCommand', 'ajail', 2, function(source, args, user)
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1[ System ] : ', 'Shoma Dastresi Kafi Nadarid.' } })
 end, {help = 'Admin Jail', params = {{name = 'playerId', help = 'Player ID'},{name = 'time', help = 'Time'},{name = 'reason', help = 'Reason'}}})
-
 
 TriggerEvent('es:addAdminCommand', 'ajailoffline', 3, function(source, args, user)
 	local xPlayer = ESX.GetPlayerFromIdentifier(args[1])
@@ -233,7 +214,6 @@ end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1[ System ] : ', 'Shoma Dastresi Kafi Nadarid.' } })
 end, {help = 'Admin Unjail', params = {{name = 'playerId', help = 'Player ID'}}})
 
-
 TriggerEvent('es:addAdminCommand', 'icunjail', 8, function(source, args, user)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local target = tonumber(args[1])
@@ -281,7 +261,6 @@ end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1[ System ] : ', 'Shoma Dastresi Kafi Nadarid.' } })
 end, {help = 'Get Jail', params = {{name = 'playerId', help = 'Player ID'}}})
 
-
 AddEventHandler('playerDropped', function()
 	local source = source
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -291,5 +270,4 @@ AddEventHandler('playerDropped', function()
 		PersistJail(identifier, sentences[identifier])
 	 end
 end)
-
 

@@ -1,6 +1,4 @@
 
--- Dell Perro Heights, Apt 7
--- High end apartment 2: -1477.14 -538.7499 55.5264
 
 exports('GetGTAOApartmentHi2Object', function()
     return GTAOApartmentHi2

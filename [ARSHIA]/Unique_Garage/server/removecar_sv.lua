@@ -1,4 +1,4 @@
--- ESX is already initialized globally by server.lua; no need to re-fetch it here.
+
 
 RegisterCommand('removecar', function(source, args)
 		local xPlayer = ESX.GetPlayerFromId(source)
@@ -11,10 +11,10 @@ RegisterCommand('removecar', function(source, args)
 			if #args > 1 then
 				for i=2, #args do
 					plate = plate.." "..args[i]
-				end		
+				end
 			end
 			plate = string.upper(plate)
-			
+
 			local result = MySQL.Sync.execute('DELETE FROM owned_vehicles WHERE plate = @plate', {
 				['@plate'] = plate
 			})
@@ -22,7 +22,7 @@ RegisterCommand('removecar', function(source, args)
 				TriggerClientEvent('esx:showNotification', source, string.format('Mashin Ba Plak ~y~%s ~s~ Hazf Shod', plate))
 			elseif result == 0 then
 				TriggerClientEvent('esx:showNotification', source, string.format('~r~Mashin Ba Plak ~y~%s~r~ Peyda Nashod!!!', plate))
-			end		
+			end
 		end
 	else
 		TriggerClientEvent(
@@ -35,19 +35,14 @@ RegisterCommand('removecar', function(source, args)
 	end
 else
 	TriggerClientEvent("chatMessage", source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma ^1Admin ^0nistid!")
-end	
+end
 end)
-
-
 
 RegisterServerEvent('esx_giveownedcar:printToConsole')
 AddEventHandler('esx_giveownedcar:printToConsole', function(msg)
 	print(msg)
 end)
 
--- Actually reaches the esx_giveownedcar:spawnVehicle flow in client/removecar_cl.lua — before this,
--- nothing ever fired that event, so even with setVehicle fixed it was still unreachable.
--- Usage: /givecar [playerId] [vehicle model, e.g. adder]
 RegisterCommand('givecar', function(source, args)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	if not xPlayer or xPlayer.permission_level < 10 then
@@ -73,11 +68,6 @@ RegisterCommand('givecar', function(source, args)
 	TriggerClientEvent('esx_giveownedcar:spawnVehicle', source, targetId, model, playerName, 'command', 'car')
 end, false)
 
--- This was the missing piece: spawnVehicle/spawnVehiclePlate (client/removecar_cl.lua) already
--- worked and called this event, but nothing on the server ever actually wrote the vehicle to the
--- database — so it silently did nothing. Uses the same INSERT IGNORE + full-health defaults
--- convention as the /addcar system (server/addcar_sv.lua) so a donated car behaves normally
--- (full engine/body, sitting in the garage) instead of "no engine" / stuck out of the garage.
 RegisterServerEvent('esx_giveownedcar:setVehicle')
 AddEventHandler('esx_giveownedcar:setVehicle', function(vehicleProps, playerID, vehicleType)
 	local xTarget = ESX.GetPlayerFromId(playerID)

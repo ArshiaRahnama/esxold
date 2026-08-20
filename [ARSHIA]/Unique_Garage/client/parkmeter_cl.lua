@@ -1,17 +1,14 @@
--- ESX is already initialized globally by client.lua; no need to re-fetch it here.
+
 local vehsdamage = {}
 local vehsprop   = {}
 
-local playerParkingStatus  = {}  
-local ParkMeterBlips       = {}  
+local playerParkingStatus  = {}
+local ParkMeterBlips       = {}
 local PosCorrds            = {}
 local VehLocal             = {}
 local activeAutoParkTimers = {}
 local lastDriver           = nil
 
--- ox_lib is a hard dependency of this resource (hotwire/lockpick already use it), so it's
--- safe to use its real progress bar here instead of the old freeze+3D-text placeholder.
--- Both original calls used canCancel = false, so this always completes and returns true, matching that behavior.
 function SimpleProgressBar(duration, text)
     return lib.progressBar({
         duration = duration,
@@ -35,23 +32,20 @@ Citizen.CreateThread(function()
         SetBlipDisplay(blip, 5)
         SetBlipScale(blip, 0.7)
         SetBlipAsShortRange(blip, true)
-        
 
-        SetBlipColour(blip, 2)  
+
+        SetBlipColour(blip, 2)
 
         BeginTextCommandSetBlipName("STRING")
         AddTextComponentString('Park meter')
         EndTextCommandSetBlipName(blip)
-        
-       
+
+
         ParkMeterBlips[k] = blip
         Citizen.Wait(10)
     end
 end)
 
--- Real ground pad prop at every park meter (like GTA Online's vehicle warehouse call-in pad),
--- with a floating "Parking Meter" label. Press E to park/retrieve — the fill/progress
--- animation (ox_lib progressBar) plays via SimpleProgressBar once you do.
 Citizen.CreateThread(function()
     while ESX == nil do Wait(10) end
 
@@ -70,7 +64,6 @@ Citizen.CreateThread(function()
     end
 end)
 
--- Press E at the pad to park/retrieve.
 Citizen.CreateThread(function()
     while true do
         local sleep = 500
@@ -84,7 +77,7 @@ Citizen.CreateThread(function()
                 ParkMeter_Draw3DText(location.x, location.y, location.z + 1.2, "~b~Parking Meter")
                 ShowHelpNotification("~INPUT_CONTEXT~ Park / Baziabi Mashin")
 
-                if IsControlJustReleased(0, 38) then -- E
+                if IsControlJustReleased(0, 38) then
                     HandleParkingOrRetrieve(i)
                 end
             end
@@ -105,12 +98,12 @@ Citizen.CreateThread(function()
 
             if distance < 20.0 then
                 sleep = 5
-                local markerColor = {r = 0, g = 255, b = 0} 
-                local blipColor = 2  
+                local markerColor = {r = 0, g = 255, b = 0}
+                local blipColor = 2
 
                 if playerParkingStatus[i] then
-                    markerColor = {r = 255, g = 0, b = 0}  
-                    blipColor = 1  
+                    markerColor = {r = 255, g = 0, b = 0}
+                    blipColor = 1
                 end
 
                 PosCorrds = {x = location.x, y = location.y, z = location.z}
@@ -128,26 +121,24 @@ Citizen.CreateThread(function()
     end
 end)
 
-
-
 function GetVehicleDamagesPM(vehicle)
 	local damages 	   = {['damaged_windows'] = {}, ['burst_tires'] = {}, ['broken_doors'] = {}, ['body_health'] = GetVehicleBodyHealth(vehicle), ['engine_health'] = GetVehicleEngineHealth(vehicle), ['fuel_health'] = GetVehicleFuelLevel(vehicle)}
 
 	for i = 0, GetVehicleNumberOfWheels(vehicle) do
-		if IsVehicleTyreBurst(vehicle, i, false) then table.insert(damages['burst_tires'], i) end 
+		if IsVehicleTyreBurst(vehicle, i, false) then table.insert(damages['burst_tires'], i) end
 	end
 	for i = 0, 7 do
 		if not IsVehicleWindowIntact(vehicle, i) then table.insert(damages['damaged_windows'], i) end
 	end
-	for i = 0, GetNumberOfVehicleDoors(vehicle) do 
-		if IsVehicleDoorDamaged(vehicle, i) then table.insert(damages['broken_doors'], i) end 
+	for i = 0, GetNumberOfVehicleDoors(vehicle) do
+		if IsVehicleDoorDamaged(vehicle, i) then table.insert(damages['broken_doors'], i) end
 	end
 
 	return damages
 end
 
 function setDamagesPM(car, damages)
-	if type(damages) == 'table' and next (damages) then  
+	if type(damages) == 'table' and next (damages) then
 		for i = 0, GetVehicleNumberOfWheels(car) do
 			if damages['burst_tires'] then
 				if damages['burst_tires'][i] then
@@ -164,7 +155,7 @@ function setDamagesPM(car, damages)
 			end
 		end
 
-		for i = 0, GetNumberOfVehicleDoors(car) do 
+		for i = 0, GetNumberOfVehicleDoors(car) do
 			if damages['broken_doors'] then
 				if damages['broken_doors'][i] then
 					SetVehicleDoorBroken(car, damages['broken_doors'][i], true)
@@ -181,7 +172,7 @@ function setDamagesPM(car, damages)
 		if damages['fuel_health'] then
 			SetVehicleFuelLevel(car, damages['fuel_health'])
 		end
-	end 
+	end
 end
 
 function ShowFloatingHelpNotification(msg, coords)
@@ -196,13 +187,13 @@ function HandleParkingOrRetrieve(markerIndex)
     local ped = GetPlayerPed(-1)
     local vehicle = GetVehiclePedIsIn(ped, false)
     if IsPedInAnyVehicle(ped, false) and GetPedInVehicleSeat(vehicle, -1) == ped then
-        
+
         vehsprop = ESX.Game.GetVehicleProperties(vehicle)
         vehsdamage = GetVehicleDamagesPM(vehicle)
         ESX.TriggerServerCallback('temporaryParking:getVehicleDatas', function(Chek)
             if not Chek then
                 lib.notify({title = 'Parking', description = 'Error!', type = 'error', position = 'center-right'})
-                return 
+                return
             end
 
             if playerParkingStatus[markerIndex] then
@@ -252,9 +243,9 @@ end
 RegisterNetEvent('temporaryParking:spawnVehicle')
 AddEventHandler('temporaryParking:spawnVehicle', function(vehsprop, markerIndex)
     local ped = PlayerPedId()
-    local parkingLocation = Customize.ParkMeter[markerIndex] 
+    local parkingLocation = Customize.ParkMeter[markerIndex]
     local coords = vector3(parkingLocation.x, parkingLocation.y, parkingLocation.z)
-    local heading = parkingLocation.w 
+    local heading = parkingLocation.w
 
     local Rest = SimpleProgressBar(3000, "Retrieving...")
 
@@ -336,7 +327,7 @@ function StartParkCountdown(vehicle, plate, zoneIndex)
 
     activeAutoParkTimers[plate] = duration
     ESX.TriggerServerCallback('temporaryParking:getVehicleDatas', function(bucket)
-   
+
         if not bucket then activeAutoParkTimers[plate] = nil return end
 
         local playerPed = PlayerPedId()
@@ -362,7 +353,7 @@ function StartParkCountdown(vehicle, plate, zoneIndex)
                 end
 
                 Citizen.CreateThread(function()
-                    while DrawTex do 
+                    while DrawTex do
                         ParkMeter_Draw3DText(vehCoords.x, vehCoords.y, vehCoords.z + 1.5, "~w~Park in : ~r~" .. Sonie .. " s")
                         Wait(1)
                     end
@@ -402,7 +393,6 @@ function StartParkCountdown(vehicle, plate, zoneIndex)
                     SetDisableVehiclePetrolTankDamage(vehicle, true)
                     SetDisableVehiclePetrolTankFires(vehicle, true)
                 end)
-
 
                 lib.notify({title = 'Parking', description = 'ماشین شما به صورت خودکار پارک شد.', type = 'success', position = 'center-right'})
             end

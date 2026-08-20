@@ -9,8 +9,8 @@ PropConfig.MarkerColorVehDel          = { r = 255, g = 0, b = 0 }
 PropConfig.MarkerColor                = { r = 255, g = 255, b = 236 }
 PropConfig.EnablePlayerManagement     = true
 PropConfig.EnableArmoryManagement     = true
-PropConfig.EnableESXIdentity          = true -- only turn this on if you are using esx_identity
-PropConfig.EnableNonFreemodePeds      = false -- turn this on if you want custom peds
+PropConfig.EnableESXIdentity          = true
+PropConfig.EnableNonFreemodePeds      = false
 PropConfig.EnableSocietyOwnedVehicles = false
 PropConfig.EnableLicenses             = false
 PropConfig.MaxInService               = -1

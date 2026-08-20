@@ -5,7 +5,6 @@ author 'Your Name'
 description 'Badge Command for ESX'
 version '1.0.0'
 
-
 server_scripts {
 	'@essentialmode/locale.lua',
 	'@mysql-async/lib/MySQL.lua',
@@ -34,14 +33,4 @@ client_scripts {
 	'config.lua',
 	'client/main.lua'
 }
-
-
-
-
-
-
-
-
-
-
 

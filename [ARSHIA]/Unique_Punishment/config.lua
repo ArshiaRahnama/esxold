@@ -1,20 +1,16 @@
 Config = {}
 Config.Locale = 'en'
 
-----------------------------------------------------------------------
--- Jail
-----------------------------------------------------------------------
-
 Config.AdminJail = {
 	unjail = vec(212.92, -845.81, 30.38)
 }
 
 Config.AllowedJobs = {
-	-- Law Enforcement
+
 	{name = 'police', unjailPerm = 15},
 	{name = 'sheriff', unjailPerm = 15},
 	{name = 'mt', unjailPerm = 15},
-	-- Department Of Justice
+
 	{name = 'cid', unjailPerm = 15},
 	{name = 'cia', unjailPerm = 15},
 	{name = 'marshal', unjailPerm = 15},
@@ -24,18 +20,18 @@ Config.AllowedJobs = {
 }
 
 Config.CanJail = {
-	{ coords = vec(456.7, -994.24, 34.25),    radius = 50.0,  unjail = vec(417.49, -986.89, 29.4)   },  -- pd 1
-	{ coords = vec(609.71, -8.03, 82.78),     radius = 15.0,  unjail = vec(649.10, -9.54, 82.78)    },  -- pd 2
-	{ coords = vec(1810.42, 3678.42, 34.19),  radius = 15.0,  unjail = vec(1843.97, 3674.32, 33.97) },  -- sheriff sandy
-	{ coords = vec(-442.24, 6012.08, 27.58),  radius = 20.0,  unjail = vec(-432.09, 6012.62, 31.49) },  -- sheriff paleto
-	{ coords = vec(-52.59, -2523.38, 7.39),   radius = 20.0,  unjail = vec(-45.3, -2504.76, 6.01)   },  -- Station 3
-	{ coords = vec(1561.44, 831.1, 77.66),    radius = 20.0,  unjail = vec(1843.97, 3674.32, 33.97) },  -- Station 4 ist bazresi
-	{ coords = vec(-1084.51, -832.25, 19.04), radius = 35.0,  unjail = vec(-1065.03,-852.5,4.87)    },  -- Station 5
-	{ coords = vec(-558.15,-232.8,34.27),     radius = 10.0,  unjail = vec(-552.55,-212.83,37.65)   },  -- justic
-	{ coords = vec(2507.51,-351.32,105.69),   radius = 20.0,  unjail = vec(2504.81,-384.02,94.12)   },  -- fbi birun shahr
-	{ coords = vec(1763.6, 2487.04, 46.56),   radius = 25.0,  unjail = vec(1843.97, 3674.32, 33.97), cutscene = true },  -- zendan markazi
-	{ coords = vec(846.26, -1294.02, 28.24),  radius = 20.0,  unjail = vec(821.74, -1275.26, 26.39) },  -- pd 7
-	{ coords = vec(380.17, 797.27, 187.46),   radius = 6.0,   unjail = vec(389.3, 797.63, 187.67)   },  -- pd 8 jungle
+	{ coords = vec(456.7, -994.24, 34.25),    radius = 50.0,  unjail = vec(417.49, -986.89, 29.4)   },
+	{ coords = vec(609.71, -8.03, 82.78),     radius = 15.0,  unjail = vec(649.10, -9.54, 82.78)    },
+	{ coords = vec(1810.42, 3678.42, 34.19),  radius = 15.0,  unjail = vec(1843.97, 3674.32, 33.97) },
+	{ coords = vec(-442.24, 6012.08, 27.58),  radius = 20.0,  unjail = vec(-432.09, 6012.62, 31.49) },
+	{ coords = vec(-52.59, -2523.38, 7.39),   radius = 20.0,  unjail = vec(-45.3, -2504.76, 6.01)   },
+	{ coords = vec(1561.44, 831.1, 77.66),    radius = 20.0,  unjail = vec(1843.97, 3674.32, 33.97) },
+	{ coords = vec(-1084.51, -832.25, 19.04), radius = 35.0,  unjail = vec(-1065.03,-852.5,4.87)    },
+	{ coords = vec(-558.15,-232.8,34.27),     radius = 10.0,  unjail = vec(-552.55,-212.83,37.65)   },
+	{ coords = vec(2507.51,-351.32,105.69),   radius = 20.0,  unjail = vec(2504.81,-384.02,94.12)   },
+	{ coords = vec(1763.6, 2487.04, 46.56),   radius = 25.0,  unjail = vec(1843.97, 3674.32, 33.97), cutscene = true },
+	{ coords = vec(846.26, -1294.02, 28.24),  radius = 20.0,  unjail = vec(821.74, -1275.26, 26.39) },
+	{ coords = vec(380.17, 797.27, 187.46),   radius = 6.0,   unjail = vec(389.3, 797.63, 187.67)   },
 }
 
 Config.cutscene = {
@@ -65,12 +61,8 @@ Config.cutscene = {
 	camRot3 = vec(-10.0, 0.0, 70.0),
 }
 
-----------------------------------------------------------------------
--- Community Service
-----------------------------------------------------------------------
-
-Config.ServiceExtensionOnEscape = 8    -- Escape Extension
-Config.DistanceExtension = 50.0        -- Escape Distance
+Config.ServiceExtensionOnEscape = 8
+Config.DistanceExtension = 50.0
 
 Config.ServiceLocation = vec(-3451.93, -3464.14, 462.35)
 Config.ReleaseLocation = vec(-255.97, -973.38, 31.22)

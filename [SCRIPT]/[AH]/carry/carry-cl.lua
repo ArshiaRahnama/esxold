@@ -1,15 +1,14 @@
 local Keys = {
-	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57, 
-	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177, 
+	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
+	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
 	["TAB"] = 37, ["Q"] = 44, ["W"] = 32, ["E"] = 38, ["R"] = 45, ["T"] = 245, ["Y"] = 246, ["U"] = 303, ["P"] = 199, ["["] = 39, ["]"] = 40, ["ENTER"] = 18,
 	["CAPS"] = 137, ["A"] = 34, ["S"] = 8, ["D"] = 9, ["F"] = 23, ["G"] = 47, ["H"] = 74, ["K"] = 311, ["L"] = 182,
 	["LEFTSHIFT"] = 21, ["Z"] = 20, ["X"] = 73, ["C"] = 26, ["V"] = 0, ["B"] = 29, ["N"] = 249, ["M"] = 244, [","] = 82, ["."] = 81,
-	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70, 
+	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70,
 	["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
 	["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
-
 
 ESX = nil
 local PlayerData = nil
@@ -19,16 +18,15 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
     end
 
-	while ESX.GetPlayerData().job == nil do 
+	while ESX.GetPlayerData().job == nil do
 		Citizen.Wait(50)
 	end
 	Citizen.Wait(500)
 
 	PlayerData = ESX.GetPlayerData()
-	
+
 
 end)
-
 
 status = {}
 
@@ -85,7 +83,7 @@ local function ensureAnimDict(animDict)
         RequestAnimDict(animDict)
         while not HasAnimDictLoaded(animDict) do
             Wait(500)
-        end        
+        end
     end
     return animDict
 end
@@ -95,7 +93,7 @@ AddEventHandler('esx:setJob', function(job)
 
     PlayerData.job = job
 
-    
+
 end)
 
 RegisterNetEvent("citizen:cl_stop")
@@ -109,7 +107,7 @@ function dragthread()
 	Citizen.CreateThread(function()
 		while carry.InProgress do
 
-			if IsPedInAnyVehicle(PlayerPedId(), false) then 
+			if IsPedInAnyVehicle(PlayerPedId(), false) then
 
 				TaskLeaveAnyVehicle(PlayerPedId(), true, true)
 			end
@@ -137,21 +135,21 @@ function dragthread()
 				end
 			end
 			DisableControlAction(0, 45, true)
-			DisableControlAction(0, 24, true) -- Attack
-			DisableControlAction(0, 257, true) -- Attack 2
-			DisableControlAction(0, 25, true) -- Right click
-			DisableControlAction(0, 47, true)  -- Disable weapon
-			DisableControlAction(0, 264, true) -- Disable melee
-			DisableControlAction(0, 257, true) -- Disable melee
-			DisableControlAction(0, 140, true) -- Disable melee
-			DisableControlAction(0, 141, true) -- Disable melee
-			DisableControlAction(0, 142, true) -- Disable melee
-			DisableControlAction(0, 143, true) -- Disable melee
-			DisableControlAction(0, 263, true) -- Melee Attack 1
-			DisableControlAction(0, 170, true) -- Melee Attack 1	
-			DisableControlAction(0, 23, true) -- Melee Attack 1	
-			DisableControlAction(0, Keys["LEFTSHIFT"], true) -- Melee Attack 1	
-			SetCurrentPedWeapon(PlayerPedId(),GetHashKey('WEAPON_UNARMED'))		
+			DisableControlAction(0, 24, true)
+			DisableControlAction(0, 257, true)
+			DisableControlAction(0, 25, true)
+			DisableControlAction(0, 47, true)
+			DisableControlAction(0, 264, true)
+			DisableControlAction(0, 257, true)
+			DisableControlAction(0, 140, true)
+			DisableControlAction(0, 141, true)
+			DisableControlAction(0, 142, true)
+			DisableControlAction(0, 143, true)
+			DisableControlAction(0, 263, true)
+			DisableControlAction(0, 170, true)
+			DisableControlAction(0, 23, true)
+			DisableControlAction(0, Keys["LEFTSHIFT"], true)
+			SetCurrentPedWeapon(PlayerPedId(),GetHashKey('WEAPON_UNARMED'))
 			Wait(5)
 		end
 	end)
@@ -163,7 +161,7 @@ AddEventHandler("citizen:syncTarget", function(targetSrc)
 	carry.InProgress = true
 	ensureAnimDict(carry.personCarried.animDict)
 	AttachEntityToEntity(PlayerPedId(), targetPed, 0, carry.personCarried.attachX, carry.personCarried.attachY, carry.personCarried.attachZ, 0.5, 0.5, 180, false, false, false, false, 2, false)
-	carry.type = "beingcarried"	
+	carry.type = "beingcarried"
 	dragthread()
 end)
 
@@ -182,14 +180,14 @@ AddEventHandler('carry:SendRequest', function(playerid)
 
 	local PlayerId = playerid
 	local nojobss = true
-	local targetPlayer = GetPlayerFromServerId(targetServerId) 
+	local targetPlayer = GetPlayerFromServerId(targetServerId)
 	local targetPed = GetPlayerPed(targetPlayer)
     local targetHealth = GetEntityHealth(targetPed)
 	IsPedDeadOrDying(targetPed, true)
 	if PlayerNew == 0 then return end
 	if not PlayerId then ESX.ShowNotification('Id Ra Vared Konid') return end
 
-	if ESX.GetPlayerData().IsDead then 
+	if ESX.GetPlayerData().IsDead then
 		ESX.ShowNotification('shoma Nemi Tavanin Vaghti Dead Hastid Kasi Ra Carry Konid')
 		return
 	end
@@ -199,7 +197,7 @@ AddEventHandler('carry:SendRequest', function(playerid)
 		return
 	end
 
-	
+
 	target = PlayerId
 
 	if not PlayerExist(target) then
@@ -207,9 +205,9 @@ AddEventHandler('carry:SendRequest', function(playerid)
 		return
 	end
 
-	
 
-	local targetVeh = GetVehiclePedIsIn(GetPlayerPed(PlayerId), false) 
+
+	local targetVeh = GetVehiclePedIsIn(GetPlayerPed(PlayerId), false)
 
 	if targetVeh ~= 0 then
 		return ESX.ShowNotification("Kasi Nazdik Shoma Nist")
@@ -221,17 +219,17 @@ AddEventHandler('carry:SendRequest', function(playerid)
 		ESX.ShowNotification('fard bayad dar 3 metri shoma bashad')
 		return
 	end
-	
+
 	if carry.InProgress == true then
 		ESX.ShowNotification('Shoma Nemitaniv Dar In Halat Carry Konid!')
 		return
 	end
-	
+
 	if distance > 3 and (carry.InProgress == true) then
 		ESX.ShowNotification('Shoma Nemitaniv Dar In Halat Carry Konid!')
 		return
 	end
-	
+
 	carry.Requested = true
 	Citizen.SetTimeout(5000,function()
 		if carry.Requested then
@@ -246,23 +244,20 @@ AddEventHandler('carry:SendRequest', function(playerid)
 			else
 				ESX.ShowNotification('darkhast carry ersal shod')
 				TriggerServerEvent('carry:send',target)
-				
+
 			end
-		end, target) 
+		end, target)
 	else
 		ESX.ShowNotification('darkhast carry ersal shod')
 		TriggerServerEvent('carry:send',target)
 
 	end
 
-
-
 end)
-
 
 RegisterCommand('carrymdd',function(source, args)
 	if not args[1] then return end
-	if PlayerData.job.name == "ambulance" then 
+	if PlayerData.job.name == "ambulance" then
 		TriggerServerEvent('carry:sendjob', tonumber(args[1]))
 	end
 end)
@@ -270,8 +265,8 @@ end)
 RegisterNetEvent("carry:sendtocljob")
 AddEventHandler("carry:sendtocljob", function(targetSrc)
 
-	-- local closestPlayer = GetClosestPlayer(50)
-	-- local targetSrc = GetPlayerServerId(closestPlayer)
+
+
 	TriggerServerEvent('carry:respone',true)
 	TriggerServerEvent("citizen:syncjob", targetSrc)
 
@@ -283,7 +278,7 @@ RegisterNetEvent("carry:sendtocl")
 AddEventHandler("carry:sendtocl", function(targetSrc2)
 	showrequest = true
 	targetSrc = targetSrc2
-	
+
 	Citizen.SetTimeout(20000,function()
 		showrequest = false
 	end)
@@ -311,20 +306,17 @@ AddEventHandler("carry:sync1", function(src, target)
 	carry.type = "carrying"
 end)
 
-
 AddEventHandler('carry:cascel', function(terayto)
 	carry.InProgress = terayto
 end)
-
-
 
 local cancel = false
 local disable = false
 AddEventHandler('onKeyDown',function(key)
 	local closestPlayer = GetClosestPlayer(3)
 	local targetSrc22 = GetPlayerServerId(closestPlayer)
-	
-	
+
+
 	if showrequest then
 		if key == "l" then
 			showrequest = false
@@ -351,7 +343,7 @@ AddEventHandler('onKeyDown',function(key)
 			TriggerServerEvent('citizen:stopcarry', targetSrc22)
 		end
 	end
-	
+
 	if disable then
 		if key == "l" then
 		disable = false
@@ -365,7 +357,6 @@ AddEventHandler('onKeyDown',function(key)
 		end
 	end
 end)
-
 
 RegisterNetEvent("carry:showcancel")
 AddEventHandler("carry:showcancel", function()

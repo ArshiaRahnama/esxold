@@ -1,10 +1,10 @@
 Locales['en'] = Locales['en'] or {}
 for k, v in pairs({
-  -- Cloakroom
+
   ['cloakroom'] = 'locker Room',
   ['ems_clothes_civil'] = 'Lebas Shakhsi',
   ['ems_clothes_ems'] = 'Lebas Kar',
-   -- Vehicles
+
   ['ambulance'] = 'ambulance',
   ['helicopter_prompt'] = 'press ~INPUT_CONTEXT~ to access the ~y~Helicopter Actions~s~.',
 
@@ -42,10 +42,10 @@ for k, v in pairs({
   ['vehicleshop_money'] = 'you cannot afford that vehicle',
   ['vehicleshop_awaiting_model'] = 'the vehicle is currently ~g~DOWNLOADING & LOADING~s~ please wait',
   ['confirm_no'] = 'no',
-  ['confirm_yes'] = 'yes', 
+  ['confirm_yes'] = 'yes',
   ['no'] = 'Na',
   ['yes'] = 'Are',
-  -- Action Menu
+
   ['hospital'] = 'hospital',
   ['revive_inprogress'] = 'a revive is in progress!',
   ['revive_complete'] = 'you have revived ~y~%s~s~',
@@ -61,9 +61,9 @@ for k, v in pairs({
   ['extra_division'] = 'Extera Division',
   ['buy_item_menu'] = 'armory - Buy Items',
 
-  -- Boss Menu
+
   ['boss_actions'] = 'boss Actions',
-  -- Misc
+
   ['invalid_amount'] = '~r~Invalid amount',
   ['actions_prompt'] = 'press ~INPUT_CONTEXT~ access the ~y~Ambulance Actions~s~.',
   ['deposit_amount'] = 'deposit Amount',
@@ -77,16 +77,16 @@ for k, v in pairs({
   ['medikit'] = 'medikit',
   ['bandage'] = 'bandage',
   ['max_item'] = 'You are already carrying enough.',
-  -- F6 Menu
+
   ['ems_menu'] = 'EMS Menu',
   ['ems_menu_title'] = 'Medical Menu',
   ['ems_menu_revive'] = 'revive Player',
   ['ems_menu_putincar'] = 'put in Vehicle',
   ['ems_menu_small'] = 'Big Heal',
   ['ems_menu_big'] = 'Small Heal',
-  -- Phone
+
   ['alert_ambulance'] = 'alert Ambulance',
-  -- Death
+
   ['respawn_available_in'] = 'respawn available in ~b~%s minutes %s seconds~s~',
   ['respawn_bleedout_in'] = 'you will bleed out in ~b~%s minutes %s seconds~s~\n',
   ['respawn_bleedout_prompt'] = 'hold [~b~E~s~] to respawn',
@@ -96,9 +96,9 @@ for k, v in pairs({
   ['distress_sent'] = 'Mahal Shoma Be Medic Ha Elam Shod Va Anha Darhal Ezam Be Mogheiat Hastand!',
   ['distress_message'] = 'Tebgh Gozareshat Fardi Dar Mahal GPS Moshkhas Shode Zakhmi Shode!',
   ['combatlog_message'] = '~h~Akharin Bari Ke Dar Server Boodid Morde Boodi Va Dc Kardid Be Hamin Dalil ~r~New Life~s~ Shodid!',
-  -- revive
+
   ['revive_help'] = 'revive a player',
-  -- Item
+
   ['used_medikit'] = 'You have used ~y~1x~s~ medikit',
   ['used_bandage'] = 'You have used ~y~1x~s~ bandage',
   ['not_enough_medikit'] = 'You do not have ~b~medikit~s~.',
@@ -111,12 +111,12 @@ for k, v in pairs({
   ['valid_purchase'] = 'validate this purchase?',
   ['not_enough_money'] = 'you do not have enough money',
   ['you_paid'] = 'you paid $%s',
-  --jafari
+
   ['press_access'] = 'Dokme ~INPUT_CONTEXT~ Baray Heal ~r~(~h~~g~$1000~r~)',
-  --gholi
+
   ['press_accessg'] = 'Dokme ~INPUT_CONTEXT~ Baray Heal ~r~(~h~~g~$15000~r~)',
-  
-  --armory
+
+
   ['open_armory'] = 'press ~INPUT_CONTEXT~ to open ~y~Armory~s~.',
   ['armory'] = 'Armory',
   ['quantity_invalid'] = '~r~Meghdar Vared Shode Namotabar Ast.',

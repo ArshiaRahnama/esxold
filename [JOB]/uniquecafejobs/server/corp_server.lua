@@ -1,7 +1,4 @@
---[[
-	Server side for the 3 corp jobs sitting on top of the 17 businesses.
-	See shared/corp.lua for the numbers (cuts, cooldowns, markup).
-]]
+
 
 for _, corp in pairs({ Corp.Meridian, Corp.Blacktide, Corp.CrateCarry }) do
 	TriggerEvent('esx_society:registerSociety', corp.Job, corp.Label, 'society_' .. corp.Job, 'society_' .. corp.Job, 'society_' .. corp.Job, { type = 'public' })
@@ -21,7 +18,6 @@ local function saveCustomName(entityJob, label)
 	})
 end
 
--- A holding's own top-grade Boss can rename their holding.
 RegisterNetEvent('uniquecafejobs:corp:renameHolding')
 AddEventHandler('uniquecafejobs:corp:renameHolding', function(newName)
 	local src = source
@@ -63,11 +59,8 @@ AddEventHandler('uniquecafejobs:corp:spawnVehicle', function(vehicleName)
 	end
 end)
 
--- ══════════════════════════ Meridian Holdings ══════════════════════════
+local lastFranchiseCollect = 0
 
-local lastFranchiseCollect = 0 -- os.time() of the last successful collection, server-wide
-
--- business_job -> { kind = 'portfolio'|'vip', status = 'acquired'|'partnered', rank = 'bronze'|'silver'|'gold' }
 local MeridianState = {}
 
 CreateThread(function()
@@ -163,8 +156,6 @@ AddEventHandler('uniquecafejobs:corp:collectFranchiseFee', function()
 	TriggerClientEvent('esx:showNotification', src, ('Franchise fees collected from %d affiliated businesses.'):format(collectedFrom))
 end)
 
--- ── Manage Portfolio (acquire / upgrade rank) ──
-
 RegisterNetEvent('uniquecafejobs:corp:requestManagePortfolio')
 AddEventHandler('uniquecafejobs:corp:requestManagePortfolio', function()
 	local src = source
@@ -239,8 +230,6 @@ AddEventHandler('uniquecafejobs:corp:upgradeBusiness', function(job)
 	end)
 end)
 
--- ── VIP Partnerships ──
-
 RegisterNetEvent('uniquecafejobs:corp:requestVIPPartnerships')
 AddEventHandler('uniquecafejobs:corp:requestVIPPartnerships', function()
 	local src = source
@@ -282,11 +271,6 @@ AddEventHandler('uniquecafejobs:corp:signVIPPartnership', function(job)
 	end)
 end)
 
--- ── Manage Business Staff (Director+ only, i.e. grade >= 2) ──
--- Only businesses Meridian actually owns (acquired portfolio) or has a VIP
--- partnership with show up here - unaffiliated businesses are completely
--- off limits, their own Boss keeps 100% independent control.
-
 local function isMeridianAffiliated(job)
 	local s = MeridianState[job]
 	return s ~= nil and (s.status == 'acquired' or s.status == 'partnered')
@@ -312,9 +296,6 @@ AddEventHandler('uniquecafejobs:corp:requestManageStaffList', function()
 	TriggerClientEvent('uniquecafejobs:corp:showManageStaffList', src, rows)
 end)
 
--- Opens that business's REAL boss menu (same hire/fire/grade/uniform/vehicle
--- system its own Boss uses) - Meridian is just a second entry point into the
--- exact same esx_society data, not a separate parallel system.
 RegisterNetEvent('uniquecafejobs:corp:openBusinessBossMenuAsMeridian')
 AddEventHandler('uniquecafejobs:corp:openBusinessBossMenuAsMeridian', function(job)
 	local src = source
@@ -338,8 +319,8 @@ AddEventHandler('uniquecafejobs:corp:appointManager', function(job, targetId)
 		return
 	end
 
-	-- Appoint them as that business's Boss (its own top grade), same as if
-	-- their own Boss had promoted them - Meridian is just doing the hiring.
+
+
 	target.setJob(job, 4)
 	TriggerClientEvent('esx:showNotification', src, ('%s appointed as Manager (Boss) of that business.'):format(target.name))
 	TriggerClientEvent('esx:showNotification', target.source, 'You have been appointed Manager (Boss) by Meridian Holdings.')
@@ -363,9 +344,7 @@ AddEventHandler('uniquecafejobs:corp:renameBusiness', function(job, newName)
 	TriggerClientEvent('esx:showNotification', src, ('Business renamed to "%s".'):format(newName))
 end)
 
--- ══════════════════════════ Blacktide Logistics (laundering) ══════════════════════════
-
-local lastWash = {} -- [identifier] = os.time()
+local lastWash = {}
 
 RegisterNetEvent('uniquecafejobs:corp:launder')
 AddEventHandler('uniquecafejobs:corp:launder', function(businessJob)
@@ -403,8 +382,6 @@ AddEventHandler('uniquecafejobs:corp:launder', function(businessJob)
 	lastWash[xPlayer.identifier] = now
 	TriggerClientEvent('esx:showNotification', src, ('Shoma $%d pool kasif shostid, Blacktide $%d gereft.'):format(amount, blacktideCut))
 end)
-
--- ══════════════════════════ Crate & Carry (wholesale + resale) ══════════════════════════
 
 RegisterNetEvent('uniquecafejobs:corp:openWholesaleMenu')
 AddEventHandler('uniquecafejobs:corp:openWholesaleMenu', function(businessJob)

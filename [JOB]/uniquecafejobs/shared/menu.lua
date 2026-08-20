@@ -1,8 +1,6 @@
 Config = Config or {}
 Config.itemIconsPath = "nui://esx_inventoryhud/html/img/items/"
 
--- Shared product catalog / shop stock - identical menu at every cafe.
-
 Config.UwUMenu_Cake_Item = {
     { title = 'Cake Bastani', value = 'cakebastani', price = 10000, image = Config.itemIconsPath..'cakebastani.png' },
     { title = 'Cake Totfarangi', value = 'caketotfarangi', price = 8000, image = Config.itemIconsPath..'caketotfarangi.png' },
@@ -41,30 +39,29 @@ Config.UwUMenu_Noshidani_Item = {
 }
 
 Config.UwUItems = {
-    -- items masrafi --
-    'bubbletetotfarangi', 'cakebastani', 'cakebastanivanili', 'caketotfarangi', 
-	'chaee', 'cupcake', 'ghahve50', 'ghahve80', 'ghahve100', 'hot_chocolate','latte', 'milkshake', 
+
+    'bubbletetotfarangi', 'cakebastani', 'cakebastanivanili', 'caketotfarangi',
+	'chaee', 'cupcake', 'ghahve50', 'ghahve80', 'ghahve100', 'hot_chocolate','latte', 'milkshake',
     'shokolat','suop',
-    -- New items masrafi --
+
     'bastani', 'boba_milk_tea_caramel', 'boba_milk_tea_matcha', 'bobal_tea_matcha', 'bobal_tea_tamshak',
 	'cake_bastani_vanili', 'cake_limoii', 'cupcake_shokolati', 'ice_coffee_matcha', 'milk_shake_shokolati',
 	'mufchocolate', 'muffin_tamshak', 'nodel', 'pankik', 'pankik_nutella', 'pankik_oreo',
     'tiramisuye_toot_farangi', 'vafel_nutella',
-    
-    -- item avalie --
-	'aard', 'bakingpowder', 'daneghahve','egg', 'fenjon', 'fenjonkasif', 'kare', 'kase', 
+
+
+	'aard', 'bakingpowder', 'daneghahve','egg', 'fenjon', 'fenjonkasif', 'kare', 'kase',
     'kasekasif', 'limo', 'podrcacao','shekar', 'shir', 'totfarangi','yakh', 'water',
     'bread', "abporteghal", 'nutela',
-    -- New item avalie --
+
 	'vanil', 'tamshak', 'powdr_matcha', 'oreo', 'nodel_kham', 'khame',
 }
-
 
 Config.UwUShopItem = {
     {label = 'Aard', icon = Config.itemIconsPath .. 'aard.png', price = 100, args = 'aard'},
     {label = 'Ab Porteghal', icon = Config.itemIconsPath .. 'abporteghal.png', price = 5000, args = 'abporteghal'},
-    -- {label = 'Boba Milk Tea Matcha', icon = Config.itemIconsPath .. 'boba_milk_tea_matcha.png', price = 4000, args = 'boba_milk_tea_matcha'},
-    -- {label = 'Boba Milk Tea Caramel', icon = Config.itemIconsPath .. 'boba_milk_tea_caramel.png', price = 4100, args = 'boba_milk_tea_caramel'},
+
+
     {label = 'Ice Coffee Matcha', icon = Config.itemIconsPath .. 'ice_coffee_matcha.png', price = 4500, args = 'ice_coffee_matcha'},
     {label = 'Bastani', icon = Config.itemIconsPath .. 'bastani.png', price = 5000, args = 'bastani'},
     {label = 'Nutela', icon = Config.itemIconsPath .. 'nutela.png', price = 200, args = 'nutela'},
@@ -83,7 +80,7 @@ Config.UwUShopItem = {
     {label = 'Yakh', icon = Config.itemIconsPath .. 'yakh.png', price = 100, args = 'yakh'},
     {label = 'Water', icon = Config.itemIconsPath .. 'water.png', price = 100, args = 'water'},
     {label = 'Bread', icon = Config.itemIconsPath .. 'bread.png', price = 100, args = 'bread'},
-  
+
     {label = 'Vanil', icon = Config.itemIconsPath .. 'vanil.png', price = 200, args = 'vanil'},
     {label = 'Tamshak', icon = Config.itemIconsPath .. 'tamshak.png', price = 175, args = 'tamshak'},
     {label = 'Powdr Matcha', icon = Config.itemIconsPath .. 'powdr_matcha.png', price = 200, args = 'powdr_matcha'},

@@ -1,10 +1,10 @@
 Locales['cs'] = Locales['cs'] or {}
 for k, v in pairs({
-  -- Cloakroom
+
   ['cloakroom'] = 'šatna',
   ['ems_clothes_civil'] = 'civilní oblečení',
   ['ems_clothes_ems'] = 'zdravotnické oblečení',
-  -- Vehicles
+
   ['ambulance'] = 'ambulance',
   ['helicopter_prompt'] = 'press ~INPUT_CONTEXT~ to access the ~y~Helicopter Actions~s~.',
   ['helicopter_buy'] = 'helicopter shop',
@@ -36,7 +36,7 @@ for k, v in pairs({
   ['vehicleshop_awaiting_model'] = 'the vehicle is currently ~g~DOWNLOADING & LOADING~s~ please wait',
   ['confirm_no'] = 'no',
   ['confirm_yes'] = 'yes',
-  -- Action Menu
+
   ['hospital'] = 'nemocnice',
   ['revive_inprogress'] = 'probíhá oživení!',
   ['revive_complete'] = 'oživili jste ~y~%s~s~',
@@ -47,9 +47,9 @@ for k, v in pairs({
   ['no_vehicles'] = 'v okolí není žádné vozidlo',
   ['player_not_unconscious'] = 'hráč není v bezvědomí!',
   ['player_not_conscious'] = 'hráč je v bezvědomí!',
-  -- Boss Menu
+
   ['boss_actions'] = 'akce šéfa',
-  -- Misc
+
   ['invalid_amount'] = '~r~neplatná částka',
   ['actions_prompt'] = 'press ~INPUT_CONTEXT~ access the ~y~Ambulance Actions~s~.',
   ['deposit_amount'] = 'částka vkladu',
@@ -61,16 +61,16 @@ for k, v in pairs({
   ['medikit'] = 'lékarnička',
   ['bandage'] = 'obvaz',
   ['max_item'] = 'již nesete dostatek věcí.',
-  -- F6 Menu
+
   ['ems_menu'] = 'Zdravotnické menu',
   ['ems_menu_title'] = 'záchranka - Zdravotnické menu',
   ['ems_menu_revive'] = 'oživit hráče',
   ['ems_menu_putincar'] = 'naložit do vozidla',
   ['ems_menu_small'] = 'ošetřit malé zranění',
   ['ems_menu_big'] = 'ošetřit vážné zranění',
-  -- Phone
+
   ['alert_ambulance'] = 'zdravotnický poplach',
-  -- Death
+
   ['respawn_available_in'] = 'oživení dostupné za ~b~%s minut a %s sekund~s~\n',
   ['respawn_bleedout_in'] = 'vykrvácíte za ~b~%s minut a %s sekund~s~\n',
   ['respawn_bleedout_prompt'] = 'držte [~b~E~s~] pro respawn.',
@@ -80,9 +80,9 @@ for k, v in pairs({
   ['distress_sent'] = 'tísňový signál byl vyslán dostupným jednotkám!',
   ['distress_message'] = 'nutná lékařská péče: občan v bezvědomí!',
   ['combatlog_message'] = 'byli jste násilně oživeni, protože jste předtím opustili server, když jste byli mrtví.',
-  -- revive
+
   ['revive_help'] = 'oživit hráče',
-  -- Item
+
   ['used_medikit'] = 'použili jste ~y~1x~s~ lékarničku',
   ['used_bandage'] = 'použili jste ~y~1x~s~ obvaz',
   ['not_enough_medikit'] = 'nemáte ~b~medikit~s~.',

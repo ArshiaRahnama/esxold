@@ -105,7 +105,7 @@ end)
 function OpenMenu(info)
 
 	for k, v in pairs(info) do
-		if v.category == "More" then 
+		if v.category == "More" then
 			TriggerEvent('chat:addMessage', {args = {"^1[System]: ^0Report : ^2"..v.owner.name.."^0(^5"..v.owner.id.."^0) : (^2"..v.Detail.." ^0)"}})
 		else
 			TriggerEvent('chat:addMessage', {args = {"^1[System]: ^0Report : ^2"..v.owner.name.."^0(^5"..v.owner.id.."^0) : ( ^2"..v.category.." ^0)"}})

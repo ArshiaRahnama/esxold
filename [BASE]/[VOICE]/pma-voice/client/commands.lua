@@ -18,7 +18,6 @@ TriggerEvent('chat:addSuggestion', '/setvoiceintent', 'Sets the players voice in
 	},
 })
 
--- TODO: Better implementation of this?
 RegisterCommand('vol', function(_, args)
 	if not args[1] then return end
 	setVolume(tonumber(args[1]))
@@ -43,7 +42,7 @@ function setProximityState(proximityRange, isCustom)
 		mode = isCustom and "Custom" or voiceModeData[2],
 	}, true)
 	sendUIMessage({
-		-- JS expects this value to be - 1, "custom" voice is on the last index
+
 		voiceMode = isCustom and #Cfg.voiceModes or mode -1
 	})
 end
@@ -57,16 +56,14 @@ exports("overrideProximityRange", function(range, disableCycle)
 	end
 end)
 
-
-
 exports("EnableMegaPhone", function(vol)
     EnableMegaPhone(vol)
 end)
- 
+
 function EnableMegaPhone(vol)
     voiceMode = 4
     MumbleSetAudioInputDistance(vol + 0.0)
-	
+
     mode = voiceMode
     LocalPlayer.state:set('proximity', {
         index = voiceMode,
@@ -95,10 +92,6 @@ end
 
 exports('DisableMegaPhone', DisableMegaPhone)
 
-
-
-
-
 exports("clearProximityOverride", function()
 	local voiceModeData = Cfg.voiceModes[mode]
 	setProximityState(voiceModeData[1], false)
@@ -109,11 +102,11 @@ exports("clearProximityOverride", function()
 end)
 
 RegisterCommand('cycleproximity', function()
-	-- Proximity is either disabled, or manually overwritten.
+
 	if GetConvarInt('voice_enableProximityCycle', 1) ~= 1 or disableProximityCycle then return end
 	local newMode = mode + 1
 
-	-- If we're within the range of our voice modes, allow the increase, otherwise reset to the first state
+
 	if newMode <= #Cfg.voiceModes then
 		mode = newMode
 	else

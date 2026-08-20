@@ -3,10 +3,6 @@ PlayerData = nil
 local inGarage = 0
 HZ = Citizen
 
--- essentialmode's own ESX.ShowNotification can throw ("attempt to index a nil value (global 'lib')")
--- if ox_lib's `lib` global isn't ready in that resource's context yet — that's a framework-side
--- bug outside our control. This wrapper catches it and falls back to GTA's native notification
--- (no framework dependency at all) so a broken ESX.ShowNotification can never crash/spam errors.
 function SafeNotify(msg)
     local ok = pcall(function() ESX.ShowNotification(msg) end)
     if not ok then
@@ -16,11 +12,6 @@ function SafeNotify(msg)
     end
 end
 
--- oxmysql's driver can return TINYINT(1) columns as Lua booleans instead of numbers.
--- This makes `stored` safe to compare either way. NOTE: if `stored` is still boolean here
--- (i.e. Unique_Garage.sql's ALTER TABLE hasn't been run yet), values 1 (in garage) and
--- 2 (impound) are indistinguishable at this point — this only restores correct behavior
--- for the in-garage/out-of-garage split, not the impound distinction. Run the SQL for that.
 function ToStoredNum(v)
     if type(v) == 'boolean' then
         return v and 1 or 0
@@ -30,8 +21,8 @@ end
 
 if Customize.ESX == 'ESX' then
     HZ.CreateThread(function() while not ESX do TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end) PlayerData = ESX.GetPlayerData() HZ.Wait(10) end end)
-	
-	
+
+
     RegisterNUICallback('SpawnVehicle', function(data)
         ESX.TriggerServerCallback('isPrice', function(istrue)
             if istrue then
@@ -96,7 +87,7 @@ elseif Customize.ESX == 'QBCore' then
             end
         end, data.Price)
     end)
-    
+
     RegisterNUICallback('VehicleInfo', function(data, cb)
         local model = GetHashKey(data.data.vehicle)
         RequestModel(model)
@@ -113,7 +104,6 @@ elseif Customize.ESX == 'QBCore' then
     end)
 end
 
-
 RegisterNetEvent('ImpoundVehicle', function(vehicles)
 	local vehicle
 	if vehicles then
@@ -128,9 +118,9 @@ RegisterNetEvent('ImpoundVehicle', function(vehicles)
         local ped = PlayerPedId()
         local pos = GetEntityCoords(ped)
         local vehpos = GetEntityCoords(vehicle)
-        -- if #(pos - vehpos) < 5.0 and not IsPedInAnyVehicle(ped) then
-       
-		if (not IsPedAPlayer(GetPedInVehicleSeat(vehicle, -1))) then 
+
+
+		if (not IsPedAPlayer(GetPedInVehicleSeat(vehicle, -1))) then
             local plate = GetPlate(vehicle)
             TriggerServerEvent("SetVehImpound", plate, bodyDamage, engineDamage, totalFuel)
             HZDeleteVehicle(vehicle)
@@ -145,7 +135,7 @@ AddEventHandler('Unique_Garage:DeleteAllVehicle', function()
 		if IsAnyPedInVehicle(entity) then
 			return
 		end
-		NetworkRequestControlOfEntity(entity)	
+		NetworkRequestControlOfEntity(entity)
 		local timeout = 2000
 		while timeout > 0 and not NetworkHasControlOfEntity(entity) do
 			Wait(100)
@@ -158,7 +148,7 @@ AddEventHandler('Unique_Garage:DeleteAllVehicle', function()
 			timeout = timeout - 100
 		end
 		TriggerEvent("ImpoundVehicle", entity)
-		if (DoesEntityExist(entity)) then 
+		if (DoesEntityExist(entity)) then
 			DeleteEntity(entity)
 		end
 	end
@@ -171,14 +161,14 @@ end
 RegisterNetEvent("Unique_Garage:DeleteAllVehicle")
 AddEventHandler("Unique_Garage:DeleteAllVehicle", function()
     for vehicle in EnumerateVehicles() do
-        if (not IsPedAPlayer(GetPedInVehicleSeat(vehicle, -1))) then 
-            SetVehicleHasBeenOwnedByPlayer(vehicle, false) 
+        if (not IsPedAPlayer(GetPedInVehicleSeat(vehicle, -1))) then
+            SetVehicleHasBeenOwnedByPlayer(vehicle, false)
             SetEntityAsMissionEntity(vehicle, false, false)
 			TriggerEvent("ImpoundVehicle", vehicle)
             ESX.Game.DeleteVehicle(vehicle)
             DeleteVehicle(vehicle)
-            if (DoesEntityExist(vehicle)) then 
-                DeleteVehicle(vehicle) 
+            if (DoesEntityExist(vehicle)) then
+                DeleteVehicle(vehicle)
             end
         end
     end
@@ -236,7 +226,7 @@ RegisterNetEvent('esx_SetJobPlayers')
 AddEventHandler('esx_SetJobPlayers', function(job)
 	PlayerData.job = job
 end)
-	
+
 HZ.CreateThread(function()
     HZ.Wait(2000)
 
@@ -295,7 +285,7 @@ HZ.CreateThread(function()
 
         for index, esc in pairs(Customize.JobGarages) do
             if PlayerData ~= nil then
-				-- print(PlayerData.job.name , esc.PlayerJob)
+
                 if PlayerData.job.name == esc.PlayerJob then
                     local NPCDistance = #(PlayerCoord - esc.Npc.Pos)
                     local VehPutDistance = #(PlayerCoord - esc.VehPutPos)
@@ -343,7 +333,7 @@ HZ.CreateThread(function()
                                     end
                                 end
                             end
-    
+
                         end
                     end
                 end
@@ -368,7 +358,7 @@ OpenMenuG = function(type)
 	local PlayerPed = PlayerPedId()
 	local PlayerCoord = GetEntityCoords(PlayerPed)
 	local InVeh = GetVehiclePedIsIn(PlayerPed)
-	local Callback = ESX.TriggerServerCallback 
+	local Callback = ESX.TriggerServerCallback
 	if type == "garage" then
 		for index_, esc in pairs(Customize.Garages) do
 			local NPCDistance = #(PlayerCoord - esc.Npc.Pos)
@@ -380,30 +370,30 @@ OpenMenuG = function(type)
 						local newData = {}
 						for index, vh in pairs(data) do
 							veh = nil
-							
-							veh = json.decode(vh.vehicle).model 
+
+							veh = json.decode(vh.vehicle).model
 							vh.stored = ToStoredNum(vh.stored)
 							vh.engine = tonumber(vh.engine) or 1000
 							vh.fuel = tonumber(vh.fuel) or 100
 							vh.body = tonumber(vh.body) or 1000
 							local vehClass = GetVehicleClassFromName(veh)
-							if vh.stored ~= 2 then                               
+							if vh.stored ~= 2 then
 								local displaytext = string.gsub(GetDisplayNameFromVehicleModel(veh), "%s+", ""):lower();
 								vh["VehModel"] = displaytext
 								vh["VehText"] = GetLabelText(displaytext)
-								
+
 								if esc.Type == 'car' then
-									if vehClass ~= 14 and vehClass ~= 15 and vehClass ~= 16 then -- air
+									if vehClass ~= 14 and vehClass ~= 15 and vehClass ~= 16 then
 										NewTable(newData, vh)
 									end
 								end
 								if esc.Type == 'air' then
-									if vehClass == 15 or vehClass == 16 then -- air
+									if vehClass == 15 or vehClass == 16 then
 										NewTable(newData, vh)
 									end
 								end
 								if esc.Type == 'sea' then
-									if vehClass == 14 then -- sea
+									if vehClass == 14 then
 										NewTable(newData, vh)
 									end
 								end
@@ -412,7 +402,7 @@ OpenMenuG = function(type)
 						LastCamera = esc.Camera
 						LastSpawnPos = esc.VehSpawnPos
 						Camera()
-						
+
 						SendReactMessage('setOpen', { setVeh = newData, setName = esc.UIName, inGarage = inGarage, Price = Customize.GaragesPrice })
 						SetNuiFocus(true, true)
 					else
@@ -443,17 +433,17 @@ OpenMenuG = function(type)
 									vh["VehModel"] = displaytext
 									vh["VehText"] = GetLabelText(displaytext)
 									if esc.Type == 'car' then
-										if vehClass ~= 14 and vehClass ~= 15 and vehClass ~= 16 then -- air
+										if vehClass ~= 14 and vehClass ~= 15 and vehClass ~= 16 then
 											NewTable(newData, vh)
 										end
 									end
 									if esc.Type == 'air' then
-										if vehClass == 15 or vehClass == 16 then -- air
+										if vehClass == 15 or vehClass == 16 then
 											NewTable(newData, vh)
 										end
 									end
 									if esc.Type == 'sea' then
-										if vehClass == 14 then -- sea
+										if vehClass == 14 then
 											NewTable(newData, vh)
 										end
 									end
@@ -492,17 +482,17 @@ OpenMenuG = function(type)
 								vh["VehModel"] = displaytext
 								vh["VehText"] = GetLabelText(displaytext)
 								if esc.Type == 'car' then
-									if vehClass ~= 14 and vehClass ~= 15 and vehClass ~= 16 then -- air
+									if vehClass ~= 14 and vehClass ~= 15 and vehClass ~= 16 then
 										NewTable(newData, vh)
 									end
 								end
 								if esc.Type == 'air' then
-									if vehClass == 15 or vehClass == 16 then -- air
+									if vehClass == 15 or vehClass == 16 then
 										NewTable(newData, vh)
 									end
 								end
 								if esc.Type == 'sea' then
-									if vehClass == 14 then -- sea
+									if vehClass == 14 then
 										NewTable(newData, vh)
 									end
 								end
@@ -528,9 +518,6 @@ HZ.CreateThread(function()
     for index, esc in pairs(Customize.ImpoundGarages) do NPCLoad(esc) MapBlip(esc) end
 end)
 
--- ox_target sphere zones for the garage NPC points, styled like Sunset's sun-garage
--- (icon = 'fa-solid fa-square-parking fa-beat'). Replaces the old raw [E]-key polling
--- loop with the same radius (5.0) and the exact same open logic (OpenMenuG).
 local GarageZoneRadius = 5.0
 
 HZ.CreateThread(function()
@@ -564,9 +551,9 @@ HZ.CreateThread(function()
                     name = 'unique_garage_job_open_' .. tostring(index),
                     icon = 'fa-solid fa-square-parking fa-beat',
                     label = (esc.UIName or 'Job Garage'),
-                    -- Keeps the exact same job gate as before: the icon can be visible from
-                    -- a distance, but selecting it (or even seeing the prompt up close) still
-                    -- requires the matching job, checked live so a job change works immediately.
+
+
+
                     canInteract = function()
                         return PlayerData ~= nil and PlayerData.job ~= nil and PlayerData.job.name == esc.PlayerJob
                     end,
@@ -620,7 +607,6 @@ function MapBlip(esc)
     EndTextCommandSetBlipName(blip)
 end
 
--- Native GTA help-text box (the strip that appears on the left side of the screen), no dependency needed.
 function ShowHelpNotification(text)
     BeginTextCommandDisplayHelp("STRING")
     AddTextComponentSubstringPlayerName(text)
@@ -660,7 +646,6 @@ RegisterNUICallback('Close', function()
     currentVeh = nil
 end)
 
-
 function NewTable(newData, vh)
     table.insert(newData, vh)
     if vh.stored == 1 then
@@ -674,8 +659,6 @@ function Camera()
     RenderScriptCams(true, true, 2000, true, false, false)
     SetFocusPosAndVel(LastCamera.location.posX, LastCamera.location.posY, LastCamera.location.posZ, 0.0, 0.0, 0.0)
 end
-
-
 
 RegisterNUICallback("rotateright", function(data)
     SetEntityHeading(currentVeh, GetEntityHeading(currentVeh) - 2)
@@ -769,8 +752,6 @@ end
 
 local ownCarBlips = {}
 
--- Attaches a map blip to a vehicle that follows it automatically for as long as it exists —
--- so the owner never loses track of where they left their car while it's out of the garage.
 function AttachOwnCarBlip(vehicle)
     if not vehicle or vehicle == 0 then return end
     if ownCarBlips[vehicle] and DoesBlipExist(ownCarBlips[vehicle]) then return end
@@ -821,7 +802,7 @@ function HZSpawnVehicle(model, cb, coords, isnetworked, teleportInto)
     SetVehRadioStation(veh, 'OFF')
     SetVehicleFuelLevel(veh, 100.0)
     SetModelAsNoLongerNeeded(model)
-	
+
     if teleportInto then TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)  end
     if cb then cb(veh) end
 end

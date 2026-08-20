@@ -3,19 +3,9 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 local boomboxes = {}
 
--- IMPORTANT: this id must be STABLE per player (not randomized), otherwise
--- pressing Play more than once creates a brand new sound each time while
--- only the newest id is ever remembered -> Stop can only kill the latest
--- one and any earlier sound is orphaned and keeps playing forever.
 local function getSoundId(src)
     return 'boombox_' .. src
 end
-
--- ==========================================================
--- Persistent storage (history + playlists)
--- Stored per-player via server-side KVP, so it survives
--- restarts without needing a MySQL/oxmysql dependency.
--- ==========================================================
 
 local function getIdentifier(src)
     local xPlayer = ESX.GetPlayerFromId(src)
@@ -48,8 +38,8 @@ end
 local function addToHistory(identifier, link)
     local data = loadPlayerData(identifier)
 
-    -- dedupe: if this link is already in the history, drop the old entry
-    -- so the fresh one moves to the front instead of listing it twice
+
+
     for i = #data.history, 1, -1 do
         if data.history[i].link == link then
             table.remove(data.history, i)
@@ -65,10 +55,6 @@ local function addToHistory(identifier, link)
     savePlayerData(identifier, data)
     return data
 end
-
--- ==========================================================
--- ESX callbacks used by the NUI
--- ==========================================================
 
 ESX.RegisterServerCallback('Im0ArSaBoom:getData', function(source, cb)
     local identifier = getIdentifier(source)
@@ -149,10 +135,6 @@ ESX.RegisterServerCallback('Im0ArSaBoom:deletePlaylist', function(source, cb, pl
     cb(false, 'Playlist Peida Nashod !')
 end)
 
--- ==========================================================
--- Playback (unchanged behaviour, now also records history)
--- ==========================================================
-
 ESX.RegisterUsableItem(Config.ItemName, function(source)
     TriggerClientEvent('Im0ArSaBoom:use', source)
 end)
@@ -191,8 +173,6 @@ AddEventHandler('Im0ArSaBoom:setDistance', function(distance)
     TriggerClientEvent('Im0ArSaBoom:setDistance', -1, soundId, distance)
 end)
 
--- always broadcasts the stop, even if our local state got desynced for
--- any reason -- pressing stop must be a guaranteed kill, every time.
 RegisterServerEvent('Im0ArSaBoom:stopMusic')
 AddEventHandler('Im0ArSaBoom:stopMusic', function()
     local src = source
@@ -211,8 +191,6 @@ AddEventHandler('Im0ArSaBoom:updatePosition', function(coords)
     TriggerClientEvent('Im0ArSaBoom:updatePosition', -1, soundId, coords)
 end)
 
--- if a player disconnects while their boombox is playing, make sure
--- the sound gets killed for everyone instead of looping forever
 AddEventHandler('playerDropped', function()
     local src = source
     if boomboxes[src] then

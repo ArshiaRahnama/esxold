@@ -1,4 +1,4 @@
--- loosely based on MTA's https://code.google.com/p/mtasa-resources/source/browse/trunk/%5Bmanagers%5D/mapmanager/mapmanager_main.lua
+
 
 local maps = {}
 local gametypes = {}
@@ -51,7 +51,7 @@ AddEventHandler('onResourceStarting', function(resource)
 
                 changeMap(resource)
             else
-                -- check if there's only one possible game type for the map
+
                 local map = maps[resource]
                 local count = 0
                 local gt
@@ -148,7 +148,7 @@ AddEventHandler('onResourceStart', function(resource)
         end
     end
 
-    -- handle starting
+
     loadMap(resource)
 end)
 
@@ -168,8 +168,8 @@ local function handleRoundEnd()
 end
 
 AddEventHandler('mapmanager:roundEnded', function()
-    -- set a timeout as we don't want to return to a dead environment
-    SetTimeout(50, handleRoundEnd) -- not a closure as to work around some issue in neolua?
+
+    SetTimeout(50, handleRoundEnd)
 end)
 
 function roundEnded()
@@ -191,7 +191,7 @@ AddEventHandler('onResourceStop', function(resource)
         currentMap = nil
     end
 
-    -- unload the map
+
     unloadMap(resource)
 end)
 

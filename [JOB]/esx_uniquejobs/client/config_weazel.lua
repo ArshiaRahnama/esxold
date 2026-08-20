@@ -6,7 +6,7 @@ Config_weazel.MaxInService               = -1
 Config_weazel.Locale                     = 'en'
 
 Config_weazel.AuthorizedVehicles = {
-	Shared = {			
+	Shared = {
 		{
 			model = 'b219tahoe',
 			label = 'Weazel Tahoe',
@@ -50,20 +50,20 @@ Config_weazel.AuthorizedVehicles = {
 		},
 	},
 
-	Sharedheli = {			
-	-- Extra : 0 = true , 1 = false
+	Sharedheli = {
+
 	{ model = 'polmav', label = 'Weazel Polmav', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 0, ['5'] = 0 } },
 	{ model = 'tx_heli', label = 'Weazel Heli', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 0, ['5'] = 0 } },
 
-	
-	
+
+
 	},
-	
+
 }
 
 Config_weazel.Blips = {
 
-	Blip = {	
+	Blip = {
 		Pos     = { x = -586.21, y = -935.42, z = 23.82},
 		Sprite  = 184,
 		Display = 4,
@@ -80,7 +80,7 @@ Config_weazel.Zones = {
         Color = { r = 0, g = 100, b = 0 },
         Type  = 22,
     },
-	
+
 	Cloakrooms = {
 		Pos = { x = -560.32, y =-912.80, z = 33.34},
 		Size = { x = 1.5, y = 1.5, z = 1.0 },
@@ -95,8 +95,8 @@ Config_weazel.Zones = {
         Color        = { r = 0, g = 255, b = 128 },
         Type         = 36,
         Heading      = 270.66,
-	},	
-	
+	},
+
 	Helicopters = {
         Pos          = { x = -576.46  , y = -924.80, z = 36.83 },
         SpawnPoint   = { x = -583.14, y = -930.56, z = 36.73},
@@ -104,19 +104,19 @@ Config_weazel.Zones = {
         Color        = { r = 0, g = 255, b = 128 },
         Type         = 7,
         Heading      = 90.00,
-    },	
+    },
 
 	VehicleDeleters = {
 		Pos  = {x = -616.009, y = -933.139, z = 22.315},
 		Size = { x = 1.5, y = 1.5, z = 1.0 },
-        Color = { r = 0, g = 255, b = 128 },		
+        Color = { r = 0, g = 255, b = 128 },
 		Type = 24
 	},
 
 	VehicleDeleters2 = {
 		Pos  = { x = -583.14, y = -930.56, z = 36.73},
 		Size = { x = 1.5, y = 1.5, z = 1.0 },
-        Color = { r = 0, g = 255, b = 128 },		
+        Color = { r = 0, g = 255, b = 128 },
 		Type = 24
 	},
 
@@ -143,7 +143,7 @@ Config_weazel.Uniforms = {
 			['chain_1'] = 2,    ['chain_2'] = 1
 		}
 	},
-	
+
   	reporter_outfit = {
 		male = {
 			['tshirt_1'] = 10,  ['tshirt_2'] = 0,
@@ -163,7 +163,7 @@ Config_weazel.Uniforms = {
 			['pants_1'] = 6,   ['pants_2'] = 0,
 			['shoes_1'] = 13,   ['shoes_2'] = 0,
 			['chain_1'] = 0,   ['chain_2'] = 0
-		}	
+		}
 	},
 
 	investigator_outfit = {
@@ -185,7 +185,7 @@ Config_weazel.Uniforms = {
 			['pants_1'] = 6,   ['pants_2'] = 0,
 			['shoes_1'] = 13,   ['shoes_2'] = 0,
 			['chain_1'] = 0,   ['chain_2'] = 0
-		}	
+		}
 	},
 
 	administrator_outfit = {
@@ -207,7 +207,7 @@ Config_weazel.Uniforms = {
 			['pants_1'] = 6,   ['pants_2'] = 0,
 			['shoes_1'] = 13,   ['shoes_2'] = 0,
 			['chain_1'] = 0,   ['chain_2'] = 0
-		}	
+		}
 	},
 
 	boss_outfit = {
@@ -229,7 +229,7 @@ Config_weazel.Uniforms = {
 			['pants_1'] = 6,   ['pants_2'] = 0,
 			['shoes_1'] = 13,   ['shoes_2'] = 0,
 			['chain_1'] = 0,   ['chain_2'] = 0
-		}	
+		}
 	}
-  
+
 }

@@ -1,5 +1,4 @@
 
--- Heist Carrier: 3082.3117 -4717.1191 15.2622
 
 exports('GetHeistCarrierObject', function()
 	return HeistCarrier

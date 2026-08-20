@@ -22,7 +22,7 @@ server_exports {
 }
 
 client_scripts{
-    "@ox_lib/init.lua", -- provides the global `lib` used by lib.notify
+    "@ox_lib/init.lua",
     "Client/*.lua",
     'Config.lua',
     "ReportMenu.lua"

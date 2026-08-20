@@ -1,13 +1,8 @@
--- Add additional functions to the standard table library
 
----@class oxtable : tablelib
+
 lib.table = table
 local pairs = pairs
 
----@param tbl table
----@param value any
----@return boolean
----Checks if tbl contains the given values. Only intended for simple values and unnested tables.
 local function contains(tbl, value)
     if type(value) ~= 'table' then
         for _, v in pairs(tbl) do
@@ -34,10 +29,6 @@ local function contains(tbl, value)
     end
 end
 
----@param t1 any
----@param t2 any
----@return boolean
----Compares if two values are equal, iterating over tables and matching both keys and values.
 local function table_matches(t1, t2)
     local tabletype1 = table.type(t1)
 
@@ -63,10 +54,6 @@ local function table_matches(t1, t2)
     return true
 end
 
----@generic T
----@param tbl T
----@return T
----Recursively clones a table to ensure no table references.
 local function table_deepclone(tbl)
     tbl = table.clone(tbl)
 
@@ -79,11 +66,6 @@ local function table_deepclone(tbl)
     return tbl
 end
 
----@param t1 table
----@param t2 table
----@param addDuplicateNumbers boolean? add duplicate number keys together if true, replace if false. Defaults to true.
----@return table
----Merges two tables together. Defaults to adding duplicate keys together if they are numbers, otherwise they are overriden.
 local function table_merge(t1, t2, addDuplicateNumbers)
     addDuplicateNumbers = addDuplicateNumbers == nil or addDuplicateNumbers
     for k, v2 in pairs(t2) do
@@ -111,10 +93,6 @@ table.merge = table_merge
 local frozenNewIndex = function(self) error(('cannot set values on a frozen table (%s)'):format(self), 2) end
 local _rawset = rawset
 
----@param tbl table
----@param index any
----@param value any
----@return table
 function rawset(tbl, index, value)
     if table.isfrozen(tbl) then
         frozenNewIndex(tbl)
@@ -123,10 +101,6 @@ function rawset(tbl, index, value)
     return _rawset(tbl, index, value)
 end
 
----Makes a table read-only, preventing further modification. Unfrozen tables stored within `tbl` are still mutable.
----@generic T : table
----@param tbl T
----@return T
 function table.freeze(tbl)
     local copy = table.clone(tbl)
     local metatbl = getmetatable(tbl)
@@ -137,16 +111,13 @@ function table.freeze(tbl)
         __metatable = 'readonly',
         __newindex = frozenNewIndex,
         __len = function() return #copy end,
-        ---@diagnostic disable-next-line: redundant-return-value
+
         __pairs = function() return next, copy end,
     })
 
     return tbl
 end
 
----Return true if `tbl` is set as read-only.
----@param tbl table
----@return boolean
 function table.isfrozen(tbl)
     return getmetatable(tbl) == 'readonly'
 end

@@ -1,4 +1,4 @@
--- Nightclub: -1604.664 -3012.583 -78.000
+
 
 exports('GetAfterHoursNightclubsObject', function()
     return AfterHoursNightclubs
@@ -222,28 +222,28 @@ AfterHoursNightclubs = {
             end,
         },
         Details = {
-            clutter = "Int01_ba_Clutter",               -- Clutter and graffitis
-            worklamps = "Int01_ba_Worklamps",           -- Work lamps + trash
-            truck = "Int01_ba_deliverytruck",           -- Truck parked in the garage
-            dryIce = "Int01_ba_dry_ice",                -- Dry ice machines (no effects)
-            lightRigsOff = "light_rigs_off",            -- All light rigs at once but turned off
-            roofLightsOff = "Int01_ba_lightgrid_01",    -- Fake lights
-            floorTradLights = "Int01_ba_trad_lights",   -- Floor lights meant to go with the trad style
-            chest = "Int01_ba_trophy04",                -- Chest on the VIP desk
-            vaultAmmunations = "Int01_ba_trophy05",     -- (inside vault) Ammunations
-            vaultMeth = "Int01_ba_trophy07",            -- (inside vault) Meth bag
-            vaultFakeID = "Int01_ba_trophy08",          -- (inside vault) Fake ID
-            vaultWeed = "Int01_ba_trophy09",            -- (inside vault) Opened weed bag
-            vaultCoke = "Int01_ba_trophy10",            -- (inside vault) Coke doll
-            vaultCash = "Int01_ba_trophy11",            -- (inside vault) Scrunched fake money 
+            clutter = "Int01_ba_Clutter",
+            worklamps = "Int01_ba_Worklamps",
+            truck = "Int01_ba_deliverytruck",
+            dryIce = "Int01_ba_dry_ice",
+            lightRigsOff = "light_rigs_off",
+            roofLightsOff = "Int01_ba_lightgrid_01",
+            floorTradLights = "Int01_ba_trad_lights",
+            chest = "Int01_ba_trophy04",
+            vaultAmmunations = "Int01_ba_trophy05",
+            vaultMeth = "Int01_ba_trophy07",
+            vaultFakeID = "Int01_ba_trophy08",
+            vaultWeed = "Int01_ba_trophy09",
+            vaultCoke = "Int01_ba_trophy10",
+            vaultCash = "Int01_ba_trophy11",
             Enable = function (details, state, refresh)
                 SetIplPropState(AfterHoursNightclubs.interiorId, details, state, refresh)
             end
         }
     },
 
-    -- 760, -1337, 27
-    Mesa = { 
+
+    Mesa = {
         id = 0,
         Barrier = {
             Enable = function(state)
@@ -262,8 +262,8 @@ AfterHoursNightclubs = {
         }
     },
 
-    -- 348, -979, 30
-    MissionRow = { 
+
+    MissionRow = {
         id = 1,
         Barrier = {
             Enable = function(state)
@@ -282,8 +282,8 @@ AfterHoursNightclubs = {
         }
     },
 
-    -- -118, -1260, 30
-    Strawberry = { 
+
+    Strawberry = {
         id = 2,
         Barrier = {
             Enable = function(state)
@@ -302,8 +302,8 @@ AfterHoursNightclubs = {
         }
     },
 
-    -- 9, 221, 109
-    VinewoodWest = { 
+
+    VinewoodWest = {
         id = 3,
         Barrier = {
             Enable = function(state)
@@ -322,8 +322,8 @@ AfterHoursNightclubs = {
         }
     },
 
-    -- 868, -2098, 31
-    Cypress = { 
+
+    Cypress = {
         id = 4,
         Barrier = {
             Enable = function(state)
@@ -342,8 +342,8 @@ AfterHoursNightclubs = {
         }
     },
 
-    -- -1287, -647, 27
-    DelPerro = { 
+
+    DelPerro = {
         id = 5,
         Barrier = {
             Enable = function(state)
@@ -362,8 +362,8 @@ AfterHoursNightclubs = {
         }
     },
 
-    -- -680, -2461, 14
-    Airport = { 
+
+    Airport = {
         id = 6,
         Barrier = {
             Enable = function(state)
@@ -382,8 +382,8 @@ AfterHoursNightclubs = {
         }
     },
 
-    -- 192, -3168, 6
-    Elysian = { 
+
+    Elysian = {
         id = 7,
         Barrier = {
             Enable = function(state)
@@ -402,8 +402,8 @@ AfterHoursNightclubs = {
         }
     },
 
-    -- 373, 254, 103
-    Vinewood = { 
+
+    Vinewood = {
         id = 8,
         Barrier = {
             Enable = function(state)
@@ -422,8 +422,8 @@ AfterHoursNightclubs = {
         }
     },
 
-    -- -1171, -1150, 6
-    Vespucci = { 
+
+    Vespucci = {
         id = 9,
         Barrier = {
             Enable = function(state)
@@ -480,9 +480,9 @@ AfterHoursNightclubs = {
     },
 
     LoadDefault = function()
-        -- Interior setup
+
         AfterHoursNightclubs.Ipl.Interior.Load()
-        
+
         AfterHoursNightclubs.Interior.Name.Set(AfterHoursNightclubs.Interior.Name.galaxy)
         AfterHoursNightclubs.Interior.Style.Set(AfterHoursNightclubs.Interior.Style.edgy)
 
@@ -490,7 +490,7 @@ AfterHoursNightclubs = {
         AfterHoursNightclubs.Interior.Speakers.Set(AfterHoursNightclubs.Interior.Speakers.upgrade)
 
         AfterHoursNightclubs.Interior.Security.Set(AfterHoursNightclubs.Interior.Security.on)
-        
+
         AfterHoursNightclubs.Interior.Turntables.Set(AfterHoursNightclubs.Interior.Turntables.style01)
         AfterHoursNightclubs.Interior.Lights.Bands.Set(AfterHoursNightclubs.Interior.Lights.Bands.cyan)
 
@@ -503,11 +503,10 @@ AfterHoursNightclubs = {
         RefreshInterior(AfterHoursNightclubs.interiorId)
 
 
-        -- Exterior IPL
         AfterHoursNightclubs.Mesa.Barrier.Enable(true)
         AfterHoursNightclubs.Mesa.Posters.Enable(AfterHoursNightclubs.Posters, true)
         AfterHoursNightclubs.Mesa.Posters.Enable(AfterHoursNightclubs.Posters.forSale, false)
-        
+
         AfterHoursNightclubs.MissionRow.Barrier.Enable(true)
         AfterHoursNightclubs.MissionRow.Posters.Enable(AfterHoursNightclubs.Posters, true)
         AfterHoursNightclubs.MissionRow.Posters.Enable(AfterHoursNightclubs.Posters.forSale, false)
@@ -539,7 +538,7 @@ AfterHoursNightclubs = {
         AfterHoursNightclubs.Vinewood.Barrier.Enable(true)
         AfterHoursNightclubs.Vinewood.Posters.Enable(AfterHoursNightclubs.Posters, true)
         AfterHoursNightclubs.Vinewood.Posters.Enable(AfterHoursNightclubs.Posters.forSale, false)
-        
+
         AfterHoursNightclubs.Vespucci.Barrier.Enable(true)
         AfterHoursNightclubs.Vespucci.Posters.Enable(AfterHoursNightclubs.Posters, true)
         AfterHoursNightclubs.Vespucci.Posters.Enable(AfterHoursNightclubs.Posters.forSale, false)

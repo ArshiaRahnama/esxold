@@ -7,13 +7,13 @@ if Config_fbi.MaxInService ~= -1 then
 end
 
 TriggerEvent('esx_phone:registerNumber', 'fbi', _U('alert_fbi'), true, true)
--- Boss-action MONEY is shared across the whole DOJ group - see cid_main.lua's note.
+
 TriggerEvent('esx_society:registerSociety', 'fbi', 'fbi', 'society_doj', 'society_fbi', 'society_fbi', {type = 'public'})
 
 RegisterServerEvent('esx_fbi_job:giveWeapon')
 AddEventHandler('esx_fbi_job:giveWeapon', function(weapon, ammo)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	
+
 	if xPlayer.job.name == 'fbi' then
 		xPlayer.addWeapon(weapon, ammo)
 		TriggerEvent('esx_society:logAction', 'fbi', 'Weapon Given', {
@@ -46,10 +46,10 @@ AddEventHandler('esx_fbi_job:confiscatePlayerItem', function(target, itemType, i
 		local targetItem = targetXPlayer.getInventoryItem(itemName)
 		local sourceItem = sourceXPlayer.getInventoryItem(itemName)
 
-		-- does the target player have enough in their inventory?
+
 		if targetItem.count > 0 and targetItem.count <= amount then
-		
-			-- can the player carry the said amount of x item?
+
+
 			if sourceItem.limit ~= -1 and (sourceItem.count + amount) > sourceItem.limit then
 				TriggerClientEvent('esx:showNotification', _source, _U('quantity_invalid'))
 			else
@@ -112,7 +112,7 @@ AddEventHandler('esx_fbi_job:putInVehicle', function(target, netId)
   if xPlayer.job.name ~= "nojob" then
     TriggerClientEvent('esx_fbi_job:putInVehicle', target, netId)
   else
-    -- exports.BanSql:BanTarget(source, "Tried to put someone in vehicle without being part of the gang", "Cheat Lua executor")
+
   end
 end)
 
@@ -127,8 +127,6 @@ AddEventHandler('esx_fbi_job:OutVehicle', function(target)
 	end
 end)
 
-
-
 RegisterServerEvent('esx_fbi_job:getStockItem')
 AddEventHandler('esx_fbi_job:getStockItem', function(itemName, count)
 	local _source = source
@@ -139,10 +137,10 @@ AddEventHandler('esx_fbi_job:getStockItem', function(itemName, count)
 
 		local inventoryItem = inventory.getItem(itemName)
 
-		-- is there enough in the society?
+
 		if count > 0 and inventoryItem.count >= count then
-		
-			-- can the player carry the said amount of x item?
+
+
 			if sourceItem.limit ~= -1 and (sourceItem.count + count) > sourceItem.limit then
 				TriggerClientEvent('esx:showNotification', _source, _U('quantity_invalid'))
 			else
@@ -170,7 +168,7 @@ AddEventHandler('esx_fbi_job:putStockItems', function(itemName, count)
 
 		local inventoryItem = inventory.getItem(itemName)
 
-		-- does the player have enough of the item?
+
 		if sourceItem.count >= count and count > 0 then
 			xPlayer.removeInventoryItem(itemName, count)
 			inventory.addItem(itemName, count)
@@ -419,10 +417,9 @@ ESX.RegisterServerCallback('esx_fbi_job:removeArmoryWeapon', function(source, cb
 
 end)
 
-
 ESX.RegisterServerCallback('esx_fbi_job:buy', function(source, cb, amount)
 
-	-- Armory purchases spend from the shared DOJ money pool - see registerSociety note above.
+
 	TriggerEvent('esx_addonaccount:getSharedAccount', 'society_doj', function(account)
 		if account.money >= amount then
 			account.removeMoney(amount)
@@ -457,26 +454,26 @@ ESX.RegisterServerCallback('esx_fbi_job:getPlayerInventory', function(source, cb
 end)
 
 AddEventHandler('playerDropped', function()
-	-- Save the source in case we lose it (which happens a lot)
+
 	local _source = source
-	
-	-- Did the player ever join?
+
+
 	if _source ~= nil then
 		local xPlayer = ESX.GetPlayerFromId(_source)
-		
-		-- Is it worth telling all clients to refresh?
+
+
 		if xPlayer ~= nil and xPlayer.job ~= nil and xPlayer.job.name == 'fbi' then
 			Citizen.Wait(5000)
 			TriggerClientEvent('esx_fbi_job:updateBlip', -1)
 		end
-	end	
+	end
 end)
 
 RegisterServerEvent('esx_fbi_job:spawned')
 AddEventHandler('esx_fbi_job:spawned', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	
+
 	if xPlayer ~= nil and xPlayer.job ~= nil and xPlayer.job.name == 'fbi' then
 		Citizen.Wait(5000)
 		TriggerClientEvent('esx_fbi_job:updateBlip', -1)

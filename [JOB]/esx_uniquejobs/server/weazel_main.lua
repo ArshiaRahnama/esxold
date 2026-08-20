@@ -14,14 +14,11 @@ end
 TriggerEvent('esx_phone:registerNumber', 'weazel', "Moshtari", true, true)
 TriggerEvent('esx_society:registerSociety', 'weazel', 'weazel', 'society_weazel', 'society_weazel', 'society_weazel', {type = 'private'})
 
-
-
-
 RegisterCommand('tabligh', function(source, args)
   local identifier = GetPlayerIdentifier(source)
   local xPlayer =  ESX.GetPlayerFromId(source)
   if not DoesHaveAds_weazel(identifier) then
-    if  xPlayer.bank >= adcost then 
+    if  xPlayer.bank >= adcost then
       if not args[1] then
         SendMessage_weazel(source, "Shoma dar ghesmat matn tabligh chizi vared nakardid!")
         return
@@ -47,17 +44,17 @@ RegisterCommand('ads', function(source)
   if xPlayer.job.name == "weazel" and xPlayer.job.grade >= 1 then
 
     if Count_weazel(ads) > 0 then
-     
+
       TriggerClientEvent('chatMessage', source, "", {255, 0, 0}, "^0====== List Tablighat Faal ======")
       for k,v in pairs(ads) do
-      
+
         TriggerClientEvent('chatMessage', source, "", {255, 0, 0}, "^3[^1" .. k  .. "^3]^0 Owner: ^2" .. v.name.."\nMessage: ^0"..v.message)
       end
 
     else
       SendMessage_weazel(source, "Tablighi baraye namayesh vojod nadarad!")
     end
-    
+
   else
     SendMessage_weazel(source, "Shoma dastresi kafi baraye estefade az in dastor ra nadarid!")
   end
@@ -87,7 +84,7 @@ RegisterCommand("ad_weazel", function(source, args)
     local author = string.gsub(xPlayer.name, "_", " ")
 
     if ads[adid] then
-      
+
       local ad = ads[adid]
       if action == "view" then
         SendMessage_weazel(source, "^2" .. ad.name .. ":^0 " .. ad.message)
@@ -109,8 +106,8 @@ RegisterCommand("ad_weazel", function(source, args)
           SendMessage_weazel(source, "Shakhsi ke in tabligh ra ferestade dar shahr nist!")
         end
       elseif action == "decline" then
- 
-        if not args[3] then 
+
+        if not args[3] then
           SendMessage_weazel(source, "Shoma dar ghesmat dalil baste shodan tabligh chizi vared nakardid!")
           return
         end
@@ -120,8 +117,8 @@ RegisterCommand("ad_weazel", function(source, args)
         ads[adid] = nil
         NotifyJob_weazel("Tabligh ^3" .. adid .. "^0 tavasot ^2" .. author .. "^0 baste shod be dalile: ^1" .. reason)
         if zPlayer then SendMessage_weazel(zPlayer.source, "Tabligh shoma tavasot ^2" .. author .. "^0 Baste shod be dalile: ^3" .. reason) end
-      
-      else 
+
+      else
         SendMessage_weazel(source, "Action vared shode eshtebah ast!")
       end
 
@@ -180,22 +177,21 @@ function Feed_weazel(intern, ad)
           },
       }
   }
-  
+
   PerformHttpRequest(news, function(err, text, headers) end, 'POST', json.encode({username = "Weazel News", embeds = details}), { ['Content-Type'] = 'application/json' })
 end
-
 
 RegisterCommand('news', function(source, args)
   local xPlayer = ESX.GetPlayerFromId(source)
   local author = string.gsub(xPlayer.name, "_", " ")
 
-  if xPlayer.job.name == 'weazel' then 
-   
-    if args[1] then 
+  if xPlayer.job.name == 'weazel' then
+
+    if args[1] then
       ad ={name = author, message = table.concat(args, " ")}
       Wait(50)
       SendAD_weazel(ad)
-      
+
     else
       SendMessage_weazel(source, "Shoma Matni Wared Nakardid!")
     end
@@ -206,19 +202,19 @@ RegisterCommand('newstime', function(source, args)
   local xPlayer = ESX.GetPlayerFromId(source)
   local author = string.gsub(xPlayer.name, "_", " ")
 
-  if xPlayer.job.name == 'weazel' then 
-   
-    if args[1] and args[2] and args[3] then 
-      if tonumber(args[2]) >= 60 then 
+  if xPlayer.job.name == 'weazel' then
+
+    if args[1] and args[2] and args[3] then
+      if tonumber(args[2]) >= 60 then
         local messageParts = {}
 
-        for i = 3, #args do 
+        for i = 3, #args do
             table.insert(messageParts, args[i])
         end
 
         ad = {name = author, message = table.concat(messageParts, " ")}
         Wait(50)
-        
+
         SendMsgTimer_weazel(ad, args[2], args[1])
       else
         SendMessage_weazel(source, "Zaman Bayad Bishtar Az ^159 ^0Sanie Bashad!!")
@@ -242,7 +238,7 @@ function CheckADS_weazel()
 
   for k,v in pairs(ads) do
     if os.time() - v.created >= 600 then
-      
+
       NotifyJob_weazel("Tabligh ^4" .. k .. "^0 be elat ^3adam pasokhgoyi^0 dar zaman mogharar ^1baste^0 shod!")
 
       local xPlayer = ESX.GetPlayerFromIdentifier(v.owner)
@@ -259,7 +255,6 @@ SetTimeout(15000, CheckADS_weazel)
 end
 
 CheckADS_weazel()
-
 
 ESX.RegisterServerCallback("esx_weazeljob:GetIdTabligh", function(source, cb)
   local element = {}
@@ -280,5 +275,4 @@ ESX.RegisterServerCallback("esx_weazeljob:GetIdTabligh", function(source, cb)
   end
   cb(element)
 end)
-
 

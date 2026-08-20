@@ -1,5 +1,4 @@
 
--- Meth lab: 1009.5, -3196.6, -38.99682
 
 exports('GetBikerMethLabObject', function()
     return BikerMethLab
@@ -43,7 +42,7 @@ BikerMethLab = {
         end
     },
     Details = {
-        production = "meth_lab_production",			-- Products
+        production = "meth_lab_production",
         Enable = function (details, state, refresh)
             SetIplPropState(BikerMethLab.interiorId, details, state, refresh)
         end

@@ -12,13 +12,13 @@ count = 0
 OnDuty = {}
 
 messages = {
-    -- [1] = "با ماشین 1 چرخ پنچر نمیتونید بیشتر از 30 کیلومتر برساعت حرکت کنید  ",
-    -- [2] = ".برای سرچ کردن باید : دست های طرف مقابل بالا باشد, یا به طرف دستبند زده باشید,یا مرده باشد",
-    -- [3] = " آدرس سرور دیسکورد : https://discord.gg/DiscordLink",
-    -- [4] = ".با ماشین نمیتوانید اقدام به کشتن افراد بکنید ",
-	-- [5] = ".در رابری ها یا درگیری خیابانی,شما حق تیر خلاص زدن به پلیس را ندارید",
-	-- [6] = "ریپورت خود را به صورت شفاف و کامل توضیح دهید ",
-	-- [7] = "برای خفت گیری باید حداقل 2 پلیس و 1 مدیک در شهر حضور داشته باشد"
+
+
+
+
+
+
+
 }
 
 resetaccountAceess = {
@@ -39,7 +39,6 @@ TriggerEvent(
     end
 )
 
-
 AddEventHandler(
     "esx:playerDropped",
     function(source, reason)
@@ -48,7 +47,7 @@ AddEventHandler(
         if _source ~= nil then
             local identifier = GetPlayerIdentifier(_source)
             local name = GetPlayerName(_source)
-            -- [Save into audit log]
+
             exports.ghmattimysql:execute(
                 "INSERT INTO audit (`identifier`, `id` ,`oname`, `timestamp`, `type`) VALUES (@identifier, @id, @name, @timestamp, @type)",
                 {
@@ -64,13 +63,12 @@ AddEventHandler(
                     end
                 end
             )
-            -- end of it
-			
+
+
 			if xPlayer.permission_level >= 8 then
 				xPlayer.set("aduty", false)
 				OnDuty[xPlayer.source] = false
 			end
-
 
             if AdminPlayers[identifier] ~= nil then
                 AdminPlayers[identifier] = nil
@@ -87,10 +85,10 @@ AddEventHandler(
         Citizen.Wait(2000)
         local identifier = GetPlayerIdentifier(source)
 		local xPlayer = ESX.GetPlayerFromId(source)
-		
+
         TriggerClientEvent("aduty:set_tags", -1, AdminPlayers)
-        
-        -- [Save into audit log]
+
+
         exports.ghmattimysql:execute(
             "INSERT INTO audit (`identifier`, `id`, `oname`, `timestamp`, `type`) VALUES (@identifier, @id, @name, @timestamp, @type)",
             {
@@ -107,8 +105,8 @@ AddEventHandler(
                 end
             end
         )
-        -- end of it
-        
+
+
 
         if xPlayer.permission_level >= 8 then
             xPlayer.set("aduty", true)
@@ -157,19 +155,10 @@ AddEventHandler(
                 " ^0Event ^3" .. event.name .. "^0 shoro shode ^1/event ^0jahat join dadan be event"
             )
         else
-            -- exports.BanSql:BanTarget(source, "Tried to modify event coords without permission", "esx:updateLastPosition'ecutor")
+
         end
     end
 )
-
-
-
--- RegisterServerEvent("aduty:playerLoaded")
--- AddEventHandler("aduty:playerLoaded", function()
-
--- 	TriggerClientEvent('aduty:set_tags', -1, AdminPlayers)
-
--- end)
 
 ESX.RegisterServerCallback(
     "esx_aduty:checkdutystatus",
@@ -247,7 +236,6 @@ ESX.RegisterServerCallback(
     end
 )
 
---// Civilian Section
 RegisterServerEvent("aduty:sendMessage")
 AddEventHandler(
     "aduty:sendMessage",
@@ -459,7 +447,7 @@ AddEventHandler(
                             callback("Not Found")
                             return
                         end
-                        --result['source'] = 'Offline'
+
                         table.insert(result, {source = "Offline"})
                         callback(result)
                     end
@@ -496,7 +484,7 @@ AddEventHandler(
     "esx_aduty:AddUserMoney",
     function(Type, identifier, amount, callback)
         if Type == "id" then
-            local xPlayer = ESX.GetPlayerFromId(tonumber(identifier)) -- Identifier Means Id At Here
+            local xPlayer = ESX.GetPlayerFromId(tonumber(identifier))
             xPlayer.addMoney(tonumber(amount))
             callback(true)
         elseif Type == "steam" then
@@ -533,7 +521,7 @@ AddEventHandler(
             mechanic = exports.esx_playerinfo:GetCounts("mecano"),
             government = exports.esx_playerinfo:GetCounts("government"),
             total = exports.esx_playerinfo:GetCounts("total"),
-            --queue = exports.Vice City-Queue:GetQueueSize(),
+
             Admins = {
                 on = 0,
                 off = 0,
@@ -558,7 +546,6 @@ AddEventHandler(
         callback(info)
     end
 )
-
 
 ESX.RegisterServerCallback("GetGangMembers", function(source, cb)
     Gangs = {}

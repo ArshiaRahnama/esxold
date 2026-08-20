@@ -14,13 +14,12 @@ Citizen.CreateThread(function()
 		Wait(1)
 	end
 
-
     while ESX.GetPlayerData().job == nil do
         Wait(100)
     end
 
 	PlayerData = ESX.GetPlayerData()
-    
+
     if Config.blipGroup.renameGroup then
         AddTextEntryByHash(`BLIP_OTHPLYR`, Config.blipGroup.groupName..'~w~')
     end
@@ -132,12 +131,12 @@ function goOnDuty()
     TriggerServerEvent('rflx_pdblips:setDuty', true)
 
     if Config.notifications.enable and Config.notifications.useMythic then
-        -- exports['mythic_notify']:SendAlert('inform', Config.notifications.onDutyText)
+
     elseif Config.notifications.enable then
         ESX.ShowNotification(Config.notifications.onDutyText)
     end
 
-    -- other sets
+
     if Config.bigmapTags then
         SetBigmapActive(true, false)
         DisplayPlayerNameTagsOnBlips(true)
@@ -153,12 +152,12 @@ function goOffDuty()
     TriggerServerEvent('rflx_pdblips:setDuty', false)
 
     if Config.notifications.enable and Config.notifications.useMythic then
-        -- exports['mythic_notify']:SendAlert('inform', Config.notifications.offDutyText)
+
     elseif Config.notifications.enable then
         ESX.ShowNotification(Config.notifications.offDutyText)
     end
 
-    -- other sets
+
     if Config.bigmapTags then
         DisplayPlayerNameTagsOnBlips(false)
     end
@@ -200,7 +199,7 @@ AddEventHandler('rflx_pdblips:removeUser', function(plyId)
 end)
 
 RegisterNetEvent('rflx_pdblips:receiveData')
-AddEventHandler('rflx_pdblips:receiveData', function(myId, data) -- ugly ass event
+AddEventHandler('rflx_pdblips:receiveData', function(myId, data)
     for k, v in pairs(data) do
         local cId = GetPlayerFromServerId(v.playerId)
         local canSee = Config.emergencyJobs[v.job].canSee and Config.emergencyJobs[v.job].canSee[PlayerData.job.name]
@@ -208,7 +207,7 @@ AddEventHandler('rflx_pdblips:receiveData', function(myId, data) -- ugly ass eve
         if canSee then
             if myId ~= v.playerId then
                 if cId ~= -1 then
-                    if nearBlips[v.playerId] == nil then  -- switch/init blip from long to close proximity
+                    if nearBlips[v.playerId] == nil then
                         if longBlips[v.playerId] then
                             RemoveBlip(longBlips[v.playerId].blip)
                             longBlips[v.playerId] = nil
@@ -218,30 +217,30 @@ AddEventHandler('rflx_pdblips:receiveData', function(myId, data) -- ugly ass eve
                         setupBlip(nearBlips[v.playerId].blip, v)
                     end
 
-                    if v.inVeh and not nearBlips[v.playerId].inVeh then -- entered veh blip setup
+                    if v.inVeh and not nearBlips[v.playerId].inVeh then
                         nearBlips[v.playerId].inVeh = true
                         vehBlipSetup(nearBlips[v.playerId].blip, v)
-                    elseif not v.inVeh and nearBlips[v.playerId].inVeh then -- left veh blip
+                    elseif not v.inVeh and nearBlips[v.playerId].inVeh then
                         nearBlips[v.playerId].inVeh = false
                         vehBlipSetup(nearBlips[v.playerId].blip, v)
                     end
 
-                    if v.siren and not nearBlips[v.playerId].siren then  -- turn on siren flash
+                    if v.siren and not nearBlips[v.playerId].siren then
                         nearBlips[v.playerId].siren = true
                         nearBlips[v.playerId].sirenState = 1
-                    elseif not v.siren and nearBlips[v.playerId].siren then  -- turn on siren flash
+                    elseif not v.siren and nearBlips[v.playerId].siren then
                         nearBlips[v.playerId].siren = false
                         if v.inVeh then
                             vehBlipSetup(nearBlips[v.playerId].blip, v)
                         else
                             setupBlip(nearBlips[v.playerId].blip, v)
                         end
-                    elseif nearBlips[v.playerId].siren then  -- blip color flash
+                    elseif nearBlips[v.playerId].siren then
                         nearBlips[v.playerId].sirenState = v.flashColors[nearBlips[v.playerId].sirenState + 1] and nearBlips[v.playerId].sirenState + 1 or 1
                         updateBlipFlash(nearBlips[v.playerId].blip, v.flashColors[nearBlips[v.playerId].sirenState])
                     end
                 else
-                    if longBlips[v.playerId] == nil then -- switch/init blip from close to long proximity
+                    if longBlips[v.playerId] == nil then
                         if nearBlips[v.playerId] then
                             RemoveBlip(nearBlips[v.playerId].blip)
                             nearBlips[v.playerId] = nil
@@ -263,31 +262,31 @@ AddEventHandler('rflx_pdblips:receiveData', function(myId, data) -- ugly ass eve
                         end
                     end
 
-                    if v.inVeh and not longBlips[v.playerId].inVeh then -- entered veh blip setup
+                    if v.inVeh and not longBlips[v.playerId].inVeh then
                         longBlips[v.playerId].inVeh = true
                         vehBlipSetup(longBlips[v.playerId].blip, v)
-                    elseif not v.inVeh and longBlips[v.playerId].inVeh then -- left veh blip
+                    elseif not v.inVeh and longBlips[v.playerId].inVeh then
                         longBlips[v.playerId].inVeh = false
                         vehBlipSetup(longBlips[v.playerId].blip, v)
                     end
 
-                    if v.siren and not longBlips[v.playerId].siren then -- turn on siren flash
+                    if v.siren and not longBlips[v.playerId].siren then
                         longBlips[v.playerId].siren = true
                         longBlips[v.playerId].sirenState = 1
-                    elseif not v.siren and longBlips[v.playerId].siren then  -- turn on siren flash
+                    elseif not v.siren and longBlips[v.playerId].siren then
                         longBlips[v.playerId].siren = false
                         if v.inVeh then
                             vehBlipSetup(longBlips[v.playerId].blip, v)
                         else
                             setupBlip(longBlips[v.playerId].blip, v)
                         end
-                    elseif longBlips[v.playerId].siren then -- blip color flash
+                    elseif longBlips[v.playerId].siren then
                         longBlips[v.playerId].sirenState = v.flashColors[longBlips[v.playerId].sirenState + 1] and longBlips[v.playerId].sirenState + 1 or 1
                         updateBlipFlash(longBlips[v.playerId].blip, v.flashColors[longBlips[v.playerId].sirenState])
                     end
                 end
             elseif Config.selfBlip then
-                if myBlip.blip == nil then -- my blip setup
+                if myBlip.blip == nil then
                     myBlip.blip = GetMainPlayerBlipId()
 
                     while myBlip.blip == nil do
@@ -296,7 +295,7 @@ AddEventHandler('rflx_pdblips:receiveData', function(myId, data) -- ugly ass eve
                     setupBlip(myBlip.blip, v)
                 end
 
-                if v.inVeh and not myBlip.inVeh then -- casual veh stuff, like above
+                if v.inVeh and not myBlip.inVeh then
                     myBlip.inVeh = true
                     vehBlipSetup(myBlip.blip, v)
                 elseif not v.inVeh and myBlip.inVeh then
@@ -304,17 +303,17 @@ AddEventHandler('rflx_pdblips:receiveData', function(myId, data) -- ugly ass eve
                     vehBlipSetup(myBlip.blip, v)
                 end
 
-                if v.siren and not myBlip.siren then  -- turn on siren flash
+                if v.siren and not myBlip.siren then
                     myBlip.siren = true
                     myBlip.sirenState = 1
-                elseif not v.siren and myBlip.siren then -- turn off siren flash
+                elseif not v.siren and myBlip.siren then
                     myBlip.siren = false
                     if v.inVeh then
                         vehBlipSetup(myBlip.blip, v)
                     else
                         setupBlip(myBlip.blip, v)
                     end
-                elseif myBlip.siren then -- blip color flash
+                elseif myBlip.siren then
                     myBlip.sirenState = v.flashColors[myBlip.sirenState + 1] ~= nil and myBlip.sirenState + 1 or 1
                     updateBlipFlash(myBlip.blip, v.flashColors[myBlip.sirenState])
                 end
@@ -388,7 +387,7 @@ function updateBlipFlash(blip, color)
     SetBlipColour(blip, color)
 end
 
-function restoreBlip(blip) -- idk better way, pls don't kill me bruh
+function restoreBlip(blip)
     SetBlipSprite(blip, 6)
     SetBlipDisplay(blip, 4)
     SetBlipScale(blip, 0.7)
@@ -402,4 +401,3 @@ function restoreBlip(blip) -- idk better way, pls don't kill me bruh
     SetBlipCategory(blip, 1)
 end
 
--- there used to be "includes" function, F

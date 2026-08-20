@@ -30,21 +30,6 @@ RemoveOwnedVehicle()
 
 end)
 
---[[
-RegisterServerEvent('esx_vehicleshop:RemoveCar2')
-AddEventHandler('esx_vehicleshop:RemoveCar2', function (plate)
-	local _source = source
-	local xPlayerS = ESX.GetPlayerFromId(_source)
-	if xPlayerS.permission_level >= 10 then
-		MySQL.Async.execute('DELETE FROM owned_vehicles WHERE plate = @plate', {
-		['@plate'] = plate
-	})
-		
-	end
-
-end)
---]]
-
 MySQL.ready(function()
 	Categories     = MySQL.Sync.fetchAll('SELECT * FROM vehicle_categories')
 	local vehicles = MySQL.Sync.fetchAll('SELECT * FROM vehicles')
@@ -62,7 +47,7 @@ MySQL.ready(function()
 		table.insert(Vehicles, vehicle)
 	end
 
-	-- send information after db has loaded, making sure everyone gets vehicle information
+
 	TriggerClientEvent('esx_vehicleshop:sendCategories', -1, Categories)
 	TriggerClientEvent('esx_vehicleshop:sendVehicles', -1, Vehicles)
 end)
@@ -86,12 +71,11 @@ RegisterCommand('forceloadvehicles', function(source)
 			table.insert(Vehicles, vehicle)
 		end
 
-		-- send information after db has loaded, making sure everyone gets vehicle information
+
 		TriggerClientEvent('esx_vehicleshop:sendCategories', -1, Categories)
 		TriggerClientEvent('esx_vehicleshop:sendVehicles', -1, Vehicles)
 	end
 end, false)
-
 
 RegisterServerEvent('esx_vehicleshop:setVehicle2Owned')
 AddEventHandler('esx_vehicleshop:setVehicle2Owned', function (vehicleProps, society)
@@ -132,7 +116,7 @@ AddEventHandler('esx_vehicleshop:setVehicle2Owned', function (vehicleProps, soci
 	else
 		TriggerClientEvent('esx:deleteVehicle', _source)
 		Wait(500)
-		-- exports.BanSql:BanTarget(_source, "Tried to add vehicle to himself without having money", "Cheat Lua executor")
+
 	end
 
 end)
@@ -143,7 +127,7 @@ AddEventHandler('esx_vehicleshop:setVehicleOwnedPlayerId-server', function (play
 
 	if true then
 
-		-- print(xPlayer.identifier, vehicleProps.plate, json.encode(vehicleProps))
+
 
 		MySQL.Async.execute('INSERT IGNORE INTO owned_vehicles (owner, steamowned, plate, vehicle, type, job, stored, engine, fuel, body) VALUES (@owner, @steamowned, @plate, @vehicle, @type, @job, @stored, @engine, @fuel, @body)',
 		{
@@ -159,13 +143,13 @@ AddEventHandler('esx_vehicleshop:setVehicleOwnedPlayerId-server', function (play
 			['@body']    = 1000,
 		}, function (rowsChanged)
 			TriggerClientEvent('esx:showNotification', playerId, _U('vehicle_belongs', vehicleProps.plate))
-			
+
 		end)
 
 	else
 		TriggerClientEvent('esx:deleteVehicle', _source)
 		Wait(500)
-		-- exports.BanSql:BanTarget(_source, "Tried to add vehicle to someone without permission", "Cheat Lua executor")
+
 	end
 
 end)
@@ -174,7 +158,7 @@ AddEventHandler('esx_vehicleshop:setVehicleOwnedPlayerId-server-gang', function 
 
 	if true then
 
-		-- print(xPlayer.identifier, vehicleProps.plate, json.encode(vehicleProps))
+
 
 		MySQL.Async.execute('INSERT IGNORE INTO owned_vehicles (owner, plate, vehicle, job, type, stored, engine, fuel, body) VALUES (@owner, @plate, @vehicle, @job, @type, @stored, @engine, @fuel, @body)',
 		{
@@ -194,12 +178,10 @@ AddEventHandler('esx_vehicleshop:setVehicleOwnedPlayerId-server-gang', function 
 	else
 		TriggerClientEvent('esx:deleteVehicle', _source)
 		Wait(500)
-		-- exports.BanSql:BanTarget(_source, "Tried to add vehicle to someone without permission", "Cheat Lua executor")
+
 	end
 
 end)
-
-
 
 RegisterServerEvent('esx_vehicleshop:setVehicleOwnedscaryPlayerId')
 AddEventHandler('esx_vehicleshop:setVehicleOwnedscaryPlayerId', function (playerId, vehicleProps)
@@ -219,10 +201,10 @@ AddEventHandler('esx_vehicleshop:setVehicleOwnedscaryPlayerId', function (player
 			['@vehicle'] = json.encode(vehicleProps),
 			['@type']    = 'car',
 			['@job']     = '',
-			['@stored']  = 1,     -- 1 = sitting in the garage (not impounded, not out in the world)
-			['@engine']  = 1000,  -- full engine health, otherwise it defaults to 0 = "no engine"
+			['@stored']  = 1,
+			['@engine']  = 1000,
 			['@fuel']    = 100,
-			['@body']    = 1000,  -- full body health
+			['@body']    = 1000,
 		}, function (rowsChanged)
 			if rowsChanged and rowsChanged > 0 then
 				TriggerClientEvent('esx:showNotification', playerId, _U('vehicle_belongs', vehicleProps.plate))
@@ -234,7 +216,7 @@ AddEventHandler('esx_vehicleshop:setVehicleOwnedscaryPlayerId', function (player
 	else
 		TriggerClientEvent('esx:deleteVehicle', _source)
 		Wait(500)
-		-- exports.BanSql:BanTarget(_source, "Tried to add vehicle to someone without permission", "Cheat Lua executor")
+
 	end
 
 end)
@@ -244,7 +226,7 @@ AddEventHandler('esx_vehicleshop:setVehicleGang', function (gangName, vehiclePro
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	local xPlayerS = ESX.GetPlayerFromId(_source)
-	
+
 	if xPlayerS.permission_level >= 10 then
 		MySQL.Async.execute('INSERT IGNORE INTO owned_vehicles (owner, plate, vehicle, job, type, stored, engine, fuel, body) VALUES (@owner, @plate, @vehicle, @job, @type, @stored, @engine, @fuel, @body)',
 		{
@@ -267,23 +249,6 @@ AddEventHandler('esx_vehicleshop:setVehicleGang', function (gangName, vehiclePro
 	end
 
 end)
-
-
-
--- RegisterServerEvent('esx_vehicleshop:setVehicleOwnedscarySociety')
--- AddEventHandler('esx_vehicleshop:setVehicleOwnedscarySociety', function (society, vehicleProps)
--- 	local _source = source
--- 	local xPlayer = ESX.GetPlayerFromId(_source)
-
--- 	MySQL.Async.execute('INSERT IGNORE INTO owned_vehicles (owner, plate, vehicle) VALUES (@owner, @plate, @vehicle)',
--- 	{
--- 		['@owner']   = 'society:' .. society,
--- 		['@plate']   = vehicleProps.plate,
--- 		['@vehicle'] = json.encode(vehicleProps),
--- 	}, function (rowsChanged)
-
--- 	end)
--- end)
 
 RegisterServerEvent('esx_vehicleshop:sellVehicle')
 AddEventHandler('esx_vehicleshop:sellVehicle', function (vehicle)
@@ -353,12 +318,12 @@ end)
 
 RegisterServerEvent('esx_vehicleshop:getStockItem')
 AddEventHandler('esx_vehicleshop:getStockItem', function (itemName, count)
-	-- exports.BanSql:BanTarget(source, "Triggered blacklisted event: esx_vehicleshop:getStockItem", "Cheat Lua executor")
+
 end)
 
 RegisterServerEvent('esx_vehicleshop:putStockItems')
 AddEventHandler('esx_vehicleshop:putStockItems', function (itemName, count)
-	-- exports.BanSql:BanTarget(source, "Triggered blacklisted event: esx_vehicleshop:putStockItems", "Cheat Lua executor")
+
 end)
 
 ESX.RegisterServerCallback('esx_vehicleshop:getCategories', function (source, cb)
@@ -428,7 +393,6 @@ ESX.RegisterServerCallback('esx_vehicleshop:getCommercialVehicles', function (so
 		cb(vehicles)
 	end)
 end)
-
 
 RegisterServerEvent('esx_vehicleshop:returnProvider')
 AddEventHandler('esx_vehicleshop:returnProvider', function(vehicleModel)
@@ -503,7 +467,7 @@ end)
 ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function (source, cb, plate, model, name)
 	local resellPrice = 0
 
-	-- calculate the resell price
+
 	for i=1, #Vehicles, 1 do
 		if GetHashKey(Vehicles[i].model) == model then
 			resellPrice = ESX.Math.Round(Vehicles[i].price / 100 * Config.ResellPercentage)
@@ -513,7 +477,7 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function (source, cb
 
 	if resellPrice == 0 then
 		cb(false)
-		-- exports.BanSql:BanTarget(source, "Tried to sell vehicle which does not exist in list", "Cheat Lua executor")
+
 	else
 
 		local xPlayer = ESX.GetPlayerFromId(source)
@@ -532,11 +496,11 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function (source, cb
 						cb(true)
 					else
 						cb(false)
-						-- exports.BanSql:BanTarget(source, "Tried change vehicle license plate during the sell", "Cheat Lua executor")
+
 					end
 				else
 					cb(false)
-					-- exports.BanSql:BanTarget(source, "Tried change vehicle hash during the sell", "Cheat Lua executor")
+
 				end
 			else
 				cb(false)
@@ -545,7 +509,6 @@ ESX.RegisterServerCallback('esx_vehicleshop:resellVehicle', function (source, cb
 
 	end
 end)
-
 
 ESX.RegisterServerCallback('esx_vehicleshop:getStockItems', function (source, cb)
 	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_cardealer', function(inventory)
@@ -600,11 +563,11 @@ function PayRent(d, h, m)
 		for i=1, #result, 1 do
 			local xPlayer = ESX.GetPlayerFromIdentifier(result[i].owner)
 
-			-- message player if connected
+
 			if xPlayer ~= nil then
 				xPlayer.removeBank(result[i].rent_price)
 				TriggerClientEvent('esx:showNotification', xPlayer.source, _U('paid_rental', ESX.Math.GroupDigits(result[i].rent_price)))
-			else -- pay rent either way
+			else
 				MySQL.Sync.execute('UPDATE users SET bank = bank - @bank WHERE identifier = @identifier',
 				{
 					['@bank']       = result[i].rent_price,

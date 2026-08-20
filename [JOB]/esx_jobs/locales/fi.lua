@@ -1,5 +1,5 @@
 Locales['fi'] = {
-  -- Global menus
+
   ['cloakroom']                 = 'vaatelokero',
   ['cloak_change']              = 'paina ~INPUT_PICKUP~ vaihtaaksesi vaatteet',
   ['citizen_wear']              = 'siviilivaatteet',
@@ -25,7 +25,7 @@ Locales['fi'] = {
   ['public_enter']              = 'paina ~INPUT_PICKUP~ mennäksesi taloon sisälle.',
   ['public_leave']              = 'paina ~INPUT_PICKUP~ poistuaksesi talosta.',
 
-  -- Lumber Jack job
+
   ['lj_locker_room']            = 'metsurin Pukulokero',
   ['lj_mapblip']                = 'Puukasa',
   ['lj_wood']                   = 'puu',
@@ -38,7 +38,7 @@ Locales['fi'] = {
   ['lj_pick_boards']            = 'paina ~INPUT_PICKUP~ saadaksesi lankkuja',
   ['lj_deliver_button']         = 'paina ~INPUT_PICKUP~ toimitaaksesi lankut.',
 
-  -- Fisherman
+
   ['fm_fish_locker']            = 'kalastajan Pukulokero',
   ['fm_fish']                   = 'kala',
   ['fm_fish_area']              = 'kalastus alue',
@@ -50,7 +50,7 @@ Locales['fi'] = {
   ['fm_boat_return_button']     = 'paina ~INPUT_PICKUP~ palautaaksesi laiva',
   ['fm_deliver_fish']           = 'paina ~INPUT_PICKUP~ myydäksesi kalat',
 
-  -- Fuel
+
   ['f_oil_refiner']             = 'Öljynjalostajan Pukulokero',
   ['f_drill_oil']               = 'poraa että saat öljyä',
   ['f_fuel']                    = 'öljy',
@@ -63,7 +63,7 @@ Locales['fi'] = {
   ['f_deliver_gas']             = 'toimita polttoöljy',
   ['f_deliver_gas_button']      = 'paina ~INPUT_PICKUP~ myydäksesi Polttoöljyä',
 
-  -- Miner
+
   ['m_miner_locker']            = 'Kaivostyöläisen Pukulokero',
   ['m_rock']                    = 'kivi',
   ['m_pickrocks']               = 'paina ~INPUT_PICKUP~ louhiaksesi kiviä.',
@@ -84,11 +84,11 @@ Locales['fi'] = {
   ['m_deliver_diamond']         = 'paina ~INPUT_PICKUP~ myydäksesi timantit',
   ['m_melt_button']             = 'paina ~INPUT_PICKUP~ sulattaaksesi kivet',
 
-  -- Reporter
+
   ['reporter_name']             = 'san Andreas Times',
   ['reporter_garage']           = 'paina ~INPUT_PICKUP~ mennäksesi alas talliin',
 
-  -- Slaughterer
+
   ['s_slaughter_locker']        = 'teurastajan Pukulokero',
   ['s_hen']                     = 'kanakoppi',
   ['s_alive_chicken']           = 'elävä kana',
@@ -102,7 +102,7 @@ Locales['fi'] = {
   ['s_unpackaged_button']       = 'paina ~INPUT_PICKUP~ laittaaksesi kanoja pakettiin',
   ['s_deliver']                 = 'paina ~INPUT_PICKUP~  myydäksesi kananfileet',
 
-  -- Dress Designer
+
   ['dd_dress_locker']           = 'vaatevalmistajan Pukulokero',
   ['dd_wool']                   = 'villa',
   ['dd_pickup']                 = 'paina ~INPUT_PICKUP~ kerätäksesi villaa',

@@ -3,48 +3,48 @@ Config = {
     Objects = {
         ['pickaxe'] = 'prop_tool_pickaxe',
     },
-    -- shopItems = {
-    --     iron = 600,
-    --     stone = 500
-    -- },
+
+
+
+
     Uniforms = {
         work_wear = {
 			   male = {
-				['tshirt_1'] = 184,  
+				['tshirt_1'] = 184,
 				['tshirt_2'] = 0,
-				['torso_1'] = 160,  
+				['torso_1'] = 160,
 				['torso_2'] = 0,
-				['decals_1'] = 0,   
+				['decals_1'] = 0,
 				['decals_2'] = 0,
-				['arms'] = 23,   
-				['pants_1'] = 86,  
+				['arms'] = 23,
+				['pants_1'] = 86,
 				['pants_2'] = 2,
-				['shoes_1'] = 42, 
+				['shoes_1'] = 42,
 				['shoes_2'] = 0,
-				['helmet_1'] = 0, 
+				['helmet_1'] = 0,
 				['helmet_2'] = 0,
-				['chain_1'] = 0,   
+				['chain_1'] = 0,
 				['chain_2'] = 0,
-				['ears_1'] = -1,    
+				['ears_1'] = -1,
 				['ears_2'] = 0
 			},
             female = {
-                ['tshirt_1'] = 17,  
+                ['tshirt_1'] = 17,
                 ['tshirt_2'] = 0,
-                ['torso_1'] = 19,  
+                ['torso_1'] = 19,
                 ['torso_2'] = 0,
-                ['decals_1'] = 0,   
+                ['decals_1'] = 0,
                 ['decals_2'] = 0,
                 ['arms'] = 0,
-                ['pants_1'] = 38,  
+                ['pants_1'] = 38,
                 ['pants_2'] = 5,
-                ['shoes_1'] = 16, 
+                ['shoes_1'] = 16,
                 ['shoes_2'] = 0,
-                ['helmet_1'] = -1, 
+                ['helmet_1'] = -1,
                 ['helmet_2'] = 0,
-                ['chain_1'] = 0,   
+                ['chain_1'] = 0,
                 ['chain_2'] = 0,
-                ['ears_1'] = 0,    
+                ['ears_1'] = 0,
                 ['ears_2'] = 0
             }
         },
@@ -52,11 +52,11 @@ Config = {
     Blips = {
         {title="Madane Sang", colour= 5, id= 67, x = 2942.93, y = 2775.1, z = 39.22	},
         {title="Shostosho Va Qarbale Sangha", colour= 5, id= 67, x = 306.97, y = 2884.08, z = 42.46	},
-        --{title="RakhtKan", colour= 5, id= 67, x = 859.98, y = -2117.04, z = 31.67	},
+
         {title="Zoob Tala va Ahan", colour= 5, id= 67, x =1108.61, y = -2007.33, z = 30.9	},
         {title="Forosh Ajor", colour= 5, id= 67, x =2486.46, y = 1557.34, z = 31.91	},
-        --{title="Forosh Tala Va Ahan", colour= 5, id= 67, x =2473.81, y = 1489.99, z = 35.2	},
-        -- {title="Forosh Diamond", colour= 5, id= 67, x =2674.63, y = 3506.55, z = 51.72	},
+
+
     },
 	MeltingField = {
         { coords = vector3(1109.52, -2013.08, 34.45) ,task = { c = vector3(1110.0, -2012.42, 35.44), h = 324.77 } },
@@ -68,23 +68,23 @@ Config = {
         { coords = vector3(312.68, 2875.18, 42.50), h = 115.84 }
     },
 	ISSell = {
-       -- coords = vector3(2473.81,1489.99,35.2)    -- Ahan                 -91.54, -1029.71, 26.83
+
     },
     DGSell = {
-        -- coords = vector3(2674.63,3506.55,51.72)    -- javaheri                 -620.57, -228.36, 37.06
+
     },
     SSell = {
-        coords = vector3(2486.46,1557.34,31.91)  -- Ajoor               -149.11, -1040.24, 26.27
+        coords = vector3(2486.46,1557.34,31.91)
     },
-	
+
     SellLoc = vector3(182.82,-1319.45,29.32),
     ClackLoc = vector3(925.54, -1560.19, 29.74),
     VehLoc = vector3(922.26, -1556.8, 30.78),
     VehSpawn = vector3(910.69, -1565.42, 31.79),
     Rock = vector3(2942.93, 2775.1, 39.22),
     VehDelLoc = vector3(902.57, -1566.37, 29.82),
-	
-	
+
+
 }
 
 Strings = {

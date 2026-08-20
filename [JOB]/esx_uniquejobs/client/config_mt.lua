@@ -10,16 +10,16 @@ Config_mt.MarkerColor                = { r = 50, g = 50, b = 204 }
 
 Config_mt.EnablePlayerManagement     = true
 Config_mt.EnableArmoryManagement     = true
-Config_mt.EnableESXIdentity          = true -- enable if you're using esx_identity
-Config_mt.EnableNonFreemodePeds      = false -- turn this on if you want custom peds
+Config_mt.EnableESXIdentity          = true
+Config_mt.EnableNonFreemodePeds      = false
 Config_mt.EnableSocietyOwnedVehicles = false
-Config_mt.EnableLicenses             = true -- enable if you're using esx_license
-Config_mt.EnableJobLogs              = true -- only turn this on if you are using esx_joblogs
+Config_mt.EnableLicenses             = true
+Config_mt.EnableJobLogs              = true
 
-Config_mt.EnableHandcuffTimer        = false -- enable handcuff timer? will unrestrain player after the time ends
-Config_mt.HandcuffTimer              = 10 * 60000 -- 10 mins
+Config_mt.EnableHandcuffTimer        = false
+Config_mt.HandcuffTimer              = 10 * 60000
 
-Config_mt.EnableJobBlip              = true -- enable blips for colleagues, requires esx_society
+Config_mt.EnableJobBlip              = true
 
 Config_mt.MaxInService               = -1
 Config_mt.Locale                     = 'en'
@@ -28,25 +28,24 @@ Config_mt.mtStations = {
 
 	LSPD = {
 
-	-- 	Blip = {
-	-- 		Pos     = { x = -2333.13, y = 3261.101, z = 32.827},
-	-- 		Sprite  = 60,
-	-- 		Display = 4,
-	-- 		Scale   = 1.2,
-	-- 		Colour  = 26,
-	-- 	},
-
-		-- Blip2 = {
-		-- 	Pos     = { x = 626.0573, y = 1.681767, z = 82.785 },
-		-- 	Sprite  = 60,
-		-- 	Display = 4,
-		-- 	Scale   = 1.2,
-		-- 	Colour  = 26,
-		-- },
-		
 
 
-		-- https://wiki.rage.mp/index.php?title=Weapons
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		AuthorizedWeapons = {
 			{ name = 'WEAPON_BZGAS', price = 5000 },
 			{ name = 'WEAPON_STUNGUN', price = 5000 },
@@ -80,7 +79,7 @@ Config_mt.mtStations = {
 			{ name = 'bread', price = 60, label = 'Noon' },
 			{ name = 'breathalyzer', price = 60, label = 'Test Alchol' },
 			{ name = 'drugtest', price = 60, label = 'Test Mavad' },
-			
+
 		},
 
 		Cloakrooms = {
@@ -89,12 +88,12 @@ Config_mt.mtStations = {
 			{x = 619.7421, y = 14.96955, z = 82.781},
 			{x = -2358.08, y = 3255.290, z = 32.810},
 			{ x = 1840.233, y = 3691.182, z = 34.286},
-			
+
 		},
 
 		Armories = {
 			{ x = 482.85, y = -995.61 , z = 30.69 },
-			-- { x = 462.4197, y = -989.404, z = 30.689 },
+
 			{ x = 627.1611, y = -22.4110, z = 82.779 },
 			{ x = -2350.10, y = 3266.026, z = 32.810 },
 			{x = 1846.653, y = 3694.171, z = 34.286},
@@ -180,14 +179,14 @@ Config_mt.AuthorizedItems = {
 	Shared = {
 		{ name = 'water', price = 100 },
 		{ name = 'silencer', price = 500 },
-		-- { name = 'WEAPON_FLASHLIGHT', price = 100 },
-		-- { name = 'WEAPON_PISTOL', price = 5000 },
-		-- { name = 'WEAPON_SNSPISTOL', price = 6000 },
-		-- { name = 'WEAPON_COMBATPISTOL', price = 7000 },
-		--{ name = 'WEAPON_HEAVYPISTOL', price = 8000 },
+
+
+
+
+
 	},
 
-	
+
 }
 
 Config_mt.AuthorizedWeapons = {
@@ -198,55 +197,51 @@ Config_mt.AuthorizedWeapons = {
 		{ name = 'WEAPON_PISTOL', price = 5000 },
 		{ name = 'WEAPON_SNSPISTOL', price = 6000 },
 		{ name = 'WEAPON_COMBATPISTOL', price = 7000 },
-		--{ name = 'WEAPON_HEAVYPISTOL', price = 8000 },
+
 	},
 
-	
-	
+
+
 }
 
-
 Config_mt.AuthorizedVehicles = {
-	Shared = {			
-	-- Extra : 0 = true , 1 = false
+	Shared = {
+
 	{ model = 'b2chal', label = 'MT Chal', Extra = {['1'] = 0, ['2'] = 1, ['3'] = 1, ['4'] = 0, ['5'] = 0 } },
 
 	{ model = 'b211vic', label = 'MT Vic', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['5'] = 1, ['6'] = 0, ['10'] = 1} },
-	
+
 	{ model = 'b212caprice', label = 'MT Caprice', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['5'] = 1, ['6'] = 0} },
-	
+
 	{ model = 'b214charger', label = 'MT Charger', Extra = {['1'] = 0, ['2'] = 1, ['3'] = 1, ['5'] = 0, ['6'] = 0, ['7'] = 1, ['8'] = 0 }},
 	{ model = 'b214charger', label = 'MT Charger2', Extra = {['1'] = 1, ['2'] = 1, ['3'] = 1, ['5'] = 0, ['6'] = 0, ['7'] = 1, ['8'] = 1 }},
-	
+
 	{ model = 'b216explorer', label = 'MT Explorer',  Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['5'] = 1, ['6'] = 1}},
-	
+
 	{ model = 'b218charger', label = 'MT Charger18', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['5'] = 1, ['6'] = 0}},
-	
+
 	{ model = 'b218tau', label = 'MT Tau', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['6'] = 1, ['7'] = 0}},
 	{ model = 'b218tau', label = 'MT Tau2', Extra = {['1'] = 1, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['6'] = 1, ['7'] = 0}},
-		
+
 	{ model = 'b219tahoe', label = "MT Tahoe", Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['5'] = 1, ['6'] = 1, ['7'] = 0}},
 	{ model = 'fibm5', label = "MT BMWM5", Extra = {['1'] = 0}},
 	{ model = 'polnspeedo', label = "MT Van", Extra = {['11'] = 0}},
 	{ model = 'POLKCH', label = "MT Kamacho", Extra = {['1'] = 0, ['3'] = 0, ['4'] = 0}},
 	{ model = 'swat_dirtbike', label = "MT Motor", Extra = {['1'] = 1}},
-	
+
 	},
 
-	Sharedheli = {			
-	-- Extra : 0 = true , 1 = false
+	Sharedheli = {
+
 	{ model = 'polmav', label = 'Polmav', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 0, ['5'] = 0 } },
 	{ model = 'tx_heli', label = 'h1', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 0, ['5'] = 0 } },
 
-	
-	
+
+
 	},
 
 
-
-	
 }
-
 
 Config_mt.Uniforms = {
 
@@ -306,6 +301,6 @@ Config_mt.Uniforms = {
 			['bproof_1'] = 2,  ['bproof_2'] = 2
 		}
 	},
-	
+
 
 }

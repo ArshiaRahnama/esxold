@@ -1,20 +1,13 @@
--- NO TOUCHY, IF SOMETHING IS WRONG CONTACT KANERSPS! --
--- NO TOUCHY, IF SOMETHING IS WRONG CONTACT KANERSPS! --
--- NO TOUCHY, IF SOMETHING IS WRONG CONTACT KANERSPS! --
--- NO TOUCHY, IF SOMETHING IS WRONG CONTACT KANERSPS! --
 
--- Table with all groups
+
 groups = {}
 
--- Constructor
 Group = {}
 Group.__index = Group
 
--- Allowing better inheritance
 local _user = "user"
 local _admin = "admin"
 
--- Meta table for groups
 setmetatable(
     Group,
     {
@@ -44,7 +37,6 @@ setmetatable(
     }
 )
 
--- To check if a certain group can target another
 function Group:canTarget(gr)
     if (gr == "") then
         return true
@@ -77,15 +69,12 @@ function Group:canTarget(gr)
     end
 end
 
--- Default groups
 user = Group("user", "")
 admin = Group("admin", "user")
 superadmin = Group("superadmin", "admin")
 
--- Developer, unused
 dev = Group("_dev", "superadmin")
 
--- Custom groups
 AddEventHandler(
     "es:addGroup",
     function(group, inherit, aceGroup)
@@ -105,7 +94,6 @@ AddEventHandler(
     end
 )
 
--- Can target function, mainly for exports
 _P3 = "33f774893e"
 function canGroupTarget(group, targetGroup, cb)
     if groups[group] and groups[targetGroup] then
@@ -123,7 +111,6 @@ function canGroupTarget(group, targetGroup, cb)
     end
 end
 
--- Can target event handler
 AddEventHandler(
     "es:canGroupTarget",
     function(group, targetGroup, cb)
@@ -131,7 +118,6 @@ AddEventHandler(
     end
 )
 
--- Get all groups
 AddEventHandler(
     "es:getAllGroups",
     function(cb)

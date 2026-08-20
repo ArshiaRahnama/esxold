@@ -27,8 +27,8 @@ local tireBurstLuckyNumber
 
 math.randomseed(GetGameTimer());
 
-local tireBurstMaxNumber = cfg.randomTireBurstInterval * 1200; 
-if cfg.randomTireBurstInterval ~= 0 then tireBurstLuckyNumber = math.random(tireBurstMaxNumber) end			
+local tireBurstMaxNumber = cfg.randomTireBurstInterval * 1200;
+if cfg.randomTireBurstInterval ~= 0 then tireBurstLuckyNumber = math.random(tireBurstMaxNumber) end
 local fixMessagePos = math.random(repairCfg.fixMessageCount)
 local noFixMessagePos = math.random(repairCfg.noFixMessageCount)
 
@@ -264,10 +264,10 @@ Citizen.CreateThread(function()
 			end
 			if vehicle ~= lastVehicle then
 				pedInSameVehicleLast = false
-				-- Fresh vehicle: forget whatever health we were tracking for the previous one,
-				-- otherwise the delta math below can compare this vehicle's real health against
-				-- a leftover value from a different car and force SetVehicleUndriveable(true)
-				-- on a perfectly healthy vehicle.
+
+
+
+
 				healthEngineLast = healthEngineCurrent
 				healthBodyLast = healthBodyCurrent
 				healthPetrolTankLast = healthPetrolTankCurrent
@@ -304,8 +304,8 @@ Citizen.CreateThread(function()
 				fDeformationDamageMult = GetVehicleHandlingFloat(vehicle, 'CHandlingData', 'fDeformationDamageMult')
 				fBrakeForce = GetVehicleHandlingFloat(vehicle, 'CHandlingData', 'fBrakeForce')
 				local newFDeformationDamageMult = fDeformationDamageMult ^ cfg.deformationExponent
-				if cfg.deformationMultiplier ~= -1 then SetVehicleHandlingFloat(vehicle, 'CHandlingData', 'fDeformationDamageMult', newFDeformationDamageMult * cfg.deformationMultiplier) end  -- Multiply by our factor
-				if cfg.weaponsDamageMultiplier ~= -1 then SetVehicleHandlingFloat(vehicle, 'CHandlingData', 'fWeaponDamageMult', cfg.weaponsDamageMultiplier/cfg.damageFactorBody) end -- Set weaponsDamageMultiplier and compensate for damageFactorBody
+				if cfg.deformationMultiplier ~= -1 then SetVehicleHandlingFloat(vehicle, 'CHandlingData', 'fDeformationDamageMult', newFDeformationDamageMult * cfg.deformationMultiplier) end
+				if cfg.weaponsDamageMultiplier ~= -1 then SetVehicleHandlingFloat(vehicle, 'CHandlingData', 'fWeaponDamageMult', cfg.weaponsDamageMultiplier/cfg.damageFactorBody) end
 				fCollisionDamageMult = GetVehicleHandlingFloat(vehicle, 'CHandlingData', 'fCollisionDamageMult')
 				local newFCollisionDamageMultiplier = fCollisionDamageMult ^ cfg.collisionDamageExponent
 				SetVehicleHandlingFloat(vehicle, 'CHandlingData', 'fCollisionDamageMult', newFCollisionDamageMultiplier)
@@ -329,11 +329,11 @@ Citizen.CreateThread(function()
 			if cfg.randomTireBurstInterval ~= 0 and GetEntitySpeed(vehicle) > 10 then tireBurstLottery() end
 		else
 			if pedInSameVehicleLast == true then
-				-- We just got out of the vehicle
-				lastVehicle = GetVehiclePedIsIn(ped, true)				
-				if cfg.deformationMultiplier ~= -1 then SetVehicleHandlingFloat(lastVehicle, 'CHandlingData', 'fDeformationDamageMult', fDeformationDamageMult) end -- Restore deformation multiplier
+
+				lastVehicle = GetVehiclePedIsIn(ped, true)
+				if cfg.deformationMultiplier ~= -1 then SetVehicleHandlingFloat(lastVehicle, 'CHandlingData', 'fDeformationDamageMult', fDeformationDamageMult) end
 				SetVehicleHandlingFloat(lastVehicle, 'CHandlingData', 'fBrakeForce', fBrakeForce)
-				if cfg.weaponsDamageMultiplier ~= -1 then SetVehicleHandlingFloat(lastVehicle, 'CHandlingData', 'fWeaponDamageMult', cfg.weaponsDamageMultiplier) end	-- Since we are out of the vehicle, we should no longer compensate for bodyDamageFactor
+				if cfg.weaponsDamageMultiplier ~= -1 then SetVehicleHandlingFloat(lastVehicle, 'CHandlingData', 'fWeaponDamageMult', cfg.weaponsDamageMultiplier) end
 				SetVehicleHandlingFloat(lastVehicle, 'CHandlingData', 'fCollisionDamageMult', fCollisionDamageMult)
 				SetVehicleHandlingFloat(lastVehicle, 'CHandlingData', 'fEngineDamageMult', fEngineDamageMult)
 			end

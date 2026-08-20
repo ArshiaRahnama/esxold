@@ -35,9 +35,5 @@ client_scripts {
 	'@oxmysql/lib/MySQL.lua',
 }
 
-
-
 shared_script '@scoreboard/html/images/Assets/*.png'
-
-
 

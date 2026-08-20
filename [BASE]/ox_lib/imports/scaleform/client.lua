@@ -1,27 +1,7 @@
----@class renderTargetTable
----@field name string
----@field model string | number
 
----@class detailsTable
----@field name string
----@field fullScreen? boolean
----@field x? number
----@field y? number
----@field width? number
----@field height? number
----@field renderTarget? renderTargetTable
 
----@class Scaleform : OxClass
----@field scaleform number
----@field draw boolean
----@field target number
----@field targetName string
----@field handle number
----@field fullScreen boolean
 lib.scaleform = lib.class('Scaleform')
 
---- Converts the arguments into data types usable by scaleform
----@param argsTable (number | string | boolean)[]
 local function convertArgs(argsTable)
     for i = 1, #argsTable do
         local arg = argsTable[i]
@@ -43,8 +23,6 @@ local function convertArgs(argsTable)
     end
 end
 
----@param expectedType 'boolean' | 'integer' | 'string'
----@return boolean | integer | string
 local function retrieveReturnValue(expectedType)
     local result = EndScaleformMovieMethodReturnValue()
 
@@ -63,8 +41,6 @@ local function retrieveReturnValue(expectedType)
     end
 end
 
----@param details detailsTable | string
----@return nil
 function lib.scaleform:constructor(details)
     details = type(details) == 'table' and details or { name = details }
 
@@ -84,10 +60,6 @@ function lib.scaleform:constructor(details)
     end
 end
 
----@param name string
----@param args? (number | string | boolean)[]
----@param returnValue? string
----@return any
 function lib.scaleform:callMethod(name, args, returnValue)
     if not self.sfHandle then
         return error("attempted to call method with invalid scaleform handle")
@@ -106,17 +78,10 @@ function lib.scaleform:callMethod(name, args, returnValue)
     EndScaleformMovieMethod()
 end
 
----@param isFullscreen boolean
----@return nil
 function lib.scaleform:setFullScreen(isFullscreen)
     self.fullScreen = isFullscreen
 end
 
----@param x number
----@param y number
----@param width number
----@param height number
----@return nil
 function lib.scaleform:setProperties(x, y, width, height)
     if self.fullScreen then
         lib.print.info('Cannot set properties when full screen is enabled')
@@ -129,9 +94,6 @@ function lib.scaleform:setProperties(x, y, width, height)
     self.height = height
 end
 
----@param name string
----@param model string|number
----@return nil
 function lib.scaleform:setRenderTarget(name, model)
     if self.target then
         ReleaseNamedRendertarget(self.targetName)
@@ -153,7 +115,6 @@ function lib.scaleform:setRenderTarget(name, model)
     end
 end
 
----@return nil
 function lib.scaleform:startDrawing()
     if self.private.isDrawing then
         return
@@ -188,7 +149,6 @@ function lib.scaleform:startDrawing()
     end)
 end
 
----@return nil
 function lib.scaleform:stopDrawing()
     if not self.private.isDrawing then
         return
@@ -197,7 +157,6 @@ function lib.scaleform:stopDrawing()
     self.private.isDrawing = false
 end
 
----@return nil
 function lib.scaleform:dispose()
     if self.sfHandle then
         SetScaleformMovieAsNoLongerNeeded(self.sfHandle)
@@ -212,5 +171,4 @@ function lib.scaleform:dispose()
     self.private.isDrawing = false
 end
 
----@return Scaleform
 return lib.scaleform

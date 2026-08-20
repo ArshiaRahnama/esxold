@@ -1,25 +1,11 @@
------------------- change this -------------------
 
--- قبل:
--- admins = {
--- 	'steam:CHANGEME', --Amir
 
--- }
+REQUIRED_PERMISSION_LEVEL = 5
 
--- بعد: به‌جای هاردکد کردن Steam Hex که هر بار عوض کردنش ریسک سینتکس داره،
--- از سطح دسترسی (permission_level) که از قبل تو دیتابیس ESX داری استفاده کن.
--- اینجوری دیگه لازم نیست هیچ Steam ID رو دستی تو فایل ادیت کنی.
-
-REQUIRED_PERMISSION_LEVEL = 5 -- هر عددی که برای گروه ادمینی که می‌خوای بهش دسترسی weather/time بدی مناسبه
-
--- Set this to false if you don't want the weather to change automatically every 10 minutes.
 DynamicWeather = false
 
---------------------------------------------------
-debugprint = false -- don't touch this unless you know what you're doing or you're being asked by Vespura to turn this on.
---------------------------------------------------
+debugprint = false
 
--------------------- DON'T CHANGE THIS --------------------
 AvailableWeatherTypes = {
     'EXTRASUNNY',
     'CLEAR',
@@ -56,7 +42,6 @@ function isAllowedToChange(player)
     return xPlayer.permission_level >= REQUIRED_PERMISSION_LEVEL
 end
 
-
 TriggerEvent('es:addAdminCommand', 'freezetime', 5, function(source, args, user)
     if source ~= 0 then
         if isAllowedToChange(source) then
@@ -80,7 +65,6 @@ TriggerEvent('es:addAdminCommand', 'freezetime', 5, function(source, args, user)
 end, function(source, args, user)
 	TriggerClientEvent('chatMessage', source, 'SYSTEM', {255, 0, 0}, 'Insufficient Permissions.')
 end)
-
 
 TriggerEvent('es:addAdminCommand', 'freezeweather', 5, function(source, args, user)
 	if source ~= 0 then
@@ -263,7 +247,7 @@ TriggerEvent('es:addAdminCommand', 'time', 5, function(source, args, user)
             print("Invalid syntax, correct syntax is: time <hour> <minute> !")
         end
     elseif source ~= 0 then
-        -- if isAllowedToChange(source) then
+
             if tonumber(args[1]) ~= nil and tonumber(args[2]) ~= nil then
                 local argh = tonumber(args[1])
                 local argm = tonumber(args[2])
@@ -289,7 +273,7 @@ TriggerEvent('es:addAdminCommand', 'time', 5, function(source, args, user)
             else
                 TriggerClientEvent('chatMessage', source, '', {255,255,255}, '^8Error: ^1Invalid syntax. Use ^0/time <hour> <minute> ^1instead!')
             end
-       
+
     end
 end, function(source, args, user)
 	TriggerClientEvent('chatMessage', source, 'SYSTEM', {255, 0, 0}, 'Insufficient Permissions.')
@@ -300,7 +284,7 @@ Citizen.CreateThread(function()
         Citizen.Wait(1)
         local newBaseTime = os.time(os.date("!*t"))/2 + 360
         if freezeTime then
-            timeOffset = timeOffset + baseTime - newBaseTime			
+            timeOffset = timeOffset + baseTime - newBaseTime
         end
         baseTime = newBaseTime
     end

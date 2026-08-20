@@ -1,14 +1,4 @@
--- =============================================================
---  Unique Chat Suggestions
---  Hame-ye command-haee ke ta alan hich-jaye digei tu code-e
---  khodeshun chat:addSuggestion nadashtan ro be list-e pishnahad-e
---  autocomplete-e chat (/) ezafe mikone, ba ye tozih-e kutah az
---  kari ke vaghean anjam midan.
---
---  Age ye command-e jadid be server ezafe kardi, ya inja ye khat-e
---  jadid ezafe kon ya mostaghim tu khod-e resource az
---  chat:addSuggestion estefade kon.
--- =============================================================
+
 
 local Suggestions = {
     { '/911', 'Darkhast-e emdad-e foori baraye pezeshk/ambulance' },

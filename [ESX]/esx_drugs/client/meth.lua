@@ -8,7 +8,7 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(PlayerPedId())
 
 		if GetDistanceBetweenCoords(coords, Config.FieldZones.EphedrineField.coords, true) < 50 then
-			-- TriggerEvent('esx:showNotification', _U('ephedrine_field_close'))
+
 			SpawnEphedraPlants()
 			Citizen.Wait(1000)
 		else
@@ -24,7 +24,7 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(playerPed)
 
 		if GetDistanceBetweenCoords(coords, Config.ProcessZones.EphedrineProcessing.coords, true) < 15 and GetDistanceBetweenCoords(coords, Config.ProcessZones.EphedrineProcessing.coords, true) > 10 then
-			-- ESX.ShowNotification(_U('ephedrine_process_close'))
+
 		end
 	end
 end)
@@ -70,16 +70,16 @@ Citizen.CreateThread(function()
 							},
 						}, function(status)
 							if not status then
-		
+
 							table.remove(ephedraPlants, nearbyID)
 							spawnedEphedra = spawnedEphedra - 1
 
 							ClearPedTasks(playerPed)
 							ESX.Game.DeleteObject(nearbyObject)
-			
+
 							TriggerServerEvent('esx_jk_drugs:pickedUpEphedra')
 							isPickingUp = false
-					
+
 							elseif status then
 
 								ClearPedTasksImmediately(playerPed)
@@ -88,7 +88,7 @@ Citizen.CreateThread(function()
 							end
 						end)
 
-						
+
 					else
 						ESX.ShowNotification(_U('ephedrine_inventoryfull'))
 					end

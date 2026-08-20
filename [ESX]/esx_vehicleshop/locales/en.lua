@@ -1,5 +1,5 @@
 Locales['en'] = {
-  -- global menus
+
   ['not_enough_in_society']   = 'there\'s not enough of ~r~that item~s~ in the society!',
   ['player_cannot_hold']      = 'you do ~r~not~s~ have enough ~y~free space~s~ in your inventory!',
   ['vehicle_belongs']         = 'an vehicle with plate ~y~%s~s~ now belongs to ~b~you~s~',
@@ -57,7 +57,7 @@ Locales['en'] = {
   ['have_deposited']          = 'you have deposited ~y~x%s~s~ ~b~%s~s~',
   ['boss_actions']            = 'boss actions',
 
-  -- sold vehicles
+
   ['boss_sold']               = 'list of sold vehicles',
   ['customer_client']         = 'customer name',
   ['customer_model']          = 'car model',

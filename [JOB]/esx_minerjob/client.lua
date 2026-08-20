@@ -1,5 +1,5 @@
 ESX = nil
-local amir = true  
+local amir = true
 local golds = 0
 local irons = 0
 local SpawnedRockes = 0
@@ -24,21 +24,21 @@ Citizen.CreateThread(function()
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(1)
 	end
-    
+
 	while ESX.GetPlayerData().job == nil do
 		Citizen.Wait(10)
 	end
 
 	PlayerData = ESX.GetPlayerData()
 	blips()
-    
+
 
 end)
 
 Citizen.CreateThread(function()
     Wait(45000)
     ESX.TriggerServerCallback('Miner:SetDuty', function(Duty)
-        if Duty  == true  then 
+        if Duty  == true  then
             ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
                 if skin.sex == 0 then
                     TriggerEvent('skinchanger:loadClothes', skin, Config.Uniforms['work_wear'].male)
@@ -79,10 +79,10 @@ Citizen.CreateThread(function()
                 end
                 duty = true
                 OnDuty = true
-                blips()               
+                blips()
             end)
-        end  
-    end) 
+        end
+    end)
 end)
 
 RegisterNetEvent('esx_miner:getPrice')
@@ -90,37 +90,35 @@ AddEventHandler('esx_miner:getPrice', function(data)
     price = data
 end)
 
-
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
 	PlayerData = xPlayer
     blips()
-  
-  
-end)
 
+
+end)
 
 local blipsx = {}
 local blip = false
 function blips()
-    -- if OnDuty == true then
-    --     for _, info in pairs(Config.Blips) do
-    --     info.blip = AddBlipForCoord(info.x, info.y, info.z)
-    --     SetBlipSprite  (info.blip, 318)
-	-- 	SetBlipDisplay (info.blip, 4)
-	-- 	SetBlipScale   (info.blip, 0.8)
-	-- 	SetBlipCategory(info.blip, 3)
-	-- 	SetBlipColour  (info.blip, 5)
-    --     SetBlipAsShortRange(info.blip, true)
-    --     BeginTextCommandSetBlipName("STRING")
-    --     AddTextComponentString(info.title)
-    --     EndTextCommandSetBlipName(info.blip)
-    --     end
-    -- else
-    --     for _, info in pairs(Config.Blips) do
-    --         RemoveBlip(info.blip)
-    --     end
-    -- end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	if blip == false then
 		blipsx = AddBlipForCoord(Config.ClackLoc.x, Config.ClackLoc.y, Config.ClackLoc.z)
@@ -135,7 +133,7 @@ function blips()
 		EndTextCommandSetBlipName(blipsx)
 		blip = true
 	end
-	
+
 end
 
 function SpawRocks()
@@ -168,8 +166,8 @@ function GenerateRockCoords(cb)
 
 		rockCoordX = Config.Rock.x + modX
 		rockCoordY = Config.Rock.y + modY
-		
-		
+
+
 		local coordZ = GetCoordZ(rockCoordX, rockCoordY)
 		coord = vector3(rockCoordX, rockCoordY, coordZ)
 
@@ -209,9 +207,6 @@ function HitReward()
     end
 end
 
-
-
-
 function ValidateRockCoord(rockCoord)
 	if SpawnedRockes > 0 then
 		local validate = true
@@ -242,7 +237,6 @@ function loadDict(dict, anim)
     return dict
 end
 
-
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
@@ -250,7 +244,7 @@ Citizen.CreateThread(function()
 			local playerPed = PlayerPedId()
 			local coords = GetEntityCoords(playerPed)
 			local nearbyObject, nearbyID
-			
+
 			if GetDistanceBetweenCoords(coords, Config.Rock.xyz, true) < 70 and SpawnedRockes < 10 and not IsPlayerSwitchInProgress() then
 				SpawRocks()
 				Citizen.Wait(500)
@@ -260,7 +254,7 @@ Citizen.CreateThread(function()
 				if GetDistanceBetweenCoords(coords, GetEntityCoords(Rocks[i].object), false) < 3 then
 					nearbyObject, nearbyID = Rocks[i].object, i
 				end
-			end 
+			end
 
 			if nearbyObject and IsPedOnFoot(playerPed) and not IsPedUsingAnyScenario(playerPed) then
 				ESX.ShowHelpNotification('Press ~INPUT_CONTEXT~ to start mine.')
@@ -268,9 +262,9 @@ Citizen.CreateThread(function()
 					mining = true
 					TaskTurnPedToFaceEntity(PlayerPedId(), nearbyObject, 0.5)
 					FreezeEntityPosition(PlayerPedId(), true)
-					--local axe = ESX.Game.SpawnObject('prop_tool_pickaxe', GetEntityCoords(PlayerPedId()))
-					--Wait(500)
-					--AttachEntityToEntity(axe, PlayerPedId(), GetPedBoneIndex(PlayerPedId(), 57005), 0.09, 0.03, -0.02, -78.0, 13.0, 28.0, false, true, false, true, 0, true)
+
+
+
 					while mining do
 						Wait(1)
 						SetCurrentPedWeapon(PlayerPedId(), GetHashKey('WEAPON_UNARMED'))
@@ -284,7 +278,7 @@ Citizen.CreateThread(function()
 							local dict = loadDict('melee@hatchet@streamed_core')
 							TaskPlayAnim(PlayerPedId(), dict, 'plyr_rear_takedown_b', 8.0, -8.0, -1, 2, 0, false, false, false)
 							Wait(1000)
-							Rocks[nearbyID].health = Rocks[nearbyID].health - 10 
+							Rocks[nearbyID].health = Rocks[nearbyID].health - 10
 							ClearPedTasks(PlayerPedId())
 							TaskTurnPedToFaceEntity(PlayerPedId(), nearbyObject, 0.5)
 							Wait(1000)
@@ -292,7 +286,7 @@ Citizen.CreateThread(function()
 							HitReward()
 							if Rocks[nearbyID].health <= 0 then
 								SpawnedRockes = SpawnedRockes - 1
-								--ESX.Game.DeleteLocalObject(Rocks[nearbyID].object)
+
 								SetEntityAsMissionEntity(Rocks[nearbyID].object, false, true)
 								DeleteObject(Rocks[nearbyID].object)
 								table.remove(Rocks, nearbyID)
@@ -309,23 +303,23 @@ Citizen.CreateThread(function()
 				end
 			end
 
-            
-            local markerActive = true 
-            local isProcessing = false 
-            
+
+            local markerActive = true
+            local isProcessing = false
+
             if GetDistanceBetweenCoords(coords, Config.MeltingField[1].coords, true) < 70 then
                 for k,v in pairs(Config.MeltingField) do
                     if markerActive and not isProcessing then
                         DrawMarker(1, v.coords, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 255, 255, 0, 100, false, true, 2, false, false, false, false)
                     end
-                    
+
                     if GetDistanceBetweenCoords(coords, v.coords, true) < 1.5 and markerActive and not isProcessing then
                         ESX.ShowHelpNotification('~INPUT_CONTEXT~ Baraye Baz Kardan Menu E Ra Bezanid')
                         if IsControlJustReleased(0, 38) then
                             local PlayerData = ESX.GetPlayerData()
                             local irons = 0
                             local golds = 0
-                            
+
                             for i=1, #PlayerData.inventory do
                                 if PlayerData.inventory[i].name == 'gold_piece' then
                                     golds = PlayerData.inventory[i].count
@@ -333,52 +327,52 @@ Citizen.CreateThread(function()
                                     irons = PlayerData.inventory[i].count
                                 end
                             end
-                            
+
                             local elements = {
                                 {label = "Sakhte Shemshe Ahan", value = "iron"},
                                 {label = "Sakhte Shemshe Tala", value = "gold"}
                             }
-                            
+
                             ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'melting_menu', {
                                 title = "Zoob Ahan va Tala",
                                 align = 'top-left',
                                 elements = elements
                             }, function(data, menu)
                                 menu.close()
-                                if isProcessing then 
-                                    return 
-                                end 
-                                isProcessing = true 
-                                markerActive = false 
-                                
+                                if isProcessing then
+                                    return
+                                end
+                                isProcessing = true
+                                markerActive = false
+
                                 Citizen.CreateThread(function()
                                     while isProcessing do
                                         Citizen.Wait(0)
                                         DisableControlAction(0, 38, true)
-                                        DisableControlAction(0, 38, true) 
-                                        DisableControlAction(0, 37, true) 
-                                        DisableControlAction(0, 24, true) 
-                                        DisableControlAction(0, 25, true) 
-                                        DisableControlAction(0, 140, true) 
-                                        DisableControlAction(0, 263, true) 
+                                        DisableControlAction(0, 38, true)
+                                        DisableControlAction(0, 37, true)
+                                        DisableControlAction(0, 24, true)
+                                        DisableControlAction(0, 25, true)
+                                        DisableControlAction(0, 140, true)
+                                        DisableControlAction(0, 263, true)
                                     end
                                 end)
-                                
+
                                 if (data.current.value == "iron" and irons >= 20) or (data.current.value == "gold" and golds >= 20) then
                                     TaskGoStraightToCoord(GetPlayerPed(-1), v.task.c, 1.0, 5000, 140.01, 0)
                                     Wait(100)
                                     TaskAchieveHeading(GetPlayerPed(-1), v.task.h, 1000)
                                     Wait(1000)
                                     FreezeEntityPosition(GetPlayerPed(-1), true)
-                                    
+
                                     local dict = "random@mugging4"
                                     RequestAnimDict(dict)
                                     while not HasAnimDictLoaded(dict) do
                                         Wait(10)
                                     end
                                     TaskPlayAnim(GetPlayerPed(-1), dict, "struggle_loop_b_thief", 8.0, -8.0, -1, 2, 0, false, false, false)
-                                    
-                                    Wait(10000) 
+
+                                    Wait(10000)
                                     if data.current.value == "iron" then
                                         TriggerServerEvent('mining:MeltItems', 'iron_piece', 20)
                                         TriggerEvent('TaskSystem:SakhteShemshAhan')
@@ -388,16 +382,16 @@ Citizen.CreateThread(function()
                                         TriggerEvent('TaskSystem:SakhteShemshTala')
                                         ESX.ShowNotification("Shoma 20x Khorde Tala Zoob Kardid va 1x Tala Daryaft Kardid!")
                                     end
-                                    
+
                                     FreezeEntityPosition(GetPlayerPed(-1), false)
                                     ClearPedTasksImmediately(GetPlayerPed(-1))
                                     Wait(1000)
                                     markerActive = true
-                                    isProcessing = false 
+                                    isProcessing = false
                                 else
                                     ESX.ShowNotification("Shoma Be Tedade Kafi Az In Item Nadarid!")
-                                    markerActive = true 
-                                    isProcessing = false 
+                                    markerActive = true
+                                    isProcessing = false
                                 end
                             end, function(data, menu)
                                 menu.close()
@@ -406,12 +400,12 @@ Citizen.CreateThread(function()
                     end
                 end
             end
-            
-            
-            
+
+
+
 			if GetDistanceBetweenCoords(coords, Config.SSell.coords, true) < 15 then
 				DrawMarker(1, Config.SSell.coords, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 2.0, 255, 255, 0, 100, false, true, 2, false, false, false, false)
-			
+
 				if GetDistanceBetweenCoords(coords, Config.SSell.coords, true) < 3 then
 					local vehicle = GetVehiclePedIsIn(GetPlayerPed(-1), false)
 					if DoesEntityExist(vehicle) then
@@ -424,7 +418,7 @@ Citizen.CreateThread(function()
 				end
 			end
 
-            
+
             if GetDistanceBetweenCoords(coords, Config.DGSell.coords, true) < 70 then
 				DrawMarker(1, Config.DGSell.coords, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.5, 1.5, 1.0, 255, 255, 0, 100, false, true, 2, false, false, false, false)
 				if GetDistanceBetweenCoords(coords, Config.DGSell.coords, true) < 1.5 then
@@ -433,7 +427,7 @@ Citizen.CreateThread(function()
 						OpenShop({'gold','diamond'})
 					end
 				end
-			end	
+			end
 			if GetDistanceBetweenCoords(coords, Config.WashField[1].coords, true) < 70 then
                     for k,v in pairs(Config.WashField) do
                         DrawMarker(1, v.coords, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 3.0, 3.0, 1.0, 255, 255, 0, 100, false, true, 2, false, false, false, false)
@@ -445,10 +439,10 @@ Citizen.CreateThread(function()
                                 ESX.ShowHelpNotification('Press ~INPUT_CONTEXT~ to start wash.')
                                 if IsControlJustReleased(0, 38) then
                                     local plate = ESX.Math.Trim(GetVehicleNumberPlateText(vehicle))
-                               
+
                                     TriggerServerEvent('mining:WashStonePieces', plate)
-                                    
-                                  
+
+
                                 end
                             end
                         end
@@ -472,76 +466,17 @@ AddEventHandler('mining:WashStonePieces_cl', function()
             SetVehicleDoorsLocked(vehicle, 2)
             FreezeEntityPosition(vehicle, true)
             ESX.ShowNotification('Lotfan Chand Daqiqe Baraye Gharbale Sangha Sabr konid')
-            -- SetVehicleNumberPlateText(vehicle, 'XDDDD')
+
             SetTimeout(math.random(10000, 20000) , function()
                 SetVehicleDoorsLocked(vehicle, 1)
                 FreezeEntityPosition(vehicle, false)
                 ESX.ShowNotification('Shoma Aknon mitavanid Mashine Khodeton Ro Bardarid')
-            --	SetVehicleNumberPlateText(vehicle, plate)
+
             end)
-           -- break 
-        end 
-    end 
-end) 
 
--- function OpenShop(selling)
--- 	ESX.UI.Menu.CloseAll()
--- 	local elements = {}
---     local temp     = {}
---     for k, v in pairs(ESX.GetPlayerData().inventory) do
---             if price[v.name] ~= nil then
---                 if v.count > 0 then
---                     table.insert(temp, {
---                         label = ('%s - <span style="color:green;">%s</span>'):format(v.label, '$'..ESX.Math.GroupDigits(price[v.name])),
---                         name = v.name,
---                         price = price[v.name],
-
---                         -- menu properties
---                         type = 'slidironer',
---                         value = 1,
---                         min = 1,
---                         max = v.count
---                     })
---                 end
---             end
--- 	end
-
---     for k,v in pairs(temp) do
---         for i=1, #selling do
---             if v.name == selling[i] then
---                 table.insert(elements, v)
---             end
---         end
---     end
-
---     if #elements == 0 then
---         ESX.ShowNotification('Shoma Mahsoli Baraye Forosh nadarid')
---     end
-
--- 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'miner_shop', {
--- 		title    = 'Mining Shop',
--- 		align    = 'top-left',
--- 		elements = elements
--- 	}, function(data, menu)
---         TriggerServerEvent('mining:sell', data.current.name, data.current.value)
---         OpenShop(selling)
--- 	end, function(data, menu)
--- 		menu.close()
---     end)
---     Citizen.CreateThread(function()
---         local coords = GetEntityCoords(PlayerPedId())
-
---         while true do
---             local distance = GetDistanceBetweenCoords(coords,GetEntityCoords(PlayerPedId()), true)
---             if distance >= 3 then
---                 ESX.UI.Menu.CloseAll()
---                 break
---             end
---             Wait(1000)
---         end
---     end)
--- end
-
+        end
+    end
+end)
 
 function OpenShop()
 	menuOpen = true
@@ -556,7 +491,7 @@ function OpenShop()
                         label = (v.name..' - <span style="color:green;">'..ESX.Math.GroupDigits(d.price)..'</span>'),
                         name = v.name,
                         price = d.price,
-                        -- menu properties
+
                         type = 'slider',
                         value = 1,
                         min = 1,
@@ -584,8 +519,6 @@ function OpenShop()
 		ESX.UI.Menu.CloseAll()
     end)
 end
-
-
 
 Citizen.CreateThread(function()
     while ESX.GetPlayerData().job == nil do Wait(1) end
@@ -653,8 +586,8 @@ Citizen.CreateThread(function()
                         TriggerEvent('esx:showHelpNotification', 'Dokme ~INPUT_CONTEXT~ jahat ~r~park kardan~s~')
                         if IsControlJustReleased(1, 38) then
                             local veh = GetVehiclePedIsIn(PlayerPedId())
-                            -- DeleteVehicle(veh)
-							ESX.Game.DeleteVehicle(veh)	 
+
+							ESX.Game.DeleteVehicle(veh)
                             spawned = false
                         end
                     end
@@ -690,8 +623,8 @@ function OpenRakhtkanMenu()
 				OnDuty = false
                 TriggerServerEvent('Miner:SetDuty', false )
 				blips()
-                
-                if amir == false then 
+
+                if amir == false then
                     for _, info in pairs(Config.Blips) do
                         RemoveBlip(info.blip)
                     end
@@ -744,7 +677,7 @@ function OpenRakhtkanMenu()
 					duty = true
 					OnDuty = true
 					blips()
-                    
+
 
 					menu.close()
 				end)
@@ -808,8 +741,4 @@ function DrawTexet3D(x,y,z, text)
     local factor = (string.len(text)) / 370
     DrawRecet(_x,_y+0.0125, 0.015+ factor, 0.03, 41, 11, 41, 68)
 end
-
-
-
-
 

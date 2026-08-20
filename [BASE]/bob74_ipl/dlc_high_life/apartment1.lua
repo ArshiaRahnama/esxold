@@ -1,5 +1,4 @@
 
--- Apartment 1: -1462.28100000, -539.62760000, 72.44434000
 
 exports('GetHLApartment1Object', function()
     return HLApartment1
@@ -31,7 +30,7 @@ HLApartment1 = {
         Enable = function (details, state, refresh)
             SetIplPropState(HLApartment1.interiorId, details, state, refresh)
         end
-    }, 
+    },
     LoadDefault = function()
         HLApartment1.Ipl.Interior.Load()
         HLApartment1.Strip.Enable({HLApartment1.Strip.A, HLApartment1.Strip.B, HLApartment1.Strip.C}, false)

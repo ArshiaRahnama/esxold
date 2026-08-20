@@ -1,10 +1,7 @@
-aduty = false 
+aduty = false
 local OffDuty = nil
 local infinite_stamina = false
--- Made global (dropped `local`) so player_toggles.lua's server-confirmed
--- Unique_AdminMenu:ApplyToggle handler can update the SAME variables this
--- menu reads for its checkbox display state - previously these were
--- separate file-local variables that never stayed in sync.
+
 invisibility = invisibility or false
 invisibility2 = invisibility2 or false
 local noRagDoll = false
@@ -12,12 +9,10 @@ noclip = false
 superjump = false
 fastrun = false
 blipdool = false
-local show2 = false	
+local show2 = false
 PlayersCache = {}
 lastspec = 0
 godmode = false
-
-
 
 RegisterNetEvent('Admin_Menu:GetGodeModes')
 AddEventHandler('Admin_Menu:GetGodeModes', function(Toggle)
@@ -28,7 +23,7 @@ RegisterNetEvent('esx_aduty:ChangeMenuStatus')
 AddEventHandler('esx_aduty:ChangeMenuStatus', function(boolean)
   WarMenu.CloseMenu()
   aduty = boolean
-  if aduty and OffDuty == nil then 
+  if aduty and OffDuty == nil then
     AdminM()
   else
     OffDuty = true
@@ -103,9 +98,9 @@ end
 
 function AdminMenu()
   local mOpen = false
-  -- ---------------------------------------------------------------------
-  -- MAIN MENU
-  -- ---------------------------------------------------------------------
+
+
+
   if WarMenu.IsMenuOpened('main') then
     mOpen = true
     WarMenu.MenuButton('Spectate Menu', 'spectate')
@@ -117,9 +112,9 @@ function AdminMenu()
     WarMenu.MenuButton('Server Tools', 'server_tools')
 
     WarMenu.Display()
-  -- ---------------------------------------------------------------------
-  -- PLAYER MENU
-  -- ---------------------------------------------------------------------
+
+
+
   elseif WarMenu.IsMenuOpened('player_menu') then
     mOpen = true
     if WarMenu.CheckBox("Invis", invisibility, function(checked) end) then
@@ -140,9 +135,9 @@ function AdminMenu()
       RequestNoclip()
     end
     WarMenu.Display()
-  -- ---------------------------------------------------------------------
-  -- SPECTATE PLAYER
-  -- ---------------------------------------------------------------------
+
+
+
   elseif WarMenu.IsMenuOpened('spectate') then
     mOpen = true
     for i=1, GetLast(PlayersCache) do
@@ -160,9 +155,9 @@ function AdminMenu()
       end
     end
     WarMenu.Display()
-  -- ---------------------------------------------------------------------
-  -- TELEPORT PLAYER
-  -- ---------------------------------------------------------------------
+
+
+
   elseif WarMenu.IsMenuOpened('teleport_player') then
     mOpen = true
     if TargetSpectate then

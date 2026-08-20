@@ -3,7 +3,6 @@ TriggerEvent('esx:getSharedObject', function(obj)
     ESX = obj
 end)
 
-
 TriggerEvent('es:addGroupCommand', 'info', 'user', function(source, args, user)
 	if args[1] and GetPlayerPing(tonumber(args[1]))then
 		TriggerClientEvent('chatMessage', source, "^8Ping ^0: ^0".. GetPlayerPing(tonumber(args[1])))
@@ -13,8 +12,6 @@ TriggerEvent('es:addGroupCommand', 'info', 'user', function(source, args, user)
 end, function(source, args, user)
 	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Admin Nisti Ke XD.")
 end, {help = "Get Ping", params = {{name = "id", help = "ID"}}})
-
-
 
 TriggerEvent('es:addGroupCommand', 'id', 'user', function(source, args, user)
 	TriggerClientEvent('chatMessage', source, "Your Id :", {255, 0, 0}, source)
@@ -37,8 +34,6 @@ TriggerEvent('es:addAdminCommand', 'dva', 9, function(source, args, user)
 end, function(source, args, user)
 	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Admin Nisti Ke XD.")
 end, {help = "Delete All Veh", })
-
-
 
 ESX.RegisterServerCallback('esx:GetAdminsInfo', function(source, cb)
 	local xPlayers = ESX.GetPlayers()
@@ -70,7 +65,7 @@ TriggerEvent('es:addAdminCommand', 'setperm', 9, function(source, args, user)
     local pLevel = tonumber(args[2])
 	local xPlayer = ESX.GetPlayerFromId(source)
     local tPlayer = ESX.GetPlayerFromId(tPlayerId)
-	
+
 	if xPlayer.permission_level > tPlayer.permission_level and xPlayer.permission_level > tonumber(args[2]) then
 		if tonumber(args[2]) <= 100 then
 			tPlayer.Setperm(pLevel)
@@ -82,11 +77,10 @@ TriggerEvent('es:addAdminCommand', 'setperm', 9, function(source, args, user)
 		end
 		TriggerClientEvent('chat:addMessage', source, {color = {0, 255, 0},args = {'[SYSTEM]', 'Shoma Rank Bala Tar Az Khod Ra Nemitonid Taghir Dahid!!'}})
 	end
-	
+
 end, function(source, args, user)
 	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Dastresi Nadari Ke xD.")
 end, {help = "Set User Permission", params = {{name = "id", help = "Target Palyer ID "}, {name = "permission level", help = "Permission Level [Number]"}}})
-
 
 TriggerEvent('es:addAdminCommand', 'vsetperm', 10, function(source, args, user)
 	local tPlayerId = args[1]
@@ -97,9 +91,8 @@ TriggerEvent('es:addAdminCommand', 'vsetperm', 10, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', tPlayerId, {color = {0, 255, 0}, args = {'[SYSTEM]', 'Level Shoma Tavasot Consol Be ' .. pLevel .. ' Taghir Yaft'}})
 	print('Shoma Level '..GetPlayerName(tPlayerId)..'('..args[1]..') Ra Be ' .. args[2] .. ' Taghir Dadid')
 	TriggerEvent('DiscordBot:ToDiscord', 'gp', 'GivePermLog', '```css\n[ Admin Name : Consol ]\n[ Admin Steam : N/A ]\n[ Admin Permission : N/A ]\n[ Gived Permission : ' .. pLevel .. ' ]\n[ Player Name : '..GetPlayerName(tPlayerId)..'(' .. tPlayerId .. ') ]\n[ Player Steam : '..GetPlayerIdentifier(tPlayerId).. ' ]\n[ Last Player Permission : '..tPlayer.permission_level..' ]\n```' , 'user', true, source, false)
-	
+
 end, function(source, args, user)
 	TriggerClientEvent('chatMessage', source, "SYSTEM", {255, 0, 0}, "Dastresi Nadari Ke xD.")
 end, {help = "Set User Permission", params = {{name = "id", help = "Target Palyer ID "}, {name = "permission level", help = "Permission Level [Number]"}}})
-
 

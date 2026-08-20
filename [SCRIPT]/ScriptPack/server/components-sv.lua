@@ -21,26 +21,15 @@ local translate = {
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-
-
---
-
----------------------------------------------------------------------
------------------------------- Tint Items ---------------------------
----------------------------------------------------------------------
-
 for k,v in pairs(tints) do
 	ESX.RegisterUsableItem(k, function(source)
 		local xPlayer = ESX.GetPlayerFromId(source)
 		local item = xPlayer.getInventoryItem(k)
-	
+
 		TriggerClientEvent('esx_components:useTint', source, {color = v, name = k, label = item.label})
-			
+
 	end)
 end
-
-
---- black market items
 
 RegisterServerEvent('esx_components:remove')
 AddEventHandler('esx_components:remove', function(itemName)
@@ -58,13 +47,13 @@ AddEventHandler('esx_components:addComponent', function(component)
 				xPlayer.removeInventoryItem(component.item, 1)
 				xPlayer.addWeaponComponent(component.weapon, component.id)
 				TriggerClientEvent('esx:showNotification', source, "~h~Shoma ba movafaghiat ~g~1x " .. item.label .. "~w~ estefade kardid.")
-				
+
 			else
 				TriggerClientEvent('esx:showNotification', source, "~h~Aslahe shoma dar hale hazer in component ra darad!")
 			end
 		else
 			TriggerClientEvent('esx:showNotification', source, "~h~Shoma aslahe mored nazar ra baraye estefade kardan component nadarid!")
-		end	
+		end
 	else
 		TriggerClientEvent('esx:showNotification', source, "~h~Shoma ~g~" .. item.label .. "~w~ kafi baraye estefade kardan nadarid!")
 	end
@@ -90,7 +79,7 @@ AddEventHandler('esx_components:removeComponent', function(component, all)
 		else
 			TriggerClientEvent('esx:showNotification', source, "~h~Shoma aslahe mored nazar shoma hich componenti nadarad!")
 		end
-	
+
 	else
 		local item = xPlayer.getInventoryItem(component.item)
 		if xPlayer.hasWeapon(component.weapon) then
@@ -106,34 +95,9 @@ AddEventHandler('esx_components:removeComponent', function(component, all)
 		else
 			TriggerClientEvent('esx:showNotification', source, "~h~Shoma aslahe mored nazar ra baraye joda kardan component nadarid!")
 		end
-	end	
+	end
 
 end)
-
---mahi ha
--- ESX.RegisterUsableItem('mahigoli', function(source)
-
--- end)
-
--- ESX.RegisterUsableItem('ghezelala', function(source)
-
--- end)
-
--- ESX.RegisterUsableItem('hamoor', function(source)
-
--- end)
-
--- ESX.RegisterUsableItem('salomon', function(source)
-
--- end)
-
--- ESX.RegisterUsableItem('dampaii', function(source)
-
--- end)
-
--- ESX.RegisterUsableItem('meygoo', function(source)
-
--- end)
 
 ESX.RegisterUsableItem('clip', function(source)
 	TriggerClientEvent('esx_components:useClipcli', source)

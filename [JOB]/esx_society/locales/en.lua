@@ -57,5 +57,5 @@ Locales['en'] = {
   ['manage_vehicles']        = 'Manage Garage Access',
   ['manage_helis']           = 'Manage Heli Access',
   ['manage_inventory']       = 'Manage inventory access',
-  
+
 }

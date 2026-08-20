@@ -1,5 +1,5 @@
 Locales['en'] = {
-  -- shop
+
   ['boat_shop'] = 'Boat Shop',
   ['boat_shop_open'] = '~h~Press ~INPUT_CONTEXT~ To Access The ~y~Boat Shop~s~.',
   ['boat_shop_confirm'] = 'Buy <span style="color: yellow;">%s</span> for <span style="color: orange;">$%s</span>?',
@@ -8,7 +8,7 @@ Locales['en'] = {
   ['confirm_no'] = 'no',
   ['confirm_yes'] = 'yes',
 
-  -- garage
+
   ['garage'] = 'Boat Garage',
   ['garage_open'] = '~h~Press ~INPUT_CONTEXT~ Barai Kharej Kardan Qayeq Az Parking',
   ['garage_store'] = '~h~Press ~INPUT_CONTEXT~ Barai Park Kardan Qayeq.',
@@ -18,14 +18,14 @@ Locales['en'] = {
   ['garage_blocked'] = 'The Boat Cannot Be Taken Out Because Another Vehicle Is Blocking The Spawn Point!',
   ['garage_notowner'] = '~h~~r~Shoma Qayeqi Nadarid!',
 
-  -- license
+
   ['license_menu'] = 'Buy Boat License?',
   ['license_buy_no'] = 'No',
   ['license_buy_yes'] = 'Buy Boat License <span style="color: green;">$%s</span>',
   ['license_bought'] = 'You Have Bought The ~y~Boat License~s~ For ~g~$%s~s~',
   ['license_nomoney'] = 'You Cannot ~r~afford~s~ The ~y~Boat License~s~!',
 
-  -- blips
+
   ['blip_garage'] = 'Boat Garage',
   ['blip_shop'] = 'Boat Shop',
 }

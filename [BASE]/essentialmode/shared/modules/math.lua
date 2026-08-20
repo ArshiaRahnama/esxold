@@ -4,7 +4,6 @@ ESX.Math.Round = function(value, numDecimalPlaces)
 	return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", value))
 end
 
--- credit http://richard.warburton.it
 ESX.Math.GroupDigits = function(value)
 	local left,num,right = string.match(value,'^([^%d]*%d)(%d*)(.-)$')
 

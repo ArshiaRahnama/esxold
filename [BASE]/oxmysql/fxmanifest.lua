@@ -10,9 +10,7 @@ license 'LGPL-3.0-or-later'
 repository 'https://github.com/overextended/oxmysql.git'
 description 'FXServer to MySQL communication via node-mysql2'
 
--- dependencies {
-    -- '/server:7290',
--- }
+
 
 client_script 'ui.lua'
 server_script 'dist/build.js'

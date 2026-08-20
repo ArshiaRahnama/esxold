@@ -1,5 +1,4 @@
 
--- Cocaine lockup: 1093.6, -3196.6, -38.99841
 
 exports('GetBikerCocaineObject', function()
     return BikerCocaine
@@ -45,11 +44,11 @@ BikerCocaine = {
         end
     },
     Details = {
-        cokeBasic1 = "coke_cut_01",						-- On the basic tables
-        cokeBasic2 = "coke_cut_02",						-- On the basic tables
-        cokeBasic3 = "coke_cut_03",						-- On the basic tables
-        cokeUpgrade1 = "coke_cut_04",					-- On the upgraded tables
-        cokeUpgrade2 = "coke_cut_05",					-- On the upgraded tables
+        cokeBasic1 = "coke_cut_01",
+        cokeBasic2 = "coke_cut_02",
+        cokeBasic3 = "coke_cut_03",
+        cokeUpgrade1 = "coke_cut_04",
+        cokeUpgrade2 = "coke_cut_05",
         Enable = function (details, state, refresh)
             SetIplPropState(BikerCocaine.interiorId, details, state, refresh)
         end

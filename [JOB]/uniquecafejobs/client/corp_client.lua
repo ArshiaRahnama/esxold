@@ -1,9 +1,4 @@
---[[
-	Client side for the 3 corp jobs. Reuses OpenCloakroomMenu() (from
-	functions.lua) and esx_society's boss menu event - only the physical
-	zones + a couple of bespoke menus (Portfolio / Launder / Wholesale) are
-	new here.
-]]
+
 
 local function myCorpJob()
 	if not PlayerData or not PlayerData.job then return nil end
@@ -13,7 +8,6 @@ local function myCorpJob()
 	return nil
 end
 
--- ── Blips ──
 local CorpBlips = {}
 CreateThread(function()
 	for _, corp in pairs({ Corp.Meridian, Corp.Blacktide, Corp.CrateCarry }) do
@@ -44,7 +38,6 @@ AddEventHandler('uniquecafejobs:corp:businessRenamed', function(job, newName)
 	CustomNames[job] = newName
 end)
 
--- ── Boss Action / Cloakroom zones (Meridian + Blacktide + CrateCarry) ──
 local function addSimpleZone(coord, name, icon, job, event)
 	exports.ox_target:addBoxZone({
 		coords = vec3(coord.x, coord.y, coord.z),
@@ -74,11 +67,11 @@ CreateThread(function()
 	addSimpleZone(Corp.Blacktide.BossAction.Pos, Corp.Blacktide.BossAction.Name, Corp.Blacktide.BossAction.Icon, Corp.Blacktide.Job, 'uniquecafejobs:corp:openBlacktideBoss')
 	addSimpleZone(Corp.Blacktide.CloackRoom.Pos, Corp.Blacktide.CloackRoom.Name, Corp.Blacktide.CloackRoom.Icon, Corp.Blacktide.Job, 'uniquecafejobs:corp:openCloakroom')
 
-	addSimpleZone(Corp.CrateCarry.Freezer.Pos, Corp.CrateCarry.Freezer.Name, Corp.CrateCarry.Freezer.Icon, Corp.CrateCarry.Job, 'AH_uwucafejob:OpenInventory') -- reuse the existing freezer inventory menu for cratecarry's own warehouse stock
+	addSimpleZone(Corp.CrateCarry.Freezer.Pos, Corp.CrateCarry.Freezer.Name, Corp.CrateCarry.Freezer.Icon, Corp.CrateCarry.Job, 'AH_uwucafejob:OpenInventory')
 	addSimpleZone(Corp.CrateCarry.BossAction.Pos, Corp.CrateCarry.BossAction.Name, Corp.CrateCarry.BossAction.Icon, Corp.CrateCarry.Job, 'uniquecafejobs:corp:openCrateCarryBoss')
 	addSimpleZone(Corp.CrateCarry.CloackRoom.Pos, Corp.CrateCarry.CloackRoom.Name, Corp.CrateCarry.CloackRoom.Icon, Corp.CrateCarry.Job, 'uniquecafejobs:corp:openCloakroom')
 
-	-- Resale counter - open to EVERYONE (public customers), not job gated
+
 	exports.ox_target:addBoxZone({
 		coords = vec3(Corp.CrateCarry.ResaleShop.Pos.x, Corp.CrateCarry.ResaleShop.Pos.y, Corp.CrateCarry.ResaleShop.Pos.z),
 		size = vec3(1.5, 1.5, 1.5),
@@ -314,7 +307,6 @@ AddEventHandler('uniquecafejobs:corp:openCrateCarryBoss', function()
 	openRenamableBossMenu(Corp.CrateCarry.Job, Corp.CrateCarry.Label)
 end)
 
--- ── Blacktide: laundering target at EVERY one of the 17 businesses' shop ──
 CreateThread(function()
 	for _, cafe in pairs(Cafes) do
 		exports.ox_target:addBoxZone({
@@ -339,7 +331,6 @@ CreateThread(function()
 	end
 end)
 
--- ── CrateCarry: wholesale-buy target at EVERY one of the 17 businesses' freezer ──
 CreateThread(function()
 	for _, cafe in pairs(Cafes) do
 		exports.ox_target:addBoxZone({
@@ -415,7 +406,6 @@ AddEventHandler('uniquecafejobs:corp:showResaleShop', function(stock)
 	end)
 end)
 
--- ── Vehicle spawn/delete for the 3 corp jobs (same pattern as the 17 businesses) ──
 CreateThread(function()
 	while true do
 		Citizen.Wait(0)

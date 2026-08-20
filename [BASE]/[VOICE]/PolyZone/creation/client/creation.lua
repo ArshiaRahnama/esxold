@@ -145,7 +145,6 @@ AddEventHandler("polyzone:pzcancel", function()
   createdZoneType = nil
 end)
 
--- Drawing
 function drawThread()
   Citizen.CreateThread(function()
     while drawZone do

@@ -1,12 +1,11 @@
-------------------------------------------------------------------
---                          Variables
-------------------------------------------------------------------
+
+
 playerLoaded = false
 
-local showMenu = false					-- Change this value to show/hide UI
-local cam = -1							-- Camera control
-local heading = 332.219879				-- Heading coord
-local zoom = "visage"					-- Define which tab is shown first (Default: Head)
+local showMenu = false
+local cam = -1
+local heading = 332.219879
+local zoom = "visage"
 local prvGnd = -1
 local firstSpawn = true
 
@@ -30,15 +29,11 @@ AddEventHandler('showRegisterMenu', function()
 	showMenu = true
 end)
 
-
 RegisterCommand('close', function()
 	SetNuiFocus(false,false)
 	ESX.UI.Menu.CloseAll()
 end, false)
 
-------------------------------------------------------------------
---                          NUI
-------------------------------------------------------------------
 RegisterNUICallback('updateSkin', function(data)
 	updateSkin(data, false)
 end)
@@ -83,7 +78,7 @@ AddEventHandler('playerSpawned', function()
 					playsound = true
 					TriggerEvent('showStatus')
 					showMenu = true
-					toggleMenu(showMenu)				
+					toggleMenu(showMenu)
 				end
 			end)
 		end
@@ -97,17 +92,17 @@ end)
 
 function updateSkin(data, dontneed)
 	gender = tonumber(data.gender)
-	if gender ~= prvGnd or dontneed then 
+	if gender ~= prvGnd or dontneed then
 		if gender == 0  then
 			local characterModel = GetHashKey('mp_m_freemode_01')
-		
+
 			RequestModel(characterModel)
 
 			while not HasModelLoaded(characterModel) do
 				RequestModel(characterModel)
 				Citizen.Wait(0)
 			end
-		
+
 			if IsModelInCdimage(characterModel) and IsModelValid(characterModel) then
 				SetPlayerModel(PlayerId(), characterModel)
 				SetPedDefaultComponentVariation(GetPlayerPed(-1))
@@ -115,25 +110,25 @@ function updateSkin(data, dontneed)
 			SetModelAsNoLongerNeeded(characterModel)
 		else
 			local characterModel = GetHashKey('mp_f_freemode_01')
-		
+
 			RequestModel(characterModel)
-		
+
 			while not HasModelLoaded(characterModel) do
 				RequestModel(characterModel)
 				Citizen.Wait(0)
 			end
-		
+
 			if IsModelInCdimage(characterModel) and IsModelValid(characterModel) then
 				SetPlayerModel(PlayerId(), characterModel)
 				SetPedDefaultComponentVariation(GetPlayerPed(-1))
 			end
-		
+
 			SetModelAsNoLongerNeeded(characterModel)
 		end
 		prvGnd = gender
 	end
 	v = data.value
-	-- Face
+
 	dad = tonumber(data.dad)
 	mum = tonumber(data.mum)
 	dadmumpercent = tonumber(data.dadmumpercent)
@@ -144,7 +139,7 @@ function updateSkin(data, dontneed)
 	freckle = tonumber(data.freckle)
 	wrinkle = tonumber(data.wrinkle)
 	wrinkleopacity = tonumber(data.wrinkleopacity)
-	--hair = tonumber(data.hair)
+
 	hair = tonumber(data.hair) == 0 and 1 or tonumber(data.hair)
 	haircolor = tonumber(data.haircolor1)
 	hairhighlight = tonumber(data.haircolor2)
@@ -153,7 +148,7 @@ function updateSkin(data, dontneed)
 	beard = tonumber(data.beard)
 	beardopacity = tonumber(data.beardopacity)
 	beardcolor = tonumber(data.beardcolor)
-	-- Clothes
+
 	hats = tonumber(data.hats)
 	glasses = tonumber(data.glasses)
 	ears = tonumber(data.ears)
@@ -161,7 +156,7 @@ function updateSkin(data, dontneed)
 	pants = tonumber(data.pants)
 	shoes = tonumber(data.shoes)
 	watches = tonumber(data.watches)
-	-- makeup
+
 	makeupopacity = tonumber(data.makeupopacity)
 	makeupcolor = tonumber(data.makeupcolor)
 	if(v == true) then
@@ -187,15 +182,15 @@ function updateSkin(data, dontneed)
 		local prop_earrings_text = GetPedPropTextureIndex(ped, 2)
 		local prop_watches = GetPedPropIndex(ped, 6)
 		local prop_watches_text = GetPedPropTextureIndex(ped, 6)
-		-- These four were never read here, so they were entirely absent
-		-- from the saved table below (not even nil-in-the-table, the key
-		-- just didn't exist). skinchanger:loadSkin() reads them straight
-		-- back out on every future load/spawn -- a missing key decodes to
-		-- Lua nil, and passing nil into SetPedComponentVariation/
-		-- SetPedPropIndex either errors or clears the slot. Concretely:
-		-- using this identity menu while wearing a mask/vest/bag/bracelet
-		-- (e.g. from esx_inventoryhud's wear system) silently lost that
-		-- item's appearance the next time the skin was applied.
+
+
+
+
+
+
+
+
+
 		local mask = GetPedDrawableVariation(ped, 1)
 		local masktext = GetPedTextureVariation(ped, 1)
 		local bproof = GetPedDrawableVariation(ped, 9)
@@ -205,10 +200,10 @@ function updateSkin(data, dontneed)
 		local prop_bracelet = GetPedPropIndex(ped, 7)
 		local prop_bracelet_text = GetPedPropTextureIndex(ped, 7)
 		local skinn = {["sex"]=gender,["face_1"]=dad,["face_2"]=mum,["face_3"]=dadmumpercent,["skin"]=skin,["eye_color"]=eyecolor,["complexion_1"]=skinproblem,["complexion_2"]=1,["moles_1"]=freckle,["moles_2"]=1,["age_1"]=wrinkle,["age_2"]=wrinkleopacity,["eyebrows_1"]=eyebrow,["eyebrows_2"]=eyebrowopacity,["beard_1"]=beard,["beard_2"]=beardopacity,["beard_3"]=beardcolor,["beard_4"]=beardcolor,["hair_1"]=hair,["hair_2"]=0,["hair_color_1"]=haircolor,["hair_color_2"]=hairhighlight,["arms"]=torso,["arms_2"]=torsotext,["pants_1"]=leg,["pants_2"]=legtext,["shoes_1"]=shoes,["shoes_2"]=shoestext,["chain_1"]=accessory,["chain_2"]=accessorytext,["tshirt_1"]=undershirt,["tshirt_2"]=undershirttext,["torso_1"]=torso2,["torso_2"]=torso2text,["helmet_1"]=prop_hat,["helmet_2"]=prop_hat_text,["glasses_1"]=prop_glasses,["glasses_2"]=prop_glasses_text,["ears_1"]=prop_earrings,["ears_2"]=prop_earrings_text,["watches_1"]=prop_watches,["watches_2"]=prop_watches_text,["mask_1"]=mask,["mask_2"]=masktext,["bproof_1"]=bproof,["bproof_2"]=bprooftext,["bags_1"]=bag,["bags_2"]=bagtext,["bracelets_1"]=prop_bracelet,["bracelets_2"]=prop_bracelet_text}
-		-- ESX.TriggerServerEvent doesn't exist anywhere in essentialmode
-		-- (same bug as Unique_clothe's createPack) -- this silently
-		-- errored every time, so the save event never reached the
-		-- server and skin changes were never persisted to the DB.
+
+
+
+
 		TriggerServerEvent('updateSkin', skinn)
 		TriggerServerEvent('SendReport', 'Man new player hastam.', 'More')
 		if playsound then
@@ -220,9 +215,9 @@ function updateSkin(data, dontneed)
 		TriggerServerEvent('sunset_clothe:giveStarter')
 	elseif gender == 0 then
 
-		SetPedDefaultComponentVariation(GetPlayerPed(-1))	
+		SetPedDefaultComponentVariation(GetPlayerPed(-1))
 
-		-- Face
+
 		SetPedHeadBlendData			(GetPlayerPed(-1), dad, mum, 0, skin, skin, skin, dadmumpercent * 0.1, dadmumpercent * 0.1, 0, true)
 		SetPedEyeColor				(GetPlayerPed(-1), eyecolor)
 		if acne == 0 then
@@ -239,12 +234,12 @@ function updateSkin(data, dontneed)
 		SetPedHeadOverlay       	(GetPlayerPed(-1), 3, wrinkle, wrinkleopacity * 0.1)
 		SetPedComponentVariation	(GetPlayerPed(-1), 2, hair, 0, 2)
 		SetPedHairColor				(GetPlayerPed(-1), haircolor, hairhighlight)
-		SetPedHeadOverlay       	(GetPlayerPed(-1), 2, eyebrow, eyebrowopacity * 0.1) 
-		SetPedHeadOverlay       	(GetPlayerPed(-1), 1, beard, beardopacity * 0.1)   
-		SetPedHeadOverlayColor  	(GetPlayerPed(-1), 1, 1, beardcolor, beardcolor) 
+		SetPedHeadOverlay       	(GetPlayerPed(-1), 2, eyebrow, eyebrowopacity * 0.1)
+		SetPedHeadOverlay       	(GetPlayerPed(-1), 1, beard, beardopacity * 0.1)
+		SetPedHeadOverlayColor  	(GetPlayerPed(-1), 1, 1, beardcolor, beardcolor)
 		SetPedHeadOverlayColor  	(GetPlayerPed(-1), 2, 1, beardcolor, beardcolor)
-	
-		-- Clothes variations
+
+
 		if hats == 0 then		ClearPedProp(GetPlayerPed(-1), 0)
 		elseif hats == 1 then	SetPedPropIndex(GetPlayerPed(-1), 0, 3-1, 1-1, 2)
 		elseif hats == 2 then	SetPedPropIndex(GetPlayerPed(-1), 0, 3-1, 7-1, 2)
@@ -279,7 +274,7 @@ function updateSkin(data, dontneed)
 		elseif hats == 31 then	SetPedPropIndex(GetPlayerPed(-1), 0, 77-1, 20-1, 2)
 		elseif hats == 32 then	SetPedPropIndex(GetPlayerPed(-1), 0, 97-1, 3-1, 2)
 		end
-		
+
 		if glasses == 0 then		ClearPedProp(GetPlayerPed(-1), 1)
 		elseif glasses == 1 then	SetPedPropIndex(GetPlayerPed(-1), 1, 4-1, 1-1, 2)
 		elseif glasses == 2 then	SetPedPropIndex(GetPlayerPed(-1), 1, 4-1, 10-1, 2)
@@ -294,7 +289,7 @@ function updateSkin(data, dontneed)
 		elseif glasses == 11 then	SetPedPropIndex(GetPlayerPed(-1), 1, 18-1, 10-1, 2)
 		elseif glasses == 12 then	SetPedPropIndex(GetPlayerPed(-1), 1, 26-1, 1-1, 2)
 		end
-	
+
 		if ears == 0 then		ClearPedProp(GetPlayerPed(-1), 2)
 		elseif ears == 1 then	SetPedPropIndex(GetPlayerPed(-1), 2, 4-1, 1-1, 2)
 		elseif ears == 2 then	SetPedPropIndex(GetPlayerPed(-1), 2, 5-1, 1-1, 2)
@@ -312,606 +307,606 @@ function updateSkin(data, dontneed)
 		elseif ears == 14 then	SetPedPropIndex(GetPlayerPed(-1), 2, 32-1, 1-1, 2)
 		elseif ears == 15 then	SetPedPropIndex(GetPlayerPed(-1), 2, 33-1, 1-1, 2)
 		end
-	
-		-- Keep these 4 variations together.
-		-- It avoids empty arms or noisy clothes superposition
+
+
+
 		if tops == 0 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 15, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 15, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 15, 0, 2)
 		elseif tops == 1 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 0, 0, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 0, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 0, 1, 2)
 		elseif tops == 2 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 0, 0, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 0, 7, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 0, 7, 2)
 		elseif tops == 3 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 2, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 2, 9, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 2, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 2, 9, 2)
 		elseif tops == 4 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 6, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 5, 0, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 3, 11, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 6, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 3, 11, 2)
 		elseif tops == 5 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 6, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 5, 0, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 3, 15, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 6, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 3, 15, 2)
 		elseif tops == 6 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 6, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 4, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 6, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 4, 0, 2)
 		elseif tops == 7 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 6, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 4, 0, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 4, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 6, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 4, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 4, 0, 2)
 		elseif tops == 8 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 6, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 26, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 4, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 6, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 26, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 4, 0, 2)
 		elseif tops == 9 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 5, 0, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 5, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 5, 0, 2)
 		elseif tops == 10 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 2, 4, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 6, 11, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 2, 4, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 6, 11, 2)
 		elseif tops == 11 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 2, 4, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 6, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 2, 4, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 6, 0, 2)
 		elseif tops == 12 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 2, 4, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 6, 3, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 2, 4, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 6, 3, 2)
 		elseif tops == 13 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 7, 4, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 7, 4, 2)
 		elseif tops == 14 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 7, 10, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 7, 10, 2)
 		elseif tops == 15 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 7, 12, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 7, 12, 2)
 		elseif tops == 16 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 7, 13, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 7, 13, 2)
 		elseif tops == 17 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 9, 0, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 9, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 9, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 9, 0, 2)
 		elseif tops == 18 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 10, 0, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 10, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 10, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 10, 0, 2)
 		elseif tops == 19 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 12, 2, 2) 	-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 10, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 10, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 12, 2, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 10, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 10, 0, 2)
 		elseif tops == 20 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 18, 0, 2) 	-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 10, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 10, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 18, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 10, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 10, 0, 2)
 		elseif tops == 21 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 11, 2, 2) 	-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 10, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 10, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 11, 2, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 10, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 10, 0, 2)
 		elseif tops == 22 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 12, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 12, 10, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 12, 10, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 12, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 12, 10, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 12, 10, 2)
 		elseif tops == 23 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 13, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 13, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 13, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 13, 0, 2)
 		elseif tops == 24 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 14, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 14, 0, 2)
 		elseif tops == 25 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 14, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 14, 1, 2)
 		elseif tops == 26 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 16, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 16, 0, 2)
 		elseif tops == 27 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 16, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 16, 1, 2)
 		elseif tops == 28 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 16, 2, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 16, 2, 2)
 		elseif tops == 29 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 17, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 17, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 17, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 17, 0, 2)
 		elseif tops == 30 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 17, 1, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 17, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 17, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 17, 1, 2)
 		elseif tops == 31 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 17, 4, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 17, 4, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 17, 4, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 17, 4, 2)
 		elseif tops == 32 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 27, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 26, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 27, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 26, 0, 2)
 		elseif tops == 33 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 27, 5, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 26, 5, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 27, 5, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 26, 5, 2)
 		elseif tops == 34 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 27, 6, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 26, 6, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 27, 6, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 26, 6, 2)
 		elseif tops == 35 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 63, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 31, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 63, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 31, 0, 2)
 		elseif tops == 36 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 57, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 36, 4, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 57, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 36, 4, 2)
 		elseif tops == 37 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 57, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 36, 5, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 57, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 36, 5, 2)
 		elseif tops == 38 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 24, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 37, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 24, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 37, 0, 2)
 		elseif tops == 39 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 24, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 37, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 24, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 37, 1, 2)
 		elseif tops == 40 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 24, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 37, 2, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 24, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 37, 2, 2)
 		elseif tops == 41 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 8, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 38, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 8, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 38, 0, 2)
 		elseif tops == 42 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 8, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 38, 3, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 8, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 38, 3, 2)
 		elseif tops == 43 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 39, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 39, 0, 2)
 		elseif tops == 44 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 39, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 39, 1, 2)
 		elseif tops == 45 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 41, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 41, 0, 2)
 		elseif tops == 46 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 42, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 42, 0, 2)
 		elseif tops == 47 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 50, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 50, 0, 2)
 		elseif tops == 48 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 50, 3, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 50, 3, 2)
 		elseif tops == 49 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 50, 4, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 50, 4, 2)
 		elseif tops == 50 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 57, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 57, 0, 2)
 		elseif tops == 51 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 50, 1, 2) 	-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 70, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 50, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 70, 0, 2)
 		elseif tops == 52 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 50, 1, 2) 	-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 70, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 50, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 70, 1, 2)
 		elseif tops == 53 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 50, 1, 2) 	-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 70, 7, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 50, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 70, 7, 2)
 		elseif tops == 54 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 3, 1, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 72, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 3, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 72, 1, 2)
 		elseif tops == 55 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 6, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 87, 0, 2) 	-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 5, 0, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 74, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 6, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 87, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 74, 0, 2)
 		elseif tops == 56 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 12, 2, 2) 	-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 28, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 77, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 12, 2, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 28, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 77, 0, 2)
 		elseif tops == 57 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 15, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 79, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 79, 0, 2)
 		elseif tops == 58 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 80, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 80, 0, 2)
 		elseif tops == 59 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 80, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 80, 1, 2)
 		elseif tops == 60 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 82, 5, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 82, 5, 2)
 		elseif tops == 61 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 82, 8, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 82, 8, 2)
 		elseif tops == 62 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 82, 9, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 82, 9, 2)
 		elseif tops == 63 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 86, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 86, 0, 2)
 		elseif tops == 64 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 86, 2, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 86, 2, 2)
 		elseif tops == 65 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 86, 4, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 86, 4, 2)
 		elseif tops == 66 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 11, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 11, 2)
 		elseif tops == 67 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 0, 2)
 		elseif tops == 68 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 1, 2)
 		elseif tops == 69 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 2, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 2, 2)
 		elseif tops == 70 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 4, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 4, 2)
 		elseif tops == 71 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 8, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 8, 2)
 		elseif tops == 72 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 89, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 89, 0, 2)
 		elseif tops == 73 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 95, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 95, 0, 2)
 		elseif tops == 74 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 31, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 99, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 31, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 99, 1, 2)
 		elseif tops == 75 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 31, 13, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 99, 3, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 31, 13, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 99, 3, 2)
 		elseif tops == 76 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 31, 13, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 101, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 31, 13, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 101, 0, 2)
 		elseif tops == 77 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 105, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 105, 0, 2)
 		elseif tops == 78 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 10, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 106, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 10, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 106, 0, 2)
 		elseif tops == 79 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 73, 2, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 109, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 73, 2, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 109, 0, 2)
 		elseif tops == 80 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 111, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 111, 0, 2)
 		elseif tops == 81 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 111, 3, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 111, 3, 2)
 		elseif tops == 82 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 113, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 113, 0, 2)
 		elseif tops == 83 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 126, 5, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 126, 5, 2)
 		elseif tops == 84 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 126, 9, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 126, 9, 2)
 		elseif tops == 85 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 126, 10, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 126, 10, 2)
 		elseif tops == 86 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 126, 14, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 126, 14, 2)
 		elseif tops == 87 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 131, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 131, 0, 2)
 		elseif tops == 88 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 134, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 134, 0, 2)
 		elseif tops == 89 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 134, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 134, 1, 2)
 		elseif tops == 90 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 0, 2)
 		elseif tops == 91 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 2, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 2, 2)
 		elseif tops == 92 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 4, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 4, 2)
 		elseif tops == 93 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 5, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 5, 2)
 		elseif tops == 94 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 6, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 6, 2)
 		elseif tops == 95 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 8, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 8, 2)
 		elseif tops == 96 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 9, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 9, 2)
 		elseif tops == 97 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 146, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 146, 0, 2)
 		elseif tops == 98 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 16, 2, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 166, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 16, 2, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 166, 0, 2)
 		elseif tops == 99 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 167, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 167, 0, 2)
 		elseif tops == 100 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 167, 4, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 167, 4, 2)
 		elseif tops == 101 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 167, 6, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 167, 6, 2)
 		elseif tops == 102 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 167, 12, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 167, 12, 2)
 		elseif tops == 103 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 169, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 169, 0, 2)
 		elseif tops == 104 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 172, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 172, 0, 2)
 		elseif tops == 105 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 2, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 173, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 2, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 173, 0, 2)
 		elseif tops == 106 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 2, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 41, 2, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 185, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 2, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 41, 2, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 185, 0, 2)
 		elseif tops == 107 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 2, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 202, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 2, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 202, 0, 2)
 		elseif tops == 108 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 203, 10, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 203, 10, 2)
 		elseif tops == 109 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 203, 16, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 203, 16, 2)
 		elseif tops == 110 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 203, 25, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 203, 25, 2)
 		elseif tops == 111 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 2, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 205, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 2, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 205, 0, 2)
 		elseif tops == 112 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 226, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 226, 0, 2)
 		elseif tops == 113 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 257, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 257, 0, 2)
 		elseif tops == 114 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 257, 9, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 257, 9, 2)
 		elseif tops == 115 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 257, 17, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 257, 17, 2)
 		elseif tops == 116 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 259, 9, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 259, 9, 2)
 		elseif tops == 117 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 5, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 269, 2, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 269, 2, 2)
 		elseif tops == 118 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 282, 6, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 282, 6, 2)
 		end
-	
+
 		if pants == 0 then 		SetPedComponentVariation(GetPlayerPed(-1), 4, 61, 4, 2)
 		elseif pants == 1 then	SetPedComponentVariation(GetPlayerPed(-1), 4, 0, 0, 2)
 		elseif pants == 2 then	SetPedComponentVariation(GetPlayerPed(-1), 4, 0, 2, 2)
@@ -971,7 +966,7 @@ function updateSkin(data, dontneed)
 		elseif pants == 56 then	SetPedComponentVariation(GetPlayerPed(-1), 4, 88, 9, 2)
 		elseif pants == 57 then	SetPedComponentVariation(GetPlayerPed(-1), 4, 100, 9, 2)
 		end
-	
+
 		if shoes == 0 then 	SetPedComponentVariation(GetPlayerPed(-1), 6, 34, 0, 2)
 		elseif shoes == 1 then	SetPedComponentVariation(GetPlayerPed(-1), 6, 0, 10, 2)
 		elseif shoes == 2 then	SetPedComponentVariation(GetPlayerPed(-1), 6, 1, 0, 2)
@@ -1024,7 +1019,7 @@ function updateSkin(data, dontneed)
 		elseif shoes == 49 then SetPedComponentVariation(GetPlayerPed(-1), 6, 75, 8, 2)
 		elseif shoes == 50 then SetPedComponentVariation(GetPlayerPed(-1), 6, 77, 0, 2)
 		end
-	
+
 		if watches == 0 then		ClearPedProp(GetPlayerPed(-1), 6)
 		elseif watches == 1 then	SetPedPropIndex(GetPlayerPed(-1), 6, 1-1, 1-1, 2)
 		elseif watches == 2 then	SetPedPropIndex(GetPlayerPed(-1), 6, 2-1, 1-1, 2)
@@ -1034,19 +1029,19 @@ function updateSkin(data, dontneed)
 		elseif watches == 6 then	SetPedPropIndex(GetPlayerPed(-1), 6, 9-1, 1-1, 2)
 		elseif watches == 7 then	SetPedPropIndex(GetPlayerPed(-1), 6, 11-1, 1-1, 2)
 		end
-		
-		-- Unused yet
-		-- These presets will be editable in V2 release
-		SetPedHeadOverlay       	(GetPlayerPed(-1), 4, 0, 0.0)   	-- Lipstick
-		SetPedHeadOverlay       	(GetPlayerPed(-1), 8, 0, 0.0) 		-- Makeup
-		SetPedHeadOverlayColor  	(GetPlayerPed(-1), 4, 1, 0, 0)      -- Makeup Color
-		SetPedHeadOverlayColor  	(GetPlayerPed(-1), 8, 1, 0, 0)      -- Lipstick Color
-		SetPedComponentVariation	(GetPlayerPed(-1), 1,  0,0, 2)    	-- Mask
+
+
+
+		SetPedHeadOverlay       	(GetPlayerPed(-1), 4, 0, 0.0)
+		SetPedHeadOverlay       	(GetPlayerPed(-1), 8, 0, 0.0)
+		SetPedHeadOverlayColor  	(GetPlayerPed(-1), 4, 1, 0, 0)
+		SetPedHeadOverlayColor  	(GetPlayerPed(-1), 8, 1, 0, 0)
+		SetPedComponentVariation	(GetPlayerPed(-1), 1,  0,0, 2)
 	elseif gender == 1 then
 
-		SetPedDefaultComponentVariation(GetPlayerPed(-1))	
+		SetPedDefaultComponentVariation(GetPlayerPed(-1))
 
-		-- Face
+
 		SetPedHeadBlendData			(GetPlayerPed(-1), dad, mum, 0, skin, skin, skin, dadmumpercent * 0.1, dadmumpercent * 0.1, 0, true)
 		SetPedEyeColor				(GetPlayerPed(-1), eyecolor)
 		if acne == 0 then
@@ -1063,7 +1058,7 @@ function updateSkin(data, dontneed)
 		SetPedHeadOverlay       	(GetPlayerPed(-1), 3, wrinkle, wrinkleopacity * 0.1)
 		if hair == 0 then SetPedComponentVariation(GetPlayerPed(-1), 2, 39 + 0, hair, 2)
 		elseif hair == 1 then SetPedComponentVariation(GetPlayerPed(-1), 2, 39 + hair, 0, 2)
-		elseif hair == 2 then 
+		elseif hair == 2 then
 			SetPedComponentVariation(GetPlayerPed(-1), 2, 39 + hair, 0, 2)
 			if hats == 0 then
 				SetPedPropIndex(GetPlayerPed(-1), 0, 5, 0, 2)
@@ -1075,15 +1070,15 @@ function updateSkin(data, dontneed)
 		elseif hair >= 24 then SetPedComponentVariation(GetPlayerPed(-1), 2, hair + 1, 0, 2)
 		elseif hair > 3 then SetPedComponentVariation(GetPlayerPed(-1), 2, hair, 0, 2) end
 
-		
-		-- SetPedComponentVariation	(GetPlayerPed(-1), 2, hair, 0, 2)
+
+
 		SetPedHairColor				(GetPlayerPed(-1), haircolor, hairhighlight)
-		SetPedHeadOverlay       	(GetPlayerPed(-1), 2, eyebrow, eyebrowopacity * 0.1) 
-		SetPedHeadOverlay       	(GetPlayerPed(-1), 1, beard, beardopacity * 0.1)   
-		SetPedHeadOverlayColor  	(GetPlayerPed(-1), 1, 1, beardcolor, beardcolor) 
+		SetPedHeadOverlay       	(GetPlayerPed(-1), 2, eyebrow, eyebrowopacity * 0.1)
+		SetPedHeadOverlay       	(GetPlayerPed(-1), 1, beard, beardopacity * 0.1)
+		SetPedHeadOverlayColor  	(GetPlayerPed(-1), 1, 1, beardcolor, beardcolor)
 		SetPedHeadOverlayColor  	(GetPlayerPed(-1), 2, 1, beardcolor, beardcolor)
-	
-		-- Clothes variations
+
+
 		if hats == 0 and hair ~= 2 then		ClearPedProp(GetPlayerPed(-1), 0)
 		elseif hats == 1 then	SetPedPropIndex(GetPlayerPed(-1), 0, 4, 0, 2)
 		elseif hats == 2 then	SetPedPropIndex(GetPlayerPed(-1), 0, 4, 1, 2)
@@ -1092,7 +1087,7 @@ function updateSkin(data, dontneed)
 		elseif hats == 5 then	SetPedPropIndex(GetPlayerPed(-1), 0, 4, 4, 2)
 		elseif hats == 6 then	SetPedPropIndex(GetPlayerPed(-1), 0, 4, 5, 2)
 		elseif hats == 7 then	SetPedPropIndex(GetPlayerPed(-1), 0, 4, 6, 2)
-		elseif hats == 8 then	SetPedPropIndex(GetPlayerPed(-1), 0, 4, 7, 2)	
+		elseif hats == 8 then	SetPedPropIndex(GetPlayerPed(-1), 0, 4, 7, 2)
 		elseif hats == 9 then	SetPedPropIndex(GetPlayerPed(-1), 0, 5, 0, 2)
 		elseif hats == 10 then	SetPedPropIndex(GetPlayerPed(-1), 0, 5, 1, 2)
 		elseif hats == 11 then	SetPedPropIndex(GetPlayerPed(-1), 0, 5, 2, 2)
@@ -1118,7 +1113,7 @@ function updateSkin(data, dontneed)
 		elseif hats == 31 then	SetPedPropIndex(GetPlayerPed(-1), 0, 13, 2, 2)
 		elseif hats == 32 then	SetPedPropIndex(GetPlayerPed(-1), 0, 13, 1, 2)
 		end
-		
+
 		if glasses == 0 then		ClearPedProp(GetPlayerPed(-1), 1)
 		elseif glasses == 1 then	SetPedPropIndex(GetPlayerPed(-1), 1, 3, 1-1, 2)
 		elseif glasses == 2 then	SetPedPropIndex(GetPlayerPed(-1), 1, 3, 10-1, 2)
@@ -1151,610 +1146,610 @@ function updateSkin(data, dontneed)
 		elseif ears == 14 then	SetPedPropIndex(GetPlayerPed(-1), 2, 14, 0, 2)
 		elseif ears == 15 then	SetPedPropIndex(GetPlayerPed(-1), 2, 17, 0, 2)
 		end
-	
-		-- Keep these 4 variations together.
-		-- 			SetPedComponentVariation(GetPlayerPed(-1), 3, 3, 0, 2)		-- astin boland
-		-- It avoids empty arms or noisy clothes superposition
-		if tops == 0 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 15, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 15, 0, 2) 	-- Torso 2
-		elseif tops == 1 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 0, 0, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 0, 1, 2) 	-- Torso 2
-		elseif tops == 2 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 0, 0, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 0, 7, 2) 	-- Torso 2
-		elseif tops == 3 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 2, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 2, 9, 2) 	-- Torso 2
-		elseif tops == 4 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 3, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 2, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 3, 0, 2) 	-- Torso 2
-		elseif tops == 5 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 3, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 2, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 3, 1, 2) 	-- Torso 2
-		elseif tops == 6 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 3, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 2, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 3, 2, 2) 	-- Torso 2
-		elseif tops == 7 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 41, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 6, 0, 2) 	-- Torso 2
-		elseif tops == 8 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 40, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 6, 1, 2) 	-- Torso 2
-		elseif tops == 9 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 40, 1, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 6, 2, 2) 	-- Torso 2
-		elseif tops == 10 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 21, 0, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 8, 0, 2) 	-- Torso 2
-		elseif tops == 11 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 21, 1, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 8, 0, 2) 	-- Torso 2
-		elseif tops == 12 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 9, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 2, 0, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 9, 0, 2) 	-- Torso 2
-		elseif tops == 13 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 9, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 2, 0, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 9, 1, 2) 	-- Torso 2
-		elseif tops == 14 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 9, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 14, 0, 2) 	-- Torso 2
-		elseif tops == 15 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 9, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 14, 1, 2) 	-- Torso 2
-		elseif tops == 16 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 9, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 14, 2, 2) 	-- Torso 2
-		elseif tops == 17 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 9, 0, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 16, 0, 2) 	-- Torso 2
-		elseif tops == 18 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 10, 0, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 16, 1, 2) 	-- Torso 2
-		elseif tops == 19 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 12, 2, 2) 	-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 10, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 16, 2, 2) 	-- Torso 2
 
-			--- here
+
+
+
+		if tops == 0 then
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 15, 0, 2)
+		elseif tops == 1 then
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 0, 1, 2)
+		elseif tops == 2 then
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 0, 7, 2)
+		elseif tops == 3 then
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 2, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 2, 9, 2)
+		elseif tops == 4 then
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 3, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 2, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 3, 0, 2)
+		elseif tops == 5 then
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 3, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 2, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 3, 1, 2)
+		elseif tops == 6 then
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 3, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 2, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 3, 2, 2)
+		elseif tops == 7 then
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 41, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 6, 0, 2)
+		elseif tops == 8 then
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 40, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 6, 1, 2)
+		elseif tops == 9 then
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 40, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 6, 2, 2)
+		elseif tops == 10 then
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 21, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 8, 0, 2)
+		elseif tops == 11 then
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 21, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 8, 0, 2)
+		elseif tops == 12 then
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 9, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 2, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 9, 0, 2)
+		elseif tops == 13 then
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 9, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 2, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 9, 1, 2)
+		elseif tops == 14 then
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 9, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 14, 0, 2)
+		elseif tops == 15 then
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 9, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 14, 1, 2)
+		elseif tops == 16 then
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 9, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 14, 2, 2)
+		elseif tops == 17 then
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 9, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 16, 0, 2)
+		elseif tops == 18 then
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 10, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 16, 1, 2)
+		elseif tops == 19 then
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 12, 2, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 10, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 16, 2, 2)
+
+
 		elseif tops == 20 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 18, 0, 2) 	-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 10, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 10, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 18, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 10, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 10, 0, 2)
 		elseif tops == 21 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 11, 2, 2) 	-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 10, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 10, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 11, 2, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 10, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 10, 0, 2)
 		elseif tops == 22 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 12, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 12, 10, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 12, 10, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 12, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 12, 10, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 12, 10, 2)
 		elseif tops == 23 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 13, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 13, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 13, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 13, 0, 2)
 		elseif tops == 24 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 14, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 14, 0, 2)
 		elseif tops == 25 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 14, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 14, 1, 2)
 		elseif tops == 26 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 16, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 16, 0, 2)
 		elseif tops == 27 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 16, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 16, 1, 2)
 		elseif tops == 28 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 16, 2, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 16, 2, 2)
 		elseif tops == 29 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 17, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 17, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 17, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 17, 0, 2)
 		elseif tops == 30 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 17, 1, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 17, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 17, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 17, 1, 2)
 		elseif tops == 31 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 17, 4, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 17, 4, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 17, 4, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 17, 4, 2)
 		elseif tops == 32 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 27, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 26, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 27, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 26, 0, 2)
 		elseif tops == 33 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 27, 5, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 26, 5, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 27, 5, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 26, 5, 2)
 		elseif tops == 34 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 27, 6, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 26, 6, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 27, 6, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 26, 6, 2)
 		elseif tops == 35 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 63, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 31, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 63, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 31, 0, 2)
 		elseif tops == 36 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 57, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 36, 4, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 57, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 36, 4, 2)
 		elseif tops == 37 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 57, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 36, 5, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 57, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 36, 5, 2)
 		elseif tops == 38 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 24, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 37, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 24, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 37, 0, 2)
 		elseif tops == 39 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 24, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 37, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 24, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 37, 1, 2)
 		elseif tops == 40 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 24, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 37, 2, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 24, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 37, 2, 2)
 		elseif tops == 41 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 8, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 38, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 8, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 38, 0, 2)
 		elseif tops == 42 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 8, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 38, 3, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 8, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 38, 3, 2)
 		elseif tops == 43 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 39, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 39, 0, 2)
 		elseif tops == 44 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 39, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 39, 1, 2)
 		elseif tops == 45 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 41, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 41, 0, 2)
 		elseif tops == 46 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 42, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 42, 0, 2)
 		elseif tops == 47 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 50, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 50, 0, 2)
 		elseif tops == 48 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 50, 3, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 50, 3, 2)
 		elseif tops == 49 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 50, 4, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 50, 4, 2)
 		elseif tops == 50 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 57, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 57, 0, 2)
 		elseif tops == 51 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 50, 1, 2) 	-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 70, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 50, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 70, 0, 2)
 		elseif tops == 52 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 50, 1, 2) 	-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 70, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 50, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 70, 1, 2)
 		elseif tops == 53 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 50, 1, 2) 	-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 70, 7, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 50, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 23, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 70, 7, 2)
 		elseif tops == 54 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 3, 1, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 72, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 3, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 72, 1, 2)
 		elseif tops == 55 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 6, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 87, 0, 2) 	-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 5, 0, 2) 		-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 74, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 6, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 87, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 74, 0, 2)
 		elseif tops == 56 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 12, 2, 2) 	-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 28, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 77, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 12, 2, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 28, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 77, 0, 2)
 		elseif tops == 57 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 15, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 79, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 79, 0, 2)
 		elseif tops == 58 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 80, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 80, 0, 2)
 		elseif tops == 59 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 80, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 80, 1, 2)
 		elseif tops == 60 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 82, 5, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 82, 5, 2)
 		elseif tops == 61 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 82, 8, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 82, 8, 2)
 		elseif tops == 62 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 82, 9, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 82, 9, 2)
 		elseif tops == 63 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 86, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 86, 0, 2)
 		elseif tops == 64 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 86, 2, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 86, 2, 2)
 		elseif tops == 65 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 86, 4, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 86, 4, 2)
 		elseif tops == 66 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 11, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 11, 2)
 		elseif tops == 67 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 0, 2)
 		elseif tops == 68 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 1, 2)
 		elseif tops == 69 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 2, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 2, 2)
 		elseif tops == 70 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 4, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 4, 2)
 		elseif tops == 71 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 8, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 87, 8, 2)
 		elseif tops == 72 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 89, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 89, 0, 2)
 		elseif tops == 73 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 95, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 11, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 95, 0, 2)
 		elseif tops == 74 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 31, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 99, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 31, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 99, 1, 2)
 		elseif tops == 75 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 31, 13, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 99, 3, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 31, 13, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 99, 3, 2)
 		elseif tops == 76 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 31, 13, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 101, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 31, 13, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 101, 0, 2)
 		elseif tops == 77 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 105, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 105, 0, 2)
 		elseif tops == 78 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 10, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 106, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 10, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 106, 0, 2)
 		elseif tops == 79 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 73, 2, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 109, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 73, 2, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 109, 0, 2)
 		elseif tops == 80 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 111, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 111, 0, 2)
 		elseif tops == 81 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 111, 3, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 4, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 111, 3, 2)
 		elseif tops == 82 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 113, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 113, 0, 2)
 		elseif tops == 83 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 126, 5, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 126, 5, 2)
 		elseif tops == 84 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 126, 9, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 126, 9, 2)
 		elseif tops == 85 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 126, 10, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 126, 10, 2)
 		elseif tops == 86 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 126, 14, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 126, 14, 2)
 		elseif tops == 87 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 131, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 131, 0, 2)
 		elseif tops == 88 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 134, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 134, 0, 2)
 		elseif tops == 89 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 134, 1, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 134, 1, 2)
 		elseif tops == 90 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 0, 2)
 		elseif tops == 91 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 2, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 2, 2)
 		elseif tops == 92 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 4, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 4, 2)
 		elseif tops == 93 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 5, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 5, 2)
 		elseif tops == 94 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 6, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 6, 2)
 		elseif tops == 95 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 8, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 8, 2)
 		elseif tops == 96 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 9, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 143, 9, 2)
 		elseif tops == 97 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 146, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 146, 0, 2)
 		elseif tops == 98 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 16, 2, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 166, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 16, 2, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 166, 0, 2)
 		elseif tops == 99 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 167, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 167, 0, 2)
 		elseif tops == 100 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 167, 4, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 167, 4, 2)
 		elseif tops == 101 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 167, 6, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 167, 6, 2)
 		elseif tops == 102 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 167, 12, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 167, 12, 2)
 		elseif tops == 103 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 169, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 169, 0, 2)
 		elseif tops == 104 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 172, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 172, 0, 2)
 		elseif tops == 105 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 2, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 173, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 2, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 38, 1, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 173, 0, 2)
 		elseif tops == 106 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 2, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 41, 2, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 185, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 2, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 41, 2, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 185, 0, 2)
 		elseif tops == 107 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 2, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 202, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 2, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 202, 0, 2)
 		elseif tops == 108 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 203, 10, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 203, 10, 2)
 		elseif tops == 109 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 203, 16, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 203, 16, 2)
 		elseif tops == 110 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 203, 25, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 203, 25, 2)
 		elseif tops == 111 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 2, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 205, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 2, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 205, 0, 2)
 		elseif tops == 112 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 226, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 226, 0, 2)
 		elseif tops == 113 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 257, 0, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 257, 0, 2)
 		elseif tops == 114 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 257, 9, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 257, 9, 2)
 		elseif tops == 115 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 257, 17, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 257, 17, 2)
 		elseif tops == 116 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 259, 9, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 1, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 259, 9, 2)
 		elseif tops == 117 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 5, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 269, 2, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 5, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 269, 2, 2)
 		elseif tops == 118 then
-			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)		-- Torso
-			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2) 		-- Neck
-			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2) 	-- Undershirt
-			SetPedComponentVariation(GetPlayerPed(-1), 11, 282, 6, 2) 	-- Torso 2
+			SetPedComponentVariation(GetPlayerPed(-1), 3, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 7, 0, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 8, 15, 0, 2)
+			SetPedComponentVariation(GetPlayerPed(-1), 11, 282, 6, 2)
 		end
-		-- SetPedComponentVariation(GetPlayerPed(-1), 3, bazo, 0, 2)		-- Torso
-	
+
+
 		if pants == 0 then 		SetPedComponentVariation(GetPlayerPed(-1), 4, 15, 0, 2)
 		elseif pants == 1 then	SetPedComponentVariation(GetPlayerPed(-1), 4, 0, 0, 2)
 		elseif pants == 2 then	SetPedComponentVariation(GetPlayerPed(-1), 4, 0, 2, 2)
@@ -1814,7 +1809,7 @@ function updateSkin(data, dontneed)
 		elseif pants == 56 then	SetPedComponentVariation(GetPlayerPed(-1), 4, 12, 5, 2)
 		elseif pants == 57 then	SetPedComponentVariation(GetPlayerPed(-1), 4, 12, 7, 2)
 		end
-	
+
 		if shoes == 0 then 	SetPedComponentVariation(GetPlayerPed(-1), 6, 35, 0, 2)
 		elseif shoes == 1 then	SetPedComponentVariation(GetPlayerPed(-1), 6, 0, 0, 2)
 		elseif shoes == 2 then	SetPedComponentVariation(GetPlayerPed(-1), 6, 1, 0, 2)
@@ -1867,7 +1862,7 @@ function updateSkin(data, dontneed)
 		elseif shoes == 49 then SetPedComponentVariation(GetPlayerPed(-1), 6, 49, 0, 2)
 		elseif shoes == 50 then SetPedComponentVariation(GetPlayerPed(-1), 6, 50, 0, 2)
 		end
-	
+
 		if watches == 0 then		ClearPedProp(GetPlayerPed(-1), 6)
 		elseif watches == 1 then	SetPedPropIndex(GetPlayerPed(-1), 6, 16, 1-1, 2)
 		elseif watches == 2 then	SetPedPropIndex(GetPlayerPed(-1), 6, 5, 1-1, 2)
@@ -1877,15 +1872,14 @@ function updateSkin(data, dontneed)
 		elseif watches == 6 then	SetPedPropIndex(GetPlayerPed(-1), 6, 9, 1-1, 2)
 		elseif watches == 7 then	SetPedPropIndex(GetPlayerPed(-1), 6, 10, 1-1, 2)
 		end
-		
-		-- SetPedHeadOverlay       	(GetPlayerPed(-1), 4, lipstick, lipopacity)   	-- Lipstick
-		SetPedHeadOverlay       	(GetPlayerPed(-1), 8, 3, makeupopacity/10) 		-- lipstick
-		SetPedHeadOverlayColor  	(GetPlayerPed(-1), 8, 2, makeupcolor, 0)      -- lipstick
-		-- SetPedHeadOverlayColor  	(GetPlayerPed(-1), 8, 2, lipstickcolor, 0)      -- Lipstick Color
+
+
+		SetPedHeadOverlay       	(GetPlayerPed(-1), 8, 3, makeupopacity/10)
+		SetPedHeadOverlayColor  	(GetPlayerPed(-1), 8, 2, makeupcolor, 0)
+
 	end
 end
 
--- Character rotation
 RegisterNUICallback('rotateleftheading', function(data)
 	local currentHeading = GetEntityHeading(GetPlayerPed(-1))
 	SetEntityHeading(GetPlayerPed(-1), currentHeading+tonumber(data.value))
@@ -1896,22 +1890,17 @@ RegisterNUICallback('rotaterightheading', function(data)
 	SetEntityHeading(GetPlayerPed(-1), currentHeading-tonumber(data.value))
 end)
 
--- Define which part of the body must be zoomed
 RegisterNUICallback('zoom', function(data)
 	zoom = data.zoom
 end)
 
-
-------------------------------------------------------------------
---                          Functions
-------------------------------------------------------------------
 local disabledBefore = false
 local camerases = nil
 local enabled = false
 function toggleMenu(enable)
 	local ped = GetPlayerPed(-1)
 	if enable and camerases ~= zoom then
-		--SetPlayerInvincible(ped, true)
+
 		RenderScriptCams(false, false, 0, 1, 0)
 		DestroyCam(cam, false)
 		if(not DoesCamExist(cam)) then
@@ -1946,16 +1935,16 @@ function toggleMenu(enable)
 		DisableControlAction(0, 25, true)
 		DisableControlAction(0, 24, true)
 
-		-- if IsDisabledControlJustReleased(0, 24) or IsDisabledControlJustReleased(0, 142) then -- MeleeAttackAlternate
-		-- 	SendNUIMessage({type = "click"})
-		-- end
+
+
+
 		disabledBefore = false
 	elseif not enable and (not disabledBefore or camerases ~= zoom) then
 		RenderScriptCams(false, true, 500, 0, 0)
 
 		camerases = true
 		FreezeEntityPosition(ped, false)
-		--SetPlayerInvincible(ped, false)
+
 		disabledBefore = true
 	end
 
@@ -1970,11 +1959,6 @@ function toggleMenu(enable)
 
 end
 
-
-
-------------------------------------------------------------------
---                          Citizen
-------------------------------------------------------------------
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1000)

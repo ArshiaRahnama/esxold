@@ -7,7 +7,7 @@ Config_taxi.MarkerType                 = 21
 Config_taxi.MarkerColor                = { r = 0, g = 0, b = 255 }
 
 Config_taxi.NPCJobEarnings             = {min = 1000, max = 3000}
-Config_taxi.MinimumDistance            = 3000 -- Minimum NPC job destination distance from the pickup in GTA units, a higher number prevents nearby destionations.
+Config_taxi.MinimumDistance            = 3000
 
 Config_taxi.MaxInService               = -1
 Config_taxi.EnablePlayerManagement     = true
@@ -17,7 +17,7 @@ Config_taxi.EnableJobBlip              = true
 Config_taxi.Locale                     = 'en'
 
 Config_taxi.AuthorizedVehicles = {
-	Shared = {	
+	Shared = {
 		{
 			model = 'b219tahoe',
 			label = 'Taxi Tahoe',
@@ -71,9 +71,8 @@ Config_taxi.AuthorizedVehicles = {
 	},
 }
 
-
 Config_taxi.AuthorizedHelis = {
-	Shared = {	
+	Shared = {
 		{
 			model = 'tx_heli',
 			label = 'Taxi Heli'
@@ -82,7 +81,7 @@ Config_taxi.AuthorizedHelis = {
 			model = 'polmav',
 			label = 'Taxi Polmav'
 		},
-		
+
 	},
 }
 
@@ -94,7 +93,7 @@ Config_taxi.Zones = {
 		Color = {r = 0, g = 255, b = 0},
 		Type  = 36, Rotate = true
 	},
-	
+
 	VehicleSpawnPoint = {
 		Pos     = {x = 884.3005, y = -151.883, z = 69.385},
 		Size    = {x = 1.5, y = 1.5, z = 1.0},
@@ -115,7 +114,7 @@ Config_taxi.Zones = {
 		Size  = {x = 1.0, y = 1.0, z = 1.0},
 		Color = {r = 0, g = 255, b = 0},
 		Type  = 34, Rotate = true,
-		 
+
 	},
 
 	HeliSpawnPoint = {
@@ -139,7 +138,7 @@ Config_taxi.Zones = {
 		Color = {r = 204, g = 204, b = 0},
 		Type  = 31, Rotate = true
 	},
-	
+
 	Armory = {
 		Pos   = { x = 909.3887, y = -153.415, z = 74.222 },
 		Size  = {x = 1.0, y = 1.0, z = 1.0},
@@ -153,7 +152,7 @@ Config_taxi.Zones = {
 		Color   = {r = 204, g = 204, b = 0},
 		Type    = 21, Rotate = true
 	},
-	
+
 	Blip = {
 		Pos   = { x = 911.84, y = -178.08, z = 74.32 },
 		Size  = {x = 0, y = 0, z = 0},
@@ -161,14 +160,10 @@ Config_taxi.Zones = {
 	},
 }
 
-
-
-
-
 Config_taxi.hash = GetHashKey("cs_movpremmale")
-Config_taxi.vehicleHash = -956048545 
-Config_taxi.Price = 500 
-Config_taxi.Speed = 30.0 
+Config_taxi.vehicleHash = -956048545
+Config_taxi.Price = 500
+Config_taxi.Speed = 30.0
 Config_taxi.DriveMode = 262207
 Config_taxi.SpawnBase = vector3(926.59, -192.94, 73.26)
 Config_taxi.SpawnPoints = {
@@ -277,14 +272,13 @@ Config_taxi.JobLocations = {
 	vector3(-798.1, 831.7, 204.4)
 }
 
-
 Config_taxi.AuthorizedItems = {
 	{ name = 'water', price = 60 , label = 'Ab'},
-	-- { name = 'silencer', price = 5000, label = 'Silencer'},
-	-- { name = 'grip', price = 5000, label = 'Grip' },
-	-- { name = 'clip', price = 10, label = 'Kheshab' },
+
+
+
 	{ name = 'radio', price = 3000, label = 'Bisim' },
 	{ name = 'phone', price = 2000, label = 'Goshi' },
 	{ name = 'bread', price = 60, label = 'Noon' },
-	
+
   }

@@ -3,11 +3,10 @@ Config.RepeatTimeout = 500
 Config.CallRepeats = 120
 Config.OpenPhone = 288
 
--- Configs
-Config.Language = 'en' -- You have more translations in html.
+Config.Language = 'en'
 Config.webhooksscreenshot = "https:// arshiahub.ir/changemesasdds/1324462146993520752/-m1nDasTidW9-WDKDCJGQ-dy_D5mEwyb65zE3Xk4wVVyrqKm_YmtSvqjC_NIAbWYGep6"
-Config.Tokovoip = false -- If it is true it will use Tokovoip, if it is false it will use Mumblevoip.
-Config.Job = '' -- If you want, you can choose another job and it is the job that will appear in the 'Police' application, modify the html to make it another job.
+Config.Tokovoip = false
+Config.Job = ''
 Config.UseESXLicense = true
 Config.UseESXBilling = true
 
@@ -79,9 +78,8 @@ Config.Languages = {
         ["MEOS_GPS"] = "In payam moghiyat GPS nadarad!",
         ["MEOS_NORESULT"] = "Natijei yaft nashod!"
 
-
 	},
-	
+
 }
 
 Config.PhoneApplications = {
@@ -177,76 +175,76 @@ Config.PhoneApplications = {
         slot = 8,
         Alerts = 0,
     },
-    -- ["twitter"] = {
-    --     app = "twitter",
-    --     color = "#1da1f2",
-    --     icon = "fab fa-twitter",
-    --     tooltipText = "Twitter",
-    --     tooltipPos = "top",
-    --     job = false,
-    --     blockedjobs = {},
-    --     slot = 13,
-    --     Alerts = 0,
-    -- },
-    -- ["mail"] = {
-    --     app = "mail",
-    --     color = "#ff002f",
-    --     icon = "fas fa-envelope",
-    --     tooltipText = "Mail",
-    --     job = false,
-    --     blockedjobs = {},
-    --     slot = 8,
-    --     Alerts = 0,
-    -- },
-    -- ["advert"] = {
-    --     app = "advert",
-    --     color = "#ff8f1a",
-    --     icon = "fas fa-ad",
-    --     tooltipText = "Adverts",
-    --     job = false,
-    --     blockedjobs = {},
-    --     slot = 7,
-    --     Alerts = 0,
-    -- },
-    -- ["racing"] = {
-    --     app = "racing",
-    --     color = "#353b48",
-    --     icon = "fas fa-flag-checkered",
-    --     tooltipText = "Racing",
-    --     job = false,
-    --     blockedjobs = {},
-    --     slot = 9,
-    --     Alerts = 0,
-    -- },
-    -- ["spotify"] = {
-    --     app = "spotify",
-    --     color = "#82c91e",
-    --     icon = "fab fa-spotify",
-    --     tooltipText = "Spotify",
-    --     job = false,
-    --     blockedjobs = {},
-    --     slot = 12,
-    --     Alerts = 0,
-    -- }, 
-    -- ["snake"] = {
-    --     app = "snake",
-    --     color = "#609",
-    --     icon = "fas fa-ghost",
-    --     tooltipText = "Snake Game",
-    --     job = false,
-    --     blockedjobs = {},
-    --     slot = 11,
-    --     Alerts = 0,
-    -- },
-    -- ["solitary"] = {
-    --     app = "solitary",
-    --     color = "#e6bb12",
-    --     icon = "fas fa-crown",
-    --     tooltipText = "Solitary",
-    --     job = false,
-    --     blockedjobs = {},
-    --     slot = 10,
-    --     Alerts = 0,
-    -- },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

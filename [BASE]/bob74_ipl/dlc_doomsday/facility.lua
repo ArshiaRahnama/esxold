@@ -1,5 +1,4 @@
 
--- DoomsdayFacility: 345.00000000 4842.00000000 -60.00000000
 
 exports('GetDoomsdayFacilityObject', function()
     return DoomsdayFacility
@@ -18,19 +17,19 @@ DoomsdayFacility = {
         },
         Exterior = {
             ipl = {
-                "xm_hatch_01_cutscene",         -- 1286.924 2846.06 49.39426
-                "xm_hatch_02_cutscene",         -- 18.633 2610.834 86.0
-                "xm_hatch_03_cutscene",         -- 2768.574 3919.924 45.82
-                "xm_hatch_04_cutscene",         -- 3406.90 5504.77 26.28
-                "xm_hatch_06_cutscene",         -- 1.90 6832.18 15.82
-                "xm_hatch_07_cutscene",         -- -2231.53 2418.42 12.18
-                "xm_hatch_08_cutscene",         -- -6.92 3327.0 41.63
-                "xm_hatch_09_cutscene",         -- 2073.62 1748.77 104.51
-                "xm_hatch_10_cutscene",         -- 1874.35 284.34 164.31
-                "xm_hatch_closed",              -- Closed hatches (all)
-                "xm_siloentranceclosed_x17",    -- Closed silo: 598.4869 5556.846 716.7615
-                "xm_bunkerentrance_door",       -- Bunker entrance closed door: 2050.85 2950.0 47.75
-                "xm_hatches_terrain",           -- Terrain adjustments for facilities (all) + silo
+                "xm_hatch_01_cutscene",
+                "xm_hatch_02_cutscene",
+                "xm_hatch_03_cutscene",
+                "xm_hatch_04_cutscene",
+                "xm_hatch_06_cutscene",
+                "xm_hatch_07_cutscene",
+                "xm_hatch_08_cutscene",
+                "xm_hatch_09_cutscene",
+                "xm_hatch_10_cutscene",
+                "xm_hatch_closed",
+                "xm_siloentranceclosed_x17",
+                "xm_bunkerentrance_door",
+                "xm_hatches_terrain",
                 "xm_hatches_terrain_lod",
             },
             Load = function()
@@ -129,7 +128,7 @@ DoomsdayFacility = {
                         while not HasModelLoaded(model) do
                             Wait(1)
                         end
-                        
+
                         local privacyGlass = CreateObject(model, 367.99, 4827.745, -59.0, false, false, false)
                         SetEntityAsMissionEntity(privacyGlass, true, 0)
                         SetEntityCollision_2(privacyGlass, false, 0)
@@ -156,7 +155,7 @@ DoomsdayFacility = {
                             while not HasModelLoaded(DoomsdayFacility.PrivacyGlass.controlModelHash) do
                                 Wait(1)
                             end
-                
+
                             local privacyGlass = CreateObjectNoOffset(DoomsdayFacility.PrivacyGlass.controlModelHash, DoomsdayFacility.PrivacyGlass.Bedroom.Control.position.x, DoomsdayFacility.PrivacyGlass.Bedroom.Control.position.y, DoomsdayFacility.PrivacyGlass.Bedroom.Control.position.z, true, true, false)
                             SetEntityRotation(privacyGlass, DoomsdayFacility.PrivacyGlass.Bedroom.Control.rotation.x, DoomsdayFacility.PrivacyGlass.Bedroom.Control.rotation.y, DoomsdayFacility.PrivacyGlass.Bedroom.Control.rotation.z, 2, true)
                             FreezeEntityPosition(privacyGlass, true)
@@ -192,7 +191,7 @@ DoomsdayFacility = {
                                 while not HasModelLoaded(glass.modelHash) do
                                     Wait(1)
                                 end
-                                
+
                                 local privacyGlass = CreateObject(glass.modelHash, glass.entityPos.x, glass.entityPos.y, glass.entityPos.z, false, false, false)
                                 SetEntityAsMissionEntity(privacyGlass, true, false)
                                 SetEntityCollision_2(privacyGlass, false, 0)
@@ -209,7 +208,7 @@ DoomsdayFacility = {
                     end
                 end
             end,
-            
+
             Control = {
                 position = {x = 367.317, y = 4846.729, z = -58.448},
                 rotation = {x = 0.0, y = 0.0, z = -16.0},
@@ -222,7 +221,7 @@ DoomsdayFacility = {
                             while not HasModelLoaded(DoomsdayFacility.PrivacyGlass.controlModelHash) do
                                 Wait(1)
                             end
-                
+
                             local privacyGlass = CreateObjectNoOffset(DoomsdayFacility.PrivacyGlass.controlModelHash, DoomsdayFacility.PrivacyGlass.Lounge.Control.position.x, DoomsdayFacility.PrivacyGlass.Lounge.Control.position.y, DoomsdayFacility.PrivacyGlass.Lounge.Control.position.z, true, true, false)
                             SetEntityRotation(privacyGlass, DoomsdayFacility.PrivacyGlass.Lounge.Control.rotation.x, DoomsdayFacility.PrivacyGlass.Lounge.Control.rotation.y, DoomsdayFacility.PrivacyGlass.Lounge.Control.rotation.z, 2, true)
                             FreezeEntityPosition(privacyGlass, true)
@@ -244,7 +243,7 @@ DoomsdayFacility = {
         ChenoParts = {A = "Set_Int_02_Parts_Cheno1", B = "Set_Int_02_Parts_Cheno2", C = "Set_Int_02_Parts_Cheno3"},
         ThrusterParts = {A = "Set_Int_02_Parts_Thruster1", B = "Set_Int_02_Parts_Thruster2", C = "Set_Int_02_Parts_Thruster3"},
         AvengerParts = {A = "Set_Int_02_Parts_Avenger1", B = "Set_Int_02_Parts_Avenger2", C = "Set_Int_02_Parts_Avenger3"},
-        
+
         Outfits = {
             paramedic = "Set_Int_02_outfit_paramedic", morgue = "Set_Int_02_outfit_morgue", serverFarm = "Set_Int_02_outfit_serverfarm",
             iaa = "Set_Int_02_outfit_iaa", stealAvenger = "Set_Int_02_outfit_steal_avenger", foundry = "Set_Int_02_outfit_foundry",
@@ -272,7 +271,7 @@ DoomsdayFacility = {
     LoadDefault = function()
         DoomsdayFacility.Ipl.Exterior.Load()
         DoomsdayFacility.Ipl.Interior.Load()
-        
+
         DoomsdayFacility.Walls.SetColor(DoomsdayFacility.Colors.utility)
         DoomsdayFacility.Decals.Set(DoomsdayFacility.Decals.style01)
         DoomsdayFacility.Lounge.Set(DoomsdayFacility.Lounge.premier, DoomsdayFacility.Colors.utility)
@@ -280,7 +279,7 @@ DoomsdayFacility = {
         DoomsdayFacility.Security.Set(DoomsdayFacility.Security.on, DoomsdayFacility.Colors.utility)
         DoomsdayFacility.Cannon.Set(DoomsdayFacility.Cannon.on, DoomsdayFacility.Colors.utility)
 
-        -- Privacy glass remote
+
         DoomsdayFacility.PrivacyGlass.Bedroom.Control.Enable(true)
         DoomsdayFacility.PrivacyGlass.Lounge.Control.Enable(true)
 
@@ -289,7 +288,7 @@ DoomsdayFacility = {
         DoomsdayFacility.Details.Enable(DoomsdayFacility.Details.AvengerParts, true)
 
         DoomsdayFacility.Details.Enable(DoomsdayFacility.Details.Outfits, true)
-        
+
         DoomsdayFacility.Details.Enable(DoomsdayFacility.Details.Trophies, true)
         DoomsdayFacility.Details.Trophies.SetColor(DoomsdayFacility.Colors.utility)
 

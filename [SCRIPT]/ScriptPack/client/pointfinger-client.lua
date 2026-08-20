@@ -38,7 +38,7 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(10)
 		local ped = PlayerPedId()
-		
+
 		if once then
 			once = false
 		end
@@ -47,35 +47,9 @@ Citizen.CreateThread(function()
 			stopPointing()
 		end
 
-		--[[if not keyPressed then
-			if IsControlPressed(0, 29) and not mp_pointing and IsPedOnFoot(ped) then
-				Wait(200)
-				if not IsControlPressed(0, 29) then
-					if not IsPedArmed(ped, 7) then
-						keyPressed = true
-						startPointing()
-						mp_pointing = true
-					else
-						notification("~h~Dast shoma por ast nemitavanid point konid!")
-					end
-				else
-					keyPressed = true
-					while IsControlPressed(0, 29) do
-						Wait(50)
-					end
-				end
-			elseif (IsControlPressed(0, 29) and mp_pointing) or (mp_pointing and (not IsPedOnFoot(ped) or IsPedArmed(ped, 7)) ) then
-				keyPressed = true
-				mp_pointing = false
-				stopPointing()
-			end
-		end]]
 
-		--[[if keyPressed then
-			if not IsControlPressed(0, 29) then
-				keyPressed = false
-			end
-		end]]
+
+
 		if Citizen.InvokeNative(0x921CE12C489C4C41, ped) and not mp_pointing then
 			stopPointing()
 		end

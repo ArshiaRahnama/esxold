@@ -67,7 +67,7 @@ function spectate(serverid)
     local pl2 = GetPlayerPed(pl)
 
     local Timer = GetGameTimer()
-    while not DoesEntityExist(pl2) or (GetGameTimer() - Timer > 5000) do 
+    while not DoesEntityExist(pl2) or (GetGameTimer() - Timer > 5000) do
       Wait(0)
       pl2 = GetPlayerPed(pl)
     end
@@ -95,7 +95,7 @@ function resetNormalCamera()
   DetachEntity(playerPed, true, true)
   TriggerServerEvent('Unique_AdminMenu:AntiCheatExempt', 5000, { teleport = true, speed = true, invisibility = true })
   SetEntityCoords(playerPed, LastPosition)
-  
+
 	if not invisibility or not invisibility2 then
     SetEntityVisible(playerPed, true)
   end
@@ -132,7 +132,7 @@ end)
 function DoSpecThread()
   if InSpectatorMode and TargetSpectate then
     local targetPlayerId = GetPlayerFromServerId(TargetSpectate)
-    -- local playerPed	  = PlayerPedId()
+
     local targetPed	= GetPlayerPed(targetPlayerId)
     if ESX.Game.DoesPlayerExistInArea(TargetSpectate) then
       SetEntityVisible(PlayerPedId(), false)
@@ -142,49 +142,49 @@ function DoSpecThread()
       resetNormalCamera()
     end
 
-    -- local coords	    = GetEntityCoords(targetPed)
 
-    -- for i=0, 32, 1 do
-    -- 	if i ~= PlayerId() then
-    -- 		local otherPlayerPed = GetPlayerPed(i)
-    -- 		SetEntityNoCollisionEntity(playerPed,  otherPlayerPed,  true)
-    -- 		SetEntityVisible(playerPed, false)
-    -- 	end
-    -- end
 
-    -- local xMagnitude = GetDisabledControlNormal(0, 1);
-    -- local yMagnitude = GetDisabledControlNormal(0, 2);
 
-    -- polarAngleDeg = polarAngleDeg + xMagnitude * 10;
 
-    -- if polarAngleDeg >= 360 then
-    --   polarAngleDeg = 0
-    -- end
 
-    -- azimuthAngleDeg = azimuthAngleDeg + yMagnitude * 10;
 
-    -- if azimuthAngleDeg >= 360 then
-    --   azimuthAngleDeg = 0;
-    -- end
 
-    -- local nextCamLocation = polar3DToWorld3D(coords, radius, polarAngleDeg, azimuthAngleDeg)
 
-    -- SetCamCoord(cam,  nextCamLocation.x,  nextCamLocation.y,  nextCamLocation.z)
-    -- PointCamAtEntity(cam,  targetPed)
-    -- SetEntityCoords(playerPed,  coords.x, coords.y, coords.z + 3.0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     local text = {}
 
-    -- local targetGod = GetPlayerInvincible(targetPlayerId)
-    -- if targetGod then
-    --   table.insert(text,"Godmode: ~r~Found~w~")
-    -- else
-    --   table.insert(text,"Godmode: ~g~Not Found~w~")
-    -- end
-    -- if not CanPedRagdoll(targetPed) and not IsPedInAnyVehicle(targetPed, false) and (GetPedParachuteState(targetPed) == -1 or GetPedParachuteState(targetPed) == 0) and not IsPedInParachuteFreeFall(targetPed) then
-    --   table.insert(text,"~r~Anti-Ragdoll~w~")
-    -- end
-    -- health info
+
+
+
+
+
+
+
+
+
+
     if TargetSpectate then
       table.insert(text,"ID: "..TargetSpectate)
       table.insert(text,"Steam Name: "..GetPlayerName(targetPlayerId))
@@ -221,7 +221,7 @@ function DoSpecThread()
       end
 
       if IsControlPressed(0, 47) then
-        -- OpenAdminActionMenu(targetPlayerId)
+
       elseif IsControlJustReleased(2, 73) then
         ESX.TriggerServerCallback('esx_aduty:checkAduty', function(isAduty)
           if isAduty then
@@ -236,14 +236,13 @@ function DoSpecThread()
   end
 end
 
--- TELEPORT TO PLAYER EVENT
 function teleportToPlayer(serverId)
   local targetId = GetPlayerFromServerId(serverId)
   local playerPed = PlayerPedId()
   local targetPed = GetPlayerPed(targetId)
 
   TriggerServerEvent('Unique_AdminMenu:AntiCheatExempt', 5000, { teleport = true, speed = true })
-  NetworkSetInSpectatorMode(false, playerPed) -- turn off spectator mode just in case
+  NetworkSetInSpectatorMode(false, playerPed)
   TriggerServerEvent('Admin_Menu:SpectStatus', nil)
   DetachEntity(playerPed, true, true)
   SetEntityCompletelyDisableCollision(playerPed, true, true)
@@ -304,11 +303,11 @@ function NoClipThread()
 		while IsNoclipActive do
 			local playerPed = PlayerPedId()
 
-			-- Keep an AntiCheat exemption alive for the whole noclip session —
-			-- this loop disables collision on the player's own ped every
-			-- frame (see SetEntityCollision(noclipEntity,...) below), which
-			-- would otherwise look identical to a noclip cheat. Refreshed
-			-- every 3s rather than every frame to avoid spamming the network.
+
+
+
+
+
 			noclipExemptRefresh = (noclipExemptRefresh or 0)
 			if GetGameTimer() - noclipExemptRefresh > 3000 then
 				TriggerServerEvent('Unique_AdminMenu:AntiCheatExempt', 4000,
@@ -476,5 +475,4 @@ AddEventHandler("Admin_Menu:ToggleNoclip", function()
 		NoClipThread()
 	end
 end)
-
 

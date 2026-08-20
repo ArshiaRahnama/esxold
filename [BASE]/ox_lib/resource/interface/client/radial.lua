@@ -1,38 +1,15 @@
----@class RadialItem
----@field icon string | {[1]: IconProp, [2]: string};
----@field label string
----@field menu? string
----@field onSelect? fun(currentMenu: string | nil, itemIndex: number) | string
----@field [string] any
----@field keepOpen? boolean
----@field iconWidth? number
----@field iconHeight? number
 
----@class RadialMenuItem: RadialItem
----@field id string
-
----@class RadialMenuProps
----@field id string
----@field items RadialItem[]
----@field [string] any
 
 local isOpen = false
 
----@type table<string, RadialMenuProps>
 local menus = {}
 
----@type RadialMenuItem[]
 local menuItems = {}
 
----@type table<{id: string, option: string}>
 local menuHistory = {}
 
----@type RadialMenuProps?
 local currentRadial = nil
 
----Open a the global radial menu or a registered radial submenu with the given id.
----@param id string?
----@param option number?
 local function showRadial(id, option)
     local radial = id and menus[id]
 
@@ -42,7 +19,7 @@ local function showRadial(id, option)
 
     currentRadial = radial
 
-    -- Hide current menu and allow for transition
+
     SendNUIMessage({
         action = 'openRadialMenu',
         data = false
@@ -50,7 +27,7 @@ local function showRadial(id, option)
 
     Wait(100)
 
-    -- If menu was closed during transition, don't open the submenu
+
     if not isOpen then return end
 
     SendNUIMessage({
@@ -63,7 +40,6 @@ local function showRadial(id, option)
     })
 end
 
----Refresh the current menu items or return from a submenu to its parent.
 local function refreshRadial(menuId)
     if not isOpen then return end
 
@@ -78,9 +54,9 @@ local function refreshRadial(menuId)
                     local parent = menus[subMenu.id]
 
                     for j = 1, #parent.items do
-                        -- If we still have a path to the current submenu, refresh instead of returning
+
                         if parent.items[j].menu == currentRadial.id then
-                            return -- showRadial(currentRadial.id)
+                            return
                         end
                     end
 
@@ -102,8 +78,6 @@ local function refreshRadial(menuId)
     showRadial()
 end
 
----Registers a radial sub menu with predefined options.
----@param radial RadialMenuProps
 function lib.registerRadial(radial)
     menus[radial.id] = radial
     radial.resource = GetInvokingResource()
@@ -132,8 +106,6 @@ function lib.hideRadial()
     currentRadial = nil
 end
 
----Registers an item or array of items in the global radial menu.
----@param items RadialMenuItem | RadialMenuItem[]
 function lib.addRadialItem(items)
     local menuSize = #menuItems
     local invokingResource = GetInvokingResource()
@@ -167,8 +139,6 @@ function lib.addRadialItem(items)
     end
 end
 
----Removes an item from the global radial menu with the given id.
----@param id string
 function lib.removeRadialItem(id)
     local menuItem
 
@@ -186,7 +156,6 @@ function lib.removeRadialItem(id)
     refreshRadial(id)
 end
 
----Removes all items from the global radial menu.
 function lib.clearRadialItems()
     table.wipe(menuItems)
 
@@ -244,7 +213,7 @@ RegisterNUICallback('radialBack', function(_, cb)
 
     currentRadial = nil
 
-    -- Hide current menu and allow for transition
+
     SendNUIMessage({
         action = 'openRadialMenu',
         data = false
@@ -252,7 +221,7 @@ RegisterNUICallback('radialBack', function(_, cb)
 
     Wait(100)
 
-    -- If menu was closed during transition, don't open the submenu
+
     if not isOpen then return end
 
     SendNUIMessage({
@@ -278,7 +247,7 @@ end)
 RegisterNUICallback('radialTransition', function(_, cb)
     Wait(100)
 
-    -- If menu was closed during transition, don't open the submenu
+
     if not isOpen then return cb(false) end
 
     cb(true)
@@ -286,8 +255,6 @@ end)
 
 local isDisabled = false
 
----Disallow players from opening the radial menu.
----@param state boolean
 function lib.disableRadial(state)
     isDisabled = state
 
@@ -331,7 +298,7 @@ lib.addKeybind({
             Wait(0)
         end
     end,
-    -- onReleased = lib.hideRadial,
+
 })
 
 AddEventHandler('onClientResourceStop', function(resource)

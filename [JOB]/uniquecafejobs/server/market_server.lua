@@ -21,7 +21,7 @@ AddEventHandler('lg: buyItemuwuuwu', function(data)
 
         return
 
-    -- if error here, item not exists
+
     elseif not canCarryItem(idJ, item.name, data.selectAmount) then
         TriggerClientEvent("lg: uwumarketNotify", idJ, "brown", translate.TR_DONT_FULL)
         TriggerClientEvent("lg: uwumarketRefused", idJ)
@@ -29,12 +29,12 @@ AddEventHandler('lg: buyItemuwuuwu', function(data)
 
         return
     end
-        
+
     local result = MySQL.Sync.fetchAll('SELECT * FROM uwumarket WHERE id = @id',{
         ['@id'] = data.item.id
     })
 
-    -- secutiry var
+
     local item_var = nil
 
     for i,k in pairs(itens_market) do
@@ -49,7 +49,7 @@ AddEventHandler('lg: buyItemuwuuwu', function(data)
         local price = tonumber(result[1].price) * selectAmount
 
         local varAmount = tonumber(item_var.amount)
-        
+
         if price > playerMoney then
             TriggerClientEvent("lg: uwumarketNotify", idJ, "brown", translate.TR_DONT_MONEY)
             TriggerClientEvent("chat:addMessage", idJ, {args = {translate.TR_DONT_MONEY}})
@@ -81,7 +81,7 @@ AddEventHandler('lg: buyItemuwuuwu', function(data)
             addBankMoney(data.item.identifier, price)
             removeBankMoney(idJ, price)
             addInventoryItem(idJ, item.name, selectAmount)
-            
+
             TriggerClientEvent('lg: updateuwuMarket', idJ)
             TriggerClientEvent("lg: uwumarketNotify", idJ, "green", translate.TR_SUCESS)
             TriggerClientEvent("chat:addMessage", idJ, {args = {translate.TR_SUCESS}})
@@ -98,8 +98,6 @@ AddEventHandler('lg: buyItemuwuuwu', function(data)
         TriggerClientEvent("lg: uwumarketRefused", idJ)
     end
 end)
-
-
 
 local function getPriceByName(itemName)
     for _, item in ipairs(list_products) do
@@ -137,13 +135,13 @@ AddEventHandler('lg: advertiseItemuwu', function(data)
     if data.anonymous then
         owner = "Anonymous"
     else
-        -- owner = getName(source)
+
         owner = "Anonymous"
     end
 
-    
 
-   
+
+
 
     local amount = tonumber(data.item.amount)
 
@@ -164,14 +162,14 @@ AddEventHandler('lg: advertiseItemuwu', function(data)
             removeInventoryItem(idJ, item.name, amount)
 
             MySQL.Async.insert('INSERT INTO uwumarket (name, amount, weight, price, owner, identifier) VALUES (@name, @amount, @weight, @price, @owner, @identifier)',{
-                ['@name'] = data.item.name, 
-                ['@amount'] = amount, 
-                ['@weight'] = item.weight, 
-                ['@price'] = tonumber(data.item.price), 
-                ['@owner'] = owner, 
+                ['@name'] = data.item.name,
+                ['@amount'] = amount,
+                ['@weight'] = item.weight,
+                ['@price'] = tonumber(data.item.price),
+                ['@owner'] = owner,
                 ['@identifier'] = identifier,
             }, function(id)
-            table.insert(itens_market, {id = id, name = data.item.name, amount = amount, weight = item.weight, price = tonumber(data.item.price), owner = owner, identifier = identifier}) 
+            table.insert(itens_market, {id = id, name = data.item.name, amount = amount, weight = item.weight, price = tonumber(data.item.price), owner = owner, identifier = identifier})
             end)
             TriggerClientEvent('lg: updatePlayeruwuMarket', idJ)
             TriggerClientEvent("lg: uwumarketNotify", idJ, "green", translate.TR_ADVERTISE_ITEM)
@@ -195,7 +193,7 @@ AddEventHandler('lg: removeItemuwu', function(data)
     local namePlayer = getName(idJ)
     local amount = tonumber(data.item.amount)
 
-    -- if error here, item not exists
+
     if not canCarryItem(idJ, item.name, amount) then
         TriggerClientEvent("lg: uwumarketNotify", idJ, "brown", translate.TR_DONT_FULL)
         TriggerClientEvent("lg: uwumarketRefused", idJ)
@@ -210,7 +208,7 @@ AddEventHandler('lg: removeItemuwu', function(data)
             ['@amount'] = amount
         })
 
-        -- secutiry var
+
         local item_var = nil
 
         for i,k in pairs(itens_market) do
@@ -256,13 +254,12 @@ AddEventHandler('lg: loaduwuMarket', function()
     end)
 end)
 
-
 RegisterNetEvent('lg: loadPlayeruwuMarket')
 AddEventHandler('lg: loadPlayeruwuMarket', function()
     local idJ = source
 
     local identifier = getIdentifier(idJ)
-    local itens_filter = filterInventory(idJ)    
+    local itens_filter = filterInventory(idJ)
 
     MySQL.Async.fetchAll('SELECT * FROM uwumarket WHERE identifier = @identifier ORDER BY price',{
         ['@identifier'] = identifier
@@ -270,7 +267,7 @@ AddEventHandler('lg: loadPlayeruwuMarket', function()
         TriggerClientEvent('lg: loadPlayeruwuMarket', idJ, itens_filter, result)
     end)
 end)
- 
+
 function sendWebhook(DISCORD_WEBHOOK, DISCORD_TITLE, message, color)
     local send = {
         {
@@ -285,7 +282,6 @@ function sendWebhook(DISCORD_WEBHOOK, DISCORD_TITLE, message, color)
     }
     PerformHttpRequest(DISCORD_WEBHOOK, function(err, text, headers) end, 'POST', json.encode({username = DISCORD_NAME, embeds = send, avatar_url = DISCORD_IMAGE}), { ['Content-Type'] = 'application/json' })
 end
-
 
 RegisterCommand('asdfghjkl;sfsdfsdfzxcvnads23adfghuwu', function(source, args)
     xPlayer = ESX.GetPlayerFromId(source)

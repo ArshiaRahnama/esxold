@@ -1,5 +1,4 @@
 
--- Garage 2: Maze Bank Building
 
 exports('GetImportCEOGarage2Object', function()
 	return ImportCEOGarage2
@@ -7,10 +6,10 @@ end)
 
 ImportCEOGarage2 = {
     Part = {
-        Garage1 = {interiorId = 254465, ipl = "imp_dt1_11_cargarage_a"},  -- -84.2193, -823.0851, 221.0000
-        Garage2 = {interiorId = 254721, ipl = "imp_dt1_11_cargarage_b"},  -- -69.8627, -824.7498, 221.0000
-        Garage3 = {interiorId = 254977, ipl = "imp_dt1_11_cargarage_c"},  -- -80.4318, -813.2536, 221.0000
-        ModShop = {interiorId = 255233, ipl = "imp_dt1_11_modgarage"},    -- -73.9039, -821.6204, 284.0000
+        Garage1 = {interiorId = 254465, ipl = "imp_dt1_11_cargarage_a"},
+        Garage2 = {interiorId = 254721, ipl = "imp_dt1_11_cargarage_b"},
+        Garage3 = {interiorId = 254977, ipl = "imp_dt1_11_cargarage_c"},
+        ModShop = {interiorId = 255233, ipl = "imp_dt1_11_modgarage"},
 
         Load = function(part) EnableIpl(part.ipl, true) end,
         Remove = function(part) EnableIpl(part.ipl, false) end,
@@ -115,7 +114,7 @@ ImportCEOGarage2 = {
         ImportCEOGarage2.Style.Set(ImportCEOGarage2.Part.Garage1, ImportCEOGarage2.Style.concrete, false)
         ImportCEOGarage2.Numbering.Set(ImportCEOGarage2.Part.Garage1, ImportCEOGarage2.Numbering.Level1.style1, false)
         ImportCEOGarage2.Lighting.Set(ImportCEOGarage2.Part.Garage1, ImportCEOGarage2.Lighting.style1, true)
-        
+
         ImportCEOGarage2.Part.Load(ImportCEOGarage2.Part.ModShop)
         ImportCEOGarage2.ModShop.Floor.Set(ImportCEOGarage2.ModShop.Floor.default, true)
     end

@@ -1,4 +1,4 @@
----@enum PrintLevel
+
 local printLevel = {
     error = 1,
     warn = 2,
@@ -23,10 +23,6 @@ local function handleException(reason, value)
 end
 local jsonOptions = { sort_keys = true, indent = true, exception = handleException }
 
----Prints to console conditionally based on what ox:printlevel is.
----Any print with a level more severe will also print. If ox:printlevel is info, then warn and error prints will appear as well, but debug prints will not.
----@param level PrintLevel
----@param ... any
 local function libPrint(level, ...)
     if level > resourcePrintLevel then return end
 

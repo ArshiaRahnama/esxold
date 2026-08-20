@@ -28,4 +28,3 @@ files {
 	'translation.js'
 }
 
-

@@ -1,8 +1,5 @@
----@param coords vector3 The coords to check from.
----@param maxDistance? number The max distance to check.
----@return number? playerId
----@return number? playerPed
----@return vector3? playerCoords
+
+
 function lib.getClosestPlayer(coords, maxDistance)
     local players = GetActivePlayers()
     local closestId, closestPed, closestCoords

@@ -1,10 +1,10 @@
 local Keys = {
-	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57, 
-	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177, 
+	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
+	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
 	["TAB"] = 37, ["Q"] = 44, ["W"] = 32, ["E"] = 38, ["R"] = 45, ["T"] = 245, ["Y"] = 246, ["U"] = 303, ["P"] = 199, ["["] = 39, ["]"] = 40, ["ENTER"] = 18,
 	["CAPS"] = 137, ["A"] = 34, ["S"] = 8, ["D"] = 9, ["F"] = 23, ["G"] = 47, ["H"] = 74, ["K"] = 311, ["L"] = 182,
 	["LEFTSHIFT"] = 21, ["Z"] = 20, ["X"] = 73, ["C"] = 26, ["V"] = 0, ["B"] = 29, ["N"] = 249, ["M"] = 244, [","] = 82, ["."] = 81,
-	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70, 
+	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70,
 	["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
 	["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
@@ -47,18 +47,17 @@ function OpenAccessoryMenu()
 	end)
 end
 
-
 function SetUnsetAccessory(accessory)
 
 	if accessory == "Vest" then
 
 		local Ped = PlayerPedId()
 
-		local Armor = GetPedArmour(Ped)	  
+		local Armor = GetPedArmour(Ped)
 
-		
 
-		TriggerEvent('skinchanger:getSkin', function(skin)		
+
+		TriggerEvent('skinchanger:getSkin', function(skin)
 
 			if skin['bproof_1'] ~= 0 or skin['bproof_2'] ~= 0 then
 
@@ -68,13 +67,13 @@ function SetUnsetAccessory(accessory)
 
 		end)
 
-		
 
-		if Armor > 0 then	
+
+		if Armor > 0 then
 
 			SetPedArmour(PlayerPedId(), 0)
 
-			
+
 
 			TriggerEvent('skinchanger:getSkin', function(skin)
 
@@ -84,7 +83,7 @@ function SetUnsetAccessory(accessory)
 
 			end)
 
-			ESX.ShowNotification('Shoma veste khod ra dar avardid!')		
+			ESX.ShowNotification('Shoma veste khod ra dar avardid!')
 
 		else
 
@@ -94,11 +93,9 @@ function SetUnsetAccessory(accessory)
 
 	else
 
-		ESX.TriggerServerCallback('esx_accessories:get', function(hasAccessory, accessorySkin)	
+		ESX.TriggerServerCallback('esx_accessories:get', function(hasAccessory, accessorySkin)
 
 			local _accessory = string.lower(accessory)
-
-
 
 			if hasAccessory then
 
@@ -108,15 +105,11 @@ function SetUnsetAccessory(accessory)
 
 					local mColor = 0
 
-
-
 					if _accessory == "mask" then
 
 						mAccessory = 0
 
 					end
-
-
 
 					if _accessory == "mask" then
 					mAccessory = 0
@@ -149,54 +142,16 @@ function SetUnsetAccessory(accessory)
 
 			end
 
-
-
 		end, accessory)
 
 	end
 
 end
---[[
-function SetUnsetAccessory(accessory)
-	ESX.TriggerServerCallback('esx_accessories:get', function(hasAccessory, accessorySkin)
-		local _accessory = string.lower(accessory)
-		if hasAccessory then
-			TriggerEvent('skinchanger:getSkin', function(skin)
-				local mAccessory = -1
-				local mColor = 0
 
-
-				if _accessory == "mask" then
-					mAccessory = 0
-				elseif _accessory == "glasses" then
-					if skin.sex == 1 then
-						mAccessory = 5
-					else
-						mAccessory = 0
-					end
-				end
-
-				if skin[_accessory .. '_1'] == mAccessory then
-					mAccessory = accessorySkin[_accessory .. '_1']
-					mColor = accessorySkin[_accessory .. '_2']
-				end
-
-				local accessorySkin = {}
-				accessorySkin[_accessory .. '_1'] = mAccessory
-				accessorySkin[_accessory .. '_2'] = mColor
-				TriggerEvent('skinchanger:loadClothes', skin, accessorySkin)
-			end)
-		else
-			ESX.ShowNotification(_U('no_' .. _accessory))
-		end
-
-	end, accessory)
-end
---]]
 function OpenShopMenu(accessory)
 	local _accessory = string.lower(accessory)
 	local restrict = {}
-	
+
 		if _accessory == 'glasses' then
 
 		restrict = { 'glasses_1', 'glasses_2' }
@@ -206,7 +161,7 @@ function OpenShopMenu(accessory)
 		restrict = { _accessory .. '_1', _accessory .. '_2' }
 
 	end
-	
+
 	TriggerEvent('esx_skin:openRestrictedMenu', function(data, menu)
 
 		menu.close()
@@ -289,7 +244,6 @@ AddEventHandler('esx_accessories:hasExitedMarker', function(zone)
 	CurrentAction = nil
 end)
 
--- Create Blips --
 Citizen.CreateThread(function()
 	for k,v in pairs(Config.ShopsBlips) do
 		if v.Pos ~= nil then
@@ -310,8 +264,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
-
--- Display markers
 Citizen.CreateThread(function()
 	local coords
 	local distance
@@ -330,7 +282,6 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
-
 
 Citizen.CreateThread(function()
 	while true do
@@ -362,11 +313,10 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Key controls
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(10)
-		
+
 		if CurrentAction ~= nil then
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
@@ -378,22 +328,7 @@ Citizen.CreateThread(function()
 		else
 			Citizen.Wait(500)
 		end
---[[
-		 if Config.EnableControls then
-		 	if IsControlJustReleased(0, Keys['K']) and IsInputDisabled(0) and not isDead then
-		 		OpenAccessoryMenu()
-		 	end
-		 end
---]]
+
 	end
 end)
 
---[[
-AddEventHandler("onKeyDown", function(key)
-	if key == "k" then
-		if ESX.GetPlayerData()['IsDead'] ~= 1 then
-			OpenAccessoryMenu()
-		end
-	end
-end)
---]]

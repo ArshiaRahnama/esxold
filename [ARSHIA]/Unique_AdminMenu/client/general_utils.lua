@@ -26,9 +26,6 @@ function getGroundZ(x, y, z)
 		return groundZ
 end
 
--- Simple onscreen-keyboard text input helper, used by the new admin tools
--- (kick/ban reasons, plates, coordinates, job names, amounts...). WarMenu
--- itself has no text-input widget, so this fills that gap.
 function GetUserInput(windowTitle, defaultText, maxLength)
     defaultText = defaultText or ""
     maxLength = maxLength or 40
@@ -39,7 +36,7 @@ function GetUserInput(windowTitle, defaultText, maxLength)
         if status == 1 then
             return GetOnscreenKeyboardResult()
         elseif status == 2 or status == 3 then
-            return nil -- cancelled
+            return nil
         end
     end
 end

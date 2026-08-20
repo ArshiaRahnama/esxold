@@ -6,15 +6,15 @@ Citizen.CreateThread(function()
         Citizen.Wait(0)
     end
 
-    while ESX.GetPlayerData().job == nil do 
+    while ESX.GetPlayerData().job == nil do
         Wait(10)
     end
 
     PlayerData = ESX.GetPlayerData()
-    
-    
-   
-    if IsCafeJob(PlayerData.job.name) then 
+
+
+
+    if IsCafeJob(PlayerData.job.name) then
         FreezerTarget()
         SpawnVeh()
     end
@@ -23,7 +23,7 @@ end)
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
     PlayerData.job = job
-    if IsCafeJob(PlayerData.job.name) then 
+    if IsCafeJob(PlayerData.job.name) then
         RemoveTarget()
         Citizen.Wait(2000)
         FreezerTarget()
@@ -32,8 +32,6 @@ AddEventHandler('esx:setJob', function(job)
         RemoveTarget()
     end
 end)
-
-
 
 RegisterNetEvent('AH_uwucafejob:OpenInventory')
 AddEventHandler('AH_uwucafejob:OpenInventory', function()
@@ -89,13 +87,11 @@ AddEventHandler('esx_inventoryhud:RefreshInventory', function()
     end)
 end)
 
-
-
 RegisterNetEvent('AH_uwucafejob:OpenShopMenus')
 AddEventHandler('AH_uwucafejob:OpenShopMenus', function()
     OpendMenuShops()
 end)
-    
+
 RegisterNetEvent('AH_uwucafejob:OpenBossMenus')
 AddEventHandler('AH_uwucafejob:OpenBossMenus', function()
     ESX.UI.Menu.CloseAll()
@@ -110,73 +106,16 @@ AddEventHandler('AH_uwucafejob:OpenCloakroomMenu', function()
 end)
 
 
--- local spawnedCats = {}
 
--- function changeCatPose(cat)
---     Citizen.CreateThread(function()
---         while DoesEntityExist(cat) do
---             Wait(math.random(20000, 40000)) 
-            
---             if DoesEntityExist(cat) then
---                 ClearPedTasksImmediately(cat) 
-                
---                 if math.random(1, 2) == 1 then
---                     TaskStartScenarioInPlace(cat, "WORLD_CAT_SLEEPING_GROUND", 0, true)
---                 else
---                     TaskStartScenarioInPlace(cat, "WORLD_CAT_SLEEPING_LEDGE", 0, true) 
---                 end
---             end
---         end
---     end)
--- end
 
--- function spawnCat(location)
---     RequestModel(GetHashKey(Config.catModels[1]))
---     while not HasModelLoaded(GetHashKey(Config.catModels[1])) do
---         Wait(100)
---     end
-    
---     local cat = CreatePed(28, GetHashKey(Config.catModels[1]), location.x, location.y, location.z, 0.0, true, true)
---     Wait(200)
-    
---     SetEntityInvincible(cat, true) 
---     SetBlockingOfNonTemporaryEvents(cat, true) 
---     SetPedCanRagdoll(cat, false) 
---     PlaceObjectOnGroundProperly(cat) 
---     DisablePedPainAudio(cat, true) 
---     SetEntityAsMissionEntity(cat, true, true) 
-    
 
---     if math.random(1, 2) == 1 then
---         TaskStartScenarioInPlace(cat, "WORLD_CAT_SLEEPING_GROUND", 0, true) 
---     else
---         TaskStartScenarioInPlace(cat, "WORLD_CAT_SLEEPING_LEDGE", 0, true) 
---     end
-    
---     table.insert(spawnedCats, {entity = cat, location = location})
 
-   
---     changeCatPose(cat)
--- end
 
--- Citizen.CreateThread(function()
---     for _, location in ipairs(Config.spawnLocations) do
---         spawnCat(location)
---     end
--- end)
 
--- Citizen.CreateThread(function()
---     while true do
---         Wait(60000) 
 
---         for i = #spawnedCats, 1, -1 do  
---             if not DoesEntityExist(spawnedCats[i].entity) then
---                 table.remove(spawnedCats, i) 
---                 spawnCat(spawnedCats[i].location) 
---             end
---         end
---     end
--- end)
+
+
+
 
 
 
@@ -198,9 +137,9 @@ function SpawnVeh()
         local spawnDistance = #(playerCoords - spawnMarker)
         local deleteDistance = #(playerCoords - deleteMarker)
 
-        -- بهینه‌سازی: برخلاف corp_client.lua و turfco_client.lua که همین الگو رو دارن،
-        -- این حلقه وقتی بازیکن از هر دو مارکر دور بود Wait(0) باقی می‌موند (بدون خوابیدن).
-        -- این خط دقیقاً همون else-sleep که توی نسخه‌های مشابه هست رو اضافه می‌کنه.
+
+
+
         if spawnDistance >= 10.0 and deleteDistance >= 10.0 then
             Citizen.Wait(1000)
         end
@@ -211,7 +150,7 @@ function SpawnVeh()
             if spawnDistance < markerRadius then
                 ESX.ShowHelpNotification("برای دریافت خودرو ~INPUT_CONTEXT~ را فشار دهید")
 
-                if IsControlJustPressed(0, 38) and canSpawn then 
+                if IsControlJustPressed(0, 38) and canSpawn then
                     canSpawn = false
                     TriggerServerEvent("spawnCarOnMarker", myCafe.SpawnVehicle)
                     Citizen.SetTimeout(5000, function()
@@ -227,7 +166,7 @@ function SpawnVeh()
             if deleteDistance < markerRadius then
                 ESX.ShowHelpNotification("برای حذف خودرو ~INPUT_CONTEXT~ را فشار دهید")
 
-                if IsControlJustPressed(0, 38) then 
+                if IsControlJustPressed(0, 38) then
                     local vehicle = GetVehiclePedIsIn(playerPed, false)
                     if vehicle and vehicle ~= 0 then
                         ESX.Game.DeleteVehicle(vehicle)

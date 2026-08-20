@@ -2,13 +2,6 @@ ESX = nil
 AdminPlayers = {}
 tempOown = false
 
--- [SECURITY] The "Code" string and the "xC_BabatMordAdmin2:AdminBakhti"
--- event that sent it to clients for pcall(load(Code)) execution have been
--- removed - that was a remote-code-execution channel (server could push and
--- run arbitrary Lua on every client). Everything that string used to define
--- (SpawnVehicle, visibility, the keybind table) now lives as normal static
--- code in Client/carp_cl.lua, so nothing else changes.
-
 local Table = {}
 
 TriggerEvent(

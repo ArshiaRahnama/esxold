@@ -1,7 +1,5 @@
----@param path string
----@param pattern string
----@return table string[]
----@return integer fileCount
+
+
 function lib.getFilesInDirectory(path, pattern)
     local resource = cache.resource
 

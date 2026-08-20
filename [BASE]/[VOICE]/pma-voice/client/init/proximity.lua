@@ -1,4 +1,4 @@
--- used when muted
+
 local disableUpdates = false
 local isListenerEnabled = false
 local plyCoords = GetEntityCoords(PlayerPedId())
@@ -24,7 +24,7 @@ end)
 
 function addNearbyPlayers()
 	if disableUpdates then return end
-	-- update here so we don't have to update every call of addProximityCheck
+
 	plyCoords = GetEntityCoords(PlayerPedId())
 	proximity = MumbleGetTalkerProximity()
 	currentTargets = {}
@@ -39,20 +39,19 @@ function addNearbyPlayers()
 		end
 	end
 
-
 	local players = GetActivePlayers()
 	for i = 1, #players do
 		local ply = players[i]
 		local serverId = GetPlayerServerId(ply)
 		local shouldAdd, distance = addProximityCheck(ply)
 		if shouldAdd then
-			-- if distance then
-			-- 	currentTargets[serverId] = distance
-			-- else
-			-- 	-- backwards compat, maybe remove in v7
-			-- 	currentTargets[serverId] = 15.0
-			-- end
-			-- logger.verbose('Added %s as a voice target', serverId)
+
+
+
+
+
+
+
 			MumbleAddVoiceTargetChannel(voiceTarget, MumbleGetVoiceChannelFromServerId(serverId))
 		end
 	end
@@ -103,7 +102,6 @@ exports("setListenerOverride", function(enabled)
 	listenerOverride = enabled
 end)
 
--- cache talking status so we only send a nui message when its not the same as what it was before
 local lastTalkingStatus = false
 local lastRadioStatus = false
 local voiceState = "proximity"
@@ -113,11 +111,11 @@ CreateThread(function()
 		{ name = "duration",  help = "(opt) the duration the mute in seconds (default: 900)" }
 	})
 	while true do
-		-- wait for mumble to reconnect
+
 		while not MumbleIsConnected() do
 			Wait(100)
 		end
-		-- Leave the check here as we don't want to do any of this logic
+
 		if GetConvarInt('voice_enableUi', 1) == 1 then
 			local curTalkingStatus = MumbleIsPlayerTalking(PlayerId()) == 1
 			if lastRadioStatus ~= radioPressed or lastTalkingStatus ~= curTalkingStatus then
@@ -132,7 +130,7 @@ CreateThread(function()
 
 		if voiceState == "proximity" then
 			addNearbyPlayers()
-			-- What a name, wowza
+
 			local cam = GetConvarInt("voice_disableAutomaticListenerOnCamera", 0) ~= 1 and GetRenderingCam() or -1
 			local isSpectating = NetworkIsInSpectatorMode() or cam ~= -1
 			if not isListenerEnabled and (isSpectating or listenerOverride) then
@@ -153,7 +151,7 @@ exports("setVoiceState", function(_voiceState, channel)
 	voiceState = _voiceState
 	if voiceState == "channel" then
 		type_check({ channel, "number" })
-		-- 65535 is the highest a client id can go, so we add that to the base channel so we don't manage to get onto a players channel
+
 		channel = channel + 65535
 		MumbleSetVoiceChannel(channel)
 		while MumbleGetVoiceChannelFromServerId(playerServerId) ~= channel do
@@ -164,7 +162,6 @@ exports("setVoiceState", function(_voiceState, channel)
 		handleInitialState()
 	end
 end)
-
 
 AddEventHandler("onClientResourceStop", function(resource)
 	if type(addProximityCheck) == "table" then
@@ -198,7 +195,7 @@ exports("removeVoiceMode", function(name)
 		local voiceMode = Cfg.voiceModes[i]
 		if voiceMode[2] == name then
 			table.remove(Cfg.voiceModes, i)
-			-- Reset our current range if we had it
+
 			if mode == i then
 				local newMode = Cfg.voiceModes[1]
 				mode = 1

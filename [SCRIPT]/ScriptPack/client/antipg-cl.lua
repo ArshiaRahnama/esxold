@@ -48,13 +48,13 @@ local whitelist = {
     [`faction3`] = true,
     [`Outlaw`] = true,
     [`Everon`] = true,
--- cargo
+
     [`youga`] = true,
--- job center
+
     [`rubble`] = true,
     [`benson`] = true,
-    [`youga2`] = true, 
--- job dolati
+    [`youga2`] = true,
+
     [`riot`] = true,
     [`riot2`] = true,
     [`1200RT`] = true,
@@ -66,7 +66,7 @@ local whitelist = {
 }
 
 local semiOffroad = {
--- suv
+
     [`fq2`] = 60,
     [`granger`] = 60,
     [`gresley`] = 60,
@@ -83,7 +83,7 @@ local semiOffroad = {
     [`rocoto`] = 60,
     [`seminole`] = 60,
     [`xls`] = 60,
--- other
+
     [`ruffian`] = 60,
     [`vader`] = 60,
     [`nemesis`] = 60,
@@ -102,7 +102,7 @@ local semiOffroad = {
     [`novak`] = 60,
     [`toros`] = 60,
     [`Vagrant`] = 60,
--- job dolati
+
     [`mdoff2`] = 60,
     [`POLREB`] = 60,
     [`POLROS`] = 60,
@@ -120,7 +120,7 @@ Citizen.CreateThread(function()
 		local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 		local PlayerIsDriver = GetPedInVehicleSeat(vehicle, -1) == PlayerPedId()
 		if DoesEntityExist(vehicle) then
-			if lastVehicle ~= vehicle then 
+			if lastVehicle ~= vehicle then
 				lastVehicle = vehicle
 				TriggerEvent('enterVehicle', vehicle, PlayerIsDriver)
 				if PlayerIsDriver then
@@ -167,20 +167,20 @@ if AntiTireLimit then
 							if IsVehicleTyreBurst(vehicle, 0, false) then
 								count = count + 1
 							end
-							--Right Front
+
 							if IsVehicleTyreBurst(vehicle, 1, false)  then
 								count = count + 1
 							end
-							--Left Rear
+
 							if IsVehicleTyreBurst(vehicle, 4, false) then
 								count = count + 1
 							end
-							--Right Rear
+
 							if IsVehicleTyreBurst(vehicle, 5, false) then
 								count = count + 1
 							end
 							if limit[count] then
-								if ( count >= 1 --[[ and InStreet == true--]] ) then
+								if ( count >= 1  ) then
 									SetEntityMaxSpeed(vehicle, limit[count])
 									if ( count == 4) then
 										SetVehicleEngineOn(vehicle, false, false, true)
@@ -189,7 +189,7 @@ if AntiTireLimit then
 							end
 						end
 					end)
-				end 
+				end
 			end
 		end
 	end)
@@ -249,7 +249,7 @@ AddEventHandler('enterVehicle',function(_,isDriver)
 								end
 							end
 						end
-						
+
 					end
 				end)
 			end

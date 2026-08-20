@@ -1,30 +1,4 @@
---[[
-    UNIQUE RP — OFFICIAL DOCUMENTS — Client
-    Author: Arshia | arshiahub.ir
 
-    This rebuilds the missing runtime logic for the resource. The previous
-    Client.lua only did this:
-
-        RegisterNetEvent('doc:initialize')
-        AddEventHandler('doc:initialize', function(data)
-            load(data)()          -- runs a string of Lua sent by the server
-        end)
-
-    That pattern (server sends a string, client `load()`s and executes it)
-    is a code-injection foot-gun and isn't needed — it's replaced below with
-    normal, readable client code that talks to the NUI (html/) exactly the
-    way the compiled front-end expects (verified from its own sourcemap):
-
-        NUI -> Lua callbacks : close, getdata, saveModel, saveDocument
-        Lua -> NUI messages  : openCreateModel, openCreateDocument,
-                                openEditModel,  openEditDocument,
-                                openViewDocument (each carries infos_document)
-
-    Menu (list / search / edit / delete / close / copy / give) is handled
-    entirely here via the `icon_menu` resource already required in
-    fxmanifest.lua, using its documented API:
-        IconMenu.OpenMenu(items, config)
-]]
 
 ESX = nil
 CreateThread(function()
@@ -34,13 +8,10 @@ CreateThread(function()
     end
 end)
 
--- ---------------------------------------------------------------------
--- local state for whatever item is currently open in the NUI
--- ---------------------------------------------------------------------
-local currentItemId    = nil   -- nil while creating something new
-local currentItemType  = nil   -- 'model' | 'document'
-local currentItemName  = nil   -- name shown in the list menu
-local currentModelId   = nil   -- which model a new document was based on
+local currentItemId    = nil
+local currentItemType  = nil
+local currentItemName  = nil
+local currentModelId   = nil
 
 local function ResetCurrentItem()
     currentItemId   = nil
@@ -57,20 +28,15 @@ local function HasJob(list)
     return false
 end
 
--- mysql-async can return TINYINT(1) columns as a Lua boolean, a number,
--- or a numeric string depending on driver config — normalize all of
--- them here instead of trusting tonumber() alone (tonumber(true) is
--- nil, which silently breaks a plain `== 1` check).
 local function IsFlagTrue(v)
     return v == true or v == 1 or v == "1"
 end
 
--- Standard on-screen keyboard input helper
 local function KeyboardInput(title, default)
-    -- icon_menu keeps listening for Enter/click in the background even
-    -- while this is open (it doesn't know we've moved on), so the same
-    -- Enter press that confirms typing here could also re-trigger
-    -- whatever menu item was last highlighted. Close it first.
+
+
+
+
     IconMenu.ForceCloseMenu()
 
     default = default or ""
@@ -83,8 +49,8 @@ local function KeyboardInput(title, default)
         Wait(0)
     end
 
-    -- let the confirming key press fully clear before anything else
-    -- (menu, NUI, another prompt) starts reading input again
+
+
     Wait(300)
 
     if status == 1 then
@@ -93,7 +59,6 @@ local function KeyboardInput(title, default)
     return nil
 end
 
--- Closest other player (used for "give document")
 local function GetClosestPlayer()
     local closestDistance = -1
     local closestPlayer   = -1
@@ -117,9 +82,6 @@ AddEventHandler('Documents:notify', function(msg)
     ESX.ShowNotification(msg)
 end)
 
--- ---------------------------------------------------------------------
--- NUI <-> Lua bridge
--- ---------------------------------------------------------------------
 local function PushConfigToNUI()
     SendNUIMessage({
         config       = true,
@@ -130,7 +92,7 @@ local function PushConfigToNUI()
 end
 
 local function OpenNUI(kind, infos_document)
-    IconMenu.ForceCloseMenu() -- icon_menu doesn't auto-hide itself on selection
+    IconMenu.ForceCloseMenu()
     SetNuiFocus(true, true)
     PushConfigToNUI()
 
@@ -182,9 +144,6 @@ RegisterNUICallback('saveDocument', function(data, cb)
     cb('ok')
 end)
 
--- ---------------------------------------------------------------------
--- Give a closed document to the nearest player
--- ---------------------------------------------------------------------
 local function GiveDocument(docId)
     local player, distance = GetClosestPlayer()
     if player == -1 or distance > 3.0 then
@@ -194,9 +153,6 @@ local function GiveDocument(docId)
     TriggerServerEvent('Documents:giveDocument', docId, GetPlayerServerId(player))
 end
 
--- ---------------------------------------------------------------------
--- Open an existing model/document into the NUI (view or edit)
--- ---------------------------------------------------------------------
 local function RequestOpen(docType, id, mode)
     ESX.TriggerServerCallback('Documents:openItem', function(res)
         if not res then
@@ -219,10 +175,7 @@ local function RequestOpen(docType, id, mode)
     end, docType, id)
 end
 
--- ---------------------------------------------------------------------
--- Create a brand new model, or a new document based on a chosen model
--- ---------------------------------------------------------------------
-local OpenListMenu -- forward declaration (recursive/mutually referenced)
+local OpenListMenu
 
 local function PromptCreate(docType)
     if docType == 'model' then
@@ -237,7 +190,7 @@ local function PromptCreate(docType)
         return
     end
 
-    -- creating a document: first pick which model it's based on
+
     OpenListMenu('model', nil, function(modelRow)
         ESX.TriggerServerCallback('Documents:openItem', function(res)
             if not res then
@@ -253,15 +206,12 @@ local function PromptCreate(docType)
             currentItemName = name
             currentModelId  = modelRow.id
 
-            res.infos_document.name = nil -- strip the model's routing sentinel
+            res.infos_document.name = nil
             OpenNUI('openCreateDocument', res.infos_document)
         end, 'model', modelRow.id)
     end)
 end
 
--- ---------------------------------------------------------------------
--- Per-item action menu (view / edit / close / copy / give / delete)
--- ---------------------------------------------------------------------
 local function OpenItemActions(docType, row)
     local items = {}
     local isCopy = docType == 'document' and IsFlagTrue(row.is_copy)
@@ -335,9 +285,6 @@ local function OpenItemActions(docType, row)
     IconMenu.OpenMenu(items)
 end
 
--- ---------------------------------------------------------------------
--- List menu (also used in "pick a model" mode when creating a document)
--- ---------------------------------------------------------------------
 OpenListMenu = function(docType, search, pickCallback)
     ESX.TriggerServerCallback('Documents:getLists', function(rows)
         local items = {}
@@ -398,9 +345,6 @@ OpenListMenu = function(docType, search, pickCallback)
     end, docType, search)
 end
 
--- ---------------------------------------------------------------------
--- Root menu
--- ---------------------------------------------------------------------
 function OpenRootMenu()
     IconMenu.OpenMenu({
         {
@@ -414,18 +358,11 @@ function OpenRootMenu()
     })
 end
 
--- Bound to F9 by default (rebindable by the player in FiveM's key-binding
--- settings, under this resource's name). No chat command needed.
--- Everyone can open and browse; the create/edit/close/copy/give/delete
--- options are still individually gated by job further down.
 RegisterCommand('documents_openmenu', function()
     OpenRootMenu()
 end, false)
 RegisterKeyMapping('documents_openmenu', 'Open Official Documents Menu', 'keyboard', 'F9')
 
--- ---------------------------------------------------------------------
--- Citizens: view documents that were given to them (not job-gated)
--- ---------------------------------------------------------------------
 RegisterCommand('mydocuments', function()
     ESX.TriggerServerCallback('Documents:getMyDocuments', function(rows)
         if #rows == 0 then

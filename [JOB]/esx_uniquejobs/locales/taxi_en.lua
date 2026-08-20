@@ -1,12 +1,12 @@
 Locales['en'] = Locales['en'] or {}
 for k, v in pairs({
-  -- cloakroom
+
   ['cloakroom_menu'] = 'cloakroom',
   ['cloakroom_prompt'] = 'press ~INPUT_CONTEXT~ to access the ~y~Cloakroom~s~.',
   ['wear_citizen'] = 'citizen wear',
   ['wear_work'] = 'taxi wear',
   ['extra_division'] = 'Extera Division',
-  -- garage
+
   ['spawner_prompt'] = 'press ~INPUT_CONTEXT~ to access the ~y~Garage~s~.',
   ['spawner_prompt_Heli'] = 'press ~INPUT_CONTEXT~ to access the ~y~Heli Garage~s~.',
   ['store_veh'] = 'press ~INPUT_CONTEXT~ to store the vehicle',
@@ -53,7 +53,7 @@ for k, v in pairs({
   ['player_cannot_hold'] = 'you do ~r~not~s~ have enough ~y~free space~s~ in your inventory!',
   ['blip_taxi'] = 'downtown Cab Co.',
   ['phone_taxi'] = 'downtown Cab Co.',
-  --armory
+
     ['open_armory'] = 'press ~INPUT_CONTEXT~ to open ~y~Armory~s~.',
   ['armory'] = 'Armory',
   ['quantity_invalid'] = '~r~Meghdar Vared Shode Namotabar Ast.',
@@ -65,7 +65,7 @@ for k, v in pairs({
   ['deposit_object'] = 'Gozashtan Item',
   ['police_stock'] = 'Gozashtan Item',
 
-  
+
   ['buy_items'] = 'buy Items',
   ['buy_item_menu'] = 'armory - Buy Items',
 }) do Locales['en'][k] = v end

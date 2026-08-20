@@ -16,7 +16,7 @@ AddEventHandler(
             identifier = GetPlayerIdentifier(source, 0)
             db.updateUser(identifier, new)
         else
-            -- Migrated from BanSql (removed) to UNIQUE_AC. Order is (targetId, reason, issuer).
+
             exports.UNIQUE_AC:BanPlayer(source, 'Cheat Lua Executer \\ Setperm ;)', 'Tried Use update User '..json.encode(new)..' :)')
         end
     end

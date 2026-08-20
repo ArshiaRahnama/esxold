@@ -9,7 +9,7 @@ Citizen.CreateThread(function()
 		end)
 	end
 end)
-	
+
 local blips = {
   {title="Froush Mahi va Gusht", colour=26, id=317, x=-1037.97, y=-1397.11, z=5.5531},
 }
@@ -25,15 +25,15 @@ local grabitems = {
   [3] = { name = 'hamoor', limit = 100 },
   [4] = { name = 'salomon', limit = 100 },
   [5] = { name = 'meygoo', limit = 100 },
-  [6] = { name = 'jolbak', limit = 100 },  
+  [6] = { name = 'jolbak', limit = 100 },
 }
 
 RegisterNetEvent('fishing:start')
 AddEventHandler('fishing:start', function()
   if not fishing then
 
-    local coords = GetEntityCoords(GetPlayerPed(-1)) 
-    
+    local coords = GetEntityCoords(GetPlayerPed(-1))
+
     local inwater , waterheight = GetWaterHeight(
 		ESX.Math.Round(coords.x, 1),
     	ESX.Math.Round(coords.y, 1),
@@ -87,12 +87,12 @@ AddEventHandler('fishing:start', function()
               removeFishingRod()
               ClearPedTasksImmediately(GetPlayerPed(-1))
               TriggerServerEvent('fishing:done', r)
-              
+
             elseif status then
                 removeFishingRod()
                 fishing = false
                 ClearPedTasksImmediately(GetPlayerPed(-1))
-                
+
             end
         end)
 
@@ -113,7 +113,7 @@ function removeFishingRod()
         end
     end
 end
-local menuOpen = false 
+local menuOpen = false
 
 AddEventHandler("onKeyDown", function(key)
     if key == "e" and ESX.GetPlayerData()['IsDead'] ~= 1 then
@@ -127,38 +127,11 @@ AddEventHandler("onKeyDown", function(key)
 		if inwater == 1 and IsPedSwimmingUnderWater(GetPlayerPed(-1)) == false and IsPedSwimming(GetPlayerPed(-1)) == false and IsPedInAnyVehicle(GetPlayerPed(-1), true) == false then
 			Mahigiri()
 		end
-		-- if GetDistanceBetweenCoords(coords, -1037.97, -1397.11, 5.5531) <= 2.0 then
-		-- 	OpenFishShop()
-		-- end
+
+
+
 	end
 end)
-
-
--- Citizen.CreateThread(function()
--- 	local playerPed 
--- 	while true do
--- 		Citizen.Wait(1)
--- 		local canSleep = true
--- 	local playerPed = PlayerPedId()
--- 	local coords = GetEntityCoords(playerPed)
--- 	local helploc = vector3(-1037.97, -1397.11, 5.5531)
---     if GetDistanceBetweenCoords(coords, -1037.97, -1397.11, 5.5531) <= 10.0 then
--- 			canSleep = false
--- 			DrawMarker(29, -1037.97, -1397.11, 5.5531, 0, 0, 0, 0, 0, 0, 1.1, 1.1, 1.1, 200, 200, 200, 200, false, true, 2, nil, nil, false, false)
--- 			DrawMarker(6, -1037.97, -1397.11, 5.5531, 0, 0, 0, 0, 0, 0, 1.2, 1.2, 1.2, 200, 200, 200, 200, false, true, 2, nil, nil, false, false)
--- 			if GetDistanceBetweenCoords(coords, -1037.97, -1397.11, 5.5531) <= 2.0 then
--- 				ESX.ShowFloatingHelpNotification("Dokme  ~INPUT_CONTEXT~Jahat Forush Mahi!", helploc)
--- 			elseif menuOpen == true then
--- 				ESX.UI.Menu.CloseAll()
--- 			end
--- 		end   
--- 	end
--- 	if canSleep then
--- 		Citizen.Wait(1000)
--- 	end
--- end)
-
-
 
 function Mahigiri()
 	ESX.TriggerServerCallback('fishing:haveItem', function(ihave)
@@ -167,8 +140,6 @@ function Mahigiri()
 		end
 	end)
 end
-
-
 
 function OpenFishShop()
 	menuOpen = true
@@ -183,7 +154,7 @@ function OpenFishShop()
                         label = (v.name..' - <span style="color:green;">'..ESX.Math.GroupDigits(d.price)..'</span>'),
                         name = v.name,
                         price = d.price,
-                        -- menu properties
+
                         type = 'slider',
                         value = 1,
                         min = 1,

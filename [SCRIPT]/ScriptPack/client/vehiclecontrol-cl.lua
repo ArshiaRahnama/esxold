@@ -16,12 +16,9 @@ local impound = {busy = false, vehicle = 0}
 local time = 0
 local DesiredVehicle
 
-
 local engineoff = false
 local IsEngineOn = true
 local saved = false
-
-
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -84,7 +81,7 @@ local authorizedVehicles = {
 		-1760183916,
 		-1145771600
 	},
-	
+
 	sheriff = {
 		1912215274,
 		1264341792,
@@ -178,13 +175,13 @@ local authorizedVehicles = {
 	weazel = {
 		1162065741
 	},
-	
+
 	food = {
 		1663218586,
 		1951180813,
 		-1289178744
 	},
-	
+
 	nightclub = {
 		86520421,
 		-1908948564
@@ -194,7 +191,6 @@ local authorizedVehicles = {
 		1951180813
 	}
 }
-
 
 RegisterCommand("gethash", function(source)
 	ESX.TriggerServerCallback('esx_aduty:checkAdmin', function(isAdmin)
@@ -223,8 +219,6 @@ RegisterCommand("getmodel", function(source)
         end
     end)
 end, false)
-
-
 
 RegisterNetEvent("esx_vehiclecontol:toggleLock")
 AddEventHandler("esx_vehiclecontol:toggleLock",function(vehicle)
@@ -273,24 +267,6 @@ AddEventHandler("esx_vehiclecontol:toggleLock",function(vehicle)
 	end
 end)
 
---[[ Server side sync
-RegisterNetEvent("esx_vehiclecontol:ClientSync")
-AddEventHandler("esx_vehiclecontol:ClientSync", function(NetId, state)
-	if not NetworkDoesNetworkIdExist(NetId) then
-		return
-	end
-
-	local vehicle = NetworkGetEntityFromNetworkId(NetId)
-	if DoesEntityExist(vehicle) then
-		if state then
-			SetVehicleDoorsLocked(vehicle, 2) -- lock the door 
-		else
-			SetVehicleDoorsLocked(vehicle, 1) -- unlcok the door
-		end
-	end
-end)
---]]
-
 RegisterNetEvent("esx_vehiclecontol:lockLights")
 AddEventHandler("esx_vehiclecontol:lockLights", function(veh)
 	if not NetworkDoesNetworkIdExist(veh) then
@@ -308,7 +284,6 @@ AddEventHandler("esx_vehiclecontol:lockLights", function(veh)
 		SetVehicleLights(vehicle, 0)
 	end
 end)
-
 
 RegisterNetEvent("esx_vehiclecontrol:AlarmStete")
 AddEventHandler("esx_vehiclecontrol:AlarmStete", function(NetId, state)
@@ -335,11 +310,9 @@ AddEventHandler("esx_vehiclecontrol:HiJack", function()
         TriggerEvent("chatMessage", "[SYSTEM]", {255, 0, 0}, "^0Hich mashini nazdik shoma nist!")
         return
 	  end
-	  
+
 	HiJackVehicle(vehicle)
 end)
-
---############# END OF VEHICLE ASSETS #################
 
 function DoesHaveAccess(model, table)
 	for k,v in pairs(table) do
@@ -367,7 +340,7 @@ function Repair(vehicle)
 		Wait(100)
 		timeout = timeout - 100
 	end
-	
+
 	SetVehicleFixed(vehicle)
 	exports.LegacyFuel:fixVehicle(vehicle)
 end
@@ -392,7 +365,7 @@ end
 
 function ImpoundPolice(vehicle)
 	if not impound.busy then
-		
+
 		local plate = GetVehicleNumberPlateText(vehicle)
 		impound.busy = true
 		impound.vehicle = vehicle
@@ -410,7 +383,7 @@ function ImpoundPolice(vehicle)
 				disableCombat = true,
 			}
 		}, function(status)
-			
+
 			if not status then
 
 				ClearPedTasksImmediately(PlayerPedId())
@@ -419,13 +392,13 @@ function ImpoundPolice(vehicle)
 
 				impound.busy = false
 				impound.vehicle = 0
-				
+
 			elseif status then
 				ClearPedTasksImmediately(PlayerPedId())
 				impound.busy = false
 				impound.vehicle = 0
 			end
-			
+
 		end)
 
 	end
@@ -433,7 +406,7 @@ end
 
 function Impoundsheriff(vehicle)
 	if not impound.busy then
-		
+
 		local plate = GetVehicleNumberPlateText(vehicle)
 		impound.busy = true
 		impound.vehicle = vehicle
@@ -451,7 +424,7 @@ function Impoundsheriff(vehicle)
 				disableCombat = true,
 			}
 		}, function(status)
-			
+
 			if not status then
 
 				ClearPedTasksImmediately(PlayerPedId())
@@ -460,18 +433,17 @@ function Impoundsheriff(vehicle)
 
 				impound.busy = false
 				impound.vehicle = 0
-				
+
 			elseif status then
 				ClearPedTasksImmediately(PlayerPedId())
 				impound.busy = false
 				impound.vehicle = 0
 			end
-			
+
 		end)
 
 	end
 end
-
 
 function DeleteVehicles(vehicle)
 	if not impound.busy then
@@ -492,7 +464,7 @@ function DeleteVehicles(vehicle)
 				disableCombat = true,
 			}
 		}, function(status)
-			
+
 			if not status then
 				ESX.Game.DeleteVehicle(vehicle)
 				ClearPedTasksImmediately(PlayerPedId())
@@ -500,13 +472,13 @@ function DeleteVehicles(vehicle)
 
 				impound.busy = false
 				impound.vehicle = 0
-				
+
 			elseif status then
 				ClearPedTasksImmediately(PlayerPedId())
 				impound.busy = false
 				impound.vehicle = 0
 			end
-			
+
 		end)
 
 	end
@@ -531,7 +503,7 @@ function RepairVehicle(vehicle)
 				disableCombat = true,
 			}
 		}, function(status)
-			
+
 			if not status then
 
 				ClearPedTasksImmediately(PlayerPedId())
@@ -539,13 +511,13 @@ function RepairVehicle(vehicle)
 
 				impound.busy = false
 				impound.vehicle = 0
-				
+
 			elseif status then
 				ClearPedTasksImmediately(PlayerPedId())
 				impound.busy = false
 				impound.vehicle = 0
 			end
-			
+
 		end)
 
 	end
@@ -570,7 +542,7 @@ function CleanVehicle(vehicle)
 				disableCombat = true,
 			}
 		}, function(status)
-			
+
 			if not status then
 
 				ClearPedTasksImmediately(PlayerPedId())
@@ -578,13 +550,13 @@ function CleanVehicle(vehicle)
 
 				impound.busy = false
 				impound.vehicle = 0
-				
+
 			elseif status then
 				ClearPedTasksImmediately(PlayerPedId())
 				impound.busy = false
 				impound.vehicle = 0
 			end
-			
+
 		end)
 
 	end
@@ -619,7 +591,7 @@ function HiJackVehicle(vehicle)
 					anim = "idle_a",
 				},
 			}, function(status)
-				
+
 				if not status then
 
 					impound.busy = false
@@ -639,7 +611,7 @@ function HiJackVehicle(vehicle)
 							TriggerServerEvent('esx_vehiclecontrol:syncAlarm', NetId, false)
 						end)
 					end
-					
+
 				elseif status then
 					impound.busy = false
 					impound.vehicle = 0
@@ -649,22 +621,22 @@ function HiJackVehicle(vehicle)
 						TriggerServerEvent('esx_vehiclecontrol:syncAlarm', NetId, false)
 					end)
 				end
-				
+
 			end)
 
 		else
 			TriggerEvent("chatMessage", "[SYSTEM]", {255, 0, 0}, "^0Dare mashin mored nazar ghofl nist!")
 		end
-		
+
 	end
 end
 
 Citizen.CreateThread(function()
 	while true do
 	  Citizen.Wait(1000)
-	
+
 	  if impound.busy and impound.vehicle ~= 0 then
-		 
+
 		local coords = GetEntityCoords(PlayerPedId())
 
 		if not DoesEntityExist(impound.vehicle) then
@@ -688,7 +660,7 @@ Citizen.CreateThread(function()
 			TriggerEvent("mythic_progbar:client:cancel")
 			impound.busy = false
 			impound.vehicle = 0
-		end	  
+		end
 
 	  end
 
@@ -702,14 +674,10 @@ exports("DeleteVehicle", DeleteVehicles)
 exports("RepairVehicle", RepairVehicle)
 exports("CleanVehicle", CleanVehicle)
 
-
-
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-interactionDistance = 3.5 --The radius you have to be in to interact with the vehicle.
-lockDistance = 25 --The radius you have to be in to lock your vehicle.
+interactionDistance = 3.5
+lockDistance = 25
 local timer = 0
--- E S X --
+
 ESX = nil
 Citizen.CreateThread(
 	function()
@@ -745,8 +713,6 @@ AddEventHandler(
 saved = false
 controlsave_bool = false
 
-
--- L O C K --
 RegisterNetEvent("lockLights")
 AddEventHandler("lockLights", function(vehicle)
 		local vehicle = vehicle
@@ -765,7 +731,7 @@ AddEventHandler("lock",function()
 	local vehicle = {}
 	local name = nil
 	if PlayerData.job.name == "police" then
-		
+
 		vehicles = {
 			949403409,
 			335384930,
@@ -807,9 +773,9 @@ AddEventHandler("lock",function()
 			38057582
 		}
 		name = "police"
-		
+
 	elseif PlayerData.job.name == "sheriff" then
-		
+
 		vehicles = {
 			949403409,
 			1912215274,
@@ -862,7 +828,7 @@ AddEventHandler("lock",function()
 			-1800062819
 		}
 		name = "ambulance"
-		
+
 	elseif PlayerData.job.name == "food" then
 
 		vehicles = {
@@ -871,13 +837,13 @@ AddEventHandler("lock",function()
 			-1289178744
 		}
 		name = "sandwitchi"
-		
+
 	elseif PlayerData.job.name == "nightclub" then
 
 		vehicles = {
 			86520421,
 			-1908948564
-			
+
 		}
 		name = "nightclub"
 	elseif PlayerData.job.name == "mechanic" then
@@ -927,7 +893,7 @@ AddEventHandler("lock",function()
 			1026149675
 		}
 		name = "Khayat"
-		
+
 	elseif PlayerData.job.name == "weazel" then
 
 		vehicles = {
@@ -945,10 +911,10 @@ AddEventHandler("lock",function()
 			-2030171296
 		}
 		name = "taxi"
-		
+
 	else
 
-		--ESX.ShowNotification("~r~Shoma ozv hich Shoghli nistid")
+
 		return
 
 	end
@@ -959,7 +925,7 @@ AddEventHandler("lock",function()
 			local vehicle = GetVehiclePedIsUsing(player)
 			local islocked = GetVehicleDoorLockStatus(vehicle)
 			if DoesEntityExist(vehicle) then
-				
+
 
 				local function contains(table, val)
 					for i = 1, #table do
@@ -970,7 +936,7 @@ AddEventHandler("lock",function()
 					return false
 				end
 				if contains(vehicles, GetEntityModel(vehicle)) then
-				
+
 						if (islocked == 1 or islocked == 0) then
 							SetVehicleDoorsLocked(vehicle, 2)
 							ShowNotification(
@@ -1000,13 +966,13 @@ AddEventHandler("lock",function()
 									local PlayerName = GetPlayerName(PlayerId())
 									local text = '* ' .. PlayerName .. ' vasile naghlie ro ghofl mikone *'
 
-	
+
 									TriggerServerEvent('3dme:shareDisplay', text, false)
-						
+
 								end
-						
+
 							end)
-							
+
 
 						elseif islocked == 2 then
 							SetVehicleDoorsLocked(vehicle, 1)
@@ -1031,23 +997,23 @@ AddEventHandler("lock",function()
 									local PlayerName = GetPlayerName(PlayerId())
 									local text = '* ' .. PlayerName .. ' vasile naghlie ro baz mikone *'
 
-	
+
 									TriggerServerEvent('3dme:shareDisplay', text, false)
-						
+
 								end
-						
+
 							end)
 
 						end
-			
-				-- else
-				-- 	ShowNotification("~r~~h~In yek mashin " .. name .. " nist")
+
+
+
 				end
 			else
 				ShowNotification("~r~~h~Hich mashini nazdik shoma nist.")
 			end
 
-			
+
 
 		else
 
@@ -1056,7 +1022,7 @@ AddEventHandler("lock",function()
 			local islocked = GetVehicleDoorLockStatus(vehicle)
 			local distanceToVeh = #(GetEntityCoords(player) - GetEntityCoords(vehicle))
 			if DoesEntityExist(vehicle) then
-				
+
 
 				local function contains(table, val)
 					for i = 1, #table do
@@ -1067,7 +1033,7 @@ AddEventHandler("lock",function()
 					return false
 				end
 				if contains(vehicles, GetEntityModel(vehicle)) then
-				
+
 						if (islocked == 1 or islocked == 0) then
 							SetVehicleDoorsLocked(vehicle, 2)
 							ShowNotification(
@@ -1094,14 +1060,14 @@ AddEventHandler("lock",function()
 							ESX.TriggerServerCallback('esx_policejob:getIcName', function(PlayerName)
 
 								if PlayerName ~= nil then
-						
+
 									local text = '* ' .. PlayerName .. ' vasile naghlie ro ghofl mikone *'
 
-	
+
 									TriggerServerEvent('3dme:shareDisplay', text, false)
-						
+
 								end
-						
+
 							end)
 
 						elseif islocked == 2 then
@@ -1124,23 +1090,23 @@ AddEventHandler("lock",function()
 							ESX.TriggerServerCallback('esx_policejob:getIcName', function(PlayerName)
 
 								if PlayerName ~= nil then
-						
+
 									local text = '* ' .. PlayerName .. ' vasile naghlie ro baz mikone *'
 
-	
+
 									TriggerServerEvent('3dme:shareDisplay', text, false)
-						
+
 								end
-						
+
 							end)
 
 						end
-			
+
 				else
 					ShowNotification("~r~~h~In yek mashin " .. name .. " nist")
 				end
 			else
-				
+
 				local player = PlayerPedId()
 				local vehicle = saveVehicle
 				local islocked = GetVehicleDoorLockStatus(vehicle)
@@ -1173,15 +1139,15 @@ AddEventHandler("lock",function()
 								ESX.TriggerServerCallback('esx_policejob:getIcName', function(PlayerName)
 
 									if PlayerName ~= nil then
-										
+
 										local PlayerName = GetPlayerName(PlayerId())
 										local text = '* ' .. PlayerName .. ' vasile naghlie ro ghofl mikone *'
-	
-		
+
+
 										TriggerServerEvent('3dme:shareDisplay', text, false)
-							
+
 									end
-							
+
 								end)
 
 							elseif islocked == 2 then
@@ -1205,16 +1171,16 @@ AddEventHandler("lock",function()
 
 									if PlayerName ~= nil then
 										local PlayerName = GetPlayerName(PlayerId())
-										
+
 										local text = '* ' .. PlayerName .. ' vasile naghlie ro baz mikone *'
-	
-		
+
+
 										TriggerServerEvent('3dme:shareDisplay', text, false)
-							
+
 									end
-							
+
 								end)
-								
+
 							end
 						else
 							ShowNotification("~r~Shoma nazdik mashin nistid.")
@@ -1224,7 +1190,7 @@ AddEventHandler("lock",function()
 				end
 
 			end
-			
+
 		end
 end)
 
@@ -1233,13 +1199,13 @@ function ShowNotification(text)
 	AddTextComponentString(text)
 	DrawNotification(false, false)
 end
--- S A V E --
+
 RegisterNetEvent("save")
 AddEventHandler("save",function(pelak)
 
 	local player = PlayerPedId()
 	if (IsPedSittingInAnyVehicle(player)) then
-		--print("This is vehicle model: " .. GetEntityModel(GetVehiclePedIsIn(player)))
+
 		if PlayerData.job.name == "police" then
 			local vehicles = {
 				949403409,
@@ -1292,7 +1258,7 @@ AddEventHandler("save",function(pelak)
 			end
 			if contains(vehicles, GetEntityModel(GetVehiclePedIsIn(player))) then
 				if saved == true then
-					--remove from saved.
+
 					saveVehicle = nil
 					RemoveBlip(targetBlip)
 					ShowNotification("Mashin ~g~save~w~ shode shoma ~r~hazf~w~ shod.")
@@ -1306,7 +1272,7 @@ AddEventHandler("save",function(pelak)
 					SetBlipDisplay(targetBlip, 4)
 					SetBlipScale(targetBlip, 0.7)
 					BeginTextCommandSetBlipName("STRING")
-					AddTextComponentString(pelak) -- set blip's "name"
+					AddTextComponentString(pelak)
 					EndTextCommandSetBlipName(targetBlip)
 					SetVehicleNumberPlateText(vehicle, pelak)
 					ShowNotification(
@@ -1319,7 +1285,6 @@ AddEventHandler("save",function(pelak)
 			else
 				ShowNotification("~r~~h~Shoma Faghat Ghader be save kardan mashin haye police hastid")
 			end
-
 
 		elseif PlayerData.job.name == "sheriff" then
 			local vehicles = {
@@ -1368,7 +1333,7 @@ AddEventHandler("save",function(pelak)
 			end
 			if contains(vehicles, GetEntityModel(GetVehiclePedIsIn(player))) then
 				if saved == true then
-					--remove from saved.
+
 					saveVehicle = nil
 					RemoveBlip(targetBlip)
 					ShowNotification("Mashin ~g~save~w~ shode shoma ~r~hazf~w~ shod.")
@@ -1383,7 +1348,7 @@ AddEventHandler("save",function(pelak)
 					SetBlipScale(targetBlip, 0.7)
 					SetBlipColour(targetBlip, 10)
 					BeginTextCommandSetBlipName("STRING")
-					AddTextComponentString(pelak) -- set blip's "name"
+					AddTextComponentString(pelak)
 					EndTextCommandSetBlipName(targetBlip)
 					SetVehicleNumberPlateText(vehicle, pelak)
 					ShowNotification(
@@ -1396,7 +1361,7 @@ AddEventHandler("save",function(pelak)
 			else
 				ShowNotification("~r~~h~Shoma Faghat Ghader be save kardan mashin haye sheriff hastid")
 			end
-			
+
 		elseif PlayerData.job.name == "mechanic" then
 
 			local vehicles = {
@@ -1418,7 +1383,7 @@ AddEventHandler("save",function(pelak)
 			end
 			if contains(vehicles, GetEntityModel(GetVehiclePedIsIn(player))) then
 				if saved == true then
-					--remove from saved.
+
 					saveVehicle = nil
 					RemoveBlip(targetBlip)
 					ShowNotification("Mashin ~g~save~w~ shode shoma ~r~hazf~w~ shod.")
@@ -1431,7 +1396,7 @@ AddEventHandler("save",function(pelak)
 					SetBlipSprite(targetBlip, 225)
 					SetBlipColour(targetBlip, 81)
 					BeginTextCommandSetBlipName("STRING")
-					AddTextComponentString(pelak) -- set blip's "name"
+					AddTextComponentString(pelak)
 					EndTextCommandSetBlipName(targetBlip)
 					SetVehicleNumberPlateText(vehicle, pelak)
 					ShowNotification(
@@ -1444,7 +1409,6 @@ AddEventHandler("save",function(pelak)
 			else
 				ShowNotification("~r~~h~Shoma Faghat Ghader be save kardan mashin haye mechanici hastid")
 			end
-
 
 		elseif PlayerData.job.name == "ambulance" then
 
@@ -1471,7 +1435,7 @@ AddEventHandler("save",function(pelak)
 			end
 			if contains(vehicles, GetEntityModel(GetVehiclePedIsIn(player))) then
 				if saved == true then
-					--remove from saved.
+
 					saveVehicle = nil
 					RemoveBlip(targetBlip)
 					ShowNotification("Mashin ~g~save~w~ shode shoma ~r~hazf~w~ shod.")
@@ -1483,7 +1447,7 @@ AddEventHandler("save",function(pelak)
 					targetBlip = AddBlipForEntity(vehicle)
 					SetBlipSprite(targetBlip, 225)
 					BeginTextCommandSetBlipName("STRING")
-					AddTextComponentString(pelak) -- set blip's "name"
+					AddTextComponentString(pelak)
 					SetBlipColour(targetBlip, 1)
 					EndTextCommandSetBlipName(targetBlip)
 					SetVehicleNumberPlateText(vehicle, pelak)
@@ -1497,7 +1461,7 @@ AddEventHandler("save",function(pelak)
 			else
 				ShowNotification("~r~~h~Shoma Faghat Ghader be save kardan mashin haye medic hastid")
 			end
-			
+
 		elseif PlayerData.job.name == "food" then
 
 			local vehicles = {
@@ -1516,7 +1480,7 @@ AddEventHandler("save",function(pelak)
 			end
 			if contains(vehicles, GetEntityModel(GetVehiclePedIsIn(player))) then
 				if saved == true then
-					--remove from saved.
+
 					saveVehicle = nil
 					RemoveBlip(targetBlip)
 					ShowNotification("Mashin ~g~save~w~ shode shoma ~r~hazf~w~ shod.")
@@ -1528,7 +1492,7 @@ AddEventHandler("save",function(pelak)
 					targetBlip = AddBlipForEntity(vehicle)
 					SetBlipSprite(targetBlip, 225)
 					BeginTextCommandSetBlipName("STRING")
-					AddTextComponentString(pelak) -- set blip's "name"
+					AddTextComponentString(pelak)
 					EndTextCommandSetBlipName(targetBlip)
 					SetVehicleNumberPlateText(vehicle, pelak)
 					ShowNotification(
@@ -1541,13 +1505,13 @@ AddEventHandler("save",function(pelak)
 			else
 				ShowNotification("~r~~h~Shoma Faghat Ghader be save kardan mashin haye sandwitchi hastid")
 			end
-			
+
 			elseif PlayerData.job.name == "nightclub" then
 
 			local vehicles = {
 				86520421,
 				-1908948564
-				
+
 			}
 
 			local function contains(table, val)
@@ -1560,7 +1524,7 @@ AddEventHandler("save",function(pelak)
 			end
 			if contains(vehicles, GetEntityModel(GetVehiclePedIsIn(player))) then
 				if saved == true then
-					--remove from saved.
+
 					saveVehicle = nil
 					RemoveBlip(targetBlip)
 					ShowNotification("Mashin ~g~save~w~ shode shoma ~r~hazf~w~ shod.")
@@ -1572,7 +1536,7 @@ AddEventHandler("save",function(pelak)
 					targetBlip = AddBlipForEntity(vehicle)
 					SetBlipSprite(targetBlip, 225)
 					BeginTextCommandSetBlipName("STRING")
-					AddTextComponentString(pelak) -- set blip's "name"
+					AddTextComponentString(pelak)
 					EndTextCommandSetBlipName(targetBlip)
 					SetVehicleNumberPlateText(vehicle, pelak)
 					ShowNotification(
@@ -1585,7 +1549,7 @@ AddEventHandler("save",function(pelak)
 			else
 				ShowNotification("~r~~h~Shoma Faghat Ghader be save kardan mashin haye nightclub hastid")
 			end
-			
+
 		elseif PlayerData.job.name == "fisherman" then
 
 			local vehicles = {
@@ -1602,7 +1566,7 @@ AddEventHandler("save",function(pelak)
 			end
 			if contains(vehicles, GetEntityModel(GetVehiclePedIsIn(player))) then
 				if saved == true then
-					--remove from saved.
+
 					saveVehicle = nil
 					RemoveBlip(targetBlip)
 					ShowNotification("Mashin ~g~save~w~ shode shoma ~r~hazf~w~ shod.")
@@ -1624,7 +1588,7 @@ AddEventHandler("save",function(pelak)
 			else
 				ShowNotification("~r~~h~Shoma Faghat Ghader be save kardan mashin haye Mahigiri hastid")
 			end
-			
+
 		elseif PlayerData.job.name == "fueler" then
 
 			local vehicles = {
@@ -1641,7 +1605,7 @@ AddEventHandler("save",function(pelak)
 			end
 			if contains(vehicles, GetEntityModel(GetVehiclePedIsIn(player))) then
 				if saved == true then
-					--remove from saved.
+
 					saveVehicle = nil
 					RemoveBlip(targetBlip)
 					ShowNotification("Mashin ~g~save~w~ shode shoma ~r~hazf~w~ shod.")
@@ -1663,7 +1627,7 @@ AddEventHandler("save",function(pelak)
 			else
 				ShowNotification("~r~~h~Shoma Faghat Ghader be save kardan mashin haye Sherkat Naft hastid")
 			end
-			
+
 		elseif PlayerData.job.name == "lumberjack" then
 
 			local vehicles = {
@@ -1680,7 +1644,7 @@ AddEventHandler("save",function(pelak)
 			end
 			if contains(vehicles, GetEntityModel(GetVehiclePedIsIn(player))) then
 				if saved == true then
-					--remove from saved.
+
 					saveVehicle = nil
 					RemoveBlip(targetBlip)
 					ShowNotification("Mashin ~g~save~w~ shode shoma ~r~hazf~w~ shod.")
@@ -1719,7 +1683,7 @@ AddEventHandler("save",function(pelak)
 			end
 			if contains(vehicles, GetEntityModel(GetVehiclePedIsIn(player))) then
 				if saved == true then
-					--remove from saved.
+
 					saveVehicle = nil
 					RemoveBlip(targetBlip)
 					ShowNotification("Mashin ~g~save~w~ shode shoma ~r~hazf~w~ shod.")
@@ -1741,7 +1705,7 @@ AddEventHandler("save",function(pelak)
 			else
 				ShowNotification("~r~~h~Shoma Faghat Ghader be save kardan mashin haye Khayati hastid")
 			end
-			
+
 		elseif PlayerData.job.name == "miner" then
 
 			local vehicles = {
@@ -1758,7 +1722,7 @@ AddEventHandler("save",function(pelak)
 			end
 			if contains(vehicles, GetEntityModel(GetVehiclePedIsIn(player))) then
 				if saved == true then
-					--remove from saved.
+
 					saveVehicle = nil
 					RemoveBlip(targetBlip)
 					ShowNotification("Mashin ~g~save~w~ shode shoma ~r~hazf~w~ shod.")
@@ -1780,7 +1744,7 @@ AddEventHandler("save",function(pelak)
 			else
 				ShowNotification("~r~~h~Shoma Faghat Ghader be save kardan mashin haye Madanchi hastid")
 			end
-			
+
 		elseif PlayerData.job.name == "slaughterer" then
 
 			local vehicles = {
@@ -1797,7 +1761,7 @@ AddEventHandler("save",function(pelak)
 			end
 			if contains(vehicles, GetEntityModel(GetVehiclePedIsIn(player))) then
 				if saved == true then
-					--remove from saved.
+
 					saveVehicle = nil
 					RemoveBlip(targetBlip)
 					ShowNotification("Mashin ~g~save~w~ shode shoma ~r~hazf~w~ shod.")
@@ -1836,7 +1800,7 @@ AddEventHandler("save",function(pelak)
 			end
 			if contains(vehicles, GetEntityModel(GetVehiclePedIsIn(player))) then
 				if saved == true then
-					--remove from saved.
+
 					saveVehicle = nil
 					RemoveBlip(targetBlip)
 					ShowNotification("Mashin ~g~save~w~ shode shoma ~r~hazf~w~ shod.")
@@ -1858,7 +1822,7 @@ AddEventHandler("save",function(pelak)
 			else
 				ShowNotification("~r~~h~Shoma Faghat Ghader be save kardan mashin haye Weazel News hastid")
 			end
-			
+
 		elseif PlayerData.job.name == "taxi" then
 
 			local vehicles = {
@@ -1880,7 +1844,7 @@ AddEventHandler("save",function(pelak)
 			end
 			if contains(vehicles, GetEntityModel(GetVehiclePedIsIn(player))) then
 				if saved == true then
-					--remove from saved.
+
 					saveVehicle = nil
 					RemoveBlip(targetBlip)
 					ShowNotification("Mashin ~g~save~w~ shode shoma ~r~hazf~w~ shod.")
@@ -1892,7 +1856,7 @@ AddEventHandler("save",function(pelak)
 					targetBlip = AddBlipForEntity(vehicle)
 					SetBlipSprite(targetBlip, 225)
 					BeginTextCommandSetBlipName("STRING")
-					AddTextComponentString(pelak) -- set blip's "name"
+					AddTextComponentString(pelak)
 					SetBlipColour(targetBlip, 46)
 					EndTextCommandSetBlipName(targetBlip)
 					SetVehicleNumberPlateText(vehicle, pelak)
@@ -1906,17 +1870,16 @@ AddEventHandler("save",function(pelak)
 			else
 				ShowNotification("~r~~h~Shoma Faghat Ghader be save kardan mashin haye taxi hastid")
 			end
-		
+
 		else
 
-		--	ESX.ShowNotification("Shoma ozv hich shoghli nistid")
+
 
 		end
 	end
-			
+
 end)
 
--- R E M O T E --
 RegisterNetEvent("controlsave")
 AddEventHandler(
 	"controlsave",
@@ -1945,30 +1908,29 @@ AddEventHandler(
 	end
 )
 
----------------------------- ENGINE --------------------------
 Citizen.CreateThread( function()
-    while true do 
+    while true do
         Citizen.Wait(1)
 
-		if IsControlJustReleased(0, 178) then 
-			
+		if IsControlJustReleased(0, 178) then
+
 			if GetGameTimer() - 2000  > timer then
 
 				TriggerEvent('engine')
-			
+
 				timer = GetGameTimer()
-			
+
 			else
-			
+
 				timer = GetGameTimer()
 				ESX.ShowNotification("~r~Lotfan spam nakonid")
-				
+
 			end
-		
-			
+
+
 	end
 
-		if IsControlJustReleased(0, 246) then 
+		if IsControlJustReleased(0, 246) then
 
 			if GetGameTimer() - 2000  > timer then
 
@@ -1982,77 +1944,11 @@ Citizen.CreateThread( function()
 				ESX.ShowNotification("~r~Lotfan spam nakonid")
 
 			end
-			
+
 		end
-        
+
     end
 end )
---[[
-function EngineHandler(force)
-	local player = PlayerPedId()
-
-	if (IsPedSittingInAnyVehicle(player)) then
-
-		DesiredVehicle = GetVehiclePedIsIn(player, false)
-
-		if not force then
-
-		    if GetPedInVehicleSeat(DesiredVehicle, -1) == player then
-		    	if IsEngineOn == true then
-		    		IsEngineOn = false
-					ESX.ShowNotification("Engine ~r~off~s~.")
-					SetVehicleEngineOn(DesiredVehicle, false, false, false)
-		    	else
-		    		IsEngineOn = true
-					ESX.ShowNotification("Engine ~g~on~s~.")
-		    		SetVehicleUndriveable(DesiredVehicle, false)
-		    		SetVehicleEngineOn(DesiredVehicle, true, false, false)
-		    	end
-		    end
-
-		else
-			IsEngineOn = false
-			SetVehicleEngineOn(DesiredVehicle, false, false, false)
-		end
-		
-	end
-
-end
-
-
-RegisterNetEvent("engineoff")
-AddEventHandler("engineoff", function()
-	local player = PlayerPedId()
-
-	if (IsPedSittingInAnyVehicle(player)) then
-		local vehicle = GetVehiclePedIsIn(player, false)
-		engineoff = true
-		ESX.ShowNotification("Engine ~r~off~s~.")
-		
-		while (engineoff) do
-			SetVehicleEngineOn(vehicle, false, false, false)
-			SetVehicleUndriveable(vehicle, true)
-			Citizen.Wait(1)
-		end
-	end
-end)
-
-RegisterNetEvent("engineon")
-AddEventHandler("engineon", function()
-	local player = PlayerPedId()
-
-	if (IsPedSittingInAnyVehicle(player)) then
-		local vehicle = GetVehiclePedIsIn(player, false)
-		engineoff = false
-		SetVehicleUndriveable(vehicle, false)
-		SetVehicleEngineOn(vehicle, true, false, false)
-		ESX.ShowNotification("Engine ~g~on~s~.")
-
-	end
-end)
-
---]]
-
 
 RegisterNetEvent("engine")
 AddEventHandler(
@@ -2063,7 +1959,7 @@ AddEventHandler(
 			local vehicle = GetVehiclePedIsIn(player, false)
 			local plate = GetVehicleNumberPlateText(vehicle)
 			ESX.TriggerServerCallback('CarLock:haskey', function(haskey)
-				if  haskey then					
+				if  haskey then
 					if GetPedInVehicleSeat(vehicle, -1) == player then
 						if IsEngineOn == true then
 							IsEngineOn = false
@@ -2074,10 +1970,10 @@ AddEventHandler(
 								local text = '* ' .. PlayerName .. ' motore vasile naghlie ro khamosh mikone *'
 
 								TriggerServerEvent('3dme:shareDisplay', text, false)
-							
+
 								timer = GetGameTimer()
 							end
-							
+
 						else
 							IsEngineOn = true
 							ESX.ShowNotification("Engine ~g~On~s~.")
@@ -2085,7 +1981,7 @@ AddEventHandler(
 							SetVehicleEngineOn(vehicle, true, false, false)
 							if GetGameTimer() - 2000  > timer then
 								local PlayerName = GetPlayerName(PlayerId())
-								
+
 								local text = '* ' .. PlayerName .. ' motore vasile naghlie ro roshan mikone *'
 
 								TriggerServerEvent('3dme:shareDisplay', text, false)
@@ -2142,17 +2038,17 @@ AddEventHandler(
 
 Citizen.CreateThread(function()
 	TriggerEvent('chat:addSuggestion', '/engine', 'On / Off Kardan Engine', {})
-			RegisterCommand('engine', function() 
+			RegisterCommand('engine', function()
 				toggleEngine()
 			end, false)
 		while true do
 			Citizen.Wait(1)
 			local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
-			
+
 			if (IsControlJustReleased(0, 178) or IsDisabledControlJustReleased(0, 178)) and vehicle ~= nil and vehicle ~= 0 and GetPedInVehicleSeat(vehicle, 0) then
 				toggleEngine()
 			end
-			
+
 		end
 	end)
 	function toggleEngine()
@@ -2163,8 +2059,8 @@ Citizen.CreateThread(function()
 	end
 
 	exports("EngineHandler", EngineHandler)
-	
+
 	TriggerEvent('chat:addSuggestion', '/save', 'Save Or Remove Vehicle', {
-	
+
 })
 

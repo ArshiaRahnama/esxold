@@ -5,19 +5,6 @@ local handsup = false
 local gender = nil
 ESX = nil
 
--- ============================================================
--- Itemization support (added on top of the original script).
--- This shop buys/wears the WHOLE current outfit at once (skinchanger
--- skin table), it never sold individual pieces as inventory items.
--- To make bought clothes real, giveable/tradeable inventory items
--- (and keep them recognised by the server's usable-item system), we
--- diff the skin table from right before the shop opened (lastSkin)
--- against right after a successful purchase, and turn every slot that
--- actually changed into one 'clothe_<type>_<drawable>_<texture>' item.
--- Slot ids match essentialmode's own skinchanger
--- ([SCRIPT]/skinchanger/client/main.lua) and this resource's own
--- components.lua exactly -- do not change these without updating both.
--- ============================================================
 local ClotheItemSlots = {
     { type = 'tshirt',    d = 'tshirt_1',    t = 'tshirt_2',    prop = false },
     { type = 'torso',     d = 'torso_1',     t = 'torso_2',     prop = false },
@@ -36,8 +23,6 @@ local ClotheItemSlots = {
     { type = 'ears',      d = 'ears_1',      t = 'ears_2',      prop = true },
 }
 
--- returns a list of {type, drawable, texture} for every slot that
--- differs between the pre-shop skin and the post-purchase skin
 local function computeBoughtClotheItems(before, after)
     local bought = {}
     if not before or not after then return bought end
@@ -45,7 +30,7 @@ local function computeBoughtClotheItems(before, after)
         local beforeD, beforeT = before[slot.d], before[slot.t]
         local afterD, afterT = after[slot.d], after[slot.t]
         if afterD ~= nil and (afterD ~= beforeD or afterT ~= beforeT) then
-            -- props use -1 to mean "nothing worn" -- not a purchase
+
             if not (slot.prop and (afterD == -1 or afterD == nil)) then
                 bought[#bought + 1] = { type = slot.type, drawable = afterD, texture = afterT or 0 }
             end
@@ -81,9 +66,6 @@ Citizen.CreateThread(function()
     end
 end)
 
--- Applies one purchased piece to the ped and re-saves the whole skin,
--- matching this resource's own whole-skin persistence model. Used by
--- the server when a player "uses" a clothing item from their inventory.
 RegisterNetEvent('unique_clothestore:wearClotheItem')
 AddEventHandler('unique_clothestore:wearClotheItem', function(clotheType, drawable, texture)
     local slot
@@ -113,9 +95,9 @@ RegisterNUICallback('buyClothes', function(data)
 
     if Config.Core == "ESX" then
         if data.type == 'bank' then
-    
 
-            ESX.TriggerServerCallback('unique_clothestore:payForClothes', function(callback) 
+
+            ESX.TriggerServerCallback('unique_clothestore:payForClothes', function(callback)
                 if callback then
                     DeleteSkinCam()
                     TriggerEvent('skinchanger:getSkin', function(skin)
@@ -140,7 +122,7 @@ RegisterNUICallback('buyClothes', function(data)
                 end
             end, data.price, data.type, 'none')
         elseif data.type == 'cash' then
-            ESX.TriggerServerCallback('unique_clothestore:payForClothes', function(callback) 
+            ESX.TriggerServerCallback('unique_clothestore:payForClothes', function(callback)
                 if callback then
                     DeleteSkinCam()
                     TriggerEvent('skinchanger:getSkin', function(skin)
@@ -207,7 +189,7 @@ RegisterNUICallback('cancelClothes', function(data)
 end)
 
 RegisterNUICallback("change", function(data)
-    
+
     Character_ESX[data.type] = data.new
     if Config.Core == "ESX" then
         if Config.SkinManager == "esx_skin" then
@@ -341,7 +323,7 @@ function OpenManage()
                 end)
             end)
         elseif Config.Menu == "esx_menu_default" then
-        
+
            ESX.TriggerServerCallback("unique_clothestore:getPlayerDressing", function(dressing)
                local elements = {}
                if Config.SkinManager == "esx_skin" then
@@ -358,8 +340,8 @@ function OpenManage()
                     end
                 end
                 ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'select_option', {
-                    title = Config.Translate['manage_header'].name, 
-                    elements = elements, 
+                    title = Config.Translate['manage_header'].name,
+                    elements = elements,
                     align = Config.ESXMenuDefault_Align
                 }, function(data, menu)
                     if data.current.label then
@@ -368,8 +350,8 @@ function OpenManage()
                             {label = Config.Translate['remove_no'].name, value = "no"}
                         }
                         ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'select_option2', {
-                            title = (Config.Translate['title_remove'].name):format(data.current.label), 
-                            elements = elements2, 
+                            title = (Config.Translate['title_remove'].name):format(data.current.label),
+                            elements = elements2,
                             align = Config.ESXMenuDefault_Align
                         }, function(data2, menu2)
                             if data2.current.value == "yes" and data2.current.id then
@@ -397,12 +379,12 @@ function OpenManage()
                 if Config.SkinManager == "esx_skin" then
                     for i = 1, #dressing, 1 do
                         elements[#elements + 1] = {
-                            title = dressing[i], 
+                            title = dressing[i],
                             onSelect = function()
                                 local elements2 = {
                                     {
                                         icon = Config.Translate['remove_yes'].icon,
-                                        title = Config.Translate['remove_yes'].name, 
+                                        title = Config.Translate['remove_yes'].name,
                                         onSelect = function()
                                             TriggerServerEvent('unique_clothestore:removeClothe', dressing[i])
                                             isMenuOpened = false
@@ -413,7 +395,7 @@ function OpenManage()
                                     },
                                     {
                                         icon = Config.Translate['remove_no'].icon,
-                                        title = Config.Translate['remove_no'].name, 
+                                        title = Config.Translate['remove_no'].name,
                                         onSelect = function()
                                             OpenManage()
                                         end,
@@ -440,12 +422,12 @@ function OpenManage()
                 elseif Config.SkinManager == "fivem-appearance" then
                     for i = 1, #dressing, 1 do
                         elements[#elements + 1] = {
-                            title = dressing[i].name, 
+                            title = dressing[i].name,
                             onSelect = function()
                                 local elements2 = {
                                     {
                                         icon = Config.Translate['remove_yes'].icon,
-                                        title = Config.Translate['remove_yes'].name, 
+                                        title = Config.Translate['remove_yes'].name,
                                         onSelect = function()
                                             TriggerServerEvent('unique_clothestore:removeClothe', dressing[i].name)
                                             isMenuOpened = false
@@ -456,7 +438,7 @@ function OpenManage()
                                     },
                                     {
                                         icon = Config.Translate['remove_no'].icon,
-                                        title = Config.Translate['remove_no'].name, 
+                                        title = Config.Translate['remove_no'].name,
                                         onSelect = function()
                                             OpenManage()
                                         end,
@@ -483,12 +465,12 @@ function OpenManage()
                 elseif Config.SkinManager == "illenium-appearance" then
                     for i = 1, #dressing, 1 do
                         elements[#elements + 1] = {
-                            title = dressing[i].outfitname, 
+                            title = dressing[i].outfitname,
                             onSelect = function()
                                 local elements2 = {
                                     {
                                         icon = Config.Translate['remove_yes'].icon,
-                                        title = Config.Translate['remove_yes'].name, 
+                                        title = Config.Translate['remove_yes'].name,
                                         onSelect = function()
                                             TriggerServerEvent('unique_clothestore:removeClothe', dressing[i].outfitname)
                                             isMenuOpened = false
@@ -499,7 +481,7 @@ function OpenManage()
                                     },
                                     {
                                         icon = Config.Translate['remove_no'].icon,
-                                        title = Config.Translate['remove_no'].name, 
+                                        title = Config.Translate['remove_no'].name,
                                         onSelect = function()
                                             OpenManage()
                                         end,
@@ -592,12 +574,12 @@ function OpenManage()
                     local elements = {}
                     for k, v in pairs(result) do
                         elements[#elements + 1] = {
-                            title = Config.Translate['manage_header'].name, 
+                            title = Config.Translate['manage_header'].name,
                             onSelect = function()
                                 local elements2 = {
                                     {
                                         icon = Config.Translate['remove_yes'].icon,
-                                        title = Config.Translate['remove_yes'].name, 
+                                        title = Config.Translate['remove_yes'].name,
                                         onSelect = function()
                                             TriggerServerEvent('unique_clothestore:removeClothe', v.outfitId)
                                             isMenuOpened = false
@@ -608,7 +590,7 @@ function OpenManage()
                                     },
                                     {
                                         icon = Config.Translate['remove_no'].icon,
-                                        title = Config.Translate['remove_no'].name, 
+                                        title = Config.Translate['remove_no'].name,
                                         onSelect = function()
                                             OpenManage()
                                         end,
@@ -699,12 +681,12 @@ function OpenManage()
                     local elements = {}
                     for k, v in pairs(result) do
                         elements[#elements + 1] = {
-                            title = v.outfitname, 
+                            title = v.outfitname,
                             onSelect = function()
                                 local elements2 = {
                                     {
                                         icon = Config.Translate['remove_yes'].icon,
-                                        title = Config.Translate['remove_yes'].name, 
+                                        title = Config.Translate['remove_yes'].name,
                                         onSelect = function()
                                             TriggerServerEvent('unique_clothestore:removeClothe', v.id)
                                             isMenuOpened = false
@@ -715,7 +697,7 @@ function OpenManage()
                                     },
                                     {
                                         icon = Config.Translate['remove_no'].icon,
-                                        title = Config.Translate['remove_no'].name, 
+                                        title = Config.Translate['remove_no'].name,
                                         onSelect = function()
                                             OpenManage()
                                         end,
@@ -788,7 +770,7 @@ function OpenWardrobe()
                     local elements = {{unselectable = true, icon = Config.Translate['wardrobe_header'].icon, title = Config.Translate['wardrobe_header'].name}}
                     for i = 1, #dressing, 1 do
                         elements[#elements + 1] = {
-                            title = dressing[i].name, 
+                            title = dressing[i].name,
                             value = {
                                 ped = dressing[i].ped,
                                 components = dressing[i].components,
@@ -810,7 +792,7 @@ function OpenWardrobe()
                     local elements = {{unselectable = true, icon = Config.Translate['wardrobe_header'].icon, title = Config.Translate['wardrobe_header'].name}}
                     for i = 1, #dressing, 1 do
                         elements[#elements + 1] = {
-                            title = dressing[i].outfitname, 
+                            title = dressing[i].outfitname,
                             value = {
                                 model = dressing[i].model,
                                 components = dressing[i].components,
@@ -845,7 +827,7 @@ function OpenWardrobe()
                                         TriggerServerEvent('esx_skin:save', skin)
 
                                     end)
-                                end, data.current.value) 
+                                end, data.current.value)
                             end)
                         end
                     end, function(data, menu)
@@ -861,7 +843,7 @@ function OpenWardrobe()
                     local elements = {}
                     for i = 1, #dressing, 1 do
                         elements[#elements + 1] = {
-                            label = dressing[i].name, 
+                            label = dressing[i].name,
                             value = {
                                 ped = dressing[i].ped,
                                 components = dressing[i].components,
@@ -886,7 +868,7 @@ function OpenWardrobe()
                     local elements = {}
                     for i = 1, #dressing, 1 do
                         elements[#elements + 1] = {
-                            label = dressing[i].outfitname, 
+                            label = dressing[i].outfitname,
                             value = {
                                 model = dressing[i].model,
                                 components = dressing[i].components,
@@ -913,7 +895,7 @@ function OpenWardrobe()
                 ESX.TriggerServerCallback("unique_clothestore:getPlayerDressing", function(dressing)
                     for i = 1, #dressing, 1 do
                         elements[#elements + 1] = {
-                            title = dressing[i], 
+                            title = dressing[i],
                             onSelect = function()
                                 TriggerEvent("skinchanger:getSkin", function(skin)
                                     ESX.TriggerServerCallback("unique_clothestore:getPlayerOutfit", function(clothes)
@@ -954,7 +936,7 @@ function OpenWardrobe()
                 ESX.TriggerServerCallback("unique_clothestore:getPlayerDressing", function(dressing)
                     for i = 1, #dressing, 1 do
                         elements[#elements + 1] = {
-                            title = dressing[i].name, 
+                            title = dressing[i].name,
                             onSelect = function()
                                 TriggerEvent('fivem-appearance:setOutfit', {
                                     ped = dressing[i].ped,
@@ -991,7 +973,7 @@ function OpenWardrobe()
                 ESX.TriggerServerCallback("unique_clothestore:getPlayerDressing", function(dressing)
                     for i = 1, #dressing, 1 do
                         elements[#elements + 1] = {
-                            title = dressing[i].outfitname, 
+                            title = dressing[i].outfitname,
                             onSelect = function()
                                 TriggerEvent('illenium-appearance:client:changeOutfit', {
                                     model = dressing[i].model,
@@ -1079,7 +1061,7 @@ function OpenWardrobe()
                             props = v.props
                         }
                         elements[#elements + 1] = {
-                            header = v.outfitname, 
+                            header = v.outfitname,
                             icon = "fas fa-shirt",
                             params = {
                                 isAction = true,
@@ -1108,7 +1090,7 @@ function OpenWardrobe()
                 QBCore.Functions.TriggerCallback('qb-clothing:server:getOutfits', function(result)
                     for k, v in pairs(result) do
                         elements[#elements + 1] = {
-                            title = v.outfitname, 
+                            title = v.outfitname,
                             onSelect = function()
                                 TriggerEvent('qb-clothing:client:loadOutfit', {outfitData = v.skin, outfitId = v.outfitId})
                                 TriggerServerEvent("qb-clothing:saveSkin", v.model, json.encode(v.skin))
@@ -1142,7 +1124,7 @@ function OpenWardrobe()
                 QBCore.Functions.TriggerCallback('unique_clothestore:getPlayerDressing', function(dressing)
                     for k, v in pairs(dressing) do
                         elements[#elements + 1] = {
-                            title = v.outfitname, 
+                            title = v.outfitname,
                             onSelect = function()
                                 TriggerEvent('illenium-appearance:client:changeOutfit', {
                                     model = v.model,
@@ -1312,7 +1294,7 @@ function SelectCategory(store)
         if Config.Core == "QB-Core" and Config.SkinManager == 'fivem-appearance' then
             elements = {
                 {
-                    icon = Config.Translate['open_wardrobe'].icon, 
+                    icon = Config.Translate['open_wardrobe'].icon,
                     title = Config.Translate['open_wardrobe'].name,
                     onSelect = function()
                         OpenWardrobe()
@@ -1323,7 +1305,7 @@ function SelectCategory(store)
                     end
                 },
                 {
-                    icon = Config.Translate['open_store'].icon, 
+                    icon = Config.Translate['open_store'].icon,
                     title = Config.Translate['open_store'].name,
                     onSelect = function()
                         OpenClothestore(store)
@@ -1337,7 +1319,7 @@ function SelectCategory(store)
         else
             elements = {
                 {
-                    icon = Config.Translate['open_wardrobe'].icon, 
+                    icon = Config.Translate['open_wardrobe'].icon,
                     title = Config.Translate['open_wardrobe'].name,
                     onSelect = function()
                         OpenWardrobe()
@@ -1348,7 +1330,7 @@ function SelectCategory(store)
                     end
                 },
                 {
-                    icon = Config.Translate['open_manage'].icon, 
+                    icon = Config.Translate['open_manage'].icon,
                     title = Config.Translate['open_manage'].name,
                     onSelect = function()
                         OpenManage()
@@ -1359,7 +1341,7 @@ function SelectCategory(store)
                     end
                 },
                 {
-                    icon = Config.Translate['open_store'].icon, 
+                    icon = Config.Translate['open_store'].icon,
                     title = Config.Translate['open_store'].name,
                     onSelect = function()
                         OpenClothestore(store)
@@ -1437,7 +1419,6 @@ function openSaveMenu()
                     end)
                 elseif Config.Menu == "esx_menu_default" then
 
-
                     ESX.TriggerServerCallback('esx_eden_clotheshop:checkPropertyDataStore', function(foundStore, foundGang)
                         local elements = {
                             {label = Config.Translate['menu:yes'].name, value = 'yes'},
@@ -1446,7 +1427,6 @@ function openSaveMenu()
                         if foundGang then
                             table.insert(elements, {label = 'GANG', value = 'gang'})
                         end
-
 
                         ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'shop', {title = Config.Translate['menu:header'].name, elements = elements, align = Config.ESXMenuDefault_Align}, function(data, menu)
                             if data.current.value == 'yes' then
@@ -1497,12 +1477,12 @@ function openSaveMenu()
                                     function(data4, menu4)
                                                     local elemen333ts3 = {
                                             {label = 'Lebas Gang 1', value = '1'},
-                                            -- {label = 'Lebas Gang II', value = '2'},
+
                                         }
 
                                                     ESX.UI.Menu.Open(
                                                         'default', GetCurrentResourceName(), 'gang_ssssranks',
-                                                        
+
                                                         {
                                                             title = 'Be Onvane Kodom Lebas Save Shavad?',
                                                             align = 'left',
@@ -1514,7 +1494,7 @@ function openSaveMenu()
                                                                 TriggerEvent('skinchanger:getSkin', function(skin)
                                                                     TriggerServerEvent('gangs:saveOutfit', data4.current.value, skin)
                                                                 end)
-                    
+
                                                                 ESX.ShowNotification('Taghirat Baraye ' .. data5.current.label .. ' Anjam Shod' ,'success')
                                                                 menu5.close()
                                                             elseif data5.current.value == '2' then
@@ -1522,31 +1502,29 @@ function openSaveMenu()
                                                                 TriggerEvent('skinchanger:getSkin', function(skin)
                                                                     TriggerServerEvent('gangs:saveOutfit2', data4.current.value, skin)
                                                                 end)
-                    
+
                                                                 ESX.ShowNotification('Taghirat Baraye ' .. data5.current.label .. ' Anjam Shod' ,'success')
                                                                 menu5.close()
                                                             end
-                                                                
+
                                                         end,
                                                         function(data5, menu5)
-                    
+
                                                             menu4.close()
-                                            
-                                            
+
+
                                                         end
                                                     )
 
 
-                                            
                                     end,
                                     function(data4, menu4)
 
                                         menu4.close()
-                        
-                        
+
+
                                     end
                                 )
-
 
                             end
                         end, function(data, menu)
@@ -1558,12 +1536,10 @@ function openSaveMenu()
 
 
 
-                    
-                    
                 elseif Config.Menu == "ox_lib" then
                     local elements = {
                         {
-                            icon = Config.Translate['menu:yes'].icon, 
+                            icon = Config.Translate['menu:yes'].icon,
                             title = Config.Translate['menu:yes'].name,
                             onSelect = function()
                                 isMenuOpened = true
@@ -1596,7 +1572,7 @@ function openSaveMenu()
                             end
                         },
                         {
-                            icon = Config.Translate['menu:no'].icon, 
+                            icon = Config.Translate['menu:no'].icon,
                             title = Config.Translate['menu:no'].name,
                             onSelect = function()
                                 isMenuOpened = false
@@ -1679,7 +1655,7 @@ function openSaveMenu()
             elseif Config.Menu == "ox_lib" then
                 local elements = {
                     {
-                        icon = Config.Translate['menu:yes'].icon, 
+                        icon = Config.Translate['menu:yes'].icon,
                         title = Config.Translate['menu:yes'].name,
                         onSelect = function()
                             isMenuOpened = true
@@ -1708,7 +1684,7 @@ function openSaveMenu()
                         end
                     },
                     {
-                        icon = Config.Translate['menu:no'].icon, 
+                        icon = Config.Translate['menu:no'].icon,
                         title = Config.Translate['menu:no'].name,
                         onSelect = function()
                             isMenuOpened = false
@@ -1733,7 +1709,7 @@ function openSaveMenu()
 end
 
 function OpenClothestore(store)
-    -- print(json.encode(store))
+
     TriggerEvent("resetpedHandler", "s_m_m_chemsec_01")
     if Config.Core == "ESX" then
         if Config.SkinManager == "esx_skin" or Config.SkinManager == "fivem-appearance" or Config.SkinManager == "illenium-appearance" then
@@ -1888,7 +1864,6 @@ AddEventHandler('unique_clothestore:openMenu', function(data)
 end)
 
 Citizen.CreateThread(function()
-    
 
 
         while true do
@@ -1905,15 +1880,14 @@ Citizen.CreateThread(function()
                 end
                 if dst < 2 then
                     if IsControlJustReleased(0, 38) then
-                        -- TriggerEvent("resetpedHandler", "s_m_m_chemsec_01")
-                        -- ESX.ShowNotification('Reset Ped Shodid')
+
+
                         TriggerEvent('unique_clothestore:openMenu', v)
                     end
                 end
             end
             Citizen.Wait(Sleep)
         end
-
 
 end)
 

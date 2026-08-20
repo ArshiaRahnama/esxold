@@ -11,9 +11,9 @@ files {
 	"ui/css/style.css",
 	"ui/css/index.css",
 	"ui/js/debounce.min.js",
-		-- Job Images
+
 	'ui/assets/imgs/*.png',
-	
+
 }
 
 client_scripts {

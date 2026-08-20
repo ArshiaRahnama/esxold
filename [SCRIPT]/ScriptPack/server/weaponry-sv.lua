@@ -7,12 +7,9 @@ ESX.RegisterUsableItem('lsd', function(source)
 	TriggerClientEvent('weaponry:UseLsd', source)
 end)
 
-
 RegisterNetEvent("weaponry:DeleteLsd")
 AddEventHandler("weaponry:DeleteLsd", function()
 	local xPlayer = ESX.GetPlayerFromId(source)
 	xPlayer.removeInventoryItem('lsd', 1)
 end)
-
-
 

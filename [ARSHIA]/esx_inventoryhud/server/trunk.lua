@@ -69,7 +69,6 @@ AddEventHandler('inventory-trunk:updateSlot', function(plate, data)
     end)
 end)
 
--- move item/weapon FROM the player's main inventory INTO the trunk/glovebox
 RegisterServerEvent('inventory-trunk:put')
 AddEventHandler('inventory-trunk:put', function(plate, data)
     local src = source
@@ -104,7 +103,6 @@ AddEventHandler('inventory-trunk:put', function(plate, data)
     end)
 end)
 
--- move item/weapon FROM the trunk/glovebox INTO the player's main inventory
 RegisterServerEvent('inventory-trunk:get')
 AddEventHandler('inventory-trunk:get', function(plate, data)
     local src = source

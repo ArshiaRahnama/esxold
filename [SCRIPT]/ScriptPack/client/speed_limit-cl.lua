@@ -18,11 +18,11 @@ Citizen.CreateThread(function()
 		local playerPed = PlayerPedId()
 		local vehicle = GetVehiclePedIsIn(playerPed, false)
 
-		-- This should only happen on vehicle first entry to disable any old values
+
 		if GetPedInVehicleSeat(vehicle, -1) == playerPed and IsPedInAnyVehicle(playerPed, false) then
 			if resetSpeedOnEnter then
 				maxSpeed = GetVehicleHandlingFloat(vehicle,"CHandlingData","fInitialDriveMaxFlatVel")
-				--SetEntityMaxSpeed(vehicle, maxSpeed)
+
 				SetEntityMaxSpeed(vehicle, 450.0)
 				resetSpeedOnEnter = false
 				enabled = false
@@ -35,9 +35,9 @@ Citizen.CreateThread(function()
 					showHelpNotification(_U('speedlimiter_set', cruise))
 					enabled = true
 				else
-					
+
 					maxSpeed = GetVehicleHandlingFloat(vehicle,"CHandlingData","fInitialDriveMaxFlatVel")
-					--SetEntityMaxSpeed(vehicle, maxSpeed)
+
 					SetEntityMaxSpeed(vehicle, 450.0)
 					showHelpNotification(_U('speedlimiter_disabled'))
 					enabled = false

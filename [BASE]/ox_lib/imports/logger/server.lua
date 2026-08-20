@@ -3,13 +3,13 @@ local buffer
 local bufferSize = 0
 
 local function removeColorCodes(str)
-    -- replace ^[0-9] with nothing
+
     str = string.gsub(str, "%^%d", "")
 
-    -- replace ^#[0-9A-F]{3,6} with nothing
+
     str = string.gsub(str, "%^#[%dA-Fa-f]+", "")
 
-    -- replace ~[a-z]~ with nothing
+
     str = string.gsub(str, "~[%a]~", "")
 
     return str
@@ -42,7 +42,6 @@ local function getAuthorizationHeader(user, password)
     return "Basic " .. base64encode(user .. ":" .. password)
 end
 
-
 local function badResponse(endpoint, status, response)
     warn(('unable to submit logs to %s (status: %s)\n%s'):format(endpoint, status, json.encode(response, { indent = true })))
 end
@@ -64,7 +63,7 @@ local function formatTags(source, tags)
 
             local num = 1
 
-            ---@cast source string
+
             for i = 0, GetNumPlayerIdentifiers(source) - 1 do
                 local identifier = GetPlayerIdentifier(source, i)
 
@@ -102,7 +101,7 @@ if service == 'fivemanage' then
 
                 SetTimeout(500, function()
                     PerformHttpRequest(endpoint, function(status, _, _, response)
-                        if status ~= 200 then 
+                        if status ~= 200 then
                             if type(response) == 'string' then
                                 response = json.decode(response) or response
                                 badResponse(endpoint, status, response)
@@ -198,22 +197,22 @@ if service == 'loki' then
 
     local endpoint = ('%s/loki/api/v1/push'):format(lokiEndpoint)
 
-    -- Converts a string of comma seperated kvp string to a table of kvps
-    -- example `discord:blahblah,fivem:blahblah,license:blahblah` -> `{discord="blahblah",fivem="blahblah",license="blahblah"}`
+
+
     local function convertDDTagsToKVP(tags)
         if not tags or type(tags) ~= 'string' then
             return {}
         end
-        local tempTable = { string.strsplit(',', tags) } -- outputs a number index table wth k:v strings as values
-        local bTable = table.create(0, #tempTable) -- buffer table
+        local tempTable = { string.strsplit(',', tags) }
+        local bTable = table.create(0, #tempTable)
 
-        -- Loop through table and grab only values
+
         for _, v in pairs(tempTable) do
-            local key, value = string.strsplit(':', v) -- splits string on ':' character
+            local key, value = string.strsplit(':', v)
             bTable[key] = value
         end
 
-        return bTable -- Return the new table of kvps
+        return bTable
     end
 
     function lib.logger(source, event, message, ...)
@@ -221,7 +220,7 @@ if service == 'loki' then
             buffer = {}
 
             SetTimeout(500, function()
-                -- Strip string keys from buffer
+
                 local tempBuffer = {}
                 for _,v in pairs(buffer) do
                     tempBuffer[#tempBuffer+1] = v
@@ -238,23 +237,23 @@ if service == 'loki' then
             end)
         end
 
-        -- Generates a nanosecond unix timestamp
-        ---@diagnostic disable-next-line: param-type-mismatch
+
+
         local timestamp = ('%s000000000'):format(os.time(os.date('*t')))
 
-        -- Initializes values table with the message
+
         local values = {message = message}
 
-        -- Format the args into strings
+
         local tags = formatTags(source, ... and string.strjoin(',', string.tostringall(...)) or nil)
         local tagsTable = convertDDTagsToKVP(tags)
 
-        -- Concatenates tags kvp table to the values table
+
         for k,v in pairs(tagsTable) do
-            values[k] = v -- Store the tags in the values table ready for logging
+            values[k] = v
         end
 
-        -- initialise stream payload
+
         local payload = {
             stream = {
                 server = hostname,
@@ -269,13 +268,13 @@ if service == 'loki' then
             }
         }
 
-        -- Safety check incase it throws index issue
+
         if not buffer then
             buffer = {}
         end
 
-        -- Checks if the event exists in the buffer and adds to the values if found
-        -- else initialises the stream
+
+
         if not buffer[event] then
             buffer[event] = payload
         else

@@ -1,28 +1,18 @@
---[[
 
-    !!!WARNING!!!
-
-    HORRIBLE, STUPID, HACKY AND PREFORMANCE DEGRADING CODE AHEAD
-
-    PROCEED WITH CAUTION
-    
-]]
 
 RequestStreamedTextureDict("CommonMenu")
 
 JayMenu = { }
 
--- Options
 JayMenu.debug = false
 
--- Local variables
 local menus = { }
-local keys = { 
-    up = 172, 
-    down = 173, 
-    left = 174, 
-    right = 175, 
-    select = 176, 
+local keys = {
+    up = 172,
+    down = 173,
+    left = 174,
+    right = 175,
+    select = 176,
     back = 177,
     mup = 181,
     mdown = 180,
@@ -51,7 +41,6 @@ local continuity = {}
 
 local function HudColourToTable(r,g,b,a) return { r, g, b, a or 255 } end
 
--- Local functions
 local function debugPrint(text)
     if JayMenu.debug then
         Citizen.Trace('[SYSTEM] '..tostring(text))
@@ -73,24 +62,6 @@ local function isMenuVisible(id)
     end
 end
 
---[[local function setMenuVisible(id, visible, holdCurrent)
-    if id and menus[id] then
-        setMenuProperty(id, 'visible', visible)
-
-        if not holdCurrent and menus[id] then
-            setMenuProperty(id, 'currentOption', 1)
-        end
-
-        if visible then
-            if id ~= currentMenu and isMenuVisible(currentMenu) then
-                setMenuVisible(currentMenu, false)
-            end
-
-            currentMenu = id
-        end
-    end
-end]]
-
 local function setMenuVisible(id, visible, holdCurrent)
     if id and menus[id] then
         setMenuProperty(id, 'visible', visible)
@@ -107,10 +78,9 @@ local function setMenuVisible(id, visible, holdCurrent)
     end
 end
 
-
 function drawText(text, x, y, font, color, scale, center, shadow, alignRight)
     BeginTextCommandDisplayText("STRING")
-        if color then 
+        if color then
             SetTextColour(color[1], color[2], color[3], color[4])
         else
             SetTextColour(255, 255, 255, 255)
@@ -136,7 +106,7 @@ end
 
 function getLineHeight(text, font, color, scale, center, shadow, alignRight)
 	BeginTextCommandLineCount("STRING")
-        if color then 
+        if color then
             SetTextColour(color[1], color[2], color[3], color[4])
         else
             SetTextColour(255, 255, 255, 255)
@@ -180,14 +150,14 @@ local function drawTitle()
 		if menus[currentMenu].titleFont == "!sprite!" then
 			local color = menus[currentMenu].titleBackgroundColor
 			local textDict, sprite = table.unpack(menus[currentMenu].titleColor)
-			--print("txd:"..textDict.." spr:"..sprite.." col:"..color.r..","..color.g..","..color.b..","..color.a)
+
 			RequestStreamedTextureDict(textDict, false)
 			HasStreamedTextureDictLoaded(textDict)
 			DrawSprite(textDict, sprite, x, y, menuWidth, titleHeight, 0, color[1], color[2], color[3], color[4])
 		elseif menus[currentMenu].titleFont == "~sprite~" then
 			local color = menus[currentMenu].titleBackgroundColor
 			local textDict, sprite = table.unpack(menus[currentMenu].titleColor)
-			--print("txd:"..textDict.." spr:"..sprite.." col:"..color.r..","..color.g..","..color.b..","..color.a)
+
 			RequestStreamedTextureDict(textDict, false)
 			HasStreamedTextureDictLoaded(textDict)
 			DrawSprite(textDict, sprite, x, y, menuWidth, titleHeight, 0, color[1], color[2], color[3], color[4])
@@ -197,7 +167,7 @@ local function drawTitle()
                 SetUiLayer(0)
                 DrawSprite("CommonMenu", "interaction_bgd", x, y, menuWidth, titleHeight, 0.0, 255, 255, 255, 255, 0)
             end
-			--drawRect(x, y, menuWidth, titleHeight, menus[currentMenu].titleBackgroundColor)
+
 			drawText(menus[currentMenu].title, x, y - titleHeight / 2 + titleYOffset, menus[currentMenu].titleFont, menus[currentMenu].titleColor, titleScale, true)
         end
 
@@ -205,21 +175,19 @@ local function drawTitle()
     end
 end
 
--- local function drawSubTitle()
-    -- if menus[currentMenu] then
-        -- local x = menus[currentMenu].x + (menuWidth / 2)
-        -- local y = menus[currentMenu].y + (titleHeight + buttonHeight / 2)
 
-        -- local subTitleColor = { r = menus[currentMenu].titleBackgroundColor.r, g = menus[currentMenu].titleBackgroundColor.g, b = menus[currentMenu].titleBackgroundColor.b, a = 255 }
-        -- local subTitleColor = {255, 255, 255, 255}
 
-        -- drawRect(x, y, menuWidth, buttonHeight, menus[currentMenu].subTitleBackgroundColor)
-        -- drawText(menus[currentMenu].subTitle, menus[currentMenu].x + buttonTextXOffset, y - buttonHeight / 2 + buttonTextYOffset, buttonFont, false, buttonScale, false)
-        -- drawText(tostring(menus[currentMenu].currentOption)..' / '..tostring(optionCount), menus[currentMenu].x + menuWidth, y - buttonHeight / 2 + buttonTextYOffset, buttonFont, false, buttonScale, false, false, true)
 
-        -- local x,y,subTitleColor = nil
-    -- end
--- end
+
+
+
+
+
+
+
+
+
+
 
 local function drawSubTitle()
     if menus[currentMenu] then
@@ -227,8 +195,8 @@ local function drawSubTitle()
         local y = menus[currentMenu].y + (titleHeight + buttonHeight / 2)
         local subtitle = menus[currentMenu].subTitle
 
-        --local subTitleColor = { r = menus[currentMenu].titleBackgroundColor.r, g = menus[currentMenu].titleBackgroundColor.g, b = menus[currentMenu].titleBackgroundColor.b, a = 255 }
-        --local subTitleColor = {255, 255, 255, 255}    
+
+
 
         drawRect(x, y, menuWidth, buttonHeight, menus[currentMenu].subTitleBackgroundColor)
         if subtitle:find("|") then
@@ -247,7 +215,7 @@ local function drawDescription()
     if menus[currentMenu] then
         local x = menus[currentMenu].x + menuWidth / 2
 		local menuHeight = buttonHeight*(((optionCount <= menus[currentMenu].maxOptionCount) and optionCount or menus[currentMenu].maxOptionCount + 1) + 1)
-		
+
 		local lines = getLineHeight(currentDesc, buttonFont, menus[currentMenu].menuTextColor, buttonScale, false, true)
 
 		local descriptionHeight = lines*(buttonTextYOffset*5) + buttonTextYOffset*2
@@ -258,7 +226,7 @@ local function drawDescription()
 
         if HasStreamedTextureDictLoaded("CommonMenu") then
 			SetUiLayer(0)
-			
+
 			DrawRect(x, dividerY, menuWidth, buttonTextYOffset, 0, 0, 0, 255)
 			DrawSprite("CommonMenu", "Gradient_Bgd", x, y, menuWidth, descriptionHeight, 0.0, 255, 255, 255, 220, 0)
 
@@ -337,7 +305,7 @@ local function drawButton(text, subText)
                 SetUiLayer(1)
                 DrawSprite("CommonMenu", "Gradient_Nav", x, y, menuWidth, buttonHeight, 0.0, 255, 255, 255, 255, 0)
             end
-            --drawRect(x, y, menuWidth, buttonHeight, backgroundColor)
+
             drawText(text, menus[currentMenu].x + buttonTextXOffset, y - (buttonHeight / 2) + buttonTextYOffset, buttonFont, textColor, buttonScale, false, shadow)
 
             if subText then
@@ -366,11 +334,8 @@ local function drawDisabledButton(text, subText)
         local subTextColor = HudColourToTable(GetHudColour(5))
         local shadow = false
 
-        --[[if menus[currentMenu].currentOption == optionCount and HasStreamedTextureDictLoaded("CommonMenu") then
-            SetUiLayer(1)
-            DrawSprite("CommonMenu", "Gradient_Nav", x, y, menuWidth, buttonHeight, 0.0, 255, 255, 255, 255, 0)
-        end]]
-        --drawRect(x, y, menuWidth, buttonHeight, backgroundColor)
+
+
         drawText(text, menus[currentMenu].x + buttonTextXOffset, y - (buttonHeight / 2) + buttonTextYOffset, buttonFont, textColor, buttonScale, false, shadow)
 
         if subText then
@@ -413,7 +378,7 @@ local function drawSpriteButton(text, textDict, sprite, focusSprite)
             SetUiLayer(1)
             DrawSprite("CommonMenu", "Gradient_Nav", x, y, menuWidth, buttonHeight, 0.0, 255, 255, 255, 255, 0)
         end
-        
+
         drawText(text, menus[currentMenu].x + buttonTextXOffset, y - (buttonHeight / 2) + buttonTextYOffset, buttonFont, textColor, buttonScale, false, shadow)
 
         if textDict and sprite then
@@ -436,20 +401,19 @@ local function drawSpriteButton(text, textDict, sprite, focusSprite)
 end
 
 local function stopConflictingInputs()
-    -- isolates menu navigation buttons and stops jumping, weapon selection and opening of the pause menu
+
 
     for _,key in pairs(keys) do
         SetInputExclusive(0, key)
     end
-    DisableControlAction(0, 22, true) 
+    DisableControlAction(0, 22, true)
     DisableControlAction(0, 37, true)
     DisableControlAction(0, 38, true)
     DisableControlAction(0, 200, true)
 end
 
--- API
 function JayMenu.CreateMenu(id, title, closeCallback)
-    -- Default settings
+
     menus[id] = { }
     menus[id].title = title
     menus[id].subTitle = 'INTERACTION MENU'
@@ -460,7 +424,7 @@ function JayMenu.CreateMenu(id, title, closeCallback)
 
     menus[id].aboutToBeClosed = false
 
-    -- Top left corner
+
     menus[id].x = 0.0145
     menus[id].y = 0.075
 
@@ -479,19 +443,18 @@ function JayMenu.CreateMenu(id, title, closeCallback)
 
     menus[id].subTitleBackgroundColor = {menus[id].menuBackgroundColor[1], menus[id].menuBackgroundColor[2], menus[id].menuBackgroundColor[3], 255 }
 
-    menus[id].buttonPressedSound = { name = "SELECT", set = "HUD_FRONTEND_DEFAULT_SOUNDSET" } --https://pastebin.com/0neZdsZ5
+    menus[id].buttonPressedSound = { name = "SELECT", set = "HUD_FRONTEND_DEFAULT_SOUNDSET" }
 
     menus[id].closeCallback = closeCallback or function() return true end
 
     debugPrint(tostring(id)..' menu created')
 end
 
-
 function JayMenu.CreateSubMenu(id, parent, subTitle, closeCallback)
     if menus[parent] then
         JayMenu.CreateMenu(id, menus[parent].title)
 
-        -- Well it's copy constructor like :)
+
         if subTitle then
             setMenuProperty(id, 'subTitle', string.upper(subTitle))
         else
@@ -513,12 +476,11 @@ function JayMenu.CreateSubMenu(id, parent, subTitle, closeCallback)
         setMenuProperty(id, 'menuBackgroundColor', menus[parent].menuBackgroundColor)
         setMenuProperty(id, 'subTitleBackgroundColor', menus[parent].subTitleBackgroundColor)
         setMenuProperty(id, 'closeCallback', closeCallback or function() return true end)
-        -- :(
+
     else
         debugPrint('Failed to create '..tostring(id)..' submenu: '..tostring(parent)..' parent menu doesn\'t exist')
     end
 end
-
 
 function JayMenu.CurrentMenu()
     return currentMenu
@@ -528,14 +490,13 @@ function JayMenu.MenuTable()
     return menus
 end
 
-
 function JayMenu.OpenMenu(id)
     if id and menus[id] then
         PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", true)
         setMenuVisible(id, true)
 
-        -- continuity.lastPedWeapon = GetCurrentPedWeapon(PlayerPedId())
-        -- SetPedCurrentWeaponVisible(PlayerPedId(), false, true)
+
+
 
         debugPrint(tostring(id)..' menu opened')
     else
@@ -543,11 +504,9 @@ function JayMenu.OpenMenu(id)
     end
 end
 
-
 function JayMenu.IsMenuOpened(id)
     return isMenuVisible(id)
 end
-
 
 function JayMenu.IsAnyMenuOpened()
     for id, _ in pairs(menus) do
@@ -585,7 +544,6 @@ function JayMenu.IsThisMenuAboutToBeClosed(id)
     end
 end
 
-
 function JayMenu.CloseMenu()
     if menus[currentMenu] then
         if menus[currentMenu].aboutToBeClosed then
@@ -598,11 +556,11 @@ function JayMenu.CloseMenu()
 			currentKey = nil
 			currentDesc = nil
 
-            -- keep continuity
+
             if continuity.lastPedWeapon then
                 SetCurrentPedWeapon(PlayerPedId(), continuity.lastPedWeapon, true)
             end
-            
+
             continuity = {}
 
             Citizen.CreateThread(function()
@@ -760,20 +718,20 @@ function JayMenu.ComboBox(text, items, currentIndex, selectedIndex, callback, di
     end
 
     callback(currentIndex, selectedIndex)
-    -- local itemsCount,isCurrent,getDisplayText,selectedItem = nil
+
     return false, isCurrent
 end
 
 function JayMenu.MenuButton(text, id, secondtext)
     if menus[id] then
-		local clicked, hovered = JayMenu.Button(text, (secondtext and secondtext or "→")) 
+		local clicked, hovered = JayMenu.Button(text, (secondtext and secondtext or "→"))
 		if clicked then
             setMenuVisible(currentMenu, false)
             setMenuVisible(id, true, true)
 
             return true, true
 		end
-		
+
 		return false, hovered
     else
         debugPrint('Failed to create '..tostring(text)..' menu button: '..tostring(id)..' submenu doesn\'t exist')
@@ -792,10 +750,7 @@ function JayMenu.SetDescription(text)
 end
 
 function JayMenu.CheckBox(text, bool, callback)
-    --[[local checked = '~r~Off'
-    if bool then
-        checked = '~g~On'
-    end]]
+
 
     local sprite = bool and "shop_box_tick" or "shop_box_blank"
     local focusSprite = bool and "shop_box_tickb" or "shop_box_blankb"
@@ -873,36 +828,29 @@ function JayMenu.Display()
     end
 end
 
-
 function JayMenu.SetMenuWidth(id, width)
     setMenuProperty(id, 'width', width)
 end
-
 
 function JayMenu.SetMenuX(id, x)
     setMenuProperty(id, 'x', x)
 end
 
-
 function JayMenu.SetMenuY(id, y)
     setMenuProperty(id, 'y', y)
 end
-
 
 function JayMenu.SetMenuMaxOptionCountOnScreen(id, count)
     setMenuProperty(id, 'maxOptionCount', count)
 end
 
-
 function JayMenu.SetTitleColor(id, r, g, b, a)
     setMenuProperty(id, 'titleColor', { r, g, b, a or  menus[id].titleColor[4] })
 end
 
-
 function JayMenu.SetTitleBackgroundColor(id, r, g, b, a)
     setMenuProperty(id, 'titleBackgroundColor', { r, g, b, a or menus[id].titleBackgroundColor[4] })
 end
-
 
 function JayMenu.UseSpriteAsBackground(id, textDict, sprite, r, g, b, a, stillDrawText)
 	if stillDrawText then setMenuProperty(id, 'titleFont', "~sprite~") else setMenuProperty(id, 'titleFont', "!sprite!") end
@@ -910,16 +858,13 @@ function JayMenu.UseSpriteAsBackground(id, textDict, sprite, r, g, b, a, stillDr
 	setMenuProperty(id, 'titleBackgroundColor', { r, g, b, a or menus[id].titleBackgroundColor[4] })
 end
 
-
 function JayMenu.SetSubTitle(id, text)
     setMenuProperty(id, 'subTitle', string.upper(text))
 end
 
-
 function JayMenu.SetMenuBackgroundColor(id, r, g, b, a)
     setMenuProperty(id, 'menuBackgroundColor', { r, g, b, a or menus[id].menuBackgroundColor[4] })
 end
-
 
 function JayMenu.SetMenuTextColor(id, r, g, b, a)
     setMenuProperty(id, 'menuTextColor', { r, g, b, a or menus[id].menuTextColor[4] })
@@ -932,7 +877,6 @@ end
 function JayMenu.SetMenuFocusColor(id, r, g, b, a)
     setMenuProperty(id, 'menuFocusColor', { r, g, b, a or menus[id].menuFocusColor[4] })
 end
-
 
 function JayMenu.SetMenuButtonPressedSound(id, name, set)
     setMenuProperty(id, 'buttonPressedSound', { ['name'] = name, ['set'] = set })

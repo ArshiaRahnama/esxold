@@ -17,7 +17,7 @@ if config.interact_sound_enable then
             PlayUrl("./sounds/" .. soundFile, "./sounds/" .. soundFile .. "." .. config.interact_sound_file, soundVolume)
         end
     end)
-    
+
     RegisterNetEvent('InteractSound_CL:SendData')
     AddEventHandler('InteractSound_CL:SendData', function(maxDistance, soundFile, soundVolume)
         ESX.TriggerServerEvent('InteractSound_SV:PlayWithinDistance:2',maxDistance,soundFile,soundVolume,ESX.Game.GetPlayersToSend(ESX.Math.Round(maxDistance)))

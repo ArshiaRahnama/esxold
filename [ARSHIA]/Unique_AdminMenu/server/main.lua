@@ -2,25 +2,13 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
--- ============================================================================
--- CONFIG
--- ============================================================================
--- Set a Discord webhook URL to get every admin action logged there too.
--- Leave as "" to only print to the server console.
 local Config = {
     DiscordWebhook = "",
-    -- minimum ESX permission_level required to use ANY toggle below, on top
-    -- of always requiring the player to be on aduty
+
+
     MinPermissionLevel = 1,
 }
 
--- ============================================================================
--- STATE - server is now the source of truth for who has what active.
--- Any other resource (e.g. UNIQUE_AC) can call
--- exports.Unique_AdminMenu:IsAdminToggleActive(source, 'godmode') to check
--- whether a given effect on a given player is a *legitimate* admin toggle
--- before flagging/kicking them for it.
--- ============================================================================
 local AdminToggleState = {}
 
 local function GetState(source)
@@ -34,9 +22,6 @@ AddEventHandler('playerDropped', function()
     AdminToggleState[source] = nil
 end)
 
--- ============================================================================
--- PERMISSION HELPERS
--- ============================================================================
 function IsOnDutyAdmin(source)
     local xPlayer = ESX.GetPlayerFromId(source)
     if not xPlayer then return false end
@@ -49,13 +34,6 @@ function IsOnDutyAdmin(source)
     return true
 end
 
--- ============================================================================
--- AUDIT LOG - every admin action (toggle, teleport, spectate, slap, area)
--- goes through here so there's always a paper trail. When a target player
--- is known, it's also persisted to `admin_action_log` so it can be pulled
--- up later as that player's Action History (see admin_tools.lua's
--- InspectPlayer callback).
--- ============================================================================
 function LogAdminAction(source, action, details, targetIdentifier, targetName)
     local name = GetPlayerName(source) or ('Unknown (' .. tostring(source) .. ')')
     local line = ('[Unique_AdminMenu] %s (id:%s) -> %s%s'):format(
@@ -94,21 +72,12 @@ function LogAdminAction(source, action, details, targetIdentifier, targetName)
     end
 end
 
--- Exported so other resources (anticheat, logging systems, etc.) can check
--- whether a player's current state (invincible, noclipping, etc.) is a
--- legitimate, server-approved admin toggle rather than a cheat.
 exports('IsAdminToggleActive', function(source, feature)
     local state = AdminToggleState[source]
     if not state then return false end
     return state[feature] == true
 end)
 
--- ============================================================================
--- TOGGLE REQUESTS - client no longer flips these effects on its own; it
--- asks the server, the server checks permission + aduty, records the new
--- state, and (for godmode) also applies the real server-side native so the
--- invincibility is authoritative and can't be faked by a modified client.
--- ============================================================================
 local ValidFeatures = {
     godmode      = true,
     invisibility = true,
@@ -137,8 +106,8 @@ AddEventHandler('Unique_AdminMenu:RequestToggle', function(feature)
     local newValue = state[feature]
 
     if feature == 'godmode' then
-        -- Real server-authoritative invincibility. A modified client cannot
-        -- fake this the way it could fake a purely local SetEntityInvincible.
+
+
         SetPlayerInvincible(source, newValue)
     end
 
@@ -146,11 +115,6 @@ AddEventHandler('Unique_AdminMenu:RequestToggle', function(feature)
     TriggerClientEvent('Unique_AdminMenu:ApplyToggle', source, feature, newValue)
 end)
 
--- ============================================================================
--- EXISTING CALLBACKS - now permission-gated. Previously ANY connected
--- player could call these and get back the full player list / another
--- player's exact coordinates with zero permission check.
--- ============================================================================
 ESX.RegisterServerCallback('Admin_Menu:GetActivePlayers', function(source, cb)
     if not IsOnDutyAdmin(source) then cb({}) return end
 
@@ -208,8 +172,8 @@ RegisterCommand('slap', function(source, args)
   local xPlayer = ESX.GetPlayerFromId(source)
   local Target = ESX.GetPlayerFromId(TargetId)
 
-  -- was: permission_level >= 2 only. Added the same aduty requirement every
-  -- other admin action here uses, so /slap can't be used while off-duty.
+
+
   if xPlayer.permission_level >= 2 and xPlayer.get('aduty') and Target then
     LogAdminAction(source, "slap", "target: " .. GetPlayerName(TargetId) .. " (id:" .. TargetId .. ")")
     TriggerClientEvent('AdminMenu:SlapPlayers', TargetId)

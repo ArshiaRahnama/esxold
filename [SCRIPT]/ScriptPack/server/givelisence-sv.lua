@@ -15,7 +15,7 @@ RegisterCommand(
         if xPlayer.job.name == "police" and xPlayer.job.grade > 12 then
             if args[1] then
                 if args[2] then
-                    --if xPlayer.hasDivision("police") then
+
 					if xPlayer.job.name == "police" and xPlayer.job.grade > 12 then
                         local target = tonumber(args[1])
                         if target ~= nil then

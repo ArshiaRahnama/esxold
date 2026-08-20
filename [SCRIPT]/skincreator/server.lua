@@ -9,10 +9,6 @@ ESX.RegisterServerCallback('getSkin', function(source, cb)
 	end)
 end)
 
--- client.lua calls ESX.TriggerServerCallback('getGender', ...) on
--- every menu open (skincreator:getGender) but nothing anywhere
--- registered it -- that call was hanging forever waiting for a reply.
--- Reads straight from the same `sex` column updateSkin() below writes.
 ESX.RegisterServerCallback('getGender', function(source, cb)
 	TriggerEvent('es:getPlayerFromId', source, function(user)
 		exports.ghmattimysql:scalar('SELECT sex FROM users WHERE identifier = @identifier', {

@@ -8,7 +8,7 @@ function isAllowedToChange(player)
     return xPlayer and xPlayer.permission_level >= 9
 end
 
-ESX.RegisterServerCallback('NUI_doorlock:cb:getDoors', function(source, cb) 
+ESX.RegisterServerCallback('NUI_doorlock:cb:getDoors', function(source, cb)
     local doors = LoadResourceFile(GetCurrentResourceName(), "Server/Files/Doors.json")
     doors = json.decode(doors)
     cb(doors, _doorCache)
@@ -80,23 +80,23 @@ RegisterServerEvent("NUI_doorlock:server:syncRemove", function(id)
     end
 end)
 
-RegisterCommand(Config.commands.CreateDoor, function(source, args)  
+RegisterCommand(Config.commands.CreateDoor, function(source, args)
     if isAllowedToChange(source) then
         TriggerClientEvent("NUI_doorlock:client:setUpDoor", source)
     else
         TriggerClientEvent('ESX:showNotification', source, '~r~Shoma Dastrasi nadarid')
-    end 
+    end
 end, false)
 
-RegisterCommand(Config.commands.RemoveDoor, function(source, args)  
+RegisterCommand(Config.commands.RemoveDoor, function(source, args)
     if isAllowedToChange(source) then
         TriggerClientEvent("NUI_doorlock:client:deleteDoor", source)
     else
         TriggerClientEvent('ESX:showNotification', source, '~r~Shoma Dastrasi nadarid')
-    end 
+    end
 end, false)
 
-ESX.RegisterServerCallback('NUI_doorlock:cb:hasObj', function(source, cb, item) 
+ESX.RegisterServerCallback('NUI_doorlock:cb:hasObj', function(source, cb, item)
     local xPlayer = ESX.GetPlayerFromId(source)
     local itemPly = xPlayer.getInventoryItem(item)
     cb(itemPly and itemPly.count > 0)

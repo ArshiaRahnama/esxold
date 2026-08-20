@@ -63,13 +63,13 @@ AddEventHandler('gangaccount:updateGangAccount', function(name, cb)
 	local result = MySQL.Sync.fetchAll('SELECT * FROM gang_account_data WHERE gang_name = @gang_name', {
 		['@gang_name'] = name
 	})
-	
+
 	local money = nil
 	local dirty_money = nil
-	
+
 	GangAccounts[name].money = result[1].money
 	GangAccounts[name].dirty_money = result[1].dirty_money
-	
+
 	cb(GetGangAccount(name))
 end)
 

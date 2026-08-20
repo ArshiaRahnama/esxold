@@ -1,11 +1,5 @@
--- Unique_AllRobs/client.lua
--- Merged client-side code from DarkPhone + PartySystem + Unique_RobSystem
--- Each original resource's code is preserved as-is inside its own do...end
--- block so local variables/threads never leak or collide between sections.
 
--- ----------------------------------------------------------------------
--- DarkPhone/client.lua (Hostage & Pursuit menu)
--- ----------------------------------------------------------------------
+
 do
 local ESX = nil
 
@@ -30,18 +24,16 @@ AddEventHandler('DarkPhone:OpenMenu', function()
 		menu.close()
 		local action = data.current.value
 		if action == "Hostage" then
-            local coords = GetEntityCoords(PlayerPedId()) 
+            local coords = GetEntityCoords(PlayerPedId())
             TriggerServerEvent("DarkPhone:StartHostage",coords)
         elseif  action == "Pursuit" then
-            local coords = GetEntityCoords(PlayerPedId()) 
+            local coords = GetEntityCoords(PlayerPedId())
             TriggerServerEvent("DarkPhone:StartPursuit",coords)
         end
 	end, function(data, menu)
 		menu.close()
 	end)
 end)
-
--- ==================================== Hostage ===========================================
 
 local hostageblip = nil
 RegisterNetEvent('DarkPhone:killBlipHostage')
@@ -82,8 +74,6 @@ AddEventHandler('DarkPhone:CheckDistance', function(coords)
     end)
 end)
 
--- ==================================== Pursuit ===========================================
-
 local PursuitBlip = nil
 
 RegisterNetEvent('DarkPhone:setBlipPursuit')
@@ -93,7 +83,7 @@ AddEventHandler('DarkPhone:setBlipPursuit', function(position,id)
 	SetBlipScale(PursuitBlip, 0.7)
 	SetBlipColour(PursuitBlip, 1)
 	PulseBlip(PursuitBlip)
-    -- SetBlipFlashTimer(PursuitBlip, 5000)
+
 	BeginTextCommandSetBlipName('STRING')
 	AddTextComponentSubstringPlayerName('Pursuit Car')
 	EndTextCommandSetBlipName(PursuitBlip)
@@ -138,9 +128,6 @@ AddEventHandler('DarkPhone:StartProgressBar', function()
 end)
 end
 
--- ----------------------------------------------------------------------
--- PartySystem/client.lua (Team menu)
--- ----------------------------------------------------------------------
 do
 local ESX = nil
 
@@ -294,9 +281,6 @@ RegisterCommand('tinvite', function(source, args)
 end)
 end
 
--- ----------------------------------------------------------------------
--- Unique_RobSystem/client.lua (Robbery blips/markers/hacks)
--- ----------------------------------------------------------------------
 do
 local Keys = {
 	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
@@ -318,7 +302,7 @@ Citizen.CreateThread(function()
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
-end)    
+end)
 
 Citizen.CreateThread(function()
     for name,things in pairs(Config.Rob.Robs) do
@@ -348,7 +332,6 @@ Citizen.CreateThread(function()
 		Citizen.Wait(1000)
 	end
 end)
-
 
 RegisterNetEvent('Morphy_RobSystem:SetMarker')
 AddEventHandler('Morphy_RobSystem:SetMarker', function (name, state)
@@ -417,7 +400,7 @@ AddEventHandler('Morphy_RobSystem:StartHack', function(robname,hacktype)
             else
                 TriggerServerEvent('Morphy_RobSystem:robberyHackFail', robname)
             end
-        end, 5, 20)  -- Number of Blocks, Time in seconds
+        end, 5, 20)
     elseif hacktype == 2 then
         exports['ps-ui']:Scrambler(function(success)
             if success then
@@ -425,11 +408,11 @@ AddEventHandler('Morphy_RobSystem:StartHack', function(robname,hacktype)
             else
                 TriggerServerEvent('Morphy_RobSystem:robberyHackFail', robname)
             end
-        end, "alphanumeric", 30, 0)  -- Type options: alphabet, numeric, alphanumeric, greek, braille, runes; Time in seconds; Mirrored options: 0, 1, 2
+        end, "alphanumeric", 30, 0)
     else
         TriggerServerEvent('Morphy_RobSystem:robberyStarted', robname)
     end
-    
+
 end)
 
 Citizen.CreateThread(function()

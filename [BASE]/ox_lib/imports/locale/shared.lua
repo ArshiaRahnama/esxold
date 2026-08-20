@@ -1,9 +1,6 @@
----@type { [string]: string }
+
 local dict = {}
 
----@param source { [string]: string }
----@param target { [string]: string }
----@param prefix? string
 local function flattenDict(source, target, prefix)
     for key, value in pairs(source) do
         local fullKey = prefix and (prefix .. '.' .. key) or key
@@ -18,9 +15,6 @@ local function flattenDict(source, target, prefix)
     return target
 end
 
----@param str string
----@param ... string | number
----@return string
 function locale(str, ...)
     local lstr = dict[str]
 
@@ -51,8 +45,6 @@ end
 
 local table = lib.table
 
----Loads the ox_lib locale module. Prefer using fxmanifest instead (see [docs](https://overextended.dev/ox_lib#usage)).
----@param key? string
 function lib.locale(key)
     local lang = key or lib.getLocaleKey()
     local locales = loadLocale('en')
@@ -79,10 +71,6 @@ function lib.locale(key)
     end
 end
 
----Gets a locale string from another resource and adds it to the dict.
----@param resource string
----@param key string
----@return string?
 function lib.getLocale(resource, key)
     local locale = dict[key]
 
@@ -100,9 +88,6 @@ function lib.getLocale(resource, key)
     return locale
 end
 
----Backing function for lib.getLocale.
----@param key string
----@return string?
 exports('getLocale', function(key)
     return dict[key]
 end)

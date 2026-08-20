@@ -1,5 +1,5 @@
 Locales['fr'] = {
-  -- ==== from gangs ====
+
   ['actions']                = 'actions',
   ['boss_menu']              = 'patron',
   ['money_generic']          = '$%s',
@@ -37,8 +37,8 @@ Locales['fr'] = {
   ['you_have_been_promoted'] = 'Vous avez été promu',
     ['garage_nocars'] = '~h~~r~Dar Parking Gang Hich Mashini Vojood Nadarad!',
 
-  -- ==== from gangprop ====
-  -- Cloakroom
+
+
   ['cloakroom'] = 'vestiaire',
   ['citizen_wear'] = 'tenue Civil',
   ['gang_wear'] = 'tenue Gang',
@@ -48,20 +48,20 @@ Locales['fr'] = {
   ['statepd_wear'] = 'State Police outfit',
   ['specops_wear'] = 'Spec OPS outfit',
   ['open_cloackroom'] = 'appuez sur ~INPUT_CONTEXT~ pour vous changer',
-  -- Armory
+
   ['get_weapon'] = 'prendre Arme',
   ['put_weapon'] = 'déposer Arme',
   ['buy_weapons'] = 'acheter Armes',
   ['armory'] = 'armurerie',
   ['open_armory'] = 'appuez sur ~INPUT_CONTEXT~ pour accéder à l\'armurerie',
-  -- Vehicles
+
   ['vehicle_menu'] = 'véhicule',
   ['vehicle_out'] = 'il y a déja un véhicule de sorti',
   ['vehicle_spawner'] = 'appuez sur ~INPUT_CONTEXT~ pour sortir un véhicule',
   ['boat_spawner'] = 'appuez sur ~INPUT_CONTEXT~ pour sortir un véhicule',
   ['store_vehicle'] = 'appuez sur ~INPUT_CONTEXT~ pour ranger le véhicule',
   ['service_max'] = 'Service complet : ',
-  -- Action Menu
+
   ['citizen_interaction'] = 'interaction avec le kidnappé',
   ['vehicle_interaction'] = 'interaction véhicule',
   ['object_spawner'] = 'placer objets',
@@ -85,10 +85,10 @@ Locales['fr'] = {
   ['spikestrips'] = 'herse',
   ['box'] = 'caisse',
   ['cash'] = 'caisse',
-  -- ID Card Menu
+
   ['name'] = 'nom : ',
   ['bac'] = 'alcoolémie : ',
-  -- Body Search Menu
+
   ['confiscate_dirty'] = 'confisquer argent sale : $',
   ['guns_label'] = '--- Armes ---',
   ['confiscate'] = 'confisquer ',
@@ -100,16 +100,16 @@ Locales['fr'] = {
   ['average_offense'] = 'gros racket',
   ['major_offense'] = 'énorme racket',
   ['fine_total'] = 'racket : ',
-  -- Vehicle Info Menu
+
   ['plate'] = 'N°: ',
   ['owner_unknown'] = 'propriétaire : Inconnu',
   ['owner'] = 'propriétaire : ',
-  -- Weapons Menus
+
   ['get_weapon_menu'] = 'armurerie - Prendre Arme',
   ['put_weapon_menu'] = 'armurerie - Déposer Arme',
   ['buy_weapon_menu'] = 'armurerie - Acheter Armes',
   ['not_enough_money'] = 'vous n\'avez pas assez d\'argent',
-  -- Boss Menu
+
   ['take_company_money'] = 'retirer argent société',
   ['deposit_money'] = 'déposer argent',
   ['amount_of_withdrawal'] = 'montant du retrait',
@@ -122,10 +122,10 @@ Locales['fr'] = {
   ['quantity'] = 'Quantité',
   ['inventory'] = 'inventaire',
   ['gang_stock'] = 'Gang Stock',
-  -- Misc
+
   ['remove_object'] = 'appuez sur ~INPUT_CONTEXT~ pour enlever l\'objet',
   ['map_blip'] = 'Commissariat',
-  -- Notifications
+
   ['from'] = '~s~ à ~b~',
   ['you_have_confinv'] = 'vous avez confisqué ~y~x',
   ['confinv'] = '~s~ vous a confisqué ~y~x',
@@ -134,7 +134,7 @@ Locales['fr'] = {
   ['you_have_confweapon'] = 'vous avez confisqué ~y~x1 ',
   ['confweapon'] = '~s~ vous a confisqué ~y~x1 ',
   ['alert_police'] = 'alerte police',
-  -- Authorized Vehicles
+
   ['schafter3'] = 'véhicule Civil',
   ['kuruma2'] = 'kuruma',
   ['sandking'] = '4X4',

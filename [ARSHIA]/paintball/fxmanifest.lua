@@ -1,14 +1,7 @@
 
 
-
-
-
-
-
-
 fx_version 'adamant'
 game 'gta5'
-
 
 author 'Arshia - arshiahub.ir'
 ui_page "html/index.html"
@@ -16,7 +9,7 @@ files {
 	'html/index.html',
 	'html/assets/css/style.css',
 	'html/assets/imgs/*.png',
-	'html/assets/imgs/*.jpg',					
+	'html/assets/imgs/*.jpg',
 	'html/assets/js/script.js',
 	'html/assets/weapons/advancedrifle.png',
 	'html/assets/weapons/appistol.png',
@@ -72,7 +65,7 @@ files {
 }
 
 client_scripts {
-	"@ox_lib/init.lua", -- provides the global `lib` used by lib.notify
+	"@ox_lib/init.lua",
 	"settings/*.lua",
     'client/*.lua'
 }
@@ -82,7 +75,4 @@ server_scripts {
 	'@mysql-async/lib/MySQL.lua',
     'server/*.lua'
 }
--- NOTE: uniquecafejobs is NOT listed as a hard dependency here on purpose -
--- CreateLobby calls its export through a pcall (see server/server.lua), so
--- paintball still starts fine even if uniquecafejobs is missing/late/down;
--- the Turf Wars map-reservation check just silently skips in that case.
+

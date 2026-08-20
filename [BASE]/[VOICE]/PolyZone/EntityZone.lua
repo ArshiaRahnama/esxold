@@ -1,8 +1,7 @@
 EntityZone = {}
--- Inherits from BoxZone
+
 setmetatable(EntityZone, { __index = BoxZone })
 
--- Utility functions
 local deg, atan2 = math.deg, math.atan2
 local function GetRotation(entity)
   local fwdVector = GetEntityForwardVector(entity)
@@ -13,13 +12,13 @@ local function _calculateMinAndMaxZ(entity, dimensions, scaleZ, offsetZ)
   local min, max = dimensions[1], dimensions[2]
   local minX, minY, minZ, maxX, maxY, maxZ = min.x, min.y, min.z, max.x, max.y, max.z
 
-  -- Bottom vertices
+
   local p1 = GetOffsetFromEntityInWorldCoords(entity, minX, minY, minZ).z
   local p2 = GetOffsetFromEntityInWorldCoords(entity, maxX, minY, minZ).z
   local p3 = GetOffsetFromEntityInWorldCoords(entity, maxX, maxY, minZ).z
   local p4 = GetOffsetFromEntityInWorldCoords(entity, minX, maxY, minZ).z
 
-  -- Top vertices
+
   local p5 = GetOffsetFromEntityInWorldCoords(entity, minX, minY, maxZ).z
   local p6 = GetOffsetFromEntityInWorldCoords(entity, maxX, minY, maxZ).z
   local p7 = GetOffsetFromEntityInWorldCoords(entity, maxX, maxY, maxZ).z
@@ -30,7 +29,6 @@ local function _calculateMinAndMaxZ(entity, dimensions, scaleZ, offsetZ)
   return BoxZone.calculateMinAndMaxZ(entityMinZ, entityMaxZ, scaleZ, offsetZ)
 end
 
--- Initialization functions
 local function _initDebug(zone, options)
   if options.debugBlip then zone:addDebugBlip() end
   if not options.debugPoly and not options.debugBlip then
@@ -93,8 +91,6 @@ function UpdateOffsets(entity, zone)
   if zone.debugBlip then SetBlipCoords(zone.debugBlip, pos.x, pos.y, 0.0) end
 end
 
-
--- Helper functions
 function EntityZone:isPointInside(point)
   local entity = self.entity
   if entity == nil then
@@ -120,7 +116,7 @@ function EntityZone:onEntityDamaged(onDamagedCb)
 
     if name == 'CEventNetworkEntityDamage' then
       local victim, attacker, victimDied, weaponHash, isMelee = args[1], args[2], args[4], args[5], args[10]
-      --print(entity, victim, attacker, victimDied, weaponHash, isMelee)
+
       if victim ~= entity then return end
       onDamagedCb(victimDied == 1, attacker, weaponHash, isMelee == 1)
     end

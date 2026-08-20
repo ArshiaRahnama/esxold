@@ -1,5 +1,4 @@
 
--- Garage 1: Arcadius Business Centre
 
 exports('GetImportCEOGarage1Object', function()
 	return ImportCEOGarage1
@@ -7,10 +6,10 @@ end)
 
 ImportCEOGarage1 = {
     Part = {
-        Garage1 = {interiorId = 253441, ipl = "imp_dt1_02_cargarage_a"},  -- -191.0133, -579.1428, 135.0000
-        Garage2 = {interiorId = 253697, ipl = "imp_dt1_02_cargarage_b"},  -- -117.4989, -568.1132, 135.0000
-        Garage3 = {interiorId = 253953, ipl = "imp_dt1_02_cargarage_c"},  -- -136.0780, -630.1852, 135.0000
-        ModShop = {interiorId = 254209, ipl = "imp_dt1_02_modgarage"},    -- -146.6166, -596.6301, 166.0000
+        Garage1 = {interiorId = 253441, ipl = "imp_dt1_02_cargarage_a"},
+        Garage2 = {interiorId = 253697, ipl = "imp_dt1_02_cargarage_b"},
+        Garage3 = {interiorId = 253953, ipl = "imp_dt1_02_cargarage_c"},
+        ModShop = {interiorId = 254209, ipl = "imp_dt1_02_modgarage"},
 
         Load = function(part) EnableIpl(part.ipl, true) end,
         Remove = function(part) EnableIpl(part.ipl, false) end,
@@ -115,7 +114,7 @@ ImportCEOGarage1 = {
         ImportCEOGarage1.Style.Set(ImportCEOGarage1.Part.Garage1, ImportCEOGarage1.Style.concrete)
         ImportCEOGarage1.Numbering.Set(ImportCEOGarage1.Part.Garage1, ImportCEOGarage1.Numbering.Level1.style1)
         ImportCEOGarage1.Lighting.Set(ImportCEOGarage1.Part.Garage1, ImportCEOGarage1.Lighting.style1, true)
-        
+
         ImportCEOGarage1.Part.Load(ImportCEOGarage1.Part.ModShop)
         ImportCEOGarage1.ModShop.Floor.Set(ImportCEOGarage1.ModShop.Floor.default, true)
     end

@@ -1,5 +1,5 @@
 Locales ['fr'] = {
-  -- police
+
   ['bca_pass'] = 'Testé négatif avec moins de 0,01%',
   ['drug_pass'] = 'Test négatif pour usage de narcotiques',
   ['drug_fail'] = 'Testé positif pour usage de narcotiques',
@@ -8,8 +8,8 @@ Locales ['fr'] = {
   ['restriced_zone'] = 'Quelqu\'un est entré dans une zone réglementée, veuillez répondre immédiatement!',
   ['police_alert'] = 'Une piqûre louche vend de la drogue',
   ['act_imp_police'] = 'L\'acheteur aime donner une chance à la police de vous rattraper, attendez qu\'il soit en poste',
-  
-  -- weed
+
+
   ['weed_pickupprompt'] = 'appuyez sur ~INPUT_CONTEXT~ pour récolter le ~g~cannabis~s~ plante.',
   ['weed_field_close'] = 'Vous sentez un fort parfum de skunky',
   ['weed_process_close'] = 'Ça sent comme une ferme de mauvaises herbes ici',
@@ -23,7 +23,7 @@ Locales ['fr'] = {
   ['weed_sell'] = 'Appuyez sur ~INPUT_CONTEXT~ pour donner votre mauvaise herbe à la fumée sur l\'eau',
   ['weed_use'] = 'Vous avez fumé un doobie',
 
-  -- cocaine
+
   ['cocaine_pickupprompt'] = 'appuyez sur ~INPUT_CONTEXT~ pour récolter le ~g~CocaPlant~s~ plante.',
   ['cocaine_field_close'] = 'Vous remarquerez que certaines de ces plantes ne ressemblent pas au coton.',
   ['cocaine_process_close'] = 'Ces gars font leur propre coke',
@@ -37,7 +37,7 @@ Locales ['fr'] = {
   ['cocaine_sell'] = 'Appuyez sur ~INPUT_CONTEXT~ pour donner votre coca à la société de golf',
   ['cocaine_use'] = 'Vous avez mangé un tas de coca!',
 
-  -- ephedrine
+
   ['ephedrine_pickupprompt'] = 'appuyez sur ~INPUT_CONTEXT~ pour récolter le ~g~Ephedra~s~ plant.',
   ['ephedrine_field_close'] = '~r~ Vous vous trouvez dans une zone réglementée. Les autorités ont été prévenues, partez immédiatement! ',
   ['ephedrine_process_close'] = 'Vous sentez l\'odeur des chats morts et de la pisse',
@@ -46,13 +46,13 @@ Locales ['fr'] = {
   ['ephedrine_processingstarted'] = 'traitement de ~g~éphédra~s~ en ~g~éphédrine~s~ ...',
   ['ephedrine_processingfull'] = 'Le traitement de ~r~annulé~s~ en raison de l\'inventaire complet!',
   ['ephedrine_processingenough'] = 'vous devez disposer de ~b~1x~s~ ~g~Ephedra~s~ pour pouvoir traiter.',
-  ['ephedrine_processed'] = 'vous avez traité ~b~1x~s~ ~g~Ephedra~s~ to ~b~1x~s~ ~g~Ephedrine~s~', 
+  ['ephedrine_processed'] = 'vous avez traité ~b~1x~s~ ~g~Ephedra~s~ to ~b~1x~s~ ~g~Ephedrine~s~',
   ['ephedrine_processingtoofar'] = 'Le traitement a été ~r~annulé~s~ car vous avez abandonné la zone.',
   ['ephedrine_sell'] = 'Appuyez sur ~INPUT_CONTEXT~',
 
-  -- meth
-  -- ['meth_pickupprompt'] = 'appuyez sur ~INPUT_CONTEXT~ pour récolter le ~g~Ephedrine~s~ plant.',
-  -- ['meth_inventoryfull'] = 'vous n’avez plus d’espace d’inventaire pour ~g~Ephedrine~s~.',
+
+
+
   ['meth_process_close'] = 'Vous vous sentez sur le point de vomir à cause de la puanteur de la pisse',
   ['meth_processprompt'] = 'appuyez sur ~INPUT_CONTEXT~ pour démarrer ~g~Traitement de l\'éphédrine~s~.',
   ['meth_processingstarted'] = 'en traitant ~g~l’éphédrine~s~ en ~g~Meth~s~ ...',
@@ -63,9 +63,9 @@ Locales ['fr'] = {
   ['meth_sell'] = 'Appuyez sur ~INPUT_CONTEXT~ pour donner votre méthamphétamine à Willie',
   ['meth_use'] = 'Vous avez laissé tomber de la glace en essayant de fumer!',
 
-  -- crack
-  -- ['crack_pickupprompt'] = 'appuyez sur ~INPUT_CONTEXT~ pour récolter le ~g~Ephedrine~s~ plant.',
-  -- ['crack_inventoryfull'] = 'vous ne disposez plus d’espace d’inventaire pour ~g~Ephedrine~s~.',
+
+
+
   ['crack_process_close'] = 'Les perdus ne sont pas trop sympas pour partager la drogue',
   ['crack_processprompt'] = 'appuyez sur ~INPUT_CONTEXT~ pour démarrer ~g~Traitement de la cocaïne~s~.',
   ['crack_processingstarted'] = 'traitement de ~g~cocaïne~s~ en ~g~fissure~s~ ...',
@@ -76,8 +76,8 @@ Locales ['fr'] = {
   ['crack_sell'] = 'Appuyez sur ~INPUT_CONTEXT~ pour vous déconnecter de Jérôme',
   ['crack_use'] = 'Ne lâcheriez probablement pas votre crack si vous ne le fumiez pas',
 
-  -- opium
-  
+
+
   ['opium_pickupprompt'] = 'appuyez sur ~INPUT_CONTEXT~ pour récolter le ~g~Coquelicot~s~.',
   ['opium_field_close'] = '~r~ La famille Wong pourrait bien avoir la tête pour jouer dans son champ de pavot',
   ['opium_process_close'] = 'On dirait que Humane Labs se lance dans les opioïdes',
@@ -91,9 +91,8 @@ Locales ['fr'] = {
   ['opium_sell'] = 'Appuyez sur ~INPUT_CONTEXT~ pour jeter votre opium dans la cheminée O \' Neil, ils ne paieront rien',
 
 
-   -- heroine
-  -- ['heroine_pickupprompt'] = 'appuyez sur ~INPUT_CONTEXT~ pour récolter le ~g~Ephedrine~s~ plant.',
-  -- ['heroine_inventoryfull'] = 'vous n’avez plus d’espace de stockage pour ~g~Ephedrine~s~.',
+
+
   ['heroine_process_close'] = 'Trevor aurait peut-être quelque chose à faire contre de l\'argent',
   ['heroine_processprompt'] = 'appuyez sur ~INPUT_CONTEXT~ pour lancer ~g~Traitement de l\'opium~s~.',
   ['heroine_processingstarted'] = 'traitement de ~g~l\'opium~s~ en ~g~l\'héroïne~s~ ...',
@@ -104,15 +103,15 @@ Locales ['fr'] = {
   ['heroine_sell'] = 'Appuyez sur ~INPUT_CONTEXT~ pour donner votre héroïne à Frederick',
   ['heroine_use'] = 'Vous vous êtes piqué avec une aiguille.',
 
-  -- drug dealer
-  
+
+
   ['dealer_prompt'] = 'appuyez sur ~INPUT_CONTEXT~ pour parler avec le ~r~vendeur de drogue~s~.',
   ['dealer_title'] = 'Dealer',
   ['dealer_item'] = '$% s',
   ['dealer_notenough'] = 'Vous n’avez pas assez de cela pour vendre!',
   ['dealer_sold'] = 'vous avez vendu ~b~%sx~s~ ~y~%s~s~ pour ~g~$%s~s~',
 
-  -- blips
+
   ['blip_weedprocess'] = 'Hangout Hippy',
   ['blip_cokeprocess'] = 'Yacht',
   ['blip_ephedrineprocess'] = 'Garage Vagos',
@@ -126,12 +125,12 @@ Locales ['fr'] = {
   ['blip_heroinedump'] = 'Grue de Frédéric',
   ['blip_opiumdump'] = 'O\'Neil Farm ',
   ['blip_crackdump'] = 'Auberge pour sans-abri',
-  --['blip_methdump'] = 'La pharmacie de Willie',
-  --['blip_heroinedump'] = 'Grue de Frédéric',
-  --['blip_opiumdump'] = 'O\'Neil Farm ',
-  --['blip_crackdump'] = 'Auberge pour sans-abri',
-  
-  -- misc
+
+
+
+
+
+
   ['not_needed'] = 'Vous ne devez pas prendre les médicaments dont vous n’avez pas besoin!',
   ['fake_clean'] = 'Vous paraîtrez propre pendant une minute!',
   ['wearin_off'] = 'Votre buzz est en train de s\'estomper!',

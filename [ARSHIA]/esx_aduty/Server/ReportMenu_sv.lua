@@ -13,7 +13,7 @@ RegisterCommand('report', function(source, args)
         end
     end
 
-	if Cowldown[source] ~= nil then 
+	if Cowldown[source] ~= nil then
 		if Cowldown[source] <= os.time() then
 			TriggerClientEvent('sr_reportsystem:openMenu', source)
 			Cowldown[source] = nil
@@ -23,7 +23,7 @@ RegisterCommand('report', function(source, args)
 	else
 		TriggerClientEvent('sr_reportsystem:openMenu', source)
 	end
-end) 
+end)
 
 RegisterCommand('reports', function(source, args)
     for k,v in pairs(reports) do
@@ -57,22 +57,22 @@ RegisterCommand('ar', function(source, args)
 			local Targetid = tonumber(reports[args[1]].owner.id)
 			local Target = ESX.GetPlayerFromId(Targetid)
 			if Target and Target.coords and xPlayer.coords then
-				-- FIX: GetDistanceBetweenCoords is a CLIENT-only native and
-				-- doesn't exist server-side - calling it here threw
-				-- "attempt to call a nil value" and crashed every /ar.
-				-- Also fixed xPlayer.coordsx/coordsy/coordsz (not real
-				-- fields - the actual table is xPlayer.coords.x/.y/.z,
-				-- same as Target above) with a plain Euclidean distance.
+
+
+
+
+
+
 				local dx = Target.coords.x - xPlayer.coords.x
 				local dy = Target.coords.y - xPlayer.coords.y
 				local dz = Target.coords.z - xPlayer.coords.z
 				local Distance = math.sqrt(dx * dx + dy * dy + dz * dz)
-				if Distance <= 10 then 
+				if Distance <= 10 then
 					TriggerClientEvent('chatMessage', source, "[ Report ] : ", {255, 0, 0}, "Shoma Bayad Spect Bashid Ta Betavanid Accept Konid!")
 					return
 				end
 			end
-	
+
 
 			if reports[args[1]] then
 
@@ -83,7 +83,7 @@ RegisterCommand('ar', function(source, args)
 					local name = GetPlayerName(source)
 					report.status = "pending"
 					report.respond.name = name
-					report.respond.identifier = identifier 
+					report.respond.identifier = identifier
 
 					TriggerClientEvent('chatMessage', source, "[ Report ] : ", {255, 0, 0}, " ^0Report [ ^3" .. args[1] .. "^0 ] Tavasot  ^2Shoma ^0  Ghabol Shod Jahat Takmil Kardan Report /cr^2 "..args[1])
 
@@ -129,13 +129,13 @@ RegisterCommand('cr', function(source, args)
 
 			if reports[args[1]] then
 
-				local report = reports[args[1]] 
+				local report = reports[args[1]]
 				local identifier = GetPlayerIdentifier(source)
 				local ridentifier = report.owner.identifier
 				local closer = GetPlayerName(source)
-				if reports[args[1]].status == "pending" or xPlayer.permission_level >= 9 then 
+				if reports[args[1]].status == "pending" or xPlayer.permission_level >= 9 then
 					TriggerClientEvent('chatMessage', xPlayer.source, "[ Report ] : ", {255, 0, 0}, "Shoma Report ^2" .. report.owner.name .. "^0 [^3" .. report.owner.id .. "^0] Ra Bastid!")
-							
+
 					xPlayer = report.owner.id
 					if xPlayer then
 						TriggerClientEvent('chatMessage', xPlayer, "[ Report ] : ", {255, 0, 0}, "Report Shoma Tavasot [ ^2" .. closer .. "^0 ] Ghabol Shod!")
@@ -170,7 +170,7 @@ RegisterServerEvent('esx_Report:Pending', function(v,ped)
     xPlayer = report.owner.id
     TriggerClientEvent('chatMessage', xPlayer, "[ Report ] : ", {255, 0, 0}, "Report Shoma Tavasot [ ^2" .. name .. "^0 ] Ghabol Shod!")
     TriggerClientEvent('esx_Report:spectate', id, xPlayer)
-    --TriggerClientEvent('chatMessage', xPlayer.source, "[ Report ] : ", {255, 0, 0}, "Jahat Chat Kardan Ba Admin Marbote Az [ ^3/rd^0 ] ^0Estefade Konid!")
+
     local xPlayers = ESX.GetPlayers()
     for i=1, #xPlayers do
     xPlayer = ESX.GetPlayerFromId(xPlayers[i])
@@ -189,7 +189,7 @@ RegisterServerEvent('esx_Report:CreateReport', function(typee,text)
     reports[tostring(rcount)] = {
         owner = {
         identifier = identifier,
-        name = name, 
+        name = name,
         id = source,
     },
 
@@ -233,9 +233,6 @@ function canRespond(identifier)
 	return true
 end
 
--- Bridge for Unique_AdminMenu's Report Queue panel: `reports` above is a
--- file-local table with no other way to read it from outside this file.
--- This export doesn't change any existing behavior.
 exports('GetReports', function()
 	return reports
 end)

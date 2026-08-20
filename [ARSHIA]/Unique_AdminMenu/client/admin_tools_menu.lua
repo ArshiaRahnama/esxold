@@ -1,9 +1,4 @@
--- ============================================================================
--- Unique_AdminMenu / client/admin_tools_menu.lua
--- Adds: Player Tools, Vehicle Tools, World Tools, Server Tools submenus.
--- Every action here just asks the server to do it (see server/admin_tools.lua)
--- - nothing that matters (money, jobs, bans...) is decided client-side.
--- ============================================================================
+
 
 SelectedTargetId = nil
 SavedLocationsCache = {}
@@ -17,11 +12,8 @@ Citizen.CreateThread(function()
     WarMenu.CreateSubMenu('server_tools', 'main', 'Server Tools')
 end)
 
--- ----------------------------------------------------------------------
--- SELECT TARGET (reused by every Player Tools action)
--- ----------------------------------------------------------------------
 local function OpenPlayerTools()
-    AdminM() -- refresh PlayersCache (from menu_ui.lua)
+    AdminM()
     WarMenu.OpenMenu('select_target')
 end
 
@@ -36,9 +28,6 @@ local function DrawSelectTargetMenu()
     end
 end
 
--- ----------------------------------------------------------------------
--- PLAYER TOOLS
--- ----------------------------------------------------------------------
 local function DrawPlayerToolsMenu()
     if not SelectedTargetId then
         WarMenu.OpenMenu('select_target')
@@ -122,9 +111,6 @@ local function DrawPlayerToolsMenu()
     end
 end
 
--- ----------------------------------------------------------------------
--- VEHICLE TOOLS (act on the vehicle the admin is currently in/near)
--- ----------------------------------------------------------------------
 local function DrawVehicleToolsMenu()
     if WarMenu.Button("Spawn Vehicle") then
         local model = GetUserInput("Vehicle model name", "adder") or ""
@@ -147,9 +133,6 @@ local function DrawVehicleToolsMenu()
     end
 end
 
--- ----------------------------------------------------------------------
--- WORLD TOOLS
--- ----------------------------------------------------------------------
 local WeatherPresets = { "EXTRASUNNY", "CLEAR", "CLOUDS", "OVERCAST", "RAIN", "THUNDER", "SMOG", "FOGGY", "XMAS", "SNOWLIGHT", "BLIZZARD" }
 
 local function DrawWorldToolsMenu()
@@ -214,14 +197,11 @@ local function DrawSavedLocationsMenu()
     end
 end
 
--- ----------------------------------------------------------------------
--- SERVER TOOLS
--- ----------------------------------------------------------------------
 local function DrawServerToolsMenu()
     if WarMenu.Button("Announce to server") then
         local msg = GetUserInput("Announcement text", "", 120) or ""
         if msg ~= "" then
-            TriggerServerEvent('_chat:messageEntered', 'AdminAnnounce', {}, msg) -- harmless if unused
+            TriggerServerEvent('_chat:messageEntered', 'AdminAnnounce', {}, msg)
             ExecuteCommand('aannounce ' .. msg)
         end
     end
@@ -234,7 +214,7 @@ local function DrawServerToolsMenu()
     end
 
     if WarMenu.Button("Report Queue") then
-        OpenReportsMenu() -- ox_lib context menu, see client/nui_panel.lua
+        OpenReportsMenu()
     end
 
     if WarMenu.Button("Chat Log") then
@@ -246,12 +226,6 @@ local function DrawServerToolsMenu()
     end
 end
 
--- ----------------------------------------------------------------------
--- Hook into the existing AdminMenu() draw loop from menu_ui.lua by wrapping
--- it: we can't edit that function's internals cleanly from another file
--- without duplicating WarMenu.Display(), so these submenus are drawn from
--- their own lightweight loop that only runs while their own menu is open.
--- ----------------------------------------------------------------------
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
@@ -277,9 +251,6 @@ Citizen.CreateThread(function()
     end
 end)
 
--- ----------------------------------------------------------------------
--- APPLY (server-confirmed) EFFECTS
--- ----------------------------------------------------------------------
 RegisterNetEvent('Unique_AdminMenu:ApplyFreeze')
 AddEventHandler('Unique_AdminMenu:ApplyFreeze', function(frozen)
     FreezeEntityPosition(PlayerPedId(), frozen)

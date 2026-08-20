@@ -60,23 +60,23 @@ Citizen.CreateThread(function()
 
     while true do
         if FinanceOrganization.Office.needToLoad then
-            -- Need to load
+
             if (Global.FinanceOffices.isInsideOffice1 or Global.FinanceOffices.isInsideOffice2 or
                 Global.FinanceOffices.isInsideOffice3 or Global.FinanceOffices.isInsideOffice4) then
                 DrawOrganizationName(FinanceOrganization.Name.name, FinanceOrganization.Name.style, FinanceOrganization.Name.color, FinanceOrganization.Name.font)
                 FinanceOrganization.Office.loaded = true
-                Wait(1) -- We need to call all this every frame
+                Wait(1)
             else
-                Wait(1000) -- We are not inside an office
+                Wait(1000)
             end
         elseif FinanceOrganization.Office.loaded then
-            -- Loaded and need to unload
+
             FinanceOrganization.Office.Clear()
             FinanceOrganization.Office.loaded = false
-            Wait(1000) -- We can wait longer when we don't need to display text
+            Wait(1000)
         else
-            -- Not needed to load
-            Wait(1000) -- We can wait longer when we don't need to display text
+
+            Wait(1000)
         end
     end
 end)

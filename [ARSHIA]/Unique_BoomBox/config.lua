@@ -4,9 +4,9 @@ Config.DefaultVolume = 0.5
 Config.MaxVolume = 1.0
 Config.ItemName = 'hifi'
 Config.OpenMenuKey = 'g'
-Config.StopKey = 'x' -- force-stops/removes the boombox instantly, even if the menu/anim ever gets stuck
+Config.StopKey = 'x'
 
-Config.MaxHistory = 12          -- how many recently played links to remember per player
-Config.MaxPlaylists = 8         -- how many playlists a player can create
-Config.MaxPlaylistSongs = 25    -- how many songs a single playlist can hold
+Config.MaxHistory = 12
+Config.MaxPlaylists = 8
+Config.MaxPlaylistSongs = 25
 Config.MaxPlaylistNameLength = 24

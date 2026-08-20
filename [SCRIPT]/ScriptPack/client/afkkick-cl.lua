@@ -1,4 +1,4 @@
--- CONFIG --
+
 ESX = nil
 local isAdmin = false
 Citizen.CreateThread(function()
@@ -6,7 +6,7 @@ Citizen.CreateThread(function()
 		TriggerEvent("esx:getSharedObject",function(obj)
 			ESX = obj
 		end)
-			
+
 		Citizen.Wait(50)
 		ESX.TriggerServerCallback('esx_aduty:checkAdmin', function(isAdmin)
 			isAdmin = isAdmin
@@ -66,10 +66,10 @@ Citizen.CreateThread(function()
 			end
 
 			prevPos = position
-			
+
 		end
 		end)
-		
+
 	end
 end)
 

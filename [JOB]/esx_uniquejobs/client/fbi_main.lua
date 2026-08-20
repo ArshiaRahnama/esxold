@@ -83,8 +83,6 @@ function cleanPlayer_fbi(playerPed)
 	ResetPedMovementClipset(playerPed, 0)
 end
 
-
-
 function setUniform_fbi(job, playerPed)
 	 TriggerEvent('skinchanger:getSkin', function(skin)
 		if tonumber(skin.sex) == 0 then
@@ -119,7 +117,7 @@ function OpenCloakroomMenu_fbi()
 		local elements = {
 			{label = "Lebas Kar", value = 'work_wear'},
 			{ label = _U('citizen_wear'), value = 'citizen_wear' },
-			-- {label = 'Vest Menu', value = 'wmenu'}
+
 			{label = 'Vest', value = 'wmenu'}
 		}
 
@@ -130,12 +128,11 @@ function OpenCloakroomMenu_fbi()
                     label = 'Lebas Division',
 					diviname = v.name,
 					value = 'division_lebas',
-					
+
                 })
             end
-			
+
         end
-		
 
 
 		ESX.UI.Menu.CloseAll()
@@ -159,51 +156,51 @@ function OpenCloakroomMenu_fbi()
 			if data.current.value == 'work_wear' then
 				local job =  PlayerData.job.name
 				local gradenum =  PlayerData.job.grade
-				
-						
-						
-				
+
+
+
+
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
-					ESX.TriggerServerCallback('esx_society:getUniforms', function(SkinMale, SkinFemale)-- get uniform from esx_society
-					
+					ESX.TriggerServerCallback('esx_society:getUniforms', function(SkinMale, SkinFemale)
+
 						if skin.sex == 0 then
 							TriggerEvent('skinchanger:loadClothes', skin, SkinMale)
 						else
 							TriggerEvent('skinchanger:loadClothes', skin, SkinFemale)
 						end
-						
+
 					end,gradenum, job)
-					
+
 				end)
-					
-				
+
+
 			end
 			if data.current.value == 'wmenu' then
 
 				SetPedArmour(playerPed, 100)
-				-- ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'West-Menu', {
-				-- 	title    = 'West Menu',
-				-- 	align    = 'left',
-				-- 	elements = {
-				-- 		{label = '1',   value = '1'},
-				-- 		{label = '2',   value = '2'},
-				-- 		{label = '3',   value = '3'},
-				-- }}, function(data, menu)
-				-- 	if data.current.value == '1' then
-				-- 		setvest('1', playerPed)
-				-- 	elseif data.current.value == '2' then
-				-- 		setvest('2', playerPed)
-				-- 	elseif data.current.value == '3' then
-				-- 		setvest('3', playerPed)
-				-- 	end
-				-- end, function(data, menu)
-				-- 	menu.close()
 
-				-- end)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 			end
-			
+
 			if data.current.value == 'division_lebas' then
-				
+
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
 					local job =  PlayerData.job.name
 					ESX.TriggerServerCallback('esx_society:getUniformsDivision', function(SkinMale, SkinFemale)
@@ -213,7 +210,7 @@ function OpenCloakroomMenu_fbi()
 							TriggerEvent('skinchanger:loadClothes', skin, SkinFemale)
 						end
 					end, data.current.diviname, job)
-					
+
 				end)
 			end
 
@@ -277,7 +274,7 @@ function OpenArmoryMenu_fbi(station)
 		for i=1, #Config_fbi.fbiStations[station].AuthorizedWeapons, 1 do
 			local weapon = Config_fbi.fbiStations[station].AuthorizedWeapons[i]
 			table.insert(elements, {
-				label = ESX.GetWeaponLabel(weapon.name), 
+				label = ESX.GetWeaponLabel(weapon.name),
 				value = weapon.name
 			})
 		end
@@ -315,20 +312,18 @@ function OpenVehicleSpawnerMenu_fbi(station, partNum)
 	local job = PlayerData.job.name
 	local steamhex = PlayerData.identifier
 	ESX.TriggerServerCallback('esx_society:getVehicles', function(authorizedVehicle)
-		
+
 		ESX.TriggerServerCallback('esx_society:GetDivisionsPlayer', function(getdivision)
 			dvisionName = nil
 
-			for k,v in pairs(getdivision) do 
-				if v.status and v.job == job then 
-					
+			for k,v in pairs(getdivision) do
+				if v.status and v.job == job then
+
 
 					dvisionName = v.name
 				end
 			end
 			ESX.TriggerServerCallback('esx_society:getVehiclesdivision', function(authorizedVehicledivision)
-			
-
 
 
 				local found = false
@@ -338,7 +333,7 @@ function OpenVehicleSpawnerMenu_fbi(station, partNum)
 					for i = 1, #Vehicles, 1 do
 					local found = false
 
-				
+
 					if authorizedVehicle ~= nil then
 						for _,sharedVeh in ipairs(authorizedVehicle) do
 							if found then break end
@@ -347,24 +342,23 @@ function OpenVehicleSpawnerMenu_fbi(station, partNum)
 									found = true
 
 
-									
 								end
 							end
-							
+
 						end
 					end
 
 				end
 
-				if authorizedVehicledivision then 
+				if authorizedVehicledivision then
 					table.insert(elements, {label = '------ Division ------', model = nil})
 					local nnname = nil
 					local Vehicles2 = Config_fbi.AuthorizedVehicles.Shared
 					for i = 1, #Vehicles2, 1 do
 						nnname = nil
-						for t,vehs in pairs(authorizedVehicledivision) do 
+						for t,vehs in pairs(authorizedVehicledivision) do
 							for k,v in pairs(elements) do
-								if vehs.status and Vehicles2[i].model == vehs.model then 
+								if vehs.status and Vehicles2[i].model == vehs.model then
 									if v.model == vehs.model then
 										nnname = nil
 										break
@@ -374,7 +368,7 @@ function OpenVehicleSpawnerMenu_fbi(station, partNum)
 								end
 							end
 							if nnname then
-								
+
 								table.insert(elements, {label = Vehicles2[i].label, model = Vehicles2[i].model})
 								break
 							end
@@ -390,9 +384,8 @@ function OpenVehicleSpawnerMenu_fbi(station, partNum)
 				}, function(data, menu)
 					menu.close()
 
-
 					local model   = data.current.model
-					
+
 					if model then
 						if not DoesEntityExist(vehicle) then
 
@@ -405,7 +398,7 @@ function OpenVehicleSpawnerMenu_fbi(station, partNum)
 
 									ESX.TriggerServerCallback('checkPlateInServer', function(plateExists)
 										if plateExists then
-											
+
 											local alert = lib.alertDialog({
 												header = 'Az In Plake Qablan Estefadeh Shode',
 												content = 'Aya Mikhahid Hazf Shavad?',
@@ -425,7 +418,7 @@ function OpenVehicleSpawnerMenu_fbi(station, partNum)
 													centered = true,
 													cancel = true
 												})
-												if texture2 == 'confirm' then 
+												if texture2 == 'confirm' then
 													Wait(1000)
 													spawnvehicles_fbi(data, plate, vehicle, station, partNum, true)
 												else
@@ -449,13 +442,13 @@ function OpenVehicleSpawnerMenu_fbi(station, partNum)
 													centered = true,
 													cancel = true
 												})
-												if texture == 'confirm' then 
+												if texture == 'confirm' then
 													spawnvehicles_fbi(data, plate, vehicle, station, partNum, true)
 												else
 													spawnvehicles_fbi(data, plate, vehicle, station, partNum, false)
 												end
 
-												
+
 											else
 												TriggerEvent('chat:addMessage', {
 													args = {'^1SYSTEM', 'Plake Mashin Bayad 5 Character Bashad'}
@@ -463,7 +456,7 @@ function OpenVehicleSpawnerMenu_fbi(station, partNum)
 												requestPlate()
 											end
 										end
-									end, "FBI" .. plate[1]) 
+									end, "FBI" .. plate[1])
 								end
 							end
 							requestPlate()
@@ -478,7 +471,7 @@ function OpenVehicleSpawnerMenu_fbi(station, partNum)
 					CurrentAction     = 'menu_vehicle_spawner'
 					CurrentActionMsg  = _U('vehicle_spawner')
 					CurrentActionData = {station = station, partNum = partNum}
-					
+
 				end)
 			end, dvisionName, job)
 		end, steamhex)
@@ -512,8 +505,8 @@ function spawnvehicles_fbi(data, plate, vehicle, station, partNum, texchar)
 					end
 				end
 			end
-		
-			if texchar then 
+
+			if texchar then
 				SetVehicleLivery(vehicle, 6)
 				Citizen.Wait(500)
 				SetVehicleLivery(vehicle, 6)
@@ -522,16 +515,16 @@ function spawnvehicles_fbi(data, plate, vehicle, station, partNum, texchar)
 				Citizen.Wait(500)
 				SetVehicleLivery(vehicle, 7)
 			end
-			
+
 			SetVehicleMaxMods_fbi(vehicle)
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 			Citizen.Wait(500)
 			SetVehicleRadioEnabled(vehicle, false)
 			SetVehicleFuelLevel(vehicle, 100.0)
-			 
+
 			SetVehicleNumberPlateText(vehicle, "FBI" ..plate[1] )
 
-			local playerIdentifier = ESX.GetPlayerData().identifier 
+			local playerIdentifier = ESX.GetPlayerData().identifier
 			local vehicleModel = GetEntityModel(CurrentActionData.vehicle)
 			local vehicleLabel = GetLabelText(GetDisplayNameFromVehicleModel(vehicleModel))
 			local playerPed = PlayerPedId()
@@ -562,16 +555,14 @@ function OpenheliSpawnerMenu_fbi(station, partNum)
 	ESX.TriggerServerCallback('esx_society:getHelis', function(authorizedVehicle)
 		ESX.TriggerServerCallback('esx_society:GetDivisionsPlayer', function(getdivision)
 			dvisionName = nil
-			for k,v in pairs(getdivision) do 
-				if v.status and v.job == job then 
-					
+			for k,v in pairs(getdivision) do
+				if v.status and v.job == job then
+
 
 					dvisionName = v.name
 				end
 			end
 			ESX.TriggerServerCallback('esx_society:getHelisdivision', function(authorizedVehicledivision)
-			
-
 
 
 				local found = false
@@ -581,7 +572,7 @@ function OpenheliSpawnerMenu_fbi(station, partNum)
 					for i = 1, #Vehicles, 1 do
 					local found = false
 
-				
+
 					if authorizedVehicle ~= nil then
 						for _,sharedVeh in ipairs(authorizedVehicle) do
 							if found then break end
@@ -590,24 +581,23 @@ function OpenheliSpawnerMenu_fbi(station, partNum)
 									found = true
 
 
-									
 								end
 							end
-							
+
 						end
 					end
 
 				end
 
-				if authorizedVehicledivision then 
+				if authorizedVehicledivision then
 					table.insert(elements, {label = '------ Division ------', model = nil})
 					local nnname = nil
 					local Vehicles2 = Config_fbi.AuthorizedVehicles.Sharedheli
 					for i = 1, #Vehicles2, 1 do
 						nnname = nil
-						for t,vehs in pairs(authorizedVehicledivision) do 
+						for t,vehs in pairs(authorizedVehicledivision) do
 							for k,v in pairs(elements) do
-								if vehs.status and Vehicles2[i].model == vehs.model then 
+								if vehs.status and Vehicles2[i].model == vehs.model then
 									if v.model == vehs.model then
 										nnname = nil
 										break
@@ -617,7 +607,7 @@ function OpenheliSpawnerMenu_fbi(station, partNum)
 								end
 							end
 							if nnname then
-								
+
 								table.insert(elements, {label = Vehicles2[i].label, model = Vehicles2[i].model})
 								break
 							end
@@ -633,9 +623,8 @@ function OpenheliSpawnerMenu_fbi(station, partNum)
 				}, function(data, menu)
 					menu.close()
 
-
 					local model   = data.current.model
-					
+
 					if model then
 						if not DoesEntityExist(vehicle) then
 
@@ -648,7 +637,7 @@ function OpenheliSpawnerMenu_fbi(station, partNum)
 
 									ESX.TriggerServerCallback('checkPlateInServer', function(plateExists)
 										if plateExists then
-											
+
 											local alert = lib.alertDialog({
 												header = 'Az In Plake Qablan Estefadeh Shode',
 												content = 'Aya Mikhahid Hazf Shavad?',
@@ -669,13 +658,13 @@ function OpenheliSpawnerMenu_fbi(station, partNum)
 													centered = true,
 													cancel = true
 												})
-												if texture == 'confirm' then 
+												if texture == 'confirm' then
 													spawnheliss_fbi(data, plate, vehicle, station, partNum, true)
 												else
 													spawnheliss_fbi(data, plate, vehicle, station, partNum, false)
 												end
 
-												
+
 											else
 												TriggerEvent('chat:addMessage', {
 													args = {'^1SYSTEM', 'Cancel Shod'}
@@ -692,7 +681,7 @@ function OpenheliSpawnerMenu_fbi(station, partNum)
 													centered = true,
 													cancel = true
 												})
-												if texture2 == 'confirm' then 
+												if texture2 == 'confirm' then
 													spawnheliss_fbi(data, plate, vehicle, station, partNum, true)
 												else
 													spawnheliss_fbi(data, plate, vehicle, station, partNum, false)
@@ -704,7 +693,7 @@ function OpenheliSpawnerMenu_fbi(station, partNum)
 												requestPlate()
 											end
 										end
-									end, "FBI" .. plate[1]) 
+									end, "FBI" .. plate[1])
 								end
 							end
 
@@ -720,7 +709,7 @@ function OpenheliSpawnerMenu_fbi(station, partNum)
 					CurrentAction     = 'menu_heli_spawner'
 					CurrentActionMsg  = _U('heli_spawner')
 					CurrentActionData = {station = station, partNum = partNum}
-					
+
 				end)
 			end, dvisionName, job)
 		end, PlayerData.identifier)
@@ -735,10 +724,10 @@ function spawnheliss_fbi(data, plate, vehicle, station, partNum, texchur)
 		if vehicle then
 
 			local playerPed = PlayerPedId()
-			
+
 
 			local Vehicles2 = Config_fbi.AuthorizedVehicles.Shared
-		
+
 			for _, vehicle2 in ipairs(Vehicles2) do
 				if vehicle2.Extra and vehicle2.model == data.current.model then
 					for extraName, extraValue in pairs(vehicle2.Extra) do
@@ -746,9 +735,9 @@ function spawnheliss_fbi(data, plate, vehicle, station, partNum, texchur)
 					end
 				end
 			end
-		
-			
-			if texchur then 
+
+
+			if texchur then
 				SetVehicleLivery(vehicle, 6)
 				Citizen.Wait(500)
 				SetVehicleLivery(vehicle, 6)
@@ -757,23 +746,23 @@ function spawnheliss_fbi(data, plate, vehicle, station, partNum, texchur)
 				Citizen.Wait(500)
 				SetVehicleLivery(vehicle, 7)
 			end
-			
-			
+
+
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 			Citizen.Wait(500)
 			SetVehicleFuelLevel(vehicle, 100.0)
-			SetVehicleMaxMods_fbi(vehicle) 
+			SetVehicleMaxMods_fbi(vehicle)
 			SetVehicleNumberPlateText(vehicle, "FBI" ..plate[1] )
 
-			local playerIdentifier = ESX.GetPlayerData().identifier 
+			local playerIdentifier = ESX.GetPlayerData().identifier
 			local vehicleModel = GetEntityModel(CurrentActionData.vehicle)
 			local vehicleLabel = GetLabelText(GetDisplayNameFromVehicleModel(vehicleModel))
 			local playerPed = PlayerPedId()
 			local xPlayer = ESX.GetPlayerData()
 
-           
 
-			
+
+
 
 			TriggerEvent('chat:addMessage', {
 				args = {'^1SYSTEM', 'Heli Ba Plake^2 FBI'..plate[1]..' ^0Spawn Shod'}
@@ -796,8 +785,8 @@ function OpenfbiActionsMenu_fbi()
 		local playerjob =  ESX.GetPlayerData().job.name
 		for k, v in pairs(check) do
 			if v.job == playerjob then
-				if #check >= 1 then 
-					
+				if #check >= 1 then
+
 					isdivision = true
 					break
 				end
@@ -810,7 +799,7 @@ function OpenfbiActionsMenu_fbi()
 			{label = _U('object_spawner'),		value = 'object_spawner'}
 		}
 
-		if isdivision then 
+		if isdivision then
 			table.insert(elements, {label = 'Extra Division', value = 'extra_division'})
 		end
 
@@ -833,14 +822,14 @@ function OpenfbiActionsMenu_fbi()
 					{label = _U('fine'),			value = 'fine'},
 					{label = _U('unpaid_bills'),	value = 'unpaid_bills'}
 				}
-			
+
 				if Config_fbi.EnableLicenses then
 					table.insert(elements, {
-						label = _U('license_check'), 
+						label = _U('license_check'),
 						value = 'license'
 					})
 				end
-			
+
 				ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'citizen_interaction', {
 					title    = _U('citizen_interaction'),
 					align    = 'top-left',
@@ -859,11 +848,11 @@ function OpenfbiActionsMenu_fbi()
 								OpenBodySearchMenu(closestPlayer)
 							elseif not IsPedSittingInAnyVehicle(GetPlayerPed(closestPlayer)) and not IsPedSittingInAnyVehicle(GetPlayerPed(-1)) then
 								ESX.TriggerServerCallback("PD_CuffStatus:GetPedHandsUpStatus", function(Cuff, IsInjure, IsDead)
-								
+
 									local text = 'Shoro Be Gashtane Fard Mikone '
 									TriggerServerEvent('3dme:shareDisplay', text, true)
 									OpenBodySearchMenu(closestPlayer)
-									
+
 								end, GetPlayerServerId(closestPlayer))
 							else
 								ESX.ShowNotification('Shoma Ejaze Search Nadarid!')
@@ -871,7 +860,7 @@ function OpenfbiActionsMenu_fbi()
 						elseif action == 'handcuff' then
 
 							playerPed = PlayerPedId()
-							SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true) -- unarm player
+							SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true)
 							local target, distance = ESX.Game.GetClosestPlayer()
 							playerheading = GetEntityHeading(playerPed)
 							playerlocation = GetEntityForwardVector(PlayerPedId())
@@ -880,12 +869,12 @@ function OpenfbiActionsMenu_fbi()
 							if distance <= 2.0 then
 								if not IsPedSittingInAnyVehicle(GetPlayerPed(target)) and not IsPedSittingInAnyVehicle(PlayerPedId()) then
 									ESX.TriggerServerCallback("PD_CuffStatus:GetPedHandsUpStatus", function(Cuff, IsInjure, IsDead)
-										if not Cuff then 
-											
-											if not IsInjure or not IsDead then 
+										if not Cuff then
+
+											if not IsInjure or not IsDead then
 												TriggerServerEvent('esx:requestarrestpd', target_id, playerheading, playerCoords, playerlocation, false)
-												
-												
+
+
 											else
 												ESX.ShowNotification("~y~Shoma Nemitavanid Player Zakhmi Ra Cuff Konid")
 											end
@@ -903,7 +892,7 @@ function OpenfbiActionsMenu_fbi()
 						elseif action == 'uncuff' then
 
 							playerPed = PlayerPedId()
-							SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true) -- unarm player
+							SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true)
 							local target, distance = ESX.Game.GetClosestPlayer()
 							playerheading = GetEntityHeading(playerPed)
 							playerlocation = GetEntityForwardVector(PlayerPedId())
@@ -911,22 +900,22 @@ function OpenfbiActionsMenu_fbi()
 							local target_id = GetPlayerServerId(target)
 							if distance <= 2.0 then
 								TriggerServerEvent('esx_policejob:requestrelease', target_id, playerheading, playerCoords, playerlocation)
-								
+
 							else
 								ESX.ShowNotification('Shakhsi nazdik shoma nist')
 							end
-							
+
 						elseif action == 'drag' then
 							local target, distance = ESX.Game.GetClosestPlayer()
 							if distance <= 2.0 then
-								
-								
+
+
 								TriggerServerEvent('esx_policejob:drag', GetPlayerServerId(closestPlayer))
 							else
 								ESX.ShowNotification('Shakhsi nazdik shoma nist')
 							end
 						elseif action == 'put_in_vehicle' then
-							if dragiss then 
+							if dragiss then
 								TriggerServerEvent('esx_policejob:putInVehicle', GetPlayerServerId(closestPlayer))
 							elseif IsEntityPlayingAnim(PlayerPedId(), carry.personCarrying.animDict, carry.personCarrying.anim, 3) then
 
@@ -934,21 +923,21 @@ function OpenfbiActionsMenu_fbi()
 								TriggerServerEvent('carry:respone',false)
 								TriggerServerEvent('citizen:stopcarry', targetSrc)
 								TriggerEvent('carry:cascel', false)
-								
+
 								ClearPedSecondaryTask(PlayerPedId())
-					
+
 								DetachEntity(PlayerPedId(), true, false)
 								TriggerServerEvent('policejob:putInVehiclecarry', GetPlayerServerId(closestPlayer))
-							else 
-								
+							else
+
 								ESX.ShowNotification('~h~~r~Playeri Scort Nakardin!')
 							end
 						elseif action == 'out_the_vehicle' then
 							local target, distance = ESX.Game.GetClosestPlayer()
 								ESX.TriggerServerCallback("PD_CuffStatus:GetPedHandsUpStatus", function(Cuff, IsInjure, IsDead)
-								if Cuff then 
+								if Cuff then
 									TriggerServerEvent('esx_policejob:OutVehicle', GetPlayerServerId(closestPlayer))
-								elseif IsDead then 
+								elseif IsDead then
 									TriggerServerEvent('policejob:OutVehiclecarry', GetPlayerServerId(closestPlayer))
 								end
 							end, GetPlayerServerId(target))
@@ -971,13 +960,13 @@ function OpenfbiActionsMenu_fbi()
 				local playerPed = PlayerPedId()
 				local coords    = GetEntityCoords(playerPed)
 				local vehicle   = ESX.Game.GetVehicleInDirection()
-				
+
 				if DoesEntityExist(vehicle) then
 					table.insert(elements, {label = _U('vehicle_info'),	value = 'vehicle_infos'})
 					table.insert(elements, {label = _U('pick_lock'),	value = 'hijack_vehicle'})
 					table.insert(elements, {label = _U('impound'),		value = 'impound'})
 				end
-				
+
 				table.insert(elements, {label = _U('search_database'), value = 'search_database'})
 
 				ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_interaction', {
@@ -988,14 +977,14 @@ function OpenfbiActionsMenu_fbi()
 					coords  = GetEntityCoords(playerPed)
 					vehicle = ESX.Game.GetVehicleInDirection()
 					action  = data2.current.value
-					
+
 					if action == 'search_database' then
 						LookupVehicle_fbi()
 					elseif DoesEntityExist(vehicle) then
 						local vehicleData = ESX.Game.GetVehicleProperties(vehicle)
 						if action == 'vehicle_infos' then
 							OpenVehicleInfosMenu_fbi(vehicleData)
-							
+
 						elseif action == 'hijack_vehicle' then
 							if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 3.0) then
 								TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_WELDING", 0, true)
@@ -1007,28 +996,28 @@ function OpenfbiActionsMenu_fbi()
 								ESX.ShowNotification(_U('vehicle_unlocked'))
 							end
 						elseif action == 'impound' then
-						
-							-- is the script busy?
+
+
 							if CurrentTask.Busy then
 								return
 							end
 
 							ESX.ShowHelpNotification(_U('impound_prompt'))
-							
+
 							TaskStartScenarioInPlace(playerPed, 'CODE_HUMAN_MEDIC_TEND_TO_DEAD', 0, true)
-							
+
 							CurrentTask.Busy = true
 							CurrentTask.Task = ESX.SetTimeout(10000, function()
 								ClearPedTasks(playerPed)
 								ImpoundVehicle_fbi(vehicle)
-								Citizen.Wait(100) -- sleep the entire script to let stuff sink back to reality
+								Citizen.Wait(100)
 							end)
-							
-							-- keep track of that vehicle!
+
+
 							Citizen.CreateThread(function()
 								while CurrentTask.Busy do
 									Citizen.Wait(1000)
-								
+
 									vehicle = GetClosestVehicle(coords.x, coords.y, coords.z, 3.0, 0, 71)
 									if not DoesEntityExist(vehicle) and CurrentTask.Busy then
 										ESX.ShowNotification(_U('impound_canceled_moved'))
@@ -1104,17 +1093,17 @@ function OpenIdentityCardMenu_fbi(player)
 		local dobLabel    = nil
 		local heightLabel = nil
 		local idLabel     = nil
-	
+
 		if data.job.grade_label ~= nil and  data.job.grade_label ~= '' then
 			jobLabel = _U('job', data.job.label .. ' - ' .. data.job.grade_label)
 		else
 			jobLabel = _U('job', data.job.label)
 		end
-	
+
 		if Config_fbi.EnableESXIdentity then
-	
+
 			nameLabel = _U('name', data.firstname .. ' ' .. data.lastname)
-	
+
 			if data.sex ~= nil then
 				if string.lower(data.sex) == 'm' then
 					sexLabel = _U('sex', _U('male'))
@@ -1124,73 +1113,73 @@ function OpenIdentityCardMenu_fbi(player)
 			else
 				sexLabel = _U('sex', _U('unknown'))
 			end
-	
+
 			if data.dob ~= nil then
 				dobLabel = _U('dob', data.dob)
 			else
 				dobLabel = _U('dob', _U('unknown'))
 			end
-	
+
 			if data.height ~= nil then
 				heightLabel = _U('height', data.height)
 			else
 				heightLabel = _U('height', _U('unknown'))
 			end
-	
+
 			if data.name ~= nil then
 				idLabel = _U('id', data.name)
 			else
 				idLabel = _U('id', _U('unknown'))
 			end
-	
+
 		end
-	
+
 		local elements = {
 			{label = nameLabel, value = nil},
 			{label = jobLabel,  value = nil},
 		}
-	
+
 		if Config_fbi.EnableESXIdentity then
 			table.insert(elements, {label = sexLabel, value = nil})
 			table.insert(elements, {label = dobLabel, value = nil})
 			table.insert(elements, {label = heightLabel, value = nil})
 			table.insert(elements, {label = idLabel, value = nil})
 		end
-	
+
 		if data.drunk ~= nil then
 			table.insert(elements, {label = _U('bac', data.drunk), value = nil})
 		end
-	
+
 		if data.licenses ~= nil then
-	
+
 			table.insert(elements, {label = _U('license_label'), value = nil})
-	
+
 			for i=1, #data.licenses, 1 do
 				table.insert(elements, {label = data.licenses[i].label, value = nil})
 			end
-	
+
 		end
-	
+
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'citizen_interaction', {
 			title    = _U('citizen_interaction'),
 			align    = 'top-left',
 			elements = elements
 		}, function(data, menu)
-	
+
 		end, function(data, menu)
 			menu.close()
 		end)
-	
+
 	end, GetPlayerServerId(player))
 
 end
 
   function OpenBodySearchMenu(player)
-  
+
 	  ESX.TriggerServerCallback('esx_fbi_job:getOtherPlayerData', function(data)
-  
+
 		  local elements = {}
-  
+
 		  table.insert(elements, {label = _U('guns_label'), value = nil})
 		  for i = 1, #data.weapons, 1 do
 			  local fbisearchweapon = data.weapons[i].name
@@ -1203,11 +1192,11 @@ end
 				  })
 			  end
 		  end
-  
+
 		  table.insert(elements, {label = _U('inventory_label'), value = nil})
 		  for i = 1, #data.inventory, 1 do
 			  local fbisearchitem = data.inventory[i].name
-			  if data.inventory[i].count > 0 and fbisearchitem ~= "hifi" and fbisearchitem ~= "customcoupon" then 
+			  if data.inventory[i].count > 0 and fbisearchitem ~= "hifi" and fbisearchitem ~= "customcoupon" then
 				  table.insert(elements, {
 					  label    = _U('confiscate_inv', data.inventory[i].count, data.inventory[i].label),
 					  value    = fbisearchitem,
@@ -1216,8 +1205,8 @@ end
 				  })
 			  end
 		  end
-  
-  
+
+
 		  ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'body_search',
 		  {
 			  title    = _U('search'),
@@ -1225,24 +1214,24 @@ end
 			  elements = elements,
 		  },
 		  function(data, menu)
-  
+
 			  local itemType = data.current.itemType
 			  local itemName = data.current.value
 			  local amount   = data.current.amount
-  
+
 			  if data.current.value ~= nil then
 				  TriggerServerEvent('esx_fbi_job:confiscatePlayerItem', GetPlayerServerId(player), itemType, itemName, amount)
 				  OpenBodySearchMenu(player)
 			  end
-  
+
 		  end, function(data, menu)
 			  menu.close()
 		  end)
-  
+
 	  end, GetPlayerServerId(player))
-  
+
   end
-  
+
 function OpenFineMenu_fbi(player)
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'fine', {
@@ -1264,7 +1253,7 @@ end
 
 function OpenFineCategoryMenu_fbi(player, category)
 
-	if Config_fbi.EnablePoliceFine then 
+	if Config_fbi.EnablePoliceFine then
 
 		ESX.TriggerServerCallback('esx_fbi_job:getFineList', function(fines)
 
@@ -1345,13 +1334,13 @@ function ShowPlayerLicense_fbi(player)
 				end
 			end
 		end
-		
+
 		if Config_fbi.EnableESXIdentity then
 			targetName = data.firstname .. ' ' .. data.lastname
 		else
 			targetName = data.name
 		end
-		
+
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_license', {
 			title    = _U('license_revoke'),
 			align    = 'top-left',
@@ -1359,9 +1348,9 @@ function ShowPlayerLicense_fbi(player)
 		}, function(data, menu)
 			ESX.ShowNotification(_U('licence_you_revoked', data.current.label, targetName))
 			TriggerServerEvent('esx_fbi_job:message', GetPlayerServerId(player), _U('license_revoked', data.current.label))
-			
+
 			TriggerServerEvent('esx_license:removeLicense', GetPlayerServerId(player), data.current.value)
-			
+
 			ESX.SetTimeout(300, function()
 				ShowPlayerLicense_fbi(player)
 			end)
@@ -1388,7 +1377,7 @@ function OpenUnpaidBillsMenu_fbi(player)
 			align    = 'top-left',
 			elements = elements
 		}, function(data, menu)
-	
+
 		end, function(data, menu)
 			menu.close()
 		end)
@@ -1424,7 +1413,7 @@ end
 function OpenGetWeaponMenu_fbi()
 
 	ESX.TriggerServerCallback('esx_fbi_job:getArmoryWeapons', function(weapons)
-		
+
 
 			local grade = PlayerData.job.grade
 			local job = PlayerData.job.name
@@ -1475,7 +1464,7 @@ function OpenPutWeaponMenu_fbi()
 
 		if HasPedGotWeapon(playerPed, weaponHash, false) and weaponList[i].name ~= 'WEAPON_UNARMED' then
 			table.insert(elements, {
-				label = weaponList[i].label, 
+				label = weaponList[i].label,
 				value = weaponList[i].name
 			})
 		end
@@ -1550,7 +1539,6 @@ end
 function OpenGetStocksMenu_fbi()
 
 	ESX.TriggerServerCallback('esx_fbi_job:getStockItems', function(items)
-
 
 		local grade = PlayerData.job.grade
 		local job = PlayerData.job.name
@@ -1632,7 +1620,7 @@ function OpenPutStocksMenu_fbi()
 
 			if item.count > 0 then
 				table.insert(elements, {
-					label = item.label .. ' x' .. item.count, type = 'item_standard', 
+					label = item.label .. ' x' .. item.count, type = 'item_standard',
 					value = item.name
 				})
 			end
@@ -1704,7 +1692,7 @@ function OpenElevator_fbi(station, partNum)
 
 	end, function(data, menu)
 		menu.close()
-		
+
 		CurrentAction     = 'menu_elevator'
 		CurrentActionMsg  = _U('open_elevator')
 		CurrentActionData = {}
@@ -1714,7 +1702,7 @@ end
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	PlayerData.job = job
-	
+
 	Citizen.Wait(5000)
 	TriggerServerEvent('esx_fbi_job:forceBlip')
 end)
@@ -1730,10 +1718,9 @@ AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
 	TriggerEvent('esx_phone:addSpecialContact', specialContact.name, specialContact.number, specialContact.base64Icon)
 end)
 
--- don't show dispatches if the player isn't in service
 AddEventHandler('esx_phone:cancelMessage', function(dispatchNumber)
 	if type(PlayerData.job.name) == 'string' and PlayerData.job.name == 'fbi' and PlayerData.job.name == dispatchNumber then
-		-- if esx_service is enabled
+
 		if Config_fbi.MaxInService ~= -1 and not playerInService then
 			CancelEvent()
 		end
@@ -1744,24 +1731,24 @@ end)
   AddEventHandler('esx_fbi_job:removeHandcuff', function()
 	IsHandcuffed = false
   end)
-  
+
   RegisterNetEvent('esx_fbi_job:removeHandcuffFull')
   AddEventHandler('esx_fbi_job:removeHandcuffFull', function()
-  
+
 	  local playerPed = PlayerPedId()
-	  
+
 	  IsHandcuffed = false
-	  
+
 	  if Config_fbi.EnableHandcuffTimer and HandcuffTimer.Active then
 		  ESX.ClearTimeout(HandcuffTimer.Task)
 	  end
-  
+
 	  ClearPedSecondaryTask(playerPed)
 	  SetEnableHandcuffs(playerPed, false)
 	  DisablePlayerFiring(playerPed, false)
 	  SetPedCanPlayGestureAnims(playerPed, true)
-	  -- FreezeEntityPosition(playerPed, false)
-	  
+
+
 	  TriggerEvent("esx_fbi_job:removeHandcuff")
   end)
 
@@ -1860,7 +1847,7 @@ RegisterNetEvent('esx_fbi_job:getarrested')
 AddEventHandler('esx_fbi_job:getarrested', function(playerheading, playercoords, playerlocation)
 	playerPed = GetPlayerPed(-1)
 	TriggerServerEvent('InteractSound_SV:PlayWithinDistance', 5.0, 'cuff', 1.0)
-	SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true) -- unarm player
+	SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true)
 	local x, y, z   = table.unpack(playercoords + playerlocation * 1.0)
 	TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, { teleport = true, speed = true })
 	SetEntityCoords(GetPlayerPed(-1), x, y, z)
@@ -1885,14 +1872,13 @@ AddEventHandler('esx_fbi_job:doarrested', function()
 	TriggerServerEvent("esx_fbi_job:soundplay", "cuff", 0.5)
 	Citizen.Wait(3000)
 
-
-end) 
+end)
 
 RegisterNetEvent('esx_fbi_job:douncuffing')
 AddEventHandler('esx_fbi_job:douncuffing', function()
 	TriggerServerEvent('InteractSound_SV:PlayWithinDistance', 5.0, 'cuff', 1.0)
 	playerPed = GetPlayerPed(-1)
-	SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true) -- unarm player
+	SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true)
 	Citizen.Wait(250)
 	loadanimdict_fbi('mp_arresting')
 	TaskPlayAnim(GetPlayerPed(-1), 'mp_arresting', 'a_uncuff', 8.0, -8,-1, 2, 0, 0, 0, 0)
@@ -1942,7 +1928,7 @@ Citizen.CreateThread(function()
 			TriggerEvent("citizen:getCarry", function(carry)
 				if DragStatus.IsDragged then
 					targetPed = GetPlayerPed(GetPlayerFromServerId(DragStatus.CopId))
-					-- undrag if target is in an vehicle
+
 					if not IsPedSittingInAnyVehicle(targetPed) then
 						AttachEntityToEntity(playerPed, targetPed, 11816, 0.54, 0.54, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
 					else
@@ -1982,34 +1968,34 @@ AddEventHandler("esx_fbi_job:putInVehicle", function(vehicle)
   AddEventHandler('esx_fbi_job:putInVehicle', function()
 	  local playerPed = PlayerPedId()
 	  local coords    = GetEntityCoords(playerPed)
-  
+
 	  if not IsHandcuffed then
 		  return
 	  end
-  
+
 	  if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
-  
+
 		  local vehicle = GetClosestVehicle(coords.x, coords.y, coords.z, 5.0, 0, 71)
-  
+
 		  if DoesEntityExist(vehicle) then
-  
+
 			  local maxSeats = GetVehicleMaxNumberOfPassengers(vehicle)
 			  local freeSeat = nil
-  
+
 			  for i=maxSeats - 1, 0, -1 do
 				  if IsVehicleSeatFree(vehicle, i) then
 					  freeSeat = i
 					  break
 				  end
 			  end
-  
+
 			  if freeSeat ~= nil then
 				  TaskWarpPedIntoVehicle(playerPed, vehicle, freeSeat)
 				  DragStatus.IsDragged = false
 			  end
-  
+
 		  end
-  
+
 	  end
   end)
 
@@ -2026,60 +2012,58 @@ AddEventHandler('esx_fbi_job:OutVehicle', function()
 end)
 
 
-
-  -- Handcuff
   Citizen.CreateThread(function()
 	  while true do
 		  Citizen.Wait(1)
 		  if IsHandcuffed then
-			  -- DisableControlAction(2, 1, true) -- Disable pan
-			DisableControlAction(2, 2, true) -- Disable tilt
-			DisableControlAction(2, 24, true) -- Attack
-			DisableControlAction(2, 257, true) -- Attack 2
-			DisableControlAction(2, 25, true) -- Aim
-			DisableControlAction(2, 263, true) -- Melee Attack 1
-			DisableControlAction(2, Keys['~'], true) -- HandsUP
-			DisableControlAction(2, Keys['X'], true) -- HandsUP
+
+			DisableControlAction(2, 2, true)
+			DisableControlAction(2, 24, true)
+			DisableControlAction(2, 257, true)
+			DisableControlAction(2, 25, true)
+			DisableControlAction(2, 263, true)
+			DisableControlAction(2, Keys['~'], true)
+			DisableControlAction(2, Keys['X'], true)
 			DisableControlAction(2, Keys['ESC'], true)
 			DisableControlAction(2, Keys['F6'], true)
 			DisableControlAction(2, Keys['ENTER'], true)
-			DisableControlAction(2, Keys['LEFTSHIFT'], true) -- HandsUP
-			DisableControlAction(2, Keys['R'], true) -- Reload
-			DisableControlAction(2, Keys['TOP'], true) -- Open phone (not needed?)
-			DisableControlAction(2, Keys['TAB'], true) -- weapon
-			DisableControlAction(2, Keys['SPACE'], true) -- Jump
-			DisableControlAction(2, Keys['Q'], true) -- Cover
-			DisableControlAction(0, Keys['E'], true) --select
-			DisableControlAction(0, Keys['PAGEUP'], true) -- vehicle
-			DisableControlAction(0, Keys['K'], true) --lebas
-			DisableControlAction(2, Keys['TAB'], true) -- Select Weapon
-			DisableControlAction(2, Keys['F'], true) -- Also 'enter'?
-			DisableControlAction(2, Keys['F1'], true) -- Disable phone
-			DisableControlAction(2, Keys['F2'], true) -- Inventory
-			DisableControlAction(2, Keys['F3'], true) -- Animations
+			DisableControlAction(2, Keys['LEFTSHIFT'], true)
+			DisableControlAction(2, Keys['R'], true)
+			DisableControlAction(2, Keys['TOP'], true)
+			DisableControlAction(2, Keys['TAB'], true)
+			DisableControlAction(2, Keys['SPACE'], true)
+			DisableControlAction(2, Keys['Q'], true)
+			DisableControlAction(0, Keys['E'], true)
+			DisableControlAction(0, Keys['PAGEUP'], true)
+			DisableControlAction(0, Keys['K'], true)
+			DisableControlAction(2, Keys['TAB'], true)
+			DisableControlAction(2, Keys['F'], true)
+			DisableControlAction(2, Keys['F1'], true)
+			DisableControlAction(2, Keys['F2'], true)
+			DisableControlAction(2, Keys['F3'], true)
 			DisableControlAction(2, Keys['F5'], true)
 			DisableControlAction(2, Keys['F8'], true)
 			DisableControlAction(2, Keys['H'], true)
 			DisableControlAction(2, Keys['M'], true)
-			DisableControlAction(2, Keys['V'], true) -- Disable changing view
-			DisableControlAction(2, Keys['P'], true) -- Disable pause screen
-			DisableControlAction(2, 59, true) -- Disable steering in vehicle
-			DisableControlAction(2, Keys['LEFTCTRL'], true) -- Disable going stealth
-			DisableControlAction(0, 47, true)  -- Disable weapon
-			DisableControlAction(0, 264, true) -- Disable melee
-			DisableControlAction(0, 257, true) -- Disable melee
-			DisableControlAction(0, 140, true) -- Disable melee
-			DisableControlAction(0, 141, true) -- Disable melee
-			DisableControlAction(0, 142, true) -- Disable melee
-			DisableControlAction(0, 143, true) -- Disable melee
-			DisableControlAction(0, 19, true) -- Disable melee
-			DisableControlAction(0, 75, true)  -- Disable exit vehicle
-			DisableControlAction(27, 75, true) -- Disable exit vehicle
-			DisableControlAction(0, 27, true) -- Disable exit vehicle
-			DisableControlAction(0, 142, true) -- MeleeAttackAlternate
-			DisableControlAction(0, 24,  true) -- Shoot 
-			DisableControlAction(0, 92,  true) -- Shoot in car
-			DisableControlAction(0, 75,  true) -- Leave Vehicle
+			DisableControlAction(2, Keys['V'], true)
+			DisableControlAction(2, Keys['P'], true)
+			DisableControlAction(2, 59, true)
+			DisableControlAction(2, Keys['LEFTCTRL'], true)
+			DisableControlAction(0, 47, true)
+			DisableControlAction(0, 264, true)
+			DisableControlAction(0, 257, true)
+			DisableControlAction(0, 140, true)
+			DisableControlAction(0, 141, true)
+			DisableControlAction(0, 142, true)
+			DisableControlAction(0, 143, true)
+			DisableControlAction(0, 19, true)
+			DisableControlAction(0, 75, true)
+			DisableControlAction(27, 75, true)
+			DisableControlAction(0, 27, true)
+			DisableControlAction(0, 142, true)
+			DisableControlAction(0, 24,  true)
+			DisableControlAction(0, 92,  true)
+			DisableControlAction(0, 75,  true)
 			SetPlayerCanDoDriveBy(player, false)
 			DisablePlayerFiring(player, true)
 		  if not IsEntityPlayingAnim(PlayerPedId(), "mp_arresting", "idle", 1) then
@@ -2093,7 +2077,6 @@ end)
 	  end
   end)
 
--- Create blips
 Citizen.CreateThread(function()
 
 	for k,v in pairs(Config_fbi.fbiStations) do
@@ -2112,7 +2095,6 @@ Citizen.CreateThread(function()
 
 end)
 
--- Display markers
 Citizen.CreateThread(function()
 	while true do
 
@@ -2186,7 +2168,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Enter / Exit marker events
 Citizen.CreateThread(function()
 
 	while true do
@@ -2317,7 +2298,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Enter / Exit entity zone events
 Citizen.CreateThread(function()
 	local trackedEntities = {
 		'prop_roadcone02a',
@@ -2363,7 +2343,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Key Controls
 Citizen.CreateThread(function()
 	while true do
 
@@ -2392,7 +2371,7 @@ Citizen.CreateThread(function()
 					OpenheliSpawnerMenu_fbi(CurrentActionData.station, CurrentActionData.partNum)
 
 				elseif CurrentAction == 'delete_vehicle' then
-				
+
 					ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
 
 				elseif CurrentAction == 'menu_boss_actions' then
@@ -2402,7 +2381,7 @@ Citizen.CreateThread(function()
 						CurrentAction     = 'menu_boss_actions'
 						CurrentActionMsg  = _U('open_bossmenu')
 						CurrentActionData = {}
-					end, { wash = false }) -- disable washing money
+					end, { wash = false })
 
 				elseif CurrentAction == 'remove_entity' then
 					DeleteEntity(CurrentActionData.entity)
@@ -2410,11 +2389,11 @@ Citizen.CreateThread(function()
 				elseif CurrentAction == 'menu_elevator' then
 					OpenElevator_fbi(CurrentActionData.station, CurrentActionData.partNum)
 				end
-				
+
 				CurrentAction = nil
 			end
-		end -- CurrentAction end
-		
+		end
+
 		if IsControlJustReleased(0, Keys['F6']) and not isDead and PlayerData.job ~= nil and PlayerData.job.name == 'fbi' and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'fbi_actions') then
 			if Config_fbi.MaxInService == -1 then
 				OpenfbiActionsMenu_fbi()
@@ -2424,25 +2403,21 @@ Citizen.CreateThread(function()
 				ESX.ShowNotification(_U('service_not'))
 			end
 		end
-		
+
 		if IsControlJustReleased(0, Keys['E']) and CurrentTask.Busy then
 			ESX.ShowNotification(_U('impound_canceled'))
 			ESX.ClearTimeout(CurrentTask.Task)
 			ClearPedTasks(PlayerPedId())
-			
+
 			CurrentTask.Busy = false
 		end
 	end
 end)
 
-
-
-
-
 AddEventHandler('playerSpawned', function(spawn)
 	isDead = false
 	TriggerEvent('esx_fbi_job:unrestrain')
-	
+
 	if not hasAlreadyJoined then
 		TriggerServerEvent('esx_fbi_job:spawned')
 	end
@@ -2468,7 +2443,6 @@ AddEventHandler('onResourceStop', function(resource)
 	end
 end)
 
--- handcuff timer, unrestrain the player after an certain amount of time
 function StartHandcuffTimer_fbi()
 	if Config_fbi.EnableHandcuffTimer and HandcuffTimer.Active then
 		ESX.ClearTimeout(HandcuffTimer.Task)
@@ -2485,19 +2459,16 @@ end
 
 function loadanimdict_fbi(dictname)
 	if not HasAnimDictLoaded(dictname) then
-		RequestAnimDict(dictname) 
-		while not HasAnimDictLoaded(dictname) do 
+		RequestAnimDict(dictname)
+		while not HasAnimDictLoaded(dictname) do
 			Citizen.Wait(1)
 		end
 	end
 end
 
--- TODO
---   - return to garage if owned
---   - message owner that his vehicle has been impounded
 function ImpoundVehicle_fbi(vehicle)
-	--local vehicleName = GetLabelText(GetDisplayNameFromVehicleModel(GetEntityModel(vehicle)))
-	ESX.Game.DeleteVehicle(vehicle) 
+
+	ESX.Game.DeleteVehicle(vehicle)
 	ESX.ShowNotification(_U('impound_successful'))
 	CurrentTask.Busy = false
 end
@@ -2505,8 +2476,6 @@ end
 AddEventHandler('police:gargbygang', function(drrragss)
 	dragiss = drrragss
 end)
-
-
 
 function OpendivisionsMenu_fbi()
     ESX.TriggerServerCallback('esx_society:divisionsPlayer', function(check)

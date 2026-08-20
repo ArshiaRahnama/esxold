@@ -1,6 +1,5 @@
--- ====================================================================
--- [HUNT] client
--- ====================================================================
+
+
 ESX = nil
 local PlayedData = nil
 
@@ -26,61 +25,61 @@ end)
 
 local Blips , Animals = {} , {}
 local inhunt , cd = false , false
-local ZoneBlip = nil 
-local PriveId = 0 
+local ZoneBlip = nil
+local PriveId = 0
 local IsCraft = true
 local blipinfo = {
-    { 
+    {
         Name = 'Hunt' ,
-		
+
         Coord = vector3(-567.811, 5253.099, 70.47766) ,
-        Color =  46, 
-        Sprite =  442 , 
-		Scale = 0.7 , 
-		BeginText = true , 
-	
+        Color =  46,
+        Sprite =  442 ,
+		Scale = 0.7 ,
+		BeginText = true ,
+
     },
-	{ 
+	{
         Name = 'slaughterhouse' ,
-		
+
         Coord = vector3(-96.81758, 6205.78, 31.01538)  ,
-        Color =  1, 
-        Sprite =  442 , 
-		Scale = 0.6 , 
-		BeginText = true , 
-		
-    }, 
-	-- { 
-    --     Name = 'Sell Meat' ,
-		
-    --     Coord = vector3(-1546.708, -466.4572, 36.18823)  ,
-    --     Color =  0, 
-    --     Sprite =  442 , 
-	-- 	Scale = 0.7 , 
-	-- 	BeginText = true , 
-	
-    -- }, 
-	
+        Color =  1,
+        Sprite =  442 ,
+		Scale = 0.6 ,
+		BeginText = true ,
+
+    },
+
+
+
+
+
+
+
+
+
+
+
 }
 local Animalsbot = {
-	'a_c_deer', -- Aho
-	'a_c_rabbit_01', -- khargush
-	'a_c_hen', -- Morgh
- 	'a_c_chickenhawk', -- Oghab
-	-- New
-	'a_c_chop', --Rottweiler
-	'a_c_coyote', -- Plang
-	'a_c_husky', -- Husky
-	'a_c_mtlion', -- Cougar shir kohi
-	'a_c_pig', -- khok
+	'a_c_deer',
+	'a_c_rabbit_01',
+	'a_c_hen',
+ 	'a_c_chickenhawk',
+
+	'a_c_chop',
+	'a_c_coyote',
+	'a_c_husky',
+	'a_c_mtlion',
+	'a_c_pig',
 }
 
 local AnimalsbotAtack = {
-	'a_c_deer', -- Aho
-	'a_c_chop', -- Rottweiler
-	'a_c_coyote', -- Plang
-	'a_c_husky', -- Husky
-	'a_c_mtlion', -- Cougar shir kohi
+	'a_c_deer',
+	'a_c_chop',
+	'a_c_coyote',
+	'a_c_husky',
+	'a_c_mtlion',
 }
 
 RegisterNetEvent('HUNT:ChekCraft')
@@ -99,14 +98,14 @@ CreateThread(function()
                 local animalCoords = GetEntityCoords(v.Animal)
                 local distance = #(playerCoords - animalCoords)
 
-              
+
                 local attackedOrShot = distance <= 30.0 or HasEntityBeenDamagedByEntity(v.Animal, playerPed, true)
-				
+
                 for _, model in pairs(AnimalsbotAtack) do
                     if animalModel == GetHashKey(model) and attackedOrShot then
-                        
+
                         ClearEntityLastDamageEntity(v.Animal)
-                   
+
                         SetPedFleeAttributes(v.Animal, 0, false)
                         SetPedCombatAttributes(v.Animal, 46, true)
                         SetPedCombatAttributes(v.Animal, 5, true)
@@ -117,20 +116,20 @@ CreateThread(function()
                         if not IsPedInCombat(v.Animal, playerPed) then
                             TaskCombatPed(v.Animal, playerPed, 0, 16)
                         end
-            
+
                         CreateThread(function()
                             while DoesEntityExist(v.Animal) and not IsPedRagdoll(playerPed) do
                                 Wait(1500)
                                 if #(GetEntityCoords(v.Animal) - GetEntityCoords(playerPed)) <= 2.0 and GetEntityHealth(v.Animal) ~= 0 then
-									
+
                                     SetPedToRagdoll(playerPed, 5000, 5000, 0, false, false, false)
-									
+
                                     Wait(3000)
                                     TaskSmartFleePed(v.Animal, playerPed, 100.0, -1, false, false)
                                     SetPedCombatAttributes(v.Animal, 46, false)
-                                    SetPedRelationshipGroupHash(v.Animal, GetHashKey("NEUTRAL")) 
-                                    ClearPedTasks(v.Animal) 
-                                    SetEntityAsNoLongerNeeded(v.Animal) 
+                                    SetPedRelationshipGroupHash(v.Animal, GetHashKey("NEUTRAL"))
+                                    ClearPedTasks(v.Animal)
+                                    SetEntityAsNoLongerNeeded(v.Animal)
                                     break
                                 end
                             end
@@ -143,10 +142,6 @@ CreateThread(function()
     end
 end)
 
-
-------
---blip
-------
 CreateThread(function()
 	for k, v in pairs(blipinfo) do
 	local blip = AddBlipForCoord(v.Coord)
@@ -158,39 +153,39 @@ CreateThread(function()
 	BeginTextCommandSetBlipName("STRING")
 	AddTextComponentString(v.Name)
 	EndTextCommandSetBlipName(blip)
-end 
+end
 end)
 CreateThread(function()
-	while true do 
-		Wait(700) 
-		if inhunt then -- Dead CanLoot
-			for k,v in pairs(Animals) do 
+	while true do
+		Wait(700)
+		if inhunt then
+			for k,v in pairs(Animals) do
 				if DoesEntityExist(v.Animal) then
 					local AnimalCoords = GetEntityCoords(v.Animal)
-					local PlyToAnimal = GetDistanceBetweenCoords(vector3(-624.9231, 5085.086, 131.7267), AnimalCoords, true) 
-					if PlyToAnimal > 250.0 then 
-						DeleteEntity(v.Animal) 
+					local PlyToAnimal = GetDistanceBetweenCoords(vector3(-624.9231, 5085.086, 131.7267), AnimalCoords, true)
+					if PlyToAnimal > 250.0 then
+						DeleteEntity(v.Animal)
 						RemoveBlip(v.Blip)
 						table.remove(Animals , k,v )
-					end 
-					if v.Dead == false then  
-						if IsEntityDead(v.Animal) then 
-							v.Dead = true  							 
-							if GetSelectedPedWeapon(PlayerPedId()) ~= GetHashKey('WEAPON_MUSKET') then 
-								v.CanLoot = false 						
-							end  
-						end 
-					end 
-				end 
-			end  
+					end
+					if v.Dead == false then
+						if IsEntityDead(v.Animal) then
+							v.Dead = true
+							if GetSelectedPedWeapon(PlayerPedId()) ~= GetHashKey('WEAPON_MUSKET') then
+								v.CanLoot = false
+							end
+						end
+					end
+				end
+			end
 
-			if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()),vector3(-624.9231, 5085.086, 131.7267)  , true ) > 250.0 then 
+			if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()),vector3(-624.9231, 5085.086, 131.7267)  , true ) > 250.0 then
 				ExitHunt()
-			end 
-		else 
+			end
+		else
 			Wait(5000)
-		end  
-	end 
+		end
+	end
 end)
 
 function ShowZone()
@@ -203,53 +198,53 @@ CreateThread(function()
 	SetBlipAsShortRange(blip, true)
 	ZoneBlip = blip
 end)
-AddEventHandler('onKeyDown',function(key) 
-	if key == 'e' then 
-		if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()),vector3(-624.9231, 5085.086, 131.7267)  , true ) <= 250.0 then 
-			if not cd  then 
-				ESX.TriggerServerCallback('HUNT:GetInventoryKnife', function(hasweapon) 
-					for k,v in pairs(Animals) do 
+AddEventHandler('onKeyDown',function(key)
+	if key == 'e' then
+		if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()),vector3(-624.9231, 5085.086, 131.7267)  , true ) <= 250.0 then
+			if not cd  then
+				ESX.TriggerServerCallback('HUNT:GetInventoryKnife', function(hasweapon)
+					for k,v in pairs(Animals) do
 						if DoesEntityExist(v.Animal) then
 							local AnimalCoords = GetEntityCoords(v.Animal)
 							local PlyCoords = GetEntityCoords(PlayerPedId())
 							local AnimalHealth = GetEntityHealth(v.Animal)
 							local PlyToAnimal = GetDistanceBetweenCoords(PlyCoords, AnimalCoords, true)
-						
+
 							if PlyToAnimal < 2.0 then
 								if AnimalHealth <= 0 then
-									if v.CanLoot  then 
-									
+									if v.CanLoot  then
+
 										if hasweapon then
 											RemoveBlip(v.Blip)
 											PickUP(v.Animal, v.Name)
 											table.remove( Animals , k,v )
-										
-											
-											break 
+
+
+											break
 										else
 											lib.notify({ position = 'center-right', title = '', description = 'شما چاقو ندارید!', type = 'error', duration = 3000 })
-										end 
-										
-									else  
+										end
+
+									else
 										RemoveBlip(v.Blip)
-										DeleteEntity(v.Animal) 
+										DeleteEntity(v.Animal)
 										table.remove( Animals , k,v )
-									
+
 										lib.notify({ position = 'center-right', title = '', description = 'این حیوان با اسلحه شکار کشته نشده و گوشت آن قابل استفاده نیست!', type = 'error', duration = 3000 })
-									end 
+									end
 								end
-							end   
-						end 
+							end
+						end
 					end
 				end)
-			end 
-		end 
-	end 
+			end
+		end
+	end
 end)
-end  
+end
 
 function PickUP(Animal,Name )
-	if DoesEntityExist(Animal) then 
+	if DoesEntityExist(Animal) then
 		SetCurrentPedWeapon(PlayerPedId(), GetHashKey('WEAPON_KNIFE'), true)
 		Wait(50)
 		SetEntityCoords(PlayerPedId() , GetEntityCoords(Animal))
@@ -260,51 +255,51 @@ function PickUP(Animal,Name )
 			ClearPedTasksImmediately(PlayerPedId())
 			TriggerServerEvent('Hunt:killed', Name)
 			DeleteEntity(Animal)
-			cd  = false 
+			cd  = false
 			Wait(1000)
 			SetCurrentPedWeapon(PlayerPedId(), GetHashKey('WEAPON_MUSKET'), true)
-		end) 
-	end 
-end 
+		end)
+	end
+end
 
 function RemoveBlips()
 	CreateThread(function()
     RemoveBlip(ZoneBlip)
-end) 
-	
-end 
+end)
+
+end
 function starthunt()
-	ESX.TriggerServerCallback('HUNT:GetInventoryKnife&Musket', function(Knife) 
-		-- if PlayedData.job.name == 'police' or PlayedData.job.name == 'mt' or  PlayedData.job.name == 'sheriff' or  PlayedData.job.name == 'ambulance' or  PlayedData.job.name == 'mechanic' or  PlayedData.job.name == 'taxi' or  PlayedData.job.name == 'weazel' then 
-		-- 	ESX.ShowNotification("Shoma OnDuty Job Hastid Nemitavanid Az Shekar Estefade Konid !!!")
-		-- else
-			if Knife then 
-				for k,v in pairs(Animalsbot) do 
+	ESX.TriggerServerCallback('HUNT:GetInventoryKnife&Musket', function(Knife)
+
+
+
+			if Knife then
+				for k,v in pairs(Animalsbot) do
 				LoadModel(v)
-				end 
+				end
 				LoadAnimDict('amb@medic@standing@kneel@base')
 				LoadAnimDict('anim@gangops@facility@servers@bodysearch@')
-				inhunt = true 
+				inhunt = true
 				ShowZone()
 				createAnimal()
-				-- ESX.ShowNotification("Dar Sorat Kharj Shodan Az Zone Hunting Cancel Mishavad")
+
 				GiveWeaponToPed(PlayerPedId(), "WEAPON_MUSKET", 250, false, true)
 				NotVehicle(true)
 			else
 				lib.notify({ position = 'center-right', title = '', description = 'شما برای ان دیوتی کردن باید چاقو داشته باشید', type = 'error', duration = 3000 })
 			end
-		-- end
+
 	end)
-end 
+end
 function createAnimal()
 	CreateThread(function()
-		while inhunt do 
-			local random = math.random(1, 2)	
-			if not inhunt then break  end  
-			PriveId = PriveId + 1 
-		-- if (#Animals) < 1 then 
-			
-			for k,v in pairs(Animalsbot) do 
+		while inhunt do
+			local random = math.random(1, 2)
+			if not inhunt then break  end
+			PriveId = PriveId + 1
+
+
+			for k,v in pairs(Animalsbot) do
 
 				local waypointCoords = vector2(-624.9231 + math.random(-180,180) , 5085.086 + math.random(-180,180))
 				for height = 1, 10000 do
@@ -322,8 +317,8 @@ function createAnimal()
 							SetBlipAsShortRange(AnimalBlip, false)
 							BeginTextCommandSetBlipName("STRING")
 							AddTextComponentString('Animal')
-							EndTextCommandSetBlipName(AnimalBlip) 
-						
+							EndTextCommandSetBlipName(AnimalBlip)
+
 							table.insert(Animals,{ Animal = Animal , Name = v , Blip = AnimalBlip , CanLoot = true , Dead = false   })
 
 							break
@@ -332,77 +327,77 @@ function createAnimal()
 					Citizen.Wait(3)
 				end
 				Wait(math.random(50, 120) * 1000)
-				if not inhunt then break  end  
-			end 
-		-- end 
+				if not inhunt then break  end
+			end
+
 		Wait(5000)
-		if not inhunt then break  end  
-		end 
+		if not inhunt then break  end
+		end
 	end)
-end  
+end
 function ExitHunt()
-	inhunt = false 
+	inhunt = false
 	RemoveWeaponFromPed(PlayerPedId(), GetHashKey("WEAPON_MUSKET"))
-	for k,v in pairs(Animals) do 
-	   if DoesEntityExist(v.Animal) then 
+	for k,v in pairs(Animals) do
+	   if DoesEntityExist(v.Animal) then
 			DeleteEntity(v.Animal)
 			DeletePed(v.Animal)
-	   end 
+	   end
 	   RemoveBlip(v.Blip)
-	end 
+	end
 	Animals = {}
 	RemoveBlips()
 	NotVehicle(false)
-end 
----
+end
+
 local Coldown = 0
 function  KeysandMarker()
-	AddEventHandler('onKeyDown',function(key) 
-		if key == 'e' then 
-			if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()),vector3(-567.811, 5253.099, 70.47766)  , true ) <= 2.0 then 
+	AddEventHandler('onKeyDown',function(key)
+		if key == 'e' then
+			if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()),vector3(-567.811, 5253.099, 70.47766)  , true ) <= 2.0 then
 				if Coldown >= GetGameTimer() then return end
 				OpenHuntMenu()
 				Coldown = GetGameTimer() + 3000
 			elseif GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()),vector3(-96.81758, 6205.78, 31.01538)  , true ) <= 2.0 then
-				if IsCraft then 
+				if IsCraft then
 					OpenSeMenu()
 				end
-			-- elseif  GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()),vector3(-1546.708, -466.4572, 36.18823)  , true ) <= 15.0 then
-			-- 	OpenSellMenu()
-			 end 
-		end 
+
+
+			 end
+		end
 	end)
 	CreateThread(function()
-		while true do 
+		while true do
 			Wait(5)
 			local Sleep = true
 			if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()),vector3(-567.811, 5253.099, 70.47766)  , true ) <= 15.0 then
-				Sleep = false 
+				Sleep = false
 				DrawMarker(31, vector3(-567.811, 5253.099, 70.47766), 0, 0, 0, 0, 0, 0, 0.6, 0.6, 0.6, 255, 128, 0, 100, 0, 0, 1, 1, 0, 0, 0)
 			elseif  GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()),vector3(-96.81758, 6205.78, 31.01538)  , true ) <= 15.0 then
-				Sleep = false 
+				Sleep = false
 				DrawMarker(31, vector3(-96.81758, 6205.78, 31.01538), 0, 0, 0, 0, 0, 0, 0.6, 0.6, 0.6, 255, 128, 0, 100, 0, 0, 1, 1, 0, 0, 0)
-			 --elseif  GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()),vector3(-1546.708, -466.4572, 36.18823)  , true ) <= 15.0 then
-			 	--Sleep = false 
-			-- 	DrawMarker(31, vector3(-1546.708, -466.4572, 36.18823), 0, 0, 0, 0, 0, 0, 0.6, 0.6, 0.6, 255, 128, 0, 180, 0, 0, 1, 1, 0, 0, 0)
-			 end 
-			if Sleep then Wait(2000) end 
-		end 
+
+
+
+			 end
+			if Sleep then Wait(2000) end
+		end
 	end)
-end  
-----
-function OpenHuntMenu() 
+end
+
+function OpenHuntMenu()
 	local elements = {}
-        -- table.insert(elements, {label = ("[------- Hunt -------]"), value = 'BP'})
-		if inhunt then 
+
+		if inhunt then
 		table.insert(elements, {label = (" End "), value = 'end'})
 		table.insert(elements, {label = ("Hunt :  ✔️ "), value = nil})
-	    else 
+	    else
 		table.insert(elements, {label = (" Start "), value = 'start'})
 		table.insert(elements, {label = ("Hunt :  ❌ "), value = nil})
-		end 
-		-- table.insert(elements, {label = ("[------- Hunt -------]"), value = 'BP'})
-	
+		end
+
+
 	ESX.UI.Menu.CloseAll()
 	ESX.UI.Menu.Open(
 	'default', GetCurrentResourceName(), 'BattelPass',
@@ -413,25 +408,25 @@ function OpenHuntMenu()
 	}, function(data, menu)
 		local action = data.current.value
 		menu.close()
-		if action == 'end' then 
+		if action == 'end' then
 			ExitHunt()
-		elseif  action == 'start' then 
+		elseif  action == 'start' then
 			starthunt()
 
-	    end 
+	    end
 	end, function(data, menu)
       menu.close()
     end)
-end 
---
+end
+
 function OpenSellMenu()
 	local elements = {}
-	-- table.insert(elements, {label = ("[------- Sell -------]"), value = 'BP'})
+
 	table.insert(elements, {label = ("Morgh"), value = 'morgh'})
 	table.insert(elements, {label = ("Khargush"), value = 'khargush'})
 	table.insert(elements, {label = ("Gavazn"), value = 'Aho'})
 	table.insert(elements, {label = ("Oghab"), value = 'Oghab'})
-	-- table.insert(elements, {label = ("[------- Sell -------]"), value = 'BP'})
+
 
 ESX.UI.Menu.CloseAll()
 ESX.UI.Menu.Open(
@@ -448,18 +443,17 @@ end, function(data, menu)
   menu.close()
 end)
 
-
-end  
+end
 function OpenSeMenu()
-	
-	ESX.TriggerServerCallback('HUNT:GetInventory', function(inventorys) 
+
+	ESX.TriggerServerCallback('HUNT:GetInventory', function(inventorys)
 		local elements = {}
-		if inventorys then 
-			for k,v in pairs(inventorys) do 
-			
-				for i=1, #Config_HUNT.ItemsLashe do  
-					if v.name == Config_HUNT.ItemsLashe[i] and v.count >= 1 then 
-						
+		if inventorys then
+			for k,v in pairs(inventorys) do
+
+				for i=1, #Config_HUNT.ItemsLashe do
+					if v.name == Config_HUNT.ItemsLashe[i] and v.count >= 1 then
+
 						table.insert(elements, {label = v.label.." | X "..v.count, value = v.name})
 					end
 				end
@@ -477,13 +471,13 @@ function OpenSeMenu()
 			local action = data.current.value
 			menu.close()
 			TriggerServerEvent("Hunt:slaughterhouse",action)
-			
+
 		end, function(data, menu)
 		menu.close()
 		end)
 	end)
-	
-end  
+
+end
 function LoadModel(model)
     while not HasModelLoaded(model) do
           RequestModel(model)
@@ -494,7 +488,7 @@ function LoadAnimDict(dict)
     while (not HasAnimDictLoaded(dict)) do
         RequestAnimDict(dict)
         Citizen.Wait(10)
-    end    
+    end
 end
 
 RegisterNetEvent('esx:playerLoaded')
@@ -503,20 +497,18 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 end)
 
 function NotVehicle(Chek)
-	while Chek do 
+	while Chek do
 		Wait(500)
-		if inhunt then 
-			if GetVehiclePedIsIn(PlayerPedId(), false) ~= 0 then 
+		if inhunt then
+			if GetVehiclePedIsIn(PlayerPedId(), false) ~= 0 then
 				TaskLeaveAnyVehicle(PlayerPedId(), 16, 0)
 			end
-		else 
+		else
 			return
 		end
 	end
 end
--- ====================================================================
--- [Megaphone] client
--- ====================================================================
+
 ESX = nil
 
 local holdingMega = false
@@ -534,13 +526,13 @@ local function DisableSubmix()
         ExecuteCommand('e c')
     end
     TriggerServerEvent('megaphone:applySubmix', false)
-end 
+end
 
 local usingMegaphone = false
 
 RegisterNetEvent('megaphone:use')
 AddEventHandler('megaphone:use', function()
-    if usingMegaphone then 
+    if usingMegaphone then
         DisableSubmix()
         exports["pma-voice"]:clearProximityOverride()
     end
@@ -551,22 +543,21 @@ AddEventHandler('megaphone:use', function()
             exports["pma-voice"]:overrideProximityRange(150.0, true)
         end
         while usingMegaphone do
-            -- if not IsEntityPlayingAnim(PlayerPedId(), "molly@megaphone", "megaphone_clip", 3) then
-                -- ExecuteCommand('e megaphone')
-            -- end
+
+
+
             Wait(100)
         end
     end)
 end)
-
 
 Citizen.CreateThread(function()
     DecorRegister("megafan_active", 2)
     local wasActive = false
 
     while true do
-        Citizen.Wait(0) 
-        if IsControlPressed(0, 210) then 
+        Citizen.Wait(0)
+        if IsControlPressed(0, 210) then
             local notified = false
 
             while IsControlPressed(0, 210) do
@@ -575,8 +566,8 @@ Citizen.CreateThread(function()
                 local vehicleped = GetVehiclePedIsIn(PlayerPedId(), false)
                 local checkveh   = tonumber(vehicleped)
 
-                if JobName == 'police' or JobName == 'sheriff' or JobName == 'fbi' or JobName == 'mt' then 
-                    if checkveh ~= 0 then 
+                if JobName == 'police' or JobName == 'sheriff' or JobName == 'fbi' or JobName == 'mt' then
+                    if checkveh ~= 0 then
                         local vehplate = GetVehicleNumberPlateText(vehicleped)
                         local platetexttest = string.sub(tostring(vehplate), 1, 2)
                         local platetexttestFBi = string.sub(tostring(vehplate), 1, 3)
@@ -593,9 +584,8 @@ Citizen.CreateThread(function()
                         end
                     end
                 end
-                Citizen.Wait(0) 
+                Citizen.Wait(0)
             end
-
 
             if wasActive then
                 Wait(20)
@@ -609,7 +599,6 @@ Citizen.CreateThread(function()
         end
     end
 end)
-
 
 local function loadAnimDict(dict)
     while (not HasAnimDictLoaded(dict)) do
@@ -658,7 +647,6 @@ AddEventHandler('Megaphone:UseCommand', function()
         exports["pma-voice"]:overrideProximityRange(50.0, true)
         TriggerServerEvent('megaphone:applySubmix', true)
 
-
         lib.notify({ position = 'center-right', title = "Megaphone:", description = "Speaker Activated!", type = 'success', duration = 5000 })
     else
 
@@ -668,16 +656,14 @@ AddEventHandler('Megaphone:UseCommand', function()
         ClearPedTasks(ped)
         DeleteEntity(prop)
         prop = nil
-        
+
         DisableSubmix()
         Wait(20)
         exports["pma-voice"]:clearProximityOverride()
 
-
         lib.notify({ position = 'center-right', title = "Megaphone:", description = "Speaker Deactivated!", type = 'error', duration = 5000 })
     end
 end)
-
 
 local data = {
     ['default'] = 0,
@@ -709,9 +695,6 @@ RegisterNetEvent('megaphone:updateSubmixStatus', function(state, source)
     end
 end)
 
--- ====================================================================
--- [antipg] client (به‌روزرسانی‌شده - antipg_fixed)
--- ====================================================================
 do
 ESX = nil
 
@@ -722,75 +705,72 @@ local isDriver = false
 local fTractionLossMult = nil
 local isModed = false
 local class = nil
-local isBlacklisted = false 
+local isBlacklisted = false
 local serverspeed = 75.0
-local limite = 13.89 -- jade hai khaki 50kmh
+local limite = 13.89
 
-local dirtSurfaces = {4, 5, 10} 
+local dirtSurfaces = {4, 5, 10}
 local noSpeedLimitSurfaces = {7, 8, 1, 4, 181, 15, 3, 13, 68, 0}
 
-
-local blackListed = {   
-    788045382, --"sanchez"
-    -1453280962, --"sanchez2"
-    1753414259, --"enduro"
-    2035069708, --"esskey"
-    86520421, --"bf400"
-    909518807, -- trx
-    1221510024, -- Nissantitan17
-    1047274985,  -- AFRICAT
-    898224721, -- 19raptor
-    449889667, --  CARACARA2
-    -1915558610, --  slammedrapt
-    -1299229688 , -- RAID
+local blackListed = {
+    788045382,
+    -1453280962,
+    1753414259,
+    2035069708,
+    86520421,
+    909518807,
+    1221510024,
+    1047274985,
+    898224721,
+    449889667,
+    -1915558610,
+    -1299229688 ,
     -888725296,
     353883353,
-    1067067984, --g63amg6x6cop
-    241076232,  --tx heli
-    353883353,  --POLMAV
-    497572160,  --bmwg07
-    -2066403776,  -- Canyon AT4X
-    -2107990196,  --GUARDIAN
-    -1990430753,  --ACTROS
-    -1941254156,  --scania
-    164236479, -- Police cros
-    -1960756985,  --FORMULA2
-    1543134283, -- VALKYRI2
-    1981688531,  --TITAN
-    630371791,   --BARRACKS
-    2071877360,  --INSURGENT2
-    353883353,   --POLMAV
-    -980573366,  --DINGHY5
-    745926877,  --BUZZARD2
+    1067067984,
+    241076232,
+    353883353,
+    497572160,
+    -2066403776,
+    -2107990196,
+    -1990430753,
+    -1941254156,
+    164236479,
+    -1960756985,
+    1543134283,
+    1981688531,
+    630371791,
+    2071877360,
+    353883353,
+    -980573366,
+    745926877,
 
 }
-
 
 local classMod = {
-    [0] = limite, -- Compacts 
-    [1] = limite, -- Sedans
-    [2] = limite, -- SUVs
-    [3] = limite, -- Coupes
-    [4] = limite, -- Muscle
-    [5] = limite, -- Sports Classics
-    [6] = limite, -- Sports
-    [7] = limite, -- Super  
-    [8] = serverspeed, -- Motorcycles  
-    [9] = 47.22, -- Off-road   47.22ms = 170kmh
-    [10] = limite, -- Industrial
-    [11] = limite, -- Utility
-    [12] = limite, -- Vans  
-    [13] = 0, -- Cycles  
-    [14] = 0, -- Boats  
-    [15] = serverspeed, -- Helicopters  
-    [16] = 0, -- Planes  
-    [17] = 0, -- Service  
-    [18] = limite, -- Emergency  
-    [19] = 0, -- Military  
-    [20] = limite, -- Commercial  
-    [21] = 0, -- Trains  
+    [0] = limite,
+    [1] = limite,
+    [2] = limite,
+    [3] = limite,
+    [4] = limite,
+    [5] = limite,
+    [6] = limite,
+    [7] = limite,
+    [8] = serverspeed,
+    [9] = 47.22,
+    [10] = limite,
+    [11] = limite,
+    [12] = limite,
+    [13] = 0,
+    [14] = 0,
+    [15] = serverspeed,
+    [16] = 0,
+    [17] = 0,
+    [18] = limite,
+    [19] = 0,
+    [20] = limite,
+    [21] = 0,
 }
-
 
 function isModelBlacklisted_Antipg(model)
     for _, blacklisted2 in ipairs(blackListed) do
@@ -803,8 +783,8 @@ function isModelBlacklisted_Antipg(model)
 end
 
 Citizen.CreateThread(function()
-    while true do 
-        local ped = PlayerPedId()      
+    while true do
+        local ped = PlayerPedId()
         if IsPedInAnyVehicle(ped, false) then
             if vehicle == nil then
                 vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
@@ -826,9 +806,8 @@ Citizen.CreateThread(function()
 
                 Wait(1000)
                 if DoesEntityExist(vehicle) then
-                    
-                    setTractionLost_Antipg(fTractionLossMult)
 
+                    setTractionLost_Antipg(fTractionLossMult)
 
                 end
                 vehicle = nil
@@ -839,19 +818,18 @@ Citizen.CreateThread(function()
                 isBlacklisted = false
             end
         end
-        Citizen.Wait(100) 
+        Citizen.Wait(100)
     end
 end)
 
 Citizen.CreateThread(function()
-    while true do 
-        if not isBlacklisted then     
+    while true do
+        if not isBlacklisted then
             if vehicle and isDriver then
                 local speed = GetEntitySpeed(vehicle)
-                local surfaceType = GetVehicleWheelSurfaceMaterial(vehicle, 0) 
+                local surfaceType = GetVehicleWheelSurfaceMaterial(vehicle, 0)
 
-
-                if isDirtOrGrassSurface_Antipg(surfaceType) then 
+                if isDirtOrGrassSurface_Antipg(surfaceType) then
                     if not isModed and speed >= 8.5 then
                         isModed = true
                         SetVehicleMaxSpeed(vehicle, classMod[class] or limite)
@@ -864,42 +842,40 @@ Citizen.CreateThread(function()
                 end
 
                 if isNoSpeedLimitSurface_Antipg(surfaceType) then
-                    SetVehicleMaxSpeed(vehicle, serverspeed) 
+                    SetVehicleMaxSpeed(vehicle, serverspeed)
                 end
             end
         else
-            -- if isNoSpeedLimitSurface_Antipg(surfaceType) then
-                SetVehicleMaxSpeed(vehicle, serverspeed) 
-            -- end
+
+                SetVehicleMaxSpeed(vehicle, serverspeed)
+
         end
         Citizen.Wait(100)
     end
 end)
 
-
-
 local llmitsss = {
-    69.44, -- 250 km/h
-    66.67, -- 240 km/h
-    63.89, -- 230 km/h
-    61.11, -- 220 km/h
-    58.33, -- 210 km/h
-    55.56, -- 200 km/h
-    52.78, -- 190 km/h
-    50.00, -- 180 km/h
-    47.22, -- 170 km/h
-    44.44, -- 160 km/h
-    41.67, -- 150 km/h
-    38.89, -- 140 km/h
-    36.11, -- 130 km/h
-    33.33, -- 120 km/h
-    30.56, -- 110 km/h
-    27.78, -- 100 km/h
-    25.00, -- 90 km/h
-    22.22, -- 80 km/h
-    19.44, -- 70 km/h
-    16.67, -- 60 km/h
-    13.89, -- 50 km/h
+    69.44,
+    66.67,
+    63.89,
+    61.11,
+    58.33,
+    55.56,
+    52.78,
+    50.00,
+    47.22,
+    44.44,
+    41.67,
+    38.89,
+    36.11,
+    33.33,
+    30.56,
+    27.78,
+    25.00,
+    22.22,
+    19.44,
+    16.67,
+    13.89,
 }
 
 local speed = GetEntitySpeed(vehicle)
@@ -907,223 +883,221 @@ function lllimit_Antipg(vehicle, limite)
     for i=1, tostring(#llmitsss), 1 do
 
         if i <= 21 then
-            
-            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then 
-                if GetEntitySpeed(vehicle) >= llmitsss[1] then 
+
+            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then
+                if GetEntitySpeed(vehicle) >= llmitsss[1] then
                     SetVehicleMaxSpeed(vehicle, llmitsss[1])
                     Wait(100)
                 end
-            else 
+            else
                 SetVehicleMaxSpeed(vehicle, serverspeed)
-                
+
             end
-            
-            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then 
-                if GetEntitySpeed(vehicle) >= llmitsss[2] then 
+
+            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then
+                if GetEntitySpeed(vehicle) >= llmitsss[2] then
                     SetVehicleMaxSpeed(vehicle, llmitsss[2])
                     Wait(100)
                 end
-            else 
+            else
                 SetVehicleMaxSpeed(vehicle, serverspeed)
-                
+
             end
-            
-            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then 
-                if GetEntitySpeed(vehicle) >= llmitsss[3] then 
+
+            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then
+                if GetEntitySpeed(vehicle) >= llmitsss[3] then
                     SetVehicleMaxSpeed(vehicle, llmitsss[3])
                     Wait(100)
                 end
-            else 
+            else
                 SetVehicleMaxSpeed(vehicle, serverspeed)
-                
+
             end
-            
-            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then 
-                if GetEntitySpeed(vehicle) >= llmitsss[4] then 
+
+            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then
+                if GetEntitySpeed(vehicle) >= llmitsss[4] then
                     SetVehicleMaxSpeed(vehicle, llmitsss[4])
                     Wait(100)
                 end
-            else 
+            else
                 SetVehicleMaxSpeed(vehicle, serverspeed)
-                
+
             end
-            
-            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then 
-                if GetEntitySpeed(vehicle) >= llmitsss[5] then 
+
+            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then
+                if GetEntitySpeed(vehicle) >= llmitsss[5] then
                     SetVehicleMaxSpeed(vehicle, llmitsss[5])
                     Wait(100)
                 end
-            else 
+            else
                 SetVehicleMaxSpeed(vehicle, serverspeed)
-                
+
             end
-            
-            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then 
-                if GetEntitySpeed(vehicle) >= llmitsss[6] then 
+
+            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then
+                if GetEntitySpeed(vehicle) >= llmitsss[6] then
                     SetVehicleMaxSpeed(vehicle, llmitsss[6])
                     Wait(100)
                 end
-            else 
+            else
                 SetVehicleMaxSpeed(vehicle, serverspeed)
-                
+
             end
-            
-            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then 
-                if GetEntitySpeed(vehicle) >= llmitsss[7] then 
+
+            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then
+                if GetEntitySpeed(vehicle) >= llmitsss[7] then
                     SetVehicleMaxSpeed(vehicle, llmitsss[7])
                     Wait(100)
                 end
-            else 
+            else
                 SetVehicleMaxSpeed(vehicle, serverspeed)
-                
+
             end
 
-            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then 
-                if GetEntitySpeed(vehicle) >= llmitsss[8] then 
+            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then
+                if GetEntitySpeed(vehicle) >= llmitsss[8] then
                     SetVehicleMaxSpeed(vehicle, llmitsss[8])
                     Wait(100)
                 end
-            else 
+            else
                 SetVehicleMaxSpeed(vehicle, serverspeed)
-                
+
             end
-            
-            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then 
-                if GetEntitySpeed(vehicle) >= llmitsss[9] then 
+
+            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then
+                if GetEntitySpeed(vehicle) >= llmitsss[9] then
                     SetVehicleMaxSpeed(vehicle, llmitsss[9])
                     Wait(100)
                 end
-            else 
+            else
                 SetVehicleMaxSpeed(vehicle, serverspeed)
-                
+
             end
-            
-            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then 
-                if GetEntitySpeed(vehicle) >= llmitsss[10] then 
+
+            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then
+                if GetEntitySpeed(vehicle) >= llmitsss[10] then
                     SetVehicleMaxSpeed(vehicle, llmitsss[10])
                     Wait(100)
                 end
-            else 
+            else
                 SetVehicleMaxSpeed(vehicle, serverspeed)
-                
+
             end
-            
-            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then 
-                if GetEntitySpeed(vehicle) >= llmitsss[11] then 
+
+            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then
+                if GetEntitySpeed(vehicle) >= llmitsss[11] then
                     SetVehicleMaxSpeed(vehicle, llmitsss[11])
                     Wait(100)
                 end
-            else 
+            else
                 SetVehicleMaxSpeed(vehicle, serverspeed)
-                
+
             end
-            
-            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then 
-                if GetEntitySpeed(vehicle) >= llmitsss[12] then 
+
+            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then
+                if GetEntitySpeed(vehicle) >= llmitsss[12] then
                     SetVehicleMaxSpeed(vehicle, llmitsss[12])
                     Wait(100)
                 end
-            else 
+            else
                 SetVehicleMaxSpeed(vehicle, serverspeed)
-                
+
             end
-            
-            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then 
-                if GetEntitySpeed(vehicle) >= llmitsss[13] then 
+
+            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then
+                if GetEntitySpeed(vehicle) >= llmitsss[13] then
                     SetVehicleMaxSpeed(vehicle, llmitsss[13])
                     Wait(100)
                 end
-            else 
+            else
                 SetVehicleMaxSpeed(vehicle, serverspeed)
-                
+
             end
-            
-            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then 
-                if GetEntitySpeed(vehicle) >= llmitsss[14] then 
+
+            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then
+                if GetEntitySpeed(vehicle) >= llmitsss[14] then
                     SetVehicleMaxSpeed(vehicle, llmitsss[14])
                     Wait(100)
                 end
-            else 
+            else
                 SetVehicleMaxSpeed(vehicle, serverspeed)
-                
+
             end
-            
-            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then 
-                if GetEntitySpeed(vehicle) >= llmitsss[15] then 
+
+            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then
+                if GetEntitySpeed(vehicle) >= llmitsss[15] then
                     SetVehicleMaxSpeed(vehicle, llmitsss[15])
                     Wait(100)
                 end
-            else 
+            else
                 SetVehicleMaxSpeed(vehicle, serverspeed)
-                
+
             end
-            
-            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then 
-                if GetEntitySpeed(vehicle) >= llmitsss[16] then 
+
+            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then
+                if GetEntitySpeed(vehicle) >= llmitsss[16] then
                     SetVehicleMaxSpeed(vehicle, llmitsss[16])
                     Wait(100)
                 end
-            else 
+            else
                 SetVehicleMaxSpeed(vehicle, serverspeed)
-                
+
             end
-            
-            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then 
-                if GetEntitySpeed(vehicle) >= llmitsss[17] then 
+
+            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then
+                if GetEntitySpeed(vehicle) >= llmitsss[17] then
                     SetVehicleMaxSpeed(vehicle, llmitsss[17])
                     Wait(100)
                 end
-            else 
+            else
                 SetVehicleMaxSpeed(vehicle, serverspeed)
-                
+
             end
-            
-            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then 
-                if GetEntitySpeed(vehicle) >= llmitsss[18] then 
+
+            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then
+                if GetEntitySpeed(vehicle) >= llmitsss[18] then
                     SetVehicleMaxSpeed(vehicle, llmitsss[18])
                     Wait(100)
                 end
-            else 
+            else
                 SetVehicleMaxSpeed(vehicle, serverspeed)
-                
+
             end
-            
-            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then 
-                if GetEntitySpeed(vehicle) >= llmitsss[19] then 
+
+            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then
+                if GetEntitySpeed(vehicle) >= llmitsss[19] then
                     SetVehicleMaxSpeed(vehicle, llmitsss[19])
                     Wait(100)
                 end
-            else 
+            else
                 SetVehicleMaxSpeed(vehicle, serverspeed)
-                
+
             end
-            
-            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then 
-                if GetEntitySpeed(vehicle) >= llmitsss[20] then 
+
+            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then
+                if GetEntitySpeed(vehicle) >= llmitsss[20] then
                     SetVehicleMaxSpeed(vehicle, llmitsss[20])
                     Wait(100)
                 end
-            else 
+            else
                 SetVehicleMaxSpeed(vehicle, serverspeed)
-                
+
             end
-            
-            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then 
-                if GetEntitySpeed(vehicle) >= llmitsss[21] then 
+
+            if not isNoSpeedLimitSurface_Antipg(GetVehicleWheelSurfaceMaterial(vehicle, 0)) then
+                if GetEntitySpeed(vehicle) >= llmitsss[21] then
                     SetVehicleMaxSpeed(vehicle, llmitsss[21])
                     Wait(100)
                     return
                 end
-            else 
+            else
                 SetVehicleMaxSpeed(vehicle, serverspeed)
-                
+
             end
-            
+
         end
     end
 end
-
-
 
 function isDirtOrGrassSurface_Antipg(surfaceType)
     for _, dirt in ipairs(dirtSurfaces) do
@@ -1143,26 +1117,22 @@ function isNoSpeedLimitSurface_Antipg(surfaceType)
     return false
 end
 
-
-
 function setTractionLost_Antipg(value)
     if not isBlacklisted and vehicle and value then
         SetVehicleHandlingFloat(vehicle, 'CHandlingData', 'fTractionLossMult', value)
     end
 end
 
-
-
  RegisterCommand('surface', function()
      local ped = PlayerPedId()
      if IsPedInAnyVehicle(ped, false) then
          local vehicle = GetVehiclePedIsIn(ped, false)
          if vehicle then
-        
+
              local frontSurface = GetVehicleWheelSurfaceMaterial(vehicle, 0)
              local rearSurface = GetVehicleWheelSurfaceMaterial(vehicle, 1)
 
-          
+
              TriggerEvent('chat:addMessage', {
                  color = {255, 0, 0},
                  multiline = true,
@@ -1176,12 +1146,6 @@ end
      end
 end, false)
 
-
-
-
-
-
-
 local function debugPrint(msg)
     if Config_Antipg.Debug then
         print("[EngineSystem-Client] " .. msg)
@@ -1189,7 +1153,6 @@ local function debugPrint(msg)
 end
 
 local isProcessing = false
-
 
 RegisterNetEvent('engine:createEngineItemClient')
 AddEventHandler('engine:createEngineItemClient', function()
@@ -1218,17 +1181,13 @@ local function createEngineItem()
             }
         })
 
-        SetTimeout(600000, function()  ---- 10  min
+        SetTimeout(600000, function()
             if DoesEntityExist(object) then
                 DeleteEntity(object)
             end
         end)
     end)
 end
-
-
-
-
 
 local function showEngineInstallMenu(vehicle, plate)
     local options = {
@@ -1271,7 +1230,6 @@ local function showEngineInstallMenu(vehicle, plate)
     end, plate)
 end
 
-
 RegisterNetEvent('engine:tryRepairVehicle')
 AddEventHandler('engine:tryRepairVehicle', function(data)
     ESX.TriggerServerCallback('engine:checkMoney', function(hasMoney)
@@ -1299,34 +1257,33 @@ AddEventHandler('engine:tryRepairVehicle', function(data)
             SetVehicleEngineOn(vehicle, true, true)
             lib.notify({ position = 'center-right', title = '', description = 'ماشین با موفقیت تعمیر شد!', type = 'success', duration = 3000 })
         else
-            lib.notify({ position = 'center-right', title = '', description = 'تعمیر ماشین لغو شد!', type = 'error', duration = 3000 }) 
+            lib.notify({ position = 'center-right', title = '', description = 'تعمیر ماشین لغو شد!', type = 'error', duration = 3000 })
         end
     end, 15000)
 end)
-
 
 RegisterNetEvent('engine:tryInstallEngine')
 AddEventHandler('engine:tryInstallEngine', function(data)
     local plate = data.plate
     local playerPed = PlayerPedId()
-    
+
     if not IsPedInAnyVehicle(playerPed, false) then
         lib.notify({ position = 'center-right', title = '', description = 'شما باید سوار ماشین باشید!', type = 'error', duration = 3000 })
         return
     end
-    
+
     ESX.TriggerServerCallback('engine:checkEngineItem', function(hasEngineItem, tier, price)
         if not hasEngineItem then
             lib.notify({ position = 'center-right', title = '', description = 'شما انجین ندارید!', type = 'error', duration = 3000 })
             return
         end
-        
+
         ESX.TriggerServerCallback('engine:checkMoney', function(hasMoney)
             if not hasMoney then
                 lib.notify({ position = 'center-right', title = '', description = 'شما پول کافی ندارید ($' .. price .. ')!', type = 'error', duration = 3000 })
                 return
             end
-            
+
             ESX.TriggerServerCallback('engine:checkEngineStatus', function(hasEngine)
                 if lib.progressCircle({
                     duration = 8000,
@@ -1341,21 +1298,20 @@ AddEventHandler('engine:tryInstallEngine', function(data)
                 }) then
                     TriggerServerEvent('engine:installEngine', plate, tier)
                     TriggerServerEvent('engine:payForEngine', tier)
-                
+
                     local vehicle = GetVehiclePedIsIn(playerPed, false)
                     if DoesEntityExist(vehicle) then
                         SetEntityMaxSpeed(vehicle, GetVehicleModelMaxSpeed(GetEntityModel(vehicle)))
                     end
-                
+
                     lib.notify({ position = 'center-right', title = '', description = 'انجین با موفقیت نصب شد!', type = 'success', duration = 3000 })
                 else
-                    lib.notify({ position = 'center-right', title = '', description = 'نصب انجین لغو شد!', type = 'error', duration = 3000 }) 
+                    lib.notify({ position = 'center-right', title = '', description = 'نصب انجین لغو شد!', type = 'error', duration = 3000 })
                 end
             end, plate)
         end, tier)
     end)
 end)
-
 
 local isProcessing = false
 
@@ -1364,12 +1320,12 @@ CreateThread(function()
         local playerPed = PlayerPedId()
         local playerCoords = GetEntityCoords(playerPed)
 
-        -- بهینه‌سازی: قبلاً این حلقه با Wait(0) بی‌قید اجرا می‌شد و فاصله تا هردو
-        -- زون (چاپ‌شاپ + محل نصب انجین) رو هر فریم حساب می‌کرد، حتی وقتی بازیکن
-        -- کیلومترها دور بود. چون Config_Antipg.ChopShopEnabled پیش‌فرض false هست،
-        -- در عمل این حلقه فقط برای زون نصب انجین همیشه با سرعت فریم می‌چرخید.
-        -- حالا: نزدیک به هرکدوم از زون‌ها -> Wait(0) (برای دقت DrawMarker/کلید)،
-        -- دور از هردو -> Wait(500).
+
+
+
+
+
+
         local nearChopShop = Config_Antipg.ChopShopEnabled
             and (#(playerCoords - Config_Antipg.Marker.Position) < 20)
         local nearInstall = #(playerCoords - Config_Antipg.InstallLocation) < 20
@@ -1381,7 +1337,7 @@ CreateThread(function()
             goto continue_pack_loop
         end
 
-        -- ChopShop Marker (disabled — see Config_Antipg.ChopShopEnabled)
+
         if Config_Antipg.ChopShopEnabled then
         local chopShopDistance = #(playerCoords - Config_Antipg.Marker.Position)
         if chopShopDistance < 20 then
@@ -1403,7 +1359,7 @@ CreateThread(function()
                 Config_Antipg.Marker.Color.r, Config_Antipg.Marker.Color.g, Config_Antipg.Marker.Color.b, Config_Antipg.Marker.Color.a,
                 false, true, 2, nil, nil, false
             )
-            
+
 
             if chopShopDistance < 3 and not isProcessing then
                 local vehicle = GetVehiclePedIsIn(playerPed, false)
@@ -1413,7 +1369,7 @@ CreateThread(function()
                     local vehDistanceToMarker = #(vehCoords - Config_Antipg.Marker.Position)
                     local vehSpeed = GetEntitySpeed(vehicle)
 
-                    -- چک اینکه ماشین روی مارکر وایساده و در حال حرکت نیست
+
                     if vehDistanceToMarker < 3.0 and vehSpeed < 0.3 then
                         ESX.ShowHelpNotification("~INPUT_CONTEXT~ برای چاپ‌شاپ زدن ماشین")
 
@@ -1465,9 +1421,9 @@ CreateThread(function()
                 end
             end
         end
-        end -- Config_Antipg.ChopShopEnabled
+        end
 
-        -- Engine Install Marker
+
         local installDistance = #(playerCoords - Config_Antipg.InstallLocation)
         if installDistance < 20 then
             DrawMarker(
@@ -1525,7 +1481,7 @@ RegisterNetEvent('engine:startChopshopProcess', function(vehicle, plate)
     local timer = 50
     local vehCoords = GetEntityCoords(vehicle)
 
-    -- Unique_Skills is optional; guard the call so a missing resource doesn't crash
+
     local ChekSkills = 0
     if GetResourceState('Unique_Skills') == 'started' then
         local ok, result = pcall(function() return exports['Unique_Skills']:CheckSkill('ChopShop') end)
@@ -1553,52 +1509,52 @@ RegisterNetEvent('engine:startChopshopProcess', function(vehicle, plate)
         TriggerServerEvent('engine:removeEngine', plate)
         isProcessing = false
     end)
-    
+
     CreateThread(function()
         while timer > 0 do
-            Wait(0) 
-    
+            Wait(0)
+
             local playerPed = PlayerPedId()
             local playerCoords = GetEntityCoords(playerPed)
             local distance = #(playerCoords - vehCoords)
-    
+
             if distance < 20.0 then
                 Draw3DText_Antipg(vehCoords.x, vehCoords.y, vehCoords.z + 1.0, "Chop Shop In: " .. timer .. "s")
             end
         end
     end)
-    
-    
+
+
     CreateThread(function()
         local doorsRemoved = false
         local tiresPopped = false
-    
+
         while timer > 0 do
-            Wait(1000) 
-    
+            Wait(1000)
+
             timer = timer - 1
-    
+
             if timer == 20 and not doorsRemoved then
                 for i = 0, 5 do
                     if DoesVehicleHaveDoor(vehicle, i) then
 
                         SetVehicleDoorBroken(vehicle, i, true)
-            
+
                     end
                 end
-            
+
                 doorsRemoved = true
             end
-            
+
             if timer == 10 and not tiresPopped then
-                for i = 0, 5 do 
+                for i = 0, 5 do
                     SetVehicleTyreBurst(vehicle, i, true, 1000.0)
                 end
                 tiresPopped = true
             end
         end
     end)
-end)    
+end)
 
 function Draw3DText_Antipg(x, y, z, text)
     SetTextScale(0.50, 0.50)
@@ -1613,24 +1569,21 @@ function Draw3DText_Antipg(x, y, z, text)
     ClearDrawOrigin()
 end
 
-
 if Config_Antipg.ChopShopEnabled then
 CreateThread(function()
     local blip = AddBlipForCoord(Config_Antipg.Marker.Position.x, Config_Antipg.Marker.Position.y, Config_Antipg.Marker.Position.z)
 
-    SetBlipSprite(blip, 225)             -- آیکون blip (مثلا 225 برای wrench)
-    SetBlipDisplay(blip, 4)              -- نمایش عادی
-    SetBlipScale(blip, 0.7)              -- اندازه blip
-    SetBlipColour(blip, 3)               -- رنگ (مثلا 3 = سبز)
-    SetBlipAsShortRange(blip, true)     -- فقط توی رادار محلی نمایش داده می‌شود
+    SetBlipSprite(blip, 225)
+    SetBlipDisplay(blip, 4)
+    SetBlipScale(blip, 0.7)
+    SetBlipColour(blip, 3)
+    SetBlipAsShortRange(blip, true)
 
     BeginTextCommandSetBlipName("STRING")
-    AddTextComponentSubstringPlayerName("Chop Shop")  -- اسم blip که نمایش داده می‌شود
+    AddTextComponentSubstringPlayerName("Chop Shop")
     EndTextCommandSetBlipName(blip)
 end)
-end -- Config_Antipg.ChopShopEnabled
-
-
+end
 
 local currentVehicle = nil
 local lastPlateChecked = ""
@@ -1651,7 +1604,7 @@ CreateThread(function()
                 ESX.TriggerServerCallback('engine:checkEngineStatus', function(hasEngine)
 
                     if hasEngine == nil then
-                        return 
+                        return
                     end
 
                     if hasEngine == false then
@@ -1683,9 +1636,6 @@ CreateThread(function()
     end
 end)end
 
--- ====================================================================
--- [esx_fireworks] client
--- ====================================================================
 ESX = nil
 local PlayerData = {}
 
@@ -1695,10 +1645,10 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 	end
 end)
- --- Made by HIllBilly ---
+
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
-	PlayerData = xPlayer 
+	PlayerData = xPlayer
 end)
 
 local particleDict = "scr_indep_fireworks"
@@ -1725,7 +1675,6 @@ AddEventHandler('fireworks:box', function()
 
 	lib.notify({ position = 'center-right', title = '', description = 'فیوز روشن است، لطفاً فاصله بگیرید ~r~(9 ثانیه)', type = 'warning', duration = 3000 })
 
-
 	Wait(9000)
 	TriggerServerEvent("syncbad4", x, y, z)
 
@@ -1738,7 +1687,7 @@ AddEventHandler("syncbad_cl4", function(x, y, z)
     while not HasNamedPtfxAssetLoaded(particleDict) do
         Wait(1)
 	end
-	
+
 	UseParticleFxAssetNextCall(particleDict)
 	local particle = StartNetworkedParticleFxNonLoopedAtCoord("scr_indep_firework_trailburst", x, y, z, 0.0, 0.0, 0.0, math.random() * 0.5 + 0.8, false, false, false, false)
 	Wait(1500)
@@ -1790,7 +1739,7 @@ AddEventHandler('fireworks:cone', function()
 
 	Wait(9000)
 	TriggerServerEvent("syncbad3", x, y, z)
-	
+
 	Wait(18000)
 	DeleteObject(prop)
 end)
@@ -1800,7 +1749,7 @@ AddEventHandler("syncbad_cl3", function(x, y, z)
     while not HasNamedPtfxAssetLoaded(particleDict) do
         Wait(1)
 	end
-	
+
 	UseParticleFxAssetNextCall(particleDict)
 	local particle = StartNetworkedParticleFxNonLoopedAtCoord("scr_indep_firework_fountain", x, y, z, 0.0, 0.0, 0.0, math.random() * 0.5 + 0.8, false, false, false, false)
 	Wait(1500)
@@ -1843,7 +1792,7 @@ AddEventHandler('fireworks:cylinder', function()
 
 	Wait(9000)
 	TriggerServerEvent("syncbad2", x, y, z)
-		
+
 	Wait(18000)
 	DeleteObject(prop)
 end)
@@ -1853,7 +1802,7 @@ AddEventHandler("syncbad_cl2", function(x, y, z)
     while not HasNamedPtfxAssetLoaded(particleDict) do
         Wait(1)
 	end
-	
+
 	UseParticleFxAssetNextCall(particleDict)
 	local particle = StartNetworkedParticleFxNonLoopedAtCoord("scr_indep_firework_shotburst", x, y, z, 0.0, 0.0, 0.0, math.random() * 0.5 + 0.8, false, false, false, false)
 	Wait(1500)
@@ -1904,7 +1853,7 @@ AddEventHandler('fireworks:rocket', function()
 	TriggerServerEvent("syncbad1", x, y, z)
 
 	local veh = GetClosestVehicle(x,y,z, 100.0, 0, 70)
-	SetVehicleAlarm(veh, true)	
+	SetVehicleAlarm(veh, true)
 	SetVehicleAlarmTimeLeft(veh, 8000)
 
 	Wait(8500)
@@ -1919,40 +1868,36 @@ AddEventHandler("syncbad_cl1", function(x, y, z)
     UseParticleFxAssetNextCall(particleDict)
     StartParticleFxNonLoopedAtCoord("scr_indep_firework_starburst", x, y, z, 0.0, 0.0, 0.0, 2.5, false, false, false, false)
 end)
--- ====================================================================
--- [fightban] client
--- ====================================================================
-ESX = nil 
+
+ESX = nil
 
 CreateThread(function()
 	while ESX == nil do
 		TriggerEvent("esx:getSharedObject", function(obj) ESX = obj end)
 	Wait(0)
 	end
-end) 
+end)
 
-local FightBan = false 
+local FightBan = false
 function SetFightBan()
 	CreateThread(function()
-		while true do 
-			SetCurrentPedWeapon(PlayerPedId()  , GetHashKey("WEAPON_UNARMED"), true)      
-			Wait(5)         
-		end 
+		while true do
+			SetCurrentPedWeapon(PlayerPedId()  , GetHashKey("WEAPON_UNARMED"), true)
+			Wait(5)
+		end
 	end)
-end 
+end
 
 RegisterNetEvent('Unique_Scripts_FightBan:Notif')
-AddEventHandler('Unique_Scripts_FightBan:Notif', function(FightBan,time) 
-	FightBan = FightBan 
-	if FightBan == true then 
+AddEventHandler('Unique_Scripts_FightBan:Notif', function(FightBan,time)
+	FightBan = FightBan
+	if FightBan == true then
 		SetFightBan()
-	else 
+	else
 		lib.notify({ position = 'center-right', title = '', description = 'شما از فایت‌بن حذف شدید', type = 'success', duration = 3000 })
-	end 
+	end
 end)
--- ====================================================================
--- [gang_mapings] client
--- ====================================================================
+
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -1963,7 +1908,6 @@ Citizen.CreateThread(function()
       Citizen.Wait(0)
     end
 end)
-
 
 local blipss = true
 local blips = {
@@ -2042,8 +1986,8 @@ RegisterCommand('gangs', function()
 end)
 
 function blipp(blipss2)
-    if blipss2 == true then 
-        for k,v in pairs(blips) do 
+    if blipss2 == true then
+        for k,v in pairs(blips) do
             v.blip = AddBlipForCoord(v.x, v.y, v.z)
             SetBlipSprite(v.blip, v.id)
             SetBlipDisplay(v.blip, 4)
@@ -2053,19 +1997,17 @@ function blipp(blipss2)
             BeginTextCommandSetBlipName("STRING")
             AddTextComponentString(v.title)
             EndTextCommandSetBlipName(v.blip)
-            
+
         end
         blipss = false
     else
         for k,v in pairs(blips) do
             RemoveBlip(v.blip)
         end
-        blipss = true 
+        blipss = true
     end
 end
--- ====================================================================
--- [joblist] client
--- ====================================================================
+
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -2097,20 +2039,15 @@ AddEventHandler('ArSa:showJobMenu', function(jobs)
         if data.current.value then
             menu.close()
             TriggerServerEvent("ArSa:GoToSp",tonumber(data.current.value))
-        end 
+        end
     end, function(data, menu)
         menu.close()
     end)
 end)
--- ====================================================================
--- [notbad-rockstar-editor] client
--- ====================================================================
+
 TriggerEvent('chat:addSuggestion', '/rsrecord', 'Recording options', {
     { name = "type", help = "start/stop/discard" }
 })
-
--- TriggerEvent('chat:addSuggestion', '/picture', 'Take a picture')
--- TriggerEvent('chat:addSuggestion', '/rockstareditor', 'Opens rockstar editor')
 
 RegisterCommand('rsrecord', function(source, args, rawCommand)
 	local type = args[1]
@@ -2119,24 +2056,6 @@ RegisterCommand('rsrecord', function(source, args, rawCommand)
 	if type == 'discard' then StopRecordingAndDiscardClip() end
 end)
 
--- RegisterCommand('rockstareditor', function()
--- 	ActivateRockstarEditor()
--- end)
-
--- RegisterCommand('picture', function()
--- 	BeginTakeHighQualityPhoto()
--- 	SaveHighQualityPhoto(-1)
--- 	FreeMemoryForHighQualityPhoto()
--- end)
-
--- RegisterKeyMapping('record start', '(Rockstar editor) Start Recording', 'keyboard', '')
--- RegisterKeyMapping('record stop', '(Rockstar editor) Stop Recording', 'keyboard', '')
--- RegisterKeyMapping('record discard', '(Rockstar editor) Discard Recording', 'keyboard', '')
--- RegisterKeyMapping('picture', '(Rockstar editor) Take a Picture', 'keyboard', '')
-
--- ====================================================================
--- [pedshop] client
--- ====================================================================
 Citizen.CreateThread(function()
     while ESX == nil do
         TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -2173,7 +2092,6 @@ function OpenPedShop()
     end)
 end
 
-
 function OpenChangePedMenu()
     TriggerServerEvent('pedshop:getOwnedPeds', GetPlayerServerId(PlayerId()))
 end
@@ -2182,10 +2100,9 @@ RegisterNetEvent('pedshop:showOwnedPeds')
 AddEventHandler('pedshop:showOwnedPeds', function(peds)
     local elements = {}
 
-
     table.insert(elements, {label = "Reset Ped", value = "resetped"})
 
- 
+
     for _, ped in ipairs(peds) do
         table.insert(elements, {label = ped.model, value = ped.model})
     end
@@ -2205,8 +2122,6 @@ AddEventHandler('pedshop:showOwnedPeds', function(peds)
         menu.close()
     end)
 end)
-
-
 
 RegisterNetEvent('pedshop:applyPed')
 AddEventHandler('pedshop:applyPed', function(pedModel)
@@ -2253,21 +2168,13 @@ Citizen.CreateThread(function()
     end
 end)
 
--- ====================================================================
--- [Unique_Scripts_Badge] client
--- (حذف شد - /mybadge, /tbadge, و /showbadge جمع شدن تو یه فرمان واحد
--- /badge سمت سرور، تو server/dispatch-sv.lua)
--- ====================================================================
--- ====================================================================
--- [Unique_Scripts_NPC_Doctors] client
--- ====================================================================
 local doctorCoordsList = {
-    {x = 318.5803, y = -587.662, z = 42.284, h = 156.17}, -- -- St Shar
-    {x = -246.573, y = 6314.123, z = 31.427, h = 44.77}, -- -- St Paleto
+    {x = 318.5803, y = -587.662, z = 42.284, h = 156.17},
+    {x = -246.573, y = 6314.123, z = 31.427, h = 44.77},
 }
-local healCost = 15000 
-local isHealing = false 
-local ped = {} 
+local healCost = 15000
+local isHealing = false
+local ped = {}
 
 Citizen.CreateThread(function()
     while ESX == nil do
@@ -2286,7 +2193,7 @@ function DrawBlackScreen(duration)
     local startTime = GetGameTimer()
     while GetGameTimer() - startTime < duration do
         Citizen.Wait(0)
-        -- رسم مستطیل سیاه
+
         DrawRect(0.5, 0.5, 1.0, 1.0, 0, 0, 0, 255)
     end
 end
@@ -2298,62 +2205,62 @@ Citizen.CreateThread(function()
         Wait(100)
     end
 
-    -- Create doctors at each set of coordinates
+
     for _, coords in ipairs(doctorCoordsList) do
         local pedInstance = CreatePed("PED_TYPE_CIVFEMALE", hash, coords.x, coords.y, coords.z, coords.h, false, true)
         SetBlockingOfNonTemporaryEvents(pedInstance, true)
-        FreezeEntityPosition(pedInstance, true) -- Freeze position
-        SetEntityInvincible(pedInstance, true) -- Prevent damage
+        FreezeEntityPosition(pedInstance, true)
+        SetEntityInvincible(pedInstance, true)
 
-        -- Store the created ped
+
         table.insert(ped, pedInstance)
 
-        -- Setting up ox_target for each doctor
+
         exports['ox_target']:addLocalEntity(pedInstance, {
             {
                 name = "revive_player",
-                icon = "fas fa-user-md", -- Custom icon
+                icon = "fas fa-user-md",
                 label = "درمان",
                 onSelect = function()
                     local playerPed = GetPlayerPed(-1)
-                    local isPlayerDown = GetEntityHealth(playerPed) <= 100 and GetEntityHealth(playerPed) > 0 -- Check if the player is "down"
+                    local isPlayerDown = GetEntityHealth(playerPed) <= 100 and GetEntityHealth(playerPed) > 0
                     local players = ESX.Game.GetPlayers()
-                    ESX.TriggerServerCallback('Unique_Scripts_NPC_Doctor:chekmedic', function(ismedec) 
-                        
-                    
-                        if ismedec then 
+                    ESX.TriggerServerCallback('Unique_Scripts_NPC_Doctor:chekmedic', function(ismedec)
+
+
+                        if ismedec then
                             if isPlayerDown then
-                                -- Show black screen
+
                                 isHealing = true
                                 Citizen.CreateThread(function()
-                                    DrawBlackScreen(10000) -- Duration of black screen in milliseconds
+                                    DrawBlackScreen(10000)
                                     isHealing = false
                                 end)
 
-                                TriggerEvent("esx_ambulancejob:revivex", GetPlayerServerId(PlayerId())) -- Trigger revive
+                                TriggerEvent("esx_ambulancejob:revivex", GetPlayerServerId(PlayerId()))
 
-                                Wait(10000) -- Wait for revive
+                                Wait(10000)
                                 TriggerServerEvent("pase:addXP", GetPlayerServerId(PlayerId()), 100)
                                 lib.notify({ position = 'center-right', title = "", description = "Shoma Darman Shodid", type = 'success', duration = 5000 })
-                                lib.notify({ position = 'center-right', title = "", description = "Az Shoma 15k kam shod be dalil Darman", type = 'info', duration = 5000 }) -- New notification
+                                lib.notify({ position = 'center-right', title = "", description = "Az Shoma 15k kam shod be dalil Darman", type = 'info', duration = 5000 })
                             else
-                                -- Check player balance when normal
-                                ESX.TriggerServerCallback('esx:getPlayerData', function(playerData)
-                                    local bank = playerData.bank -- Get player bank
 
-                                    if bank then -- Ensure bank value is present
+                                ESX.TriggerServerCallback('esx:getPlayerData', function(playerData)
+                                    local bank = playerData.bank
+
+                                    if bank then
                                         if bank >= healCost then
-                                            -- Deduct bank from account
+
                                             TriggerServerEvent("esx:removeBank", healCost)
 
-                                            -- Show black screen
+
                                             isHealing = true
                                             Citizen.CreateThread(function()
-                                                DrawBlackScreen(10000) -- Duration of black screen in milliseconds
+                                                DrawBlackScreen(10000)
                                                 isHealing = false
                                             end)
 
-                                            TriggerEvent("esx_ambulancejob:revivex", GetPlayerServerId(PlayerId())) -- Trigger revive
+                                            TriggerEvent("esx_ambulancejob:revivex", GetPlayerServerId(PlayerId()))
                                             TriggerEvent("mythic_progbar:client:progress", {
                                                 name = "heal",
                                                 duration = 10000,
@@ -2367,14 +2274,14 @@ Citizen.CreateThread(function()
                                                     disableCombat = true,
                                                 },
                                             }, function(status)
-                                                -- You can add additional actions here if needed
+
                                             end)
 
                                             Wait(10000)
 
                                             TriggerServerEvent("pase:addXP", GetPlayerServerId(PlayerId()), 100)
                                             lib.notify({ position = 'center-right', title = "", description = "Shoma Darman Shodid", type = 'success', duration = 5000 })
-                                            lib.notify({ position = 'center-right', title = "", description = "Az Shoma 15k kam shod be dalil Darman", type = 'info', duration = 5000 }) -- New notification
+                                            lib.notify({ position = 'center-right', title = "", description = "Az Shoma 15k kam shod be dalil Darman", type = 'info', duration = 5000 })
                                         else
                                             lib.notify({ position = 'center-right', title = "", description = "Shoma Poul Kafi Nadarid", type = 'error', duration = 5000 })
                                         end
@@ -2393,20 +2300,14 @@ Citizen.CreateThread(function()
     end
 end)
 
-
-
-
-
----------------------------------------- Medic  Police  Sheriff  FBI --------------------------------------------
 local pddoctorCoordsList = {
     {x = 441.3534, y = -974.723, z = 24.699, h = 180.44},
-    {x = 613.8029, y = 12.60721, z = 86.817, h = 250.47}, -- Example coordinates
+    {x = 613.8029, y = 12.60721, z = 86.817, h = 250.47},
     {x = 1836.779, y = 3672.764, z = 33.326, h = 296.03},
- --   {x = -300.0, y = -900.0, z = 30.0, h = 45.0}  -- Add more coordinates as needed
+
 }
 
 local ped = 0
-
 
 Citizen.CreateThread(function()
     local hash = GetHashKey("s_m_m_doctor_01")
@@ -2415,26 +2316,26 @@ Citizen.CreateThread(function()
         Wait(100)
     end
 
-    -- Create the doctor at each set of coordinates
+
     for _, coords in ipairs(pddoctorCoordsList) do
         local pedInstance = CreatePed("PED_TYPE_CIVFEMALE", hash, coords.x, coords.y, coords.z, coords.h, false, true)
         SetBlockingOfNonTemporaryEvents(pedInstance, true)
-        FreezeEntityPosition(pedInstance, true) -- Freeze position
-        SetEntityInvincible(pedInstance, true) -- Prevent damage
+        FreezeEntityPosition(pedInstance, true)
+        SetEntityInvincible(pedInstance, true)
 
-        -- Adding target zone for interaction with ox_target
+
         exports['ox_target']:addSphereZone({
             coords = vector3(coords.x, coords.y, coords.z),
             radius = 2.0,
-            debug = drawZones, -- Enable for debugging if needed
+            debug = drawZones,
             options = {
                 {
-                    name = 'heal_pd', -- Option name
-                    icon = 'fa-solid fa-heart', -- Icon for the option
-                    label = 'درمان', -- Display text
+                    name = 'heal_pd',
+                    icon = 'fa-solid fa-heart',
+                    label = 'درمان',
                     onSelect = function()
                         local playerData = ESX.GetPlayerData()
-                        if playerData.job.name == 'police' or playerData.job.name == 'sheriff' or playerData.job.name == 'fbi' or playerData.job.name == 'mt' then -- Check player job
+                        if playerData.job.name == 'police' or playerData.job.name == 'sheriff' or playerData.job.name == 'fbi' or playerData.job.name == 'mt' then
                             TriggerEvent("esx_ambulancejob:revivex", GetPlayerServerId(PlayerId()))
                             TriggerEvent("mythic_progbar:client:progress", {
                                 name = "pdheal",
@@ -2449,13 +2350,13 @@ Citizen.CreateThread(function()
                                     disableCombat = true,
                                 },
                             }, function(status)
-                                -- Additional actions can be added here if necessary
+
                             end)
-                            Wait(10000) -- Wait for the progress duration
+                            Wait(10000)
                             TriggerServerEvent("pase:addXP", GetPlayerServerId(PlayerId()), 100)
                             lib.notify({ position = 'center-right', title = "", description = "Shoma Heal Shodid!", type = 'success', duration = 5000 })
                         else
-                            lib.notify({ position = 'center-right', title = "", description = "Shoma nemitavanid az in ja estefade konid", type = 'error', duration = 5000 }) -- Error message for other jobs
+                            lib.notify({ position = 'center-right', title = "", description = "Shoma nemitavanid az in ja estefade konid", type = 'error', duration = 5000 })
                         end
                     end,
                 },
@@ -2464,13 +2365,9 @@ Citizen.CreateThread(function()
     end
 end)
 
--- ====================================================================
--- [Unique_Scripts_Switchjob] client
--- ====================================================================
 ESX = nil
 local menuOpen = false
 local allowedRadius = 75.0
-
 
 local allowedPositions = {
     vector3(135.3890, -763.786, 45.752),
@@ -2479,40 +2376,37 @@ local allowedPositions = {
 
 Citizen.CreateThread(function()
     while ESX == nil do
-        TriggerEvent('esx:getSharedObject', function(obj) 
-            ESX = obj 
+        TriggerEvent('esx:getSharedObject', function(obj)
+            ESX = obj
         end)
         Citizen.Wait(200)
     end
 end)
 
-
 function IsPlayerInAllowedArea()
     local playerPed = PlayerPedId()
     local playerCoords = GetEntityCoords(playerPed)
-    
+
     for _, position in ipairs(allowedPositions) do
         local distance = #(playerCoords - position)
         if distance <= allowedRadius then
             return true
         end
     end
-    
+
     return false
 end
 
-
-
 function OpenJobMenu(jobs)
     if menuOpen then return end
-    
+
     if not jobs or #jobs == 0 then
         return
     end
-    
+
     menuOpen = true
     local elements = {}
-    
+
 
     ESX.TriggerServerCallback('jobmenu:getPlayerJob', function(currentJob)
         for _, job in ipairs(jobs) do
@@ -2526,12 +2420,12 @@ function OpenJobMenu(jobs)
                 })
             end
         end
-        
+
         if #elements == 0 then
             menuOpen = false
             return
         end
-        
+
         ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'job_menu', {
             title = 'ChnageJob Menu',
             align = 'right',
@@ -2551,7 +2445,6 @@ function OpenJobMenu(jobs)
     end)
 end
 
-
 RegisterNetEvent('jobmenu:openMenu')
 AddEventHandler('jobmenu:openMenu', function(jobs)
     if IsPlayerInAllowedArea() then
@@ -2561,7 +2454,6 @@ AddEventHandler('jobmenu:openMenu', function(jobs)
     end
 end)
 
-
 RegisterCommand(Config_Switchjob.MenuCommand, function()
     if IsPlayerInAllowedArea() then
         TriggerServerEvent('jobmenu:checkPermission')
@@ -2570,74 +2462,53 @@ RegisterCommand(Config_Switchjob.MenuCommand, function()
     end
 end, false)
 
-
--- exports('openJobMenu', function()
---     if IsPlayerInAllowedArea() then
---         TriggerServerEvent('jobmenu:checkPermission')
---     else
---         ESX.ShowNotification('Shoma Bayad Nazid Sakhteman FBI Bashid!')
---     end
--- end)
--- ====================================================================
--- [maket_guns] client
--- ====================================================================
-
-----------------------------------------------------------------------------
---DANO ARMAS (E SOCO) MELEE ///// MELEE AND WEAPONS DAMAGE 
-----------------------------------------------------------------------------
-
--- in faghat damage gun ra kam ziad mikone 0 bezari hich damage nmide
 Citizen.CreateThread(function()
     while true do
-	-- N_0x4757f00bc6323cfe(GetHashKey("WEAPON_UNARMED"), 0.0) 
-    -- 	Wait(0)
-    
-        N_0x4757f00bc6323cfe(GetHashKey("WEAPON_SNIPERRIFLE"), 0.0) 
+
+
+
+        N_0x4757f00bc6323cfe(GetHashKey("WEAPON_SNIPERRIFLE"), 0.0)
     	Wait(0)
 
-        N_0x4757f00bc6323cfe(GetHashKey("WEAPON_MINIGUN"), 0.0) 
+        N_0x4757f00bc6323cfe(GetHashKey("WEAPON_MINIGUN"), 0.0)
     	Wait(0)
 
-        N_0x4757f00bc6323cfe(GetHashKey("WEAPON_RPG"), 0.0) 
+        N_0x4757f00bc6323cfe(GetHashKey("WEAPON_RPG"), 0.0)
     	Wait(0)
 
         N_0x4757f00bc6323cfe(GetHashKey("WEAPON_FIREWORK"), 0.0)
     	Wait(0)
     end
 end)
-----------------------------------------------------------------------------
---DANO CORONHADA //// PISTOL WHIPPING    weapon_sniperrifle
-----------------------------------------------------------------------------
+
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
-        -- Gun hai maket inja add beshan
+
         koni(100416529)
         koni(-1312131151)
         koni(1119849093)
 	local ped = PlayerPedId()
         if IsPedArmed(ped, 6) then
-	       DisableControlAction(1, 140, true) 
+	       DisableControlAction(1, 140, true)
        	   DisableControlAction(1, 141, true)
            DisableControlAction(1, 142, true)
         end
-        
-    end 
+
+    end
 end)
 
 function koni(hashgun)
-    -- 736523883 in hash aslahe SMG e
+
     if GetSelectedPedWeapon(PlayerPedId()) == hashgun then
         local ped = PlayerPedId()
-        DisableControlAction(1, 140, true) 
+        DisableControlAction(1, 140, true)
         DisableControlAction(1, 141, true)
         DisableControlAction(1, 142, true)
         DisablePlayerFiring(PlayerId(), true)
     end
 end
--- ====================================================================
--- [Unique_Scripts_vehicle_damage] client
--- ====================================================================
+
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -2647,24 +2518,24 @@ Citizen.CreateThread(function()
     end
 end)
 
-local vehicleDamage = 100 
+local vehicleDamage = 100
 local display = false
 
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(6000) 
+        Citizen.Wait(6000)
 
         local playerPed = PlayerPedId()
         local vehicle = GetVehiclePedIsIn(playerPed, false)
 
         if vehicle and vehicle ~= 0 then
-            local driver = GetPedInVehicleSeat(vehicle, -1) 
+            local driver = GetPedInVehicleSeat(vehicle, -1)
 
-            if driver == playerPed then 
+            if driver == playerPed then
                 local plate = GetVehicleNumberPlateText(vehicle)
 
                 ESX.TriggerServerCallback('vehicle:getVehicleDamage', function(damage)
-                    vehicleDamage = tonumber(damage) or 100 
+                    vehicleDamage = tonumber(damage) or 100
 
                     local currentEngineHealth = GetVehicleEngineHealth(vehicle)
                     local maxEngineHealth = 1000
@@ -2678,7 +2549,7 @@ Citizen.CreateThread(function()
                     display = true
                 end, plate)
             else
-                display = false 
+                display = false
             end
         else
             display = false
@@ -2690,7 +2561,7 @@ Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
 
-        if display and type(vehicleDamage) == "number" then 
+        if display and type(vehicleDamage) == "number" then
             DrawVehicleDamageIndicator(vehicleDamage)
         end
     end
@@ -2720,9 +2591,6 @@ function DrawTextOnScreen(text, x, y)
     DrawText(x, y)
 end
 
--- ====================================================================
--- [Unique_Scripts_Washmoney] client
--- ====================================================================
 ESX = nil
 local isWashing = false
 local washLocations = {
@@ -2755,7 +2623,7 @@ Citizen.CreateThread(function()
                     local blip = AddBlipForCoord(location.x, location.y, location.z)
                     SetBlipSprite(blip, 500)
                     SetBlipScale(blip, 0.7)
-                    SetBlipColour(blip, 1) 
+                    SetBlipColour(blip, 1)
                     SetBlipAsShortRange(blip, true)
                     BeginTextCommandSetBlipName("STRING")
                     AddTextComponentSubstringPlayerName("Money Wash")
@@ -2781,7 +2649,7 @@ Citizen.CreateThread(function()
                                     if not isWashing then
                                         isWashing = true
                                         TriggerServerEvent('notifyPolice', location)
-                                        
+
                                         TriggerEvent("mythic_progbar:client:progress", {
                                             name = "process_moneywash",
                                             duration = 10000,
@@ -2803,7 +2671,7 @@ Citizen.CreateThread(function()
                                                 TriggerServerEvent('poolkasif', 50000)
                                             end
                                             isWashing = false
-                                            TriggerServerEvent('removePoliceBlip', location) 
+                                            TriggerServerEvent('removePoliceBlip', location)
                                             TriggerEvent('TaskSystem:WashMoney', 50000)
                                         end)
                                     end
@@ -2818,15 +2686,14 @@ Citizen.CreateThread(function()
                 end
             end
         end
-        Wait(0) 
+        Wait(0)
     end
 end)
-
 
 RegisterNetEvent('createPoliceBlip')
 AddEventHandler('createPoliceBlip', function(x, y, z)
     local blip = AddBlipForCoord(x, y, z)
-    SetBlipSprite(blip, 161) 
+    SetBlipSprite(blip, 161)
     SetBlipScale(blip, 0.7)
     SetBlipColour(blip, 1)
     SetBlipAlpha(blip, 250)
@@ -2849,12 +2716,9 @@ AddEventHandler('removePoliceBlip', function()
             RemoveBlip(blip)
         end
     end
-    policeBlips = {} 
+    policeBlips = {}
 end)
 
--- ====================================================================
--- [Unique_Scripts_item_mc] client
--- ====================================================================
 ESX = nil
 
 local propModel = nil
@@ -2913,7 +2777,7 @@ Citizen.CreateThread(function()
 						end
 					end
 				end
-				
+
 				if IsControlJustPressed(1, 47) then
 					deleteProp()
 				end
@@ -2954,7 +2818,7 @@ function GetClosestVehicleTire(vehicle)
 	local plyPos = GetEntityCoords(plyPed, false)
 	local minDistance = 1.0
 	local closestTire = nil
-	
+
 	for a = 1, #tireBones do
 		local bonePos = GetWorldPositionOfEntityBone(vehicle, GetEntityBoneIndexByName(vehicle, tireBones[a]))
 		local distance = Vdist(plyPos.x, plyPos.y, plyPos.z, bonePos.x, bonePos.y, bonePos.z)
@@ -2973,21 +2837,20 @@ function GetClosestVehicleTire(vehicle)
 	return closestTire
 end
 
--- (removed duplicate global loadAnimDict - dead code, the local version above already handles every call in this file, and this global copy collided with ScriptPack's own global loadAnimDict)
 function Draw3DText_ItemMC(x, y, z, text)
     local onScreen,_x,_y=World3dToScreen2d(x,y,z)
     local px,py,pz=table.unpack(GetGameplayCamCoords())
     local dist = GetDistanceBetweenCoords(px,py,pz, x,y,z, 1)
- 
+
     local scale = (1/dist)
     local fov = (1/GetGameplayCamFov())*100
     local scale = scale*fov
-   
+
     if onScreen then
         SetTextScale(0.0*scale, 0.75*scale)
         SetTextFont(4)
         SetTextProportional(1)
-        -- SetTextScale(0.0, 0.55)
+
         SetTextColour(255, 255, 255, 255)
         SetTextDropshadow(0, 0, 0, 0, 255)
         SetTextEdge(2, 0, 0, 0, 150)
@@ -3000,17 +2863,11 @@ function Draw3DText_ItemMC(x, y, z, text)
     end
 end
 
-
-
-
------------------------------------------ flip -----------------------------------------
-
-
 RegisterNetEvent('Unique_Scripts_item_mc:flipp')
 AddEventHandler('Unique_Scripts_item_mc:flipp', function()
     local playerPed = PlayerPedId()
     local vehicle = ESX.Game.GetVehicleInDirection(4)
- 
+
     if vehicle ~= 0 then
         TriggerServerEvent('Unique_Scripts_item_mc:removeitemss', 1)
         TriggerEvent("mythic_progbar:client:progress", {
@@ -3044,8 +2901,6 @@ AddEventHandler('Unique_Scripts_item_mc:flipp', function()
     end
 end)
 
----------------- cleaner --------------------
-
 RegisterNetEvent('Unique_Scripts_item_mc:cleann')
 AddEventHandler('Unique_Scripts_item_mc:cleann', function()
 	local playerPed = GetPlayerPed(-1)
@@ -3067,7 +2922,7 @@ AddEventHandler('Unique_Scripts_item_mc:cleann', function()
                 disableCombat = true,
 			},
 			TaskStartScenarioInPlace(playerPed, 'WORLD_HUMAN_MAID_CLEAN', 0, true)
-           
+
 		}, function(status)
 			if not status then
 				local id = NetworkGetNetworkIdFromEntity(vehicle)
@@ -3089,9 +2944,7 @@ AddEventHandler('Unique_Scripts_item_mc:cleann', function()
         })
 	end
 end)
--- ====================================================================
--- [weapons-on-back] client
--- ====================================================================
+
 do
 ESX = nil
 local PlayerData = nil
@@ -3142,14 +2995,13 @@ local SETTINGS = {
         ["w_sg_pumpshotgun"] = 487013001,
         ["w_sg_heavyshotgun"] = GetHashKey("WEAPON_HEAVYSHOTGUN"),
         ["w_ar_m4"] = GetHashKey("WEAPON_M4"),
-        -- اضافه‌شده: پیستول‌ها (برای اینکه اصلاً تو منو انتخاب‌شدنی باشن)
+
         ["w_pi_pistol"] = GetHashKey("WEAPON_PISTOL"),
         ["w_pi_pistol50"] = GetHashKey("WEAPON_PISTOL50"),
-        -- تیزر و باتوم فعلاً برداشته شد (اگه بعداً خواستی، همینجا دوباره اضافه می‌کنیم)
+
     }
 }
 
--- اضافه‌شده: دسته‌بندی سلاح‌ها برای انتخاب محل قرارگیری
 local CHEST_WEAPONS = {
     ["w_sb_microsmg"]  = true,
     ["w_sb_assaultsmg"] = true,
@@ -3163,9 +3015,6 @@ local WAIST_WEAPONS = {
     ["w_pi_pistol50"] = true,
 }
 
--- تیزر و باتوم فعلاً برداشته شد (اگه بعداً خواستی، همینجا دوباره اضافه می‌کنیم)
-
--- تنظیمات هر محل - عددهای نهایی، تست‌شده و ثابت.
 local POSITIONS = {
     back = {
         bone = 24816,
@@ -3173,17 +3022,17 @@ local POSITIONS = {
         x_rotation = 0.0, y_rotation = 390.0, z_rotation = 0.0,
     },
     chest = {
-        bone = 24818, -- SKEL_Spine2 (نزدیک قفسه سینه)
+        bone = 24818,
         x = 0.023, y = 0.216, z = -0.034,
         x_rotation = 167.5, y_rotation = 147.5, z_rotation = 0.0,
     },
-    -- پیستول: پشت، نزدیک باسن (نه ران، نه کمر جلو)
+
     waist = {
-        bone = 11816, -- SKEL_Pelvis (لگن/کمر) - عدد نهایی، خودت تست کردی
+        bone = 11816,
         x = 0.045, y = -0.159, z = -0.011,
         x_rotation = 0.0, y_rotation = -57.5, z_rotation = 0.0,
     },
-    -- تیزر و باتوم فعلاً برداشته شد (اگه بعداً خواستی، همینجا دوباره اضافه می‌کنیم)
+
 }
 
 function GetSlotForWeapon(wep_name)
@@ -3202,11 +3051,9 @@ function SlotLabel(slot)
     else return "Posht" end
 end
 
--- اضافه‌شده: حالا پنج تا اسلات مستقل داریم که هرکدوم می‌تونه هم‌زمان یه
--- اسلحه‌ی جدا نگه داره.
 local WornWeapons     = { back = nil, chest = nil, waist = nil }
 local AttachedObjects = { back = nil, chest = nil, waist = nil }
-local SuppressAutoReattach = false -- جایگزین OffByMenu قدیمی
+local SuppressAutoReattach = false
 
 function AnyWorn()
     return WornWeapons.back ~= nil or WornWeapons.chest ~= nil or WornWeapons.waist ~= nil
@@ -3223,13 +3070,13 @@ end
 
 RegisterCommand("weapback", function()
     if Config_WeaponsOnBack.mahdod then
-        ESX.TriggerServerCallback('Weapon_On_Back:GetBossGang', function(Call) 
-            if type(Call) == "table" then 
+        ESX.TriggerServerCallback('Weapon_On_Back:GetBossGang', function(Call)
+            if type(Call) == "table" then
                 local Pcoords = GetEntityCoords(PlayerPedId())
-            
+
                 local Distance = GetDistanceBetweenCoords(Call.x, Call.y, Call.z, Pcoords.x, Pcoords.y, Pcoords.z, true)
 
-                if Distance <= 50 then 
+                if Distance <= 50 then
                     OpenWeaponBackMenu()
                 else
                     lib.notify({ position = 'center-right', title = "", description = "Shoma Baraye Estefade Az In Cmd Bayad Nazdik Bays Gangetan Bashid!", type = 'error', duration = 8000 })
@@ -3266,7 +3113,7 @@ function OpenWeaponBackMenu()
         if HasPedGotWeapon(playerPed, wep_hash, false) then
             local weaponLabel = ESX.GetWeaponLabel(wep_hash)
             if not weaponLabel then
-                weaponLabel = wep_name:gsub("w_%a+_", "") 
+                weaponLabel = wep_name:gsub("w_%a+_", "")
             end
             local slot = GetSlotForWeapon(wep_name)
             table.insert(elements, { label = weaponLabel .. " -> " .. SlotLabel(slot), value = wep_hash })
@@ -3304,7 +3151,7 @@ function OpenWeaponBackMenu()
             local wepModel = GetWeaponModelByHash(selectedWeaponHash)
             if wepModel then
                 local slot = GetSlotForWeapon(wepModel)
-                DetachSlot(slot, false) -- هرچی قبلاً تو همین اسلات بود اول برداشته می‌شه
+                DetachSlot(slot, false)
                 WornWeapons[slot] = { hash = selectedWeaponHash, model = wepModel }
                 AttachToSlot(slot)
                 lib.notify({ position = 'center-right', title = "", description = (ESX.GetWeaponLabel(selectedWeaponHash) or "Aslahe") .. " Rooye " .. SlotLabel(slot) .. " Gozashte Shod!", type = 'success', duration = 4000 })
@@ -3345,7 +3192,6 @@ function GetWeaponNameFromHash(weaponHash)
     return nil
 end
 
--- اضافه‌شده: وصل کردن سلاحِ یک اسلات خاص (پشت/سینه/کمر)
 function AttachToSlot(slot, playSound)
     local worn = WornWeapons[slot]
     if not worn then return end
@@ -3356,10 +3202,10 @@ function AttachToSlot(slot, playSound)
 
     local handle = CreateWeaponObject(worn.hash, 0, 0, 0, 0, true, 1.0, 0)
 
-    -- قبل: این آبجکت فقط "لوکال" بود، یعنی فقط خود پلیر می‌دیدش، بقیه‌ی
-    -- بازیکن‌های آنلاین اصلاً اسلحه‌ی روی بدنش رو نمی‌دیدن.
-    -- بعد: با NetworkRegisterEntityAsNetworked این آبجکت رو "شبکه‌ای" می‌کنیم
-    -- تا برای همه‌ی بازیکن‌های نزدیک هم قابل دیدن بشه.
+
+
+
+
     if not NetworkGetEntityIsNetworked(handle) then
         NetworkRegisterEntityAsNetworked(handle)
     end
@@ -3369,12 +3215,12 @@ function AttachToSlot(slot, playSound)
 
     AttachedObjects[slot] = { handle = handle }
 
-    -- اضافه‌شده: یه صدای کلیک کوتاه موقع گذاشتن اسلحه رو بدن (به‌جای لرزش دوربین)
+
     if playSound ~= false then
         PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", true)
     end
 
-    -- رفرنس محلی و ثابت تا اگه بین این و برگشت جواب سرور، اسلات دستی خالی شد، کرش نکنه
+
     local thisHandle = handle
 
     ESX.TriggerServerCallback('Weapon_On_Back:GetWeaponComponent', function(Back)
@@ -3396,7 +3242,6 @@ function AttachToSlot(slot, playSound)
     end, GetWeaponForHashK(worn.hash))
 end
 
--- اضافه‌شده: جدا کردن سلاحِ یک اسلات؛ clearWorn=true یعنی دیگه اصلاً نباید برگرده
 function DetachSlot(slot, clearWorn, playSound)
     if AttachedObjects[slot] then
         DeleteObject(AttachedObjects[slot].handle)
@@ -3411,9 +3256,9 @@ function DetachSlot(slot, clearWorn, playSound)
 end
 
 function GetWeaponForHashK(Hash)
-    for k,v in pairs(ESX.GetWeaponList()) do 
-        
-        if GetHashKey(v.name) == Hash then 
+    for k,v in pairs(ESX.GetWeaponList()) do
+
+        if GetHashKey(v.name) == Hash then
             return v.name
         end
     end
@@ -3423,8 +3268,6 @@ function isMeleeWeapon(wep_name)
     return wep_name == "prop_golf_iron_01" or wep_name == "w_me_bat" or wep_name == "prop_ld_jerrycan_01"
 end
 
--- اضافه‌شده: هر ۳ اسلات رو باهم چک می‌کنه - اگه اسلحه‌ی یه اسلات الان تو دسته،
--- از رو بدن برش می‌داره؛ اگه دست خالیه و اسلاتی خالیه، دوباره وصلش می‌کنه.
 function StartGeter()
     while OnBaked do
         local newWeapon = GetSelectedPedWeapon(PlayerPedId())
@@ -3442,7 +3285,6 @@ function StartGeter()
         Citizen.Wait(1200)
     end
 end
-
 
 RegisterNetEvent('esx:removeWeapon')
 AddEventHandler('esx:removeWeapon', function(name , ammo)
@@ -3466,8 +3308,8 @@ RegisterNetEvent("Weapon_On_back:PlayerSpawned")
 AddEventHandler('Weapon_On_back:PlayerSpawned', function(SavedSlots)
     if not SavedSlots then return end
 
-    -- محافظ: اگه داده‌ی قدیمی (فقط یه عدد هش تکی، نه جدول سه‌اسلاته) باشه،
-    -- به‌جای کرش کردن، فقط به‌عنوان "پشت" در نظرش می‌گیریم.
+
+
     if type(SavedSlots) ~= "table" then
         SavedSlots = { back = SavedSlots }
     end
@@ -3496,8 +3338,6 @@ AddEventHandler('playerSpawned', function(prr)
    TriggerServerEvent("WeaponPlayerLoaded", GetPlayerServerId(PlayerId()))
 end)
 
--- اضافه‌شده: وقتی سوار ماشین می‌شی هر سلاحی که رو بدنته (پشت/سینه/کمر) مخفی
--- بشه، وقتی پیاده می‌شی همه‌شون خودکار برگردن - فقط اونایی که واقعاً پوشیده بودی.
 Citizen.CreateThread(function()
     local wasInVehicle = false
     local hiddenForVehicle = false
@@ -3534,9 +3374,6 @@ Citizen.CreateThread(function()
 end)
 end
 
--- ====================================================================
--- [Unique_Boxing] client
--- ====================================================================
 ESX = nil
 local markerPos = vector3(-426.296, 1137.764, 326.90)
 local zoneCoords = vector3(-420.973, 1139.818, 326.82)
@@ -3550,7 +3387,6 @@ Citizen.CreateThread(function()
         Citizen.Wait(0)
     end
 end)
-
 
 Citizen.CreateThread(function()
     while true do
@@ -3566,8 +3402,8 @@ Citizen.CreateThread(function()
                 end
             end
         else
-            -- بهینه‌سازی: مشابه الگوی marker های دیگه‌ی پروژه، وقتی بازیکن دورتر از
-            -- ۱۰ متر از زون مسابقه‌ست، هر فریم محاسبه‌ی فاصله لازم نیست.
+
+
             Citizen.Wait(500)
         end
     end
@@ -3595,7 +3431,7 @@ function OpenBoxingMenu()
                 OpenTeamMenu(2)
             elseif data.current.value == 'start' then
                 TriggerServerEvent('boxing:startFight')
-                
+
             end
         end, function(data, menu)
             menu.close()
@@ -3675,7 +3511,7 @@ AddEventHandler('boxing:receiveInvite', function(inviterId, team)
             cancel = 'خیر'
         }
     })
-    
+
     if alert == 'confirm' then
         TriggerServerEvent('boxing:acceptInvite', inviterId, team)
     end
@@ -3690,13 +3526,13 @@ end)
 
 RegisterNetEvent('boxing:returnToMarker')
 AddEventHandler('boxing:returnToMarker', function()
-    TriggerEvent("esx_ambulancejob:revivex", GetPlayerServerId(PlayerId())) 
+    TriggerEvent("esx_ambulancejob:revivex", GetPlayerServerId(PlayerId()))
     SetEntityCoords(PlayerPedId(), markerPos.x, markerPos.y, markerPos.z)
 end)
 
 RegisterNetEvent('boxing:announceWinner')
 AddEventHandler('boxing:announceWinner', function(winnerName)
-    -- ESX.ShowAdvancedNotification("🏆 بوکس", "برنده مبارزه", winnerName .. " برنده شد!", "CHAR_PROPERTY_BAR_AIRPORT", 1)
+
 end)
 
 RegisterNetEvent('boxing:displayWinnerText')
@@ -3705,36 +3541,34 @@ AddEventHandler('boxing:displayWinnerText', function(name)
     showWinnerUntil = GetGameTimer() + 50000
 end)
 
-local boxingGloves = {} 
-
+local boxingGloves = {}
 
 function GiveBoxingGloves()
     local playerPed = PlayerPedId()
-    
-  
+
+
     RemoveBoxingGloves()
-    
-    
+
+
     local gloveModel = 'prop_boxing_glove_01'
-    
+
 
     RequestModel(gloveModel)
     while not HasModelLoaded(gloveModel) do
         Citizen.Wait(10)
     end
-    
-    
+
+
     local rightGlove = CreateObject(gloveModel, 0, 0, 0, true, true, true)
     AttachEntityToEntity(rightGlove, playerPed, GetPedBoneIndex(playerPed, 28422), 0.0, 0.0, 0.0, 0.0, 90.0, 90.0, true, true, false, true, 1, true)
-    
-   
+
+
     local leftGlove = CreateObject(gloveModel, 0, 0, 0, true, true, true)
     AttachEntityToEntity(leftGlove, playerPed, GetPedBoneIndex(playerPed, 60309), 0.0, 0.0, 0.0, 0.0, 90.0, -90.0, true, true, false, true, 1, true)
-    
-   
+
+
     boxingGloves = {right = rightGlove, left = leftGlove}
 end
-
 
 function RemoveBoxingGloves()
     if boxingGloves.right and DoesEntityExist(boxingGloves.right) then
@@ -3746,18 +3580,16 @@ function RemoveBoxingGloves()
     boxingGloves = {}
 end
 
-
 RegisterNetEvent('boxing:startFightClient')
 AddEventHandler('boxing:startFightClient', function()
     GiveBoxingGloves()
 end)
 
-
 RegisterNetEvent('boxing:matchEnded')
 AddEventHandler('boxing:matchEnded', function()
     RemoveBoxingGloves()
     ESX.UI.Menu.CloseAll()
-    -- ESX.ShowNotification("Fight Tamom Shod!")
+
 end)
 
 AddEventHandler("esx:onPlayerDeath",function(KillData)
@@ -3765,7 +3597,7 @@ AddEventHandler("esx:onPlayerDeath",function(KillData)
     local isAlive = not IsEntityDead(ped)
     local pCoords = GetEntityCoords(ped)
     local Distance = GetDistanceBetweenCoords(zoneCoords.x, zoneCoords.y, zoneCoords.z, pCoords.x, pCoords.y, pCoords.z, true)
-    if Distance <= 6.5 then 
+    if Distance <= 6.5 then
         TriggerServerEvent('Unique_Boxing:ended')
     end
 end)
@@ -3783,7 +3615,7 @@ Citizen.CreateThread(function()
             Citizen.Wait(0)
             DrawText3D(zoneCoords.x, zoneCoords.y, zoneCoords.z + 1.5, winnerText)
         else
-            -- بهینه‌سازی: وقتی متنی برای نمایش نیست، نیازی به چک هر فریم نداریم.
+
             Citizen.Wait(500)
         end
     end

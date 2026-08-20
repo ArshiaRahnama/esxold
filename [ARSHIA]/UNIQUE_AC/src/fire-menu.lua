@@ -1,5 +1,4 @@
--- UNIQUE_AC — customized by Arshia (arshiahub.ir)
--- Licensed under the GNU Affero General Public License v3.0
+
 
 local isAdmin = false
 local pendingAdminMenuOpen = false
@@ -293,7 +292,6 @@ RegisterNUICallback("giveAllWeapon", function(data, cb)
     cb("ok")
 end)
 
--- NoClip: free-fly movement (W/S forward-back, A/D turn, SPACE/LCTRL up-down, LSHIFT cycles speed).
 local noclipSpeeds = { 0.6, 1.5, 3.0, 6.0, 12.0 }
 local noclipSpeedIndex = 2
 local function noclipTick(entity)
@@ -301,14 +299,14 @@ local function noclipTick(entity)
     SetEntityInvincible(entity, true)
     SetEntityCollision(entity, false, false)
     SetEntityAlpha(entity, 200, false)
-    DisableControlAction(0, 32, true)  -- W
-    DisableControlAction(0, 33, true)  -- S
-    DisableControlAction(0, 34, true)  -- A
-    DisableControlAction(0, 35, true)  -- D
-    DisableControlAction(0, 22, true)  -- SPACE
-    DisableControlAction(0, 36, true)  -- LCTRL
+    DisableControlAction(0, 32, true)
+    DisableControlAction(0, 33, true)
+    DisableControlAction(0, 34, true)
+    DisableControlAction(0, 35, true)
+    DisableControlAction(0, 22, true)
+    DisableControlAction(0, 36, true)
 
-    if IsControlJustPressed(0, 21) then -- LSHIFT cycles speed
+    if IsControlJustPressed(0, 21) then
         noclipSpeedIndex = (noclipSpeedIndex % #noclipSpeeds) + 1
     end
 
@@ -351,7 +349,6 @@ RegisterNUICallback("noclip", function(data, cb)
     cb("ok")
 end)
 
--- Super Jump: uses the game's own super-jump physics native for natural-looking jumps.
 RegisterNUICallback("superjump", function(data, cb)
     if not requireAdmin(cb) then return end
     adminModes.superjump = not adminModes.superjump
@@ -367,7 +364,6 @@ RegisterNUICallback("superjump", function(data, cb)
     cb("ok")
 end)
 
--- Infinite Stamina: keeps the admin's sprint/swim stamina topped up while active.
 RegisterNUICallback("infiniteStamina", function(data, cb)
     if not requireAdmin(cb) then return end
     adminModes.infiniteStamina = not adminModes.infiniteStamina
@@ -383,7 +379,6 @@ RegisterNUICallback("infiniteStamina", function(data, cb)
     cb("ok")
 end)
 
--- No Rag Doll: keeps the admin standing through impacts/explosions instead of flopping over.
 RegisterNUICallback("noRagdoll", function(data, cb)
     if not requireAdmin(cb) then return end
     adminModes.noRagdoll = not adminModes.noRagdoll
@@ -392,7 +387,6 @@ RegisterNUICallback("noRagdoll", function(data, cb)
     cb("ok")
 end)
 
--- Fast Run: raises the player's sprint speed multiplier while active.
 RegisterNUICallback("fastrun", function(data, cb)
     if not requireAdmin(cb) then return end
     adminModes.fastrun = not adminModes.fastrun
@@ -401,7 +395,6 @@ RegisterNUICallback("fastrun", function(data, cb)
     cb("ok")
 end)
 
--- Player Blips: shows every online player's live position on the map (server-fed, see below).
 local playerBlipHandles = {}
 local function clearPlayerBlips()
     for _, blip in pairs(playerBlipHandles) do

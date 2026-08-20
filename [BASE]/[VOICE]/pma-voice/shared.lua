@@ -4,7 +4,6 @@ voiceTarget = 1
 
 gameVersion = GetGameName()
 
--- these are just here to satisfy linting
 if not IsDuplicityVersion() then
 	LocalPlayer = LocalPlayer
 	playerServerId = GetPlayerServerId(PlayerId())
@@ -45,17 +44,17 @@ Player = Player
 Entity = Entity
 
 if GetConvar('voice_useNativeAudio', 'false') == 'true' then
-	-- native audio distance seems to be larger then regular gta units
+
 	Cfg.voiceModes = {
-		{ 2.0, "Whisper" }, -- Whisper speech distance in gta distance units
-		{ 4.0, "Normal" },  -- Normal speech distance in gta distance units
-		{ 8.0, "Shouting" }, -- Shout speech distance in gta distance units
+		{ 2.0, "Whisper" },
+		{ 4.0, "Normal" },
+		{ 8.0, "Shouting" },
 	}
 else
 	Cfg.voiceModes = {
-		{ 3.0,  "Whisper" }, -- Whisper speech distance in gta distance units
-		{ 7.0,  "Normal" },  -- Normal speech distance in gta distance units
-		{ 15.0, "Shouting" } -- Shout speech distance in gta distance units
+		{ 3.0,  "Whisper" },
+		{ 7.0,  "Normal" },
+		{ 15.0, "Shouting" }
 	}
 end
 
@@ -80,7 +79,6 @@ logger = {
 		end
 	end,
 }
-
 
 function tPrint(tbl, indent)
 	indent = indent or 0
@@ -112,8 +110,6 @@ local function types(args)
 	return false, argType
 end
 
---- does a type check and errors if an invalid type is sent
----@param ... table a table with the variable being the first argument and the expected type being the second
 function type_check(...)
 	local vars = { ... }
 	for i = 1, #vars do

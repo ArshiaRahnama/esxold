@@ -1,19 +1,17 @@
 server_script '@ElectronAC/src/include/server.lua'
 client_script '@ElectronAC/src/include/client.lua'
--- FX Information
+
 fx_version 'cerulean'
 use_experimental_fxv2_oal 'yes'
 lua54 'yes'
 game 'gta5'
 
--- Resource Information
 name 'ox_target'
 author 'Overextended'
 version '1.15.3'
 repository 'https://github.com/overextended/ox_target'
 description ''
 
--- Manifest
 ui_page 'web/index.html'
 
 shared_scripts {

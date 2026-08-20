@@ -1,14 +1,12 @@
-------------------------------------------------------------------
---                          Variables
-------------------------------------------------------------------
 
-local AutoSaveHungerThirst = true             -- Boolean to update hunger / thirst
-local AutoSaveHungerThirstTimer = 138000      -- Value in ms. Currently set to 2min30
-local showHud = true                          -- Boolean to show / hide HUD
-local factorHunger = (1000 * 100) / 2400000   -- Ratio to consume hunger's bar
-local factorThirst = (1000 * 100) / 1800000   -- Ratio to consume thirst's bar
-local hunger = 100                            -- Init hunger's variable. Set to 100 for development.
-local thirst = 100                            -- Init thirst's variable. Set to 100 for development.
+
+local AutoSaveHungerThirst = true
+local AutoSaveHungerThirstTimer = 138000
+local showHud = true
+local factorHunger = (1000 * 100) / 2400000
+local factorThirst = (1000 * 100) / 1800000
+local hunger = 100
+local thirst = 100
 local health = 100
 local armor  = 100
 local w = 1920
@@ -19,10 +17,6 @@ local pname
 local showpic = true
 local mugshot, mugTxd = nil, nil
 local PlayerData = {}
-------------------------------------------------------------------
---                          Edits Ahmad -- kharabesh kardiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
-------------------------------------------------------------------
-
 
 AddEventHandler('onKeyUP',function(key)
 	if key == 'oem_3' then
@@ -31,10 +25,6 @@ AddEventHandler('onKeyUP',function(key)
 	end
 end)
 
-
-------------------------------------------------------------------
---                          Functions
-------------------------------------------------------------------
 ESX                             = nil
 
 Citizen.CreateThread(function()
@@ -58,14 +48,12 @@ function MakeDigit(value)
 	return ('$' .. left..(num:reverse():gsub('(%d%d%d)','%1' .. ','):reverse())..right)
 end
 
--- my func
-
 function ToggleHUD()
 	ESX.ShowNotification('تغییر وضعیت انجام شد')
 	SendNUIMessage({
     toggle = true
   })
-ReloadAllData()  
+ReloadAllData()
 end
 
 function ReloadAllData()
@@ -80,7 +68,7 @@ function ReloadAllData()
  SendNUIMessage({action = "cash", value = MakeDigit(data.money)})
  if string.lower(job.name) ~= 'nojob' and string.lower(job.name) ~= 'police' and string.lower(job.name) ~= 'sheriff' then
       SendNUIMessage({action = "job", value = job.label .. " | " .. job.grade_label, icon = job.name})
-  elseif job.name == 'police' or job.name == 'sheriff' then		
+  elseif job.name == 'police' or job.name == 'sheriff' then
       SendNUIMessage({action = "job", value = job.ext:gsub("^%l", string.upper) .. " | " .. job.grade_label, icon = job.ext})
   else
 	 SendNUIMessage({action = "job", value = 'hide', icon = job.name})
@@ -93,9 +81,6 @@ function ReloadAllData()
  end)
 
 end
-------------------------------------------------------------------
---                          Events
-------------------------------------------------------------------
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
@@ -109,11 +94,11 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 		icon  = data.icon
 		SendNUIMessage({action = "gang", value = string.gsub(gang.name, "_", " ") .. " | " .. gang.grade_label})
 	    SendNUIMessage({action = "gangimg", value = data.icon})
-    end,gang.name)    
+    end,gang.name)
   end
   if string.lower(job.name) ~= 'nojob' and string.lower(job.name) ~= 'police' and string.lower(job.name) ~= 'sheriff' then
       SendNUIMessage({action = "job", value = job.label .. " | " .. job.grade_label, icon = job.name})
-  elseif job.name == 'police' or job.name == 'sheriff' then		
+  elseif job.name == 'police' or job.name == 'sheriff' then
       SendNUIMessage({action = "job", value = job.ext:gsub("^%l", string.upper) .. " | " .. job.grade_label, icon = job.ext})
   end
   SendNUIMessage({action = "playerName", value = string.gsub(xPlayer.name , "_"," ")})
@@ -121,7 +106,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
   SendNUIMessage({action = "cash", value = MakeDigit(xPlayer.money)})
 	SendNUIMessage({action = "playerId", value = GetPlayerServerId(PlayerId()) })
   Wait(1000)
-  ReloadAllData()	
+  ReloadAllData()
 end)
 
 RegisterNetEvent('moneyUpdate')
@@ -129,9 +114,6 @@ AddEventHandler('moneyUpdate', function(money)
   SendNUIMessage({action = "cash", value = MakeDigit(money)})
 end)
 
--- Live coin balance updates: hooks the real coin system's broadcast event
--- (fired by Unique_LevelQuest/server/coin.lua on every add/remove/set) so the
--- HUD refreshes immediately instead of only on manual /reload.
 RegisterNetEvent('Coin-System:PlayerCoin')
 AddEventHandler('Coin-System:PlayerCoin', function(coinAmount)
   SendNUIMessage({action = "tc", valuetc = tostring(coinAmount or 0) .. " سکه", valuetctime = 0})
@@ -141,19 +123,14 @@ RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
   if string.lower(job.name) ~= 'nojob' and (string.lower(job.name) ~= 'police' or job.ext == nil) then
       SendNUIMessage({action = "job", value = job.label .. " | " .. job.grade_label, icon = job.name})
-    
+
   elseif job.ext and (job.name == 'police' or job.name == 'sheriff') then
       SendNUIMessage({action = "job", value = job.ext:gsub("^%l", string.upper) .. " | " .. job.grade_label, icon = job.ext})
-      
+
   else
     SendNUIMessage({action = "job", value = 'hide', icon = job.name})
   end
 end)
-
---RegisterNetEvent('status:updatePing')
---AddEventHandler('status:updatePing', function(ping)
--- SendNUIMessage({action = "ping", value = ping})
---end)
 
 RegisterNetEvent('esx:setGang')
 AddEventHandler('esx:setGang', function(gang)
@@ -163,75 +140,32 @@ AddEventHandler('esx:setGang', function(gang)
 		icon  = data.icon
 	SendNUIMessage({action = "gang", value = string.gsub(gang.name, "_", " ") .. " | " .. gang.grade_label})
 	SendNUIMessage({action = "gangimg", value = data.icon})
-    end,gang.name)   	
+    end,gang.name)
   else
     SendNUIMessage({action = "gang", value = 'hide'})
   end
 end)
 
-
 RegisterCommand('reload',function()
 	ReloadAllData()
 end)
-------------------------------------------------------------------
---                          Citizen
-------------------------------------------------------------------
+
 RegisterNetEvent('esx_customui:updateStatus')
 AddEventHandler('esx_customui:updateStatus', function(status)
 	SendNUIMessage({action = "updateStatus", status = status})
 end)
 
-
 AddEventHandler('Status:radio', function(data)
   SendNUIMessage(data)
 end)
 
---[[RegisterNetEvent('showStatus')
-AddEventHandler('showStatus', function()
-  -- Show HUD
-  Citizen.CreateThread(function()
-    local showed = false
-    while true do
-      if showed ~= showHud and not IsPauseMenuActive() then
-        SendNUIMessage({
-          display = showHud
-        })
-        showed = showHud
-      end
-      if IsPauseMenuActive() and showed then
-        SendNUIMessage({
-          display = false
-        })
-        showed = false
-      end
-      if showHud then
-        local ped = GetPlayerPed(-1)
-        -- Health
-        local pedhealth = GetEntityHealth(ped)
 
-        if pedhealth < 100 then
-          health = 0
-        else
-          pedhealth = pedhealth - 100
-          health    = pedhealth
-        end
-        -- armor
-        local armor = GetPedArmour(ped)
-	    	if armor >= 98 then
-	    	armor = 100
-	    	end
-        updateHUD(health, armor)
-      end
-      Citizen.Wait(2000)
-    end
-  end)]]
- 
 local previousArmor = 0
 local previousHealth = 0
 RegisterNetEvent('showStatus')
 AddEventHandler('showStatus', function()
 	Wait(1000)
-  -- Show HUD
+
   local wait = 1000
   Citizen.CreateThread(function()
     local showed = false
@@ -262,7 +196,7 @@ AddEventHandler('showStatus', function()
         else
           health = pedhealth - 100
         end
-        -- armor
+
         local armor = GetPedArmour(ped)
 		if armor == 98 then
 		armor = 100
@@ -272,7 +206,7 @@ AddEventHandler('showStatus', function()
           previousArmor = armor
           updateHUD(health, armor)
         end
-        
+
       end
       Citizen.Wait(wait)
     end
@@ -319,8 +253,6 @@ RegisterNUICallback('setmugpos', function(data)
   y = data.y + (data.h/2)
 end)
 
-
--- [Function]
 function updateIndicators(type, data)
   local newData = convertData(type, data)
   SendNUIMessage({action = "indicator", value = newData})

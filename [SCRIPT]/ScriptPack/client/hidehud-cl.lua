@@ -13,9 +13,9 @@ local HUD_ELEMENTS = {
     HUD_FLOATING_HELP_TEXT_1 = { id = 11, hidden = false },
     HUD_FLOATING_HELP_TEXT_2 = { id = 12, hidden = false },
     HUD_CASH_CHANGE = { id = 13, hidden = true },
-    --HUD_RETICLE = { id = 14, hidden = FALSE },
+
     HUD_SUBTITLE_TEXT = { id = 15, hidden = false },
-   -- HUD_RADIO_STATIONS = { id = 16, hidden = true },
+
     HUD_SAVING_GAME = { id = 17, hidden = false },
     HUD_GAME_STREAM = { id = 18, hidden = false },
     HUD_WEAPON_WHEEL = { id = 19, hidden = false },
@@ -48,26 +48,11 @@ Citizen.CreateThread(function()
 			if kmh > 100 then
 				if bigmap == true then
 					SetRadarZoomLevelThisFrame(500 + kmh)
-				else						
+				else
 					SetRadarZoomLevelThisFrame(50 + kmh)
 				end
 			end
         end
-		--[[
-		if bigmap then
-		SetBigmapActive(true,false)
-		else
-		SetBigmapActive(false,false)
-		end
-		if IsControlJustReleased(1,20) then
-		if bigmap then
-		bigmap = false
-		lib.notify({ position = 'center-right', description = "!نقشه کوچک فعال شد", type = "warning", duration = 1400 })
-		else
-		bigmap = true
-		lib.notify({ position = 'center-right', description = "!نقشه بزرگ فعال شد", type = "warning", duration = 1400 })
-		end
-		end
-		]]
+
     end
 end)

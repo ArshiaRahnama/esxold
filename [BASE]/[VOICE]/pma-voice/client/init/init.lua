@@ -4,8 +4,8 @@ AddEventHandler('onClientResourceStart', function(resource)
 	end
 	print('Starting script initialization')
 
-	-- Some people modify pma-voice and mess up the resource Kvp, which means that if someone
-	-- joins another server that has pma-voice, it will error out, this will catch and fix the kvp.
+
+
 	local success = pcall(function()
 		local micClicksKvp = GetResourceKvpString('pma-voice_enableMicClicks')
 		if not micClicksKvp then
@@ -33,7 +33,7 @@ AddEventHandler('onClientResourceStart', function(resource)
 	local radioChannel = LocalPlayer.state.radioChannel or 0
 	local callChannel = LocalPlayer.state.callChannel or 0
 
-	-- Reinitialize channels if they're set.
+
 	if radioChannel ~= 0 then
 		setRadioChannel(radioChannel)
 	end

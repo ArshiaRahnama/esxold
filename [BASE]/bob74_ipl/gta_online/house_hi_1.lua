@@ -1,6 +1,4 @@
 
--- 3655 Wild Oats Drive 
--- High end house 1: -169.286 486.4938 137.4436
 
 exports('GetGTAOHouseHi1Object', function()
     return GTAOHouseHi1

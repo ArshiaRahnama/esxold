@@ -1,21 +1,21 @@
 Locales['en'] = Locales['en'] or {}
 for k, v in pairs({
-  -- Cloakroom
+
   ['cloakroom'] = 'cloakroom',
   ['citizen_wear'] = 'Civil outfit',
   ['cia_wear'] = 'cia outfit',
   ['bullet_wear'] = 'bullet proof vest',
   ['no_outfit'] = 'there\'s is no uniform at your size...',
   ['open_cloackroom'] = 'press ~INPUT_CONTEXT~ to change ~y~clothes~s~.',
-  
-  -- Elevator
+
+
   ['elevator'] = 'elevator',
   ['elevator_top'] = 'go to the offices',
   ['elevator_down'] = 'go to the ground floor',
   ['elevator_parking'] = 'Goto The Heli Park',
   ['open_elevator'] = 'press ~INPUT_CONTEXT~ to take the elevator',
 
-  -- Armory
+
   ['remove_object'] = 'withdraw object',
   ['deposit_object'] = 'deposit object',
   ['get_weapon'] = 'withdraw weapon',
@@ -24,7 +24,7 @@ for k, v in pairs({
   ['armory'] = 'armory',
   ['open_armory'] = 'press ~INPUT_CONTEXT~ to access the armory',
 
-  -- Vehicles
+
   ['vehicle_menu'] = 'vehicle',
   ['vehicle_blocked'] = 'there is already a vehicle out',
   ['vehicle_spawner'] = 'press ~INPUT_CONTEXT~ to take out a vehicle',
@@ -32,8 +32,8 @@ for k, v in pairs({
   ['store_vehicle'] = 'press ~INPUT_CONTEXT~ to store the vehicle',
 
   ['heli_out'] = 'there is already a heli out of the garage',
-  
-  -- Service
+
+
   ['service_max'] = 'you cannot enter service, max officers in service: %s/%s',
   ['service_not'] = 'you have not entered service! You\'ll have to get changed first.',
   ['service_anonunce'] = 'service information',
@@ -42,7 +42,7 @@ for k, v in pairs({
   ['service_out'] = 'you have left service.',
   ['service_out_announce'] = 'agent ~y~%s~s~ has left their service.',
 
-  -- Action Menu
+
   ['cia_actions'] = 'cia',
   ['citizen_interaction'] = 'citizen Interaction',
   ['vehicle_interaction'] = 'vehicle Interaction',
@@ -63,7 +63,7 @@ for k, v in pairs({
   ['no_players_nearby'] = 'there is no player(s) nearby!',
   ['being_searched'] = 'you are being ~y~searched~s~ by the ~b~cia~s~',
 
-  -- Vehicle interaction
+
   ['vehicle_info'] = 'vehicle Info',
   ['pick_lock'] = 'lockpick Vehicle',
   ['vehicle_unlocked'] = 'vehicle ~g~Unlocked~s~',
@@ -79,14 +79,14 @@ for k, v in pairs({
   ['search_database_error_not_found'] = 'that ~y~registration number~s~ is ~r~not~s~ registered to an vehicle!',
   ['search_database_found'] = 'the vehicle is ~y~registered~s~ to ~b~%s~s~',
 
-  -- Traffic interaction
+
   ['traffic_interaction'] = 'interaction Traffic',
   ['cone'] = 'cone',
   ['barrier'] = 'barrier',
   ['spikestrips'] = 'spikestrips',
   ['box'] = 'box',
 
-  -- ID Card Menu
+
   ['name'] = 'name: %s',
   ['job'] = 'job: %s',
   ['sex'] = 'sex: %s',
@@ -98,7 +98,7 @@ for k, v in pairs({
   ['male'] = 'male',
   ['female'] = 'female',
 
-  -- Body Search Menu
+
   ['guns_label'] = '--- Guns ---',
   ['inventory_label'] = '--- Inventory ---',
   ['license_label'] = ' --- Licenses ---',
@@ -118,18 +118,18 @@ for k, v in pairs({
   ['major_offense'] = 'major Offense',
   ['fine_total'] = 'fine: %s',
 
-  -- Vehicle Info Menu
+
   ['plate'] = 'n°: %s',
   ['owner_unknown'] = 'owner: Unknown',
   ['owner'] = 'owner: %s',
 
-  -- Weapons Menus
+
   ['get_weapon_menu'] = 'armory - Withdraw Weapon',
   ['put_weapon_menu'] = 'armory - Deposit Weapon',
   ['buy_weapon_menu'] = 'armory - Buy Guns',
   ['not_enough_money'] = 'you do not have enough money',
 
-  -- Boss Menu
+
   ['take_company_money'] = 'withdraw Company Money',
   ['deposit_money'] = 'deposit Money',
   ['amount_of_withdrawal'] = 'amount of Withdrawal',
@@ -143,12 +143,12 @@ for k, v in pairs({
   ['inventory'] = 'inventory',
   ['cia_stock'] = 'cia Stock',
 
-  -- Misc
+
   ['remove_prop'] = 'press ~INPUT_CONTEXT~ to delete the object',
   ['map_blip'] = 'cia',
   ['unrestrained_timer'] = 'you feel your handcuffs slowly losing grip and fading away.',
 
-  -- Notifications
+
   ['alert_cia'] = 'cia alert',
   ['phone_cia'] = 'cia',
 }) do Locales['en'][k] = v end

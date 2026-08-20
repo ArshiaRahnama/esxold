@@ -20,7 +20,6 @@ AddEventHandler('onResourceStart', function(resourceName)
    end
 end)
 
-
 RegisterNetEvent('gangprop:forceBlip')
 AddEventHandler('gangprop:forceBlip', function()
 	TriggerClientEvent('gangprop:updateBlip', -1)
@@ -54,16 +53,13 @@ AddEventHandler("gangprop:setArmor", function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 
-
-
-
 	MySQL.Async.fetchAll('SELECT price FROM gangs_data WHERE gang_name = @gang', {
         ['@gang'] = xPlayer.gang.name,
     }, function(result)
         if #result then
         local price = tonumber(result[1]["price"])
-        
-	
+
+
 			if xPlayer.money >= price then
 				xPlayer.removeMoney(price)
 				TriggerClientEvent('setArmorHandler', _source)
@@ -81,14 +77,13 @@ AddEventHandler("gangprop:setArmorMakhfi", function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 
-
 	MySQL.Async.fetchAll('SELECT price FROM gangs_data WHERE gang_name = @gang', {
         ['@gang'] = xPlayer.gang.name,
     }, function(result)
         if #result then
         local price = tonumber(result[1]["price"])
-        
-	
+
+
 			if xPlayer.money >= price+2000 then
 				xPlayer.removeMoney(price)
 				TriggerClientEvent('setArmorHandlerMakhfi', _source)
@@ -106,9 +101,9 @@ ESX.RegisterServerCallback('gangprop:carAvalible', function(source, cb, plate)
   exports.ghmattimysql:scalar('SELECT `stored` FROM `owned_vehicles` WHERE plate = @plate', {
     ['@plate']  = plate
   }, function(stored)
-    if tonumber(stored) == 1 then 
+    if tonumber(stored) == 1 then
       cb(true)
-    else 
+    else
       cb()
     end
   end)
@@ -125,12 +120,12 @@ ESX.RegisterServerCallback('gangprop:getCars', function(source, cb)
   }, function(data)
     for _,v in pairs(data) do
       local vehicle = json.decode(v.vehicle)
-	
-      if tonumber(v.stored) == 1 then 
+
+      if tonumber(v.stored) == 1 then
         table.insert(ownedCars, {vehicle = vehicle, stored = true  , plate = v.plate, damage = v.damage, engine = v.engine})
-      else  
+      else
         table.insert(ownedCars, {vehicle = vehicle, stored = false , plate = v.plate, damage = v.damage, engine = v.engine})
-      end 
+      end
     end
     cb(ownedCars)
   end)
@@ -147,11 +142,11 @@ ESX.RegisterServerCallback('gangprop:getOwnedAircrafts', function(source, cb)
   }, function(data)
     for _,v in pairs(data) do
       local vehicle = json.decode(v.vehicle)
-      if tonumber(v.stored) == 1 then 
+      if tonumber(v.stored) == 1 then
         table.insert(ownedCars, {vehicle = vehicle, stored = true  , plate = v.plate, damage = v.damage})
-      else  
+      else
         table.insert(ownedCars, {vehicle = vehicle, stored = false , plate = v.plate, damage = v.damage})
-      end 
+      end
     end
     cb(ownedCars)
   end)
@@ -168,11 +163,11 @@ ESX.RegisterServerCallback('gangprop:getOwnedBoats', function(source, cb)
   }, function(data)
     for _,v in pairs(data) do
       local vehicle = json.decode(v.vehicle)
-      if tonumber(v.stored) == 1 then 
+      if tonumber(v.stored) == 1 then
         table.insert(ownedCars, {vehicle = vehicle, stored = true  , plate = v.plate, damage = v.damage})
-      else  
+      else
         table.insert(ownedCars, {vehicle = vehicle, stored = false , plate = v.plate, damage = v.damage})
-      end 
+      end
     end
     cb(ownedCars)
   end)
@@ -182,7 +177,6 @@ RegisterServerEvent('gangprop:messagex')
 AddEventHandler('gangprop:messagex', function(target, msg)
 	TriggerClientEvent('esx:showNotification', target, msg)
 end)
-
 
 ESX.RegisterServerCallback('gangprop:getPlayerInventory', function(source, cb)
 
@@ -196,7 +190,7 @@ ESX.RegisterServerCallback('gangprop:getPlayerInventory', function(source, cb)
 
  end)
 
-RegisterCommand("g", function(source, args)     
+RegisterCommand("g", function(source, args)
 	local xPlayers = ESX.GetPlayers()
 	for i=1, #xPlayers, 1 do
 		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
@@ -218,14 +212,11 @@ RegisterCommand("g", function(source, args)
 	end
 end)
 
--- dare naringi ro map
 ESX.RegisterServerCallback('esx_best:getBlips', function(source, cb)
 	MySQL.Async.fetchAll('SELECT blip, expire_time FROM `gangs_data` WHERE blip IS NOT NULL AND `expire_time` > NOW()', {}, function(data)
     cb(data)
   end)
 end)
-
---------------CUFF--------------
 
 ESX.RegisterServerCallback("gangprop:GetPedHandsUpStatus", function(source, cb, ID)
 	local Dead = true
@@ -242,7 +233,6 @@ ESX.RegisterServerCallback("gangprop:GetPedHandsUpStatus", function(source, cb, 
 	if xPlayer.get("Cuff") == false then IsCuffed = false end
 	cb(IsCuffed, Injure, Dead)
 end)
-
 
 RegisterServerEvent('gangprop:requestarrest')
 AddEventHandler('gangprop:requestarrest', function(targetid, playerheading, playerCoords, playerlocation, front)
@@ -261,10 +251,10 @@ AddEventHandler('gangprop:requestarrest', function(targetid, playerheading, play
 				TriggerClientEvent('esx:showNotification', source, '~y~In Player Az Ghabl Dastband Khorde Ast.')
 			end
 		else
-			-- exports.Mid_BanSystem:BanThis(source, "Tried To Cuff Players With Cheat", 500)
+
 		end
 	else
-		-- exports.Mid_BanSystem:BanThis(source, "Tried To Cuff Players With Cheat", 500)
+
 	end
 end)
 
@@ -286,11 +276,11 @@ AddEventHandler('gangprop:requestrelease', function(targetid, playerheading, pla
 	if xPlayer.job.name == "police" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "fbi" or xPlayer.job.name == "mt" or xPlayer.job.name == "forces" or xPlayer.job.name == "cid" or xPlayer.job.name == "cia" or xPlayer.job.name == "marshal" or xPlayer.job.name == "judge" or xPlayer.job.name == "doa" or xPlayer.gang.name ~= "nogang" then
 		if #(GetEntityCoords(GetPlayerPed(source)) - GetEntityCoords(GetPlayerPed(tonumber(targetid)))) < 15.0 then
 			if cPlayer.get("Cuff") then
-				--if exports['Eye-AC']:CheckPlayers(source, targetid, 8.0) ~= false then return end
+
 				TriggerClientEvent("gangprop:getuncuffed", targetid, playerheading, playerCoords, playerlocation)
 				TriggerClientEvent("gangprop:douncuffing", source)
-				
-			else	
+
+			else
 				TriggerClientEvent('esx:showNotification', source, '~y~In Player Dastband Nakhorde Ast')
 			end
 		else
@@ -301,17 +291,14 @@ AddEventHandler('gangprop:requestrelease', function(targetid, playerheading, pla
 	end
 end)
 
--- --------------Drag-------------- --
-
-
 RegisterServerEvent('gangprop:drag')
 AddEventHandler('gangprop:drag', function(target)
 	local cPlayer = ESX.GetPlayerFromId(target)
 	if GetPlayerName(target) or cPlayer then
 		if #(GetEntityCoords(GetPlayerPed(source)) - GetEntityCoords(GetPlayerPed(tonumber(target)))) < 20.0 then
 			if cPlayer.get("Cuff") then
-			
-				--if exports['Eye-AC']:CheckPlayers(source, target, 8.0) ~= false then return end
+
+
 				TriggerClientEvent('gangprop:drag', target, source)
 				TriggerClientEvent('gangprop:draging', source)
 			else
@@ -321,10 +308,6 @@ AddEventHandler('gangprop:drag', function(target)
 		end
 	end
 end)
-
-
-
--- ------------ Put In Vehicle --------------- --
 
 RegisterServerEvent('gangprop:putInVehicle')
 AddEventHandler('gangprop:putInVehicle', function(target)
@@ -343,11 +326,11 @@ AddEventHandler('gangprop:putInVehicle', function(target)
 				for _, vehicle in ipairs(vehicles) do
 					local vehicleCoords = GetEntityCoords(vehicle)
 					local distance = #(playerCoords - vehicleCoords)
-			
+
 					if closestDistance == nil or distance < closestDistance then
 						closestDistance = distance
-						if distance < 3 then 
-							--if exports['Eye-AC']:CheckPlayers(source, target, 8.0) ~= false then return end
+						if distance < 3 then
+
 							TriggerClientEvent('gangprop:putInVehicle', target)
 							TriggerClientEvent("gangprop:draging", source)
 							return
@@ -365,22 +348,19 @@ AddEventHandler('gangprop:putInVehicle', function(target)
 	end
 end)
 
-
--- ----------------- Out teh vehicle ------------------ -- 
-
 RegisterServerEvent('gangprop:OutVehicle')
 AddEventHandler('gangprop:OutVehicle', function(target)
 	local cPlayer = ESX.GetPlayerFromId(target)
 	if GetPlayerName(target) or not cPlayer then
 		if #(GetEntityCoords(GetPlayerPed(source)) - GetEntityCoords(GetPlayerPed(tonumber(target)))) < 15.0 then
 			if cPlayer.get("Cuff") then
-				--if exports['Eye-AC']:CheckPlayers(source, target, 8.0) ~= false then return end
+
 				TriggerClientEvent('gangprop:OutVehicle', target)
 			else
 				TriggerClientEvent('esx:showNotification', source, '~y~Fard Mored Nazar Baraye Kharej Kardan Az Mashin Dastband Nakhorde Ast.')
 			end
 		else
-			-- exports.Mid_BanSystem:BanThis(source, "Tried To Drag Players With Cheat", 600)
+
 		end
 	end
 end)

@@ -37,8 +37,8 @@ BikerGang = {
         },
 
         emblem = "MPClubPreset1",
-        rot = 90.0,                 -- Rotation for 0.0 to 360.0
-        
+        rot = 90.0,
+
         Set = function(logo, rotation)
             BikerGang.Emblem.emblem = logo
             BikerGang.Emblem.rot = rotation
@@ -282,17 +282,17 @@ BikerGang = {
                     outrider = "SHU_MENU_DESC"
                 },
                 Pictures = {
-                    byThePound = "CHM_IMG0", -- Pickup car parked
-                    prisonerOfWar = "CHM_IMG8", -- Police with man down
-                    gunsForHire = "CHM_IMG4", -- Limo
-                    weaponOfChoice = "CHM_IMG10", -- Prisoner being beaten
-                    gunrunning = "CHM_IMG3", -- Shipment
-                    nineTenthsOfTheLaw = "CHM_IMG6", -- Wheeling
-                    jailbreak = "CHM_IMG5", -- Prison bus
-                    cracked = "CHM_IMG1", -- Safe
-                    fragileGoods = "CHM_IMG2", -- Lost Van
-                    torched = "CHM_IMG9", -- Explosive crate
-                    outrider = "CHM_IMG7" -- Sport ride 
+                    byThePound = "CHM_IMG0",
+                    prisonerOfWar = "CHM_IMG8",
+                    gunsForHire = "CHM_IMG4",
+                    weaponOfChoice = "CHM_IMG10",
+                    gunrunning = "CHM_IMG3",
+                    nineTenthsOfTheLaw = "CHM_IMG6",
+                    jailbreak = "CHM_IMG5",
+                    cracked = "CHM_IMG1",
+                    fragileGoods = "CHM_IMG2",
+                    torched = "CHM_IMG9",
+                    outrider = "CHM_IMG7"
                 },
             },
             needToLoad = false,
@@ -302,7 +302,7 @@ BikerGang = {
             renderId = -1,
             movieId = -1,
             stage = 0,
-            
+
             Position = {none = -1, left = 0, middle = 1, right = 2},
 
             Init = function()
@@ -316,7 +316,7 @@ BikerGang = {
             SelectMission = function(position)
                 if BikerGang.Clubhouse.MissionsWall.movieId ~= -1 then
                     BeginScaleformMovieMethod(BikerGang.Clubhouse.MissionsWall.movieId, "SET_SELECTED_MISSION")
-                    PushScaleformMovieMethodParameterInt(position) -- Mission index 0 to 2 (-1 = no mission)
+                    PushScaleformMovieMethodParameterInt(position)
                     EndScaleformMovieMethod()
                 end
             end,
@@ -328,15 +328,15 @@ BikerGang = {
                     if BikerGang.Clubhouse.MissionsWall.movieId ~= -1 then
                         if (position > -1) then
                             BeginScaleformMovieMethod(BikerGang.Clubhouse.MissionsWall.movieId, "SET_MISSION")
-                            PushScaleformMovieMethodParameterInt(position)          -- Mission index 0 to 2 (-1 = no mission)
+                            PushScaleformMovieMethodParameterInt(position)
                             PushScaleformMovieMethodParameterString(title)
                             PushScaleformMovieMethodParameterString(desc)
                             PushScaleformMovieMethodParameterButtonName(textDict)
-                            PushScaleformMovieMethodParameterFloat(x)               -- Mission 0: world coordinates X
-                            PushScaleformMovieMethodParameterFloat(y)               -- Mission 0: world coordinates Y
+                            PushScaleformMovieMethodParameterFloat(x)
+                            PushScaleformMovieMethodParameterFloat(y)
                             EndScaleformMovieMethod()
                         else
-                            -- Remove all missions
+
                             for key, value in pairs(BikerGang.Clubhouse.MissionsWall.Position) do
                                 BikerGang.Clubhouse.MissionsWall.RemoveMission(value)
                             end
@@ -351,32 +351,32 @@ BikerGang = {
                 EndScaleformMovieMethod()
             end,
             Clear = function()
-                -- Removing missions
+
                 BikerGang.Clubhouse.MissionsWall.SelectMission(BikerGang.Clubhouse.MissionsWall.Position.none)
                 BikerGang.Clubhouse.MissionsWall.SetMission(BikerGang.Clubhouse.MissionsWall.Position.none)
 
-                -- Releasing handles
+
                 if IsNamedRendertargetRegistered(BikerGang.Clubhouse.MissionsWall.prop) then
                     ReleaseNamedRendertarget(GetHashKey(BikerGang.Clubhouse.MissionsWall.prop))
                 end
                 if HasNamedScaleformMovieLoaded(BikerGang.Clubhouse.MissionsWall.movieId) then
                     SetScaleformMovieAsNoLongerNeeded(BikerGang.Clubhouse.MissionsWall.movieId)
                 end
-                
-                -- Resetting
+
+
                 BikerGang.Clubhouse.MissionsWall.renderId = -1
                 BikerGang.Clubhouse.MissionsWall.movieId = -1
                 BikerGang.Clubhouse.MissionsWall.stage = 0
             end
         },
-        
+
         ClearAll = function()
             BikerGang.Clubhouse.ClubName.Clear()
             BikerGang.Clubhouse.ClubName.loaded = false
-            
+
             BikerGang.Clubhouse.Emblem.Clear()
             BikerGang.Clubhouse.Emblem.loaded = false
-            
+
             BikerGang.Clubhouse.MissionsWall.Clear()
             BikerGang.Clubhouse.MissionsWall.loaded = false
 
@@ -391,17 +391,17 @@ BikerGang = {
 }
 
 Citizen.CreateThread(function()
-    -- Removing the black texture
+
     BikerGang.Clubhouse.Members.President.Init()
     BikerGang.Clubhouse.Members.VicePresident.Init()
     BikerGang.Clubhouse.Members.RoadCaptain.Init()
     BikerGang.Clubhouse.Members.Enforcer.Init()
     BikerGang.Clubhouse.Members.SergeantAtArms.Init()
-    
+
     BikerGang.Clubhouse.ClubName.Init()
     BikerGang.Clubhouse.Emblem.Init()
     BikerGang.Clubhouse.MissionsWall.Init()
-    
+
 
     while true do
         if (BikerGang.Clubhouse.ClubName.needToLoad or
@@ -413,9 +413,9 @@ Citizen.CreateThread(function()
             BikerGang.Clubhouse.Members.Enforcer.needToLoad or
             BikerGang.Clubhouse.Members.SergeantAtArms.needToLoad) then
 
-            -- If we are inside a clubhouse, then we load
+
             if (Global.Biker.isInsideClubhouse1 or Global.Biker.isInsideClubhouse2) then
-                -- Club name
+
                 if BikerGang.Clubhouse.ClubName.needToLoad then
                     DrawClubName(BikerGang.Name.name, BikerGang.Name.color, BikerGang.Name.font)
                     BikerGang.Clubhouse.ClubName.loaded = true
@@ -423,7 +423,7 @@ Citizen.CreateThread(function()
                     BikerGang.Clubhouse.ClubName.Clear()
                     BikerGang.Clubhouse.ClubName.loaded = false
                 end
-                -- Emblem
+
                 if BikerGang.Clubhouse.Emblem.needToLoad then
                     DrawEmblem(BikerGang.Emblem.emblem, BikerGang.Emblem.rot)
                     BikerGang.Clubhouse.Emblem.loaded = true
@@ -431,7 +431,7 @@ Citizen.CreateThread(function()
                     BikerGang.Clubhouse.Emblem.Clear()
                     BikerGang.Clubhouse.Emblem.loaded = false
                 end
-                -- Missions wall
+
                 if BikerGang.Clubhouse.MissionsWall.needToLoad then
                     DrawMissions()
                     BikerGang.Clubhouse.MissionsWall.loaded = true
@@ -440,7 +440,7 @@ Citizen.CreateThread(function()
                     BikerGang.Clubhouse.MissionsWall.loaded = false
                 end
 
-                -- Members: President
+
                 for key, member in pairs(BikerGang.Clubhouse.Members) do
                     if IsTable(member) then
                         if member.needToLoad then
@@ -453,22 +453,18 @@ Citizen.CreateThread(function()
                     end
                 end
 
-                Wait(1) -- We need to call all this every frame
+                Wait(1)
             else
-                -- Not in a clubhouse
+
                 Wait(1000)
             end
         else
-            -- No load needed
+
             Wait(1000)
         end
     end
 
 end)
-
-
-
-
 
 function DrawClubName(name, color, font)
     if BikerGang.Clubhouse.ClubName.stage == 0 then

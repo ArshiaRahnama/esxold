@@ -1,5 +1,4 @@
--- AntiCheat/server.lua
--- Owns all decisions. Clients only ever report raw anomalies (see client.lua).
+
 
 local ESX = nil
 Citizen.CreateThread(function()
@@ -9,29 +8,10 @@ Citizen.CreateThread(function()
     end
 end)
 
--- players[src] = { score = 100, lastFlagAt = {kind = time}, history = {} }
 local players = {}
 
--- recentFlags[kind] = { {src=, time=}, ... }  -- for cross-player correlation
 local recentFlags = {}
 
--- ============================================================
--- Temporary exemptions -- lets other resources (job scripts doing a
--- legitimate teleport, e.g. esx_uniquejobs' arrest/uncuff teleports)
--- tell us "don't flag THIS player for THIS check for the next N ms".
---
--- exemptions[src] = { [kind] = expiresAtGameTimer }
---
--- SECURITY: ExemptPlayer is reachable indirectly from a plain client
--- net event in other resources (esx_uniquejobs:AntiCheatExempt), which
--- ANY player can fire on themselves with whatever (ms, kinds) they want
--- -- there's no guarantee the caller is actually a job script. So this
--- export enforces its own hard ceiling on duration and only ever
--- exempts the "a legit script action can trip this" kinds (teleport,
--- speed, and invisibility — e.g. the jail arrest cutscene hiding the
--- player), no matter what a caller asks for. It can never be used to
--- silence noclip, godmode, weapon, or resource-whitelist flags.
--- ============================================================
 local exemptions = {}
 local EXEMPTABLE_KINDS = { teleport = true, speed = true, invisibility = true }
 local MAX_EXEMPT_MS = 10000
@@ -72,12 +52,11 @@ AddEventHandler('playerDropped', function()
     exemptions[source] = nil
 end)
 
--- slow natural recovery so one old flag doesn't follow a legit player forever
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(60000)
         for src, data in pairs(players) do
-            if GetPlayerName(src) then -- still connected
+            if GetPlayerName(src) then
                 data.score = math.min(Config.TrustScore.MaxScore, data.score + Config.TrustScore.RecoverPerMinute)
             end
         end
@@ -122,7 +101,7 @@ local function correlate(kind, src)
     recentFlags[kind] = recentFlags[kind] or {}
     local bucket = recentFlags[kind]
 
-    -- drop stale entries
+
     for i = #bucket, 1, -1 do
         if now - bucket[i].time > Config.Correlation.WindowMs then
             table.remove(bucket, i)
@@ -160,9 +139,9 @@ local function applyFlag(src, kind, evidence)
     if type(kind) ~= 'string' or not penaltyByKind[kind] then return end
     if type(evidence) ~= 'table' then evidence = {} end
 
-    -- A legit job script (arrest/uncuff teleport, fast-travel, etc) told us
-    -- to hold off on this exact check for this exact player. Skip entirely --
-    -- no penalty, no history entry, no webhook -- same as if nothing happened.
+
+
+
     if isExempt(src, kind) then
         if Config.Debug then
             print(('[AntiCheat] %s exempted from %s flag'):format(GetPlayerName(src) or src, kind))
@@ -172,9 +151,9 @@ local function applyFlag(src, kind, evidence)
 
     local data = getPlayer(src)
 
-    -- Safety net (see Config.TrustScore.MinReflagIntervalMs): don't let the
-    -- same kind hit the same player twice within the cooldown window, no
-    -- matter what the individual check's own debouncing does or doesn't do.
+
+
+
     local now = GetGameTimer()
     local last = data.lastFlagAt[kind]
     if last and (now - last) < (Config.TrustScore.MinReflagIntervalMs or 4000) then
@@ -228,13 +207,6 @@ AddEventHandler('AntiCheat:flag', function(kind, evidence)
     applyFlag(source, kind, evidence)
 end)
 
--- ============================================================
--- Resource Whitelist — compares the client-reported running-resource
--- list against everything the SERVER itself has loaded (the server's
--- own resource list is the ground truth; anything the client reports
--- that the server doesn't know about is the only thing that's actually
--- suspicious — a resource simply being loaded/started is expected).
--- ============================================================
 RegisterNetEvent('AntiCheat:resourceList')
 AddEventHandler('AntiCheat:resourceList', function(list)
     local src = source
@@ -250,12 +222,12 @@ AddEventHandler('AntiCheat:resourceList', function(list)
         known[name] = true
     end
 
-    -- FIXED: this used to re-flag every unknown name on every 60s report
-    -- for as long as it stayed loaded, with no dedup at all -- one
-    -- false-positive resource name was a guaranteed kick a few minutes
-    -- later. Now we remember (per player) which unknown names we've
-    -- already reported and only penalize genuinely NEW ones. If a name
-    -- disappears and later reappears, it's treated as new again.
+
+
+
+
+
+
     local data = getPlayer(src)
     local stillPresent = {}
     local unknown = {}
@@ -274,10 +246,6 @@ AddEventHandler('AntiCheat:resourceList', function(list)
     end
 end)
 
--- Simple in-memory inspection exports for admins to wire into their own
--- permission system (ACE, ESX group, whatever the server already uses) —
--- intentionally left as exports rather than a chat command so you decide
--- who can call it.
 exports('GetTrustScore', function(src)
     local data = players[src]
     return data and data.score or Config.TrustScore.StartingScore

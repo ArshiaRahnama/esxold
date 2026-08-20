@@ -35,7 +35,7 @@ for k, v in pairs({
   ['amount_invalid']            = 'ogiltigt belopp',
   ['no_players_nearby']         = 'det finns inga spelare i närheten',
   ['no_vehicle_nearby']         = 'det finns inget fordon i närheten',
-  ['inside_vehicle']            = 'du kan inte göra detta i det trånga utrymmet!', 
+  ['inside_vehicle']            = 'du kan inte göra detta i det trånga utrymmet!',
   ['vehicle_unlocked']          = 'fordonet har ~g~olåsts upp~s~',
   ['vehicle_repaired']          = 'fordonet har ~g~reparerats~s~',
   ['vehicle_cleaned']           = 'fordonet har ~g~rengjorts~s~',

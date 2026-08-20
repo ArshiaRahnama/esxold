@@ -14,7 +14,7 @@ end)
 
 RegisterNetEvent('gpstools:setgps')
 AddEventHandler('gpstools:setgps', function(pos)
-	-- add required decimal or else it wont work
+
 	pos.x = pos.x + 0.00
 	pos.y = pos.y + 0.00
 
@@ -30,7 +30,7 @@ AddEventHandler('gpstools:getpos', function()
 	local heading  = GetEntityHeading(playerPed)
 	local finalPos = {}
 
-	-- round to 2 decimals
+
 	finalPos.x = string.format("%.2f", pos.x)
 	finalPos.y = string.format("%.2f", pos.y)
 	finalPos.z = string.format("%.2f", pos.z)
@@ -40,17 +40,6 @@ AddEventHandler('gpstools:getpos', function()
 	TriggerEvent('chatMessage', 'SYSTEM', { 0, 0, 0 }, formattedText)
 	print(formattedText)
 end)
-
---[[RegisterNetEvent('gpstools:togglegps')
-AddEventHandler('gpstools:togglegps', function()
-	if not isMinimapEnabled then
-		SetRadarBigmapEnabled(true, false)
-		isMinimapEnabled = true
-	else
-		SetRadarBigmapEnabled(false, false)
-		isMinimapEnabled = false
-	end
-end)]]
 
 RegisterNetEvent('gpstools:tpwaypoint')
 AddEventHandler('gpstools:tpwaypoint', function()
@@ -93,27 +82,3 @@ RegisterCommand('togglegps', function()
 	end
 end)
 
--- RegisterNetEvent('esx:playerLoaded')
--- AddEventHandler('esx:playerLoaded', function(xPlayer)
--- 	if xPlayer == nil then return Wait(1000) end
--- 	while IsPlayerSwitchInProgress() do return Citizen.Wait(5000) end
--- 	TriggerEvent('esx_gps:removeGPS')
--- 	Wait(1000)
--- 	for i=1, #ESX.PlayerData.inventory, 1 do
--- 		if ESX.PlayerData.inventory[i].name == 'gps' then
--- 			if ESX.PlayerData.inventory[i].count > 0 then
--- 				TriggerEvent('esx_gps:addGPS')
--- 			end
--- 		end
--- 	end
--- end)
-
--- RegisterNetEvent('esx_gps:addGPS')
--- AddEventHandler('esx_gps:addGPS', function()
--- 	DisplayRadar(true)
--- end)
-
--- RegisterNetEvent('esx_gps:removeGPS')
--- AddEventHandler('esx_gps:removeGPS', function()
--- 	DisplayRadar(false)
--- end)

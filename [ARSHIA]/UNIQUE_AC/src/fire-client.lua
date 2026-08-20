@@ -1,5 +1,4 @@
--- UNIQUE_AC — customized by Arshia (arshiahub.ir)
--- Licensed under the GNU Affero General Public License v3.0
+
 
 local state = {
     ready = false,
@@ -434,7 +433,6 @@ CreateThread(function()
     end
 end)
 
--- Anti Weapon Component: flags illegal / blacklisted attachments (explosive ammo, unlimited-mag mods, etc.)
 CreateThread(function()
     while true do
         Wait(3000)
@@ -455,8 +453,6 @@ CreateThread(function()
     end
 end)
 
--- Anti Underground / Out Of Bounds: flags players clipping under the map or far outside the world limits.
--- Exempt: real game interiors (MLOs/shells) and any admin-defined UndergroundSafeZones.
 CreateThread(function()
     while true do
         Wait(4000)
@@ -495,8 +491,6 @@ CreateThread(function()
     end
 end)
 
--- Anti Macro Fire: flags mechanically-perfect trigger timing on semi-auto weapons (auto-clicker / fire macros).
--- Only watches semi-auto handguns, since full-auto weapons already fire at a fixed mechanical rate.
 CreateThread(function()
     local semiAutoWeapons = {
         [`WEAPON_PISTOL`] = true, [`WEAPON_PISTOL_MK2`] = true, [`WEAPON_COMBATPISTOL`] = true,
@@ -565,7 +559,6 @@ RegisterNetEvent("UNIQUE_AC:applySlap", function()
     ShakeGameplayCam("SMALL_EXPLOSION_SHAKE", 0.4)
 end)
 
--- RP-Stop Zone: draws + enforces every active admin-marked freeze zone for every player.
 local rpZones = {}
 local rpZoneBlips = {}
 local wasInRpZone = false
@@ -617,13 +610,13 @@ CreateThread(function()
                 local dist = #(coords - center)
                 if dist <= zone.radius then
                     insideAny = true
-                    DisableControlAction(0, 24, true)   -- attack
-                    DisableControlAction(0, 25, true)   -- aim
-                    DisableControlAction(0, 47, true)   -- weapon wheel
-                    DisableControlAction(0, 58, true)   -- weapon wheel
-                    DisableControlAction(0, 140, true)  -- melee attack light
-                    DisableControlAction(0, 141, true)  -- melee attack heavy
-                    DisableControlAction(0, 142, true)  -- melee attack alternate
+                    DisableControlAction(0, 24, true)
+                    DisableControlAction(0, 25, true)
+                    DisableControlAction(0, 47, true)
+                    DisableControlAction(0, 58, true)
+                    DisableControlAction(0, 140, true)
+                    DisableControlAction(0, 141, true)
+                    DisableControlAction(0, 142, true)
                     SetCurrentPedWeapon(ped, GetHashKey("WEAPON_UNARMED"), true)
 
                     if dist > zone.radius - 1.5 and dist > 0.05 then
@@ -644,7 +637,6 @@ CreateThread(function()
     end
 end)
 
--- Quarantine hold: freezes and protects a flagged player while an admin reviews their case.
 RegisterNetEvent("UNIQUE_AC:quarantineFreeze", function(status)
     state.quarantined = status and true or false
     local ped = PlayerPedId()
@@ -673,7 +665,6 @@ CreateThread(function()
     end
 end)
 
--- Anti Vehicle God Mode: flags vehicles that never lose engine/body health despite taking damage
 CreateThread(function()
     local lastHealth, lastVehicle = nil, 0
     while true do
@@ -860,9 +851,6 @@ CreateThread(function()
     end
 end)
 
--- Aimbot Pattern watch: samples camera rotation continuously, then on every confirmed hit
--- checks how sharply the camera snapped in the moment right before it, alongside a rolling
--- headshot ratio. Both signals have to agree before anything is reported — see config comment.
 local camHistory = {}
 local aimbotHits = {}
 

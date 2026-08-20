@@ -1,4 +1,4 @@
----@class oxstring : stringlib
+
 lib.string = string
 
 local string_char = string.char
@@ -16,16 +16,6 @@ local formatChar = {
     ['.'] = getAlphanumeric,
 }
 
----Creates a random string based on a given pattern.
----`1` will output a random number from 0-9.
----`A` will output a random letter from A-Z.
----`a` will output a random letter from a-z.
----`.` will output a random letter or number.
----`^` will output the following character literally.
----Any other character will output said character.
----@param pattern string
----@param length? integer Sets the length of the returned string, either padding it or omitting characters.
----@return string
 function string.random(pattern, length)
     local len = length or #pattern:gsub('%^', '')
     local arr = table.create(len, 0)
@@ -34,7 +24,7 @@ function string.random(pattern, length)
 
     while size < len do
         i += 1
-        ---@type string | integer
+
         local char = pattern:sub(i, i)
 
         if char == '' then

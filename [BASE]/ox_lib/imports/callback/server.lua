@@ -9,14 +9,8 @@ RegisterNetEvent(cbEvent:format(cache.resource), function(key, ...)
     return cb and cb(...)
 end)
 
----@param _ any
----@param event string
----@param playerId number
----@param cb function|false
----@param ... any
----@return ...
 local function triggerClientCallback(_, event, playerId, cb, ...)
-    assert(DoesPlayerExist(playerId --[[@as string]]), ("target playerId '%s' does not exist"):format(playerId))
+    assert(DoesPlayerExist(playerId ), ("target playerId '%s' does not exist"):format(playerId))
 
     local key
 
@@ -26,7 +20,7 @@ local function triggerClientCallback(_, event, playerId, cb, ...)
 
     TriggerClientEvent(cbEvent:format(event), playerId, cache.resource, key, ...)
 
-    ---@type promise | false
+
     local promise = not cb and promise.new()
 
     pendingCallbacks[key] = function(response, ...)
@@ -48,7 +42,6 @@ local function triggerClientCallback(_, event, playerId, cb, ...)
     end
 end
 
----@overload fun(event: string, playerId: number, cb: function, ...)
 lib.callback = setmetatable({}, {
     __call = function(_, event, playerId, cb, ...)
         if not cb then
@@ -68,10 +61,6 @@ lib.callback = setmetatable({}, {
     end
 })
 
----@param event string
----@param playerId number
---- Sends an event to a client and halts the current thread until a response is returned.
----@diagnostic disable-next-line: duplicate-set-field
 function lib.callback.await(event, playerId, ...)
     return triggerClientCallback(nil, event, playerId, false, ...)
 end
@@ -91,10 +80,6 @@ end
 
 local pcall = pcall
 
----@param name string
----@param cb function
----Registers an event handler and callback function to respond to client requests.
----@diagnostic disable-next-line: duplicate-set-field
 function lib.callback.register(name, cb)
     RegisterNetEvent(cbEvent:format(name), function(resource, key, ...)
         TriggerClientEvent(cbEvent:format(resource), source, key, callbackResponse(pcall(cb, source, ...)))

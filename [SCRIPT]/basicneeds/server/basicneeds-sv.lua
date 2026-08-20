@@ -52,21 +52,20 @@ ESX.RegisterUsableItem('water', function(source)
 	TriggerClientEvent('esx:ShowNotification', source, _U('used_water'))
 end)
 
-
 TriggerEvent('es:addAdminCommand', 'heal', 2, function(source, args, user)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if xPlayer.get('aduty') then
 
-		-- heal another player - don't heal source
+
 		if args[1] then
 		local playerId = tonumber(args[1])
 
-		-- is the argument a number?
+
 		if playerId then
-			-- is the number a valid player?
+
 			if GetPlayerName(playerId) then
-				--print(('esx_basicneeds: %s healed %s'):format(GetPlayerIdentifier(source, 0), GetPlayerIdentifier(playerId, 0)))
+
 				TriggerEvent('DiscordBot:ToDiscord', 'heal', "Healed By Admin", "```css\n[ Admin : " .. GetPlayerName(source) .. " Heal Player: "..playerId.." Full Kard ]\n```",'user', source, true, false)
 				TriggerClientEvent('esx_basicneeds:healPlayer', playerId)
 				TriggerClientEvent('chat:addMessage', source, { args = { '^5HEAL', 'You have been healed.' } })
@@ -77,7 +76,7 @@ TriggerEvent('es:addAdminCommand', 'heal', 2, function(source, args, user)
 			TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Invalid player id.' } })
 		end
 	else
-		--print(('esx_basicneeds: %s healed self'):format(GetPlayerIdentifier(source, 0)))
+
 		TriggerClientEvent('esx_basicneeds:healPlayer', source)
 		TriggerEvent('DiscordBot:ToDiscord', 'heal', "Healed By Admin", "```css\n[ Admin : " .. GetPlayerName(source) .. " Heal Player: Khod Ra Full Kard ]\n```",'user', source, true, false)
 		TriggerClientEvent('chat:addMessage', source, { args = { '^5HEAL', 'You have been healed.' } })
@@ -85,12 +84,10 @@ TriggerEvent('es:addAdminCommand', 'heal', 2, function(source, args, user)
 
 	else
 		TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma nemitavanid dar halat ^1OffDuty ^0az command haye admini estefade konid!")
-	end	
+	end
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
 end, {help = 'Heal a player, or yourself - restores thirst, hunger and health.', params = {{name = 'playerId', help = '(optional) player id'}}})
-
-
 
 RegisterCommand("healrange", function(source, args)
     local xPlayer = ESX.GetPlayerFromId(source)

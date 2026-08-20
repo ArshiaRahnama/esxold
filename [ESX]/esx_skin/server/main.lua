@@ -58,7 +58,6 @@ ESX.RegisterServerCallback('esx_skin:getPlayerSkin', function(source, cb)
 
 end)
 
--- Commands
 RegisterCommand('skin', function(source)
 
   local xPlayer = ESX.GetPlayerFromId(source)
@@ -71,7 +70,6 @@ RegisterCommand('skin', function(source)
   else
 
     TriggerClientEvent('chatMessage', source, "[ System ] : ", {255, 0, 0}, " ^0Shoma dastresi kafi baraye esfade az in dastor ra nadarid!")
-
 
   end
 
@@ -88,7 +86,6 @@ RegisterCommand('saveskin', function(source)
   else
 
     TriggerClientEvent('chatMessage', source, "[ System ] : ", {255, 0, 0}, " ^0Shoma dastresi kafi baraye esfade az in dastor ra nadarid!")
-
 
   end
 
@@ -107,11 +104,10 @@ RegisterCommand('changevest', function(source, args)
             local skinone, skintwo = tonumber(args[1]), tonumber(args[2])
 
             TriggerClientEvent('esx_skin:changeVest', source, skinone, skintwo)
-          
+
           else
 
             TriggerClientEvent('chatMessage', source, "[ System ] : ", {255, 0, 0}, " ^0shoma dar ghesmat value faghat mitavanid adad vared konid!")
-
 
           end
 
@@ -119,9 +115,7 @@ RegisterCommand('changevest', function(source, args)
 
           TriggerClientEvent('chatMessage', source, "[ System ] : ", {255, 0, 0}, " ^0Syntax vared shode eshbteh ast!")
 
-
         end
-
 
       else
 

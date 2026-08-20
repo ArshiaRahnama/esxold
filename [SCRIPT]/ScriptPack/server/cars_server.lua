@@ -3,7 +3,7 @@ local function checkWhitelist(id)
 		if id == value then
 			return true
 		end
-	end	
+	end
 	return false
 end
 

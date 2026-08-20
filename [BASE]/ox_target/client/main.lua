@@ -29,18 +29,11 @@ local menuChanged
 local menuHistory = {}
 local nearbyZones
 
--- Toggle ox_target, instead of holding the hotkey
 local toggleHotkey = GetConvarInt('ox_target:toggleHotkey', 0) == 1
 local mouseButton = GetConvarInt('ox_target:leftClick', 1) == 1 and 24 or 25
 local debug = GetConvarInt('ox_target:debug', 0) == 1
 local vec0 = vec3(0, 0, 0)
 
----@param option OxTargetOption
----@param distance number
----@param endCoords vector3
----@param entityHit? number
----@param entityType? number
----@param entityModel? number | false
 local function shouldHide(option, distance, endCoords, entityHit, entityType, entityModel)
     if option.menuName ~= currentMenu then
         return true
@@ -61,9 +54,9 @@ local function shouldHide(option, distance, endCoords, entityHit, entityType, en
     local bone = entityModel and option.bones or nil
 
     if bone then
-        ---@cast entityHit number
-        ---@cast entityType number
-        ---@cast entityModel number
+
+
+
 
         local _type = type(bone)
 
@@ -102,9 +95,9 @@ local function shouldHide(option, distance, endCoords, entityHit, entityType, en
     local offset = entityModel and option.offset or nil
 
     if offset then
-        ---@cast entityHit number
-        ---@cast entityType number
-        ---@cast entityModel number
+
+
+
 
         if not option.absoluteOffset then
             local min, max = GetModelDimensions(entityModel)
@@ -143,7 +136,7 @@ local function startTargeting()
             if debug then
                 DrawMarker(28, lastCoords.x, lastCoords.y, lastCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2,
                     0.2,
-                    ---@diagnostic disable-next-line: param-type-mismatch
+
                     255, 42, 24, 100, false, false, 0, true, false, false, false)
             end
 
@@ -348,7 +341,7 @@ local function startTargeting()
 end
 
 do
-    ---@type KeybindProps
+
     local keybind = {
         name = 'ox_target',
         defaultKey = GetConvar('ox_target:defaultHotkey', 'LMENU'),
@@ -375,10 +368,6 @@ do
     lib.addKeybind(keybind)
 end
 
----@generic T
----@param option T
----@param server? boolean
----@return T
 local function getResponse(option, server)
     local response = table.clone(option)
     response.entity = currentTarget.entity
@@ -409,7 +398,7 @@ RegisterNUICallback('select', function(data, cb)
 
     local zone = data[3] and nearbyZones[data[3]]
 
-    ---@type OxTargetOption?
+
     local option = zone and zone.options[data[2]] or options[data[1]][data[2]]
 
     if option then

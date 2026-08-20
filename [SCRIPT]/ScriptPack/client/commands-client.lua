@@ -23,7 +23,7 @@ RegisterCommand('admins',function(source)
         align    = 'top-right',
         elements = elements
         },
-            function(data2, menu2)  
+            function(data2, menu2)
             end,
       function(data2, menu2)
         menu2.close()
@@ -32,17 +32,15 @@ RegisterCommand('admins',function(source)
 	end)
 end)
 
-
-
 RegisterCommand('fps', function()
 OpenFPSMenu()
 end)
 
-function OpenFPSMenu() 
+function OpenFPSMenu()
   local elements = {
-        {label = 'High Perfomance Mode',        value = 'fps'},          
-        {label = 'Perfomance Mode ',        value = 'fps5'},            
-        {label = 'Normal',        value = 'fps2'},                                              
+        {label = 'High Perfomance Mode',        value = 'fps'},
+        {label = 'Perfomance Mode ',        value = 'fps5'},
+        {label = 'Normal',        value = 'fps2'},
     }
 
 	if ESX.GetPlayerData().perm >= 10 then
@@ -63,24 +61,24 @@ function OpenFPSMenu()
           function(data2, menu2)
             if data2.current.value == 'fps' then
               SetTimecycleModifier('yell_tunnel_nodirect')
-           
+
             elseif data2.current.value == 'fps2' then
               SetTimecycleModifier()
               ClearTimecycleModifier()
               ClearExtraTimecycleModifier()
             elseif data2.current.value == 'fps5' then
-              SetTimecycleModifier('tunnel') 
+              SetTimecycleModifier('tunnel')
             elseif data2.current.value == 'fpsbost' then
-				SetTimecycleModifier('MP_Powerplay_night') 
+				SetTimecycleModifier('MP_Powerplay_night')
             elseif data2.current.value == 'fpsbost1' then
 				SetTimecycleModifier('Glasses_Darkblue')
             elseif data2.current.value == 'fpsbost2' then
-				SetTimecycleModifier('BloomMid') 
+				SetTimecycleModifier('BloomMid')
             elseif data2.current.value == 'fpsbost3' then
 				SetTimecycleModifier('MP_Powerplay_blend')
             elseif data2.current.value == 'fpsbost4' then
 				SetTimecycleModifier('scanline_cam')
-           
+
             else
             end
           end,
@@ -90,17 +88,16 @@ function OpenFPSMenu()
   )
 end
 
-
 RegisterCommand('fps2', function()
 OpenFPSMenu2()
 end)
 
-function OpenFPSMenu2() 
+function OpenFPSMenu2()
   local elements = {
-    {label = 'High Perfomance Mode', value = 'fps'},          
-    {label = 'Perfomance Mode ', value = 'fps5'},            
-    {label = 'Normal', value = 'fps2'},   
-  
+    {label = 'High Perfomance Mode', value = 'fps'},
+    {label = 'Perfomance Mode ', value = 'fps5'},
+    {label = 'Normal', value = 'fps2'},
+
     {label = 'oltra', value = 'fpsbost'},
     {label = 'oltra1', value = 'fpsbost1'},
     {label = 'oltra2', value = 'fpsbost2'},
@@ -108,9 +105,9 @@ function OpenFPSMenu2()
     {label = 'oltra4', value = 'fpsbost4'},
   }
 
-	
-	
-	
+
+
+
   ESX.UI.Menu.CloseAll()
   ESX.UI.Menu.Open(
     'default', GetCurrentResourceName(), 'fps_menu2',
@@ -122,24 +119,24 @@ function OpenFPSMenu2()
           function(data2, menu2)
             if data2.current.value == 'fps' then
               SetTimecycleModifier('yell_tunnel_nodirect')
-           
+
             elseif data2.current.value == 'fps2' then
               SetTimecycleModifier()
               ClearTimecycleModifier()
               ClearExtraTimecycleModifier()
             elseif data2.current.value == 'fps5' then
-              SetTimecycleModifier('tunnel') 
+              SetTimecycleModifier('tunnel')
             elseif data2.current.value == 'fpsbost' then
-				SetTimecycleModifier('MP_Powerplay_night') 
+				SetTimecycleModifier('MP_Powerplay_night')
             elseif data2.current.value == 'fpsbost1' then
 				SetTimecycleModifier('Glasses_Darkblue')
             elseif data2.current.value == 'fpsbost2' then
-				SetTimecycleModifier('BloomMid') 
+				SetTimecycleModifier('BloomMid')
             elseif data2.current.value == 'fpsbost3' then
 				SetTimecycleModifier('MP_Powerplay_blend')
             elseif data2.current.value == 'fpsbost4' then
 				SetTimecycleModifier('scanline_cam')
-           
+
             else
             end
           end,
@@ -148,7 +145,6 @@ function OpenFPSMenu2()
     end
   )
 end
-
 
 Citizen.CreateThread(function()
 StartAudioScene("CHARACTER_CHANGE_IN_SKY_SCENE")
@@ -220,13 +216,10 @@ local allDefaultValues =
 
 local parameters = {"width", "gap", "dot", "thickness", "gtacross", "color", "opacity"}
 
--- Variables
 local currentParamIndex = 1
 local isEditing = false
 local customCrosshairState = true
 
-
--- Functions
 local function DisplayHelpText(str)
 	SetTextComponentFormat("STRING")
 	AddTextComponentString(str)
@@ -299,71 +292,70 @@ local function ResetDatas()
 	GetInitialDatas()
 end
 
--- Loops
 Citizen.CreateThread(function()
 	GetInitialDatas()
 
 	Citizen.Wait(2000)
 
 	while true do
-		-- Manage default reticle
+
 		if not crosshairParameters["gtacross"]["allValues"][crosshairParameters["gtacross"]["currentValue"]] then
 			HideHudComponentThisFrame(14)
 		end
 
-		-- only draw if there's a weapon in hand
+
 		if customCrosshairState then
 			local ratio = GetAspectRatio()
 
-			-- Get values
+
 			local thickness = crosshairParameters["thickness"]["allValues"][crosshairParameters["thickness"]["currentValue"]]
 			local width		= crosshairParameters["width"]["allValues"][crosshairParameters["width"]["currentValue"]]
 			local gap		= crosshairParameters["gap"]["allValues"][crosshairParameters["gap"]["currentValue"]]
 			local dot		= crosshairParameters["dot"]["allValues"][crosshairParameters["dot"]["currentValue"]]
-			--
+
 			local colorSelected = crosshairParameters["color"]["currentValue"]
 			local colorR = crosshairParameters["color"]["allValues"][colorSelected].R
 			local colorG = crosshairParameters["color"]["allValues"][colorSelected].G
 			local colorB = crosshairParameters["color"]["allValues"][colorSelected].B
-			--
-			local colorOpacity	= crosshairParameters["opacity"]["allValues"][crosshairParameters["opacity"]["currentValue"]]
-			--
 
-			-- Left
+			local colorOpacity	= crosshairParameters["opacity"]["allValues"][crosshairParameters["opacity"]["currentValue"]]
+
+
+
 			DrawRect(0.5 - gap - width / 2, 0.5, width, thickness, colorR, colorG, colorB, colorOpacity)
-			-- Right
+
 			DrawRect(0.5 + gap + width / 2, 0.5, width, thickness, colorR, colorG, colorB, colorOpacity)
-			-- Top
+
 			DrawRect(0.5, 0.5 - (gap*ratio) - (width*ratio) / 2, thickness / ratio, width * ratio, colorR, colorG, colorB, colorOpacity)
-			-- Bottom
+
 			DrawRect(0.5, 0.5 + (gap*ratio) + (width*ratio) / 2, thickness / ratio, width * ratio, colorR, colorG, colorB, colorOpacity)
-			-- Dot
+
 			if dot then
 				DrawRect(0.5, 0.5, (thickness/2), (thickness/2) * ratio, colorR, colorG, colorB, colorOpacity)
 			end
 		end
 
-		--
+
 		if isEditing then
 			local currentParameter = parameters[currentParamIndex]
 
-			-- Display
-			DisplayHelpText("~INPUT_CELLPHONE_UP~ " .. crosshairParameters[currentParameter]["label"] .. "\n~INPUT_REPLAY_ADVANCE~ " .. crosshairParameters[currentParameter]["currentValue"] .. "\n~INPUT_CONTEXT~ Save")
-			--
 
-			-- Switch currentValue
+			DisplayHelpText("~INPUT_CELLPHONE_UP~ " .. crosshairParameters[currentParameter]["label"] .. "\n~INPUT_REPLAY_ADVANCE~ " .. crosshairParameters[currentParameter]["currentValue"] .. "\n~INPUT_CONTEXT~ Save")
+
+
+
 			if IsControlJustPressed(1, 172) then
 				currentParamIndex = currentParamIndex + 1
 				if currentParamIndex > #parameters then currentParamIndex = 1 end
 			elseif IsControlJustPressed(1, 173) then
 				currentParamIndex = currentParamIndex - 1
 				if currentParamIndex < 1 then currentParamIndex = #parameters end
-			-- Increase currentValue
+
 			elseif IsControlJustPressed(1, 307) then
 				local currentValue = crosshairParameters[currentParameter]["currentValue"] + 1
 				if currentValue > #crosshairParameters[currentParameter]["allValues"] then currentValue = 1 end
 				crosshairParameters[currentParameter]["currentValue"] = currentValue
-			-- Reduce currentValue
+
 			elseif IsControlJustPressed(1, 308) then
 				local currentValue = crosshairParameters[currentParameter]["currentValue"] - 1
 				if currentValue < 1 then currentValue = #crosshairParameters[currentParameter]["allValues"] end
@@ -378,8 +370,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
-
--- Events
 AddEventHandler("cookcrosshair:active", function()
 	customCrosshairState = not customCrosshairState
 	if customCrosshairState then
@@ -397,20 +387,18 @@ AddEventHandler("cookcrosshair:reset", function()
 	ResetDatas()
 end)
 
-
--- Commands
 RegisterCommand('crosse', function(source, args)
-	-- Crosshair edit
+
 	TriggerEvent("cookcrosshair:edit")
 end, false)
 
 RegisterCommand('crossr', function(source, args)
-	-- Crosshair reset
+
 	TriggerEvent("cookcrosshair:reset")
 end, false)
 
 RegisterCommand('cross', function(source, args)
-	-- Crosshair active
+
 	TriggerEvent("cookcrosshair:active")
 end, false)
 
@@ -431,7 +419,7 @@ RegisterCommand("fpsmenu", function()
   	}, function(data, menu)
           local v = data.current.value
 
-           --// Things need to be runned only one time
+
   		if v == "reset" then
               RopeDrawShadowEnabled(true)
               CascadeShadowsSetAircraftMode(true)
@@ -440,10 +428,10 @@ RegisterCommand("fpsmenu", function()
               CascadeShadowsSetEntityTrackerScale(5.0)
               CascadeShadowsSetDynamicDepthValue(5.0)
               CascadeShadowsSetCascadeBoundsScale(5.0)
-            
+
               SetFlashLightFadeDistance(10.0)
               SetLightsCutoffDistanceTweak(10.0)
-              --DistantCopCarSirens(true)
+
               SetArtificialLightsState(false)
           elseif v == "ulow" then
               RopeDrawShadowEnabled(false)
@@ -458,7 +446,7 @@ RegisterCommand("fpsmenu", function()
 
               SetFlashLightFadeDistance(0.0)
               SetLightsCutoffDistanceTweak(0.0)
-              --DistantCopCarSirens(false)
+
 			  ClearAllBrokenGlass()
             LeaderboardsReadClearAll()
             ClearBrief()
@@ -482,7 +470,7 @@ RegisterCommand("fpsmenu", function()
             SetRainLevel(0.0)
             SetWindSpeed(0.0)
 
-            --// Find closest object and set the alpha
+
             for obj in GetWorldObjects() do
                 if not IsEntityOnScreen(obj) then
                     SetEntityAlpha(obj, 0)
@@ -496,7 +484,6 @@ RegisterCommand("fpsmenu", function()
                 end
                 Citizen.Wait(100)
             end
-
 
             DisableOcclusionThisFrame()
             SetDisableDecalRenderingThisFrame()
@@ -517,7 +504,7 @@ RegisterCommand("fpsmenu", function()
 
               SetFlashLightFadeDistance(5.0)
               SetLightsCutoffDistanceTweak(5.0)
-              --DistantCopCarSirens(false)
+
 			  ClearAllBrokenGlass()
             LeaderboardsReadClearAll()
             ClearBrief()
@@ -541,7 +528,7 @@ RegisterCommand("fpsmenu", function()
             SetRainLevel(0.0)
             SetWindSpeed(0.0)
 
-            --// Find closest object and set the alpha
+
             for obj in GetWorldObjects() do
                 if not IsEntityOnScreen(obj) then
                     SetEntityAlpha(obj, 0)
@@ -574,7 +561,7 @@ RegisterCommand("fpsmenu", function()
 
               SetFlashLightFadeDistance(3.0)
               SetLightsCutoffDistanceTweak(3.0)
-              --DistantCopCarSirens(false)
+
               SetArtificialLightsState(false)
 				  ClearAllBrokenGlass()
 				LeaderboardsReadClearAll()
@@ -587,7 +574,7 @@ RegisterCommand("fpsmenu", function()
 				ClearFocus()
 				ClearHdArea()
 				SetWindSpeed(0.0)
-        
+
 
             for obj in GetWorldObjects() do
                 if not IsEntityOnScreen(obj) then
@@ -610,8 +597,6 @@ RegisterCommand("fpsmenu", function()
  	end)
  end)
 
-
---// Entity Enumerator (https://gist.github.com/IllidanS4/9865ed17f60576425369fc1da70259b2#file-entityiter-lua)
 local entityEnumerator = {
     __gc = function(enum)
         if enum.destructor and enum.handle then
@@ -661,5 +646,4 @@ end
 function GetWorldPickups()
     return EnumerateEntities(FindFirstPickup, FindNextPickup, EndFindPickup)
 end
-
 

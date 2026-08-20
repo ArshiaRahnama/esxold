@@ -72,7 +72,7 @@ end
 
 function updateValue()
     local myPed = PlayerPedId()
-    
+
     SetPedComponentVariation(myPed, 1, Character_QB["mask"].item, 0, 2)
     SetPedComponentVariation(myPed, 1, Character_QB["mask"].item, Character_QB["mask"].texture, 0)
 
@@ -102,7 +102,6 @@ function updateValue()
 
     SetPedComponentVariation(myPed, 11, Character_QB["torso2"].item, 0, 2)
     SetPedComponentVariation(myPed, 11, Character_QB["torso2"].item, Character_QB["torso2"].texture, 0)
-
 
     if Character_QB["hat"].item ~= -1 and Character_QB["hat"].item ~= 0 then
         SetPedPropIndex(myPed, 0, Character_QB["hat"].item, Character_QB["hat"].texture, true)

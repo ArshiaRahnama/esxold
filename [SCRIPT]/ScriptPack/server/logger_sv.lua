@@ -1,7 +1,6 @@
 ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
---local logs = "https:// arshiahub.ir/changeme/938855303557042307/OHk0kdhD50Uc43XgRgRSqmJbJ9CBHFNeDmwssw_AO8Ffjx_xlihV2R7fvjyskjHFTOrk"
 local alogs 		= "https:// arshiahub.ir/changeme/1219998148894654474/MXIY_O4nnv7d7KfFQIkJ8xRd3pKQTexL2DBDeUNZr_m3qOCvAW_fPyGJICnCPHjADsyb"
 local infologs 		= "https:// arshiahub.ir/changeme/1217536908209557705/1KtYLoI-Q7RmbBGcK4tpiRJCW54eCb8_ITzpyPyrLLow8plODz1L2xQDNzSGW54DSCmu"
 local ganglog 		= "https:// arshiahub.ir/changeme/1219998040014848095/FJTWwEyGBq7yU52f649nEoLxbqSRBIHzkirbRh09inP386SeFW5p4p0FEQrRAti4H9Iv"
@@ -14,7 +13,7 @@ local proplog 		= ""
 local vehlog 		= ""
 local Rewardalllog  = 'https:// arshiahub.ir/changeme/1219997168694333470/AcP0KZnOvBhhxUcsABzQbs-yrLg4Ueq6yprxSdDQ24aWizGI5Ef_wZ8l5CXrzAZvWoII'
 local communityname = "Server Test"
-local communtiylogo = "https://media.discordapp.net/attachments/669926392921849875/939876376784273458/ServerTest.png" --Must end with .png
+local communtiylogo = "https://media.discordapp.net/attachments/669926392921849875/939876376784273458/ServerTest.png"
 
 RegisterServerEvent("esx_logger:log")
 AddEventHandler("esx_logger:log", function(src, reason)
@@ -41,7 +40,7 @@ AddEventHandler("esx_logger:log", function(src, reason)
                 },
             }
         }
-    
+
     PerformHttpRequest(alogs, function(err, text, headers) end, 'POST', json.encode({username = "ServerTest  Log", embeds = disconnect}), { ['Content-Type'] = 'application/json' })
 
 end)
@@ -62,7 +61,7 @@ AddEventHandler("esx_logger:log2", function(src, info)
                 },
             }
         }
-    
+
     PerformHttpRequest(infologs, function(err, text, headers) end, 'POST', json.encode({username = "Purge Handler", embeds = disconnect}), { ['Content-Type'] = 'application/json' })
 
 end)
@@ -83,7 +82,7 @@ AddEventHandler("esx_logger:log3", function(src, info)
                 },
             }
         }
-    
+
     PerformHttpRequest(infologs, function(err, text, headers) end, 'POST', json.encode({username = "Purge Handler", embeds = disconnect}), { ['Content-Type'] = 'application/json' })
 
 end)
@@ -104,7 +103,7 @@ AddEventHandler("esx_logger:log4", function(src, info, d)
                 },
             }
         }
-    
+
     PerformHttpRequest(d, function(err, text, headers) end, 'POST', json.encode({username = "AZ", embeds = disconnect}), { ['Content-Type'] = 'application/json' })
 
 end)
@@ -125,12 +124,10 @@ AddEventHandler("esx_logger:log5", function(src, info, d)
                 },
             }
         }
-    
+
     PerformHttpRequest(d, function(err, text, headers) end, 'POST', json.encode({username = "AZ", embeds = disconnect}), { ['Content-Type'] = 'application/json' })
 
 end)
-
-
 
 function GangLog(info)
     local source = tonumber(info.source)
@@ -150,7 +147,7 @@ function GangLog(info)
                 },
             }
         }
-    
+
     PerformHttpRequest(ganglog, function(err, text, headers) end, 'POST', json.encode({username = "Gang Log", embeds = details}), { ['Content-Type'] = 'application/json' })
 end
 
@@ -172,14 +169,14 @@ function HomeLog(info)
                 },
             }
         }
-    
+
     PerformHttpRequest(homelog, function(err, text, headers) end, 'POST', json.encode({username = "Home Log", embeds = details}), { ['Content-Type'] = 'application/json' })
 end
 
 function TrunkLog(info)
     local source = tonumber(info.source)
     local name = GetPlayerName(info.source)
-    
+
     local color
     if info.type == "Gozasht" then color = "51712" elseif info.type == "Bardasht" then color = "15852071" end
 
@@ -194,14 +191,14 @@ function TrunkLog(info)
                 },
             }
         }
-    
+
     PerformHttpRequest(trunklog, function(err, text, headers) end, 'POST', json.encode({username = "Trunk Log", embeds = details}), { ['Content-Type'] = 'application/json' })
 end
 
 function TransActionLog(info)
     local source = tonumber(info.source)
     local name = GetPlayerName(info.source)
-    
+
     local color
     if info.type == "Variz" then color = "51712" elseif info.type == "Bardasht" then color = "15852071" end
 
@@ -216,14 +213,14 @@ function TransActionLog(info)
                 },
             }
         }
-    
+
     PerformHttpRequest(atmlog, function(err, text, headers) end, 'POST', json.encode({username = "Transaction Log", embeds = details}), { ['Content-Type'] = 'application/json' })
 end
 
 function RewardAll(info)
     local source = tonumber(info.source)
     local name = GetPlayerName(info.source)
-    
+
 
     local details = {
             {
@@ -236,10 +233,9 @@ function RewardAll(info)
                 },
             }
         }
-    
+
     PerformHttpRequest(Rewardalllog, function(err, text, headers) end, 'POST', json.encode({username = "RewardAll", embeds = details}), { ['Content-Type'] = 'application/json' })
 end
-
 
 function TransferLog(info)
     local source = tonumber(info.source)
@@ -258,14 +254,14 @@ function TransferLog(info)
                 },
             }
         }
-    
+
     PerformHttpRequest(atmlog, function(err, text, headers) end, 'POST', json.encode({username = "Transaction Log", embeds = details}), { ['Content-Type'] = 'application/json' })
 end
 
 function RobLog(info)
     local source = tonumber(info.source)
     local name = GetPlayerName(info.source)
-    
+
     local color
     if info.type == "Shop" then color = "1883948" elseif info.type == "Jewels" then color = "14610984" elseif info.type == "Bank" then color = "16187398" end
     local amount
@@ -282,7 +278,7 @@ function RobLog(info)
                 },
             }
         }
-    
+
     PerformHttpRequest(roblog, function(err, text, headers) end, 'POST', json.encode({username = "Rob Log", embeds = details}), { ['Content-Type'] = 'application/json' })
 end
 
@@ -304,7 +300,7 @@ AddPed = function(info)
                 },
             }
         }
-    
+
     PerformHttpRequest(pedlog, function(err, text, headers) end, 'POST', json.encode({username = "Rob Log", embeds = details}), { ['Content-Type'] = 'application/json' })
 end
 AddProp = function(info)
@@ -325,7 +321,7 @@ AddProp = function(info)
                 },
             }
         }
-    
+
     PerformHttpRequest(proplog, function(err, text, headers) end, 'POST', json.encode({username = "Rob Log", embeds = details}), { ['Content-Type'] = 'application/json' })
 end
 AddVehicle = function(info)
@@ -346,7 +342,7 @@ AddVehicle = function(info)
                 },
             }
         }
-    
+
     PerformHttpRequest(vehlog, function(err, text, headers) end, 'POST', json.encode({username = "Rob Log", embeds = details}), { ['Content-Type'] = 'application/json' })
 end
 
@@ -365,19 +361,19 @@ function RobLogF(info)
                 },
             }
         }
-    
+
     PerformHttpRequest(roblog, function(err, text, headers) end, 'POST', json.encode({username = "Rob Log", embeds = details}), { ['Content-Type'] = 'application/json' })
 end
 
 function Date()
     local date = os.date('*t')
-	
+
 	if date.day < 10 then date.day = '0' .. tostring(date.day) end
 	if date.month < 10 then date.month = '0' .. tostring(date.month) end
 	if date.hour < 10 then date.hour = '0' .. tostring(date.hour) end
 	if date.min < 10 then date.min = '0' .. tostring(date.min) end
     if date.sec < 10 then date.sec = '0' .. tostring(date.sec) end
-    
+
     return '`' .. date.day .. '.' .. date.month .. '.' .. date.year .. ' - ' .. date.hour .. ':' .. date.min .. ':' .. date.sec .. '`'
 end
 

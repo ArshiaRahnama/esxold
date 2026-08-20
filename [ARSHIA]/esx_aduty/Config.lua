@@ -17,7 +17,6 @@ Config.Locations = {
     {name = "az" , title = "Base Admin" , coords = vector3(-425.418, 1123.572, 325.85)},
 }
 
-
 Config_RPS = {
     ReportCats = {
         {"REPORT_COMBAT_LOGOUT", "Combat Logout"},

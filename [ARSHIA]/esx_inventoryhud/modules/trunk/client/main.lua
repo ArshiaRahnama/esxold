@@ -125,20 +125,20 @@ end
 function getVehicleTrunk(plate, gloveBox)
     local p = promise.new()
     ESX.TriggerServerCallback('inventory-trunk:getVehicleTrunk', function(data)
-        -- if data.items then
-        --     for k, v in pairs(data.items) do
-        --         if configTrunk.localWeight[v.name] then
-        --             v.weight = configTrunk.localWeight[v.name]
-        --         end
-        --     end
-        -- end
-        -- if data.weapons then
-        --     for k, v in pairs(data.weapons) do
-        --         if configTrunk.localWeight[v.name] then
-        --             v.weight = configTrunk.localWeight[v.name]
-        --         end
-        --     end
-        -- end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         p:resolve(data)
     end, plate, gloveBox)
     return Citizen.Await(p)
@@ -164,7 +164,7 @@ function calculateUsedWeight(plate, gloveBox)
 end
 
 function getItemWeightTrunk(name)
-    if name then 
+    if name then
         return ESX.getItemWeight(name, 'trunk')
     end
 end

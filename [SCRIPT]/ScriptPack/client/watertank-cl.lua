@@ -1,7 +1,7 @@
 Water = {}
-Water.WaterPrice = 2 -- this is how much the water costs.
-Water.TankModel = -742198632 -- this is the model of the tank if you want to change it.
-Water.DrinkingTime = 10000 -- this is specified in ms
+Water.WaterPrice = 2
+Water.TankModel = -742198632
+Water.DrinkingTime = 10000
 ESX = nil
 cachedData = {}
 
@@ -63,7 +63,6 @@ WaitForModel = function(model)
     end
 end
 
--- Using ox_target instead of key press
 CreateThread(function()
     exports.ox_target:addModel(Water.TankModel, {
         {

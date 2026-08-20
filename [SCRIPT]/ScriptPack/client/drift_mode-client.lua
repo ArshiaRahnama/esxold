@@ -14,19 +14,18 @@ local Keys = {
   ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
--- Handle key press
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(10)
 		if IsControlJustPressed(1, Keys['N9']) and GetLastInputMethod(2) then
 
-			driftmode = not driftmode -- toggle
+			driftmode = not driftmode
 
 			if driftmode then
-				--TriggerEvent('chatMessage', _U('drift'), {167,101,181}, _U('drift_enabled'))
+
 				ESX.ShowNotification('~b~Drift Mode = ~r~~h~On')
 			else
-				--TriggerEvent('chatMessage', _U('drift'), {167,101,181}, _U('drift_disabled'))
+
 				ESX.ShowNotification('~b~Drift Mode = ~r~~h~Off')
 			end
 		end

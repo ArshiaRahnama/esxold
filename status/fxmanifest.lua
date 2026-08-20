@@ -9,7 +9,7 @@ files {
 	"ui/style.css",
 	"ui/index.css",
 	"ui/debounce.min.js",
-		-- Job Images
+
 	'ui/assets/imgs/*.png',
 	'ui/img/*.png'
 }

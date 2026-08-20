@@ -118,7 +118,7 @@ function AddEmoteMenu(menu)
         x,y,z,otheremotename = table.unpack(b)
         if otheremotename == nil then
           shareitem = NativeUI.CreateItem(z, "/nearby (~g~"..a.."~w~)")
-        else 
+        else
           shareitem = NativeUI.CreateItem(z, "/nearby (~g~"..a.."~w~) "..Config.Languages[lang]['makenearby'].." (~y~"..otheremotename.."~w~)")
         end
         sharemenu:AddItem(shareitem)
@@ -143,10 +143,10 @@ function AddEmoteMenu(menu)
         if FavEmoteTable[index] == Config.Languages[lang]['rfavorite'] then
           FavoriteEmote = ""
           ShowNotification(Config.Languages[lang]['rfavorite'], 2000)
-        return end 
+        return end
         if Config.FavKeybindEnabled then
           FavoriteEmote = FavEmoteTable[index]
-          ShowNotification("~o~"..firstToUpper(FavoriteEmote)..Config.Languages[lang]['newsetemote']) 
+          ShowNotification("~o~"..firstToUpper(FavoriteEmote)..Config.Languages[lang]['newsetemote'])
         end
       end
     end
@@ -174,7 +174,7 @@ function AddEmoteMenu(menu)
         if(distance ~= -1 and distance < 3) then
           _,_,rename = table.unpack(DP.Dances[DanceTable[index]])
           TriggerServerEvent("ServerEmoteRequest", GetPlayerServerId(target), DanceTable[index], 'Dances')
-          SimpleNotify(Config.Languages[lang]['sentrequestto']..GetPlayerName(target)) 
+          SimpleNotify(Config.Languages[lang]['sentrequestto']..GetPlayerName(target))
         else
           SimpleNotify(Config.Languages[lang]['nobodyclose'])
         end
@@ -307,7 +307,7 @@ AddEventHandler("dp:Update", function(state)
     _menuPool:RefreshIndex()
 end)
 
-RegisterNetEvent("dp:RecieveMenu") -- For opening the emote menu from another resource.
+RegisterNetEvent("dp:RecieveMenu")
 AddEventHandler("dp:RecieveMenu", function()
-  OpenEmoteMenu() 
+  OpenEmoteMenu()
 end)

@@ -1,20 +1,8 @@
---[[
-	Multi-cafe registry. Add a new cafe by copying one of the blocks below and
-	giving it a new `Job` (must also exist in the `jobs` / `job_grades` SQL
-	tables), a new `Society` name, and its own set of station coordinates.
 
-	Every cafe is a fully separate business: an employee of one cafe cannot
-	use another cafe's freezer/crafting/boss menu/cloakroom - same rule as
-	the rest of the server's job resources.
-
-	Only "UwU Café" keeps its original coordinates (that's the one that
-	already existed and works). The 2 new cafes use PLACEHOLDER coordinates -
-	move them in-game to wherever you actually want them.
-]]
 
 Cafes = {
 
-	-- ── Café #1: UwU Café (original, unchanged location) ──
+
 	UwU = {
 		Type    = 'cafe',
 		MenuGroup = 'cafe',
@@ -27,7 +15,7 @@ Cafes = {
 			Sprite  = 621,
 			Display = 4,
 			Scale   = 1.0,
-			Colour  = 8, -- pink
+			Colour  = 8,
 		},
 
 		Freezer            = { Pos = { x = -590.8,   y = -1058.64, z = 22.744 }, Name = "Freezer",     Icon = "fa-regular fa-snowflake" },
@@ -59,8 +47,8 @@ Cafes = {
 		},
 	},
 
-	-- ── Café #2: Obsidian Brew ──
-	-- PLACEHOLDER location (Rockford Hills area) - move in-game.
+
+
 	Obsidian = {
 		Type    = 'cafe',
 		MenuGroup = 'cafe',
@@ -73,7 +61,7 @@ Cafes = {
 			Sprite  = 621,
 			Display = 4,
 			Scale   = 1.0,
-			Colour  = 27, -- dark purple / obsidian-ish
+			Colour  = 27,
 		},
 
 		Freezer            = { Pos = { x = -1231.5, y = -900.4, z = 12.6 },  Name = "Freezer",     Icon = "fa-regular fa-snowflake" },
@@ -105,8 +93,8 @@ Cafes = {
 		},
 	},
 
-	-- ── Café #3: Voltage Coffee Co. ──
-	-- PLACEHOLDER location (Textile City / industrial area) - move in-game.
+
+
 	Voltage = {
 		Type    = 'cafe',
 		MenuGroup = 'cafe',
@@ -119,7 +107,7 @@ Cafes = {
 			Sprite  = 621,
 			Display = 4,
 			Scale   = 1.0,
-			Colour  = 5, -- yellow / electric
+			Colour  = 5,
 		},
 
 		Freezer            = { Pos = { x = 434.4, y = -1743.6, z = 29.8 }, Name = "Freezer",     Icon = "fa-regular fa-snowflake" },
@@ -151,8 +139,8 @@ Cafes = {
 		},
 	},
 
-	-- ── Restaurant #1: Ember & Ash ──
-	-- PLACEHOLDER location (Vinewood Hills grill spot) - move in-game.
+
+
 	Ember = {
 		Type    = 'restaurant',
 		MenuGroup = 'cafe',
@@ -165,7 +153,7 @@ Cafes = {
 			Sprite  = 93,
 			Display = 4,
 			Scale   = 1.0,
-			Colour  = 1, -- red, fire theme
+			Colour  = 1,
 		},
 
 		Freezer            = { Pos = { x = -1398.5, y = -577.4, z = 30.6 }, Name = "Freezer",     Icon = "fa-regular fa-snowflake" },
@@ -197,8 +185,8 @@ Cafes = {
 		},
 	},
 
-	-- ── Restaurant #2: The Rusty Anchor ──
-	-- PLACEHOLDER location (Del Perro pier, seafood/dockside vibe) - move in-game.
+
+
 	Anchor = {
 		Type    = 'restaurant',
 		MenuGroup = 'cafe',
@@ -211,7 +199,7 @@ Cafes = {
 			Sprite  = 356,
 			Display = 4,
 			Scale   = 1.0,
-			Colour  = 3, -- blue, seaside theme
+			Colour  = 3,
 		},
 
 		Freezer            = { Pos = { x = -1857.5, y = -1224.4, z = 13.3 }, Name = "Freezer",     Icon = "fa-regular fa-snowflake" },
@@ -243,8 +231,8 @@ Cafes = {
 		},
 	},
 
-	-- ── Restaurant #3: Crimson Fork ──
-	-- PLACEHOLDER location (Rodeo Drive, upscale fine-dining vibe) - move in-game.
+
+
 	Crimson = {
 		Type    = 'restaurant',
 		MenuGroup = 'cafe',
@@ -257,7 +245,7 @@ Cafes = {
 			Sprite  = 93,
 			Display = 4,
 			Scale   = 1.0,
-			Colour  = 18, -- dark purple / crimson-ish, upscale
+			Colour  = 18,
 		},
 
 		Freezer            = { Pos = { x = -285.5, y = -714.4, z = 33.3 }, Name = "Freezer",     Icon = "fa-regular fa-snowflake" },
@@ -289,8 +277,8 @@ Cafes = {
 		},
 	},
 
-	-- ── Bakery: Flourish Bakery ──
-	-- PLACEHOLDER location - move in-game.
+
+
 	Flourish = {
 		Type    = 'bakery',
 		MenuGroup = 'bakery',
@@ -334,8 +322,8 @@ Cafes = {
 			{ x = -1090.1, y = 260.2, z = 67.5 },
 		},
 	},
-	-- ── Bakery: Gold Crust Bakehouse ──
-	-- PLACEHOLDER location - move in-game.
+
+
 	GoldCrust = {
 		Type    = 'bakery',
 		MenuGroup = 'bakery',
@@ -379,8 +367,8 @@ Cafes = {
 			{ x = 159.9, y = -1299.8, z = 27.5 },
 		},
 	},
-	-- ── Bar: Static Lounge ──
-	-- PLACEHOLDER location - move in-game.
+
+
 	Static = {
 		Type    = 'bar',
 		MenuGroup = 'bar',
@@ -424,8 +412,8 @@ Cafes = {
 			{ x = -1375.1, y = -599.8, z = 29.0 },
 		},
 	},
-	-- ── Bar: Nightjar Pub ──
-	-- PLACEHOLDER location - move in-game.
+
+
 	Nightjar = {
 		Type    = 'bar',
 		MenuGroup = 'bar',
@@ -469,8 +457,8 @@ Cafes = {
 			{ x = -550.1, y = 290.2, z = 81.0 },
 		},
 	},
-	-- ── Pizza: Firebrick Pizza Co. ──
-	-- PLACEHOLDER location - move in-game.
+
+
 	Firebrick = {
 		Type    = 'pizza',
 		MenuGroup = 'pizza',
@@ -514,8 +502,8 @@ Cafes = {
 			{ x = -700.1, y = -914.8, z = 17.7 },
 		},
 	},
-	-- ── Pizza: Slice Society ──
-	-- PLACEHOLDER location - move in-game.
+
+
 	Slice = {
 		Type    = 'pizza',
 		MenuGroup = 'pizza',
@@ -559,8 +547,8 @@ Cafes = {
 			{ x = -37.1, y = -1749.8, z = 28.0 },
 		},
 	},
-	-- ── Icecream: Frostbite Creamery ──
-	-- PLACEHOLDER location - move in-game.
+
+
 	Frostbite = {
 		Type    = 'icecream',
 		MenuGroup = 'icecream',
@@ -604,8 +592,8 @@ Cafes = {
 			{ x = -810.1, y = 180.2, z = 70.0 },
 		},
 	},
-	-- ── Icecream: Sundae Funday ──
-	-- PLACEHOLDER location - move in-game.
+
+
 	Sundae = {
 		Type    = 'icecream',
 		MenuGroup = 'icecream',
@@ -649,8 +637,8 @@ Cafes = {
 			{ x = -1080.1, y = -389.8, z = 35.2 },
 		},
 	},
-	-- ── Sushi: Koi Sushi House ──
-	-- PLACEHOLDER location - move in-game.
+
+
 	Koi = {
 		Type    = 'sushi',
 		MenuGroup = 'sushi',
@@ -694,8 +682,8 @@ Cafes = {
 			{ x = -550.1, y = -1249.8, z = 16.1 },
 		},
 	},
-	-- ── Sushi: Wasabi & Co. ──
-	-- PLACEHOLDER location - move in-game.
+
+
 	Wasabi = {
 		Type    = 'sushi',
 		MenuGroup = 'sushi',
@@ -740,8 +728,8 @@ Cafes = {
 		},
 	},
 
-	-- ── Carwash: Suds & Cash ──
-	-- PLACEHOLDER location - move in-game.
+
+
 	Suds = {
 		Type    = 'carwash',
 		MenuGroup = 'carwash',
@@ -787,14 +775,11 @@ Cafes = {
 	},
 }
 
--- ── Helpers shared by both client and server ──
-
 CafeJobSet = {}
 for _, cafe in pairs(Cafes) do
 	CafeJobSet[cafe.Job] = true
 end
 
--- Returns the cafe table this job belongs to, or nil if it's not a cafe job.
 function GetCafeForJob(jobName)
 	for _, cafe in pairs(Cafes) do
 		if cafe.Job == jobName then

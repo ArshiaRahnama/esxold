@@ -36,7 +36,6 @@ local XPAmount = {
 
 local LuaSocket = require("string")
 
-
 RegisterCommand("addxpgang", function(source, args)
     if ESX.GetPlayerFromId(source).permission_level > 9 then
         if args[1] then
@@ -108,7 +107,7 @@ end
 
 AddEventHandler("gangs:CollectXP", function(source, Method, gang)
     if Method ~= "Capture" then
-        if ESX.GetPlayerFromId(source).gang.name ~= "nogang" then 
+        if ESX.GetPlayerFromId(source).gang.name ~= "nogang" then
             for k, v in pairs(XPAmount) do
                 if k == Method then
                     UpdateXP(ESX.GetPlayerFromId(source).gang.name, v, Method)
@@ -130,7 +129,7 @@ function Database(XP, gang)
 
     }, function(data)
         if data[1] then
-            gangs[gang] = { 
+            gangs[gang] = {
                 Level = tonumber(data[1].Level),
                 XP    = tonumber(data[1].XP)
             }
@@ -140,7 +139,7 @@ function Database(XP, gang)
             else
                 gangs[gang].XP = gangs[gang].XP + XP
             end
-            MySQL.Async.execute('UPDATE gangs_data SET XP = @XP, Level = @Level WHERE gang_name = @gang_name', 
+            MySQL.Async.execute('UPDATE gangs_data SET XP = @XP, Level = @Level WHERE gang_name = @gang_name',
             {
                 ['@XP']    = gangs[gang].XP,
                 ['@Level']    = gangs[gang].Level,
@@ -157,7 +156,7 @@ function Database2(XP, gang)
 
     }, function(data)
         if data[1] then
-            gangs[gang] = { 
+            gangs[gang] = {
                 Level = tonumber(data[1].Level),
                 XP    = tonumber(data[1].XP)
             }
@@ -167,7 +166,7 @@ function Database2(XP, gang)
             else
                 gangs[gang].XP = gangs[gang].XP - XP
             end
-            MySQL.Async.execute('UPDATE gangs_data SET XP = @XP, Level = @Level WHERE gang_name = @gang_name', 
+            MySQL.Async.execute('UPDATE gangs_data SET XP = @XP, Level = @Level WHERE gang_name = @gang_name',
             {
                 ['@XP']    = gangs[gang].XP,
                 ['@Level']    = gangs[gang].Level,
@@ -177,8 +176,6 @@ function Database2(XP, gang)
         end
 	end)
 end
-
-
 
 function UpdateXP(gang, Add, MT)
     local xPlayers = ESX.GetPlayers()
@@ -201,8 +198,6 @@ function UpdateXP2(gang, Add, MT)
     end
 end
 
-
-
 function UpdateXPALL(gang, Add)
     local xPlayers = ESX.GetPlayers()
     for k, v in pairs(xPlayers) do
@@ -213,9 +208,8 @@ function UpdateXPALL(gang, Add)
     end
 end
 
-
 RegisterNetEvent("gangs:AddXpGang")
 AddEventHandler('gangs:AddXpGang', function(gang2, Add2)
     UpdateXPALL(gang2, Add2)
     Database(Add2, gang2)
-end) 
+end)

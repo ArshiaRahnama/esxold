@@ -1,8 +1,7 @@
 BoxZone = {}
--- Inherits from PolyZone
+
 setmetatable(BoxZone, { __index = PolyZone })
 
--- Utility functions
 local rad, cos, sin = math.rad, math.cos, math.sin
 function PolyZone.rotate(origin, point, theta)
   if theta == 0.0 then return point end
@@ -45,8 +44,8 @@ function BoxZone.calculateMinAndMaxZ(minZ, maxZ, scaleZ, offsetZ)
 end
 
 local function _calculateScaleAndOffset(options)
-  -- Scale and offset tables are both formatted as {forward, back, left, right, up, down}
-  -- or if symmetrical {forward/back, left/right, up/down}
+
+
   local scale = options.scale or {1.0, 1.0, 1.0, 1.0, 1.0, 1.0}
   local offset = options.offset or {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
   assert(#scale == 3 or #scale == 6, "Scale must be of length 3 or 6")
@@ -72,7 +71,7 @@ local function _calculatePoints(center, length, width, minScale, maxScale, minOf
   min = min * minScale - minOffset
   max = max * maxScale + maxOffset
 
-  -- Box vertices
+
   local p1 = center.xy + vector2(min.x, min.y)
   local p2 = center.xy + vector2(max.x, min.y)
   local p3 = center.xy + vector2(max.x, max.y)
@@ -80,14 +79,11 @@ local function _calculatePoints(center, length, width, minScale, maxScale, minOf
   return {p1, p2, p3, p4}
 end
 
--- Debug drawing functions
 function BoxZone:TransformPoint(point)
-  -- Overriding TransformPoint function to take into account rotation and position offset
+
   return PolyZone.rotate(self.startPos, point, self.offsetRot) + self.offsetPos
 end
 
-
--- Initialization functions
 local function _initDebug(zone, options)
   if options.debugBlip then zone:addDebugBlip() end
   if not options.debugPoly then
@@ -121,10 +117,10 @@ function BoxZone:new(center, length, width, options)
   options.minZ = minZ
   options.maxZ = maxZ
 
-  -- Box Zones don't use the grid optimization because they are already rectangles/cubes
+
   options.useGrid = false
 
-  -- Pre-setting all these values to avoid PolyZone:new() having to calculate them
+
   options.min = min
   options.max = max
   options.size = size
@@ -153,8 +149,6 @@ function BoxZone:Create(center, length, width, options)
   return zone
 end
 
-
--- Helper functions
 function BoxZone:isPointInside(point)
   if self.destroyed then
     print("[PolyZone] Warning: Called isPointInside on destroyed zone {name=" .. self.name .. "}")

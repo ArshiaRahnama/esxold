@@ -10,9 +10,8 @@ Keys = {
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-
 ESX          = nil
--- local IsDead = false
+
 local IsAnimated = false
 
 Citizen.CreateThread(function()
@@ -29,26 +28,15 @@ end)
 
 RegisterNetEvent('esx_basicneeds:healPlayer')
 AddEventHandler('esx_basicneeds:healPlayer', function()
-	-- restore hunger & thirst
+
 	TriggerEvent('esx_status:setx', 'hunger', 1000000)
 	TriggerEvent('esx_status:setx', 'thirst', 1000000)
 
-	-- restore hp
+
 	local playerPed = PlayerPedId()
 	SetEntityHealth(playerPed, 200)
 end)
 
--- AddEventHandler('esx:onPlayerDeath', function()
--- 	IsDead = true
--- end)
-
--- AddEventHandler('playerSpawned', function(spawn)
--- 	if IsDead then
--- 		--TriggerEvent('esx_basicneeds:resetStatus')
--- 	end
-
--- 	IsDead = false
--- end)
 local thread = false
 AddEventHandler('esx_status:loaded', function(status)
 
@@ -104,17 +92,17 @@ AddEventHandler('esx_status:loaded', function(status)
 							Wait(10)
 							DisableControlAction(0, 24, true)
 							SetWalk('move_m@drunk@verydrunk')
-							if IsControlJustPressed(0, 69) then -- weapon tir
+							if IsControlJustPressed(0, 69) then
 								SetPedToRagdoll(PlayerPedId(), 5000, 0, 0, 0, 0, 0)
 							end
 							if IsPedJumping(PlayerPedId()) then
 								SetPedToRagdoll(PlayerPedId(), 5000, 0, 0, 0, 0, 0)
 							end
-							if IsControlJustPressed(0, 24) then -- klick chap
+							if IsControlJustPressed(0, 24) then
 								SetPedToRagdoll(PlayerPedId(), 5000, 0, 0, 0, 0, 0)
 							end
 							if IsControlJustPressed(0, 25) then
-								SetPedToRagdoll(PlayerPedId(), 5000, 0, 0, 0, 0, 0) -- klick rast
+								SetPedToRagdoll(PlayerPedId(), 5000, 0, 0, 0, 0, 0)
 							end
 						end
 					end)
@@ -138,7 +126,7 @@ function RequestWalking(set)
   RequestAnimSet(set)
   while not HasAnimSetLoaded(set) do
     Citizen.Wait(1)
-  end 
+  end
 end
 
 AddEventHandler('esx_basicneeds:isEating', function(cb)

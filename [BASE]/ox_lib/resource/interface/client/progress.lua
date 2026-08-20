@@ -4,27 +4,6 @@ local DisablePlayerFiring = DisablePlayerFiring
 local playerState = LocalPlayer.state
 local createdProps = {}
 
----@class ProgressPropProps
----@field model string
----@field bone? number
----@field pos vector3
----@field rot vector3
----@field rotOrder? number
-
----@class ProgressProps
----@field label? string
----@field duration number
----@field position? 'middle' | 'bottom'
----@field useWhileDead? boolean
----@field allowRagdoll? boolean
----@field allowCuffed? boolean
----@field allowFalling? boolean
----@field allowSwimming? boolean
----@field canCancel? boolean
----@field anim? { dict?: string, clip: string, flag?: number, blendIn?: number, blendOut?: number, duration?: number, playbackRate?: number, lockX?: boolean, lockY?: boolean, lockZ?: boolean, scenario?: string, playEnter?: boolean }
----@field prop? ProgressPropProps | ProgressPropProps[]
----@field disable? { move?: boolean, sprint?: boolean, car?: boolean, combat?: boolean, mouse?: boolean }
-
 local function createProp(ped, prop)
     lib.requestModel(prop.model)
     local coords = GetEntityCoords(ped)
@@ -90,7 +69,7 @@ local function startProgress(data)
                 DisableControlAction(0, controls.INPUT_LOOK_LR, true)
                 DisableControlAction(0, controls.INPUT_LOOK_UD, true)
                 DisableControlAction(0, controls.INPUT_VEH_MOUSE_CONTROL_OVERRIDE, true)
-                DisableControlAction(0, 73, true) 
+                DisableControlAction(0, 73, true)
             end
 
             if disable.move then
@@ -98,12 +77,12 @@ local function startProgress(data)
                 DisableControlAction(0, controls.INPUT_MOVE_LR, true)
                 DisableControlAction(0, controls.INPUT_MOVE_UD, true)
                 DisableControlAction(0, controls.INPUT_DUCK, true)
-                DisableControlAction(0, 73, true) 
+                DisableControlAction(0, 73, true)
             end
 
             if disable.sprint and not disable.move then
                 DisableControlAction(0, controls.INPUT_SPRINT, true)
-                DisableControlAction(0, 73, true) 
+                DisableControlAction(0, 73, true)
             end
 
             if disable.car then
@@ -112,13 +91,13 @@ local function startProgress(data)
                 DisableControlAction(0, controls.INPUT_VEH_ACCELERATE, true)
                 DisableControlAction(0, controls.INPUT_VEH_BRAKE, true)
                 DisableControlAction(0, controls.INPUT_VEH_EXIT, true)
-                DisableControlAction(0, 73, true) 
+                DisableControlAction(0, 73, true)
             end
 
             if disable.combat then
                 DisableControlAction(0, controls.INPUT_AIM, true)
                 DisablePlayerFiring(cache.playerId, true)
-                DisableControlAction(0, 73, true) 
+                DisableControlAction(0, 73, true)
             end
         end
 
@@ -136,7 +115,7 @@ local function startProgress(data)
     if anim then
         if anim.dict then
             StopAnimTask(cache.ped, anim.dict, anim.clip, 1.0)
-            Wait(0) -- This is needed here otherwise the StopAnimTask is cancelled
+            Wait(0)
         else
             ClearPedTasks(cache.ped)
         end
@@ -152,8 +131,6 @@ local function startProgress(data)
     return true
 end
 
----@param data ProgressProps
----@return boolean?
 function lib.progressBar(data)
     while progress ~= nil do Wait(0) end
 
@@ -170,8 +147,6 @@ function lib.progressBar(data)
     end
 end
 
----@param data ProgressProps
----@return boolean?
 function lib.progressCircle(data)
     while progress ~= nil do Wait(0) end
 
@@ -197,7 +172,6 @@ function lib.cancelProgress()
     progress = false
 end
 
----@return boolean
 function lib.progressActive()
     return progress and true
 end
@@ -239,14 +213,14 @@ AddStateBagChangeHandler('lib:progressProps', nil, function(bagName, key, value,
 
     local ped = GetPlayerPed(ply)
     local serverId = GetPlayerServerId(ply)
-    
+
     if not value then
         return deleteProgressProps(serverId)
     end
-    
+
     createdProps[serverId] = {}
     local playerProps = createdProps[serverId]
-    
+
     if value.model then
         playerProps[#playerProps+1] = createProp(ped, value)
     else

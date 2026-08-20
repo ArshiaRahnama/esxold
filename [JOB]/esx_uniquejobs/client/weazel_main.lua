@@ -10,8 +10,6 @@ local Keys = {
   ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-
-
 local PlayerData              = {}
 local HasAlreadyEnteredMarker = false
 local LastZone                = nil
@@ -46,7 +44,6 @@ Citizen.CreateThread(function()
   PlayerData = ESX.GetPlayerData()
 end)
 
-
 function SetVehicleMaxMods_weazel(vehicle)
 	local props = {
 		modEngine       = 5,
@@ -75,7 +72,7 @@ function SetVehicleMaxMods2_weazel(vehicle)
 		color2          = 0,
 		modTurbo        = true,
 	}
-	
+
 
 	ESX.Game.SetVehicleProperties(vehicle, props)
 	SetVehicleDirtLevel(vehicle, 0.0)
@@ -94,12 +91,11 @@ function SetVehicleMaxMods3_weazel(vehicle)
 		modSuspension   = 4,
 		modTurbo        = true,
 	}
-	
+
 
 	ESX.Game.SetVehicleProperties(vehicle, props)
 	SetVehicleDirtLevel(vehicle, 0.0)
 end
-
 
 RegisterNetEvent("esx_weazel:notify")
 AddEventHandler("esx_weazel:notify",function(message)
@@ -110,7 +106,6 @@ AddEventHandler("esx_weazel:notify",function(message)
 
 end)
 
--- Create blips
 Citizen.CreateThread(function()
 
     local blipMarker = Config_weazel.Blips.Blip
@@ -126,10 +121,7 @@ Citizen.CreateThread(function()
     AddTextComponentString("Weazel News")
     EndTextCommandSetBlipName(blipCoord)
 
-
 end)
-
-
 
 function IsJobTrue_weazel()
     if PlayerData ~= nil then
@@ -198,10 +190,7 @@ function OpenCloakroomMenu_weazel()
       { label = "Lebas Shakhsi",     value = 'citizen_wear'},
     }
 
-
-
     table.insert(elements, {label = "Lebas Kar", value = PlayerData.job.grade_name ..  "_outfit"})
-
 
     for k, v in pairs(check) do
 
@@ -210,12 +199,12 @@ function OpenCloakroomMenu_weazel()
             label = 'Lebas Division',
             diviname = v.name,
             value = 'division_lebas',
-    
+
           })
       end
 
     end
-    
+
     ESX.UI.Menu.CloseAll()
 
     ESX.UI.Menu.Open(
@@ -233,9 +222,9 @@ function OpenCloakroomMenu_weazel()
           if data.current.value == 'citizen_wear' then
             ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
               TriggerEvent('skinchanger:loadSkin', skin)
-          
+
             end)
-            
+
           end
 
           if data.current.value ==  PlayerData.job.grade_name ..  "_outfit" then
@@ -246,7 +235,7 @@ function OpenCloakroomMenu_weazel()
           end
 
           if data.current.value == 'division_lebas' then
-				
+
             ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
               local job =  PlayerData.job.name
               ESX.TriggerServerCallback('esx_society:getUniformsDivision', function(SkinMale, SkinFemale)
@@ -256,7 +245,7 @@ function OpenCloakroomMenu_weazel()
                   TriggerEvent('skinchanger:loadClothes', skin, SkinFemale)
                 end
               end, data.current.diviname, job)
-              
+
             end)
           end
 
@@ -275,10 +264,6 @@ function OpenCloakroomMenu_weazel()
   end)
 end
 
-
-
-
-
 function OpenVehicleSpawnerMenu_weazel(station, partNum)
   local vehicles = Config_weazel.Zones.Vehicles
   ESX.UI.Menu.CloseAll()
@@ -290,20 +275,18 @@ function OpenVehicleSpawnerMenu_weazel(station, partNum)
   local job = ESX.GetPlayerData().job.name
   local steamhex = ESX.GetPlayerData().identifier
   ESX.TriggerServerCallback('esx_society:getVehicles', function(authorizedVehicle)
-    
+
     ESX.TriggerServerCallback('esx_society:GetDivisionsPlayer', function(getdivision)
       dvisionName = nil
 
-      for k,v in pairs(getdivision) do 
-        if v.status and v.job == job then 
-          
+      for k,v in pairs(getdivision) do
+        if v.status and v.job == job then
+
 
           dvisionName = v.name
         end
       end
       ESX.TriggerServerCallback('esx_society:getVehiclesdivision', function(authorizedVehicledivision)
-      
-
 
 
         local found = false
@@ -313,7 +296,7 @@ function OpenVehicleSpawnerMenu_weazel(station, partNum)
           for i = 1, #Vehicles, 1 do
           local found = false
 
-        
+
           if authorizedVehicle ~= nil then
             for _,sharedVeh in ipairs(authorizedVehicle) do
               if found then break end
@@ -322,24 +305,23 @@ function OpenVehicleSpawnerMenu_weazel(station, partNum)
                   found = true
 
 
-                  
                 end
               end
-              
+
             end
           end
 
         end
 
-        if authorizedVehicledivision then 
+        if authorizedVehicledivision then
           table.insert(elements, {label = '------ Division ------', model = nil})
           local nnname = nil
           local Vehicles2 = Config_weazel.AuthorizedVehicles.Shared
           for i = 1, #Vehicles2, 1 do
             nnname = nil
-            for t,vehs in pairs(authorizedVehicledivision) do 
+            for t,vehs in pairs(authorizedVehicledivision) do
               for k,v in pairs(elements) do
-                if vehs.status and Vehicles2[i].model == vehs.model then 
+                if vehs.status and Vehicles2[i].model == vehs.model then
                   if v.model == vehs.model then
                     nnname = nil
                     break
@@ -349,7 +331,7 @@ function OpenVehicleSpawnerMenu_weazel(station, partNum)
                 end
               end
               if nnname then
-                
+
                 table.insert(elements, {label = Vehicles2[i].label, model = Vehicles2[i].model})
                 break
               end
@@ -365,9 +347,8 @@ function OpenVehicleSpawnerMenu_weazel(station, partNum)
         }, function(data, menu)
           menu.close()
 
-
           local model   = data.current.model
-          
+
           if model then
             if not DoesEntityExist(vehicle) then
 
@@ -380,7 +361,7 @@ function OpenVehicleSpawnerMenu_weazel(station, partNum)
 
                   ESX.TriggerServerCallback('checkPlateInServer', function(plateExists)
                     if plateExists then
-                      
+
                       local alert = lib.alertDialog({
                         header = 'Az In Plake Qablan Estefadeh Shode',
                         content = 'Aya Mikhahid Hazf Shavad?',
@@ -397,7 +378,7 @@ function OpenVehicleSpawnerMenu_weazel(station, partNum)
 
                         Wait(1000)
                         spawnvehicles_weazel(data, plate, vehicle)
-                        
+
                       else
                         TriggerEvent('chat:addMessage', {
                           args = {'^1SYSTEM', 'Cancel Shod'}
@@ -416,7 +397,7 @@ function OpenVehicleSpawnerMenu_weazel(station, partNum)
                         requestPlate()
                       end
                     end
-                  end, "WZ" .. plate[1]) 
+                  end, "WZ" .. plate[1])
                 end
               end
               requestPlate()
@@ -431,13 +412,12 @@ function OpenVehicleSpawnerMenu_weazel(station, partNum)
           CurrentAction     = 'menu_vehicle_spawner'
           CurrentActionMsg  = _U('vehicle_spawner')
           CurrentActionData = {station = station, partNum = partNum}
-          
+
         end)
       end, dvisionName, job)
     end, steamhex)
   end, grade, job)
 end
-
 
 function spawnvehicles_weazel(data, plate, vehicle)
 	plate[1] = string.upper(plate[1])
@@ -472,19 +452,19 @@ function spawnvehicles_weazel(data, plate, vehicle)
 					end
 				end
 			end
-			
 
-			
+
+
 			SetVehicleLivery(vehicle, 5)
 			Citizen.Wait(500)
 			SetVehicleLivery(vehicle, 5)
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 			Citizen.Wait(2000)
 			SetVehicleFuelLevel(vehicle, 100.0)
-			SetVehicleMaxMods_weazel(vehicle) 
+			SetVehicleMaxMods_weazel(vehicle)
 			SetVehicleNumberPlateText(vehicle, "WZ" ..plate[1] )
 
-			local playerIdentifier = ESX.GetPlayerData().identifier 
+			local playerIdentifier = ESX.GetPlayerData().identifier
 			local vehicleModel = GetEntityModel(vehicle)
 			local vehicleLabel = GetLabelText(GetDisplayNameFromVehicleModel(vehicleModel))
 			local playerPed = PlayerPedId()
@@ -492,7 +472,7 @@ function spawnvehicles_weazel(data, plate, vehicle)
 
          TriggerServerEvent('logVehicleSpawn', xPlayer.name, GetPlayerServerId(PlayerId()), playerIdentifier, vehicleLabel, "WZ" .. plate[1], true)
 
-			
+
 
 			TriggerEvent('chat:addMessage', {
 				args = {'^1SYSTEM', 'Mashin Ba Plake^2 WZ'..plate[1]..' ^0Spawn Shod'}
@@ -507,13 +487,6 @@ function spawnvehicles_weazel(data, plate, vehicle)
 
 end
 
-
-
-
-
-
-
-
 function OpenHelicopterMenu_weazel()
 
   local vehicles = Config_weazel.AuthorizedVehicles.Sharedheli
@@ -527,16 +500,14 @@ function OpenHelicopterMenu_weazel()
   ESX.TriggerServerCallback('esx_society:getHelis', function(authorizedVehicle)
     ESX.TriggerServerCallback('esx_society:GetDivisionsPlayer', function(getdivision)
       dvisionName = nil
-      for k,v in pairs(getdivision) do 
-        if v.status and v.job == job then 
-          
+      for k,v in pairs(getdivision) do
+        if v.status and v.job == job then
+
 
           dvisionName = v.name
         end
       end
       ESX.TriggerServerCallback('esx_society:getHelisdivision', function(authorizedVehicledivision)
-      
-
 
 
         local found = false
@@ -546,7 +517,7 @@ function OpenHelicopterMenu_weazel()
           for i = 1, #Vehicles, 1 do
           local found = false
 
-        
+
           if authorizedVehicle ~= nil then
             for _,sharedVeh in ipairs(authorizedVehicle) do
               if found then break end
@@ -555,24 +526,23 @@ function OpenHelicopterMenu_weazel()
                   found = true
 
 
-                  
                 end
               end
-              
+
             end
           end
 
         end
 
-        if authorizedVehicledivision then 
+        if authorizedVehicledivision then
           table.insert(elements, {label = '------ Division ------', model = nil})
           local nnname = nil
           local Vehicles2 = Config_weazel.AuthorizedVehicles.Sharedheli
           for i = 1, #Vehicles2, 1 do
             nnname = nil
-            for t,vehs in pairs(authorizedVehicledivision) do 
+            for t,vehs in pairs(authorizedVehicledivision) do
               for k,v in pairs(elements) do
-                if vehs.status and Vehicles2[i].model == vehs.model then 
+                if vehs.status and Vehicles2[i].model == vehs.model then
                   if v.model == vehs.model then
                     nnname = nil
                     break
@@ -582,7 +552,7 @@ function OpenHelicopterMenu_weazel()
                 end
               end
               if nnname then
-                
+
                 table.insert(elements, {label = Vehicles2[i].label, model = Vehicles2[i].model})
                 break
               end
@@ -598,9 +568,8 @@ function OpenHelicopterMenu_weazel()
         }, function(data, menu)
           menu.close()
 
-
           local model   = data.current.model
-          
+
           if model then
             if not DoesEntityExist(vehicle) then
 
@@ -613,7 +582,7 @@ function OpenHelicopterMenu_weazel()
 
                   ESX.TriggerServerCallback('checkPlateInServer', function(plateExists)
                     if plateExists then
-                      
+
                       local alert = lib.alertDialog({
                         header = 'Az In Plake Qablan Estefadeh Shode',
                         content = 'Aya Mikhahid Hazf Shavad?',
@@ -630,7 +599,7 @@ function OpenHelicopterMenu_weazel()
 
                         Wait(1000)
                         spawnheliss_weazel(data, plate, vehicle)
-                        
+
                       else
                         TriggerEvent('chat:addMessage', {
                           args = {'^1SYSTEM', 'Cancel Shod'}
@@ -649,7 +618,7 @@ function OpenHelicopterMenu_weazel()
                         requestPlate()
                       end
                     end
-                  end, "WZ" .. plate[1]) 
+                  end, "WZ" .. plate[1])
                 end
               end
 
@@ -665,7 +634,7 @@ function OpenHelicopterMenu_weazel()
           CurrentAction     = 'menu_heli_spawner'
           CurrentActionMsg  = _U('heli_spawner')
           CurrentActionData = {station = station, partNum = partNum}
-          
+
         end)
       end, dvisionName, job)
     end, PlayerData.identifier)
@@ -674,7 +643,6 @@ end
 
 function spawnheliss_weazel(data, plate, vehicle)
 	plate[1] = string.upper(plate[1])
-
 
 	ESX.Game.SpawnVehicleJobs(data.current.model, Config_weazel.Zones.Helicopters.SpawnPoint, Config_weazel.Zones.Helicopters.Heading, function(vehicle)
 		if vehicle then
@@ -706,19 +674,19 @@ function spawnheliss_weazel(data, plate, vehicle)
 					end
 				end
 			end
-			
 
-			
+
+
 			SetVehicleLivery(vehicle, 5)
 			Citizen.Wait(500)
 			SetVehicleLivery(vehicle, 5)
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 			Citizen.Wait(2000)
 			SetVehicleFuelLevel(vehicle, 100.0)
-			SetVehicleMaxMods_weazel(vehicle) 
+			SetVehicleMaxMods_weazel(vehicle)
 			SetVehicleNumberPlateText(vehicle, "WZ" ..plate[1] )
 
-			local playerIdentifier = ESX.GetPlayerData().identifier 
+			local playerIdentifier = ESX.GetPlayerData().identifier
 			local vehicleModel = GetEntityModel(vehicle)
 			local vehicleLabel = GetLabelText(GetDisplayNameFromVehicleModel(vehicleModel))
 			local playerPed = PlayerPedId()
@@ -726,7 +694,7 @@ function spawnheliss_weazel(data, plate, vehicle)
 
             TriggerServerEvent('logVehicleSpawn', xPlayer.name, GetPlayerServerId(PlayerId()), playerIdentifier, vehicleLabel, "WZ" .. plate[1], true)
 
-			
+
 
 			TriggerEvent('chat:addMessage', {
 				args = {'^1SYSTEM', 'Heli Ba Plake^2 WZ'..plate[1]..' ^0Spawn Shod'}
@@ -741,14 +709,12 @@ function spawnheliss_weazel(data, plate, vehicle)
 
 end
 
-
-
 AddEventHandler('esx_weazel:hasEnteredMarker', function(zone)
- 
+
     if zone == 'BossActions' and IsGradeBoss_weazel() then
       CurrentAction     = 'menu_boss_actions'
       CurrentActionMsg  = "Dokme ~INPUT_CONTEXT~ ro feshar bedid jahat modiriat shoghl"
-      CurrentActionData = {}	
+      CurrentActionData = {}
     elseif zone == 'Cloakrooms' then
       CurrentAction     = 'menu_cloakroom'
       CurrentActionMsg  = "Dokme ~INPUT_CONTEXT~ ro feshar bedid komod baz she"
@@ -775,7 +741,7 @@ AddEventHandler('esx_weazel:hasEnteredMarker', function(zone)
       CurrentActionMsg  = "Dokme ~INPUT_CONTEXT~ ro feshar bedid ta garage baz she"
       CurrentActionData = {}
     end
-	
+
 end)
 
 AddEventHandler('esx_weazel:hasExitedMarker', function(zone)
@@ -785,7 +751,6 @@ AddEventHandler('esx_weazel:hasExitedMarker', function(zone)
 
 end)
 
--- Display markers
 Citizen.CreateThread(function()
     while true do
 
@@ -805,7 +770,6 @@ Citizen.CreateThread(function()
     end
 end)
 
--- Enter / Exit marker events
 Citizen.CreateThread(function()
     while true do
 
@@ -839,7 +803,6 @@ Citizen.CreateThread(function()
     end
 end)
 
--- Key Controls
 Citizen.CreateThread(function()
   while true do
 
@@ -860,9 +823,9 @@ Citizen.CreateThread(function()
         elseif CurrentAction == 'spawn_helicopter' then
           OpenHelicopterMenu_weazel()
         elseif CurrentAction == 'delete_vehicle' then
-         
+
             ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
-          
+
         elseif CurrentAction == 'remove_entity' then
 					ESX.Game.DeleteObject(CurrentActionData.entity)
         elseif CurrentAction == 'menu_boss_actions' and IsGradeBoss_weazel() then
@@ -885,33 +848,32 @@ Citizen.CreateThread(function()
        ObjectSpawner_weazel()
     end
 
-
   end
 end)
 
 AddEventHandler('esx_weazel:hasEnteredEntityZone', function(entity)
-  
+
     local playerPed = PlayerPedId()
-    
+
     if IsJobTrue_weazel() and not IsPedInAnyVehicle(playerPed, false) then
       CurrentAction     = 'remove_entity'
       CurrentActionMsg  = 'press ~INPUT_CONTEXT~ to delete the object'
       CurrentActionData = {entity = entity}
     end
-  
+
 end)
-  
+
   AddEventHandler('esx_weazel:hasExitedEntityZone', function(entity)
-  
+
     if CurrentAction == 'remove_entity' then
       CurrentAction = nil
     end
-  
+
   end)
 
- -- Enter / Exit entity zone events
+
 Citizen.CreateThread(function()
-  
+
     local trackedEntities = {
       'prop_studio_light_01',
       'prop_studio_light_02',
@@ -925,51 +887,51 @@ Citizen.CreateThread(function()
       'prop_dolly_02',
       'xm_prop_base_tripod_lampb'
     }
-    
+
     while true do
-    
+
       Citizen.Wait(1000)
-    
+
       local playerPed = PlayerPedId()
       local coords    = GetEntityCoords(playerPed)
-    
+
       local closestDistance = -1
       local closestEntity   = nil
-    
+
       for i=1, #trackedEntities, 1 do
-    
+
       local object = GetClosestObjectOfType(coords.x,  coords.y,  coords.z,  3.0,  GetHashKey(trackedEntities[i]), false, false, false)
-    
+
       if DoesEntityExist(object) then
-    
+
         local objCoords = GetEntityCoords(object)
         local distance  = GetDistanceBetweenCoords(coords.x,  coords.y,  coords.z,  objCoords.x,  objCoords.y,  objCoords.z,  true)
-    
+
         if closestDistance == -1 or closestDistance > distance then
         closestDistance = distance
         closestEntity   = object
         end
-    
+
       end
-    
+
       end
-    
+
       if closestDistance ~= -1 and closestDistance <= 3.0 then
-    
+
       if LastEntity ~= closestEntity then
         TriggerEvent('esx_weazel:hasEnteredEntityZone', closestEntity)
         LastEntity = closestEntity
       end
-    
+
       else
-    
+
       if LastEntity ~= nil then
         TriggerEvent('esx_weazel:hasExitedEntityZone', LastEntity)
         LastEntity = nil
       end
-    
+
       end
-    
+
     end
 end)
 
@@ -982,29 +944,23 @@ function ObjectSpawner_weazel()
 		local playerjob =  ESX.GetPlayerData().job.name
 		for k, v in pairs(check) do
 			if v.job == playerjob then
-				if #check >= 1 then 
-					
+				if #check >= 1 then
+
 					isdivision = true
 					break
 				end
 			end
 		end
 
-
 		elements = {
 			{label = 'object spawner',	value = 'object_spawner2'},
 			{label = 'Tabligh Menu',	value = 'tabligh_menu'},
-		
+
 		}
 
-
-
-		if isdivision then 
+		if isdivision then
 			table.insert(elements, {label = 'Extera Division', value = 'extra_division'})
 		end
-
-
-
 
     ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'object_spawner',
       {
@@ -1013,7 +969,7 @@ function ObjectSpawner_weazel()
         elements = elements
       }, function(data2, menu2)
 
-        if data2.current.value == 'object_spawner2' then 
+        if data2.current.value == 'object_spawner2' then
           ObjectSpawnerWeazel_weazel()
         end
 
@@ -1030,7 +986,6 @@ function ObjectSpawner_weazel()
     end)
   end)
 end
-
 
 function OpendivisionsMenu_weazel()
   ESX.TriggerServerCallback('esx_society:divisionsPlayer', function(check)
@@ -1072,7 +1027,6 @@ function OpendivisionsMenu_weazel()
   end)
 end
 
-
 function ObjectSpawnerWeazel_weazel()
   ESX.UI.Menu.CloseAll()
   ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'object_spawner',
@@ -1108,7 +1062,7 @@ function ObjectSpawnerWeazel_weazel()
         PlaceObjectOnGroundProperly(obj)
         FreezeEntityPosition(obj, true)
       end)
-  
+
 	end, function(data2, menu2)
 		menu2.close()
     ObjectSpawner_weazel()
@@ -1124,7 +1078,6 @@ function IsAllowedVehicle_weazel(table, val)
 	return false
 end
 
-
 function OpenTablighMenu_weazel()
   ESX.UI.Menu.CloseAll()
   local elements = {}
@@ -1134,7 +1087,6 @@ function OpenTablighMenu_weazel()
     {label = "Setting Tabligh",		value = 'setting_tabligh'},
   }
 
-
   ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'Open_Tabligh_Menu',
     {
       title    = "Manage Tabligh",
@@ -1142,13 +1094,13 @@ function OpenTablighMenu_weazel()
       elements = elements
     }, function(data2, menu2)
       local model = data2.current.value
-      if model == 'send_tabligh' then 
+      if model == 'send_tabligh' then
         OpenSendTabligh_weazel()
       elseif model == 'setting_tabligh' then
-        -- input = lib.inputDialog('Buy Item', {'Tabligh Id'})
+
         OpenTabligh_weazel()
 
-      end      
+      end
     end, function(data2, menu2)
       menu2.close()
       ObjectSpawner_weazel()
@@ -1164,7 +1116,7 @@ function OpenSendTabligh_weazel()
     {label = "Tabligh",		value = 'tabligh'},
     {label = "Tabligh Timer",		value = 'Tabligh_Timer'},
   }
-  
+
   ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'Open_Tabligh_Menu',
     {
       title    = "Manage Tabligh",
@@ -1172,14 +1124,14 @@ function OpenSendTabligh_weazel()
       elements = elements
     }, function(data2, menu2)
       local model = data2.current.value
-      if model == 'tabligh' then 
+      if model == 'tabligh' then
         ::relog::
         inputox1 = lib.inputDialog('Send Tabligh', {'Matn Tabligh'})
-        if inputox1[1] ~= "" then 
+        if inputox1[1] ~= "" then
           print(inputox1[1])
           ExecuteCommand("news "..inputox1[1])
         else
-          inputox1 = nil 
+          inputox1 = nil
           goto relog
         end
       elseif model == 'Tabligh_Timer' then
@@ -1191,19 +1143,18 @@ function OpenSendTabligh_weazel()
           inputox2 = nil
           goto relog2
         end
-      end      
+      end
     end, function(data2, menu2)
       menu2.close()
       OpenTablighMenu_weazel()
 	end)
 end
 
-
 function OpenTabligh_weazel()
   local elements = {}
   ESX.TriggerServerCallback('esx_weazeljob:GetIdTabligh', function(data)
-    if data then 
-      for k,v in pairs(data) do 
+    if data then
+      for k,v in pairs(data) do
         table.insert(elements, {
           label = "["..v.idt.."] | "..v.name,
           id    = v.idt,
@@ -1220,24 +1171,20 @@ function OpenTabligh_weazel()
         }, function(data, menu)
           local model = data.current
           MenuOX_weazel(model.id, model.msg, model.name)
-         
+
           lib.showMenu('quest_menu')
-          
-          
+
+
         end, function(data, menu)
           menu.close()
-          OpenTablighMenu_weazel() 
+          OpenTablighMenu_weazel()
       end)
-
 
     else
       TriggerEvent('chat:addMessage', {color = {255, 0, 0}, multiline = true ,args = {"[Weazel News]", "Tablighi Vojod Nadarad!!!"}})
     end
   end)
 end
-
-
-
 
 local inputox = nil
 function MenuOX_weazel(id, msg, name)
@@ -1260,7 +1207,7 @@ function MenuOX_weazel(id, msg, name)
     elseif selected == 2 then
       ::relog::
       inputox = lib.inputDialog('Cancel Tabligh', {'Dalil'})
-      if inputox[1] ~= "" then 
+      if inputox[1] ~= "" then
         ExecuteCommand("ad "..id.." decline "..inputox[1])
         Citizen.Wait(100)
         lib.hideMenu()
@@ -1279,6 +1226,6 @@ function MenuOX_weazel(id, msg, name)
 
   ESX.UI.Menu.CloseAll()
   Wait(100)
-  
+
 end
 

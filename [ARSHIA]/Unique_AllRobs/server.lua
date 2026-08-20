@@ -1,11 +1,5 @@
--- Unique_AllRobs/server.lua
--- Merged server-side code from DarkPhone + PartySystem + Unique_RobSystem
--- Each original resource's code is preserved as-is inside its own do...end
--- block so local variables never leak or collide between sections.
 
--- ----------------------------------------------------------------------
--- DarkPhone/server.lua (Hostage & Pursuit logic)
--- ----------------------------------------------------------------------
+
 do
 
 ESX = nil
@@ -20,8 +14,6 @@ end
 ESX.RegisterUsableItem('darkphone', function(source)
     TriggerClientEvent('DarkPhone:OpenMenu', source)
 end)
-
--- ==================================== Hostage ===========================================
 
 local LastHostageTime = nil
 local HostageOwner = nil
@@ -105,8 +97,6 @@ AddEventHandler('DarkPhone:SuccessHostage', function()
     end
     HostageOwner = nil
 end)
-
--- ==================================== Pursuit ===========================================
 
 local LastPursuitTime = nil
 local PursuitOwner = nil
@@ -214,10 +204,6 @@ RegisterCommand('accp', function(source, args)
     end
 end)
 
-
-
-
-
 AddEventHandler('playerDropped', function(reason)
     local _source = source
     if HostageOwner then
@@ -246,13 +232,9 @@ AddEventHandler('playerDropped', function(reason)
         end
     end
 
-
 end)
 end
 
--- ----------------------------------------------------------------------
--- PartySystem/server.lua (Team logic)
--- ----------------------------------------------------------------------
 do
 local Teams = {}
 
@@ -280,7 +262,7 @@ function IsInTeam(id)
 end
 
 exports('IsInTeam', IsInTeam)
--- local accepted = exports["PartySystem"]:IsInTeam(RobberyCode)
+
 RegisterCommand('party', function(source, args)
     local _source = source
     local xPlayer = ESX.GetPlayerFromId(_source)
@@ -368,7 +350,6 @@ AddEventHandler('TeamSystem:DeleteTeam', function(Teamid)
     Teams[Teamid] = nil
 end)
 
-
 RegisterCommand('tchat', function(source, args)
     local _source = source
     local xPlayer = ESX.GetPlayerFromId(_source)
@@ -376,7 +357,7 @@ RegisterCommand('tchat', function(source, args)
     if InTeam then
         local name = string.gsub(xPlayer.name, "_", " ")
         local message = table.concat(args, " ")
-        
+
         for id,_ in pairs(team) do
             TriggerClientEvent('chatMessage', id, "", {255, 0, 0},"^4[^1 Team ^4]: ^3" .. name .. " " .. "^0^*" .. message .. "")
         end
@@ -384,12 +365,7 @@ RegisterCommand('tchat', function(source, args)
         TriggerClientEvent('esx:showNotification', _source, "Shoma Ozv Hich Teami Nistid",'error')
     end
 
-
 end)
-
-
-
-
 
 AddEventHandler('playerDropped', function(reason)
     local _source = source
@@ -414,9 +390,6 @@ AddEventHandler('playerDropped', function(reason)
 end)
 end
 
--- ----------------------------------------------------------------------
--- Unique_RobSystem/server.lua (Robbery logic)
--- ----------------------------------------------------------------------
 do
 ESX = nil
 local RobberyCode = 0
@@ -447,62 +420,6 @@ CreateThread(function()
     end
 end)
 
--- ESX.RegisterServerCallback("Morphy_RobSystem:getRobsCd", function(source, cb)
---     local Bank = 0
---     local Minibank = 0
---     local Feleca = 0
---     local SheriffBank = 0
---     local shop = 0
---     local Bimeh = 0
---     local mythic = 0
---     local cargo = 0
-
---     if (Config.Rob.RobTypes["Central_Bank"].cooldown - (os.time() - Config.Rob.RobTypes["Central_Bank"].lastRobbed)) > 0 then
---         Bank = Config.Rob.RobTypes["Central_Bank"].cooldown - (os.time() - Config.Rob.RobTypes["Central_Bank"].lastRobbed)
---     end
-
---     if (Config.Rob.RobTypes["Minibank"].successtime - (os.time() - Config.Rob.RobTypes["Minibank"].lastRobbed)) > 0 then
---         Minibank = Config.Rob.RobTypes["Minibank"].successtime - (os.time() - Config.Rob.RobTypes["Minibank"].lastRobbed)
---     end
-
---     if (Config.Rob.RobTypes["Minibank"].successtime - (os.time() - Config.Rob.RobTypes["Minibank"].lastRobbed)) > 0 then
---         Feleca = Config.Rob.RobTypes["Minibank"].successtime - (os.time() - Config.Rob.RobTypes["Minibank"].lastRobbed)
---     end
-
---     if (Config.Rob.RobTypes["MazeBank"].cooldown - (os.time() - Config.Rob.RobTypes["MazeBank"].lastRobbed)) > 0 then
---         SheriffBank = Config.Rob.RobTypes["MazeBank"].cooldown - (os.time() - Config.Rob.RobTypes["MazeBank"].lastRobbed)
---     end
-
---     if (Config.Rob.RobTypes["Shop"].successtime - (os.time() - Config.Rob.RobTypes["Shop"].lastRobbed)) > 0 then
---         shop = Config.Rob.RobTypes["Shop"].successtime - (os.time() - Config.Rob.RobTypes["Shop"].lastRobbed)
---     end
-
---     if (Config.Rob.RobTypes["Life_Invader"].cooldown - (os.time() - Config.Rob.RobTypes["Life_Invader"].lastRobbed)) > 0 then
---         Bimeh = Config.Rob.RobTypes["Life_Invader"].cooldown - (os.time() - Config.Rob.RobTypes["Life_Invader"].lastRobbed)
---     end
-
---     if (Config.Rob.RobTypes["Airport"].cooldown - (os.time() - Config.Rob.RobTypes["Airport"].lastRobbed)) > 0 then
---         mythic = Config.Rob.RobTypes["Airport"].cooldown - (os.time() - Config.Rob.RobTypes["Airport"].lastRobbed)
---     end
-
---     if (Config.Rob.RobTypes["Jaw_Shams"].cooldown - (os.time() - Config.Rob.RobTypes["Jaw_Shams"].lastRobbed)) > 0 then
---         cargo = Config.Rob.RobTypes["Jaw_Shams"].cooldown - (os.time() - Config.Rob.RobTypes["Jaw_Shams"].lastRobbed)
---     end
-
-
---     cb({
---         ["Bank"] = Bank,
--- 		["Minibank"] = Minibank,
--- 		["Feleca"] = Feleca,
--- 		["SheriffBank"] = SheriffBank,
--- 		["shop"] = shop,
--- 		["Bimeh"] = Bimeh,
--- 		["mythic"] = mythic,
--- 		["cargo"] = cargo
-
---     })
--- end)
-
 RegisterServerEvent('Morphy_RobSystem:robberyNeeds')
 AddEventHandler('Morphy_RobSystem:robberyNeeds', function(robname)
     local _source = source
@@ -519,7 +436,7 @@ AddEventHandler('Morphy_RobSystem:robberyNeeds', function(robname)
     if Config.Rob.Robs[robname].someonerobbing then
         TriggerClientEvent('esx:showNotification', _source, "Fardi Dar Hale Hack Ast .")
         return
-    end 
+    end
 
     if IsPoliceJob(xPlayer.job.name) then
         TriggerClientEvent('esx:showNotification', _source, "Azaye Organ Haye Nezami Tavanayi Dozdi Nadarand .",'error')
@@ -531,8 +448,6 @@ AddEventHandler('Morphy_RobSystem:robberyNeeds', function(robname)
         return
     end
 
-
-
     if (os.time() - Config.Rob.Robs[robname].lastRobbed) < Config.Rob.RobTypes[Config.Rob.Robs[robname].type].cooldown and Config.Rob.Robs[robname].lastRobbed ~= 0 then
         TriggerClientEvent('esx:showNotification', _source, "In Makan Qablan Azash Dozdi Shode Lotfan "..(Config.Rob.RobTypes[Config.Rob.Robs[robname].type].cooldown - (os.time() - Config.Rob.Robs[robname].lastRobbed)).." Sanie Sabr Konid Barai Dozdi Dobare" )
         return
@@ -541,8 +456,6 @@ AddEventHandler('Morphy_RobSystem:robberyNeeds', function(robname)
         TriggerClientEvent('esx:showNotification', _source, "Robbery Digari Dar Jarian Ast Lotfan "..(Config.Rob.RobTypes[Config.Rob.Robs[robname].type].successtime - (os.time() - Config.Rob.RobTypes[Config.Rob.Robs[robname].type].lastRobbed)).." Sanie Sabr Konid " )
         return
     end
-
-
 
     if Config.Rob.RobTypes[Config.Rob.Robs[robname].type].teammatesrequired ~= 0 then
         local InTeam,PlayerTeam,TeamID = exports["PartySystem"]:IsInTeam(_source)
@@ -579,7 +492,6 @@ AddEventHandler('Morphy_RobSystem:robberyNeeds', function(robname)
         end
     end
 
-
     local cops = 0
     for i=1, #xPlayers, 1 do
         local yPlayer = ESX.GetPlayerFromId(xPlayers[i])
@@ -603,7 +515,7 @@ AddEventHandler('Morphy_RobSystem:robberyNeeds', function(robname)
             TriggerClientEvent('esx:showNotification', _source, "Baraye Starte In Robbery Bayad Be tedade "..amount.." az "..itemname.." Dashte Bashid .")
             return
         end
-        
+
     end
     for itemname,amount in pairs(Config.Rob.RobTypes[Config.Rob.Robs[robname].type].itemneed) do
         xPlayer.removeInventoryItem(itemname, amount)
@@ -720,12 +632,10 @@ AddEventHandler('Morphy_RobSystem:robberyCancel', function(robname)
 
 end)
 
-
-
 function SetAlarmPolice(Name ,  typ , source )
     local xPlayers = ESX.GetPlayers()
-    if typ == 'start' then 
-        
+    if typ == 'start' then
+
         for i=1, #xPlayers, 1 do
             local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
             if IsPoliceJob(xPlayer.job.name)  then
@@ -733,28 +643,27 @@ function SetAlarmPolice(Name ,  typ , source )
             end
         end
         TriggerEvent('Unit:RobAlarm' , Name )
-    elseif typ  == 'end' then 
+    elseif typ  == 'end' then
         for i=1, #xPlayers, 1 do
             local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
             if IsPoliceJob(xPlayer.job.name)  then
               SendMessage( xPlayer.source , 'Az Dispatch be Tamai Vahed Ha Dar ^1' ..Config.Rob.Robs[Name].nameofrob .. '^0 Sareghan ^1Movafagh^0 Be Dozdi Shodand')
             end
         end
-    elseif typ  == 'cancel' then 
+    elseif typ  == 'cancel' then
         for i=1, #xPlayers, 1 do
             local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
             if IsPoliceJob(xPlayer.job.name) then
                 SendMessage( xPlayer.source , 'Az Dispatch be Tamai Vahed Ha Dar ^1' ..Config.Rob.Robs[Name].nameofrob .. '^0 Sareghan Dar Dozdi ^1Na Movafagh^0 Bodand')
             end
         end
-    end 
-end 
+    end
+end
 
 function SendMessage( src , msg )
     template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color:rgba(13, 196, 196, 0.4);  border-radius: 3px;">Dispatch   <br> '..msg..' <br> </div>'
     TriggerClientEvent('chat:addMessage', src , {template = template ,args = "."})
-end 
-
+end
 
 AddEventHandler('playerDropped', function(reason)
     local _source = source

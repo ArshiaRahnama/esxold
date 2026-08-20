@@ -1,20 +1,5 @@
 local glm = require 'glm'
 
----@class CZone
----@field id number
----@field coords vector3
----@field distance number
----@field __type 'poly' | 'sphere' | 'box'
----@field debugColour vector4?
----@field setDebug fun(self: CZone, enable?: boolean, colour?: vector)
----@field remove fun()
----@field contains fun(self: CZone, coords?: vector3): boolean
----@field onEnter fun(self: CZone)?
----@field onExit fun(self: CZone)?
----@field inside fun(self: CZone)?
----@field [string] any
-
----@type table<number, CZone>
 local Zones = {}
 _ENV.Zones = Zones
 
@@ -96,13 +81,10 @@ local function getTriangles(polygon)
     return triangles
 end
 
----@type table<number, CZone>
 local insideZones = {}
 
----@type CZone[] | Array
 local exitingZones = lib.array:new()
 
----@type CZone[] | Array
 local enteringZones = lib.array:new()
 
 local tick
@@ -239,7 +221,7 @@ end
 
 local function debugSphere(self)
     DrawMarker(28, self.coords.x, self.coords.y, self.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, self.radius, self.radius, self.radius, self.debugColour.r,
-        ---@diagnostic disable-next-line: param-type-mismatch
+
         self.debugColour.g, self.debugColour.b, self.debugColour.a, false, false, 0, false, false, false, false)
 end
 
@@ -293,7 +275,7 @@ local function setDebug(self, bool, colour)
 end
 
 lib.zones = {
-    ---@return CZone
+
     poly = function(data)
         data.id = #Zones + 1
         data.thickness = data.thickness or 4
@@ -374,7 +356,7 @@ lib.zones = {
         return data
     end,
 
-    ---@return CZone
+
     box = function(data)
         data.id = #Zones + 1
         data.coords = convertToVector(data.coords)
@@ -402,7 +384,7 @@ lib.zones = {
         return data
     end,
 
-    ---@return CZone
+
     sphere = function(data)
         data.id = #Zones + 1
         data.coords = convertToVector(data.coords)

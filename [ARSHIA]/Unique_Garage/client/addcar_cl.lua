@@ -1,14 +1,14 @@
--- ESX is already initialized globally by client.lua; no need to re-fetch it here.
+
 
 RegisterNetEvent('addDonationCar')
 AddEventHandler('addDonationCar', function(newOwner, plate, admin)
-	local vehicle = GetVehiclePedIsIn(PlayerPedId(), false) -- was PlayerPedId(-1): that's not a valid client-side call and always returned an empty vehicle, which is why /addcar never actually added anything
+	local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 	if vehicle == 0 then
 		SafeNotify('~r~Shoma Bayad Dakhele Mashin Bashid Ta Bekhahid Be Player Bedid!')
 		return
 	end
-	-- Fully repair the live vehicle before handing it over — otherwise if it already had 0 engine/body
-	-- health (e.g. spawned broken), the database row would say "healthy" but the actual car stays broken.
+
+
 	SetVehicleEngineHealth(vehicle, 1000.0)
 	SetVehicleBodyHealth(vehicle, 1000.0)
 	SetVehicleFixed(vehicle)
@@ -75,7 +75,7 @@ end)
 
 RegisterNetEvent('addGangCar')
 AddEventHandler('addGangCar', function(newOwner, plate, admin)
-	local vehicle = GetVehiclePedIsIn(PlayerPedId(), false) -- was PlayerPedId(-1), same bug as addDonationCar
+	local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 	if vehicle == 0 then
 		SafeNotify('~r~Shoma Bayad Dakhele Mashin Bashid!')
 		return

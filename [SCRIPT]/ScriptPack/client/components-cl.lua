@@ -102,7 +102,6 @@ local drumMagazines = {
 
 local PlayerProps = {}
 
-
 Citizen.CreateThread(function()
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -116,7 +115,7 @@ AddEventHandler('esx_components:useClipcli', function()
 		local ped = PlayerPedId()
 		if IsPedArmed(ped, 5) then
 			hash= GetSelectedPedWeapon(ped)
-			
+
 			if GetSelectedPedWeapon(ped)~=nil then
 			TriggerServerEvent('esx_components:remove', "clip")
 			AddAmmoToPed(PlayerPedId(), GetSelectedPedWeapon(ped), 25)
@@ -124,7 +123,7 @@ AddEventHandler('esx_components:useClipcli', function()
 			else
 			ESX.ShowNotification("hash aslahe mored nazar namaloom ast")
 			end
-			
+
 		else
 			ESX.ShowNotification("Shoma aslaheyi dar dast nadarid")
 		end
@@ -136,12 +135,12 @@ AddEventHandler('esx_components:useTint', function(info)
 	local ped = PlayerPedId()
 
 	if IsPedArmed(PlayerPedId(), 4) then
-		
+
 		local currentweapon = GetSelectedPedWeapon(PlayerPedId())
 		  SetPedWeaponTintIndex(PlayerPedId(), GetSelectedPedWeapon(PlayerPedId()), info.color)
 		  TriggerServerEvent('esx_components:remove', info.name)
 		  ESX.ShowNotification("~h~Shoma ba movafaghiat 1x ~g~" .. info.label .. " ~w~use kardid!")
-		
+
 	else
 		ESX.ShowNotification("Shoma aslaheyi dar dast nadarid")
 	end
@@ -153,14 +152,14 @@ AddEventHandler('esx_components:useExtendedMagazine', function()
 	local ped = PlayerPedId()
 
 	if IsPedArmed(PlayerPedId(), 4) then
-		
+
 		local weapon = GetSelectedPedWeapon(PlayerPedId())
 		if extendedClips[GetSelectedPedWeapon(PlayerPedId())] then
 			TriggerServerEvent('esx_components:addComponent', extendedClips[GetSelectedPedWeapon(PlayerPedId())])
 		else
 			ESX.ShowNotification("In aslahe extended magazine ra support nemikonad!")
 		end
-		
+
 	else
 		ESX.ShowNotification("Shoma aslaheyi dar dast nadarid")
 	end
@@ -171,14 +170,14 @@ AddEventHandler('esx_components:useDrumMagazine', function()
 	local ped = PlayerPedId()
 
 	if IsPedArmed(ped, 5) then
-		
+
 		local weapon = GetSelectedPedWeapon(PlayerPedId())
 		if drumMagazines[weapon] then
 			TriggerServerEvent('esx_components:addComponent', drumMagazines[weapon])
 		else
 			ESX.ShowNotification("In aslahe Drum magazine ra support nemikonad!")
 		end
-		
+
 	else
 		ESX.ShowNotification("Shoma aslaheyi dar dast nadarid")
 	end
@@ -190,14 +189,14 @@ AddEventHandler('esx_components:useSilencer', function()
 	local ped = PlayerPedId()
 
 	if IsPedArmed(ped, 5) then
-		
+
 		local weapon = GetSelectedPedWeapon(PlayerPedId())
 		if silencers[weapon] then
 			TriggerServerEvent('esx_components:addComponent', silencers[weapon])
 		else
 			ESX.ShowNotification("In aslahe silencer ra support nemikonad!")
 		end
-		
+
 	else
 		ESX.ShowNotification("Shoma aslaheyi dar dast nadarid")
 	end
@@ -208,14 +207,14 @@ AddEventHandler('esx_components:useFlashlight', function()
 	local ped = PlayerPedId()
 
 	if IsPedArmed(ped, 5) then
-		
+
 		local weapon = GetSelectedPedWeapon(PlayerPedId())
 		if flashlights[weapon] then
 			TriggerServerEvent('esx_components:addComponent', flashlights[weapon])
 		else
 			ESX.ShowNotification("In aslahe flashlight ra support nemikonad!")
 		end
-		
+
 	else
 		ESX.ShowNotification("Shoma aslaheyi dar dast nadarid")
 	end
@@ -226,14 +225,14 @@ AddEventHandler('esx_components:useGrip', function()
 	local ped = PlayerPedId()
 
 	if IsPedArmed(ped, 5) then
-		
+
 		local weapon = GetSelectedPedWeapon(PlayerPedId())
 		if grips[weapon] then
 			TriggerServerEvent('esx_components:addComponent', grips[weapon])
 		else
 			ESX.ShowNotification("In aslahe grip ra support nemikonad!")
 		end
-		
+
 	else
 		ESX.ShowNotification("Shoma aslaheyi dar dast nadarid")
 	end
@@ -243,7 +242,7 @@ RegisterCommand('deattach', function(source, args)
 	local ped = PlayerPedId()
 
 	if IsPedArmed(ped, 5) then
-		
+
 		if not args[1] then
 			TriggerEvent("chatMessage", "[SYSTEM]", {255, 0, 0}, "^0Shoma dar argument aval chizi vared nakardid!")
 			return
@@ -287,7 +286,7 @@ RegisterCommand('deattach', function(source, args)
 		else
 			TriggerEvent("chatMessage", "[SYSTEM]", {255, 0, 0}, "^0Argument vared shode eshtebah ast!")
 		end
-		
+
 	else
 		ESX.ShowNotification("Shoma aslaheyi dar dast nadarid")
 	end
@@ -303,7 +302,7 @@ AddEventHandler('esx_components:useYusuf', function()
 						yusuf = inventory[i].count
 					  end
 					end
-			
+
 			local ped = PlayerPedId()
 			local currentWeaponHash = GetSelectedPedWeapon(ped)
 
@@ -316,17 +315,17 @@ AddEventHandler('esx_components:useYusuf', function()
 						GiveWeaponComponentToPed(PlayerPedId(), GetHashKey("WEAPON_PISTOL50"), GetHashKey("COMPONENT_PISTOL50_VARMOD_LUXE"))
 						TriggerServerEvent('esx_components:remove', "yusuf")
 						ESX.ShowNotification("Shoma yek skin talaee estefade kardid")
-						
+
 					elseif currentWeaponHash == GetHashKey("WEAPON_SNSPISTOL") then
 						GiveWeaponComponentToPed(PlayerPedId(), GetHashKey("WEAPON_SNSPISTOL"), GetHashKey("COMPONENT_SNSPISTOL_VARMOD_LOWRIDER"))
 						TriggerServerEvent('esx_components:remove', "yusuf")
 						ESX.ShowNotification("Shoma yek skin talaee estefade kardid")
-						
+
 					elseif currentWeaponHash == GetHashKey("WEAPON_APPISTOL") then
-						GiveWeaponComponentToPed(PlayerPedId(), GetHashKey("WEAPON_APPISTOL"), GetHashKey("COMPONENT_APPISTOL_VARMOD_LUXE"))  
+						GiveWeaponComponentToPed(PlayerPedId(), GetHashKey("WEAPON_APPISTOL"), GetHashKey("COMPONENT_APPISTOL_VARMOD_LUXE"))
 						TriggerServerEvent('esx_components:remove', "yusuf")
 						ESX.ShowNotification("Shoma yek skin talaee estefade kardid")
-						
+
 					elseif currentWeaponHash == GetHashKey("WEAPON_HEAVYPISTOL") then
 						GiveWeaponComponentToPed(PlayerPedId(), GetHashKey("WEAPON_HEAVYPISTOL"), GetHashKey("COMPONENT_HEAVYPISTOL_VARMOD_LUXE"))
 						TriggerServerEvent('esx_components:remove', "yusuf")
@@ -346,27 +345,26 @@ AddEventHandler('esx_components:useYusuf', function()
 						GiveWeaponComponentToPed(PlayerPedId(), GetHashKey("WEAPON_ASSAULTRIFLE"), GetHashKey("COMPONENT_ASSAULTRIFLE_VARMOD_LUXE"))
 						TriggerServerEvent('esx_components:remove', "yusuf")
 						ESX.ShowNotification("Shoma yek skin talaee estefade kardid")
-						
+
 					elseif currentWeaponHash == GetHashKey("WEAPON_BULLPUPRIFLE") then
 						GiveWeaponComponentToPed(PlayerPedId(), GetHashKey("WEAPON_BULLPUPRIFLE"), GetHashKey("COMPONENT_BULLPUPRIFLE_VARMOD_LOW"))
 						TriggerServerEvent('esx_components:remove', "yusuf")
 						ESX.ShowNotification("Shoma yek skin talaee estefade kardid")
-						
+
 					elseif currentWeaponHash == GetHashKey("WEAPON_CARBINERIFLE") then
 						GiveWeaponComponentToPed(PlayerPedId(), GetHashKey("WEAPON_CARBINERIFLE"), GetHashKey("COMPONENT_CARBINERIFLE_VARMOD_LUXE"))
 						TriggerServerEvent('esx_components:remove', "yusuf")
 						ESX.ShowNotification("Shoma yek skin talaee estefade kardid")
-						
+
 					elseif currentWeaponHash == GetHashKey("WEAPON_ADVANCEDRIFLE") then
 						GiveWeaponComponentToPed(PlayerPedId(), GetHashKey("WEAPON_ADVANCEDRIFLE"), GetHashKey("COMPONENT_ADVANCEDRIFLE_VARMOD_LUXE"))
 						TriggerServerEvent('esx_components:remove', "yusuf")
 						ESX.ShowNotification("Shoma yek skin talaee estefade kardid")
-					
-					else 
+
+					else
 						ESX.ShowNotification("Aslahe mored nazar ghabeliat estefade kardan az skin talaee ra nadarad")
 					end
 end)
-
 
 function addDrunk()
 	drunkMuliplier = drunkMuliplier + 1
@@ -380,10 +378,10 @@ function overdose()
 
 	local playerPed = PlayerPedId()
 
-	RequestAnimSet("move_injured_generic") 
+	RequestAnimSet("move_injured_generic")
 	while not HasAnimSetLoaded("move_injured_generic") do
 	Citizen.Wait(1)
-	end    
+	end
 
 	ClearPedTasksImmediately(playerPed)
 	SetTimecycleModifier("spectator5")
@@ -392,7 +390,7 @@ function overdose()
 	SetPedIsDrunk(playerPed, true)
 	Citizen.Wait(30000)
 	clearEffects()
-	
+
 end
 
 function clearEffects()
@@ -405,33 +403,31 @@ function clearEffects()
 		ResetPedMovementClipset(playerPed, 0)
 		SetPedIsDrunk(playerPed, false)
 		SetPedMotionBlur(playerPed, false)
-	
+
 	  end)
 end
-
-
 
 function OnEmotePlay(EmoteName)
 	if not DoesEntityExist(PlayerPedId()) then
 	  return false
 	end
-  
+
 	  if IsPedArmed(PlayerPedId(), 7) then
 		SetCurrentPedWeapon(PlayerPedId(), GetHashKey('WEAPON_UNARMED'), true)
 	  end
-  
+
 	ChosenDict,ChosenAnimation,ename = table.unpack(EmoteName)
 	AnimationDuration = -1
-  
+
 	if PlayerHasProp then
 	  DestroyAllProps()
 	end
-  
+
 	if ChosenDict == "Expression" then
 	  SetFacialIdleAnimOverride(PlayerPedId(), ChosenAnimation, 0)
 	  return
 	end
-  
+
 	if ChosenDict == "MaleScenario" or "Scenario" then
 	  CheckGender()
 	  if ChosenDict == "MaleScenario" then
@@ -452,14 +448,14 @@ function OnEmotePlay(EmoteName)
 		ClearPedTasks(PlayerPedId())
 		TaskStartScenarioInPlace(PlayerPedId(), ChosenAnimation, 0, true)
 		IsInAnimation = true
-	  return end 
+	  return end
 	end
 
 	  LoadAnim(ChosenDict)
 	  if EmoteName.AnimationOptions.Drunk == true then
 		addDrunk()
 	  end
-  
+
 	  if EmoteName.AnimationOptions then
 		if EmoteName.AnimationOptions.EmoteLoop then
 		  MovementType = 1
@@ -472,14 +468,14 @@ function OnEmotePlay(EmoteName)
 	else
 	  MovementType = 0
 	end
-  
+
 	if EmoteName.AnimationOptions then
-	  if EmoteName.AnimationOptions.EmoteDuration == nil then 
+	  if EmoteName.AnimationOptions.EmoteDuration == nil then
 		EmoteName.AnimationOptions.EmoteDuration = -1
 	  else
 		AnimationDuration = EmoteName.AnimationOptions.EmoteDuration
 	  end
-  
+
 	  if EmoteName.AnimationOptions.Prop then
 		PropName = EmoteName.AnimationOptions.Prop
 		PropBone = EmoteName.AnimationOptions.PropBone
@@ -492,14 +488,14 @@ function OnEmotePlay(EmoteName)
 		else
 		  SecondPropEmote = false
 		end
-  
+
 		AddPropToPlayer(PropName, PropBone, PropPl1, PropPl2, PropPl3, PropPl4, PropPl5, PropPl6)
 		if SecondPropEmote then
 		  AddPropToPlayer(SecondPropName, SecondPropBone, SecondPropPl1, SecondPropPl2, SecondPropPl3, SecondPropPl4, SecondPropPl5, SecondPropPl6)
 		end
 	  end
 	end
-  
+
 	TaskPlayAnim(PlayerPedId(), ChosenDict, ChosenAnimation, 2.0, 2.0, AnimationDuration, MovementType, 0, false, false, false)
 	IsInAnimation = true
 	MostRecentDict = ChosenDict
@@ -510,21 +506,21 @@ function OnEmotePlay(EmoteName)
   CheckGender = function()
 	local hashSkinMale = GetHashKey("mp_m_freemode_01")
 	local hashSkinFemale = GetHashKey("mp_f_freemode_01")
-  
+
 	if GetEntityModel(PlayerPedId()) == hashSkinMale then
 	  PlayerGender = "male"
 	elseif GetEntityModel(PlayerPedId()) == hashSkinFemale then
 	  PlayerGender = "female"
 	end
   end
-  
+
   LoadAnim = function(dict)
 	while not HasAnimDictLoaded(dict) do
 	  RequestAnimDict(dict)
 	  Citizen.Wait(1)
 	end
   end
-  
+
   LoadPropDict = function(model)
 	RequestModel(GetHashKey(model))
 	while not HasModelLoaded(GetHashKey(model)) do
@@ -535,11 +531,11 @@ function OnEmotePlay(EmoteName)
   AddPropToPlayer = function(prop1, bone, off1, off2, off3, rot1, rot2, rot3)
 	local Player = PlayerPedId()
 	local x,y,z = table.unpack(GetEntityCoords(Player))
-  
+
 	if not HasModelLoaded(prop1) then
 	  LoadPropDict(prop1)
 	end
-  
+
 	prop = CreateObject(GetHashKey(prop1), x, y, z+0.2,  true,  true, true)
 	AttachEntityToEntity(prop, Player, GetPedBoneIndex(Player, bone), off1, off2, off3, rot1, rot2, rot3, true, true, false, true, 1, true)
 	table.insert(PlayerProps, prop)

@@ -1,5 +1,5 @@
 
--- Server Discord : https://discord.gg/3jzScCJZ5C
+
 ESX = nil
 local playersHealing = {}
 local reqs = {}
@@ -11,8 +11,8 @@ TriggerEvent('esx_society:registerSociety', 'ambulance', 'Ambulance', 'society_a
 RegisterServerEvent('esx_ambulancejob:revivex')
 AddEventHandler('esx_ambulancejob:revivex', function(target)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	
-	
+
+
 	if xPlayer.job.name == 'ambulance' and xPlayer.job.grade >= 1 then
 		xPlayer.addMoney(Config_ambulance.reviveReward)
 		TriggerClientEvent('esx_ambulancejob:revivex', target)
@@ -28,7 +28,7 @@ AddEventHandler('esx_ambulancejob:revivex', function(target)
 				CloseRequest_ambulance(k)
 			end
 		end
-		-- TriggerClientEvent('Quest-System:revive', source)
+
 	else
 		print(('esx_ambulancejob: %s attempted to revive!'):format(xPlayer.identifier))
 	end
@@ -54,7 +54,7 @@ end)
 RegisterServerEvent("GetDiagnosis")
 AddEventHandler("GetDiagnosis", function(id)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	if xPlayer.job.name == "ambulance" then 
+	if xPlayer.job.name == "ambulance" then
 		TriggerClientEvent("PassDiagnosis", id, source)
 	else
 		TriggerClientEvent("esx:showNotification", source, "Shoma Medic Nistid!")
@@ -88,10 +88,10 @@ AddEventHandler('esx_ambulancejob:getStockItem', function(itemName, count)
 
 		local inventoryItem = inventory.getItem(itemName)
 
-		-- is there enough in the society?
+
 		if count > 0 and inventoryItem.count >= count then
-		
-			-- can the player carry the said amount of x item?
+
+
 			if sourceItem.limit ~= -1 and (sourceItem.count + count) > sourceItem.limit then
 				TriggerClientEvent('esx:showNotification', _source, _U('quantity_invalid'))
 			else
@@ -111,8 +111,6 @@ AddEventHandler('esx_ambulancejob:getStockItem', function(itemName, count)
 
 end)
 
-
-
 RegisterServerEvent('esx_ambulancejob:putStockItems')
 AddEventHandler('esx_ambulancejob:putStockItems', function(itemName, count)
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -122,7 +120,7 @@ AddEventHandler('esx_ambulancejob:putStockItems', function(itemName, count)
 
 		local inventoryItem = inventory.getItem(itemName)
 
-		-- does the player have enough of the item?
+
 		if sourceItem.count >= count and count > 0 then
 			xPlayer.removeInventoryItem(itemName, count)
 			inventory.addItem(itemName, count)
@@ -155,28 +153,12 @@ ESX.RegisterServerCallback('esx_ambulancejob:getitem', function(source, cb, item
 	cb(quantity)
 end)
 
---[[
-ESX.RegisterServerCallback('esx_ambulancejob:checkMoney', function(source, cb)
-	local xPlayer = ESX.GetPlayerFromId(source)
-
-	--cb(xPlayer.removeMoney (1000))
-	local bool  = xPlayer.removeMoney(1000)
-	
-	if bool then 
-	if xPlayer.money >= 0 then
-			xPlayer.removeMoney(1000)
-		end
-	end
-
-end)
---]]
-
 ESX.RegisterServerCallback('esx_jafari:checkMoney', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	cb(xPlayer.get('money') >= 1000)
 	xPlayer.removeMoney(1000)
-	
+
 end)
 
 ESX.RegisterServerCallback('esx_gholi:checkMoney', function(source, cb)
@@ -184,13 +166,13 @@ ESX.RegisterServerCallback('esx_gholi:checkMoney', function(source, cb)
 
 	cb(xPlayer.get('money') >= 15000)
 	xPlayer.removeMoney(15000)
-	
-end)	
+
+end)
 
 RegisterServerEvent('esx_ambulancejob:synServerTestcDeadrpBodyx')
 AddEventHandler('esx_ambulancejob:synServerTestcDeadrpBodyx', function(ped, target)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	
+
 	if xPlayer.job.name == 'ambulance' and xPlayer.job.grade > 0 then
 		TriggerClientEvent('esx_ambulancejob:finishCPRx', target, ped)
 	else
@@ -219,7 +201,6 @@ AddEventHandler("esx_ambulancejob:drag", function(target)
 		print(('esx_ambulancejob: %s attempted to drag player!'):format(xPlayer.identifier))
 	end
 end)
-
 
 RegisterServerEvent("esx_ambulancejob:brancard")
 AddEventHandler("esx_ambulancejob:brancard", function(target)
@@ -306,7 +287,7 @@ ESX.RegisterServerCallback('esx_ambulancejob:removeItemsAfterRPDeath', function(
                 xPlayer.removeWeapon(weapon.name)
                 removed = removed .. weapon.name .. ' \n'
             else
-                table.insert(playerLoadout, weapon) 
+                table.insert(playerLoadout, weapon)
             end
         end
 
@@ -339,7 +320,6 @@ function isBlacklistedWeapon_ambulance(weaponName)
     end
     return false
 end
-
 
 TriggerEvent('es:addAdminCommand', 'backlife', 5, function(source, args, user)
 	local Target = tonumber(args[1])
@@ -379,7 +359,7 @@ TriggerEvent('es:addAdminCommand', 'backlife', 5, function(source, args, user)
 	else
 		TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'In Player Itemi Baraye Back Dadan Nadarad!' } })
 	end
-	
+
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
 end, { help = "Back New Life Items", params = {{ name = 'id' }} })
@@ -413,14 +393,14 @@ ESX.RegisterServerCallback('esx_ambulancejob:buyJobVehicle', function(source, cb
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local price = getPriceFromHash_ambulance(vehicleProps.model, xPlayer.job.grade_name, type)
 
-	-- vehicle model not found
+
 	if price == 0 then
 		print(('esx_ambulancejob: %s attempted to exploit the shop! (invalid vehicle model)'):format(xPlayer.identifier))
 		cb(false)
 	else
 		if xPlayer.money >= price then
 			xPlayer.removeMoney(price)
-	
+
 			MySQL.Async.execute('INSERT INTO owned_vehicles (owner, vehicle, plate, type, job, `stored`) VALUES (@owner, @vehicle, @plate, @type, @job, @stored)', {
 				['@owner'] = xPlayer.identifier,
 				['@vehicle'] = json.encode(vehicleProps),
@@ -540,19 +520,19 @@ AddEventHandler('esx_ambulancejob:giveItem', function(itemName)
 end)
 
 TriggerEvent('es:addAdminCommand', 'revive', 2, function(source, args, user)
-	
-	
+
+
 
 	if args[1] ~= nil then
-		
+
 		if GetPlayerName(tonumber(args[1])) ~= nil then
 			print(('esx_ambulancejob: %s used admin revive'):format(GetPlayerIdentifiers(source)[1]))
 			TriggerClientEvent('esx_ambulancejob:revivex', tonumber(args[1]))
-			
+
 			TriggerEvent('DiscordBot:ToDiscord', 'revive', "Revive By Admin", "```css\n[Admin : " .. GetPlayerName(source) .. " \nRevived : "..GetPlayerName(tonumber(args[1])).."("..tonumber(args[1])..")\n```",'user', source, true, false)
 		end
 	else
-		
+
 		TriggerClientEvent('esx_ambulancejob:revivex', source)
 		TriggerEvent('DiscordBot:ToDiscord', 'revive', "Revive By Admin", "```css\n[Admin : " .. GetPlayerName(source) .. " \nRevived : "..GetPlayerName(source).."("..source..")\n```",'user', source, true, false)
 	end
@@ -569,7 +549,7 @@ function CloseRequest_ambulance(id)
 		local req = reqs[reqid]
 		local identifier = GetPlayerIdentifier(source)
 		local ridentifier = req.owner.identifier
-		-- chats[identifier] = nil
+
 		chats[ridentifier] = nil
 		xPlayer = ESX.GetPlayerFromIdentifier(req.owner.identifier)
 		if xPlayer then
@@ -577,11 +557,11 @@ function CloseRequest_ambulance(id)
 		end
 		reqs[reqid] = nil
 
-		for k,v in pairs(GetPlayers()) do 
+		for k,v in pairs(GetPlayers()) do
 			local xxPlayer = ESX.GetPlayerFromId(v)
 			Wait(20)
 			if xxPlayer then
-				if xxPlayer.job.name == 'ambulance' then 
+				if xxPlayer.job.name == 'ambulance' then
 					TriggerClientEvent('chatMessage', xxPlayer.source, "[SYSTEM]", {255, 0, 0}, "Request : ^2"..xPlayer.name.."^0 | ^2"..xPlayer.source.."^0 Baste Shod")
 				end
 			end
@@ -597,7 +577,7 @@ ESX.RegisterUsableItem('medikit', function(source)
 	if not playersHealing[source] and xPlayer.job.name == 'ambulance' then
 		local xPlayer = ESX.GetPlayerFromId(source)
 		xPlayer.removeInventoryItem('medikit', 1)
-	
+
 		playersHealing[source] = true
 		TriggerClientEvent('esx_ambulancejob:useItem', source, 'medikit')
 
@@ -611,7 +591,7 @@ ESX.RegisterUsableItem('bandage', function(source)
 	if not playersHealing[source] and xPlayer.job.name == 'ambulance' then
 		local xPlayer = ESX.GetPlayerFromId(source)
 		xPlayer.removeInventoryItem('bandage', 1)
-	
+
 		playersHealing[source] = true
 		TriggerClientEvent('esx_ambulancejob:useItem', source, 'bandage')
 
@@ -629,7 +609,7 @@ ESX.RegisterServerCallback('esx_ambulancejob:getDeathStatus', function(source, c
 		if isDead then
 			print(('esx_ambulancejob: %s attempted combat logging!'):format(identifier))
 		end
-		if tonumber(isDead) == 0 then 
+		if tonumber(isDead) == 0 then
 			cb(false)
 		else
 			cb(true)
@@ -640,7 +620,7 @@ end)
 RegisterServerEvent('esx_ambulancejob:setDeathStatusx')
 AddEventHandler('esx_ambulancejob:setDeathStatusx', function(isDead)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	
+
 	if isDead ~= -1 then
 		xPlayer.set('IsDead', isDead)
 		xPlayer.set('Injure', isDead)
@@ -657,9 +637,6 @@ AddEventHandler('esx_ambulancejob:setDeathStatusx', function(isDead)
 		xPlayer.set('Injure', 'done')
 	end
 end)
-
-
-
 
 AddEventHandler('esx:playerLoaded', function(source)
 	local identifier = GetPlayerIdentifier(source)
@@ -711,7 +688,7 @@ RegisterServerEvent("esx_ambulancejob:creqs")
 AddEventHandler("esx_ambulancejob:creqs", function(id)
 	local reqid = id
 	local xPlayer = ESX.GetPlayerFromId(source)
-	-- if xPlayer.job.name == "ambulance" then
+
 		if reqs[reqid] then
 			local req = reqs[reqid]
 			local identifier = GetPlayerIdentifier(source)
@@ -728,9 +705,9 @@ AddEventHandler("esx_ambulancejob:creqs", function(id)
 		else
 			TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " Darkhast Mored Nazar Vojod Nadarad!")
 		end
-	-- else
-	-- 	TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma Dastresi Kafi Baraye Estefade Az In Dastor Ra Nadarid")
-	-- end
+
+
+
 end)
 
 RegisterServerEvent("esx_ambulancejob:areqs")
@@ -754,13 +731,13 @@ AddEventHandler("esx_ambulancejob:areqs", function(id)
 				req.respond.identifier = identifier
 				chats[identifier] = ridentifier
 				chats[ridentifier] = identifier
-				
+
 				TriggerClientEvent('esx:showNotification', source, "Shoma Darkhast " .. req.owner.name .. " Ra Ghabol Kardid!")
-				for k,v in pairs(GetPlayers()) do 
+				for k,v in pairs(GetPlayers()) do
 					local xxPlayer = ESX.GetPlayerFromId(v)
 					local xPlayer = ESX.GetPlayerFromId(source)
-					
-					if xxPlayer.job.name == "ambulance" then 
+
+					if xxPlayer.job.name == "ambulance" then
 						TriggerClientEvent('chatMessage', xxPlayer.source, "[SYSTEM]", {255, 0, 0}, "Darkhast ^2"..req.owner.name.." ^0|^2 "..req.owner.id.."^0 Tavasot : ^1"..xPlayer.name.." ^0|^1 "..xPlayer.source.." ^0Accept Shod")
 					end
 				end
@@ -770,7 +747,7 @@ AddEventHandler("esx_ambulancejob:areqs", function(id)
 					TriggerClientEvent('esx:showNotification', xPlayer.source, "Darkhast Shoma Ghabol Shod. Ambulance Dar Rah Ast")
 					TriggerClientEvent("esx_ambulancejob:addblip", xPlayer.source, source, coord)
 				end
-				
+
 			else
 				TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " In Darkhast Ghablan Tavasot Kasi Javab Dade Shode Ast!")
 			end
@@ -791,14 +768,14 @@ AddEventHandler("esx_ambulancejob:decline", function(id)
 		if reqs[reqid] then
 		local req = reqs[reqid]
 		local ridentifier = req.owner.identifier
-		
+
 		req.status = "open"
 		req.respond.name = "none"
 		req.respond.identifier = "none"
 		chats[identifier] = nil
 		chats[ridentifier] = nil
 		TriggerClientEvent('esx:showNotification', source, "Shoma req " .. req.owner.name .. " Ra Decline Kardid!")
-		
+
 		xPlayer = ESX.GetPlayerFromIdentifier(req.owner.identifier)
 		if xPlayer then
 			TriggerClientEvent('esx:showNotification', xPlayer.source, "Ambulance Darkhast Shoma Ro Cancel Kard Montazere Yek Ambulance Digar Bashid!")
@@ -866,7 +843,6 @@ ESX.RegisterServerCallback('esx_ambulancejob:icname', function(source, cb)
 	cb(name)
 end)
 
-
 function canRespond_ambulance(identifier)
 	for k,v in pairs(reqs) do
 		if v.respond.identifier == identifier then
@@ -886,8 +862,6 @@ function doesHaveReq_ambulance(identifier)
 
 	return false
 end
-
-
 
 function TableLength_ambulance(table)
 	local count = 0
@@ -951,7 +925,6 @@ ESX.RegisterServerCallback('esx_ambulancejob:buy', function(source, cb, amount)
 
 end)
 
-
 ESX.RegisterServerCallback('esx_ambulancejob:buyArmoryItem', function(source, cb, weaponName, removeWeapon, tedad)
 
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -978,7 +951,7 @@ ESX.RegisterServerCallback('esx_ambulancejob:buyArmoryItem', function(source, cb
 				break
 			end
 		end
-		
+
 		if not foundWeapon then
 			table.insert(weapons, {
 				name  = weaponName,
@@ -991,7 +964,6 @@ ESX.RegisterServerCallback('esx_ambulancejob:buyArmoryItem', function(source, cb
 	end)
 
 end)
-
 
 RegisterServerEvent('logmdVehicleSpawn')
 AddEventHandler('logmdVehicleSpawn', function(playerName, serverID, steamHex, vehicleModel, plateText, isspawn)
@@ -1023,7 +995,6 @@ AddEventHandler('logmdVehicleSpawn', function(playerName, serverID, steamHex, ve
 
 end)
 
-
 RegisterServerEvent('logmdPutItem')
 AddEventHandler('logmdPutItem', function(playerName, serverID, steamHex, itemLabel, itemCount)
     local discordWebhooks = {
@@ -1033,7 +1004,7 @@ AddEventHandler('logmdPutItem', function(playerName, serverID, steamHex, itemLab
 
     local logMessage = {
         {
-            ["color"] = 65280, 
+            ["color"] = 65280,
             ["title"] = "**📥 Gozashtan Item 📥**",
             ["fields"] = {
                 {["name"] = "👤 Player Name", ["value"] = playerName, ["inline"] = false},
@@ -1047,13 +1018,11 @@ AddEventHandler('logmdPutItem', function(playerName, serverID, steamHex, itemLab
     }
 
     for _, webhook in ipairs(discordWebhooks) do
-        PerformHttpRequest(webhook, function(err, text, headers) 
-           
+        PerformHttpRequest(webhook, function(err, text, headers)
+
         end, 'POST', json.encode({username = "Item Logs", embeds = logMessage}), { ['Content-Type'] = 'application/json' })
     end
 end)
-
-
 
 RegisterServerEvent('logmdGetItem')
 AddEventHandler('logmdGetItem', function(playerName, serverID, steamHex, itemLabel, itemCount)
@@ -1064,7 +1033,7 @@ AddEventHandler('logmdGetItem', function(playerName, serverID, steamHex, itemLab
 
     local logMessage = {
         {
-            ["color"] = 16711680, 
+            ["color"] = 16711680,
             ["title"] = "**📤 Bardashtan Item 📤**",
             ["fields"] = {
                 {["name"] = "👤 Player Name", ["value"] = playerName, ["inline"] = false},
@@ -1078,13 +1047,11 @@ AddEventHandler('logmdGetItem', function(playerName, serverID, steamHex, itemLab
     }
 
     for _, webhook in ipairs(discordWebhooks) do
-        PerformHttpRequest(webhook, function(err, text, headers) 
-            
+        PerformHttpRequest(webhook, function(err, text, headers)
+
         end, 'POST', json.encode({username = "Item Logs", embeds = logMessage}), { ['Content-Type'] = 'application/json' })
     end
 end)
-
-
 
 RegisterServerEvent('logmdBuyItem')
 AddEventHandler('logmdBuyItem', function(playerName, serverID, steamHex, itemLabel, itemCount, itemPrice)
@@ -1110,13 +1077,12 @@ AddEventHandler('logmdBuyItem', function(playerName, serverID, steamHex, itemLab
     }
 
     for _, webhook in ipairs(discordWebhooks) do
-        PerformHttpRequest(webhook, function(err, text, headers) 
-          
+        PerformHttpRequest(webhook, function(err, text, headers)
+
         end, 'POST', json.encode({username = "Item Logs", embeds = logMessage}), { ['Content-Type'] = 'application/json' })
     end
 
 end)
-
 
 function DiscordLogs_ambulance(messagess, titelss, grren)
 
@@ -1125,17 +1091,15 @@ function DiscordLogs_ambulance(messagess, titelss, grren)
 		"https:// arshiahub.ir/changeme/1349336980026298433/Pue-buDtNRNfvPYvEv7nU3YayMX11P-GSnQrZa7Gz5IhB6hSbHTkMGBMTcki8SixLvSc"
 	}
 
-
-
 	local colors = 0
-	
-	if grren then 
+
+	if grren then
 		colors = 65280
 	else
 		colors = 16711680
 	end
 
-	
+
 
     local logMessage = {
         {
@@ -1150,15 +1114,11 @@ function DiscordLogs_ambulance(messagess, titelss, grren)
     }
 
     for _, webhook in ipairs(discordWebhooks) do
-        PerformHttpRequest(webhook, function(err, text, headers) 
-         
+        PerformHttpRequest(webhook, function(err, text, headers)
+
         end, 'POST', json.encode({username = "Vehicle Logs", embeds = logMessage}), { ['Content-Type'] = 'application/json' })
     end
 end
-
-
-
-
 
 RegisterNetEvent('esx_ambulancejob:blingrequest')
 AddEventHandler('esx_ambulancejob:blingrequest', function(player, target, ammont)
@@ -1169,7 +1129,7 @@ end)
 RegisterNetEvent('esx_ambulancejob:ChatMessage')
 AddEventHandler('esx_ambulancejob:ChatMessage', function(target, player, Chek)
 
-	if Chek then 
+	if Chek then
 		TriggerClientEvent('chat:addMessage', target, { args = { '^1SYSTEM', 'Darkhast Ghabz Tavasot ID: ^2'..tonumber(player)..' ^0| ^2Ghabol ^0Shod' } })
 	else
 		TriggerClientEvent('chat:addMessage', target, { args = { '^1SYSTEM', 'Darkhast Ghabz Tavasot ID: ^1'..tonumber(player)..' ^0|^1Rad ^0Shod' } })

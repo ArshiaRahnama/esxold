@@ -27,14 +27,14 @@ local DragBrancard = false
 		  TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		  Citizen.Wait(1)
 	  end
-  
+
 	  while ESX.GetPlayerData().job == nil do
 		  Citizen.Wait(10)
 	  end
-  
+
 	  PlayerData = ESX.GetPlayerData()
   end)
-  
+
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
   PlayerData.job = job
@@ -68,26 +68,22 @@ function SetVehicleMaxMods2_ambulance(vehicle)
 		color2          = 0,
 		modTurbo        = true,
 	}
-	
+
 
 	ESX.Game.SetVehicleProperties(vehicle, props)
 	SetVehicleDirtLevel(vehicle, 0.0)
 end
-  
 
 
 
-
- 
 function OpenArmoryMenu_ambulance(station)
-
 
 	local elements = {
 		{label = _U('remove_object'),  value = 'get_stock'},
 		{label = _U('deposit_object'), value = 'put_stock'}
 	}
 
-	if PlayerData.job.name == "ambulance" and PlayerData.job.grade >= 10 then 
+	if PlayerData.job.name == "ambulance" and PlayerData.job.grade >= 10 then
 		table.insert(elements, {label = _U('buy_items'), value = 'buy_items'})
 
 	end
@@ -102,7 +98,6 @@ function OpenArmoryMenu_ambulance(station)
 		elements = elements,
 		},
 		function(data, menu)
-
 
 		if data.current.value == 'put_stock' then
 			OpenPutStocksMenu_ambulance()
@@ -126,9 +121,6 @@ function OpenArmoryMenu_ambulance(station)
 		end
 	)
 end
-  
-  
-
 
 
 
@@ -170,15 +162,14 @@ function OpenBuyItemsMenu_ambulance(station)
 				if hasEnoughMoney then
     ESX.TriggerServerCallback('esx_ambulancejob:buyArmoryItem', function()
     OpenBuyItemsMenu_ambulance(station)
-    
+
 
     local steamHex = ESX.GetPlayerData().identifier
-
 
     TriggerServerEvent('logmdBuyItem', ESX.GetPlayerData().name, GetPlayerServerId(PlayerId()), steamHex, data.current.label, math.floor(tonumber(tedad[1])), data.current.price * math.floor(tonumber(tedad[1])))
     end, data.current.value, false, math.floor(tonumber(tedad[1])))
 
-					
+
 
 				end
 
@@ -212,15 +203,13 @@ function OpenGetStocksMenu_ambulance()
             local dvisionName = GetDivisionName_ambulance(getdivision, job)
 
             ESX.TriggerServerCallback('esx_society:getDivisionItems', function(authorizedItems)
-               
+
                 if type(authorizedItems) ~= "table" then
                     authorizedItems = {}
                 end
 
-
                 ESX.TriggerServerCallback('esx_society:getItems', function(jobGradeItems)
                     local elements = {}
-
 
                     for _, item in ipairs(items) do
                         for _, sharedItem in ipairs(jobGradeItems) do
@@ -230,7 +219,6 @@ function OpenGetStocksMenu_ambulance()
                             end
                         end
                     end
-
 
                     for _, item in ipairs(items) do
                         for _, divisionItem in ipairs(authorizedItems) do
@@ -252,11 +240,9 @@ function OpenGetStocksMenu_ambulance()
                         end
                     end
 
-
                     if #elements == 0 then
                         table.insert(elements, {label = "Not Items", value = nil})
                     end
-
 
                     ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'stocks_menu', {
                         title = 'Bar Dasht Item',
@@ -282,13 +268,11 @@ function OpenGetStocksMenu_ambulance()
 
 								TriggerServerEvent('esx_ambulancejob:getStockItem', itemName, count)
 
-
 								local steamHex = ESX.GetPlayerData().identifier
-								
+
 
 								TriggerServerEvent('logmdGetItem', ESX.GetPlayerData().name, GetPlayerServerId(PlayerId()), steamHex, data.current.label, count)
-								
-															
+
 
 
                                 Citizen.Wait(300)
@@ -306,26 +290,25 @@ function OpenGetStocksMenu_ambulance()
         end, PlayerData.identifier)
     end)
 end
-  
 
 
-  
+
 function OpenPutStocksMenu_ambulance()
-  
+
 	ESX.TriggerServerCallback('esx_ambulancejob:getPlayerInventory', function(inventory)
-  
+
 	  local elements = {}
-  
+
 	  for i=1, #inventory.items, 1 do
-  
+
 		local item = inventory.items[i]
-  
+
 		if item.count > 0 then
 		  table.insert(elements, {label = item.label .. ' x' .. item.count, type = 'item_standard', value = item.name})
 		end
-  
+
 	  end
-  
+
 	  ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'stocks_menu',
 		{
@@ -334,18 +317,18 @@ function OpenPutStocksMenu_ambulance()
 		  elements = elements
 		},
 		function(data, menu)
-  
+
 		  local itemName = data.current.value
-  
+
 		  ESX.UI.Menu.Open(
 			'dialog', GetCurrentResourceName(), 'stocks_menu_put_item_count',
 			{
 			  title = _U('quantity')
 			},
 			function(data2, menu2)
-  
+
 			  local count = tonumber(data2.value)
-  
+
 			  if count == nil then
 				ESX.ShowNotification(_U('quantity_invalid'))
 			  else
@@ -353,51 +336,49 @@ function OpenPutStocksMenu_ambulance()
 				menu.close()
 				TriggerServerEvent('esx_ambulancejob:putStockItems', itemName, count)
 
-
 				local steamHex = ESX.GetPlayerData().identifier
-				
+
 
 				TriggerServerEvent('logmdPutItem', ESX.GetPlayerData().name, GetPlayerServerId(PlayerId()), steamHex, data.current.label, count)
-				
 
-  
+
+
 				Citizen.Wait(300)
 				OpenPutStocksMenu_ambulance()
 			  end
-  
+
 			end,
 			function(data2, menu2)
 			  menu2.close()
 			end
 		  )
-  
+
 		end,
 		function(data, menu)
 		  menu.close()
 		end
 	  )
-  
-	end)
-  
-end
 
+	end)
+
+end
 
 function PlayerRiveiveMenu_ambulance()
 	ESX.UI.Menu.CloseAll()
 	dataplayer = {}
 	local elements = {}
-	local nearbyPlayers = getNearbyPlayers_ambulance(2) 
+	local nearbyPlayers = getNearbyPlayers_ambulance(2)
 	local elements = {}
 	table.insert(elements, {label = "ID"  , value = " " })
 	local playerId22 = GetPlayerServerId(PlayerId())
 	local names = nil
-	
+
 	for _, player in ipairs(nearbyPlayers) do
-		local playerPed = GetPlayerPed(GetPlayerFromServerId(player.id)) 
-		local health = GetEntityHealth(playerPed) 
+		local playerPed = GetPlayerPed(GetPlayerFromServerId(player.id))
+		local health = GetEntityHealth(playerPed)
 		if player.id ~= playerId22 and health ~= 0 then
 			ESX.TriggerServerCallback("esx:checkInjure", function(IsDead)
-				if IsDead then 
+				if IsDead then
 					table.insert(elements, { label = "Player ID : " .. " [" .. player.id .. "]", value = player.id })
 				end
 			end, player.id)
@@ -414,23 +395,23 @@ function PlayerRiveiveMenu_ambulance()
 			elements = elements
 		}, function(data, menu)
 
-			if data.current.value ~= " " then 
-				
+			if data.current.value ~= " " then
+
 				local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
 				if closestPlayer == -1 or closestDistance > 2.0 then
 					ESX.ShowNotification("No players nearby!")
 				else
-					
+
 					local playerid = data.current.value
 
 					IsBusy = true
 						ESX.TriggerServerCallback('esx_ambulancejob:getItemAmount', function(quantity)
 							if quantity > 0 then
-								
+
 								local closestPlayerPed = GetPlayerPed(playerid)
 								ESX.TriggerServerCallback("esx:checkInjure", function(IsDead)
-									
+
 									if IsDead ~= false and IsDead ~= 'done' then
 										ESX.UI.Menu.CloseAll()
 										local camanimDict = "mini@cpr@char_a@cpr_def"
@@ -442,7 +423,7 @@ function PlayerRiveiveMenu_ambulance()
 											while not Ended do
 												Wait(1)
 												DisableControlAction(0, Keys['F1'],true)
-												--DisableControlAction(0, Keys['F2'],true)
+
 												DisableControlAction(0, Keys['F3'],true)
 												DisableControlAction(0, Keys['F5'],true)
 												DisableControlAction(0, Keys['R'], true)
@@ -453,26 +434,26 @@ function PlayerRiveiveMenu_ambulance()
 												DisableControlAction(0, Keys['X'], true)
 												DisableControlAction(0, Keys['SPACE'], true)
 												DisableControlAction(0, Keys['K'], true)
-												--DisableControlAction(0, Keys['E'], true)
-												DisableControlAction(0, 24, true) -- Attack
-												DisableControlAction(0, 257, true) -- Attack 2
-												DisableControlAction(0, 25, true) -- Right click
-												DisableControlAction(0, 47, true)  -- Disable weapon
-												DisableControlAction(0, 264, true) -- Disable melee
-												DisableControlAction(0, 257, true) -- Disable melee
-												DisableControlAction(0, 140, true) -- Disable melee
-												DisableControlAction(0, 141, true) -- Disable melee
-												DisableControlAction(0, 142, true) -- Disable melee
-												DisableControlAction(0, 143, true) -- Disable melee
-												DisableControlAction(0, 263, true) -- Melee Attack 1
-												DisableControlAction(0, 27, true) -- Arrow up
-												DisableControlAction(0, 23, true) -- Arrow up
-												DisableControlAction(0, 182, true) -- Arrow up
+
+												DisableControlAction(0, 24, true)
+												DisableControlAction(0, 257, true)
+												DisableControlAction(0, 25, true)
+												DisableControlAction(0, 47, true)
+												DisableControlAction(0, 264, true)
+												DisableControlAction(0, 257, true)
+												DisableControlAction(0, 140, true)
+												DisableControlAction(0, 141, true)
+												DisableControlAction(0, 142, true)
+												DisableControlAction(0, 143, true)
+												DisableControlAction(0, 263, true)
+												DisableControlAction(0, 27, true)
+												DisableControlAction(0, 23, true)
+												DisableControlAction(0, 182, true)
 											end
 										end)
 										ESX.Streaming.RequestAnimDict(camanimDict1)
 										ESX.Streaming.RequestAnimDict(camanimDict, function()
-											Citizen.Wait(500)		
+											Citizen.Wait(500)
 											TaskPlayAnim(playerPed, camanimDict, "cpr_intro", 8.0, 8.0, -1, 0, 0, false, false, false)
 											Citizen.Wait(15800)
 											TaskPlayAnim(playerPed, camanimDict1, "cpr_pumpchest", 8.0, 8.0, -1, 1, 0, false, false, false)
@@ -485,7 +466,7 @@ function PlayerRiveiveMenu_ambulance()
 										ESX.ShowNotification(_U('revive_inprogress'))
 										TriggerServerEvent('esx_ambulancejob:removeItem', 'medikit')
 										TriggerServerEvent('esx_ambulancejob:revivex', playerid)
-										-- Show revive award?
+
 										if Config_ambulance.reviveReward > 0 then
 											ESX.ShowNotification(_U('revive_complete_award', GetPlayerName(closestPlayer), Config_ambulance.reviveReward))
 										else
@@ -500,43 +481,43 @@ function PlayerRiveiveMenu_ambulance()
 							end
 							IsBusy = false
 						end, 'medikit')
-					
+
 					stopActiveMarker_ambulance()
-			
+
 					ESX.UI.Menu.CloseAll()
-						
-					
+
+
 				end
-				
-			
+
+
 		end
-			
+
 		end, function(data, menu)
 			menu.close()
 
-			
+
 		end, function(data, menu)
 			local tttrp = true
 			stopActiveMarker_ambulance()
 			Wait(5)
-			
+
 			local targetPlayer = GetPlayerPed(GetPlayerFromServerId(data.current.value))
 			activeMarkerThread = true
-			
+
 			local playerId22 = GetPlayerServerId(PlayerId())
 
 			while activeMarkerThread and tttrp do
 				if DoesEntityExist(targetPlayer) then
 					local coords = GetEntityCoords(targetPlayer)
 					if data.current.value ~= " " then
-						
+
 
 						DrawMarker(23, coords.x, coords.y, coords.z-1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7, 0.7, 0.7, 0, 255, 0, 100, false, true, 2, nil, nil, false)
-						
+
 						if IsControlJustPressed(0, 177) or IsControlJustPressed(0, 322) then
 							tttrp = false
 						end
-					else 
+					else
 
 					end
 				else
@@ -544,7 +525,7 @@ function PlayerRiveiveMenu_ambulance()
 				end
 				Wait(0)
 			end
-			
+
 		end,function()
 			OpenMobileAmbulanceActionsMenu_ambulance()
 		end
@@ -555,18 +536,18 @@ function PlayerSmalHealMenu_ambulance()
 	ESX.UI.Menu.CloseAll()
 	dataplayer = {}
 	local elements = {}
-	local nearbyPlayers = getNearbyPlayers_ambulance(2) 
+	local nearbyPlayers = getNearbyPlayers_ambulance(2)
 	local elements = {}
 	table.insert(elements, {label = "ID"  , value = " " })
 	local playerId22 = GetPlayerServerId(PlayerId())
 	local names = nil
-	
+
 	for _, player in ipairs(nearbyPlayers) do
-		local playerPed = GetPlayerPed(GetPlayerFromServerId(player.id)) 
-		local health = GetEntityHealth(playerPed) 
+		local playerPed = GetPlayerPed(GetPlayerFromServerId(player.id))
+		local health = GetEntityHealth(playerPed)
 		if player.id ~= playerId22 and health ~= 0 then
 			ESX.TriggerServerCallback("esx:checkInjure", function(IsDead)
-				if not IsDead then 
+				if not IsDead then
 					table.insert(elements, { label = "Player ID : " .. " [" .. player.id .. "]", value = player.id })
 				end
 			end, player.id)
@@ -583,14 +564,14 @@ function PlayerSmalHealMenu_ambulance()
 			elements = elements
 		}, function(data, menu)
 
-			if data.current.value ~= " " then 
-				
+			if data.current.value ~= " " then
+
 				local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
 				if closestPlayer == -1 or closestDistance > 2.0 then
 					ESX.ShowNotification("No players nearby!")
 				else
-					
+
 					local playerid = data.current.value
 
 					ESX.TriggerServerCallback('esx_ambulancejob:getItemAmount', function(quantity)
@@ -618,43 +599,43 @@ function PlayerSmalHealMenu_ambulance()
 							ESX.ShowNotification(_U('not_enough_medikit'))
 						end
 					end, 'medikit')
-					
+
 					stopActiveMarker_ambulance()
-			
+
 					ESX.UI.Menu.CloseAll()
-						
-					
+
+
 				end
-				
-			
+
+
 		end
-			
+
 		end, function(data, menu)
 			menu.close()
 
-			
+
 		end, function(data, menu)
 			local tttrp = true
 			stopActiveMarker_ambulance()
 			Wait(5)
-			
+
 			local targetPlayer = GetPlayerPed(GetPlayerFromServerId(data.current.value))
 			activeMarkerThread = true
-			
+
 			local playerId22 = GetPlayerServerId(PlayerId())
 
 			while activeMarkerThread and tttrp do
 				if DoesEntityExist(targetPlayer) then
 					local coords = GetEntityCoords(targetPlayer)
 					if data.current.value ~= " " then
-						
+
 
 						DrawMarker(23, coords.x, coords.y, coords.z-1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7, 0.7, 0.7, 0, 255, 0, 100, false, true, 2, nil, nil, false)
-						
+
 						if IsControlJustPressed(0, 177) or IsControlJustPressed(0, 322) then
 							tttrp = false
 						end
-					else 
+					else
 
 					end
 				else
@@ -662,7 +643,7 @@ function PlayerSmalHealMenu_ambulance()
 				end
 				Wait(0)
 			end
-			
+
 		end,function()
 			OpenMobileAmbulanceActionsMenu_ambulance()
 		end
@@ -673,18 +654,18 @@ function PlayerBigHealMenu_ambulance()
 	ESX.UI.Menu.CloseAll()
 	dataplayer = {}
 	local elements = {}
-	local nearbyPlayers = getNearbyPlayers_ambulance(2) 
+	local nearbyPlayers = getNearbyPlayers_ambulance(2)
 	local elements = {}
 	table.insert(elements, {label = "ID"  , value = " " })
 	local playerId22 = GetPlayerServerId(PlayerId())
 	local names = nil
-	
+
 	for _, player in ipairs(nearbyPlayers) do
-		local playerPed = GetPlayerPed(GetPlayerFromServerId(player.id)) 
-		local health = GetEntityHealth(playerPed) 
+		local playerPed = GetPlayerPed(GetPlayerFromServerId(player.id))
+		local health = GetEntityHealth(playerPed)
 		if player.id ~= playerId22 and health ~= 0 then
 			ESX.TriggerServerCallback("esx:checkInjure", function(IsDead)
-				if not IsDead then 
+				if not IsDead then
 					table.insert(elements, { label = "Player ID : " .. " [" .. player.id .. "]", value = player.id })
 				end
 			end, player.id)
@@ -701,14 +682,14 @@ function PlayerBigHealMenu_ambulance()
 			elements = elements
 		}, function(data, menu)
 
-			if data.current.value ~= " " then 
-				
+			if data.current.value ~= " " then
+
 				local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
 				if closestPlayer == -1 or closestDistance > 2.0 then
 					ESX.ShowNotification("No players nearby!")
 				else
-					
+
 					local playerid = data.current.value
 
 					ESX.TriggerServerCallback('esx_ambulancejob:getItemAmount', function(quantity)
@@ -733,43 +714,43 @@ function PlayerBigHealMenu_ambulance()
 							ESX.ShowNotification(_U('not_enough_bandage'))
 						end
 					end, 'bandage')
-					
+
 					stopActiveMarker_ambulance()
-			
+
 					ESX.UI.Menu.CloseAll()
-						
-					
+
+
 				end
-				
-			
+
+
 		end
-			
+
 		end, function(data, menu)
 			menu.close()
 
-			
+
 		end, function(data, menu)
 			local tttrp = true
 			stopActiveMarker_ambulance()
 			Wait(5)
-			
+
 			local targetPlayer = GetPlayerPed(GetPlayerFromServerId(data.current.value))
 			activeMarkerThread = true
-			
+
 			local playerId22 = GetPlayerServerId(PlayerId())
 
 			while activeMarkerThread and tttrp do
 				if DoesEntityExist(targetPlayer) then
 					local coords = GetEntityCoords(targetPlayer)
 					if data.current.value ~= " " then
-						
+
 
 						DrawMarker(23, coords.x, coords.y, coords.z-1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7, 0.7, 0.7, 0, 255, 0, 100, false, true, 2, nil, nil, false)
-						
+
 						if IsControlJustPressed(0, 177) or IsControlJustPressed(0, 322) then
 							tttrp = false
 						end
-					else 
+					else
 
 					end
 				else
@@ -777,7 +758,7 @@ function PlayerBigHealMenu_ambulance()
 				end
 				Wait(0)
 			end
-			
+
 		end,function()
 			OpenMobileAmbulanceActionsMenu_ambulance()
 		end
@@ -788,19 +769,19 @@ function PlayerBlingMenu_ambulance()
 	ESX.UI.Menu.CloseAll()
 	dataplayer = {}
 	local elements = {}
-	local nearbyPlayers = getNearbyPlayers_ambulance(3) 
+	local nearbyPlayers = getNearbyPlayers_ambulance(3)
 	local elements = {}
 	table.insert(elements, {label = "ID"  , value = " " })
 	local playerId22 = GetPlayerServerId(PlayerId())
 	local names = nil
-	
+
 	for _, player in ipairs(nearbyPlayers) do
-		local playerPed = GetPlayerPed(GetPlayerFromServerId(player.id)) 
-		local health = GetEntityHealth(playerPed) 
+		local playerPed = GetPlayerPed(GetPlayerFromServerId(player.id))
+		local health = GetEntityHealth(playerPed)
 		if player.id ~= playerId22 and health ~= 0 then
-			
+
             table.insert(elements, { label = "Player ID : " .. " [" .. player.id .. "]", value = player.id })
-			
+
 		end
 	end
 
@@ -814,14 +795,14 @@ function PlayerBlingMenu_ambulance()
 			elements = elements
 		}, function(data, menu)
 
-			if data.current.value ~= " " then 
-				
+			if data.current.value ~= " " then
+
 				local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
 				if closestPlayer == -1 or closestDistance > 2.0 then
 					ESX.ShowNotification("No players nearby!")
 				else
-					
+
 					local playerid = data.current.value
 
                     ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'billing', {
@@ -829,7 +810,7 @@ function PlayerBlingMenu_ambulance()
                     }, function(data2, menu2)
                         local amount = tonumber(data2.value)
                         if amount == nil then
-                            
+
                         else
                             menu2.close()
                             if closestPlayer == -1 or closestDistance > 2.0 then
@@ -842,46 +823,45 @@ function PlayerBlingMenu_ambulance()
                     end, function(data2, menu2)
                         menu2.close()
                     end)
-					
+
 					stopActiveMarker_ambulance()
-			
-					-- ESX.UI.Menu.CloseAll()
-						
-					
+
+
+
+
 				end
-				
-			
+
+
 		end
 
 
-        
-			
+
 		end, function(data, menu)
 			menu.close()
 
-			
+
 		end, function(data, menu)
 			local tttrp = true
 			stopActiveMarker_ambulance()
 			Wait(5)
-			
+
 			local targetPlayer = GetPlayerPed(GetPlayerFromServerId(data.current.value))
 			activeMarkerThread = true
-			
+
 			local playerId22 = GetPlayerServerId(PlayerId())
 
 			while activeMarkerThread and tttrp do
 				if DoesEntityExist(targetPlayer) then
 					local coords = GetEntityCoords(targetPlayer)
 					if data.current.value ~= " " then
-						
+
 
 						DrawMarker(23, coords.x, coords.y, coords.z-1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7, 0.7, 0.7, 0, 255, 0, 100, false, true, 2, nil, nil, false)
-						
+
 						if IsControlJustPressed(0, 177) or IsControlJustPressed(0, 322) then
 							tttrp = false
 						end
-					else 
+					else
 
 					end
 				else
@@ -889,7 +869,7 @@ function PlayerBlingMenu_ambulance()
 				end
 				Wait(0)
 			end
-			
+
 		end,function()
 
 		end
@@ -909,18 +889,18 @@ AddEventHandler('esx_ambulancejob:OpenMenuDialog', function(player, target, amou
                 {label = 'Bale', value = 'yes'},
                 {label = 'Kheir', value = 'no'},
             },
-        }, 
+        },
         function(data, menu)
             if data.current.value == 'yes' then
                 TriggerServerEvent('esx_billing:send2Bill2', target, player, 'society_ambulance', 'Ambulance', amount)
                 TriggerServerEvent("esx_ambulancejob:ChatMessage",target, player, true)
 
-                ESX.UI.Menu.CloseAll()		
+                ESX.UI.Menu.CloseAll()
             elseif data.current.value == 'no' then
-               
+
                 TriggerServerEvent("esx_ambulancejob:ChatMessage",target, player, false)
                 menu.close()
-                												
+
             end
         end
     )
@@ -947,13 +927,13 @@ function getNearbyPlayers_ambulance(radius)
     return players
 end
 
-local activeMarkerTarget = nil 
+local activeMarkerTarget = nil
 function stopActiveMarker_ambulance()
     if activeMarkerThread then
         activeMarkerThread = nil
     end
 end
-  
+
 local prop = nil
 function OpenMobileAmbulanceActionsMenu_ambulance()
 	ESX.TriggerServerCallback('esx_ambulancejob:list', function(tedad)
@@ -966,8 +946,8 @@ function OpenMobileAmbulanceActionsMenu_ambulance()
 			local playerjob =  ESX.GetPlayerData().job.name
 			for k, v in pairs(check) do
 				if v.job == playerjob then
-					if #check >= 1 then 
-						
+					if #check >= 1 then
+
 						isdivision = true
 						break
 					end
@@ -978,19 +958,14 @@ function OpenMobileAmbulanceActionsMenu_ambulance()
 				{label = 'Request List ('..tedad..')',   value = 'requests'},
 				{label = "Citizen Interaction's", value = 'citizen_interactions'},
 				{label = "Brancard Option's", value = 'brancardOP'},
-				-- {label = "Carry", value = 'drag'},
+
 				{label = "Put In Vehicle", value = 'put_in_vehicle'},
 				{label = "Out Of The Vehicle", value = 'put_out_vehicle'},
 			}
 
-			if isdivision then 
+			if isdivision then
 				table.insert(elements, {label = "Extera Division", value = 'extera_division'})
 			end
-
-
-
-
-
 
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'citizen_interaction', {
 				title    = _U('ems_menu_title'),
@@ -1021,11 +996,11 @@ function OpenMobileAmbulanceActionsMenu_ambulance()
 							else
 
 								PlayerRiveiveMenu_ambulance()
-								
+
 							end
 
 						elseif data3.current.value == 'jrh' then
-							
+
 							ExecuteCommand("jerahat")
 
 						elseif data3.current.value == 'small' then
@@ -1069,7 +1044,7 @@ function OpenMobileAmbulanceActionsMenu_ambulance()
 								local xo,yo,zo = table.unpack(GetEntityCoords(prop))
 								local distance = #(vector3(x,y,z) - vector3(xo,yo,zo))
 								if distance >= 1.5 then return ESX.ShowNotification("~r~Shoma Nazdit Berancard Nistid!") end
-								AttachEntityToEntity(prop, PlayerPedId(), GetPedBoneIndex(PlayerPedId(), 24817), -0.5, 1.5, 0.0, -170.0, -90.0, 0.0, true, true, true, true, 1, true)		
+								AttachEntityToEntity(prop, PlayerPedId(), GetPedBoneIndex(PlayerPedId(), 24817), -0.5, 1.5, 0.0, -170.0, -90.0, 0.0, true, true, true, true, 1, true)
 								loadAnimDict_ambulance("anim@heists@box_carry@")
 								TaskPlayAnim(GetPlayerPed(-1), "anim@heists@box_carry@", "idle", 2.0, 2.0, -1, 51, 0, false, false, false)
 								DragBrancard = true
@@ -1095,7 +1070,7 @@ function OpenMobileAmbulanceActionsMenu_ambulance()
 								ClearPedTasks(PlayerPedId())
 								local x,y,z = table.unpack(GetEntityCoords(PlayerPedId()))
 								prop = CreateObjectNoOffset(GetHashKey('prop_ld_binbag_01'), x, y, z+0.2, true, true, false)
-								AttachEntityToEntity(prop, PlayerPedId(), GetPedBoneIndex(PlayerPedId(), 24817), -0.5, 1.5, 0.0, -170.0, -90.0, 0.0, true, true, true, true, 1, true)		
+								AttachEntityToEntity(prop, PlayerPedId(), GetPedBoneIndex(PlayerPedId(), 24817), -0.5, 1.5, 0.0, -170.0, -90.0, 0.0, true, true, true, true, 1, true)
 								loadAnimDict_ambulance("anim@heists@box_carry@")
 								TaskPlayAnim(GetPlayerPed(-1), "anim@heists@box_carry@", "idle", 2.0, 2.0, -1, 51, 0, false, false, false)
 								DragBrancard = true
@@ -1125,7 +1100,7 @@ function OpenMobileAmbulanceActionsMenu_ambulance()
 						ESX.ShowNotification(_U('no_players'))
 					else
 						ExecuteCommand('carry')
-						-- TriggerServerEvent('esx_ambulancejob:drag', GetPlayerServerId(closestPlayer))
+
 					end
 				elseif data.current.value == 'put_in_vehicle' then
 					if closestPlayer == -1 or closestDistance > 1.0 then
@@ -1135,14 +1110,14 @@ function OpenMobileAmbulanceActionsMenu_ambulance()
 						TriggerServerEvent('carry:respone',false)
 						TriggerServerEvent('citizen:stopcarry', targetSrc)
 						TriggerEvent('carry:cascel', false)
-						
+
 						ClearPedSecondaryTask(PlayerPedId())
-			
+
 						DetachEntity(PlayerPedId(), true, false)
 
 						TriggerServerEvent('esx_ambulancejob:putInVehicle', GetPlayerServerId(closestPlayer))
-						
-						
+
+
 
 					end
 				elseif data.current.value == 'put_out_vehicle' then
@@ -1154,7 +1129,6 @@ function OpenMobileAmbulanceActionsMenu_ambulance()
 				elseif data.current.value == 'extera_division' then
 
 					OpendivisionsMenu_ambulance()
-
 
 				end
 			end, function(data, menu)
@@ -1179,7 +1153,7 @@ DisableActions = function()
 			DisableControlAction(0, Keys['N6'],true)
 			DisableControlAction(0, Keys['F3'],true)
 			DisableControlAction(0, Keys['Q'],true)
-			--DisableControlAction(0, Keys['F5'],true)
+
 			DisableControlAction(0, Keys['R'], true)
 			DisableControlAction(0, Keys['SPACE'], true)
 			DisableControlAction(0, Keys['LEFTSHIFT'], true)
@@ -1189,17 +1163,17 @@ DisableActions = function()
 			DisableControlAction(0, Keys['X'], true)
 			DisableControlAction(0, Keys['M'], true)
 			DisableControlAction(0, Keys['E'], true)
-			DisableControlAction(0, 24, true) -- Attack
-			DisableControlAction(0, 210, true) -- Attack
-			DisableControlAction(0, 257, true) -- Attack 2
-			DisableControlAction(0, 25, true) -- Right click
-			DisableControlAction(0, 264, true) -- Disable melee
-			DisableControlAction(0, 140, true) -- Disable melee
-			DisableControlAction(0, 141, true) -- Disable melee
-			DisableControlAction(0, 142, true) -- Disable melee
-			DisableControlAction(0, 143, true) -- Disable melee
-			DisableControlAction(0, 263, true) -- Melee Attack 1
-			DisableControlAction(0, 44, true) -- Melee Attack 1
+			DisableControlAction(0, 24, true)
+			DisableControlAction(0, 210, true)
+			DisableControlAction(0, 257, true)
+			DisableControlAction(0, 25, true)
+			DisableControlAction(0, 264, true)
+			DisableControlAction(0, 140, true)
+			DisableControlAction(0, 141, true)
+			DisableControlAction(0, 142, true)
+			DisableControlAction(0, 143, true)
+			DisableControlAction(0, 263, true)
+			DisableControlAction(0, 44, true)
 			loadAnimDict_ambulance("anim@heists@box_carry@")
 			if not IsEntityPlayingAnim(GetPlayerPed(-1), "anim@heists@box_carry@", "idle", 51) and DragBrancard then
 				TaskPlayAnim(GetPlayerPed(-1), "anim@heists@box_carry@", "idle", 2.0, 2.0, -1, 51, 0, false, false, false)
@@ -1221,7 +1195,6 @@ AddEventHandler('onResourceStop', function(resourceName)
 	end
 end)
 
-
 function loadAnimDict_ambulance(dict)
     while (not HasAnimDictLoaded(dict)) do
         RequestAnimDict(dict)
@@ -1233,11 +1206,7 @@ function FastTravel_ambulance(coords, heading)
 
 	local playerPed = PlayerPedId()
 
-
-
 	DoScreenFadeOut(800)
-
-
 
 	while not IsScreenFadedOut() do
 
@@ -1245,13 +1214,9 @@ function FastTravel_ambulance(coords, heading)
 
 	end
 
-
-
 	ESX.Game.Teleport(playerPed, coords, function()
 
 		DoScreenFadeIn(800)
-
-
 
 		if heading then
 
@@ -1263,16 +1228,12 @@ function FastTravel_ambulance(coords, heading)
 
 end
 
-
-
--- Draw markers & Marker logic
-
 Citizen.CreateThread(function()
 
 	while true do
 
 		Citizen.Wait(1)
-		
+
 		if PlayerData.job ~= nil and PlayerData.job.name == 'ambulance' then
 
 		local playerCoords = GetEntityCoords(PlayerPedId())
@@ -1281,18 +1242,13 @@ Citizen.CreateThread(function()
 
 		local currentHospital, currentPart, currentPartNum
 
-
 		for hospitalNum,hospital in pairs(Config_ambulance.Hospitals) do
 
 
 
-			-- Ambulance Actions
-
 			for k,v in ipairs(hospital.AmbulanceLebas) do
 
 				local distance = GetDistanceBetweenCoords(playerCoords, v, true)
-
-
 
 				if distance < Config_ambulance.DrawDistance then
 
@@ -1301,8 +1257,6 @@ Citizen.CreateThread(function()
 					letSleep = false
 
 				end
-
-
 
 				if distance < Config_ambulance.Marker.x then
 
@@ -1316,8 +1270,6 @@ Citizen.CreateThread(function()
 
 				local distance = GetDistanceBetweenCoords(playerCoords, v, true)
 
-
-
 				if distance < Config_ambulance.DrawDistance then
 
 					DrawMarker(Config_ambulance.MarkerBoss, v, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config_ambulance.Marker.x, Config_ambulance.Marker.y, Config_ambulance.Marker.z, Config_ambulance.Marker.r, Config_ambulance.Marker.g, Config_ambulance.Marker.b, Config_ambulance.Marker.a, false, false, 2, Config_ambulance.Marker.rotate, nil, nil, false)
@@ -1326,8 +1278,6 @@ Citizen.CreateThread(function()
 
 				end
 
-
-
 				if distance < Config_ambulance.Marker.x then
 
 					isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'AmbulanceBossAction', k
@@ -1335,12 +1285,10 @@ Citizen.CreateThread(function()
 				end
 
 			end
-			
+
 			for k,v in ipairs(hospital.Armory) do
 
 				local distance = GetDistanceBetweenCoords(playerCoords, v, true)
-
-
 
 				if distance < Config_ambulance.DrawDistance then
 
@@ -1349,8 +1297,6 @@ Citizen.CreateThread(function()
 					letSleep = false
 
 				end
-
-
 
 				if distance < Config_ambulance.Marker.x then
 
@@ -1362,13 +1308,9 @@ Citizen.CreateThread(function()
 
 
 
-			-- Pharmacies
-
 			for k,v in ipairs(hospital.Pharmacies) do
 
 				local distance = GetDistanceBetweenCoords(playerCoords, v, true)
-
-
 
 				if distance < Config_ambulance.DrawDistance then
 
@@ -1377,8 +1319,6 @@ Citizen.CreateThread(function()
 					letSleep = false
 
 				end
-
-
 
 				if distance < Config_ambulance.Marker.x then
 
@@ -1390,13 +1330,9 @@ Citizen.CreateThread(function()
 
 
 
-			-- Vehicle Spawners
-
 			for k,v in ipairs(hospital.Vehicles) do
 
 				local distance = GetDistanceBetweenCoords(playerCoords, v.Spawner, true)
-
-
 
 				if distance < Config_ambulance.DrawDistance then
 
@@ -1405,8 +1341,6 @@ Citizen.CreateThread(function()
 					letSleep = false
 
 				end
-
-
 
 				if distance < v.Marker.x then
 
@@ -1416,13 +1350,11 @@ Citizen.CreateThread(function()
 
 			end
 
-			-- Vehicle Spawners
+
 
 			for k,v in ipairs(hospital.VehiclesDeleter) do
 
 				local distance = GetDistanceBetweenCoords(playerCoords, v.Deleter, true)
-
-
 
 				if distance < Config_ambulance.DrawDistance then
 
@@ -1432,8 +1364,6 @@ Citizen.CreateThread(function()
 
 				end
 
-
-
 				if distance < v.Marker.x then
 
 					isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'VehiclesDeleter', k
@@ -1442,13 +1372,11 @@ Citizen.CreateThread(function()
 
 			end
 
-			-- Helicopter Spawners
+
 
 			for k,v in ipairs(hospital.Helicopters) do
 
 				local distance = GetDistanceBetweenCoords(playerCoords, v.Spawner, true)
-
-
 
 				if distance < Config_ambulance.DrawDistance then
 
@@ -1458,8 +1386,6 @@ Citizen.CreateThread(function()
 
 				end
 
-
-
 				if distance < v.Marker.x then
 
 					isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'Helicopters', k
@@ -1467,16 +1393,13 @@ Citizen.CreateThread(function()
 				end
 
 			end
-	
 
 
-			-- Fast Travels
+
 
 			for k,v in ipairs(hospital.FastTravels) do
 
 				local distance = GetDistanceBetweenCoords(playerCoords, v.From, true)
-
-
 
 				if distance < Config_ambulance.DrawDistance then
 
@@ -1485,10 +1408,6 @@ Citizen.CreateThread(function()
 					letSleep = false
 
 				end
-
-
-
-
 
 				if distance < v.Marker.x then
 
@@ -1500,13 +1419,9 @@ Citizen.CreateThread(function()
 
 
 
-			-- Fast Travels (Prompt)
-
 			for k,v in ipairs(hospital.FastTravelsPrompt) do
 
 				local distance = GetDistanceBetweenCoords(playerCoords, v.From, true)
-
-
 
 				if distance < Config_ambulance.DrawDistance then
 
@@ -1516,8 +1431,6 @@ Citizen.CreateThread(function()
 
 				end
 
-
-
 				if distance < v.Marker.x then
 
 					isInMarker, currentHospital, currentPart, currentPartNum = true, hospitalNum, 'FastTravelsPrompt', k
@@ -1526,17 +1439,11 @@ Citizen.CreateThread(function()
 
 			end
 
-
-
 		end
 
 
 
-		-- Logic for exiting & entering markers
-
 		if isInMarker and not HasAlreadyEnteredMarker or (isInMarker and (LastHospital ~= currentHospital or LastPart ~= currentPart or LastPartNum ~= currentPartNum)) then
-
-
 
 			if
 
@@ -1552,19 +1459,11 @@ Citizen.CreateThread(function()
 
 			end
 
-
-
 			HasAlreadyEnteredMarker, LastHospital, LastPart, LastPartNum = true, currentHospital, currentPart, currentPartNum
-
-
 
 			TriggerEvent('esx_ambulancejob:hasEnteredMarker', currentHospital, currentPart, currentPartNum)
 
-
-
 		end
-
-
 
 		if not hasExited and not isInMarker and HasAlreadyEnteredMarker then
 
@@ -1574,8 +1473,6 @@ Citizen.CreateThread(function()
 
 		end
 
-
-
 		if letSleep then
 
 			Citizen.Wait(500)
@@ -1584,7 +1481,7 @@ Citizen.CreateThread(function()
 
 	end
 	end
-	
+
 end)
 
 RegisterNetEvent('esx_ambulancejob:finishCPRx')
@@ -1593,7 +1490,7 @@ AddEventHandler('esx_ambulancejob:finishCPRx', function(ped)
 	local PlayerPed = GetPlayerPed(-1)
 	local coords    = GetEntityCoords(PlayerPed)
 	local head 		= GetEntityHeading(PlayerPed)
-	
+
 	local camanimDict = "mini@cpr@char_b@cpr_def"
 	local camanimDict1 = "mini@cpr@char_b@cpr_str"
 	local loadedanim = false
@@ -1610,7 +1507,7 @@ AddEventHandler('esx_ambulancejob:finishCPRx', function(ped)
 
 	ClearPedTasksImmediately(PlayerPed)
 	AttachEntityToEntity(PlayerPed, NersPed, 28422, -0.1, 1.15, 0.0, 0.0, 0.0, 75.0, false, false, false, true, 2, true)
-	
+
 	TaskPlayAnim(PlayerPed, camanimDict, "cpr_intro", 8.0, 8.0, -1, 0, 0, false, false, false)
 	Citizen.Wait(800)
 	DetachEntity(PlayerPed, true, false)
@@ -1649,7 +1546,7 @@ AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(hospital, part, pa
 			CurrentActionMsg = _U('open_pharmacy')
 
 			CurrentActionData = {}
-			
+
 		elseif part == 'Armory' then
 
 			CurrentAction = 'menu_armory'
@@ -1671,13 +1568,13 @@ AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(hospital, part, pa
 			if IsPedInAnyVehicle(GetPlayerPed(-1),  false) then
 
 				local vehicle = GetVehiclePedIsIn(GetPlayerPed(-1), false)
-		  
+
 				if DoesEntityExist(vehicle) then
 				  CurrentAction     = 'VehiclesDeleter'
 				  CurrentActionMsg  = '~INPUT_CONTEXT~ Baraye Park Kardan'
 				  CurrentActionData = {vehicle = vehicle}
 				end
-		  
+
 			end
 
 		elseif part == 'Helicopters' then
@@ -1692,8 +1589,6 @@ AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(hospital, part, pa
 
 			local travelItem = Config_ambulance.Hospitals[hospital][part][partNum]
 
-
-
 			CurrentAction = part
 
 			CurrentActionMsg = travelItem.Prompt
@@ -1706,8 +1601,6 @@ AddEventHandler('esx_ambulancejob:hasEnteredMarker', function(hospital, part, pa
 
 end)
 
-
-
 AddEventHandler('esx_ambulancejob:hasExitedMarker', function(hospital, part, partNum)
 
 	if not isInShopMenu then
@@ -1716,15 +1609,9 @@ AddEventHandler('esx_ambulancejob:hasExitedMarker', function(hospital, part, par
 
 	end
 
-
-
 	CurrentAction = nil
 
 end)
-
-
-
--- Key Controls
 
 Citizen.CreateThread(function()
 
@@ -1732,17 +1619,11 @@ Citizen.CreateThread(function()
 
 		Citizen.Wait(1)
 
-
-
 		if CurrentAction then
 
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
-
-
 			if IsControlJustReleased(0, Keys['E']) then
-
-
 
 				if CurrentAction == 'AmbulanceLebas' then
 
@@ -1751,24 +1632,24 @@ Citizen.CreateThread(function()
 				elseif CurrentAction == 'AmbulanceBossAction' then
 
 					TriggerEvent('esx_society:openBosscarysMenu', 'ambulance', function()
-						
+
 					end, {wash = false})
 
 				elseif CurrentAction == 'Pharmacy' then
 
 					OpenPharmacyMenu_ambulance()
 				elseif CurrentAction == 'menu_armory' then
-					
+
 					OpenArmoryMenu_ambulance(CurrentActionData.hospital)
-					
+
 				elseif CurrentAction == 'Vehicles' then
 
 					OpenVehicleSpawnerMenu_ambulance(CurrentActionData.hospital, CurrentActionData.partNum)
-					
+
 
 				elseif CurrentAction == 'VehiclesDeleter' then
-					
-					
+
+
 
 					local vehicleModel = GetEntityModel(CurrentActionData.vehicle)
 					local vehicleLabel = GetLabelText(GetDisplayNameFromVehicleModel(vehicleModel))
@@ -1777,9 +1658,9 @@ Citizen.CreateThread(function()
 					local playerPed = PlayerPedId()
                     local xPlayer = ESX.GetPlayerData()
 					ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
-	
+
 				TriggerServerEvent('logmdVehicleSpawn', xPlayer.name, GetPlayerServerId(PlayerId()), playerIdentifier, vehicleLabel, plate, false)
-				
+
 
 				elseif CurrentAction == 'Helicopters' then
 
@@ -1791,15 +1672,9 @@ Citizen.CreateThread(function()
 
 				end
 
-
-
 				CurrentAction = nil
 
-
-
 			end
-
-
 
 		elseif ESX.PlayerData.job ~= nil and ESX.PlayerData.job.name == 'ambulance' and not IsDead and not isDead then
 
@@ -1817,16 +1692,11 @@ Citizen.CreateThread(function()
 
 end)
 
-
-
-
-
-
 RegisterNetEvent('esx_ambulancejob:putInVehicle')
 AddEventHandler('esx_ambulancejob:putInVehicle', function()
 	local playerPed = PlayerPedId()
 	local coords    = GetEntityCoords(playerPed)
-	
+
 	if IsAnyVehicleNearPoint(coords, 5.0) then
 		local vehicle = GetClosestVehicle(coords, 5.0, 0, 71)
 		if DoesEntityExist(vehicle) then
@@ -1841,17 +1711,13 @@ AddEventHandler('esx_ambulancejob:putInVehicle', function()
 				TaskWarpPedIntoVehicle(playerPed, vehicle, freeSeat)
 
 				TriggerEvent("Unique_Scripts_HuD:changeStatus", true)
-				
-				
+
+
 			end
 		end
 	end
-	
+
 end)
-
-
-
-
 
 RegisterNetEvent('esx_ambulancejob:OutVehicle')
 AddEventHandler('esx_ambulancejob:OutVehicle', function()
@@ -1859,13 +1725,11 @@ AddEventHandler('esx_ambulancejob:OutVehicle', function()
 	if not IsPedSittingInAnyVehicle(playerPed) then
 		return
 	end
-	if ESX.GetPlayerData().IsDead then 
+	if ESX.GetPlayerData().IsDead then
 		local vehicle = GetVehiclePedIsIn(playerPed, false)
 		TaskLeaveVehicle(playerPed, vehicle, 16)
 	end
 end)
-
-
 
 local isDead = false
 AddEventHandler('esx:onPlayerDeath', function(data)
@@ -1963,17 +1827,15 @@ function OpenCloakroomMenu_ambulance()
 	ESX.TriggerServerCallback('esx_society:divisionsPlayer', function(check)
 		elements = {}
 
-
 		elements = {
-				
+
 			{label = _U('ems_clothes_ems'), value = 'ambulance_wear'},
-			
+
 			{label = _U('ems_clothes_civil'), value = 'citizen_wear'},
 
-			
+
 
 		}
-
 
 		for k, v in pairs(check) do
 
@@ -1982,10 +1844,10 @@ function OpenCloakroomMenu_ambulance()
                     label = 'Lebas Division',
 					diviname = v.name,
 					value = 'division_lebas',
-					
+
                 })
             end
-			
+
         end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'cloakroom', {
@@ -2001,9 +1863,9 @@ function OpenCloakroomMenu_ambulance()
 			if data.current.value == 'citizen_wear' then
 					local grade = PlayerData.job.grade_name
 					local name = PlayerData.job.name
-					
+
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
-					
+
 					TriggerEvent('skinchanger:loadSkin', skin)
 				end)
 
@@ -2011,7 +1873,7 @@ function OpenCloakroomMenu_ambulance()
 				local job =  PlayerData.job.name
 				local gradenum =  PlayerData.job.grade
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
-					ESX.TriggerServerCallback('esx_society:getUniforms', function(SkinMale, SkinFemale)-- get uniform from esx_society
+					ESX.TriggerServerCallback('esx_society:getUniforms', function(SkinMale, SkinFemale)
 
 					if skin.sex == 0 then
 						TriggerEvent('skinchanger:loadClothes', skin, SkinMale)
@@ -2023,7 +1885,7 @@ function OpenCloakroomMenu_ambulance()
 				end)
 
 			elseif data.current.value == 'division_lebas' then
-				
+
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
 					local job =  PlayerData.job.name
 					ESX.TriggerServerCallback('esx_society:getUniformsDivision', function(SkinMale, SkinFemale)
@@ -2035,7 +1897,7 @@ function OpenCloakroomMenu_ambulance()
 					end, data.current.diviname, job)
 					OpenCloakroomMenu_ambulance()
 				end)
-				
+
 
 			end
 
@@ -2051,122 +1913,19 @@ end
 
 
 
--- function OpenVehicleSpawnerMenu_ambulance(hospital, partNum)
-
-	
-
--- 			local shopCoords = Config_ambulance.Hospitals[hospital].Vehicles[partNum].InsideShop
-
--- 			local elements = {}
 
 
 
--- 			local grade = PlayerData.job.grade
--- 			local job = PlayerData.job.name
--- 			ESX.TriggerServerCallback('esx_society:getVehicles', function(authorizedVehicle)
-
--- 			local Vehicles = Config_ambulance.AuthorizedVehicles.Shared
-		
--- 			for i = 1, #Vehicles, 1 do
--- 			local found = false
--- 			if authorizedVehicle ~= nil then
--- 				for _,sharedVeh in ipairs(authorizedVehicle) do
--- 					if found then break end
--- 						if sharedVeh.model == Vehicles[i].model and sharedVeh.status == true then
--- 							table.insert(elements, {label = Vehicles[i].label, model = Vehicles[i].model})
--- 							found = true
--- 						end
--- 					end
--- 				end
--- 			end
 
 
 
--- 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_spawner',
-
--- 			{
-
--- 				title    = _U('garage_title'),
-
--- 				align    = 'bottom-right',
-
--- 				elements = elements
-
--- 			}, function(data, menu)
-
--- 				menu.close()
-
-	
-
--- 				local model   = data.current.model
-
--- 				local foundSpawn, spawnPoint = GetAvailableVehicleSpawnPoint_ambulance(hospital, 'Vehicles', partNum)
-
-	
-
--- 				if not DoesEntityExist(vehicle) then
-
-	
-
--- 					local playerPed = PlayerPedId()
 
 
 
--- 						if foundSpawn then
-
-	
-
--- 							ESX.Game.SpawnVehicle(model, spawnPoint.coords, spawnPoint.heading, function(vehicle)
-
--- 								TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
-
--- 								if model == "fbi2" then
-
--- 								 SetVehicleMods_ambulance(vehicle, true, 27, 27, 27)
-
--- 								else
-
--- 								 SetVehicleMods_ambulance(vehicle, false, nil, nil, nil)
-
--- 								end
-
--- 								Citizen.Wait(2000)
-
--- 								SetVehicleFuelLevel(vehicle, 100.0)
-
--- 							end)
 
 
 
--- 						else
 
--- 							ESX.ShowNotification(_U('garage_notavailable'))
-
--- 						end
-
-
-
--- 					end
-
-	
-
--- 			end, function(data, menu)
-
--- 				menu.close()
-
-	
-
--- 				CurrentAction     = 'menu_vehicle_spawner'
-
--- 				CurrentActionMsg  = _U('vehicle_spawner')
-
--- 				CurrentActionData = {station = station, partNum = partNum}
-
-	
-
--- 			end)
--- 	end, grade, job)
--- end
 
 
 
@@ -2181,20 +1940,18 @@ function OpenVehicleSpawnerMenu_ambulance(station, partNum)
 	local job = ESX.GetPlayerData().job.name
 	local steamhex = ESX.GetPlayerData().identifier
 	ESX.TriggerServerCallback('esx_society:getVehicles', function(authorizedVehicle)
-		
+
 		ESX.TriggerServerCallback('esx_society:GetDivisionsPlayer', function(getdivision)
 			dvisionName = nil
 
-			for k,v in pairs(getdivision) do 
-				if v.status and v.job == job then 
-					
+			for k,v in pairs(getdivision) do
+				if v.status and v.job == job then
+
 
 					dvisionName = v.name
 				end
 			end
 			ESX.TriggerServerCallback('esx_society:getVehiclesdivision', function(authorizedVehicledivision)
-			
-
 
 
 				local found = false
@@ -2204,7 +1961,7 @@ function OpenVehicleSpawnerMenu_ambulance(station, partNum)
 					for i = 1, #Vehicles, 1 do
 					local found = false
 
-				
+
 					if authorizedVehicle ~= nil then
 						for _,sharedVeh in ipairs(authorizedVehicle) do
 							if found then break end
@@ -2213,24 +1970,23 @@ function OpenVehicleSpawnerMenu_ambulance(station, partNum)
 									found = true
 
 
-									
 								end
 							end
-							
+
 						end
 					end
 
 				end
 
-				if authorizedVehicledivision then 
+				if authorizedVehicledivision then
 					table.insert(elements, {label = '------ Division ------', model = nil})
 					local nnname = nil
 					local Vehicles2 = Config_ambulance.AuthorizedVehicles.Shared
 					for i = 1, #Vehicles2, 1 do
 						nnname = nil
-						for t,vehs in pairs(authorizedVehicledivision) do 
+						for t,vehs in pairs(authorizedVehicledivision) do
 							for k,v in pairs(elements) do
-								if vehs.status and Vehicles2[i].model == vehs.model then 
+								if vehs.status and Vehicles2[i].model == vehs.model then
 									if v.model == vehs.model then
 										nnname = nil
 										break
@@ -2240,7 +1996,7 @@ function OpenVehicleSpawnerMenu_ambulance(station, partNum)
 								end
 							end
 							if nnname then
-								
+
 								table.insert(elements, {label = Vehicles2[i].label, model = Vehicles2[i].model})
 								break
 							end
@@ -2256,9 +2012,8 @@ function OpenVehicleSpawnerMenu_ambulance(station, partNum)
 				}, function(data, menu)
 					menu.close()
 
-
 					local model   = data.current.model
-					
+
 					if model then
 						if not DoesEntityExist(vehicle) then
 
@@ -2271,7 +2026,7 @@ function OpenVehicleSpawnerMenu_ambulance(station, partNum)
 
 									ESX.TriggerServerCallback('checkPlateInServer', function(plateExists)
 										if plateExists then
-											
+
 											local alert = lib.alertDialog({
 												header = 'Az In Plake Qablan Estefadeh Shode',
 												content = 'Aya Mikhahid Hazf Shavad?',
@@ -2288,7 +2043,7 @@ function OpenVehicleSpawnerMenu_ambulance(station, partNum)
 
 												Wait(1000)
 												spawnvehicles_ambulance(data, plate, vehicle, station, partNum)
-												
+
 											else
 												TriggerEvent('chat:addMessage', {
 													args = {'^1SYSTEM', 'Cancel Shod'}
@@ -2307,7 +2062,7 @@ function OpenVehicleSpawnerMenu_ambulance(station, partNum)
 												requestPlate()
 											end
 										end
-									end, "MD" .. plate[1]) 
+									end, "MD" .. plate[1])
 								end
 							end
 							requestPlate()
@@ -2322,24 +2077,23 @@ function OpenVehicleSpawnerMenu_ambulance(station, partNum)
 					CurrentAction     = 'menu_vehicle_spawner'
 					CurrentActionMsg  = _U('vehicle_spawner')
 					CurrentActionData = {station = station, partNum = partNum}
-					
+
 				end)
 			end, dvisionName, job)
 		end, steamhex)
 	end, grade, job)
 end
 
-
 function spawnvehicles_ambulance(data, plate, vehicle, station, partNum)
     plate[1] = string.upper(plate[1])
     local vehicles = Config_ambulance.Hospitals[station].Vehicles
     local vehicle = GetClosestVehicle(vehicles[partNum].SpawnPoints.x, vehicles[partNum].SpawnPoints.y, vehicles[partNum].SpawnPoints.z, 3.0, 0, 71)
-    
+
     ESX.Game.SpawnVehicleJobs(data.current.model, vehicles[partNum].SpawnPoints, vehicles[partNum].Heading, function(vehicle)
         if vehicle then
             local playerPed = PlayerPedId()
             local xPlayer = ESX.GetPlayerData()
-            local playerIdentifier = xPlayer.identifier 
+            local playerIdentifier = xPlayer.identifier
 
             if data.current.model == "insurgent2" or data.current.model == "riot2" or data.current.model == "riot" or data.current.model == "fbi2" or data.current.model == "fbi" then
                 SetVehicleMaxMods2_ambulance(vehicle)
@@ -2363,7 +2117,7 @@ function spawnvehicles_ambulance(data, plate, vehicle, station, partNum)
                     end
                 end
             end
-            
+
 
             SetVehicleLivery(vehicle, 2)
             Citizen.Wait(500)
@@ -2371,15 +2125,14 @@ function spawnvehicles_ambulance(data, plate, vehicle, station, partNum)
             TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
             Citizen.Wait(500)
             SetVehicleFuelLevel(vehicle, 100.0)
-            SetVehicleMaxMods_ambulance(vehicle) 
+            SetVehicleMaxMods_ambulance(vehicle)
             SetVehicleNumberPlateText(vehicle, "MD" .. plate[1])
 
-            local playerIdentifier = ESX.GetPlayerData().identifier 
+            local playerIdentifier = ESX.GetPlayerData().identifier
 			local vehicleModel = GetEntityModel(CurrentActionData.vehicle)
 			local vehicleLabel = GetLabelText(GetDisplayNameFromVehicleModel(vehicleModel))
 
             TriggerServerEvent('logmdVehicleSpawn', xPlayer.name, GetPlayerServerId(PlayerId()), playerIdentifier, vehicleLabel, "MD" .. plate[1], true)
-
 
             TriggerEvent('chat:addMessage', {
                 args = {'^1SYSTEM', 'Mashin Ba Plake^2 MD'..plate[1]..' ^0Spawn Shod'}
@@ -2393,23 +2146,15 @@ function spawnvehicles_ambulance(data, plate, vehicle, station, partNum)
     end)
 end
 
-
-
-
-
 function StoreNearbyVehicle_ambulance(playerCoords)
 
 	local vehicles, vehiclePlates = ESX.Game.GetVehiclesInArea(playerCoords, 30.0), {}
-
-
 
 	if #vehicles > 0 then
 
 		for k,v in ipairs(vehicles) do
 
 
-
-			-- Make sure the vehicle we're saving is empty, or else it wont be deleted
 
 			if GetVehicleNumberOfPassengers(v) == 0 and IsVehicleSeatFree(v, -1) then
 
@@ -2420,8 +2165,6 @@ function StoreNearbyVehicle_ambulance(playerCoords)
 					plate = ESX.Math.Trim(GetVehicleNumberPlateText(v))
 
 				})
-
-
 
 			end
 
@@ -2435,8 +2178,6 @@ function StoreNearbyVehicle_ambulance(playerCoords)
 
 	end
 
-
-
 	ESX.TriggerServerCallback('esx_ambulancejob:storeNearbyVehicle', function(storeSuccess, foundNum)
 
 		if storeSuccess then
@@ -2447,10 +2188,7 @@ function StoreNearbyVehicle_ambulance(playerCoords)
 
 			ESX.Game.DeleteVehicle(vehicleId.vehicle)
 
-
 			IsBusy = true
-
-
 
 			Citizen.CreateThread(function()
 
@@ -2466,8 +2204,6 @@ function StoreNearbyVehicle_ambulance(playerCoords)
 
 
 
-			-- Workaround for vehicle not deleting when other players are near it.
-
 			while DoesEntityExist(vehicleId.vehicle) do
 
 				Citizen.Wait(500)
@@ -2476,15 +2212,11 @@ function StoreNearbyVehicle_ambulance(playerCoords)
 
 
 
-				-- Give up
-
 				if attempts > 30 then
 
 					break
 
 				end
-
-
 
 				vehicles = ESX.Game.GetVehiclesInArea(playerCoords, 30.0)
 
@@ -2496,7 +2228,6 @@ function StoreNearbyVehicle_ambulance(playerCoords)
 
 							ESX.Game.DeleteVehicle(v)
 
-							
 
 
 							break
@@ -2508,8 +2239,6 @@ function StoreNearbyVehicle_ambulance(playerCoords)
 				end
 
 			end
-
-
 
 			IsBusy = false
 
@@ -2525,15 +2254,11 @@ function StoreNearbyVehicle_ambulance(playerCoords)
 
 end
 
-
-
 function GetAvailableVehicleSpawnPoint_ambulance(hospital, part, partNum)
 
 	local spawnPoints = Config_ambulance.Hospitals[hospital][part][partNum].SpawnPoints
 
 	local found, foundSpawnPoint = false, nil
-
-
 
 	for i=1, #spawnPoints, 1 do
 
@@ -2546,8 +2271,6 @@ function GetAvailableVehicleSpawnPoint_ambulance(hospital, part, partNum)
 		end
 
 	end
-
-
 
 	if found then
 
@@ -2563,10 +2286,6 @@ function GetAvailableVehicleSpawnPoint_ambulance(hospital, part, partNum)
 
 end
 
-
-
-
-
 function OpenheliSpawnerMenu_ambulance(station, partNum)
 	local vehicles = Config_ambulance.Hospitals[station].Helicopters
 	ESX.UI.Menu.CloseAll()
@@ -2579,16 +2298,14 @@ function OpenheliSpawnerMenu_ambulance(station, partNum)
 	ESX.TriggerServerCallback('esx_society:getHelis', function(authorizedVehicle)
 		ESX.TriggerServerCallback('esx_society:GetDivisionsPlayer', function(getdivision)
 			dvisionName = nil
-			for k,v in pairs(getdivision) do 
-				if v.status and v.job == job then 
-					
+			for k,v in pairs(getdivision) do
+				if v.status and v.job == job then
+
 
 					dvisionName = v.name
 				end
 			end
 			ESX.TriggerServerCallback('esx_society:getHelisdivision', function(authorizedVehicledivision)
-			
-
 
 
 				local found = false
@@ -2598,7 +2315,7 @@ function OpenheliSpawnerMenu_ambulance(station, partNum)
 					for i = 1, #Vehicles, 1 do
 					local found = false
 
-				
+
 					if authorizedVehicle ~= nil then
 						for _,sharedVeh in ipairs(authorizedVehicle) do
 							if found then break end
@@ -2607,24 +2324,23 @@ function OpenheliSpawnerMenu_ambulance(station, partNum)
 									found = true
 
 
-									
 								end
 							end
-							
+
 						end
 					end
 
 				end
 
-				if authorizedVehicledivision then 
+				if authorizedVehicledivision then
 					table.insert(elements, {label = '------ Division ------', model = nil})
 					local nnname = nil
 					local Vehicles2 = Config_ambulance.AuthorizedVehicles.Sharedheli
 					for i = 1, #Vehicles2, 1 do
 						nnname = nil
-						for t,vehs in pairs(authorizedVehicledivision) do 
+						for t,vehs in pairs(authorizedVehicledivision) do
 							for k,v in pairs(elements) do
-								if vehs.status and Vehicles2[i].model == vehs.model then 
+								if vehs.status and Vehicles2[i].model == vehs.model then
 									if v.model == vehs.model then
 										nnname = nil
 										break
@@ -2634,7 +2350,7 @@ function OpenheliSpawnerMenu_ambulance(station, partNum)
 								end
 							end
 							if nnname then
-								
+
 								table.insert(elements, {label = Vehicles2[i].label, model = Vehicles2[i].model})
 								break
 							end
@@ -2650,9 +2366,8 @@ function OpenheliSpawnerMenu_ambulance(station, partNum)
 				}, function(data, menu)
 					menu.close()
 
-
 					local model   = data.current.model
-					
+
 					if model then
 						if not DoesEntityExist(vehicle) then
 
@@ -2665,7 +2380,7 @@ function OpenheliSpawnerMenu_ambulance(station, partNum)
 
 									ESX.TriggerServerCallback('checkPlateInServer', function(plateExists)
 										if plateExists then
-											
+
 											local alert = lib.alertDialog({
 												header = 'Az In Plake Qablan Estefadeh Shode',
 												content = 'Aya Mikhahid Hazf Shavad?',
@@ -2682,7 +2397,7 @@ function OpenheliSpawnerMenu_ambulance(station, partNum)
 
 												Wait(1000)
 												spawnheliss_ambulance(data, plate, vehicle, station, partNum)
-												
+
 											else
 												TriggerEvent('chat:addMessage', {
 													args = {'^1SYSTEM', 'Cancel Shod'}
@@ -2701,7 +2416,7 @@ function OpenheliSpawnerMenu_ambulance(station, partNum)
 												requestPlate()
 											end
 										end
-									end, "MD" .. plate[1]) 
+									end, "MD" .. plate[1])
 								end
 							end
 
@@ -2716,7 +2431,7 @@ function OpenheliSpawnerMenu_ambulance(station, partNum)
 					CurrentAction     = 'menu_heli_spawner'
 					CurrentActionMsg  = _U('heli_spawner')
 					CurrentActionData = {station = station, partNum = partNum}
-					
+
 				end)
 			end, dvisionName, job)
 		end, PlayerData.identifier)
@@ -2753,19 +2468,19 @@ function spawnheliss_ambulance(data, plate, vehicle, station, partNum)
 					end
 				end
 			end
-			
 
-			
+
+
 			SetVehicleLivery(vehicle, 2)
 			Citizen.Wait(500)
 			SetVehicleLivery(vehicle, 2)
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 			Citizen.Wait(500)
 			SetVehicleFuelLevel(vehicle, 100.0)
-			SetVehicleMaxMods_ambulance(vehicle) 
+			SetVehicleMaxMods_ambulance(vehicle)
 			SetVehicleNumberPlateText(vehicle, "MD" ..plate[1] )
 
-            local playerIdentifier = ESX.GetPlayerData().identifier 
+            local playerIdentifier = ESX.GetPlayerData().identifier
 			local vehicleModel = GetEntityModel(CurrentActionData.vehicle)
 			local vehicleLabel = GetLabelText(GetDisplayNameFromVehicleModel(vehicleModel))
 			local playerPed = PlayerPedId()
@@ -2773,7 +2488,7 @@ function spawnheliss_ambulance(data, plate, vehicle, station, partNum)
 
             TriggerServerEvent('logmdVehicleSpawn', xPlayer.name, GetPlayerServerId(PlayerId()), playerIdentifier, vehicleLabel, "MD" .. plate[1], true)
 
-			
+
 
 			TriggerEvent('chat:addMessage', {
 				args = {'^1SYSTEM', 'Heli Ba Plake^2 MD'..plate[1]..' ^0Spawn Shod'}
@@ -2788,15 +2503,11 @@ function spawnheliss_ambulance(data, plate, vehicle, station, partNum)
 
 end
 
-
-
 function OpenShopMenu_ambulance(elements, restoreCoords, shopCoords)
 
 	local playerPed = PlayerPedId()
 
 	isInShopMenu = true
-
-
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_shop', {
 
@@ -2807,8 +2518,6 @@ function OpenShopMenu_ambulance(elements, restoreCoords, shopCoords)
 		elements = elements
 
 	}, function(data, menu)
-
-
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'vehicle_shop_confirm', {
 
@@ -2826,8 +2535,6 @@ function OpenShopMenu_ambulance(elements, restoreCoords, shopCoords)
 
 		}, function(data2, menu2)
 
-
-
 			if data2.current.value == 'yes' then
 
 				local newPlate = exports['esx_vehicleshop']:GeneratePlate()
@@ -2838,21 +2545,17 @@ function OpenShopMenu_ambulance(elements, restoreCoords, shopCoords)
 
 				props.plate    = newPlate
 
-
-
 				ESX.TriggerServerCallback('esx_ambulancejob:buyJobVehicle', function (bought)
 
 					if bought then
 
 						ESX.ShowNotification(_U('vehicleshop_bought', data.current.name, ESX.Math.GroupDigits(data.current.price)))
 
-
-
 						isInShopMenu = false
 
 						ESX.UI.Menu.CloseAll()
 
-				
+
 
 						DeleteSpawnedVehicles_ambulance()
 
@@ -2860,7 +2563,7 @@ function OpenShopMenu_ambulance(elements, restoreCoords, shopCoords)
 
 						SetEntityVisible(playerPed, true)
 
-				
+
 
 						ESX.Game.Teleport(playerPed, restoreCoords)
 
@@ -2880,15 +2583,11 @@ function OpenShopMenu_ambulance(elements, restoreCoords, shopCoords)
 
 			end
 
-
-
 		end, function(data2, menu2)
 
 			menu2.close()
 
 		end)
-
-
 
 		end, function(data, menu)
 
@@ -2896,23 +2595,17 @@ function OpenShopMenu_ambulance(elements, restoreCoords, shopCoords)
 
 		ESX.UI.Menu.CloseAll()
 
-
-
 		DeleteSpawnedVehicles_ambulance()
 
 		FreezeEntityPosition(playerPed, false)
 
 		SetEntityVisible(playerPed, true)
 
-
-
 		ESX.Game.Teleport(playerPed, restoreCoords)
 
 	end, function(data, menu)
 
 		DeleteSpawnedVehicles_ambulance()
-
-
 
 		WaitForVehicleToLoad_ambulance(data.current.model)
 
@@ -2928,8 +2621,6 @@ function OpenShopMenu_ambulance(elements, restoreCoords, shopCoords)
 
 	end)
 
-
-
 	WaitForVehicleToLoad_ambulance(elements[1].model)
 
 	ESX.Game.SpawnLocalVehicle(elements[1].model, shopCoords, 0.0, function(vehicle)
@@ -2944,21 +2635,17 @@ function OpenShopMenu_ambulance(elements, restoreCoords, shopCoords)
 
 end
 
-
-
 Citizen.CreateThread(function()
 
 	while true do
 
 		Citizen.Wait(1)
 
-
-
 		if isInShopMenu then
 
-			DisableControlAction(0, 75, true)  -- Disable exit vehicle
+			DisableControlAction(0, 75, true)
 
-			DisableControlAction(27, 75, true) -- Disable exit vehicle
+			DisableControlAction(27, 75, true)
 
 		else
 
@@ -2970,8 +2657,6 @@ Citizen.CreateThread(function()
 
 end)
 
-
-
 function DeleteSpawnedVehicles_ambulance()
 
 	while #spawnedVehicles > 0 do
@@ -2980,33 +2665,23 @@ function DeleteSpawnedVehicles_ambulance()
 
 		ESX.Game.DeleteVehicle(vehicle)
 
-
-
 		table.remove(spawnedVehicles, 1)
 
 	end
 
 end
 
-
-
 function WaitForVehicleToLoad_ambulance(modelHash)
 
 	modelHash = (type(modelHash) == 'number' and modelHash or GetHashKey(modelHash))
-
-
 
 	if not HasModelLoaded(modelHash) then
 
 		RequestModel(modelHash)
 
-
-
 		while not HasModelLoaded(modelHash) do
 
 			Citizen.Wait(1)
-
-
 
 			DisableControlAction(0, Keys['TOP'], true)
 
@@ -3016,11 +2691,9 @@ function WaitForVehicleToLoad_ambulance(modelHash)
 
 			DisableControlAction(0, Keys['RIGHT'], true)
 
-			DisableControlAction(0, 176, true) -- ENTER key
+			DisableControlAction(0, 176, true)
 
 			DisableControlAction(0, Keys['BACKSPACE'], true)
-
-
 
 			drawLoadingText_ambulance(_U('vehicleshop_awaiting_model'), 255, 255, 255, 255)
 
@@ -3029,8 +2702,6 @@ function WaitForVehicleToLoad_ambulance(modelHash)
 	end
 
 end
-
-
 
 function drawLoadingText_ambulance(text, red, green, blue, alpha)
 
@@ -3050,8 +2721,6 @@ function drawLoadingText_ambulance(text, red, green, blue, alpha)
 
 	SetTextCentre(true)
 
-
-
 	BeginTextCommandDisplayText("STRING")
 
 	AddTextComponentSubstringPlayerName(text)
@@ -3060,13 +2729,9 @@ function drawLoadingText_ambulance(text, red, green, blue, alpha)
 
 end
 
-
-
 function OpenPharmacyMenu_ambulance()
 
 	ESX.UI.Menu.CloseAll()
-
-
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'pharmacy', {
 
@@ -3094,23 +2759,15 @@ function OpenPharmacyMenu_ambulance()
 
 end
 
-
-
 function WarpPedInClosestVehicle_ambulance(ped)
 
 	local coords = GetEntityCoords(ped)
 
-
-
 	local vehicle, distance = ESX.Game.GetClosestVehicle(coords)
-
-
 
 	if distance ~= -1 and distance <= 5.0 then
 
 		local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(vehicle)
-
-
 
 		for i=maxSeats - 1, 0, -1 do
 
@@ -3123,8 +2780,6 @@ function WarpPedInClosestVehicle_ambulance(ped)
 			end
 
 		end
-
-
 
 		if freeSeat then
 
@@ -3140,19 +2795,12 @@ function WarpPedInClosestVehicle_ambulance(ped)
 
 end
 
-
-
 RegisterNetEvent('esx_ambulancejob:heal')
 AddEventHandler('esx_ambulancejob:heal', function(healType, quiet)
 
 	local playerPed = PlayerPedId()
 
-
-
-
 	if healType == 'small' then
-
-
 
 		SetEntityHealth(playerPed, 200)
 
@@ -3161,7 +2809,6 @@ AddEventHandler('esx_ambulancejob:heal', function(healType, quiet)
 		SetEntityHealth(playerPed, 200)
 
 	end
- 
 
 
 	if not quiet then
@@ -3172,19 +2819,13 @@ AddEventHandler('esx_ambulancejob:heal', function(healType, quiet)
 
 end)
 
-
-
 function SetVehicleMods_ambulance(vehicle, color, colorA, colorB, colorC)
 
-	
+
 
 	local props = {}
 
-
-
 	if not color then
-
-
 
 		props = {
 
@@ -3204,11 +2845,7 @@ function SetVehicleMods_ambulance(vehicle, color, colorA, colorB, colorC)
 
 		}
 
-
-
 	else
-
-
 
 		props = {
 
@@ -3234,11 +2871,9 @@ function SetVehicleMods_ambulance(vehicle, color, colorA, colorB, colorC)
 
 		}
 
-	
+
 
 	end
-
-	
 
 
 
@@ -3247,7 +2882,7 @@ function SetVehicleMods_ambulance(vehicle, color, colorA, colorB, colorC)
 	SetVehicleDirtLevel(vehicle, 0.0)
 
 end
-RegisterCommand('911',function(source) 
+RegisterCommand('911',function(source)
 	TriggerServerEvent('esx_ambulancejob:addreq', 'Man be Medic Neyaz Daram')
 end)
 

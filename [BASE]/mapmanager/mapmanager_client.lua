@@ -2,9 +2,9 @@ local maps = {}
 local gametypes = {}
 
 AddEventHandler('onClientResourceStart', function(res)
-    -- parse metadata for this resource
 
-    -- map files
+
+
     local num = GetNumResourceMetadata(res, 'map')
 
     if num > 0 then
@@ -17,7 +17,7 @@ AddEventHandler('onClientResourceStart', function(res)
         end
     end
 
-    -- resource type data
+
     local type = GetResourceMetadata(res, 'resource_type', 0)
 
     if type then
@@ -36,10 +36,10 @@ AddEventHandler('onClientResourceStart', function(res)
         end
     end
 
-    -- handle starting
+
     loadMap(res)
 
-    -- defer this to the next game tick to work around a lack of dependencies
+
     Citizen.CreateThread(function()
         Citizen.Wait(15)
 

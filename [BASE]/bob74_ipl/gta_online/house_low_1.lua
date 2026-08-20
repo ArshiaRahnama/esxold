@@ -1,5 +1,4 @@
 
--- Low end house 1: 261.4586 -998.8196 -99.00863
 
 exports('GetGTAOHouseLow1Object', function()
     return GTAOHouseLow1

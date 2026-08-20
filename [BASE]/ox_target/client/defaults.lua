@@ -12,8 +12,6 @@ local bones = {
     [3] = 'pside_r'
 }
 
----@param vehicle number
----@param door number
 local function toggleDoor(vehicle, door)
     if GetVehicleDoorLockStatus(vehicle) ~= 2 then
         if GetVehicleDoorAngleRatio(vehicle, door) > 0.0 then
@@ -24,11 +22,6 @@ local function toggleDoor(vehicle, door)
     end
 end
 
----@param entity number
----@param coords vector3
----@param door number
----@param useOffset boolean?
----@return boolean?
 local function canInteractWithDoor(entity, coords, door, useOffset)
     if not GetIsDoorValid(entity, door) or GetVehicleDoorLockStatus(entity) > 1 or IsVehicleDoorDamaged(entity, door) then return end
 
@@ -142,7 +135,6 @@ api.addGlobalVehicle({
     }
 })
 
-
 api.addGlobalPlayer({
     {
         name = 'Carry',
@@ -156,7 +148,7 @@ api.addGlobalPlayer({
             local targetPlayer = NetworkGetPlayerIndexFromPed(data.entity)
             local targetServerId = GetPlayerServerId(targetPlayer)
             Wait(100)
-           
+
             TriggerEvent('carry:SendRequest', targetServerId)
         end
     }
@@ -175,7 +167,7 @@ api.addGlobalPlayer({
             local targetPlayer = NetworkGetPlayerIndexFromPed(data.entity)
             local targetServerId = GetPlayerServerId(targetPlayer)
             Wait(100)
-           
+
             ExecuteCommand("sl "..targetServerId)
         end
     }

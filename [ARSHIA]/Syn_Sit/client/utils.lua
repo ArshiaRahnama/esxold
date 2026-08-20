@@ -18,7 +18,7 @@ end
 
 function DrawText3Ds(x, y, z, text)
     local onScreen, _x, _y = World3dToScreen2d(x, y, z)
-    
+
     if onScreen then
         SetTextScale(0.35, 0.35)
         SetTextFont(4)
@@ -34,13 +34,13 @@ function DrawText3Ds(x, y, z, text)
 end
 
 function IsPedHeeled(ped)
-    if GetPedConfigFlag(ped, 322 ,true ) then -- heels increase the z height of player so we have to account for that
-        return true 
+    if GetPedConfigFlag(ped, 322 ,true ) then
+        return true
     end
     return false
-end 
+end
 
-function Animation(dict, anim, ped) -- this is wher animations are played^
+function Animation(dict, anim, ped)
     RequestAnimDict(dict)
     while not HasAnimDictLoaded(dict) do
         Citizen.Wait(0)

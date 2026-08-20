@@ -4,7 +4,7 @@ ui_page 'h.html'
 
 client_scripts {
     'client.lua'
-} 
+}
 
 files {
     'h.html'

@@ -20,7 +20,7 @@ ESX.RegisterServerCallback('esx_boat:buyBoat', function(source, cb, vehicleProps
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local price   = getPriceFromModel(vehicleProps.model)
 
-	-- vehicle model not found
+
 	if price == 0 then
 		print(('esx_boat: %s attempted to exploit the shop! (invalid vehicle model)'):format(xPlayer.identifier))
 		cb(false)

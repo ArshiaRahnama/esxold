@@ -1,11 +1,11 @@
-config={} 
+config={}
 config.time = 5
-config.name = '📚    Rules :' 
-config.enabled = true 
+config.name = '📚    Rules :'
+config.enabled = true
 config.messages = {
-   -- '',
-   --  '^0 Discord.gg/MidNight_Recource حتما در سرور دیسکورد ما عضو شوید ',
-     '^0 برای اطلاع از اخبار کامل سرور در دیسکورد ما عضو بشید', 
+
+
+     '^0 برای اطلاع از اخبار کامل سرور در دیسکورد ما عضو بشید',
      '^0 برای رفع مشکل های خود در دیسکورد ما تیکت باز کنید',
      '^0 برای خرید به دیسکورد ما مراجعه کنید',
      '^0 زمانی که با پیغام ری استارت سرور رو به رو میشوید از انجام آرپی های طولانی خود داری کنید و پنج دقیقه قبل از ری استارت از سرور خارج شوید تا به مشکل نخورید',
@@ -35,5 +35,5 @@ config.messages = {
 
 config.tfmsg = {
 [true] = 'Activated',
-[false] = 'Deactivated' 
+[false] = 'Deactivated'
 }

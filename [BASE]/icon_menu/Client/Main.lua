@@ -1,19 +1,7 @@
 local List = {}
 local openned = false
-local backIndex = nil -- index (1-based) of the "back" item, if any
+local backIndex = nil
 
--- Mouse left-click to select, arrow keys to move, ESC to close.
--- Backspace goes back one level — and if there's no "back" item on the
--- current screen (i.e. you're at the root menu), it closes the whole
--- menu instead, same as Esc. Right-click does NOT close the menu.
---   176 INPUT_CELLPHONE_SELECT -> ENTER *or* LEFT MOUSE BUTTON
---   172 INPUT_CELLPHONE_UP     -> ARROW UP
---   173 INPUT_CELLPHONE_DOWN   -> ARROW DOWN
---   200 INPUT_FRONTEND_PAUSE   -> suppress the game's own pause menu
---                                  while our menu is open
--- ESC and Backspace are read as raw keys (27 / 8) so they're independent
--- from the right-mouse-button that INPUT_CELLPHONE_CANCEL (177) would
--- otherwise also trigger on.
 local CONTROL_SELECT   = 176
 local CONTROL_UP       = 172
 local CONTROL_DOWN     = 173
@@ -25,7 +13,7 @@ local function GoBackOrClose()
     if backIndex and List[backIndex] and List[backIndex].callBack then
         List[backIndex].callBack()
     else
-        ForceCloseMenu() -- nowhere to go back to (root menu) -> just close
+        ForceCloseMenu()
     end
 end
 
@@ -54,9 +42,9 @@ function OpenMenu(list, configs)
     })
 
     openned = true
-    -- No SetNuiFocus on purpose: no visible cursor, no game controls
-    -- taken away. Navigation is driven entirely by the polling loop
-    -- below (left click / arrow keys / Esc).
+
+
+
 end
 
 function ForceCloseMenu()

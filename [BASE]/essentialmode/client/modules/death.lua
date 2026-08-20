@@ -45,7 +45,7 @@ function PlayerKilledByPlayer(killerServerId, killerClientId, killerWeapon)
             z = ESX.Math.Round(killerCoords.z, 1)
         },
         killedByPlayer = true,
-        killer = killerServerId , 
+        killer = killerServerId ,
         deathCause = killerWeapon,
         distance = ESX.Math.Round(distance, 1),
         killerServerId = killerServerId,
@@ -67,7 +67,7 @@ function PlayerKilled()
             z = ESX.Math.Round(victimCoords.z, 1)
         },
         killedByPlayer = false,
-        killer = false , 
+        killer = false ,
         deathCause = GetPedCauseOfDeath(playerPed)
     }
 

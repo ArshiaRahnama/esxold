@@ -33,7 +33,7 @@ function handleStateBagInitilization(source)
 		plyState:set('callChannel', 0, true)
 		plyState:set('radioChannel', 0, true)
 		plyState:set('voiceIntent', 'speech', true)
-		-- We want to save voice inits because we'll automatically reinitalize calls and channels
+
 		plyState:set('pmaVoiceInit', true, false)
 	end
 
@@ -62,7 +62,7 @@ CreateThread(function()
 	local sendingRangeOnly = GetConvar('voice_useSendingRangeOnly', 'not-set')
 	local gameVersion = GetConvar('gamename', 'fivem')
 
-	-- handle no convars being set (default drag n' drop)
+
 	if
 		nativeAudio == 'not-set'
 		and _3dAudio == 'not-set'
@@ -84,7 +84,7 @@ CreateThread(function()
 	local radioVolume = GetConvarInt("voice_defaultRadioVolume", 30)
 	local callVolume = GetConvarInt("voice_defaultCallVolume", 60)
 
-	-- When casted to an integer these get set to 0 or 1, so warn on these values that they don't work
+
 	if
 		radioVolume == 0 or radioVolume == 1 or
 		callVolume == 0 or callVolume == 1
@@ -137,7 +137,6 @@ if GetConvarInt('voice_externalDisallowJoin', 0) == 1 then
 	end)
 end
 
--- only meant for internal use so no documentation
 function isValidPlayer(source)
 	return voiceData[source]
 end
@@ -149,7 +148,7 @@ function getPlayersInRadioChannel(channel)
 	if returnChannel then
 		return returnChannel
 	end
-	-- channel doesnt exist
+
 	return {}
 end
 

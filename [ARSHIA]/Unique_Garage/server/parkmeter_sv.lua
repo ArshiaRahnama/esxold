@@ -1,9 +1,9 @@
--- ESX is already initialized globally by server.lua; no need to re-fetch it here.
+
 local parkedVehicles = {}
 
 ESX.RegisterServerCallback('temporaryParking:getPlayerBucket', function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
-    local playerBucket = GetPlayerRoutingBucket(source) 
+    local playerBucket = GetPlayerRoutingBucket(source)
     cb(playerBucket)
 end)
 
@@ -11,44 +11,44 @@ ESX.RegisterServerCallback('temporaryParking:getVehicleDatas', function(source, 
     local xPlayer = ESX.GetPlayerFromId(source)
     local Gname   = xPlayer.gang.name
     local Jname   = xPlayer.job.name
-    local playerBucket = GetPlayerRoutingBucket(source) 
+    local playerBucket = GetPlayerRoutingBucket(source)
     local ItemKey = xPlayer.getInventoryItem("CarKey|"..Plate)
     local SubPlate = string.sub(Plate, 1, 2)
     local SubPlateFBI = string.sub(Plate, 1, 3)
 
-    if Jname == "police" and SubPlate == "PD" then 
+    if Jname == "police" and SubPlate == "PD" then
         cb(true)
         return
     elseif Jname == "mt" and SubPlate == "MT" then
         cb(true)
         return
-    elseif Jname == "sheriff" and SubPlate == "SH" then 
+    elseif Jname == "sheriff" and SubPlate == "SH" then
         cb(true)
         return
-    elseif Jname == "fbi" and SubPlateFBI == "FBI" then 
+    elseif Jname == "fbi" and SubPlateFBI == "FBI" then
         cb(true)
         return
-    elseif Jname == "ambulance" and SubPlate == "MD" then 
+    elseif Jname == "ambulance" and SubPlate == "MD" then
         cb(true)
         return
-    elseif Jname == "mechanic" and SubPlate == "MC" then 
+    elseif Jname == "mechanic" and SubPlate == "MC" then
         cb(true)
         return
-    elseif Jname == "taxi" and SubPlate == "TX" then 
+    elseif Jname == "taxi" and SubPlate == "TX" then
         cb(true)
         return
-    elseif Jname == "weazel" and SubPlate == "WZ" then 
+    elseif Jname == "weazel" and SubPlate == "WZ" then
         cb(true)
         return
-    end 
+    end
     if playerBucket ~= 0 then cb(false) return end
     if ItemKey.count >= 1 then cb(true) return end
 
     MySQL.Async.fetchAll("SELECT * FROM owned_vehicles WHERE plate = @plate", {
         ['@plate'] =  tostring(Plate)
     }, function(Res)
-        if Res[1] then 
-            if Res[1].owner == Gname then 
+        if Res[1] then
+            if Res[1].owner == Gname then
                 cb(true)
             else
                 cb(false)

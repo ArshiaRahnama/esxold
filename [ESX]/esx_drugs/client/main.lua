@@ -52,7 +52,7 @@ function CreateBlipCircle(coords, text, radius, color, sprite)
     SetBlipAlpha (blip, 128)
     SetBlipAsShortRange(blip, true)
 
-    -- create a blip in the middle
+
     blip = AddBlipForCoord(coords)
 
     SetBlipHighDetail(blip, true)
@@ -74,7 +74,7 @@ Citizen.CreateThread(function()
         if Config.ShowMarkers then
 
             local coords = GetEntityCoords(GetPlayerPed(-1))
-			
+
 			for k,v in pairs(Config.FieldZones) do
                 if GetDistanceBetweenCoords(coords, v.coords, true) < Config.DrawDistance then
                     DrawMarker(Config.MarkerType, v.coords, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.ZoneSize.x, Config.ZoneSize.y, Config.ZoneSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, false, false, false, false)
@@ -101,7 +101,7 @@ Citizen.CreateThread(function()
             CreateBlipCircle(v.coords, v.name, v.radius, v.color, v.sprite)
         end
 
-       -- CreateBlipCircle(vector3(-1174.19, -1573.58, 0), "Drug Dealer", 1.0, 30, 355)
+
     end
 end)
 
@@ -112,7 +112,7 @@ Citizen.CreateThread(function()
             Wait(1)
         end
 
-        -- If the zone is for a dealer, render a PED
+
         local seller = CreatePed(1, v.ped, v.x, v.y, v.z, v.h, false, true)
         SetBlockingOfNonTemporaryEvents(seller, true)
         SetPedDiesWhenInjured(seller, false)
@@ -126,8 +126,8 @@ end)
 
 RegisterNetEvent('esx_drugs:Cartel')
 AddEventHandler('esx_drugs:Cartel', function(itemName)
-    --ESX.TriggerServerCallback('esx_drugs:Cartel:use', function(removed)
-        --if removed then
+
+
             if itemName == 'desomorphine' then
                 local lib, anim = 'anim@mp_player_intcelebrationmale@face_palm', 'face_palm'
                 local playerPed = PlayerPedId()
@@ -152,7 +152,7 @@ AddEventHandler('esx_drugs:Cartel', function(itemName)
                     end)
                 end)
             elseif itemName == 'lsd' then
-                local lib, anim = 'anim@mp_player_intcelebrationmale@face_palm', 'face_palm' 
+                local lib, anim = 'anim@mp_player_intcelebrationmale@face_palm', 'face_palm'
                 local playerPed = PlayerPedId()
                 ESX.ShowNotification('~o~Shoma ~g~LSD ~o~Masraf Kardid ~r~(Recoil Gun Shoma Kam Shod)')
                 ESX.Streaming.RequestAnimDict(lib, function()
@@ -165,7 +165,7 @@ AddEventHandler('esx_drugs:Cartel', function(itemName)
                     TriggerEvent('weaponry:ReduceRecoil')
                 end)
             elseif itemName == 'ecstasy' then
-                local lib, anim = 'anim@mp_player_intcelebrationmale@face_palm', 'face_palm' 
+                local lib, anim = 'anim@mp_player_intcelebrationmale@face_palm', 'face_palm'
                 local playerPed = PlayerPedId()
                 ESX.ShowNotification('~o~Shoma ~g~Stasy ~o~Masraf Kardid ~r~(Sorat Rah Raftan Bishtar)')
                 ESX.Streaming.RequestAnimDict(lib, function()
@@ -191,10 +191,10 @@ AddEventHandler('esx_drugs:Cartel', function(itemName)
                     end)
                 end)
             end
-        --else
-        --    ESX.ShowNotification('~r~Shoma Nemitavanid In Mavad Ra Dar Hale Hazer Estefade Konid')
-        --end
-    --end, itemName)
+
+
+
+
 end)
 
 RegisterNetEvent('esx_jk_drugs:useItem')
@@ -219,7 +219,7 @@ AddEventHandler('esx_jk_drugs:useItem', function(itemName)
         end)
 
     elseif itemName == 'cocaine' then
-        local lib, anim = 'anim@mp_player_intcelebrationmale@face_palm', 'face_palm' -- TODO better animations
+        local lib, anim = 'anim@mp_player_intcelebrationmale@face_palm', 'face_palm'
         local playerPed = PlayerPedId()
 
         ESX.ShowNotification(_U('cocaine_use'))
@@ -236,7 +236,7 @@ AddEventHandler('esx_jk_drugs:useItem', function(itemName)
         end)
 
     elseif itemName == 'meth' then
-        local lib, anim = 'mp_weapons_deal_sting', 'crackhead_bag_loop' -- TODO better animations
+        local lib, anim = 'mp_weapons_deal_sting', 'crackhead_bag_loop'
         local playerPed = PlayerPedId()
 
         ESX.ShowNotification(_U('meth_use'))
@@ -253,7 +253,7 @@ AddEventHandler('esx_jk_drugs:useItem', function(itemName)
         end)
 
     elseif itemName == 'crack' then
-        local lib, anim = 'mp_weapons_deal_sting', 'crackhead_bag_loop' -- TODO better animations
+        local lib, anim = 'mp_weapons_deal_sting', 'crackhead_bag_loop'
         local playerPed = PlayerPedId()
 
         ESX.ShowNotification(_U('crack_use'))
@@ -270,7 +270,7 @@ AddEventHandler('esx_jk_drugs:useItem', function(itemName)
         end)
 
     elseif itemName == 'heroine' then
-        local lib, anim = 'rcmpaparazzo1ig_4', 'miranda_shooting_up' -- TODO better animations
+        local lib, anim = 'rcmpaparazzo1ig_4', 'miranda_shooting_up'
         local playerPed = PlayerPedId()
 
         ESX.ShowNotification(_U('heroine_use'))
@@ -513,7 +513,7 @@ AddEventHandler('esx_jk_drugs:buzzin', function()
     ESX.ShowNotification(_U('wearin_off'))
     onBeer = false
 
-end) 
+end)
 
 RegisterNetEvent('esx_jk_drugs:drunk')
 AddEventHandler('esx_jk_drugs:drunk', function()
@@ -622,14 +622,14 @@ AddEventHandler('esx_jk_drugs:selling', function()
     local playerPed = PlayerPedId()
     PedPosition        = GetEntityCoords(playerPed)
     local PlayerCoords = { x = PedPosition.x, y = PedPosition.y, z = PedPosition.z }
-    
+
     local x,y,z = table.unpack(GetEntityCoords(GetPlayerPed(-1), false))
     local plyPos = GetEntityCoords(GetPlayerPed(-1),  true)
     local streetName, crossing = Citizen.InvokeNative( 0x2EB41072B4C1E4C0, plyPos.x, plyPos.y, plyPos.z, Citizen.PointerValueInt(), Citizen.PointerValueInt() )
     local streetName, crossing = GetStreetNameAtCoord(x, y, z)
     streetName = GetStreetNameFromHashKey(streetName)
     crossing = GetStreetNameFromHashKey(crossing)
-	
+
 	if Config.UseESXPhone then
         if crossing ~= nil then
 
@@ -664,67 +664,17 @@ AddEventHandler('esx_jk_drugs:selling', function()
 	end
 end)
 
---[[RegisterNetEvent('esx_jk_drugs:restricted')
-AddEventHandler('esx_jk_drugs:restricted', function()
-
-    local playerPed = PlayerPedId()
-    PedPosition        = GetEntityCoords(playerPed)
-    local PlayerCoords = { x = PedPosition.x, y = PedPosition.y, z = PedPosition.z }
-    
-    local x,y,z = table.unpack(GetEntityCoords(GetPlayerPed(-1), false))
-    local plyPos = GetEntityCoords(GetPlayerPed(-1),  true)
-    local streetName, crossing = Citizen.InvokeNative( 0x2EB41072B4C1E4C0, plyPos.x, plyPos.y, plyPos.z, Citizen.PointerValueInt(), Citizen.PointerValueInt() )
-    local streetName, crossing = GetStreetNameAtCoord(x, y, z)
-    streetName = GetStreetNameFromHashKey(streetName)
-    crossing = GetStreetNameFromHashKey(crossing)
-	
-	if Config.UseESXPhone then
-        if crossing ~= nil then
-
-            local coords      = GetEntityCoords(GetPlayerPed(-1))
-
-            TriggerServerEvent('esx_phone:send', "police", "Someone entered a Restricted Area at " .. streetName .. " and " .. crossing, true, {
-                x = coords.x,
-                y = coords.y,
-                z = coords.z
-            })
-        else
-            TriggerServerEvent('esx_phone:send', "police", "Someone entered a Restricted Area at " .. streetName, true, {
-                x = coords.x,
-                y = coords.y,
-                z = coords.z
-            })
-        end
-    elseif Config.UseGCPhone then
-        if crossing ~= nil then
-            local coords      = GetEntityCoords(GetPlayerPed(-1))
-
-            TriggerServerEvent('esx_addons_gcphone:startCall', 'police', "Someone entered a Restricted Area at " .. streetName .. " and " .. crossing, PlayerCoords, {
-                PlayerCoords = { x = PedPosition.x, y = PedPosition.y, z = PedPosition.z },
-            })
-        else
-            TriggerServerEvent('esx_addons_gcphone:startCall', "police", "Someone entered a Restricted Area at " .. streetName, PlayerCoords, {
-                PlayerCoords = { x = PedPosition.x, y = PedPosition.y, z = PedPosition.z },
-            })
-        end
-    else
-		TriggerServerEvent('esx_jk_drugs:restrictedArea')
-	end
-end)--]]
-
--- Give Cops access to test kits
-
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(0)	
+        Citizen.Wait(0)
         if ESX.PlayerData.job ~= nil and (ESX.PlayerData.job.name == 'police' or ESX.PlayerData.job.name == 'sheriff' or ESX.PlayerData.job.name == 'mt' or ESX.PlayerData.job.name == 'fbi' or ESX.PlayerData.job.name == 'cid' or ESX.PlayerData.job.name == 'cia' or ESX.PlayerData.job.name == 'marshal' or ESX.PlayerData.job.name == 'judge' or ESX.PlayerData.job.name == 'doa') then
-        
+
             local coords = GetEntityCoords(GetPlayerPed(-1))
 
             if GetDistanceBetweenCoords(coords, 461.6, -979.56, 30.69, true) < 15 then
                 DrawMarker(21, 461.6, -979.56, 30.69, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.5, 1.5, 0.5, 50, 50, 204, 100, true, true, 2, false, false, false, false)
             end
-        
+
             if GetDistanceBetweenCoords(coords, 461.6, -979.56, 30.69, true) < 1 then
                 ESX.ShowNotification("You grabbed some test kits")
                 TriggerServerEvent('esx_jk_drugs:giveItem', 'drugtest')
@@ -735,10 +685,6 @@ Citizen.CreateThread(function()
     end
 end)
 
-----------------------------------
--------- MY OWN SHIT -------------
-----------------------------------
--- Active kardan menu mogheyi ke player mire tosh
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(200)
@@ -764,7 +710,7 @@ Citizen.CreateThread(function()
 			HasAlreadyEnteredMarker = false
 			TriggerEvent('esx_drugs:hasExitMarker', LastZone)
 		end
-		
+
 		if not isInMarker then
 			Citizen.Wait(500)
 		end
@@ -772,8 +718,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
-
--- Keshidan marker haye roye map
 Citizen.CreateThread(function()
 	while true do
 	 	Citizen.Wait(0)
@@ -786,14 +730,13 @@ Citizen.CreateThread(function()
 				DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, true, 2, false, false, false, false)
 			end
 		end
-		
+
 		if canSleep then
 			Citizen.Wait(500)
 		end
 end
 end)
 
--- Raftan dakhel marker coke
 AddEventHandler('esx_drugs:hasEnteredMarker', function(zone)
 	print(zone)
 	if zone == "drug_1" then
@@ -827,13 +770,11 @@ AddEventHandler('esx_drugs:hasEnteredMarker', function(zone)
 	end
 end)
 
--- Kharej shodan az marker coke
 AddEventHandler('esx_drugs:hasExitMarker', function(zone)
 	ESX.UI.Menu.CloseAll()
 	CurrentAction = nil
 end)
 
--- Check kardan baraye dokme
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
@@ -842,7 +783,7 @@ Citizen.CreateThread(function()
 			ESX.ShowHelpNotification(CurrentActionMsg)
 
 			if IsControlJustReleased(0, Keys['E']) then
-				
+
                 if CurrentAction == 'cocke_menu' then
                     ESX.DoesHaveItem('coca', 5, function()
                         SetEntityHeading(GetPlayerPed(-1), 332.93)
@@ -865,19 +806,19 @@ Citizen.CreateThread(function()
                                 }
                         }, function(status)
                             if not status then
-        
+
                                 TriggerServerEvent('esx_jk_drugs:processCocaPlant')
-                    
+
                             elseif status then
-    
+
                                 ClearPedTasksImmediately(playerPed)
-    
+
                             end
                         end)
                     end, 'Tokhmn Cocaine')
 
                 elseif CurrentAction == 'crack_menu' then
-                    
+
                     ESX.DoesHaveItem('cocaine', 2, function()
                         SetEntityHeading(GetPlayerPed(-1), 161.77)
 
@@ -899,9 +840,9 @@ Citizen.CreateThread(function()
                                 }
                         }, function(status)
                             if not status then
-        
+
                                 TriggerServerEvent('esx_jk_drugs:processCoke')
-                    
+
                             elseif status then
 
                                 ClearPedTasksImmediately(playerPed)
@@ -909,10 +850,10 @@ Citizen.CreateThread(function()
                             end
                         end)
                     end)
-				
+
                 elseif CurrentAction == "marijuana_menu" then
                     ESX.DoesHaveItem('cannabis', 5, function()
-                    
+
                         SetEntityHeading(GetPlayerPed(-1), 150.32)
 
                         TriggerEvent("mythic_progbar:client:progress", {
@@ -933,10 +874,10 @@ Citizen.CreateThread(function()
                                 }
                         }, function(status)
                             if not status then
-        
+
                                 TriggerServerEvent('esx_jk_drugs:processCannabis')
                                 TriggerClientEvent("esx_drugs:MarijuanaProg", _source, amount, Item.name)
-                    
+
                             elseif status then
 
                                 ClearPedTasksImmediately(playerPed)
@@ -947,7 +888,7 @@ Citizen.CreateThread(function()
 
                 elseif CurrentAction == "ephedrine_menu" then
                     ESX.DoesHaveItem('ephedra', 1, function()
-                        
+
                         SetEntityHeading(GetPlayerPed(-1), 216.87)
 
                         TriggerEvent("mythic_progbar:client:progress", {
@@ -968,9 +909,9 @@ Citizen.CreateThread(function()
                                 }
                         }, function(status)
                             if not status then
-        
+
                                 TriggerServerEvent('esx_jk_drugs:processEphedra')
-                    
+
                             elseif status then
 
                                 ClearPedTasksImmediately(playerPed)
@@ -981,21 +922,21 @@ Citizen.CreateThread(function()
 
                 elseif CurrentAction == "poppy_menu" then
                     ESX.DoesHaveItem('poppy', 1, function()
-                        
+
                         SetEntityHeading(GetPlayerPed(-1), 164.56)
                         local TimeOut = 8000
-                        -- Unique_Skills is optional; guard the call so a missing resource doesn't crash
+
                         local ChekSkills = 0
                         if GetResourceState('Unique_Skills') == 'started' then
                         	local ok, result = pcall(function() return exports['Unique_Skills']:CheckSkill('Heroine') end)
                         	if ok then ChekSkills = result end
                         end
-						if ChekSkills == 100 then 
+						if ChekSkills == 100 then
 							TimeOut = TimeOut / 2
 						else
 							TimeOut = TimeOut
 						end
-                    
+
 
                         TriggerEvent("mythic_progbar:client:progress", {
                             name = "process_opium",
@@ -1017,7 +958,7 @@ Citizen.CreateThread(function()
                             if not status then
                                 ClearPedTasksImmediately(playerPed)
                                 TriggerServerEvent('esx_jk_drugs:processPoppy')
-                    
+
                             elseif status then
 
                                 ClearPedTasksImmediately(playerPed)
@@ -1028,17 +969,17 @@ Citizen.CreateThread(function()
 
                 elseif CurrentAction == "opium_menu" then
                     ESX.DoesHaveItem('opium', 10, function()
-                        
+
                         SetEntityHeading(GetPlayerPed(-1), 295.5)
 
                         local TimeOut = 12000
-                        -- Unique_Skills is optional; guard the call so a missing resource doesn't crash
+
                         local ChekSkills = 0
                         if GetResourceState('Unique_Skills') == 'started' then
                         	local ok, result = pcall(function() return exports['Unique_Skills']:CheckSkill('Heroine') end)
                         	if ok then ChekSkills = result end
                         end
-						if ChekSkills == 100 then 
+						if ChekSkills == 100 then
 							TimeOut = TimeOut / 2
 						else
 							TimeOut = TimeOut
@@ -1062,9 +1003,9 @@ Citizen.CreateThread(function()
                                 }
                         }, function(status)
                             if not status then
-        
+
                                 TriggerServerEvent('esx_jk_drugs:processOpium')
-                    
+
                             elseif status then
 
                                 ClearPedTasksImmediately(playerPed)
@@ -1072,10 +1013,10 @@ Citizen.CreateThread(function()
                             end
                         end)
                     end, 'Teryak')
-                    
+
                 elseif CurrentAction == "meth_menu" then
                     ESX.DoesHaveItem('ephedrine', 5, function()
-                        
+
                         SetEntityHeading(GetPlayerPed(-1), 108.86)
 
                         TriggerEvent("mythic_progbar:client:progress", {
@@ -1096,9 +1037,9 @@ Citizen.CreateThread(function()
                                 }
                         }, function(status)
                             if not status then
-        
+
                                 TriggerServerEvent('esx_jk_drugs:processEphedrine')
-                    
+
                             elseif status then
 
                                 ClearPedTasksImmediately(playerPed)

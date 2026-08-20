@@ -9,7 +9,6 @@ end
 
 function lib.getLocaleKey() return settings.locale end
 
----@param key string
 function lib.setLocale(key)
     TriggerEvent('ox_lib:setLocale', key)
     SendNUIMessage({

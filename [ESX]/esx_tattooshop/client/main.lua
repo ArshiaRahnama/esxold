@@ -97,7 +97,7 @@ function GetNaked()
 				pants_2  = 0,
 				shoes_1 = 5,
 				glasses_1 = 0
-				
+
 			})
 		else
 			TriggerEvent('skinchanger:loadSkin', {
@@ -161,7 +161,7 @@ function ButtonPress()
 end
 
 function IsMenuOpen()
-	return (JayMenu.IsMenuOpened('tattoo') or string.find(tostring(JayMenu.CurrentMenu() or ""), "ZONE_"))	
+	return (JayMenu.IsMenuOpened('tattoo') or string.find(tostring(JayMenu.CurrentMenu() or ""), "ZONE_"))
 end
 
 function BuyTattoo(collection, name, label, price)
@@ -197,13 +197,13 @@ Citizen.CreateThread(function()
         return CloseTattooShop()
     end)
     JayMenu.SetSubTitle('tattoo', "Categories")
-	
+
 	for k, v in ipairs(Config.TattooCats) do
 		JayMenu.CreateSubMenu(v[1], "tattoo", v[2])
 		JayMenu.SetSubTitle(v[1], v[2])
 	end
 
-    while true do 
+    while true do
         Citizen.Wait(1)
 		local CanSleep = true
 		if not IsMenuOpen() then
@@ -225,7 +225,7 @@ Citizen.CreateThread(function()
 			DisableAllControlActions(0)
 			CanSleep = false
 		end
-		
+
         if JayMenu.IsMenuOpened('tattoo') then
 			CanSleep = false
             for k, v in ipairs(Config.TattooCats) do
@@ -367,11 +367,11 @@ function setupScaleform2(scaleform, message, button, message2, buttons, message3
     end
     PushScaleformMovieFunction(scaleform, "CLEAR_ALL")
     PopScaleformMovieFunctionVoid()
-    
+
     PushScaleformMovieFunction(scaleform, "SET_CLEAR_SPACE")
     PushScaleformMovieFunctionParameterInt(200)
     PopScaleformMovieFunctionVoid()
-	
+
     PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
     PushScaleformMovieFunctionParameterInt(0)
     Button(GetControlInstructionalButton(2, buttons[1], true))
@@ -384,7 +384,7 @@ function setupScaleform2(scaleform, message, button, message2, buttons, message3
     Button(GetControlInstructionalButton(2, button, true))
     ButtonMessage(message)
     PopScaleformMovieFunctionVoid()
-	
+
     PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
     PushScaleformMovieFunctionParameterInt(2)
     Button(GetControlInstructionalButton(2, button2, true))
@@ -411,7 +411,7 @@ function setupScaleform(scaleform, message, button)
     end
     PushScaleformMovieFunction(scaleform, "CLEAR_ALL")
     PopScaleformMovieFunctionVoid()
-    
+
     PushScaleformMovieFunction(scaleform, "SET_CLEAR_SPACE")
     PushScaleformMovieFunctionParameterInt(200)
     PopScaleformMovieFunctionVoid()

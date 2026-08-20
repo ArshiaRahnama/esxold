@@ -61,8 +61,6 @@ AddEventHandler('inventory-public:updateSlot', function(name, data)
     end)
 end)
 
--- move item FROM the player's main inventory INTO the public inventory
--- ('delete' mode = recycle bin: just destroy it, nothing is stored)
 RegisterServerEvent('inventory-public:put')
 AddEventHandler('inventory-public:put', function(name, data)
     local src = source
@@ -76,7 +74,7 @@ AddEventHandler('inventory-public:put', function(name, data)
     xPlayer.removeInventoryItem(data.name, count)
 
     if name:find('^recycle:') then
-        -- recycle bin: item is destroyed, nothing to persist
+
         return
     end
 
@@ -96,13 +94,12 @@ AddEventHandler('inventory-public:put', function(name, data)
     end)
 end)
 
--- move item FROM the public inventory INTO the player's main inventory
 RegisterServerEvent('inventory-public:get')
 AddEventHandler('inventory-public:get', function(name, data)
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
     if not xPlayer or not data or not data.name then return end
-    if name:find('^recycle:') then return end -- nothing to withdraw from a recycle bin
+    if name:find('^recycle:') then return end
 
     loadPublic(name, function(items)
         for i, entry in ipairs(items) do

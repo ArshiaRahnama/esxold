@@ -15,7 +15,6 @@ local JStructure = {
 
 local players = {}
 local admins = {}
--- local fakeplayer = 5
 
 local counts = {
 	players = 0,
@@ -30,7 +29,7 @@ local counts = {
 	coffee = 0,
 	mechanic = 0,
 	game = true,
-	website = false, 
+	website = false,
 	discord = true,
 
 }
@@ -70,7 +69,7 @@ AddEventHandler('esx:playerLoaded', function(source, xPlayer)
 	else
 	   UpdateCounts(true, false)
 	end
-	
+
 	if xPlayer.permission_level > 0 then addAdmin(xPlayer) end
 end)
 
@@ -96,10 +95,6 @@ AddEventHandler('esx:playerDropped', function(source)
 		end
 	end
 end)
-
-
-
-
 
 function UpdatePing()
 	Citizen.CreateThread(function()
@@ -143,13 +138,13 @@ function UpdateCounts(update, jobs)
 	if update then
 		counts.players = CountTable(players)
 	end
-	
+
 	if jobs then
 		for i,v in ipairs(jobs) do
 			counts[v] = CountTable(JStructure[v])
 		end
 	end
-	
+
 end
 
 function addAdmin(xPlayer)

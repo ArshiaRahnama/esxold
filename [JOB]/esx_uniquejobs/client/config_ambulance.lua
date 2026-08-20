@@ -1,5 +1,4 @@
 
--- Server Discord : https://discord.gg/3jzScCJZ5C
 
 Config_ambulance                            = {}
 
@@ -9,17 +8,17 @@ Config_ambulance.Marker                     = { type = 21,  x = 1.0, y = 1.0, z 
 Config_ambulance.MarkerBoss                 = 42
 Config_ambulance.MarkerClock                = 20
 
-Config_ambulance.reviveReward               = 15000  -- revive reward, set to 0 if you don't want it enabled
-Config_ambulance.AntiCombatLog              = false -- enable anti-combat logging?
-Config_ambulance.LoadIpl                    = false -- disable if you're using fivem-ipl or other IPL loaders
+Config_ambulance.reviveReward               = 15000
+Config_ambulance.AntiCombatLog              = false
+Config_ambulance.LoadIpl                    = false
 
 Config_ambulance.Locale                     = 'en'
 
 local second = 1000
 local minute = 60 * second
 
-Config_ambulance.EarlyRespawnTimer          = 15 * minute  -- Time til respawn is available
-Config_ambulance.BleedoutTimer              = 5 * minute -- Time til the player bleeds out
+Config_ambulance.EarlyRespawnTimer          = 15 * minute
+Config_ambulance.BleedoutTimer              = 5 * minute
 
 Config_ambulance.EnablePlayerManagement     = true
 
@@ -27,29 +26,25 @@ Config_ambulance.RemoveWeaponsAfterRPDeath  = true
 Config_ambulance.RemoveCashAfterRPDeath     = true
 Config_ambulance.RemoveItemsAfterRPDeath    = true
 
--- Let the player pay for respawning early, only if he can afford it.
 Config_ambulance.EarlyRespawnFine           = true
 Config_ambulance.EarlyRespawnFineAmount     = 15000
 
 Config_ambulance.BlacklistedItems = {
-    'hifi',  
+    'hifi',
     'boombox',
     'customcoupon'
 }
 
 Config_ambulance.BlacklistedWeapons = {
-    'WEAPON_MINIGUN',  
+    'WEAPON_MINIGUN',
     'WEAPON_SNIPERRIFLE'
 }
-
 
 Config_ambulance.RespawnPoint = { coords = vector3(vector3(299.9083, -574.085, 43.260)), heading = 109.78 }
 
 Config_ambulance.Hospitals = {
 
 	CentralLosSantos = {
-
-
 
 		AuthorizedItems = {
 			{ name = 'water', price = 60 , label = 'Ab'},
@@ -59,7 +54,7 @@ Config_ambulance.Hospitals = {
 			{ name = 'medikit', price = 2000, label = 'Medikit' },
 			{ name = 'bandage', price = 1000, label = 'Bandage' },
 		},
-		
+
 
 		Blip = {
 			coords = vector3(289.3741, -595.735, 43.173),
@@ -67,11 +62,11 @@ Config_ambulance.Hospitals = {
 			sprite = 305,
 			scale  = 1.2,
 			color  = 1,
-			
-			
+
+
 		},
-		
-		
+
+
 
 		AmbulanceLebas = {
 			vector3(298.8177, -598.294, 43.284)
@@ -85,7 +80,7 @@ Config_ambulance.Hospitals = {
 			vector3(311.7456, -564.056, 43.284),
 			vector3(1822.93, 3666.95, 34.27),
 		},
-		
+
 		Armory = {
 			vector3(304.4680, -600.968, 43.284),
 			vector3(1834.18, 3690.48, 34.27),
@@ -99,7 +94,7 @@ Config_ambulance.Hospitals = {
 				SpawnPoints = { x = 294.6011, y = -607.727, z = 43.333 },
 				Heading    = 90.00
 			},
-			
+
 			{
 				Spawner = vector3(-1842.95, -342.370, 43.689),
 				InsideShop = vector3(446.7, -1355.6, 43.5),
@@ -119,7 +114,6 @@ Config_ambulance.Hospitals = {
 				Deleter = vector3(351.3263, -587.819, 74.164)
 			},
 		},
-
 
 		Helicopters = {
 			{
@@ -159,28 +153,27 @@ Config_ambulance.Hospitals = {
 				Marker = { type = 21, x = 1.0, y = 1.0, z = 1.0, r = 255, g = 0, b = 0, a = 100, rotate = true },
 				Prompt = _U('fast_travel2')
 			},
-			
-			-- {
-			-- 	From = vector3(309.14, -602.79, 43.29),
-			-- 	To = { coords = vector3(1835.45, 3692.24, 34.27), heading = 0.0 },
-			-- 	Marker = { type = 21, x = 1.0, y = 1.0, z = 1.0, r = 255, g = 0, b = 0, a = 100, rotate = true },
-			-- 	Prompt = _U('fast_travel2')
-			-- },
-			
-			-- {
-			-- 	From = vector3(1835.45, 3692.24, 34.27),
-			-- 	To = { coords = vector3(309.14, -602.79, 43.29), heading = 0.0 },
-			-- 	Marker = { type = 21, x = 1.0, y = 1.0, z = 1.0, r = 255, g = 0, b = 0, a = 100, rotate = true },
-			-- 	Prompt = _U('fast_travel2')
-			-- },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		}
 
 	}
 }
 
-
 Config_ambulance.AuthorizedVehicles = {
-	Shared = {	
+	Shared = {
 		{
 			model = 'b219tahoe',
 			label = 'Medic Tahoe',
@@ -250,12 +243,10 @@ Config_ambulance.AuthorizedVehicles = {
 		},
 	},
 
-	Sharedheli = {			
-		-- Extra : 0 = true , 1 = false
+	Sharedheli = {
+
 		{ model = 'tx_heli', label = 'Medic Heli', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 0, ['5'] = 0 } },
 		{ model = 'polmav', label = 'Medic Polmav', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 0, ['5'] = 0 } },
 	},
 }
-
-
 

@@ -1,5 +1,4 @@
--- DO NOT USE! Old syntax for addCommand (prior to v3.0)
----@todo convert input and call standard function?
+
 
 local commands = {}
 
@@ -36,24 +35,19 @@ local function chatSuggestion(name, parameters, help)
     }
 end
 
----@deprecated
----@param group string | string[] | false
----@param name string | string[]
----@param callback function
----@param parameters table
 function lib.__addCommand(group, name, callback, parameters, help)
     if not group then group = 'builtin.everyone' end
 
     if type(name) == 'table' then
         for i = 1, #name do
-            ---@diagnostic disable-next-line: deprecated
+
             lib.__addCommand(group, name[i], callback, parameters, help)
         end
     else
         chatSuggestion(name, parameters, help)
 
         RegisterCommand(name, function(source, args, raw)
-            source = tonumber(source) --[[@as number]]
+            source = tonumber(source)
 
             if parameters then
                 for i = 1, #parameters do
@@ -106,5 +100,4 @@ function lib.__addCommand(group, name, callback, parameters, help)
     end
 end
 
----@diagnostic disable-next-line: deprecated
 return lib.__addCommand

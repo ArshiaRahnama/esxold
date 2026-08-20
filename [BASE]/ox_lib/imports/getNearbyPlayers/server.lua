@@ -1,6 +1,5 @@
----@param coords vector3 The coords to check from.
----@param maxDistance? number The max distance to check.
----@return { id: number, ped: number, coords: vector3 }[]
+
+
 function lib.getNearbyPlayers(coords, maxDistance)
     local players = GetActivePlayers()
     local nearby = {}

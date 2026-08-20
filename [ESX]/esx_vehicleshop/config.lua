@@ -1,22 +1,19 @@
 Config                            = {}
 Config.DrawDistance               = 100.0
 Config.MarkerColor                = { r = 120, g = 120, b = 240 }
-Config.EnablePlayerManagement     = false -- enables the actual car dealer job. You'll need esx_addonaccount, esx_billing and esx_society
+Config.EnablePlayerManagement     = false
 Config.EnableOwnedVehicles        = true
-Config.EnableSocietyOwnedVehicles = false -- use with EnablePlayerManagement disabled, or else it wont have any effects
+Config.EnableSocietyOwnedVehicles = false
 Config.ResellPercentage           = 50
 
-Config.EnableJobLogs              = true -- only turn this on if you are using esx_joblogs
+Config.EnableJobLogs              = true
 Config.Locale                     = 'en'
 
-Config.LicenseEnable = false -- require people to own drivers license when buying vehicles? Only applies if EnablePlayerManagement is disabled. Requires esx_license
+Config.LicenseEnable = false
 
--- looks like this: 'LLL NNN'
--- The maximum plate length is 8 chars (including spaces & symbols), don't go past it!
 Config.PlateLetters  = 1
 Config.PlateNumbers  = 1
 Config.PlateUseSpace = true
-
 
 Config.Zones = {
 
@@ -24,8 +21,8 @@ Config.Zones = {
 		Pos   = { x = -46.8820, y = -1095.86, z = 27.274 },
 		Size  = { x = 1.5, y = 1.5, z = 1.0 },
 	    Type  = 36
-	},	
-	
+	},
+
 	ShopInside = {
 		Pos     = { x = -74.66, y = -819.92, z = 285.0 },
 		Size    = { x = 1.5, y = 1.5, z = 1.5 },

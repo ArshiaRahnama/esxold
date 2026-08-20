@@ -11,34 +11,34 @@ if DiscordConnect == nil and DiscordWebhookKillinglogs == nil and DiscordWebhook
 	Content()
 end
 if DiscordConnect == 'WEBHOOK_LINK_HERE' then
-	--print('\n\nERROR\n' .. GetCurrentResourceName() .. ': Please add your "System Infos" webhook\n\n')
+
 else
 	PerformHttpRequest(DiscordConnect, function(Error, Content, Head)
 		if Content == '{"code": 50027, "message": "Invalid Webhook Token"}' then
-			--print('\n\nERROR\n' .. GetCurrentResourceName() .. ': "System Infos" webhook non-existing!\n\n')
+
 		end
 	end)
 end
 if DiscordWebhookKillinglogs == 'WEBHOOK_LINK_HERE' then
-	--print('\n\nERROR\n' .. GetCurrentResourceName() .. ': Please add your "Killing Log" webhook\n\n')
+
 else
 	PerformHttpRequest(DiscordWebhookKillinglogs, function(Error, Content, Head)
 		if Content == '{"code": 50027, "message": "Invalid Webhook Token"}' then
-			--print('\n\nERROR\n' .. GetCurrentResourceName() .. ': "Killing Log" webhook non-existing!\n\n')
+
 		end
 	end)
 end
 if DiscordWebhookChat == 'WEBHOOK_LINK_HERE' then
-	--print('\n\nERROR\n' .. GetCurrentResourceName() .. ': Please add your "Chat" webhook\n\n')
+
 else
 	PerformHttpRequest(DiscordWebhookChat, function(Error, Content, Head)
 		if Content == '{"code": 50027, "message": "Invalid Webhook Token"}' then
-			--print('\n\nERROR\n' .. GetCurrentResourceName() .. ': "Chat" webhook non-existing!\n\n')
+
 		end
 	end)
 end
-	
--- System Infos
+
+
 PerformHttpRequest(DiscordConnect, function(Error, Content, Head) end, 'POST', json.encode({username = SystemName, content = '**FiveM server webhook started**'}), { ['Content-Type'] = 'application/json' })
 
 AddEventHandler('playerConnecting', function()
@@ -49,7 +49,6 @@ AddEventHandler('playerDropped', function(Reason)
 	TriggerEvent('DiscordBot:ToDiscord', DiscordDisconnect, SystemName, '```css\n[ Name : '..GetPlayerName(source).." ]\n[ identifier : "..GetPlayerIdentifier(source).." ]\n[ ID : "..source.." ]\n[ Player Disconnected ]\n[ Reason : " .. Reason .. " ]```", SystemAvatar, false)
 end)
 
--- Killing Log
 RegisterServerEvent('DiscordBot:plascaryyerDied')
 AddEventHandler('DiscordBot:plascaryyerDied', function(Message, killer, Deader, Weapon, KillerCorrd, PlayerCorrd)
 	local date = os.date('*t')
@@ -63,7 +62,7 @@ AddEventHandler('DiscordBot:plascaryyerDied', function(Message, killer, Deader, 
 	if date.min < 10 then date.min = '0' .. tostring(date.min) end
 	if date.sec < 10 then date.sec = '0' .. tostring(date.sec) end
 	if Weapon then
-		-- Message = Message .. ' [' .. Weapon .. ']'
+
 		Message = "```Player : "..xPlayer.name.." ("..xPlayer.source..") \n".."Steam : "..xPlayer.identifier.."\n"..PlayerCorrd.."\n **Tavasote:**\nPlayer : "..xTarget.name.." ("..xTarget.source..")\nSteam : "..xTarget.identifier.."\n"..KillerCorrd.."\n Weapon : "..Weapon.."\n Reason : "..Message.."```"
 	end
 	TriggerEvent('DiscordBot:ToDiscord', DiscordWebhookKillinglogs, SystemName, Message .. ' `' .. date.day .. '.' .. date.month .. '.' .. date.year .. ' - ' .. date.hour .. ':' .. date.min .. ':' .. date.sec .. '`', SystemAvatar, false)
@@ -84,18 +83,8 @@ end, function(source, args, user)
     TriggerClientEvent('chat:addMessage', source, { args = { "System", "Dastresi Nadarid" } })
 end, {help = "Get Killer", params = {{name = "Id", help = "ID Killer"}}})
 
--- Chat
--- AddEventHandler('chatMessage', function(Source, Name, Message)
-	
--- 		print('Log message: ' .. Message)
--- 		print(Name)
--- 		print(Source)
--- 		--Getting the steam avatar if available
--- 		TriggerEvent('DiscordBot:ToDiscord', 'chat', Name .. ' [ID: ' .. Source .. ']', Message, 'user', true, Source, false) --Sending the message to discord
 
--- end)
 
---Event to actually send Messages to Discord
 RegisterServerEvent('DiscordBot:ToDiscord')
 AddEventHandler('DiscordBot:ToDiscord', function(WebHook, Name, Message, Image, External, Source, TTS)
 	if Message == nil or Message == '' then
@@ -134,7 +123,7 @@ AddEventHandler('DiscordBot:ToDiscord', function(WebHook, Name, Message, Image, 
 		elseif WebHook:lower() == 'bansystemp' then
 			WebHook = DiscordWebhookBansystemP
 		elseif WebHook:lower() == 'disband' then
-			WebHook = DiscordWebhookDisband	
+			WebHook = DiscordWebhookDisband
 		elseif WebHook:lower() == 'reset' then
 			WebHook = DiscordWebhookReset
 		elseif WebHook:lower() == 'drop' then
@@ -196,7 +185,7 @@ AddEventHandler('DiscordBot:ToDiscord', function(WebHook, Name, Message, Image, 
 		elseif WebHook:lower() == "fine" then
 			WebHook = DiscordFine
 		end
-		
+
 		if Image:lower() == 'steam' then
 			Image = UserAvatar
 			if GetIDFromSource('steam', Source) then
@@ -219,7 +208,6 @@ AddEventHandler('DiscordBot:ToDiscord', function(WebHook, Name, Message, Image, 
 	PerformHttpRequest(WebHook, function(Error, Content, Head) end, 'POST', json.encode({username = Name, content = Message, avatar_url = Image, tts = TTS}), {['Content-Type'] = 'application/json'})
 end)
 
--- Functions
 function IsCommand(String, Type)
 	if Type == 'Blacklisted' then
 		for i, BlacklistedCommand in ipairs(BlacklistedCommands) do
@@ -275,18 +263,18 @@ function stringsplit(input, seperator)
 	if seperator == nil then
 		seperator = '%s'
 	end
-	
+
 	local t={} ; i=1
-	
+
 	for str in string.gmatch(input, '([^'..seperator..']+)') do
 		t[i] = str
 		i = i + 1
 	end
-	
+
 	return t
 end
 
-function GetIDFromSource(Type, ID) --(Thanks To WolfKnight [forum.FiveM.net])
+function GetIDFromSource(Type, ID)
     local IDs = GetPlayerIdentifiers(ID)
     for k, CurrentID in pairs(IDs) do
         local ID = stringsplit(CurrentID, ':')
@@ -320,17 +308,16 @@ AddEventHandler("adminsys:storeLastDamage", function(attackerId, weapon, coords,
     end
 end)
 
-
 RegisterCommand("getdamage", function(source, args)
     local targetId = tonumber(args[1])
 	local xPlayer = ESX.GetPlayerFromId(source)
 	if xPlayer.permission_level >= 1 then
-	 
+
 		if not targetId then
 			TriggerClientEvent('chat:addMessage', source, { args = { "Id vared konin" } })
 			return
 		end
-		
+
 		local damageList = lastDamagers[targetId]
 		if damageList and #damageList > 0 then
 			for i, dmg in ipairs(damageList) do
@@ -354,5 +341,5 @@ RegisterCommand("getdamage", function(source, args)
 		TriggerClientEvent('chat:addMessage', source, {
 			args = { "Shoma Dast Resi Nadarid." }
 		})
-	end 
+	end
 end, false)

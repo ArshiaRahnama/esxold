@@ -13,7 +13,6 @@ end)
 
 local utils = require 'client.utils'
 
----@diagnostic disable-next-line: duplicate-set-field
 function utils.hasPlayerGotGroup(filter)
     local _type = type(filter)
 

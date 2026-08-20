@@ -4,12 +4,6 @@ local GetWorldCoordFromScreenCoord = GetWorldCoordFromScreenCoord
 local StartShapeTestLosProbe = StartShapeTestLosProbe
 local GetShapeTestResultIncludingMaterial = GetShapeTestResultIncludingMaterial
 
----@param flag number
----@return boolean hit
----@return number entityHit
----@return vector3 endCoords
----@return vector3 surfaceNormal
----@return number materialHash
 function utils.raycastFromCamera(flag)
     local coords, normal = GetWorldCoordFromScreenCoord(0.5, 0.5)
     local destination = coords + normal * 10
@@ -21,7 +15,7 @@ function utils.raycastFromCamera(flag)
         local retval, hit, endCoords, surfaceNormal, materialHash, entityHit = GetShapeTestResultIncludingMaterial(handle)
 
         if retval ~= 1 then
-            ---@diagnostic disable-next-line: return-type-mismatch
+
             return hit, entityHit, endCoords, surfaceNormal, materialHash
         end
     end
@@ -31,7 +25,6 @@ function utils.getTexture()
     return lib.requestStreamedTextureDict('shared'), 'emptydot_32'
 end
 
--- SetDrawOrigin is limited to 32 calls per frame. Set as 0 to disable.
 local drawZoneSprites = GetConvarInt('ox_target:drawSprite', 24)
 local SetDrawOrigin = SetDrawOrigin
 local DrawSprite = DrawSprite
@@ -47,8 +40,6 @@ local height = width * GetAspectRatio(false)
 
 if drawZoneSprites == 0 then drawZoneSprites = -1 end
 
----@param coords vector3
----@return CZone[], boolean
 function utils.getNearbyZones(coords)
     if not Zones then return currentZones, false end
 
@@ -131,9 +122,6 @@ function utils.getItems()
     return playerItems
 end
 
----@param filter string | string[] | table<string, number>
----@param hasAny boolean?
----@return boolean
 function utils.hasPlayerGotItems(filter, hasAny)
     if not playerItems then return true end
 
@@ -170,9 +158,6 @@ function utils.hasPlayerGotItems(filter, hasAny)
     return not hasAny
 end
 
----stub
----@param filter string | string[] | table<string, number>
----@return boolean
 function utils.hasPlayerGotGroup(filter)
     return true
 end

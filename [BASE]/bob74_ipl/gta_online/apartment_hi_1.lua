@@ -1,6 +1,4 @@
 
--- 4 Integrity Way, Apt 30
--- High end apartment 1: -35.31277 -580.4199 88.71221
 
 exports('GetGTAOApartmentHi1Object', function()
     return GTAOApartmentHi1

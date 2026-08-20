@@ -101,8 +101,8 @@ AddEventHandler('esx:playerLoaded', function(id, xPlayer)
 			dataStore = CreateDataStore(name, xPlayer.identifier, {})
 			table.insert(DataStores[name], dataStore)
 		end
-		
+
 		table.insert(dataStores, dataStore)
 	end
-	
+
 end)

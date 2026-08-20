@@ -20,9 +20,6 @@ AddEventHandler("Coin-System:PlayerCoin", function(coinAmount)
     PlayerCoin = coinAmount
 end)
 
--- Reward tick loop: every ~2.5 minutes, ping the server-authoritative
--- timer/reward system. Amounts sent here are ignored server-side (see
--- server/coin.lua) — nothing lets this be exploited by editing them.
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(10 * 1000 * 15)
@@ -32,9 +29,6 @@ Citizen.CreateThread(function()
     end
 end)
 
--- Admin command to set a player's coin balance. The real permission
--- gate is server-side (server/coin.lua); this client check just avoids
--- sending an event that would get silently ignored anyway.
 RegisterCommand('setcoin', function(source, args)
     ESX.TriggerServerCallback('esx_aduty:getAdminPerm', function(aperm)
         if aperm >= Config.CoinAdminPermission then

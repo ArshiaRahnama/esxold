@@ -1,8 +1,4 @@
---[[
-	Client side for Turf Wars Inc. Just the HQ (boss action = rent menu,
-	cloakroom, vehicle spawn) - the actual paintball match UI/flow is 100%
-	handled by the existing [ARSHIA]/paintball resource.
-]]
+
 
 local TurfBlip
 CreateThread(function()
@@ -119,7 +115,6 @@ AddEventHandler('uniquecafejobs:turfco:showRentMenu', function(rows)
 	end)
 end)
 
--- ── Vehicle spawn/delete (same pattern as everything else in this resource) ──
 CreateThread(function()
 	while true do
 		Citizen.Wait(0)

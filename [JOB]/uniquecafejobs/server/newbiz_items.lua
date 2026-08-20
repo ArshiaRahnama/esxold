@@ -1,8 +1,4 @@
---[[
-	Registers all 30 new bakery/bar/pizza/icecream/sushi items as usable
-	items in one loop, driven by shared/newbiz_items.lua, instead of 30
-	duplicated ESX.RegisterUsableItem blocks.
-]]
+
 
 for _, item in ipairs(NewBizItems) do
 	ESX.RegisterUsableItem(item.name, function(source)

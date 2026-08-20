@@ -137,12 +137,12 @@ AddEventHandler('esx_idoverhead:checkTimePlay', function()
     local xPlayer = ESX.GetPlayerFromId(src)
     if not xPlayer then return end
 
-    -- FIX: this used to be keyed by a client-supplied `playerId` argument
-    -- that was PlayerId() on the client — a LOCAL, non-network-unique
-    -- handle (almost always 0 for every single client). Every player was
-    -- writing into the same timePlays[0] slot, corrupting/overwriting
-    -- each other's playtime tracking. Now keyed by the real network
-    -- source, which is guaranteed unique per connected player.
+
+
+
+
+
+
     if timePlays[src] == nil then
         local identifier = GetPlayerIdentifier(src)
 
@@ -152,7 +152,7 @@ AddEventHandler('esx_idoverhead:checkTimePlay', function()
                 timePlays[src] = { source = src, joinTime = os.time(), timePlay = timePlayP }
 
                 if timePlayP < 21600 and xPlayer.permission_level <= 0 then
-                    -- Add new player label if needed
+
                 else
                     AddToNet(src, "timePlay", src)
                 end
@@ -274,16 +274,4 @@ function AddToNet(source, netType, id)
         netIds[identifier][netType] = id
     end
 end
-
--- ================================================================= --
--- Level display now goes through Unique_LevelQuest's existing
--- 'XP_System:getRank' read-only callback (client/client.lua fetches a
--- player's rank once, on demand, when their tag first becomes visible —
--- see client/client.lua). The old 'idoverhead:GetPlayerLevel' handler
--- that lived here queried the ENTIRE `users` table (every account ever
--- registered, not just online players) every 60 seconds, independently
--- for EVERY connected client — with 50 players online that's 50
--- full-table scans per minute, all discarding almost everything they
--- fetched. Removed entirely rather than patched.
--- ================================================================= --
 

@@ -1,5 +1,4 @@
 
--- Office 4: -1392.667, -480.4736, 72.04217 (Maze Bank West)
 
 exports('GetFinanceOffice4Object', function()
 	return FinanceOffice4
@@ -8,7 +7,7 @@ end)
 FinanceOffice4 = {
     currentInteriorId = -1,
     currentSafeDoors = {hashL = "", hashR = ""},
-    
+
     Style = {
         Theme = {
             warm = {interiorId = 243201, ipl = "ex_sm_15_office_01a", safe = "ex_prop_safedoor_office1a"},
@@ -46,13 +45,13 @@ FinanceOffice4 = {
         end
     },
     Safe = {
-        doorHeadingL = 188.0, -- Only need the heading of the Left door to get the Right ones
-        Position = {x = -1372.905, y = -462.08, z = 72.05}, -- Approximately between the two doors
+        doorHeadingL = 188.0,
+        Position = {x = -1372.905, y = -462.08, z = 72.05},
 
-        -- These values are checked from "doorHandler.lua" and
+
         isLeftDoorOpen = false, isRightDoorOpen = false,
 
-        -- Safe door API
+
         Open = function(doorSide)
             if (doorSide:lower() == "left") then FinanceOffice4.Safe.isLeftDoorOpen = true
             elseif (doorSide:lower() == "right") then FinanceOffice4.Safe.isRightDoorOpen = true
@@ -70,7 +69,7 @@ FinanceOffice4 = {
             end
         end,
 
-        -- Internal use only
+
         SetDoorState = function(doorSide, open)
             local doorHandle = 0
             local heading = FinanceOffice4.Safe.doorHeadingL
@@ -92,7 +91,7 @@ FinanceOffice4 = {
             SetEntityHeading(doorHandle, heading)
         end,
 
-        -- /!\ handle changes whenever the interior is refreshed /!\
+
         GetDoorHandle = function(doorHash)
             local timeout = 4
             local doorHandle = GetClosestObjectOfType(FinanceOffice4.Safe.Position.x, FinanceOffice4.Safe.Position.y, FinanceOffice4.Safe.Position.z, 5.0, doorHash, false, false, false)

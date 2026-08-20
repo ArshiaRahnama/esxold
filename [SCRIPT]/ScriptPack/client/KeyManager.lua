@@ -76,7 +76,6 @@ local Keys = {
 	["N9"] = 118
 }
 
-
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -94,20 +93,15 @@ local KeysWhiteList = {["g"] = true, ["t"] = true}
 
 local currentKeysHolding = {}
 
-
-
 RegisterNetEvent("onKeyDown")
 
 RegisterNetEvent("onKeyUP")
 
 RegisterNetEvent("onMultiplePress")
 
-
-
 function registerKey(key, type)
 
 	local command = key .. "donttouch"
-
 
 	if not registeredKeys[key] then
 
@@ -117,7 +111,7 @@ function registerKey(key, type)
 
 	end
 
-        
+
 
 	RegisterCommand('+' .. command, function()
 
@@ -129,13 +123,11 @@ function registerKey(key, type)
 
 			end
 
-			
+
 
 			table.insert(keysHolding, key)
 
 			currentKeysHolding[key] = true
-
-
 
 			if #keysHolding > 1 then
 
@@ -143,13 +135,11 @@ function registerKey(key, type)
 
 			end
 
-
-
 		end
 
 	end)
 
-	
+
 
 	RegisterCommand('-' .. command, function()
 
@@ -158,8 +148,6 @@ function registerKey(key, type)
 			TriggerEvent("onKeyUP", key)
 
 		end
-
-
 
 		if currentKeysHolding[key] then
 
@@ -172,8 +160,6 @@ function registerKey(key, type)
 	end)
 
 end
-
-
 
 function removeKey(key)
 
@@ -189,8 +175,6 @@ function removeKey(key)
 
 end
 
-
-
 function shouldSendTheKey(key)
 
 	if KeysWhiteList[key] then
@@ -200,7 +184,7 @@ function shouldSendTheKey(key)
 	else
 
 		local data = ESX.GetPlayerData()
-		
+
 
 		if data.HandCuffed ~= 1 then
 
@@ -215,8 +199,6 @@ function shouldSendTheKey(key)
 	end
 
 end
-
-
 
 local haveToRegister = {
 
@@ -309,15 +291,13 @@ local haveToRegister = {
 	["end"] = "keyboard",
 
 	["u"] = "keyboard",
-	
+
 	["i"] = "keyboard",
 
 	["capital"] = "keyboard",
 
 	["tab"] = "keyboard",
 }
-
-
 
 for key, type in pairs(haveToRegister) do
 

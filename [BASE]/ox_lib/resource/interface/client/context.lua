@@ -1,35 +1,6 @@
 local contextMenus = {}
 local openContextMenu = nil
 
----@class ContextMenuItem
----@field title? string
----@field menu? string
----@field icon? string | {[1]: IconProp, [2]: string};
----@field iconColor? string
----@field image? string
----@field progress? number
----@field onSelect? fun(args: any)
----@field arrow? boolean
----@field description? string
----@field metadata? string | { [string]: any } | string[]
----@field disabled? boolean
----@field readOnly? boolean
----@field event? string
----@field serverEvent? string
----@field args? any
-
----@class ContextMenuArrayItem : ContextMenuItem
----@field title string
-
----@class ContextMenuProps
----@field id string
----@field title string
----@field menu? string
----@field onExit? fun()
----@field onBack? fun()
----@field canClose? boolean
----@field options { [string]: ContextMenuItem } | ContextMenuArrayItem[]
-
 local function closeContext(_, cb, onExit)
     if cb then cb(1) end
 
@@ -44,7 +15,6 @@ local function closeContext(_, cb, onExit)
     openContextMenu = nil
 end
 
----@param id string
 function lib.showContext(id)
     if not contextMenus[id] then error('No context menu of such id found.') end
 
@@ -64,7 +34,6 @@ function lib.showContext(id)
     }, { sort_keys = true }))
 end
 
----@param context ContextMenuProps | ContextMenuProps[]
 function lib.registerContext(context)
     for k, v in pairs(context) do
         if type(k) == 'number' then
@@ -76,10 +45,8 @@ function lib.registerContext(context)
     end
 end
 
----@return string?
 function lib.getOpenContextMenu() return openContextMenu end
 
----@param onExit boolean?
 function lib.hideContext(onExit) closeContext(nil, nil, onExit) end
 
 RegisterNUICallback('openContext', function(data, cb)
@@ -112,6 +79,4 @@ RegisterNUICallback('clickContext', function(id, cb)
 end)
 
 RegisterNUICallback('closeContext', closeContext)
-
-
 

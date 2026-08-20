@@ -56,7 +56,6 @@ ESX.RegisterServerCallback('getDrugPrices', function(source, cb)
 	})
 end)
 
-
 function CountCops()
 
 	local xPlayers = ESX.GetPlayers()
@@ -103,17 +102,6 @@ AddEventHandler('esx_jk_drugs:pickedUpCannabis', function()
 	end
 end)
 
-
----- Quest Shadane
-
--- RegisterServerEvent("esx_drugs:notifyPickup")
--- AddEventHandler("esx_drugs:notifyPickup", function(amount, itemName)
--- 	local _source = source
--- 	TriggerClientEvent("esx_drugs:weedpickup", _source, amount, itemName)
--- end)
-
-
-
 ESX.RegisterServerCallback('esx_jk_drugs:canPickUp', function(source, cb, item)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local xItem = xPlayer.getInventoryItem(item)
@@ -138,7 +126,7 @@ AddEventHandler('esx_jk_drugs:pickedUpCocaPlant', function()
 			return
 		end
 	end
-	
+
 	if multi then
 		local picked = math.random(3)
 		if xItem.limit ~= -1 and (xItem.count + picked) > xItem.limit then
@@ -183,7 +171,6 @@ AddEventHandler('esx_jk_drugs:pickedUpEphedra', function()
 	end
 end)
 
-
 RegisterServerEvent('esx_jk_drugs:pickedUpmushroom')
 AddEventHandler('esx_jk_drugs:pickedUpmushroom', function()
 	local _source = source
@@ -212,13 +199,12 @@ AddEventHandler('esx_jk_drugs:pickedUpmushroom', function()
 	end
 end)
 
-
 RegisterServerEvent('esx_jk_drugs:pickedUpPoppy')
 AddEventHandler('esx_jk_drugs:pickedUpPoppy', function(hasSkill)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	local xItem = xPlayer.getInventoryItem('poppy')
-	
+
 	if xPlayer.job.grade > 0 then
 		if xPlayer.job.name == 'ambulance' or xPlayer.job.name == 'taxi' or xPlayer.job.name == 'mechanic' or xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' or xPlayer.job.name == 'sheriff' or xPlayer.job.name == 'fbi' or xPlayer.job.name == 'cid' or xPlayer.job.name == 'cia' or xPlayer.job.name == 'marshal' or xPlayer.job.name == 'judge' or xPlayer.job.name == 'doa' then
 			TriggerClientEvent('esx:showNotification', _source, 'Shoma nemitavanid On-Duty in kar ro anjam dahid!')
@@ -271,7 +257,7 @@ AddEventHandler('esx_jk_drugs:processCannabis', function()
 			TriggerClientEvent('esx:showNotification', _source, _U('weed_processed'))
 		end
 		TriggerEvent('esx_jk_drugs:processCannabis', _source)
-		
+
 	end
 
 end)
@@ -326,7 +312,7 @@ AddEventHandler('esx_jk_drugs:processEphedra', function()
 		xPlayer.addInventoryItem('ephedrine', 2)
 		TriggerClientEvent('esx_drugs:MarijuanaProg', _source)
 		TriggerClientEvent("Task_System:SakhteEphedrine", _source, amount, itemName)
-		
+
 
 		TriggerClientEvent('esx:showNotification', _source, _U('ephedrine_processed'))
 	end
@@ -360,9 +346,6 @@ AddEventHandler('esx_jk_drugs:processEphedrine', function()
 	end
 
 end)
-
-
-
 
 RegisterServerEvent('esx_jk_drugs:processCoke')
 AddEventHandler('esx_jk_drugs:processCoke', function()
@@ -415,7 +398,7 @@ AddEventHandler('esx_jk_drugs:processPoppy', function()
 		TriggerClientEvent('esx_drugs:MarijuanaProg', _source)
 		exports['Unique_Skills']:UpdateSkill(_source, "Heroine", 0.004)
 		TriggerClientEvent("Task_System:SakhteTeryak", _source, amount, itemName)
-		
+
 		TriggerClientEvent('esx:showNotification', _source, _U('opium_processed'))
 	end
 end)
@@ -447,19 +430,7 @@ AddEventHandler('esx_jk_drugs:processOpium', function()
 	end
 end)
 
--- RegisterServerEvent('esx_jk_drugs:restrictedArea')
--- AddEventHandler('esx_jk_drugs:restrictedArea', function()
--- 	local _source = source
--- 	local xPlayers = ESX.GetPlayers()
 
--- 	for i=1, #xPlayers, 1 do
--- 		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-		
--- 		if xPlayer.job.name == 'police' then
--- 			TriggerClientEvent('esx:showNotification', xPlayers[i], (_U('restricted_zone')))
--- 		end
--- 	end
--- end)
 
 RegisterServerEvent('esx_jk_drugs:testResultsFail')
 AddEventHandler('esx_jk_drugs:testResultsFail', function()
@@ -468,7 +439,7 @@ AddEventHandler('esx_jk_drugs:testResultsFail', function()
 
 	for i=1, #xPlayers, 1 do
 		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-		
+
 		if xPlayer.job.name == 'police' then
 			TriggerClientEvent('esx:showNotification', xPlayers[i], (_U('drug_fail')))
 		end
@@ -482,7 +453,7 @@ AddEventHandler('esx_jk_drugs:testResultsFailTipsy', function()
 
 	for i=1, #xPlayers, 1 do
 		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-		
+
 		if xPlayer.job.name == 'police' then
 			TriggerClientEvent('esx:showNotification', xPlayers[i], (_U('fail_tipsy')))
 		end
@@ -496,7 +467,7 @@ AddEventHandler('esx_jk_drugs:testResultsFailDrunk', function()
 
 	for i=1, #xPlayers, 1 do
 		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-		
+
 		if xPlayer.job.name == 'police' then
 			TriggerClientEvent('esx:showNotification', xPlayers[i], (_U('fail_drunk')))
 		end
@@ -510,7 +481,7 @@ AddEventHandler('esx_jk_drugs:testResultsPass', function()
 
 	for i=1, #xPlayers, 1 do
 		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-		
+
 		if xPlayer.job.name == 'police' then
 			TriggerClientEvent('esx:showNotification', xPlayers[i], (_U('drug_pass')))
 		end
@@ -524,7 +495,7 @@ AddEventHandler('esx_jk_drugs:testResultsPassBCA', function()
 
 	for i=1, #xPlayers, 1 do
 		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-		
+
 		if xPlayer.job.name == 'police' then
 			TriggerClientEvent('esx:showNotification', xPlayers[i], (_U('bca_pass')))
 		end
@@ -595,7 +566,7 @@ AddEventHandler('esx_drugs:sellDrug', function(itemName, amount)
 			return
 		end
 	end
-	
+
 	if not price then
 		print(('esx_drugs: %s attempted to sell an invalid drug!'):format(xPlayer.identifier))
 		return
@@ -622,7 +593,7 @@ end)
 ESX.RegisterUsableItem('marijuana', function(source)
 		local xPlayer = ESX.GetPlayerFromId(source)
 		xPlayer.removeInventoryItem('marijuana', 1)
-	
+
 		TriggerClientEvent('esx_jk_drugs:useItem', source, 'marijuana')
 
 		Citizen.Wait(1000)
@@ -631,7 +602,7 @@ end)
 ESX.RegisterUsableItem('cocaine', function(source)
 		local xPlayer = ESX.GetPlayerFromId(source)
 		xPlayer.removeInventoryItem('cocaine', 1)
-	
+
 		TriggerClientEvent('esx_jk_drugs:useItem', source, 'cocaine')
 
 		Citizen.Wait(1000)
@@ -640,7 +611,7 @@ end)
 ESX.RegisterUsableItem('crack', function(source)
 		local xPlayer = ESX.GetPlayerFromId(source)
 		xPlayer.removeInventoryItem('crack', 1)
-	
+
 		TriggerClientEvent('esx_jk_drugs:useItem', source, 'crack')
 
 		Citizen.Wait(1000)
@@ -649,7 +620,7 @@ end)
 ESX.RegisterUsableItem('meth', function(source)
 		local xPlayer = ESX.GetPlayerFromId(source)
 		xPlayer.removeInventoryItem('meth', 1)
-	
+
 		TriggerClientEvent('esx_jk_drugs:useItem', source, 'meth')
 
 		Citizen.Wait(1000)
@@ -676,7 +647,7 @@ end)
 ESX.RegisterUsableItem('drugtest', function(source)
 		local xPlayer = ESX.GetPlayerFromId(source)
 		xPlayer.removeInventoryItem('drugtest', 1)
-	
+
 		TriggerClientEvent('esx_jk_drugs:useItem', source, 'drugtest')
 
 		Citizen.Wait(1000)
@@ -685,7 +656,7 @@ end)
 ESX.RegisterUsableItem('fakepee', function(source)
 		local xPlayer = ESX.GetPlayerFromId(source)
 		xPlayer.removeInventoryItem('fakepee', 1)
-	
+
 		TriggerClientEvent('esx_jk_drugs:useItem', source, 'fakepee')
 
 		Citizen.Wait(1000)
@@ -694,7 +665,7 @@ end)
 ESX.RegisterUsableItem('beer', function(source)
 		local xPlayer = ESX.GetPlayerFromId(source)
 		xPlayer.removeInventoryItem('beer', 1)
-	
+
 		TriggerClientEvent('esx_jk_drugs:useItem', source, 'beer')
 
 		Citizen.Wait(1000)
@@ -703,7 +674,7 @@ end)
 ESX.RegisterUsableItem('tequila', function(source)
 		local xPlayer = ESX.GetPlayerFromId(source)
 		xPlayer.removeInventoryItem('tequila', 1)
-	
+
 		TriggerClientEvent('esx_jk_drugs:useItem', source, 'tequila')
 
 		Citizen.Wait(1000)
@@ -712,7 +683,7 @@ end)
 ESX.RegisterUsableItem('vodka', function(source)
 		local xPlayer = ESX.GetPlayerFromId(source)
 		xPlayer.removeInventoryItem('vodka', 1)
-	
+
 		TriggerClientEvent('esx_jk_drugs:useItem', source, 'vodka')
 
 		Citizen.Wait(1000)
@@ -721,7 +692,7 @@ end)
 ESX.RegisterUsableItem('whiskey', function(source)
 		local xPlayer = ESX.GetPlayerFromId(source)
 		xPlayer.removeInventoryItem('whiskey', 1)
-	
+
 		TriggerClientEvent('esx_jk_drugs:useItem', source, 'whiskey')
 
 		Citizen.Wait(1000)
@@ -730,7 +701,7 @@ end)
 ESX.RegisterUsableItem('breathalyzer', function(source)
 		local xPlayer = ESX.GetPlayerFromId(source)
 		xPlayer.removeInventoryItem('breathalyzer', 1)
-	
+
 		TriggerClientEvent('esx_jk_drugs:useItem', source, 'breathalyzer')
 
 		Citizen.Wait(1000)
@@ -760,17 +731,16 @@ end)
 ESX.RegisterUsableItem('sianor', function(source)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	xPlayer.removeInventoryItem('sianor', 1)	
+	xPlayer.removeInventoryItem('sianor', 1)
 	TriggerClientEvent('es_admin:kill',_source)
 	Citizen.Wait(3000)
 	TriggerClientEvent('es_admin:kill',_source)
 end)
 
-
 ESX.RegisterUsableItem('mahi_fugu', function(source)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	xPlayer.removeInventoryItem('mahi_fugu', 1)	
+	xPlayer.removeInventoryItem('mahi_fugu', 1)
 	TriggerClientEvent('es_admin:kill',_source)
 	Citizen.Wait(3000)
 	TriggerClientEvent('es_admin:kill',_source)
@@ -781,6 +751,6 @@ function loop()
 
   	SetTimeout(1000*60*10, loop)
 end
-  
+
 loop()
 

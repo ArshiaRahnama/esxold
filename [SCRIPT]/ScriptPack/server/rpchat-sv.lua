@@ -3,10 +3,10 @@ local mutedTable = {}
 
 local Attempts = {}
 
-Citizen.CreateThread(function()    
-   while ESX == nil do TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)        
-   Citizen.Wait(50)    
-	end     
+Citizen.CreateThread(function()
+   while ESX == nil do TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+   Citizen.Wait(50)
+	end
 end)
 
 function getIdentity(source)
@@ -31,17 +31,13 @@ RegisterCommand('serverd', function(source, args, rawCommand)
   		local xPlayer = ESX.GetPlayerFromId(source)
 
 		if xPlayer.permission_level >= 11 then
-     local msg = rawCommand:sub(5) 
+     local msg = rawCommand:sub(5)
      TriggerClientEvent('chat:addMessage', -1, {
          template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(0, 236, 255, 0.6); border-radius: 3px;"><i class="far fa-newspaper"></i> Server Discord:<br> https://discord.gg/rwBHcCqzJB</div>',
          args = { playerName, msg }
      })
 end
 end, false)
-
-
-
-
 
 AddEventHandler('chatMessage', function(source, name, message)
 		if string.sub(message, 1, string.len("/")) ~= "/" then
@@ -52,8 +48,8 @@ AddEventHandler('chatMessage', function(source, name, message)
 		end
 		CancelEvent()
 	end)
-	
-	
+
+
 	TriggerEvent('es:addCommand', 'ooc', function(source, args, user)
 		local name =  GetPlayerName(source)
 		local xPlayer = ESX.GetPlayerFromId(source)
@@ -93,51 +89,51 @@ AddEventHandler('chatMessage', function(source, name, message)
 				message = table.concat(args, " "),
 				distance = 30.0,
 				coords = vector3(xPlayer.coords.x, xPlayer.coords.y, xPlayer.coords.z)
-			}	
+			}
 			TriggerClientEvent("sendProximityMessage", -1, data)
 		end
 	end)
 
-	-- TriggerEvent('es:addCommand', 'mp', function(source, args, user)
-	-- 	xPlayer = ESX.GetPlayerFromId(source)
-	-- 	if xPlayer.job.name == 'police' then
-	-- 		TriggerClientEvent("sendProximityMessageMP", -1, source, "Bolandgo Police", table.concat(args, " "))
-	-- 	end
-	-- end)
 
- 
+
+
+
+
+
+
+
 	RegisterCommand('mp', function(source, args, rawCommand)
 		local src = source
-		local xPlayer = ESX.GetPlayerFromId(src) 
-	
+		local xPlayer = ESX.GetPlayerFromId(src)
+
 		if xPlayer then
-			
+
 			local allowedJobs = {
 				police = "rgba(0, 0, 255, 0.6)",
-				mt = "rgba(0, 0, 0, 0.6)",    
-				sheriff = "rgba(254, 255, 254, 0.6)",     
-				fbi = "rgba(0, 0, 0, 0.6)",           
-				ambulance = "rgba(255, 0, 0, 0.6)",  
+				mt = "rgba(0, 0, 0, 0.6)",
+				sheriff = "rgba(254, 255, 254, 0.6)",
+				fbi = "rgba(0, 0, 0, 0.6)",
+				ambulance = "rgba(255, 0, 0, 0.6)",
 				mechanic = "rgba(255, 165, 0, 0.6)",
-				-- Department Of Justice (see esx_uniquejobs/shared/departments.lua)
+
 				cid = "rgba(75, 0, 130, 0.6)",
 				cia = "rgba(25, 25, 25, 0.6)",
 				marshal = "rgba(139, 69, 19, 0.6)",
 				judge = "rgba(0, 100, 0, 0.6)",
 				doa = "rgba(128, 0, 0, 0.6)"
 			}
-	
+
 			local playerJob = xPlayer.job.name
-			local jobLabel = xPlayer.job.label 
+			local jobLabel = xPlayer.job.label
 			local color = allowedJobs[playerJob]
-	
+
 			if color then
 				local message = table.concat(args, " ")
 				if message and message ~= "" then
-					local playerCoords = GetEntityCoords(GetPlayerPed(src)) 
+					local playerCoords = GetEntityCoords(GetPlayerPed(src))
 					local players = GetPlayers()
-	
-				 
+
+
 					for _, playerId in ipairs(players) do
 						local targetCoords = GetEntityCoords(GetPlayerPed(playerId))
 						local distance = #(playerCoords - targetCoords)
@@ -145,7 +141,7 @@ AddEventHandler('chatMessage', function(source, name, message)
 							TriggerClientEvent('chat:addMessage', playerId, {
 								template = string.format(
 									'<div style="padding: 0.5vw; margin: 0.2vw; background-color: %s; border-radius: 3px;">' ..
-									'<b>Bolandgo %s [%s]:</b><br>{0}</div>', 
+									'<b>Bolandgo %s [%s]:</b><br>{0}</div>',
 									color, jobLabel, src
 								),
 								args = { message }
@@ -168,7 +164,6 @@ AddEventHandler('chatMessage', function(source, name, message)
 			})
 		end
 	end, false)
-	
 
 
 	TriggerEvent('es:addCommand', 'do', function(source, args, user)
@@ -202,11 +197,11 @@ AddEventHandler('chatMessage', function(source, name, message)
 						coords = vector3(xPlayer.coords.x, xPlayer.coords.y, xPlayer.coords.z)
 					}
 					TriggerClientEvent("sendProximityMessage", -1, data)
-					
+
 				else
 
 					TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma nemitavanid dar halat ^1OffDuty ^0az command haye admini estefade konid!")
-					
+
 				end
 
 		else
@@ -234,12 +229,12 @@ AddEventHandler('chatMessage', function(source, name, message)
 							coords = vector3(xPlayer.coords.x, xPlayer.coords.y, xPlayer.coords.z)
 						}
 						TriggerClientEvent("sendProximityMessage", -1, data)
-					end			
+					end
 
 				else
 
 					TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma nemitavanid dar halat ^1OffDuty ^0az command haye admini estefade konid!")
-					
+
 				end
 		else
 			TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, "Shoma admin nistid!")
@@ -263,7 +258,7 @@ AddEventHandler('chatMessage', function(source, name, message)
 			TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, "Nemitavanid bishtar az 3 tas hamzaman bendazid!")
 			return
 		end
-	
+
 		local text = math.random(1,6)
 
 		for i = 2,count do
@@ -283,15 +278,13 @@ AddEventHandler('chatMessage', function(source, name, message)
 		TriggerClientEvent("sendProximityMessage", -1, data)
 	end)
 
-	-- TriggerEvent('es:addCommand', 'b', function(source, args, user)
-	-- 	-- local name = getIdentity(source)
-	-- 	TriggerClientEvent('chatMessage', -1, "OOC | " .. GetPlayerName(source) .. ": ", {200, 200, 200}, table.concat(args, " "))
-	-- end, {help = 'Out Of Character message'})
 
-	-- TriggerEvent('es:addCommand', 'ooc', function(source, args, user)
-	-- 	-- local name = getIdentity(source)
-	-- 	TriggerClientEvent('chatMessage', -1, "OOC | " .. GetPlayerName(source) .. ": ", {200, 200, 200}, table.concat(args, " "))
-	-- end, {help = 'Out Of Character message'})
+
+
+
+
+
+
 
 
 

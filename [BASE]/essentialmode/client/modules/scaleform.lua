@@ -25,15 +25,15 @@ ESX.Scaleform.ShowBreakingNews = function(title, msg, bottom, sec)
     EndScaleformMovieMethod()
 
     BeginScaleformMovieMethod(scaleform, "SET_SCROLL_TEXT")
-    PushScaleformMovieMethodParameterInt(0) -- top ticker
-    PushScaleformMovieMethodParameterInt(0) -- Since this is the first string, start at 0
+    PushScaleformMovieMethodParameterInt(0)
+    PushScaleformMovieMethodParameterInt(0)
     PushScaleformMovieMethodParameterString(title)
 
     EndScaleformMovieMethod()
 
     BeginScaleformMovieMethod(scaleform, "DISPLAY_SCROLL_TEXT")
-    PushScaleformMovieMethodParameterInt(0) -- Top ticker
-    PushScaleformMovieMethodParameterInt(0) -- Index of string
+    PushScaleformMovieMethodParameterInt(0)
+    PushScaleformMovieMethodParameterInt(0)
 
     EndScaleformMovieMethod()
 
@@ -52,7 +52,7 @@ ESX.Scaleform.ShowPopupWarning = function(title, msg, bottom, sec)
 
     BeginScaleformMovieMethod(scaleform, "SHOW_POPUP_WARNING")
 
-    PushScaleformMovieMethodParameterFloat(500.0) -- black background
+    PushScaleformMovieMethodParameterFloat(500.0)
     PushScaleformMovieMethodParameterString(title)
     PushScaleformMovieMethodParameterString(msg)
     PushScaleformMovieMethodParameterString(bottom)

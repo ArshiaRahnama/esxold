@@ -28,10 +28,6 @@ Citizen.CreateThread(function()
     end
 end)
 
------------------------------------------------------------------------------
--- NUI OPEN EXPORT/EVENT
------------------------------------------------------------------------------
-
 RegisterCommand("vehcontrol", function(source, args, rawCommand)
 	if IsPedInAnyVehicle(PlayerPedId(), false) and not IsPauseMenuActive() then
 		openVehControl()
@@ -52,10 +48,6 @@ AddEventHandler('vehcontrol:openExternal', function()
 		openVehControl()
 	end
 end)
-
------------------------------------------------------------------------------
--- NUI OPEN/CLOSE FUNCTIONS
------------------------------------------------------------------------------
 
 function openVehControl()
 	isInVehControl = true
@@ -81,10 +73,6 @@ RegisterNUICallback('NUIFocusOff', function()
 	})
 end)
 
------------------------------------------------------------------------------
--- NUI CALLBACKS
------------------------------------------------------------------------------
-
 RegisterNUICallback('ignition', function()
     EngineControl()
 end)
@@ -108,10 +96,6 @@ end)
 RegisterNUICallback('bombbay', function()
 	BombBayControl()
 end)
-
------------------------------------------------------------------------------
--- ACTION FUNCTIONS
------------------------------------------------------------------------------
 
 function EngineControl()
     local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
@@ -268,18 +252,15 @@ function BombBayControl()
 	end
 end
 
------------------------------------------------------------------------------
--- VEHICLE COMMANDS
------------------------------------------------------------------------------
 if UseCommands then
-	-- ENGINE
+
 	TriggerEvent('chat:addSuggestion', '/engine', 'Start/Stop Engine')
 
 	RegisterCommand("engine", function(source, args, rawCommand)
 		EngineControl()
 	end, false)
 
-	-- DOORS
+
 	TriggerEvent('chat:addSuggestion', '/door', 'Open/Close Vehicle Door', {
 		{ name="ID", help="1) Driver, 2) Passenger, 3) Driver Side Rear, 4) Passenger Side Rear" }
 	})
@@ -301,7 +282,7 @@ if UseCommands then
 		end
 	end, false)
 
-	-- SEAT
+
 	TriggerEvent('chat:addSuggestion', '/seat', 'Move to a seat', {
 		{ name="ID", help="1) Driver, 2) Passenger, 3) Driver Side Rear, 4) Passenger Side Rear" }
 	})
@@ -323,14 +304,14 @@ if UseCommands then
 		end
 	end, false)
 
-	-- WINDOWS
+
 	TriggerEvent('chat:addSuggestion', '/window', 'Roll Up/Down Window', {
 		{ name="ID", help="1) Driver, 2) Passenger, 3) Driver Side Rear, 4) Passenger Side Rear" }
 	})
 
 	RegisterCommand("window", function(source, args, rawCommand)
 		local windowID = tonumber(args[1])
-		
+
 		if windowID ~= nil then
 			if windowID == 1 then
 				WindowControl(0, 0)
@@ -346,35 +327,35 @@ if UseCommands then
 		end
 	end, false)
 
-	-- HOOD
+
 	TriggerEvent('chat:addSuggestion', '/hood', 'Open/Close Hood')
 
 	RegisterCommand("hood", function(source, args, rawCommand)
 		DoorControl(4)
 	end, false)
 
-	-- TRUNK
+
 	TriggerEvent('chat:addSuggestion', '/trunk', 'Open/Close Trunk')
 
 	RegisterCommand("trunk", function(source, args, rawCommand)
 		DoorControl(5)
 	end, false)
 
-	-- FRONT WINDOWS
+
 	TriggerEvent('chat:addSuggestion', '/windowfront', 'Roll Up/Down Front Windows')
 
 	RegisterCommand("windowfront", function(source, args, rawCommand)
 		FrontWindowControl()
 	end, false)
 
-	-- BACK WINDOWS
+
 	TriggerEvent('chat:addSuggestion', '/windowback', 'Roll Up/Down Back Windows')
 
 	RegisterCommand("windowback", function(source, args, rawCommand)
 		BackWindowControl()
 	end, false)
 
-	-- ALL WINDOWS
+
 	TriggerEvent('chat:addSuggestion', '/windowall', 'Roll Up/Down All Windows')
 
 	RegisterCommand("windowall", function(source, args, rawCommand)
@@ -382,7 +363,6 @@ if UseCommands then
 	end, false)
 end
 
--- FORCE CLOSE
 RegisterCommand("vehcontrolclose", function(source, args, rawCommand)
 	closeVehControl()
 end, false)

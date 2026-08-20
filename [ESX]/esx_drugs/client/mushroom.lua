@@ -8,7 +8,7 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(PlayerPedId())
 
 		if GetDistanceBetweenCoords(coords, Config.FieldZones.MushroomField.coords, true) < 40 then
-			-- TriggerEvent('esx:showNotification', _U('mushroom_field_close'))
+
 			SpawnMushroomPlants()
 			Citizen.Wait(1000)
 		else
@@ -16,8 +16,6 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
-
-
 
 Citizen.CreateThread(function()
 	while true do
@@ -60,16 +58,16 @@ Citizen.CreateThread(function()
 							},
 						}, function(status)
 							if not status then
-		
+
 							table.remove(MushroomPlants, nearbyID)
 							spawnedMushroom = spawnedMushroom - 1
 
 							ClearPedTasks(playerPed)
 							ESX.Game.DeleteObject(nearbyObject)
-			
+
 							TriggerServerEvent('esx_jk_drugs:pickedUpmushroom')
 							isPickingUp = false
-					
+
 							elseif status then
 
 								ClearPedTasksImmediately(playerPed)
@@ -78,7 +76,7 @@ Citizen.CreateThread(function()
 							end
 						end)
 
-						
+
 					else
 						ESX.ShowNotification(_U('mushroom_inventoryfull'))
 					end

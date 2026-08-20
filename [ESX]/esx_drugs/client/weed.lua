@@ -8,7 +8,7 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(PlayerPedId())
 
 		if GetDistanceBetweenCoords(coords, Config.FieldZones.WeedField.coords, true) < 20 then
-			-- TriggerEvent('esx:showNotification', _U('weed_field_close'))
+
 			SpawnWeedPlants()
 			Citizen.Wait(1000)
 		else
@@ -24,7 +24,7 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(playerPed)
 
 		if GetDistanceBetweenCoords(coords, Config.ProcessZones.WeedProcessing.coords, true) < 15 and GetDistanceBetweenCoords(coords, Config.ProcessZones.WeedProcessing.coords, true) > 10 then
-			-- ESX.ShowNotification(_U('weed_process_close'))
+
 		end
 	end
 end)
@@ -54,13 +54,13 @@ Citizen.CreateThread(function()
 
 					if canPickUp then
 						local TimeOut = 3500
-						-- Unique_Skills is optional; guard the call so a missing resource doesn't crash
+
 						local ChekSkills = 0
 						if GetResourceState('Unique_Skills') == 'started' then
 							local ok, result = pcall(function() return exports['Unique_Skills']:CheckSkill('Marijuana') end)
 							if ok then ChekSkills = result end
 						end
-						if ChekSkills == 100 then 
+						if ChekSkills == 100 then
 							TimeOut = TimeOut / 2
 						else
 							TimeOut = TimeOut
@@ -81,28 +81,28 @@ Citizen.CreateThread(function()
 							},
 						}, function(status)
 							if not status then
-		
+
 								table.remove(weedPlants, nearbyID)
 								spawnedWeeds = spawnedWeeds - 1
 								ClearPedTasksImmediately(playerPed)
 								ClearPedTasks(playerPed)
 								ESX.Game.DeleteObject(nearbyObject)
-		
+
 								TriggerServerEvent('esx_jk_drugs:pickedUpCannabis')
-								
-								local amount = 1 
+
+								local amount = 1
 								local itemName = "cannabis"
 								TriggerServerEvent("esx_drugs:notifyPickup", amount, itemName)
-								
+
 								isPickingUp = false
-					
+
 							elseif status then
 
 								ClearPedTasksImmediately(playerPed)
 								isPickingUp = false
 
 							end
-						end)  
+						end)
 
 					else
 						ESX.ShowNotification(_U('weed_inventoryfull'))
@@ -115,8 +115,6 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
-
-
 
 AddEventHandler('onResourceStop', function(resource)
 	if resource == GetCurrentResourceName() then
@@ -177,8 +175,8 @@ function GenerateWeedCoords()
 
 		weedCoordX = Config.FieldZones.WeedField.coords.x + modX
 		weedCoordY = Config.FieldZones.WeedField.coords.y + modY
-		
-		
+
+
 		local coordZ = GetCoordZ(weedCoordX, weedCoordY)
 		local coord = vector3(weedCoordX, weedCoordY, coordZ)
 

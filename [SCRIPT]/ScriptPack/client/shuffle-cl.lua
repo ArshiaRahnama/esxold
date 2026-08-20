@@ -128,7 +128,7 @@ Citizen.CreateThread(function()
 		end
 
 	end
-end)	
+end)
 
 Citizen.CreateThread(function()
 	while true do

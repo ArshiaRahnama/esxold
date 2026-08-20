@@ -1,5 +1,4 @@
----@class OxTargetOption
----@field resource? string
+
 
 local utils = require 'client.utils'
 
@@ -10,17 +9,10 @@ local api = setmetatable({}, {
     end
 })
 
----Throws a formatted type error
----@param variable string
----@param expected string
----@param received string
 local function typeError(variable, expected, received)
     error(("expected %s to have type '%s' (received %s)"):format(variable, expected, received))
 end
 
----Checks options and throws an error on type mismatch
----@param options OxTargetOption | OxTargetOption[]
----@return OxTargetOption[]
 local function checkOptions(options)
     local optionsType = type(options)
 
@@ -39,8 +31,6 @@ local function checkOptions(options)
     return options
 end
 
----@param data OxTargetPolyZone | table
----@return number
 function api.addPolyZone(data)
     if data.debug then utils.warn('Creating new PolyZone with debug enabled.') end
 
@@ -49,8 +39,6 @@ function api.addPolyZone(data)
     return lib.zones.poly(data).id
 end
 
----@param data OxTargetBoxZone | table
----@return number
 function api.addBoxZone(data)
     if data.debug then utils.warn('Creating new BoxZone with debug enabled.') end
 
@@ -59,8 +47,6 @@ function api.addBoxZone(data)
     return lib.zones.box(data).id
 end
 
----@param data OxTargetSphereZone | table
----@return number
 function api.addSphereZone(data)
     if data.debug then utils.warn('Creating new SphereZone with debug enabled.') end
 
@@ -69,8 +55,6 @@ function api.addSphereZone(data)
     return lib.zones.sphere(data).id
 end
 
----@param id number | string
----@param suppressWarning boolean?
 function api.removeZone(id, suppressWarning)
     if Zones then
         if type(id) == 'string' then
@@ -94,10 +78,6 @@ function api.removeZone(id, suppressWarning)
     warn(('attempted to remove a zone that does not exist (id: %s)'):format(id))
 end
 
----@param target table
----@param remove string | string[]
----@param resource string
----@param showWarning? boolean
 local function removeTarget(target, remove, resource, showWarning)
     if type(remove) ~= 'table' then remove = { remove } end
 
@@ -118,9 +98,6 @@ local function removeTarget(target, remove, resource, showWarning)
     end
 end
 
----@param target table
----@param options OxTargetOption | OxTargetOption[]
----@param resource string
 local function addTarget(target, options, resource)
     options = checkOptions(options)
 
@@ -161,63 +138,48 @@ local function addTarget(target, options, resource)
     end
 end
 
----@type table<number, OxTargetOption[]>
 local peds = {}
 
----@param options OxTargetOption | OxTargetOption[]
 function api.addGlobalPed(options)
     addTarget(peds, options, GetInvokingResource())
 end
 
----@param options string | string[]
 function api.removeGlobalPed(options)
     removeTarget(peds, options, GetInvokingResource())
 end
 
----@type table<number, OxTargetOption[]>
 local vehicles = {}
 
----@param options OxTargetOption | OxTargetOption[]
 function api.addGlobalVehicle(options)
     addTarget(vehicles, options, GetInvokingResource())
 end
 
----@param options string | string[]
 function api.removeGlobalVehicle(options)
     removeTarget(vehicles, options, GetInvokingResource())
 end
 
----@type table<number, OxTargetOption[]>
 local objects = {}
 
----@param options OxTargetOption | OxTargetOption[]
 function api.addGlobalObject(options)
     addTarget(objects, options, GetInvokingResource())
 end
 
----@param options string | string[]
 function api.removeGlobalObject(options)
     removeTarget(objects, options, GetInvokingResource())
 end
 
----@type table<number, OxTargetOption[]>
 local players = {}
 
----@param options OxTargetOption | OxTargetOption[]
 function api.addGlobalPlayer(options)
     addTarget(players, options, GetInvokingResource())
 end
 
----@param options string | string[]
 function api.removeGlobalPlayer(options)
     removeTarget(players, options, GetInvokingResource())
 end
 
----@type table<number, OxTargetOption[]>
 local models = {}
 
----@param arr (number | string) | (number | string)[]
----@param options OxTargetOption | OxTargetOption[]
 function api.addModel(arr, options)
     if type(arr) ~= 'table' then arr = { arr } end
     local resource = GetInvokingResource()
@@ -234,8 +196,6 @@ function api.addModel(arr, options)
     end
 end
 
----@param arr (number | string) | (number | string)[]
----@param options? string | string[]
 function api.removeModel(arr, options)
     if type(arr) ~= 'table' then arr = { arr } end
     local resource = GetInvokingResource()
@@ -256,11 +216,8 @@ function api.removeModel(arr, options)
     end
 end
 
----@type table<number, OxTargetOption[]>
 local entities = {}
 
----@param arr number | number[]
----@param options OxTargetOption | OxTargetOption[]
 function api.addEntity(arr, options)
     if type(arr) ~= 'table' then arr = { arr } end
     local resource = GetInvokingResource()
@@ -282,8 +239,6 @@ function api.addEntity(arr, options)
     end
 end
 
----@param arr number | number[]
----@param options? string | string[]
 function api.removeEntity(arr, options)
     if type(arr) ~= 'table' then arr = { arr } end
     local resource = GetInvokingResource()
@@ -305,11 +260,8 @@ end
 
 RegisterNetEvent('ox_target:removeEntity', api.removeEntity)
 
----@type table<number, OxTargetOption[]>
 local localEntities = {}
 
----@param arr number | number[]
----@param options OxTargetOption | OxTargetOption[]
 function api.addLocalEntity(arr, options)
     if type(arr) ~= 'table' then arr = { arr } end
     local resource = GetInvokingResource()
@@ -329,8 +281,6 @@ function api.addLocalEntity(arr, options)
     end
 end
 
----@param arr number | number[]
----@param options? table
 function api.removeLocalEntity(arr, options)
     if type(arr) ~= 'table' then arr = { arr } end
     local resource = GetInvokingResource()
@@ -362,8 +312,6 @@ CreateThread(function()
     end
 end)
 
----@param resource string
----@param target table
 local function removeResourceGlobals(resource, target)
     for i = 1, #target do
         local options = target[i]
@@ -376,8 +324,6 @@ local function removeResourceGlobals(resource, target)
     end
 end
 
----@param resource string
----@param target table
 local function removeResourceTargets(resource, target)
     for i = 1, #target do
         local tbl = target[i]
@@ -396,7 +342,6 @@ local function removeResourceTargets(resource, target)
     end
 end
 
----@param resource string
 AddEventHandler('onClientResourceStop', function(resource)
     removeResourceGlobals(resource, { peds, vehicles, objects, players })
     removeResourceTargets(resource, { models, entities, localEntities })
@@ -413,7 +358,6 @@ end)
 local NetworkGetEntityIsNetworked = NetworkGetEntityIsNetworked
 local NetworkGetNetworkIdFromEntity = NetworkGetNetworkIdFromEntity
 
----@class OxTargetOptions
 local options_mt = {}
 options_mt.__index = options_mt
 options_mt.size = 1
@@ -430,9 +374,6 @@ function options_mt:wipe()
     end
 end
 
----@param entity? number
----@param _type? number
----@param model? number
 function options_mt:set(entity, _type, model)
     if not entity then return end
 
@@ -457,27 +398,20 @@ function options_mt:set(entity, _type, model)
     if self.localEntity then options_mt.size += 1 end
 end
 
----@type OxTargetOption[]
 local global = {}
 
----@param options OxTargetOption | OxTargetOption[]
 function api.addGlobalOption(options)
     addTarget(global, options, GetInvokingResource())
 end
 
----@param options string | string[]
 function api.removeGlobalOption(options)
     removeTarget(global, options, GetInvokingResource())
 end
 
----@class OxTargetOptions
 local options = setmetatable({
     __global = global
 }, options_mt)
 
----@param entity? number
----@param _type? number
----@param model? number
 function api.getTargetOptions(entity, _type, model)
     if not entity then return options end
 

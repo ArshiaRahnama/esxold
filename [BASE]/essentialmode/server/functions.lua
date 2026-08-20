@@ -39,12 +39,9 @@ ESX.TriggerServerCallback = function(name, requestId, source, cb, ...)
     end
 end
 
-
-
-
 ESX.SavePlayer = function(Source, cb)
     local asyncTasks = {}
-    --inventory
+
     local invent = {}
     if not Users[Source] then
         return
@@ -77,7 +74,7 @@ ESX.SavePlayer = function(Source, cb)
     Async.parallel(
         asyncTasks,
         function(results)
-            -- RconPrint('[SAVED] ' .. Users[Source].name .. "\n")
+
 
             if cb ~= nil then
                 cb()
@@ -216,7 +213,7 @@ ESX.CreatePickup = function(type, name, sc, label, player)
         count = count,
 		components = components
     }
-	
+
     local object = ESX.GetWeaponObject(name)
     TriggerClientEvent("esx:pickup", -1, pickupId, label, object or "xs_prop_arena_bag_01", components, player)
     ESX.PickupId = pickupId
@@ -233,17 +230,11 @@ ESX.CreatePickupCrafting = function(type, name, sc, label, x, y, z)
         count = count,
 		components = components
     }
-	
+
     local object = ESX.GetWeaponObject(name)
     TriggerClientEvent("esx:pickupcrafting", -1, pickupId, label, object or "xs_prop_arena_bag_01", components, x, y, z)
     ESX.PickupId = pickupId
 end
-
-
-
-
-
-
 
 ESX.UpdatePickup = function(id, remaining, label)
     ESX.Pickups[id].count = remaining
@@ -307,7 +298,7 @@ function GetPlayerICName(source)
 	if Users[source] and Users[source].name then
 		return Users[source].name
 	end
-end 
+end
 function IcName(source)
     local src = tonumber(source)
     if Users[src] and Users[src].name then
@@ -326,147 +317,20 @@ ESX.DoesGangExist = function(gang, grade)
 
     return false
 end
--- ESX.DoesDivisionExist = function(job, Division, grade)
---     if job and Division and grade then
---         if ESX.Jobs[job] and ESX.Divisions[job][Division] and ESX.Divisions[job][Division].grades[tostring(grade)] then
---             return true
---         end
---     elseif job and Division then
---         if ESX.Jobs[job] and ESX.Divisions[job][Division] then
---             return true
---         end
---     end
 
---     return false
--- end
 
--- ESX.AddDivision = function(divisionOwner, divisionName, label, ngrade, lgrade)
---     if divisionOwner and divisionName and label and ngrade and lgrade then
---         local divisionObj = {
---             ["owner"] = divisionOwner,
---             ["label"] = label,
---             ["name"] = divisionName
---         }
 
---         local gradeObj = {
---             ["division_owner"] = divisionOwner,
---             ["label"] = lgrade,
---             ["name"] = ngrade,
---             ["grade"] = tonumber(0),
---             ["division"] = divisionName
---         }
---         if not ESX.DoesDivisionExist(divisionOwner, divisionName) and ESX.Jobs[divisionOwner] then
---             if not ESX.Divisions[divisionOwner][divisionName] then
---                 MySQL.Async.execute(
---                     "INSERT INTO divisions VALUES(@divisionOwner, @divisionName, @divisionLabel, @skin_male, @skin_female)",
---                     {
---                         ["@divisionOwner"] = divisionObj.owner,
---                         ["@divisionName"] = divisionObj.name,
---                         ["@divisionLabel"] = divisionObj.label,
---                         ["@skin_male"] = '[]',
---                         ["@skin_female"] = '[]',
---                     },
---                     function(rowsChanged)
---                         -- MySQL.Async.execute(
---                         --     "INSERT INTO division_grades (division_owner, division, grade, name, label) VALUES (@divisionOwner, @divisionName, @grade, @ngrade, @lgrade)",
---                         --     {
---                         --         ["@divisionOwner"] = gradeObj.division_owner,
---                         --         ["@divisionName"] = gradeObj.division,
---                         --         ["@grade"] = gradeObj.grade,
---                         --         ["@ngrade"] = gradeObj.name,
---                         --         ["@lgrade"] = gradeObj.label
---                         --     },
---                         --     function(rowsChanged)
---                         --         ESX.Divisions[divisionOwner][divisionName] = divisionObj
---                         --         ESX.Divisions[divisionOwner][divisionName].grades = {}
---                         --         ESX.Divisions[divisionOwner][divisionName].grades["0"] = gradeObj
---                         --     end
---                         -- )
---                     end
---                 )
 
---                 return true
---             end
---             return false
---         end
 
---         return false
---     end
 
---     return false
--- end
 
--- ESX.AddGrade = function(job, division, grade, ngrade, lgrade)
---     if not ESX.DoesDivisionExist(job, division, grade) then
---         local gradeObj = {
---             ["division_owner"] = job,
---             ["label"] = lgrade,
---             ["name"] = ngrade,
---             ["grade"] = tonumber(grade),
---             ["division"] = division
---         }
 
-        -- MySQL.Async.execute(
-        --     "INSERT INTO division_grades (division_owner, division, grade, name, label) VALUES (@divisionOwner, @divisionName, @grade, @ngrade, @lgrade)",
-        --     {
-        --         ["@divisionOwner"] = gradeObj.division_owner,
-        --         ["@divisionName"] = gradeObj.division,
-        --         ["@grade"] = gradeObj.grade,
-        --         ["@ngrade"] = gradeObj.name,
-        --         ["@lgrade"] = gradeObj.label
-        --     },
-        --     function(rowsChanged)
-        --         ESX.Divisions[job][division].grades[tostring(grade)] = gradeObj
-        --     end
-        -- )
---         return true
---     end
---     return false
--- end
 
--- ESX.RemoveGrade = function(job, division, grade)
---     if ESX.DoesDivisionExist(job, division, grade) then
---         MySQL.Async.execute(
---             "DELETE FROM division_grades WHERE division = @division AND grade = @grade ;",
---             {
---                 ["@division"] = division,
---                 ["@grade"] = tonumber(grade)
---             },
---             function(rowsChanged)
---                 ESX.Divisions[job][division].grades[grade] = nil
---             end
---         )
---         return true
---     end
 
---     return false
--- end
 
--- ESX.RemoveDivision = function(job, division)
---     if ESX.DoesDivisionExist(job, division) then
---         MySQL.Async.execute(
---             "DELETE FROM divisions WHERE name = @division;",
---             {
---                 ["@division"] = division
---             },
---             function(rowsChanged)
---                 MySQL.Async.execute(
---                     "DELETE FROM division_grades WHERE division = @division;",
---                     {
---                         ["@division"] = division
---                     },
---                     function(rowsChanged)
---                         ESX.Divisions[job][division] = {}
---                     end
---                 )
---             end
---         )
 
---         return true
---     end
 
---     return false
--- end
+
 
 ESX.GetGang = function(gang)
     if ESX.DoesGangExist(gang, 1) then
@@ -518,6 +382,4 @@ ESX.SetJobGrade = function(job, grade, name)
         return nil
     end
 end
-
-
 

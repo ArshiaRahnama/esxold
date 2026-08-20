@@ -218,7 +218,6 @@ AddEventHandler('esx_dmvschool:loadLicenses', function(licenses)
 	Licenses = licenses
 end)
 
--- Create Blips
 Citizen.CreateThread(function()
 	local blip = AddBlipForCoord(Config.Zones.DMVSchool.Pos.x, Config.Zones.DMVSchool.Pos.y, Config.Zones.DMVSchool.Pos.z)
 
@@ -232,7 +231,6 @@ Citizen.CreateThread(function()
 	EndTextCommandSetBlipName(blip)
 end)
 
--- Display markers
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
@@ -247,7 +245,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Enter / Exit marker events
 Citizen.CreateThread(function()
 	while true do
 
@@ -277,7 +274,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Block UI
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
@@ -285,18 +281,17 @@ Citizen.CreateThread(function()
 		if CurrentTest == 'theory' then
 			local playerPed = PlayerPedId()
 
-			DisableControlAction(0, 1, true) -- LookLeftRight
-			DisableControlAction(0, 2, true) -- LookUpDown
-			DisablePlayerFiring(playerPed, true) -- Disable weapon firing
-			DisableControlAction(0, 142, true) -- MeleeAttackAlternate
-			DisableControlAction(0, 106, true) -- VehicleMouseControlOverride
+			DisableControlAction(0, 1, true)
+			DisableControlAction(0, 2, true)
+			DisablePlayerFiring(playerPed, true)
+			DisableControlAction(0, 142, true)
+			DisableControlAction(0, 106, true)
 		else
 			Citizen.Wait(500)
 		end
 	end
 end)
 
--- Key Controls
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
@@ -317,7 +312,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Drive test
 Citizen.CreateThread(function()
 	while true do
 
@@ -367,13 +361,12 @@ Citizen.CreateThread(function()
 				end
 			end
 		else
-			-- not currently taking driver test
+
 			Citizen.Wait(500)
 		end
 	end
 end)
 
--- Speed / Damage control
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(10)
@@ -414,13 +407,13 @@ Citizen.CreateThread(function()
 					ESX.ShowNotification(_U('you_damaged_veh'))
 					ESX.ShowNotification(_U('errors', DriveErrors, Config.MaxErrors))
 
-					-- avoid stacking faults
+
 					LastVehicleHealth = health
 					Citizen.Wait(1500)
 				end
 			end
 		else
-			-- not currently taking driver test
+
 			Citizen.Wait(500)
 		end
 	end

@@ -1,42 +1,24 @@
--- ESX is already initialized globally by server.lua; no need to re-fetch it here.
---
--- SECURITY NOTE (fixed):
--- Previously "CarLock:ToggleKey" / "CarLock:ToggleKey2" trusted whatever plate
--- (and, for ToggleKey2, whatever target id) the client sent, with zero
--- server-side validation. Any player could fire those net events directly
--- (no game UI required) and mint themselves a permanent CarKey for ANY
--- plate -- including police/FBI/other players' cars -- fully bypassing the
--- lock system. Every path below now re-checks ownership/context on the
--- server before granting or revoking a key.
 
--- Every plate prefix a job vehicle actually gets, taken straight from the
--- server's own job scripts ([JOB]/esx_uniquejobs/client/*_main.lua,
--- SetVehicleNumberPlateText calls) -- this is the full DOJ / Law
--- Enforcement / Organ Services roster from notejobserver.txt:
---   DOJ:              CID, CIA, Marshal, FBI, Judge, DOA
---   Law Enforcement:  Police, Sheriff, MT
---   Organ Services:   Taxi, Mechanic, Medic (ambulance), Weazel
+
 local JOB_PLATE_ACCESS = {
-    -- Department of Justice
+
     cid       = "CID",
     cia       = "CIA",
     marshal   = "MS",
     fbi       = "FBI",
     judge     = "JD",
     doa       = "DOA",
-    -- Law Enforcement
+
     police    = "PD",
     sheriff   = "SH",
     mt        = "MT",
-    -- Organ Services
+
     taxi      = "TX",
     mechanic  = "MC",
     ambulance = "MD",
     weazel    = "WZ",
 }
 
--- Org vehicles should never be hotwireable by an outsider -- same prefix set
--- as JOB_PLATE_ACCESS above, just inverted into a lookup for the hotwire check.
 local RESTRICTED_HOTWIRE_PREFIXES = {}
 for _, prefix in pairs(JOB_PLATE_ACCESS) do
     RESTRICTED_HOTWIRE_PREFIXES[prefix] = true
@@ -46,7 +28,6 @@ local function IsStaff(xPlayer)
     return xPlayer ~= nil and xPlayer.permission_level ~= nil and xPlayer.permission_level >= 1
 end
 
--- Does this job/plate combo grant organizational (job) access, regardless of items?
 local function HasJobPlateAccess(xPlayer, plate)
     local jobName = xPlayer.job and xPlayer.job.name
     if not jobName then return false end
@@ -58,8 +39,6 @@ local function HasJobPlateAccess(xPlayer, plate)
     return prefix == requiredPrefix
 end
 
--- Checks a plate against every prefix in RESTRICTED_HOTWIRE_PREFIXES,
--- regardless of whether the prefix is 2 or 3 characters long.
 local function MatchesRestrictedPrefix(plate)
     for prefix in pairs(RESTRICTED_HOTWIRE_PREFIXES) do
         if string.upper(string.sub(plate, 1, #prefix)) == prefix then
@@ -69,7 +48,6 @@ local function MatchesRestrictedPrefix(plate)
     return false
 end
 
--- Async DB ownership check: personal owner OR gang owner. cb(isOwner, rowExists)
 local function CheckDbOwnership(xPlayer, plate, cb)
     local gangName = xPlayer.gang and xPlayer.gang.name or nil
     MySQL.Async.fetchScalar('SELECT owner FROM owned_vehicles WHERE plate = @plate', {
@@ -107,8 +85,8 @@ ESX.RegisterServerCallback('CarLock:haskey', function(source, cb, plate)
         return
     end
 
-    -- Fallback: personal or gang ownership in the DB, even without the item
-    -- (covers desync cases -- previously only gang ownership was checked here).
+
+
     CheckDbOwnership(xPlayer, plate, function(isOwner)
         cb(isOwner)
     end)
@@ -166,12 +144,6 @@ function EnumerateVehicles()
     end)
 end
 
---- Grants (op=true) or revokes (op=false) the CarKey item for `plate` to the
---- CALLING player (source). Validated against, in order: staff, DB
---- ownership (personal/gang), or actually sitting in a vehicle bearing that
---- exact plate while the plate has no DB owner yet (covers freshly spawned /
---- not-yet-registered vehicles -- dealership test drives, admin spawns,
---- job vehicles, etc).
 RegisterNetEvent("CarLock:ToggleKey")
 AddEventHandler("CarLock:ToggleKey", function(op, plate)
     local src = source
@@ -214,21 +186,21 @@ AddEventHandler("CarLock:ToggleKey", function(op, plate)
             end
 
             if rowExists then
-                -- Someone else owns this plate in the DB. Refuse.
+
                 print(("[CarLock] Blocked suspicious key grant: player %s (%s) requested CarKey for plate '%s' which is DB-owned by someone else.")
                     :format(GetPlayerName(src) or "?", xPlayer.identifier or "?", plate))
                 return
             end
 
-            -- Not registered in owned_vehicles at all yet -- only allow if the
-            -- player is actually sitting in a vehicle bearing this exact plate
-            -- right now (e.g. it was just spawned by SpawnVehicle/dealer/admin
-            -- and hasn't been saved to the DB yet).
-            --
-            -- NOTE: a freshly client-created vehicle can take a tick or two to
-            -- fully replicate to the server, so GetVehiclePedIsIn() right here
-            -- can briefly return 0 even for a 100% legit spawn. Retry a few
-            -- times over ~1.5s before giving up, instead of rejecting instantly.
+
+
+
+
+
+
+
+
+
             local granted = false
             for attempt = 1, 15 do
                 local ped = GetPlayerPed(src)
@@ -246,8 +218,8 @@ AddEventHandler("CarLock:ToggleKey", function(op, plate)
             end
         end)
     else
-        -- Revoking is lower-risk (it only removes access), but still gate it
-        -- so a random player can't grief-wipe someone else's key on a whim.
+
+
         if IsStaff(xPlayer) or (xPlayer.getInventoryItem(item) and xPlayer.getInventoryItem(item).count > 0) then
             applyRevoke()
         else
@@ -258,9 +230,6 @@ AddEventHandler("CarLock:ToggleKey", function(op, plate)
     end
 end)
 
---- Give-your-key-to-a-nearby-player. Sender must actually have legitimate
---- access to the plate themselves (item, DB ownership, or staff) before they
---- can hand it to someone else, and the target must be a real, nearby player.
 RegisterNetEvent("CarLock:ToggleKey2")
 AddEventHandler("CarLock:ToggleKey2", function(op, plate, targetId)
     local src = source
@@ -317,12 +286,6 @@ ESX.RegisterServerCallback('CarLock:hasHotwireItem', function(source, cb)
     cb(hotwireItem ~= nil and hotwireItem.count >= 1)
 end)
 
---- SECURITY NOTE (fixed): the restricted-plate-prefix check (no hotwiring
---- police/FBI/ambulance/etc) previously existed ONLY on the client, so any
---- exploit could skip straight to firing this event and hotwire a
---- restricted vehicle anyway. The prefix check is now enforced here too,
---- and we verify the player is actually sitting in the vehicle whose plate
---- they claim, instead of trusting a bare "give me a hotwire" ping.
 RegisterNetEvent('CarLock:useHotwireKit')
 AddEventHandler('CarLock:useHotwireKit', function(plate)
     local src = source
@@ -359,7 +322,7 @@ ESX.RegisterServerCallback('CarLock:canHotwire', function(source, cb, plate)
     local hasKey = xPlayer.getInventoryItem(item) and xPlayer.getInventoryItem(item).count >= 1
 
     if hasKey then
-        cb(false) -- already has a key, no need to hotwire
+        cb(false)
         return
     end
 

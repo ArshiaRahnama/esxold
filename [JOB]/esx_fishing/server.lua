@@ -27,7 +27,6 @@ ESX.RegisterServerCallback('GetMahiPrice', function(source, cb)
 	})
 end)
 
-
 ESX.RegisterUsableItem('fishingrod', function(source)
   TriggerClientEvent('fishing:start', source)
 end)
@@ -44,48 +43,31 @@ AddEventHandler('fishing:done', function(number)
     if fishingPlayers[source] then
         local time = os.time() - fishingPlayers[source]
         if time < 20 then
-            -- exports.BanSql:BanTarget(source, "Tried to modify fishing timer: " .. tostring(time), "Cheat lua executor")
+
             return
         end
     end
 
     TriggerClientEvent("Task_System:MahiGiri", source)
 
-    if grab.name == "mahigoli" then 
+    if grab.name == "mahigoli" then
         TriggerClientEvent("Task_System:Mahimahigoli", source)
-    elseif grab.name == "ghezelala" then 
+    elseif grab.name == "ghezelala" then
         TriggerClientEvent("Task_System:Mahighezelala", source)
     elseif grab.name == "hamoor" then
-        TriggerClientEvent("Task_System:Mahihamoor", source) 
-    elseif grab.name == "salomon" then 
+        TriggerClientEvent("Task_System:Mahihamoor", source)
+    elseif grab.name == "salomon" then
         TriggerClientEvent("Task_System:Mahisalomon", source)
-    elseif grab.name == "meygoo" then 
+    elseif grab.name == "meygoo" then
         TriggerClientEvent("Task_System:Mahimeygoo", source)
-    elseif grab.name == "jolbak" then 
+    elseif grab.name == "jolbak" then
         TriggerClientEvent("Task_System:Mahijolbak", source)
     end
-
-
 
     fishingPlayers[source] = os.time()
     xPlayer.addInventoryItem(grab.name, 1)
     exports['Unique_Skills']:UpdateSkill(source, "Fishing", 0.010)
 end)
-
--- RegisterServerEvent('esx_fishing:sellfish')
--- AddEventHandler('esx_fishing:sellfish', function(itemName, amount, price)
--- 	local _source = source
--- 	local xPlayer = ESX.GetPlayerFromId(_source)
--- 	local price = price
--- 	local xItem = xPlayer.getInventoryItem(itemName)
--- 	if not price then return end
--- 	if xItem.count < amount then TriggerClientEvent('esx:showNotification', _source, "Shoma In Tedad Mahi Nadarid!") return end
--- 	price = ESX.Math.Round(price * amount)
--- 	xPlayer.addMoney(price)
--- 	xPlayer.removeInventoryItem(xItem.name, amount)	
--- 	TriggerClientEvent('esx:showNotification', _source, "~h~Shoma ba movafagiat ~o~" .. amount .. "x ~w~"..xItem.label.." be gheymat ~r~$" .. ESX.Math.GroupDigits(price) .. " forokhtid!")
--- 	TriggerClientEvent("Quest-System:AddCompleteQuest", _source, amount, itemName)
--- end)
 
 ESX.RegisterServerCallback('fishing:haveItem', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)

@@ -76,8 +76,6 @@ local horof = {
     "~z~"
 }
 
-
-
 ESX.ShowNotification = function(msg)
     local msgedit = tostring(msg)
 
@@ -94,9 +92,9 @@ ESX.ShowNotification = function(msg)
             duration = 5000
         })
     else
-        -- ox_lib's `lib` isn't loaded in this resource's context (missing
-        -- shared_script '@ox_lib/init.lua' in this resource's own manifest).
-        -- Fall back to the native notification so this never crashes.
+
+
+
         SetNotificationTextEntry("STRING")
         AddTextComponentString(msgedit)
         DrawNotification(false, false)
@@ -293,7 +291,7 @@ ESX.UI.Menu.Open = function(type, namespace, name, data, submit, cancel, change,
 
     table.insert(ESX.UI.Menu.Opened, menu)
     ESX.UI.Menu.RegisteredTypes[type].open(namespace, name, data)
-    
+
 
     return menu
 end
@@ -363,8 +361,6 @@ ESX.Game.PlayerExist = function(src)
     return false
 end
 
-
-
 ESX.Game.GetPedMugshot = function(ped)
     local mugshot = RegisterPedheadshot(ped)
     while not IsPedheadshotReady(mugshot) do
@@ -417,7 +413,7 @@ ESX.Game.DoesPlayerExistInArea = function(source)
             return true
         end
 	end
-	
+
     return false
 end
 
@@ -448,7 +444,7 @@ ESX.Game.DeleteVehicle = function(vehicle)
     DeleteVehicle(vehicle)
 end
 
-ESX.Game.DeleteVehicleJobs = function(vehicle)  
+ESX.Game.DeleteVehicleJobs = function(vehicle)
     TriggerServerEvent('unregisterSpawnedVehicle', GetVehicleNumberPlateText(vehicle))
     SetEntityAsMissionEntity(vehicle, false, true)
     DeleteVehicle(vehicle)
@@ -499,7 +495,6 @@ ESX.Game.SpawnVehicle = function(modelName, coords, heading, cb, plate)
     end)
 end
 
-
 ESX.Game.SpawnVehicleJobs = function(modelName, coords, heading, cb, plate)
     local model = (type(modelName) == 'number' and modelName or GetHashKey(modelName))
     Citizen.CreateThread(function()
@@ -541,9 +536,6 @@ ESX.Game.SpawnVehicleJobs = function(modelName, coords, heading, cb, plate)
     end)
 end
 
-
-
-
 ESX.Game.SpawnLocalVehicle = function(modelName, coords, heading, cb, plate)
     local model = (type(modelName) == "number" and modelName or GetHashKey(modelName))
 
@@ -574,22 +566,19 @@ ESX.Game.SpawnLocalVehicle = function(modelName, coords, heading, cb, plate)
             if cb ~= nil then
                 cb(vehicle)
             end
-			-- if plate then
-			-- local pt = ESX.Math.Trim(plate)
 
-			-- 	SetVehicleNumberPlateText(vehicle, string.upper(pt))
-			-- 	TriggerServerEvent('esx:CreateItem', "CarKey|"..string.upper(pt), "CarKey | "..string.upper(pt), 1, 0, 0);
-			-- 	TriggerServerEvent("CarLock:ToggleKey", true, string.upper(pt), vehicle)
-			-- else
-			-- 	TriggerServerEvent('esx:CreateItem', "CarKey|"..GetVehicleNumberPlateText(vehicle), "CarKey | "..GetVehicleNumberPlateText(vehicle), 1, 0, 0);
-			-- 	TriggerServerEvent("CarLock:ToggleKey", true, GetVehicleNumberPlateText(vehicle), vehicle)
-			-- end
+
+
+
+
+
+
+
+
+
         end
     )
 end
-
-
-
 
 ESX.Game.GetObjects = function()
     local objects = {}
@@ -649,7 +638,6 @@ ESX.Game.GetClosestObject = function(filter, coords)
     return closestObject, closestDistance
 end
 
-
 ESX.Game.GetPlayersServerIdInArea = function(coords, area)
 	local players       = ESX.Game.GetPlayers()
 	local playersInArea = {}
@@ -665,7 +653,6 @@ ESX.Game.GetPlayersServerIdInArea = function(coords, area)
 	end
 	return playersInArea
 end
-
 
 ESX.Game.GetPlayers = function()
     local players = {}
@@ -810,7 +797,6 @@ ESX.Game.GetVehicleInDirection = function(distance)
     return 0
 end
 
-
 ESX.Game.IsSpawnPointClear = function(coords, radius)
     local vehicles = ESX.Game.GetVehiclesInArea(coords, radius)
 
@@ -857,8 +843,6 @@ ESX.Game.GetClosestPed = function(coords, ignoreList)
 
     return closestPed, closestDistance
 end
-
-
 
 ESX.Game.GetVehicleProperties = function(vehicle)
 	local color1, color2               = GetVehicleColours(vehicle)
@@ -955,10 +939,10 @@ ESX.Game.SetVehicleProperties = function(vehicle, props,job)
 		SetVehicleNumberPlateTextIndex(vehicle, props.plateIndex)
 	end
 	if props.headlight ~= nil then
-		ToggleVehicleMod(vehicle, 22, true) 
+		ToggleVehicleMod(vehicle, 22, true)
 		SetVehicleHeadlightsColour(vehicle, props.headlight)
 	else
-		ToggleVehicleMod(vehicle, 22, false) 
+		ToggleVehicleMod(vehicle, 22, false)
 	end
 	if props.livery ~= nil then
 		SetVehicleLivery(vehicle,props.livery)
@@ -1444,7 +1428,7 @@ ESX.ShowInventory = function()
                             function(data2, menu2)
                                 menu2.close()
                             end
-                        ) -- give end
+                        )
                     elseif data1.current.action == "remove" then
                         if IsPedSittingInAnyVehicle(playerPed) then
                             return
@@ -1453,7 +1437,7 @@ ESX.ShowInventory = function()
                         if type == "item_weapon" then
                             TriggerServerEvent("esx:removeInventoryItem", type, item)
                             menu1.close()
-                        else -- type: item_standard
+                        else
                             ESX.UI.Menu.Open(
                                 "dialog",
                                 GetCurrentResourceName(),
@@ -1513,7 +1497,7 @@ ESX.ShowInventory = function()
                                                 ESX.ShowNotification(
                                                     _U("gave_ammo", quantity, GetPlayerName(closestPlayer))
                                                 )
-                                                -- todo notify target that he received ammo
+
                                                 menu2.close()
                                                 menu1.close()
                                             else
@@ -1556,7 +1540,6 @@ AddEventHandler(
     end
 )
 
-
 RegisterNetEvent("esx:showNotification")
 AddEventHandler(
     "esx:showNotification",
@@ -1582,7 +1565,6 @@ AddEventHandler(
     end
 )
 
--- SetTimeout
 Citizen.CreateThread(
     function()
         while true do

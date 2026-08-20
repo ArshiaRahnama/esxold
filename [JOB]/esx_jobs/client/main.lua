@@ -38,7 +38,6 @@ local jobsplate = {
 	["tailor"] = "T"
 }
 
-
 ESX = nil
 
 Citizen.CreateThread(function()
@@ -46,7 +45,7 @@ Citizen.CreateThread(function()
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(1)
 	end
-	
+
 	while ESX.GetPlayerData().job == nil do
 		Citizen.Wait(10)
 	end
@@ -114,7 +113,7 @@ RegisterNetEvent('esx:inJob')
 AddEventHandler('esx:inJob', function(name)
     if (name == 'fisherman' or name == 'fueler' or name == 'lumberjack' or name == 'slaughterer'  or name == 'tailor') then
         playerjob = name
-		--myPlate = {} -- loosing vehicle caution in case player changes job.
+
 		spawner = 0
     else
         playerjob = nil
@@ -126,16 +125,15 @@ end)
 RegisterNetEvent('esx:SetVarOnDuty')
 AddEventHandler('esx:SetVarOnDuty',function(name,duty)
 	if name == 'fisherman' or name == 'fueler' or name == 'lumberjack' or name == 'slaughterer'  or name == 'tailor' then
-		--onDuty = duty
+
     end
 end)
 
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
-	--PlayerData = xPlayer
-	--refreshBlips()
-end)
 
+
+end)
 
 function OpenMenu(job)
 	ESX.UI.Menu.CloseAll()
@@ -166,7 +164,7 @@ function OpenMenu(job)
 		elseif data.current.value == 'job_wear' then
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 				if skin.sex == 0 then
-					
+
 					TriggerEvent('skinchanger:loadClothes', skin, lebasmenu['work_wear'].male)
 				else
 					TriggerEvent('skinchanger:loadClothes', skin, lebasmenu['work_wear'].male)
@@ -237,13 +235,13 @@ AddEventHandler('esx_jobs:action', function(job, zone)
                     local vehicle = GetVehiclePedIsIn(playerPed, false)
                     local plate = "UNKNOWN"
                     local driverPed = nil
-                    
+
                     if vehicle and vehicle ~= 0 then
                         plate = GetVehicleNumberPlateText(vehicle)
                         plate = string.gsub(plate, " ", "")
                         driverPed = GetPedInVehicleSeat(vehicle, -1)
                     end
-                    
+
                     if not vehicle or vehicle == 0 or not driverPed or playerPed == driverPed then
 
                         TriggerServerEvent('esx_jobs:cascaryution', "give_back", giveBack, 0, 0)
@@ -277,7 +275,7 @@ AddEventHandler('esx_jobs:action', function(job, zone)
                     else
                         ESX.ShowNotification(_U('not_your_vehicle'))
                     end
-                    
+
                     looping = false
                     break
                 end
@@ -298,7 +296,7 @@ AddEventHandler('esx_jobs:action', function(job, zone)
 		hintIsShowed = false
 		TriggerServerEvent('esx_jobs:starServerTestprpWork', zone.Item)
 	end
-	--nextStep(zone.GPS)
+
 end)
 
 function nextStep(gps)
@@ -352,7 +350,7 @@ end
 
 function spawnVehicle(spawnPoint, vehicle, vehicleCaution)
 	if not getVehicleFromPlate(jobsplate[playerjob]) then
-		hintToDisplay = 'no hint to display'	
+		hintToDisplay = 'no hint to display'
 		hintIsShowed = false
 		TriggerServerEvent('esx_jobs:cascaryution', 'take', vehicleCaution, spawnPoint, vehicle)
 		Spawn(spawnPoint, vehicle)
@@ -366,18 +364,18 @@ function Spawn(spawnPoint, vehicle)
 
 	ESX.Game.SpawnVehicle(vehicle.Hash, spawnPoint.Pos, spawnPoint.Heading, function(spawnedVehicle)
 		DecorSetBool(spawnedVehicle,"JobCenter",true)
-		-- if vehicle.Trailer ~= "none" then
-		-- 	ESX.Game.SpawnVehicle(vehicle.Trailer, spawnPoint.Pos, spawnPoint.Heading, function(trailer)
-		-- 		AttachVehicleToTrailer(spawnedVehicle, trailer, 1.1)
-		-- 	end)
-		-- end
 
-		-- save & set plate
-		--local plate = 'WORK' .. math.random(100, 900)
-	
+
+
+
+
+
+
+
+
 		table.insert(myPlate, plate)
-	
-          
+
+
 		TaskWarpPedIntoVehicle(playerPed, spawnedVehicle, -1)
 
 		if vehicle.HasCaution then
@@ -429,7 +427,7 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(PlayerPedId())
 		for k,v in pairs(zones) do
 		if v.Type == "cloakroom" then
-			
+
 				if Vdist(coords, v.Pos.x, v.Pos.y, v.Pos.z) < Config.DrawDistance then
 					DrawMarker(27, v.Pos.x, v.Pos.y, v.Pos.z+0.1, 0.0, 0.0, 0.0, 0, 0.0, 0.0, 1.0,  1.0,  1.0, 42, 255, 0, 100, false, true, 2, false, false, false, false)
 				end
@@ -439,7 +437,7 @@ Citizen.CreateThread(function()
 end)
 
 function NearAny()
-	
+
 	local zones = {}
 
 	if playerjob ~= nil then
@@ -476,7 +474,7 @@ local zoneInfo = {active = false}
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
-		
+
 	end
 end)
 
@@ -489,8 +487,6 @@ AddEventHandler("onKeyDown", function(key)
 		end
 	end
 end)
-
-
 
 Citizen.CreateThread(function()
 	while true do
@@ -534,7 +530,7 @@ Citizen.CreateThread(function()
 					ESX.UI.Menu.CloseAll()
 				end
 
-				-- hide or show top left zone hints
+
 				if isInMarker and not menuIsShowed then
 					hintIsShowed = true
 					if (onDuty or zone.Type == "cloakroom") and zone.Type ~= "vehdelete" then
@@ -590,14 +586,14 @@ Citizen.CreateThread(function()
 end)
 
 Citizen.CreateThread(function()
-	-- Slaughterer
+
 	RemoveIpl("CS1_02_cf_offmission")
 	RequestIpl("CS1_02_cf_onmission1")
 	RequestIpl("CS1_02_cf_onmission2")
 	RequestIpl("CS1_02_cf_onmission3")
 	RequestIpl("CS1_02_cf_onmission4")
 
-	-- Tailor
+
 	RequestIpl("id2_14_during_door")
 	RequestIpl("id2_14_during1")
 end)
@@ -609,11 +605,11 @@ AddEventHandler("startJob",function(name)
         SetNewWaypoint(GetBlipCoords(firstLocationBlip[name]).xy)
         SetBlipAsShortRange(firstLocationBlip[name],false)
 		ESX.ShowNotification("Be Mahal ~p~Pin~w~ Shode Beravid Sepas Lebas Shoghl Khod Ra Beposhid!")
-        --exports.sunset_helper:LoadNotif({title = 'پوشیدن لباس', text = "به این مکان بروید (پین شده در نقشه)، سپس لباس شغل خود را بپوشید", picture = Config.Jobs[name].pic})
-		--ESX.ClearTimeout(tOut)
-		--tOut = ESX.SetTimeout(15000,function()
-		--	exports.sunset_helper:UnLoadNotif()
-		--end)
+
+
+
+
+
     else
 		for k , v in pairs(firstLocationBlip) do
 			SetNewWaypoint(GetEntityCoords(GetPlayerPed(-1)))

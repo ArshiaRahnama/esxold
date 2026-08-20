@@ -10,8 +10,6 @@ local Keys = {
     ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-
-
 ESX = nil
 local PlayerData = nil
 local sentence = {active = false, time = 0, distance = 100, type = 0, unjail = 0}
@@ -54,7 +52,6 @@ AddEventHandler('playerSpawned', function(xPlayer)
     end)
 end)
 
-
 local function IsJobAllowed(jobname, jobgrade)
 	for _, job in pairs(Config.AllowedJobs) do
 		if jobname == job.name then
@@ -76,24 +73,24 @@ Citizen.CreateThread(function()
             DrawGenericText("~r~Zamane Jail : ~w~" .. sentence.time .. " ~r~Daghighe")
             DisableControlAction(0, Keys['F3'],true)
             DisableControlAction(0, Keys[','], true)
-            --if sentence.ajail then
+
             DisableControlAction(0, Keys['F1'], true)
             DisableControlAction(0, Keys['M'], true)
             DisableControlAction(0, Keys['R'], true)
             DisableControlAction(0, Keys['F2'], true)
-            DisableControlAction(0, 24, true) -- Attack
-            DisableControlAction(0, 257, true) -- Attack 2
-            DisableControlAction(0, 25, true) -- Right click
-            DisableControlAction(0, 47, true)  -- Disable weapon
-            DisableControlAction(0, 264, true) -- Disable melee
-            DisableControlAction(0, 257, true) -- Disable melee
-            DisableControlAction(0, 140, true) -- Disable melee
-            DisableControlAction(0, 141, true) -- Disable melee
-            DisableControlAction(0, 142, true) -- Disable melee
-            DisableControlAction(0, 143, true) -- Disable melee
-            DisableControlAction(0, 263, true) -- Melee Attack 1
-            DisableControlAction(0, 27, true) -- Arrow up
-            --end
+            DisableControlAction(0, 24, true)
+            DisableControlAction(0, 257, true)
+            DisableControlAction(0, 25, true)
+            DisableControlAction(0, 47, true)
+            DisableControlAction(0, 264, true)
+            DisableControlAction(0, 257, true)
+            DisableControlAction(0, 140, true)
+            DisableControlAction(0, 141, true)
+            DisableControlAction(0, 142, true)
+            DisableControlAction(0, 143, true)
+            DisableControlAction(0, 263, true)
+            DisableControlAction(0, 27, true)
+
         else
             Wait(1000)
         end
@@ -111,11 +108,11 @@ Citizen.CreateThread(function()
                 local coords = GetEntityCoords(ped)
                 local distance = GetDistanceBetweenCoords(coords, 1688.0815, 2513.3103, 45.5649, false)
 
-                -- Keep an AntiCheat exemption alive for the whole sentence —
-                -- the anti-escape snap-back below is a big, instant, entirely
-                -- legit teleport that can fire at any point during a jail
-                -- term (which may last many minutes), so a one-off exemption
-                -- from the moment they were jailed isn't enough on its own.
+
+
+
+
+
                 jailExemptRefresh = (jailExemptRefresh or 0)
                 if GetGameTimer() - jailExemptRefresh > 3000 then
                     TriggerServerEvent('Unique_Punishment:AntiCheatExempt', 4000, { teleport = true, speed = true })
@@ -137,7 +134,6 @@ Citizen.CreateThread(function()
 
 end)
 
-
 function trigtimer()
     Citizen.CreateThread(function()
         while sentence.active do
@@ -153,7 +149,7 @@ function trigtimer()
         end
     end)
 end
-    
+
 
 RegisterNetEvent("arshia_jail:UnjailPlayer")
 AddEventHandler("arshia_jail:UnjailPlayer", function()
@@ -170,17 +166,16 @@ function UnJail()
     TriggerServerEvent('Unique_Punishment:AntiCheatExempt', 5000, { teleport = true, speed = true })
     local releaseCoords = (type(sentence.unjail) == "table" or type(sentence.unjail) == "vector3") and sentence.unjail or Config.AdminJail.unjail
     ESX.Game.Teleport(ped, releaseCoords)
-    -- ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
-    -- 	TriggerEvent('skinchanger:loadSkin', skin)
-    -- end)
+
+
+
     TriggerEvent("resetpedHandler", "s_m_m_chemsec_01")
     ESX.ShowNotification("Shoma Azad Shodid!",'success')
 end
 
-
 RegisterNetEvent("arshia_jail:factionjail")
 AddEventHandler("arshia_jail:factionjail", function(target)
-	-- local target = tonumber(args[1])
+
 	if not PlayerData or not PlayerData.job then
 		TriggerEvent('chatMessage', "[SYSTEM]", {255, 0, 0}, "Etelaate Player Hanooz Load Nashode, Chand Sanie Sabr Konid")
 		return
@@ -217,8 +212,8 @@ AddEventHandler("arshia_jail:factionjail", function(target)
                                 if GetPlayerName(GetPlayerFromServerId(target)) ~= "**Invalid**" then
                                     if GetDistanceBetweenCoords(GetEntityCoords(GetPlayerPed(-1)), GetEntityCoords(GetPlayerPed(GetPlayerFromServerId(target))), true) < 10.000 then
                                         TriggerServerEvent("arshia_jail:sendto", target, 'faction', time, reason, unjail)
-                                        -- exports/resource 'quest-police' روی این سرور نیست، حذف شد
-                                        -- TriggerServerEvent('quest-police:jail')
+
+
                                     end
                                 else
                                     TriggerEvent('chatMessage', "[SYSTEM]", {255, 0, 0}, "Playere Morede Nazar Online Nist !")
@@ -245,9 +240,6 @@ end)
 
 TriggerEvent('chat:addSuggestion', '/unjail', 'Unjail Kardane Player',{{name = "ID", help = "Player Id"}})
 
--- هیچ‌جای فایل‌های اصلی این ریسورس، ایونت arshia_jail:factionjail (که منوی جیل رو باز می‌کنه)
--- صدا زده نمی‌شد؛ این کامند به‌عنوان راه ورودی ساده اضافه شد. اگه بعداً خواستی از NPC یا
--- ox_target یا منوی PD خاص خودت صداش بزنی، کافیه TriggerEvent('arshia_jail:factionjail', id) بزنی.
 TriggerEvent('chat:addSuggestion', '/jail', 'Baz Kardane Menu Jail', {{name = "ID", help = "Player Id"}})
 RegisterCommand('jail', function(source, args)
     local target = tonumber(args[1])
@@ -262,7 +254,7 @@ RegisterCommand('unjail', function(source, args)
 	local target = tonumber(args[1])
 	if IsJobAllowed(PlayerData.job.name, PlayerData.job.grade) then
 
-        ESX.TriggerServerCallback("arshia_jail:retriveJail", function(psentence)  
+        ESX.TriggerServerCallback("arshia_jail:retriveJail", function(psentence)
             if psentence then
                 if psentence.time > 0 then
                     if psentence.type == 'faction' then
@@ -282,8 +274,6 @@ RegisterCommand('unjail', function(source, args)
         TriggerEvent('chatMessage', "[SYSTEM]", {255, 0, 0}, "Shoma Dastresi Ndarid !")
     end
 end, false)
-
-
 
 RegisterNetEvent("arshia_jail:SentencePlayer")
 AddEventHandler("arshia_jail:SentencePlayer", function(type, time,unjail,join)
@@ -406,7 +396,6 @@ function DrawGenericText(text)
     DrawText(0.40, 0.00)
 end
 
-
 function playCutscene()
     stopThread = true
     cutscene = true
@@ -456,7 +445,7 @@ function playCutscene()
     Wait(500)
     AttachEntityToEntity(ped, byped, 11816, -0.06, 0.65, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
     TaskPlayAnim(byped, 'switch@trevor@escorted_out', '001215_02_trvs_12_escorted_out_idle_guard2', 8.0, 1.0, -1, 49, 0, 0, 0, 0)
-    -- SetFocusPosAndVel(Config.cutscene.camCoords, Config.cutscene.camCoords)
+
     createCam(Config.cutscene.camCoords, Config.cutscene.camRot)
     DoScreenFadeIn(500)
 
@@ -551,7 +540,7 @@ function playCutscene()
     Wait(1000)
     RenderScriptCams(false, false, 0, 1, 0)
     DestroyCam(cam, false)
-    -- SetFocusPosAndVel(Config.cutscene.camCoords2, Config.cutscene.camCoords2)
+
     createCam(Config.cutscene.camCoords2, Config.cutscene.camRot2)
     TriggerServerEvent('Unique_Punishment:AntiCheatExempt', 5000, { teleport = true, speed = true })
     ESX.Game.Teleport(ped, Config.cutscene.spawnCoords2, function()
@@ -562,11 +551,11 @@ function playCutscene()
         local swat = CreatePed(4, 's_m_y_swat_01', Config.cutscene.police2Coords.x, Config.cutscene.police2Coords.y, Config.cutscene.police2Coords.z, Config.cutscene.police2Coords.w,false)
         SetBlockingOfNonTemporaryEvents(swat, true)
         SetEntityHeading(swat, Config.cutscene.police2Coords.w)
-        -- local bag = ESX.Game.SpawnLocalObject('prop_money_bag_01', GetEntityCoords(ped), nil, true)
-        -- AttachEntityToEntity(bag, ped, GetPedBoneIndex(ped, 12844), 0.2, 0.04, 0, 0, 270.0, 60.0, true, true, false, true, 1, true)
-        -- SetEntityCompletelyDisableCollision(bag, false, true)
-        -- AttachEntityToEntity(ped, swat, 11816, -0.06, 0.65, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
-        -- TaskPlayAnim(swat, 'switch@trevor@escorted_out', '001215_02_trvs_12_escorted_out_idle_guard2', 8.0, 1.0, -1, 49, 0, 0, 0, 0)
+
+
+
+
+
         ESX.Game.SpawnLocalVehicle('riot', Config.cutscene.riotCoords.xyz, Config.cutscene.riotCoords.w, function(vehicle)
             local driver = CreatePed(1, 's_m_y_swat_01', Config.cutscene.police2Coords.x, Config.cutscene.police2Coords.y, Config.cutscene.police2Coords.z, Config.cutscene.police2Coords.w,false)
             TaskWarpPedIntoVehicle(driver, vehicle, -1)
@@ -574,19 +563,19 @@ function playCutscene()
             SetPedRandomComponentVariation(driver, false)
             SetPedKeepTask(driver, true)
             SetVehicleEngineOn(vehicle, true, false, false)
-            -- TaskGoStraightToCoord(swat, Config.cutscene.behindRiotCoords.xyz, 1.0, -1, Config.cutscene.behindRiotCoords.w, 0)
-            -- TaskGoToCoordAnyMeans(swat, Config.cutscene.behindRiotCoords.xyz, 1.0)
+
+
             Wait(1000)
-            -- TaskGoStraightToCoord(ped, Config.cutscene.behindRiotCoords.xyz, 1.0, 20000, Config.cutscene.behindRiotCoords.w, 0.5)
-            -- TaskGoStraightToCoord(swat, Config.cutscene.behindRiotCoords.xyz, 1.2, 20000, Config.cutscene.behindRiotCoords.w, 0.5)
-            -- Wait(10000)
+
+
+
             TaskEnterVehicle(ped, vehicle, 15000, 2, 1.0, 1, 0)
             TaskEnterVehicle(swat, vehicle, 15000, 6, 1.0, 1, 0)
             DoScreenFadeIn(500)
             SetTimeout(5000, function()
                 createCam(Config.cutscene.camCoords3, Config.cutscene.camRot3)
             end)
-            -- TaskGoToEntity(swat, vehicle, -1, 1.0, 1.0, 1073741824.0, 0)
+
             Wait(15000)
             TaskVehicleDriveWander(driver, vehicle, GetVehicleModelMaxSpeed(GetEntityModel(vehicle)), 447)
             Wait(5000)

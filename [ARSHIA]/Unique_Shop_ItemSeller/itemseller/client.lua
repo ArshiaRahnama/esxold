@@ -1,15 +1,11 @@
 ESX = nil
 
--- دریافت شیء ESX
 Citizen.CreateThread(function()
     while ESX == nil do
         TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
         Citizen.Wait(0)
     end
 end)
-
-
---------------  Khayat ---------------------------
 
 function OpenSellMenuTailor()
     local options = {}
@@ -58,13 +54,11 @@ function OpenSellMenuTailor()
     end)
 end
 
-
 RegisterNetEvent('item_shop_tailor:openSellMenu')
 AddEventHandler("item_shop_tailor:openSellMenu", function()
     OpenSellMenuTailor()
 end)
 
--- بررسی نزدیک بودن بازیکن به مکان فروش
 Citizen.CreateThread(function()
     for k,v in pairs(SellerConfig.sellingLocationTailor) do
         RequestModel(GetHashKey(v.pedname))
@@ -78,7 +72,7 @@ Citizen.CreateThread(function()
         SetBlockingOfNonTemporaryEvents(Ped, true)
     end
 
-    for k,v in pairs(SellerConfig.sellingLocationTailor) do 
+    for k,v in pairs(SellerConfig.sellingLocationTailor) do
         exports.ox_target:addBoxZone({
             coords = vec3(v.x, v.y, v.z),
             size = vec3(1.5, 1.5, 1.5),
@@ -95,10 +89,6 @@ Citizen.CreateThread(function()
         })
     end
 end)
-
-
-----------------    Choob Bor     ----------------
----
 
 function OpenSellMenuLumberjack()
     local options = {}
@@ -147,13 +137,11 @@ function OpenSellMenuLumberjack()
     end)
 end
 
-
 RegisterNetEvent('item_shop_lumberjack:openSellMenu')
 AddEventHandler("item_shop_lumberjack:openSellMenu", function()
     OpenSellMenuLumberjack()
 end)
 
--- بررسی نزدیک بودن بازیکن به مکان فروش
 Citizen.CreateThread(function()
     for k,v in pairs(SellerConfig.sellingLocationLumberjack) do
         RequestModel(GetHashKey(v.pedname))
@@ -167,7 +155,7 @@ Citizen.CreateThread(function()
         SetBlockingOfNonTemporaryEvents(Ped, true)
     end
 
-    for k,v in pairs(SellerConfig.sellingLocationLumberjack) do 
+    for k,v in pairs(SellerConfig.sellingLocationLumberjack) do
         exports.ox_target:addBoxZone({
             coords = vec3(v.x, v.y, v.z),
             size = vec3(1.5, 1.5, 1.5),
@@ -184,10 +172,6 @@ Citizen.CreateThread(function()
         })
     end
 end)
-
-
-
-------------------------------  Ghassab   --------------------
 
 function OpenSellMenuSlaughterer()
     local options = {}
@@ -236,13 +220,11 @@ function OpenSellMenuSlaughterer()
     end)
 end
 
-
 RegisterNetEvent('item_shop_slaughterer:openSellMenu')
 AddEventHandler("item_shop_slaughterer:openSellMenu", function()
     OpenSellMenuSlaughterer()
 end)
 
--- بررسی نزدیک بودن بازیکن به مکان فروش
 Citizen.CreateThread(function()
     for k,v in pairs(SellerConfig.sellingLocationSlaughterer) do
         RequestModel(GetHashKey(v.pedname))
@@ -256,7 +238,7 @@ Citizen.CreateThread(function()
         SetBlockingOfNonTemporaryEvents(Ped, true)
     end
 
-    for k,v in pairs(SellerConfig.sellingLocationSlaughterer) do 
+    for k,v in pairs(SellerConfig.sellingLocationSlaughterer) do
         exports.ox_target:addBoxZone({
             coords = vec3(v.x, v.y, v.z),
             size = vec3(1.5, 1.5, 1.5),
@@ -274,25 +256,21 @@ Citizen.CreateThread(function()
     end
 end)
 
-
-
--------------------------       Sherkat naft  -------------------
-
 function OpenSellMenuFueler()
     local options = {}
 
-    -- دریافت موجودی بازیکن به همراه تصاویر و قیمت‌ها
+
     ESX.TriggerServerCallback('getInventoryWithImagesFueler', function(inventory)
         for _, item in ipairs(inventory) do
             if item.count > 0 then
-                -- نمایش آیتم‌ها به همراه قیمت و تصویر
+
                 table.insert(options, {
                     title = ("%s x%s"):format(item.label, item.count),
                     description = "$" .. item.price,
                     icon = item.image,
                     image = item.image,
                     onSelect = function()
-                        -- درخواست وارد کردن مقدار برای فروش
+
                         local input = lib.inputDialog('Meghdar Brai Froush', {
                             {
                                 type = 'number',
@@ -305,7 +283,7 @@ function OpenSellMenuFueler()
                         })
 
                         if input and tonumber(input[1]) and tonumber(input[1]) <= item.count then
-                            -- ارسال درخواست فروش به سرور
+
                             TriggerServerEvent('item_shop_fueler:handleSell', item.name, tonumber(input[1]))
                         else
                             lib.notify({ position = 'center-right', title = "", description = "Meghdar Na Motabar", type = 'error', duration = 5000 })
@@ -322,7 +300,7 @@ function OpenSellMenuFueler()
                 options = options
             })
 
-            -- نمایش منوی فروش
+
             lib.showContext('sell_item_fueler_menu')
         else
             lib.notify({ position = 'center-right', title = "", description = "Shoma Hich Item Brai Froush Nadarid", type = 'error', duration = 5000 })
@@ -330,14 +308,11 @@ function OpenSellMenuFueler()
     end)
 end
 
-
-
 RegisterNetEvent('item_shop_fueler:openSellMenu')
 AddEventHandler("item_shop_fueler:openSellMenu", function()
     OpenSellMenuFueler()
 end)
 
--- بررسی نزدیک بودن بازیکن به مکان فروش
 Citizen.CreateThread(function()
     for k,v in pairs(SellerConfig.sellingLocationFueler) do
         RequestModel(GetHashKey(v.pedname))
@@ -351,7 +326,7 @@ Citizen.CreateThread(function()
         SetBlockingOfNonTemporaryEvents(Ped, true)
     end
 
-    for k,v in pairs(SellerConfig.sellingLocationFueler) do 
+    for k,v in pairs(SellerConfig.sellingLocationFueler) do
         exports.ox_target:addBoxZone({
             coords = vec3(v.x, v.y, v.z),
             size = vec3(1.5, 1.5, 1.5),
@@ -368,9 +343,6 @@ Citizen.CreateThread(function()
         })
     end
 end)
-
-
-------------------------------  Laster   ----------------------
 
 function OpenSellMenuLaster()
     ESX.TriggerServerCallback('getInventoryWithImagesLaster', function(inventory)
@@ -394,14 +366,14 @@ function OpenSellMenuLaster()
                                 required = true
                             }
                         })
-                    
+
                         if input and tonumber(input[1]) and tonumber(input[1]) <= item.count then
                             TriggerServerEvent('item_shop_laster:handleSell', item.name, tonumber(input[1]))
                         else
                             lib.notify({ position = 'center-right', title = "", description = "Meghdar Na Motabar", type = 'error', duration = 5000 })
-                        end                  
+                        end
                     end
-                    
+
                 })
             end
         end
@@ -425,7 +397,6 @@ AddEventHandler("item_shop_laster:openSellMenu", function()
     OpenSellMenuLaster()
 end)
 
--- ساختن پد و افزودن ox_target zone
 Citizen.CreateThread(function()
     for _, v in pairs(SellerConfig.sellingLocationLaster) do
         RequestModel(GetHashKey(v.pedname))
@@ -438,7 +409,7 @@ Citizen.CreateThread(function()
         SetBlockingOfNonTemporaryEvents(ped, true)
     end
 
-    for _, v in pairs(SellerConfig.sellingLocationLaster) do 
+    for _, v in pairs(SellerConfig.sellingLocationLaster) do
         exports.ox_target:addBoxZone({
             coords = vec3(v.x, v.y, v.z),
             size = vec3(1.5, 1.5, 1.5),
@@ -456,7 +427,6 @@ Citizen.CreateThread(function()
     end
 end)
 
--- اضافه کردن blip
 Citizen.CreateThread(function()
     for _, location in pairs(SellerConfig.sellingLocationLaster) do
         if location.enableBlip then
@@ -473,26 +443,21 @@ Citizen.CreateThread(function()
     end
 end)
 
-
-
-
---------------------- Miner ----------------------
-
 function OpenSellMenuMiner()
     local options = {}
 
-    -- دریافت موجودی بازیکن به همراه تصاویر و قیمت‌ها
+
     ESX.TriggerServerCallback('getInventoryWithImagesMiner', function(inventory)
         for _, item in ipairs(inventory) do
             if item.count > 0 then
-                -- نمایش آیتم‌ها به همراه قیمت و تصویر
+
                 table.insert(options, {
                     title = ("%s x%s"):format(item.label, item.count),
                     description = "$" .. item.price,
                     icon = item.image,
                     image = item.image,
                     onSelect = function()
-                        -- درخواست وارد کردن مقدار برای فروش
+
                         local input = lib.inputDialog('Meghdar Brai Froush', {
                             {
                                 type = 'number',
@@ -505,7 +470,7 @@ function OpenSellMenuMiner()
                         })
 
                         if input and tonumber(input[1]) and tonumber(input[1]) <= item.count then
-                            -- ارسال درخواست فروش به سرور
+
                             TriggerServerEvent('item_miner:handleSell', item.name, tonumber(input[1]))
                         else
                             lib.notify({ position = 'center-right', title = "", description = "Meghdar Na Motabar", type = 'error', duration = 5000 })
@@ -522,7 +487,7 @@ function OpenSellMenuMiner()
                 options = options
             })
 
-            -- نمایش منوی فروش
+
             lib.showContext('sell_item_miner_menu')
         else
             lib.notify({ position = 'center-right', title = "", description = "Shoma Hich Item Brai Froush Nadarid", type = 'error', duration = 5000 })
@@ -530,13 +495,11 @@ function OpenSellMenuMiner()
     end)
 end
 
-
 RegisterNetEvent('item_miner:openSellMenu')
 AddEventHandler("item_miner:openSellMenu", function()
     OpenSellMenuMiner()
 end)
 
--- بررسی نزدیک بودن بازیکن به مکان فروش
 Citizen.CreateThread(function()
     for k,v in pairs(SellerConfig.sellingLocationMiner) do
         RequestModel(GetHashKey(v.pedname))
@@ -550,7 +513,7 @@ Citizen.CreateThread(function()
         SetBlockingOfNonTemporaryEvents(Ped, true)
     end
 
-    for k,v in pairs(SellerConfig.sellingLocationMiner) do 
+    for k,v in pairs(SellerConfig.sellingLocationMiner) do
         exports.ox_target:addBoxZone({
             coords = vec3(v.x, v.y, v.z),
             size = vec3(1.5, 1.5, 1.5),
@@ -568,26 +531,21 @@ Citizen.CreateThread(function()
     end
 end)
 
-
-
------------------- Mahi  --------------------------
-
-
 function OpenSellMenuSeparated()
     local options = {}
 
-    -- دریافت موجودی بازیکن به همراه تصاویر و قیمت‌ها
+
     ESX.TriggerServerCallback('getInventoryWithImagesSeparated', function(inventory)
         for _, item in ipairs(inventory) do
             if item.count > 0 then
-                -- نمایش آیتم‌ها به همراه قیمت و تصویر
+
                 table.insert(options, {
                     title = ("%s x%s"):format(item.label, item.count),
                     description = "$" .. item.price,
                     icon = item.image,
                     image = item.image,
                     onSelect = function()
-                        -- درخواست وارد کردن مقدار برای فروش
+
                         local input = lib.inputDialog('Meghdar Brai Froush', {
                             {
                                 type = 'number',
@@ -600,7 +558,7 @@ function OpenSellMenuSeparated()
                         })
 
                         if input and tonumber(input[1]) and tonumber(input[1]) <= item.count then
-                            -- ارسال درخواست فروش به سرور
+
                             TriggerServerEvent('item_shop_separated:handleSell', item.name, tonumber(input[1]))
                         else
                             lib.notify({ position = 'center-right', title = "", description = "Meghdar Na Motabar", type = 'error', duration = 5000 })
@@ -617,7 +575,7 @@ function OpenSellMenuSeparated()
                 options = options
             })
 
-            -- نمایش منوی فروش
+
             lib.showContext('sell_item_separated_menu')
         else
             lib.notify({ position = 'center-right', title = "", description = "Shoma Hich Item Brai Froush Nadarid", type = 'error', duration = 5000 })
@@ -625,13 +583,11 @@ function OpenSellMenuSeparated()
     end)
 end
 
-
 RegisterNetEvent('item_shop_separated:openSellMenu')
 AddEventHandler("item_shop_separated:openSellMenu", function()
     OpenSellMenuSeparated()
 end)
 
--- بررسی نزدیک بودن بازیکن به مکان فروش
 Citizen.CreateThread(function()
     for k,v in pairs(SellerConfig.sellingLocationSeparated) do
         RequestModel(GetHashKey(v.pedname))
@@ -645,7 +601,7 @@ Citizen.CreateThread(function()
         SetBlockingOfNonTemporaryEvents(Ped, true)
     end
 
-    for k,v in pairs(SellerConfig.sellingLocationSeparated) do 
+    for k,v in pairs(SellerConfig.sellingLocationSeparated) do
         exports.ox_target:addBoxZone({
             coords = vec3(v.x, v.y, v.z),
             size = vec3(1.5, 1.5, 1.5),
@@ -663,26 +619,21 @@ Citizen.CreateThread(function()
     end
 end)
 
-
-
------------------- DrugDealer  --------------------------
-
-
 function OpenSellMenuDrugdealer2()
     local options = {}
 
-    -- دریافت موجودی بازیکن به همراه تصاویر و قیمت‌ها
+
     ESX.TriggerServerCallback('getInventoryWithImagesdrugdealer2', function(inventory)
         for _, item in ipairs(inventory) do
             if item.count > 0 then
-                -- نمایش آیتم‌ها به همراه قیمت و تصویر
+
                 table.insert(options, {
                     title = ("%s x%s"):format(item.label, item.count),
                     description = "$" .. item.price,
                     icon = item.image,
                     image = item.image,
                     onSelect = function()
-                        -- درخواست وارد کردن مقدار برای فروش
+
                         local input = lib.inputDialog('Meghdar Brai Froush', {
                             {
                                 type = 'number',
@@ -695,7 +646,7 @@ function OpenSellMenuDrugdealer2()
                         })
 
                         if input and tonumber(input[1]) and tonumber(input[1]) <= item.count then
-                            -- ارسال درخواست فروش به سرور
+
                             TriggerServerEvent('item_shop_drugdealer2:handleSell', item.name, tonumber(input[1]))
                         else
                             lib.notify({ position = 'center-right', title = "", description = "Meghdar Na Motabar", type = 'error', duration = 5000 })
@@ -712,7 +663,7 @@ function OpenSellMenuDrugdealer2()
                 options = options
             })
 
-            -- نمایش منوی فروش
+
             lib.showContext('sell_item_drugdealer2_menu')
         else
             lib.notify({ position = 'center-right', title = "", description = "Shoma Hich Item Brai Froush Nadarid", type = 'error', duration = 5000 })
@@ -725,7 +676,6 @@ AddEventHandler("item_shop_drugdealer2:openSellMenu", function()
     OpenSellMenuDrugdealer2()
 end)
 
--- بررسی نزدیک بودن بازیکن به مکان فروش
 Citizen.CreateThread(function()
     for k,v in pairs(SellerConfig.sellingLocationDrugdealer2) do
         RequestModel(GetHashKey(v.pedname))
@@ -739,7 +689,7 @@ Citizen.CreateThread(function()
         SetBlockingOfNonTemporaryEvents(Ped, true)
     end
 
-    for k,v in pairs(SellerConfig.sellingLocationDrugdealer2) do 
+    for k,v in pairs(SellerConfig.sellingLocationDrugdealer2) do
         exports.ox_target:addBoxZone({
             coords = vec3(v.x, v.y, v.z),
             size = vec3(1.5, 1.5, 1.5),
@@ -757,18 +707,14 @@ Citizen.CreateThread(function()
     end
 end)
 
-
-------- blip Lester -----
-
--- تابع برای اضافه کردن Blip
 Citizen.CreateThread(function()
     for _, location in pairs(SellerConfig.sellingLocationDrugdealer2) do
-        if location.enableBlip then -- بررسی فعال بودن Blip
+        if location.enableBlip then
             local blip = AddBlipForCoord(location.x, location.y, location.z)
-            SetBlipSprite(blip, 355) -- آیکون Blip
-            SetBlipDisplay(blip, 4) -- نوع نمایش
-            SetBlipScale(blip, 0.7) -- اندازه Blip
-            SetBlipColour(blip, 30) -- رنگ Blip
+            SetBlipSprite(blip, 355)
+            SetBlipDisplay(blip, 4)
+            SetBlipScale(blip, 0.7)
+            SetBlipColour(blip, 30)
             SetBlipAsShortRange(blip, true)
             BeginTextCommandSetBlipName("STRING")
             AddTextComponentSubstringPlayerName("Drug Dealer")

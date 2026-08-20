@@ -2,10 +2,10 @@ ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 local PLayersOnduty = {}
 RegisterNetEvent('Miner:SetDuty')
-AddEventHandler('Miner:SetDuty',function(status) 
+AddEventHandler('Miner:SetDuty',function(status)
 local xPlayer = ESX.GetPlayerFromId(source)
 	PLayersOnduty[xPlayer.identifier] = status
-end) 
+end)
 ESX.RegisterServerCallback('Miner:SetDuty', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	cb(PLayersOnduty[xPlayer.identifier])
@@ -27,23 +27,6 @@ function MineManager()
 
 	return self
 end
-
-
--- local MinerItems = MineManager()
-
--- ESX.RegisterServerCallback('getMiningPrices', function(source, cb)
--- 	cb({
--- 		{name = 'gold' 	, price = MinerItems.get('gold')},
--- 		{name = 'iron'	, price = MinerItems.get('iron')},
--- 	})
--- end)
--- ESX.RegisterServerCallback('getMiningPrices', function(source, cb)
--- 	cb({
--- 		{name = 'gold'	, price = 20000 },
--- 		{name = 'diamond'	, price = 5000 },
--- 	})
--- end)
-
 
 function getInventoryWeight(inventory)
   local weight = 0
@@ -100,7 +83,7 @@ AddEventHandler('mining:PutStoneInVehicle', function(plate, minerSkill)
 			TriggerClientEvent('esx:showNotification', source, 'Kamion Por Shode Be Mahal ShosteShu Sang Beravid!')
 		else
 			store.set("coffre", coffre)
-			TriggerClientEvent('esx:showNotification', source, 
+			TriggerClientEvent('esx:showNotification', source,
 				'~b~' .. count .. ' ~w~Sang Dakhele Kamion Gozashte Shod | Sang Haye Dakhele Mashin : ~b~' ..
 				math.ceil(getTotalInventoryWeight(plate)/1000)
 			)
@@ -108,11 +91,6 @@ AddEventHandler('mining:PutStoneInVehicle', function(plate, minerSkill)
 		end
 	end)
 end)
-
-
-
-
-
 
 RegisterServerEvent('mining:SellStone')
 AddEventHandler('mining:SellStone', function(plate)
@@ -170,7 +148,7 @@ end)
 
 RegisterServerEvent('mining:WashStonePieces')
 AddEventHandler('mining:WashStonePieces', function(plate)
-	-- local count = 300
+
 	local Tedad = 0
 	local Src = source
 	TriggerEvent("esx_trunk:getSharedDataStore", plate, function(store)
@@ -191,10 +169,10 @@ AddEventHandler('mining:WashStonePieces', function(plate)
 	end
 
 	end)
-	if Tedad == 0 then return end 
+	if Tedad == 0 then return end
 		TriggerClientEvent('mining:WashStonePieces_cl' , source )
-	
-	
+
+
 		TriggerClientEvent("esx_miner:Gharbale", source)
 	if Tedad >= 200 or Tedad <= 300 then
         TriggerEvent("esx_trunk:getSharedDataStore", plate, function(store)
@@ -227,18 +205,18 @@ AddEventHandler('mining:WashStonePieces', function(plate)
             TriggerClientEvent("esx_inventoryhud:refreshTrunkInventory", source, data, blackMoney, items, weapons)
           end
         )
-	
+
 	local count1 = math.random(5, 60)
 	local count2 = math.random(5, 50)
 	local count3 = math.random(5, 40)
 	local count4 = math.random(0, 7)
 	local random = math.random(1, 20)
-	
-	local item1 = "stone_piece" 
-	local item2 = "iron_piece" 
-	local item3 = "gold_piece" 
-	local item4 = "diamond" 
-	
+
+	local item1 = "stone_piece"
+	local item2 = "iron_piece"
+	local item3 = "gold_piece"
+	local item4 = "diamond"
+
 	TriggerEvent("esx_trunk:getSharedDataStore", plate, function(store)
 		local found = false
 		local coffre = (store.get("coffre") or {})
@@ -255,7 +233,7 @@ AddEventHandler('mining:WashStonePieces', function(plate)
 			coffre[i].count = coffre[i].count + count3
 			found = true
 			end
-		  
+
 			if coffre[i].name == item4 then
 			coffre[i].count = coffre[i].count + count4
 			found = true
@@ -283,7 +261,7 @@ AddEventHandler('mining:WashStonePieces', function(plate)
 			  count = count3
 			}
 		  )
-		  
+
 			table.insert(
 			coffre,
 			{
@@ -291,16 +269,16 @@ AddEventHandler('mining:WashStonePieces', function(plate)
 				count = count4
 			}
 			)
-		  
+
 		end
 
 		store.set("coffre", coffre)
 		MySQL.Async.execute("UPDATE trunk_inventory SET owned = @owned WHERE plate = @plate", {["@plate"] = plate, ["@owned"] = owned })
-		
+
     end)
 	TriggerClientEvent("esx_miner:Gharbale", source)
-	
-	
+
+
 	else
 		if Tedad ~= 0 then
 		TriggerEvent("esx_trunk:getSharedDataStore", plate, function(store)
@@ -333,18 +311,18 @@ AddEventHandler('mining:WashStonePieces', function(plate)
             TriggerClientEvent("esx_inventoryhud:refreshTrunkInventory", source, data, blackMoney, items, weapons)
           end
         )
-	
+
 	local count1 = math.random(5, 60)
 	local count2 = math.random(5, 35)
 	local count3 = math.random(5, 35)
 	local count4 = math.random(0, 7)
 
-	
-	
-	local item1 = "stone_piece" 
-	local item2 = "iron_piece" 
-	local item3 = "gold_piece" 
-	local item4 = "diamond" 
+
+
+	local item1 = "stone_piece"
+	local item2 = "iron_piece"
+	local item3 = "gold_piece"
+	local item4 = "diamond"
 
 	TriggerEvent("esx_trunk:getSharedDataStore", plate, function(store)
 		local found = false
@@ -411,41 +389,5 @@ AddEventHandler('mining:MeltItems', function(type)
     end
 end)
 
--- RegisterServerEvent('mining:sell')
--- AddEventHandler('mining:sell', function(itemName, amount)
--- 	local _source = source
--- 	local xPlayer = ESX.GetPlayerFromId(_source)
--- 	local price = MinerItems.get(itemName)
--- 	local xItem = xPlayer.getInventoryItem(itemName)
 
--- 	if not price then
--- 		print(('esx_drugs: %s attempted to sell an invalid drug!'):format(xPlayer.identifier))
--- 		return
--- 	end
 
--- 	if xItem.count < amount then
--- 		TriggerClientEvent('esx:showNotification', _source, _U('dealer_notenough'))
--- 		return
--- 	end
--- 	price = ESX.Math.Round(price * amount)
--- 	xPlayer.addMoney(price)
--- 	xPlayer.removeInventoryItem(xItem.name, amount)
-	
--- 	TriggerClientEvent('esx:showNotification', _source, _U('dealer_sold', amount, xItem.label, ESX.Math.GroupDigits(price)))
--- 	TriggerClientEvent("Quest-System:AddCompleteQuest", _source, amount, itemName)
--- end)
-
--- RegisterServerEvent('mining:sell')
--- AddEventHandler('mining:sell', function(itemName, amount, price)
--- 	local _source = source
--- 	local xPlayer = ESX.GetPlayerFromId(_source)
--- 	local price = price
--- 	local xItem = xPlayer.getInventoryItem(itemName)
--- 	if not price then return end
--- 	if xItem.count < amount then TriggerClientEvent('esx:showNotification', _source, "Shoma In Tedad Mahi Nadarid!") return end
--- 	price = ESX.Math.Round(price * amount)
--- 	xPlayer.addMoney(price)
--- 	xPlayer.removeInventoryItem(xItem.name, amount)	
--- 	TriggerClientEvent('esx:showNotification', _source, "~h~Shoma ba movafagiat ~o~" .. amount .. "x ~w~"..xItem.label.." be gheymat ~r~$" .. ESX.Math.GroupDigits(price) .. " forokhtid!")
--- 	TriggerClientEvent("Quest-System:AddCompleteQuest", _source, amount, itemName)
--- end)

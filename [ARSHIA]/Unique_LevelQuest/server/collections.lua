@@ -1,9 +1,4 @@
--- ================================================================= --
--- Collections: vehicles + houses, both backed by real tables already
--- on this server (owned_vehicles, owned_properties + properties).
--- There is no pet system anywhere on this server, so there's no
--- 'GetPets' here — adding one would just be an empty/fake tab.
--- ================================================================= --
+
 
 ESX.RegisterServerCallback("HUD_Menu:GetVehicles", function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)

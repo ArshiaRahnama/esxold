@@ -6,7 +6,6 @@ local yDelta = (mapMaxY - mapMinY) / yDivisions
 
 ComboZone = {}
 
--- Finds all values in tblA that are not in tblB, using the "id" property
 local function tblDifference(tblA, tblB)
   local diff
   for _, a in ipairs(tblA) do
@@ -28,19 +27,19 @@ end
 local function _differenceBetweenInsideZones(insideZones, newInsideZones)
   local insideZonesCount, newInsideZonesCount = #insideZones, #newInsideZones
   if insideZonesCount == 0 and newInsideZonesCount == 0 then
-    -- No zones to check
+
     return false, nil, nil
   elseif insideZonesCount == 0 and newInsideZonesCount > 0 then
-    -- Was in no zones last check, but in 1 or more zones now (just entered all zones in newInsideZones)
+
     return true, copyTbl(newInsideZones), nil
   elseif insideZonesCount > 0 and newInsideZonesCount == 0 then
-    -- Was in 1 or more zones last check, but in no zones now (just left all zones in insideZones)
+
     return true, nil, copyTbl(insideZones)
   end
 
-  -- Check for zones that were in insideZones, but are not in newInsideZones (zones the player just left)
+
   local leftZones = tblDifference(insideZones, newInsideZones)
-  -- Check for zones that are in newInsideZones, but were not in insideZones (zones the player just entered)
+
   local enteredZones = tblDifference(newInsideZones, insideZones)
 
   local isDifferent = enteredZones ~= nil or leftZones ~= nil
@@ -89,7 +88,6 @@ local function _getGridCell(pos)
   return x, y
 end
 
-
 function ComboZone:draw()
   local zones = self.zones
   for i=1, #zones do
@@ -99,7 +97,6 @@ function ComboZone:draw()
     end
   end
 end
-
 
 local function _initDebug(zone, options)
   if options.debugBlip then zone:addDebugBlip() end
@@ -121,7 +118,7 @@ function ComboZone:new(zones, options)
   if useGrid == nil then useGrid = true end
 
   local grid = {}
-  -- Add a unique id for each zone in the ComboZone and add to grid cache
+
   for i=1, #zones do
     local zone = zones[i]
     if zone then
@@ -181,17 +178,17 @@ end
 function ComboZone:RemoveZone(nameOrFn)
   local predicateFn = nameOrFn
   if type(nameOrFn) == "string" then
-    -- Create on the fly predicate function if nameOrFn is a string (zone name)
+
     predicateFn = function (zone) return zone.name == nameOrFn end
   elseif type(nameOrFn) ~= "function" then
     return nil
   end
 
-  -- Remove from zones table
+
   local zone = _removeZoneByFunction(predicateFn, self.zones)
   if not zone then return nil end
 
-  -- Remove from grid cache
+
   local grid = self.grid
   local minY, maxY, minX, maxX = _getZoneBounds(zone)
   for y=minY, maxY do
@@ -257,7 +254,7 @@ function ComboZone:destroy()
 end
 
 function ComboZone:onPointInOut(getPointCb, onPointInOutCb, waitInMS)
-  -- Localize the waitInMS value for performance reasons (default of 500 ms)
+
   local _waitInMS = 500
   if waitInMS ~= nil then _waitInMS = waitInMS end
 
@@ -280,7 +277,7 @@ function ComboZone:onPointInOut(getPointCb, onPointInOutCb, waitInMS)
 end
 
 function ComboZone:onPointInOutExhaustive(getPointCb, onPointInOutCb, waitInMS)
-  -- Localize the waitInMS value for performance reasons (default of 500 ms)
+
   local _waitInMS = 500
   if waitInMS ~= nil then _waitInMS = waitInMS end
 

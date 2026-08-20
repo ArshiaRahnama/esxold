@@ -1,21 +1,10 @@
--- Made global to match menu_ui.lua's checkbox display variables (see note
--- there) - both files now read/write the exact same state.
+
+
 godmode = false
 local infStamina = false
 invisibility = false
 invisibility2 = false
 local noRagDoll = false
-
--- ============================================================================
--- SECURITY: these effects used to flip the moment the LOCAL client fired
--- "skadmin:toggleGodmode" etc. - meaning a modified client could call that
--- event on itself with zero server involvement and grant itself godmode.
--- Now every toggle is *requested* from the server (Unique_AdminMenu:RequestToggle),
--- the server checks permission_level + aduty, and only then tells this
--- client to actually apply the effect (Unique_AdminMenu:ApplyToggle).
--- GodMode is additionally backed by the server-side SetPlayerInvincible
--- native, which a client cannot fake at all.
--- ============================================================================
 
 local function RequestToggle(feature)
   TriggerServerEvent('Unique_AdminMenu:RequestToggle', feature)
@@ -25,9 +14,9 @@ RegisterNetEvent('Unique_AdminMenu:ApplyToggle')
 AddEventHandler('Unique_AdminMenu:ApplyToggle', function(feature, newValue)
   if feature == 'godmode' then
     godmode = newValue
-    -- SetPlayerInvincible already makes this authoritative server-side;
-    -- SetEntityInvincible here is just so the local ped doesn't show pain
-    -- FX for damage that will be undone anyway.
+
+
+
     SetEntityInvincible(PlayerPedId(), godmode)
     drawNotification(godmode and "~b~God mode activated" or "~r~God mode deactivated")
 
@@ -89,9 +78,6 @@ AddEventHandler('Unique_AdminMenu:ApplyToggle', function(feature, newValue)
   end
 end)
 
--- Public entry points kept with their old names so menu_ui.lua's checkbox
--- callbacks barely had to change - they now just request instead of firing
--- the effect directly.
 function RequestGodmode() RequestToggle('godmode') end
 function RequestInfStamina() RequestToggle('infstamina') end
 function RequestInvisibility() RequestToggle('invisibility') end

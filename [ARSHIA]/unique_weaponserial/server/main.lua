@@ -1,23 +1,6 @@
--- ============================================================
--- unique_weaponserial / server / main.lua
---
--- Builds the "carryable spare weapon" layer on top of serials.lua:
---   - a carried (non-equipped) copy of a weapon is a normal inventory
---     item named 'wpn_<serial>'
---   - "using" that item from the inventory equips it, holstering
---     whatever was equipped for that weapon type back into its own
---     'wpn_<serial>' item (native GTA only allows ONE instance of a
---     given weapon type in the wheel at a time -- that's an engine
---     limit, not something this system can bypass)
---   - dropping the equipped weapon holsters it, then hands off to
---     esx_inventoryhud's OWN existing, already-working ground
---     drop/pickup system (server/main.lua there:
---     'inventory:core:throwItem' / 'inventory:core:pickupThrown').
---     Because the item name IS the serial, picking it back up
---     preserves it automatically -- no separate pickup system needed.
--- ============================================================
 
-local RegisteredWeaponItems = {} -- itemName -> true, avoids re-firing esx:CreateItem every time
+
+local RegisteredWeaponItems = {}
 
 local function weaponItemName(weaponName, serial)
     return 'wpn_' .. weaponName:gsub('^WEAPON_', ''):lower() .. '_' .. serial
@@ -27,7 +10,7 @@ local function weaponItemLabel(weaponName, serial)
     return (ESX.GetWeaponLabel(weaponName) or weaponName) .. ' #' .. serial
 end
 
-function EquipWeaponSerial(playerId, serial) -- forward-declared usable-item handler, defined below
+function EquipWeaponSerial(playerId, serial)
 
     local xPlayer = ESX.GetPlayerFromId(playerId)
     local data = xPlayer and GetWeaponSerial(serial)
@@ -40,7 +23,7 @@ function EquipWeaponSerial(playerId, serial) -- forward-declared usable-item han
 
     xPlayer.removeInventoryItem(weaponItemName(data.weapon, serial), 1)
 
-    -- holster whatever's currently equipped of the SAME weapon type
+
     local _, currentWeapon = xPlayer.getWeapon(data.weapon)
     if currentWeapon and currentWeapon.serial then
         local oldSerial = currentWeapon.serial
@@ -50,8 +33,8 @@ function EquipWeaponSerial(playerId, serial) -- forward-declared usable-item han
         end
     end
 
-    -- equip the selected serial using its OWN stored ammo, bypassing the
-    -- patched addWeapon (which would mint a brand new serial otherwise)
+
+
     xPlayer.__originalAddWeapon(data.weapon, data.ammo)
     local loadoutNum = xPlayer.getWeapon(data.weapon)
     if loadoutNum then
@@ -67,9 +50,6 @@ function EquipWeaponSerial(playerId, serial) -- forward-declared usable-item han
     SaveWeaponSerial(serial)
 end
 
--- Turns an already-minted serial into a carried inventory item. Used
--- both for brand new spare purchases (serials.lua) and for holstering
--- a weapon that's being swapped out of the equipped slot.
 function GiveCarriedWeaponSerial(xPlayer, serial)
     local data = WeaponSerials[serial]
     if not data then return end
@@ -91,10 +71,6 @@ function GiveCarriedWeaponSerial(xPlayer, serial)
     SaveWeaponSerial(serial)
 end
 
--- re-register usable-item handlers for every serial that's currently
--- sitting as a carried item, in case this resource restarted --
--- ESX.UsableItemsCallbacks resets on restart but the DB rows/inventory
--- items don't
 CreateThread(function()
     Wait(1000)
     for serial, data in pairs(WeaponSerials) do
@@ -111,11 +87,6 @@ CreateThread(function()
     end
 end)
 
--- ============================================================
--- Drop the currently equipped weapon: holster it into a carried item,
--- then hand off to esx_inventoryhud's own existing ground-drop system
--- for that exact item -- see the big comment at the top of this file.
--- ============================================================
 RegisterServerEvent('unique_weaponserial:holsterForDrop')
 AddEventHandler('unique_weaponserial:holsterForDrop', function(weaponName)
     local src = source
@@ -137,11 +108,6 @@ AddEventHandler('unique_weaponserial:holsterForDrop', function(weaponName)
     end
 end)
 
--- ============================================================
--- Police / MDT serial lookup. Standalone command for now -- exposed
--- as a plain function too (GetWeaponSerial, from serials.lua) so a
--- real MDT resource can call it directly once you point me at one.
--- ============================================================
 local PoliceJobs = { police = true, sheriff = true, government = true }
 
 RegisterCommand('checkserial', function(source, args)

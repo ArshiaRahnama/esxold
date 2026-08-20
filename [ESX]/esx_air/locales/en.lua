@@ -1,5 +1,5 @@
 Locales['en'] = {
-  -- shop
+
   ['air_shop'] = 'Air Shop',
   ['air_shop_open'] = '~h~Press ~INPUT_CONTEXT~ To Access The ~y~air Shop~s~.',
   ['air_shop_confirm'] = 'Buy <span style="color: yellow;">%s</span> for <span style="color: orange;">$%s</span>?',
@@ -8,7 +8,7 @@ Locales['en'] = {
   ['confirm_no'] = 'no',
   ['confirm_yes'] = 'yes',
 
-  -- garage
+
   ['garage'] = 'air Garage',
   ['garage_open'] = '~h~Press ~INPUT_CONTEXT~ Barai Kharej Kardan Air Az Parking',
   ['garage_store'] = '~h~Press ~INPUT_CONTEXT~ Barai Park Kardan Air.',
@@ -18,14 +18,14 @@ Locales['en'] = {
   ['garage_blocked'] = 'The air Cannot Be Taken Out Because Another Vehicle Is Blocking The Spawn Point!',
   ['garage_notowner'] = '~h~~r~Shoma Airi Nadarid!',
 
-  -- license
+
   ['license_menu'] = 'Buy air License?',
   ['license_buy_no'] = 'No',
   ['license_buy_yes'] = 'Buy air License <span style="color: green;">$%s</span>',
   ['license_bought'] = 'You Have Bought The ~y~air License~s~ For ~g~$%s~s~',
   ['license_nomoney'] = 'You Cannot ~r~afford~s~ The ~y~air License~s~!',
 
-  -- blips
+
   ['blip_garage'] = 'air Garage',
   ['blip_shop'] = 'Air Shop',
 }

@@ -1,9 +1,8 @@
--- Unique_Cad → merged into esx_uniquejobs
+
 
 ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-
 
 ESX.RegisterServerCallback('DuckMdt:GetAllWanteds', function(src, cb)
     local object = {}
@@ -16,7 +15,6 @@ ESX.RegisterServerCallback('DuckMdt:GetAllWanteds', function(src, cb)
     Wait(500)
     cb(object)
 end)
-
 
 ESX.RegisterServerCallback('DuckMdt:SearchCitizen', function(src, cb, Text)
     local object = {}
@@ -84,7 +82,6 @@ ESX.RegisterServerCallback('DuckMdt:SaveNewData', function(src, cb, reason, name
     cb(object)
 end)
 
-
 ESX.RegisterServerCallback('DuckMdt:DeleteData', function(src, cb, id, steam)
     local object = {}
     MySQL.Async.fetchAll('DELETE FROM duckcad_data WHERE `id` = @id', {['@id'] = id}, function(result)
@@ -119,8 +116,6 @@ AddEventHandler('DuckMdt:UpdateProfilePicCar', function(Profile_Pic, plate)
     MySQL.Async.fetchAll('UPDATE owned_vehicles SET `Profile_Pic` = @Profile_Pic WHERE `plate` = @plate', {['@Profile_Pic'] = Profile_Pic, ['@plate'] = plate}, function(result)
     end)
 end)
-
-------------------------------
 
 RegisterNetEvent('DuckMdt:PrintLog')
 AddEventHandler('DuckMdt:PrintLog', function()

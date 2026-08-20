@@ -35,7 +35,7 @@ for k, v in pairs({
   ['amount_invalid']            = 'montant invalide',
   ['no_players_nearby']         = 'aucun joueur à proximité',
   ['no_vehicle_nearby']         = 'there is no nearby vehicle',
-  ['inside_vehicle']            = 'you can\'t do this from inside the vehicle!', 
+  ['inside_vehicle']            = 'you can\'t do this from inside the vehicle!',
   ['vehicle_unlocked']          = 'véhicule ~g~déverouillé',
   ['vehicle_repaired']          = 'véhicule ~g~réparé',
   ['vehicle_cleaned']           = 'véhicule ~g~néttoyé',

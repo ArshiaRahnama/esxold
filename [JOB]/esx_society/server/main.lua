@@ -2,19 +2,10 @@ ESX = nil
 local Jobs = {}
 local Divisions = {}
 local RegisteredSocieties = {}
-local WebHook 
+local WebHook
 local WebHookAdmin
 
-
 TriggerEvent(Config.ESXtrigger, function(obj) ESX = obj end)
-
--- function GetSociety(name)
--- 	for i=tonumber(1), #RegisteredSocieties, tonumber(1) do
--- 		if RegisteredSocieties[i].name == name then
--- 			return RegisteredSocieties[i]
--- 		end
--- 	end
--- end
 
 function GetSociety(name)
 	for i=1, #RegisteredSocieties, 1 do
@@ -41,7 +32,7 @@ MySQL.ready(function()
 			print(('esx_society: skipping job_grades row with unknown job_name "%s"'):format(tostring(result2[i].job_name)))
 		end
 	end
-	
+
 end)
 
 MySQL.ready(function()
@@ -56,22 +47,21 @@ MySQL.ready(function()
 	for i=tonumber(1), #result2, tonumber(1) do
 		Divisions[result2[i].owner].names[result2[i].name] = result2[i]
 	end
-	
-end)
 
+end)
 
 function reloaddatabase()
 
 	MySQL.ready(function()
 		local result = MySQL.Sync.fetchAll('SELECT * FROM jobs', {})
-	
+
 		for i=tonumber(1), #result, tonumber(1) do
 			Jobs[result[i].name]        = result[i]
 			Jobs[result[i].name].grades = {}
 		end
-	
+
 		local result2 = MySQL.Sync.fetchAll('SELECT * FROM job_grades', {})
-	
+
 		for i=tonumber(1), #result2, tonumber(1) do
 			if Jobs[result2[i].job_name] then
 				Jobs[result2[i].job_name].grades[tostring(result2[i].grade)] = result2[i]
@@ -79,27 +69,26 @@ function reloaddatabase()
 				print(('esx_society: skipping job_grades row with unknown job_name "%s"'):format(tostring(result2[i].job_name)))
 			end
 		end
-		
+
 	end)
-	
+
 	MySQL.ready(function()
 		local result = MySQL.Sync.fetchAll('SELECT * FROM divisions', {})
 		for i=tonumber(1), #result, tonumber(1) do
 			Divisions[result[i].owner]        = result[i]
 			Divisions[result[i].owner].names = {}
 		end
-	
+
 		local result2 = MySQL.Sync.fetchAll('SELECT * FROM divisions', {})
-	
+
 		for i=tonumber(1), #result2, tonumber(1) do
 			Divisions[result2[i].owner].names[result2[i].name] = result2[i]
 		end
-		
+
 	end)
 
-
 end
- 
+
 AddEventHandler('esx_society:registerSociety', function(name, label, account, datastore, inventory, data)
 	local found = false
 
@@ -133,7 +122,6 @@ AddEventHandler('esx_society:getSociety', function(name, cb)
 	cb(GetSociety(name))
 end)
 
---withdraw get money
 RegisterServerEvent('esx_society:withdrawMoney')
 AddEventHandler('esx_society:withdrawMoney', function(society, amount)
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -151,7 +139,7 @@ AddEventHandler('esx_society:withdrawMoney', function(society, amount)
 			xPlayer.addMoney(tonumber(amount))
 			local Newmoney = account.money - amount
 
-			
+
 			messagess = {
 				{["name"] = "👤 **Player Name**", ["value"] = xPlayer.name, ["inline"] = false},
 				{["name"] = "🎮 **Steam Hex**", ["value"] = xPlayer.identifier, ["inline"] = false},
@@ -159,8 +147,6 @@ AddEventHandler('esx_society:withdrawMoney', function(society, amount)
 				{["name"] = "💰 **Money**", ["value"] = "Old Money : **"..Newmoney+amount.." $**\nNew Money : **"..Newmoney.." $**", ["inline"] = false},
 				{["name"] = "🔢 **Meghdar**", ["value"] = "**"..amount.." $**", ["inline"] = false},
 			}
-
-
 
 			JobsLog('Withdraw Money', false, society.name, 'money', messagess)
 
@@ -171,13 +157,11 @@ AddEventHandler('esx_society:withdrawMoney', function(society, amount)
 	end)
 end)
 
---deposit get money
 RegisterServerEvent('esx_society:depositMoney')
 AddEventHandler('esx_society:depositMoney', function(society, amount)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local society = GetSociety(society)
 	amount = ESX.Math.Round(tonumber(amount))
-
 
 	if xPlayer.job.name ~= society.name then
 		print(('esx_society: %s attempted to call depositMoney!'):format(xPlayer.identifier))
@@ -190,7 +174,7 @@ AddEventHandler('esx_society:depositMoney', function(society, amount)
 			account.addMoney(tonumber(amount))
 			Wait(500)
 			local Newmoney = account.money +amount
-			
+
 			messagess = {
 				{["name"] = "👤 **Player Name**", ["value"] = xPlayer.name, ["inline"] = false},
 				{["name"] = "🎮 **Steam Hex**", ["value"] = xPlayer.identifier, ["inline"] = false},
@@ -198,8 +182,6 @@ AddEventHandler('esx_society:depositMoney', function(society, amount)
 				{["name"] = "💰 **Money**", ["value"] = "Old Money : **"..Newmoney-amount.." $**\nNew Money : **"..Newmoney.." $**", ["inline"] = false},
 				{["name"] = "🔢 **Meghdar**", ["value"] = "**"..amount.." $**", ["inline"] = false},
 			}
-
-
 
 			JobsLog('Deposit Money', true, society.name, 'money', messagess)
 		end)
@@ -212,9 +194,9 @@ end)
 
 RegisterServerEvent('esx_society:depositMoney2')
 AddEventHandler('esx_society:depositMoney2', function(xPlayer2, society, account, amount)
-	-- SECURITY: xPlayer2 must be the calling player's own source. Without this, any
-	-- client could pass someone else's id/an arbitrary account and (since money was
-	-- never actually deducted below) mint unlimited money into any society account.
+
+
+
 	if tonumber(xPlayer2) ~= tonumber(source) then
 		print(('esx_society: %s attempted to call depositMoney2 for another player (%s)!'):format(source, tostring(xPlayer2)))
 		return
@@ -239,7 +221,6 @@ AddEventHandler('esx_society:depositMoney2', function(xPlayer2, society, account
 	end
 end)
 
-
 ESX.RegisterServerCallback('esx_society:getSocietyMoney', function(source, cb, societyName)
 	local society = GetSociety(societyName)
 
@@ -252,7 +233,6 @@ ESX.RegisterServerCallback('esx_society:getSocietyMoney', function(source, cb, s
 	end
 end)
 
--- get employees of job
 ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, society)
 	if Config.EnableESXIdentity then
 
@@ -307,7 +287,6 @@ ESX.RegisterServerCallback('esx_society:getEmployees', function(source, cb, soci
 	end
 end)
 
--- get player Division
 ESX.RegisterServerCallback('esx_society:getdivision', function(source, cb, society)
 
 	local divisionname = {}
@@ -315,39 +294,32 @@ ESX.RegisterServerCallback('esx_society:getdivision', function(source, cb, socie
 		society
 
 	}, function(division)
-		
+
 		cb(division)
 
 	end)
 end)
 
-
-
-
-
-
 ESX.RegisterServerCallback('esx_society:GetDivisionsPlayer',function(source, cb, identifier)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	-- local identifier = xPlayer.identifier
+
 
     local result = MySQL.Sync.fetchAll('SELECT divisions FROM users WHERE identifier = @identifier', {['@identifier'] = identifier})
-	
+
     if result[1] and result[1].divisions then
         local divisions = json.decode(result[1].divisions)
       cb(divisions)
     end
 end)
 
-
-
 ESX.RegisterServerCallback('esx_society:divisionsPlayer',function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	::refresh::
-	if xPlayer then 
+	if xPlayer then
 		local identifier = xPlayer.identifier
 
 		local result = MySQL.Sync.fetchAll('SELECT divisions FROM users WHERE identifier = @identifier', {['@identifier'] = identifier})
-		
+
 		if result[1] and result[1].divisions then
 			local divisions = json.decode(result[1].divisions)
 		cb(divisions)
@@ -359,11 +331,11 @@ ESX.RegisterServerCallback('esx_society:divisionsPlayer',function(source, cb)
 	end
 end)
 
-	
+
 ESX.RegisterServerCallback('esx_society:swichdivision', function(source, cb, name)
     local xPlayer = ESX.GetPlayerFromId(source)
     local identifier = xPlayer.identifier
-	
+
 	local result = MySQL.Sync.fetchAll("SELECT divisions FROM users WHERE identifier = @identifier", {
 		['@identifier'] = identifier
 	})
@@ -372,7 +344,6 @@ ESX.RegisterServerCallback('esx_society:swichdivision', function(source, cb, nam
 	if result[1] and result[1].divisions then
 		divisions = json.decode(result[1].divisions)
 	end
-
 
 	local function findDivisionByName(divisions, name)
 		for _, div in ipairs(divisions) do
@@ -383,33 +354,31 @@ ESX.RegisterServerCallback('esx_society:swichdivision', function(source, cb, nam
 		return nil
 	end
 
-
 	local division = findDivisionByName(divisions, name)
 
 	if division then
 
 		if division.status == true then
-			division.status = false 
+			division.status = false
 		else
 
 			for _, div in ipairs(divisions) do
 				if div.name == name then
-					div.status = true 
+					div.status = true
 				else
-					div.status = false 
+					div.status = false
 				end
 			end
 		end
 	else
 
 		table.insert(divisions, {
-			label = name, 
+			label = name,
 			status = true,
-			job = xPlayer.job.name, 
+			job = xPlayer.job.name,
 			name = name
 		})
 	end
-
 
 	local updatedData = json.encode(divisions)
 	MySQL.Sync.execute("UPDATE users SET divisions = @divisions WHERE identifier = @identifier", {
@@ -417,14 +386,9 @@ ESX.RegisterServerCallback('esx_society:swichdivision', function(source, cb, nam
 		['@identifier'] = identifier
 	})
 
-
 	cb(true)
-	
+
 end)
-
-
-
-
 
 ESX.RegisterServerCallback('esx_society:setJobDivision', function(source, cb, identifier, job, Divisvorodi, type)
 	local xPlayer  = ESX.GetPlayerFromId(source)
@@ -438,35 +402,33 @@ ESX.RegisterServerCallback('esx_society:setJobDivision', function(source, cb, id
 	local xTarget  = ESX.GetPlayerFromIdentifier(identifier)
 	local IsOnline = "Offline"
 
-
 	local resualtss = MySQL.Sync.fetchAll("SELECT playerName FROM users WHERE identifier = @identifier", {
 		['@identifier'] = identifier
 	})
 	local pName = resualtss[1].playerName
 
-
 	if type == 'hire' then
-	
-	
+
+
 		local result = MySQL.Sync.fetchAll("SELECT divisions FROM users WHERE identifier = @identifier", {
 			['@identifier'] = identifier
 		})
-	
+
 		local divisions = {}
 		if result[1] and result[1].divisions then
 			divisions = json.decode(result[1].divisions)
 		end
-			
 
-		local function isDivisvorodiExists(divisions, Divisvorodi)	
+
+		local function isDivisvorodiExists(divisions, Divisvorodi)
 			for _, existingDivisvorodi in ipairs(divisions) do
 				if existingDivisvorodi.name == Divisvorodi.name and existingDivisvorodi.job == Divisvorodi.job then
-					return true  
+					return true
 				end
 			end
-			return false 
+			return false
 		end
-		
+
 
 		if not isDivisvorodiExists(divisions, Divisvorodi) then
 			table.insert(divisions, Divisvorodi)
@@ -483,8 +445,8 @@ ESX.RegisterServerCallback('esx_society:setJobDivision', function(source, cb, id
 			['@identifier'] = identifier
 		})
 
-	
-			
+
+
 		messagess = {
 			{["name"] = "👤 **Player Name**", ["value"] = xPlayer.name, ["inline"] = false},
 			{["name"] = "🎮 **Steam Hex**", ["value"] = xPlayer.identifier, ["inline"] = false},
@@ -492,48 +454,48 @@ ESX.RegisterServerCallback('esx_society:setJobDivision', function(source, cb, id
 			{["name"] = "👤 **Target Name**", ["value"] = pName, ["inline"] = false},
 			{["name"] = "🎮 **Target Hex**", ["value"] = identifier, ["inline"] = false},
 			{["name"] = "🌍 **Target ID**", ["value"] = IsOnline, ["inline"] = false},
-			{["name"] = "⚙️ **Division Name**", ["value"] = Divisvorodi.name, ["inline"] = false}, 
+			{["name"] = "⚙️ **Division Name**", ["value"] = Divisvorodi.name, ["inline"] = false},
 		}
-	
+
 		JobsLog('Add Player Division ', true, xPlayer.job.name, 'divisionemploee', messagess)
-		
+
 
 	elseif type == 'fire' then
 		local result = MySQL.Sync.fetchAll("SELECT divisions FROM users WHERE identifier = @identifier", {
 			['@identifier'] = identifier
 		})
-		
+
 		local divisions = {}
 		if result[1] and result[1].divisions then
-			divisions = json.decode(result[1].divisions) 
+			divisions = json.decode(result[1].divisions)
 		end
-		
+
 
 		local function removeDivisvorodi(divisions, Divisvorodi)
-			for i = #divisions, 1, -1 do  
+			for i = #divisions, 1, -1 do
 				if divisions[i].name == Divisvorodi.name and divisions[i].job == Divisvorodi.job then
-					table.remove(divisions, i)  
-					return true 
+					table.remove(divisions, i)
+					return true
 				end
 			end
-			return false  
+			return false
 		end
-		
-	
+
+
 		local isRemoved = removeDivisvorodi(divisions, Divisvorodi)
-		
+
 		if isRemoved then
 			if xTarget then
 				TriggerClientEvent('esx:showNotification', xTarget.source, 'division Shoma ( ~r~'.. Divisvorodi.name.."~w~ ) Hazf Shod")
 				IsOnline = xTarget.source
 			end
-		
+
 
 			local updatedData = json.encode(divisions)
 			MySQL.Sync.execute("UPDATE users SET divisions = @divisions WHERE identifier = @identifier", {
 				['@divisions'] = updatedData,
 				['@identifier'] = identifier
-			})	
+			})
 		end
 
 		messagess = {
@@ -543,18 +505,15 @@ ESX.RegisterServerCallback('esx_society:setJobDivision', function(source, cb, id
 			{["name"] = "👤 **Target Name**", ["value"] = pName, ["inline"] = false},
 			{["name"] = "🎮 **Target Hex**", ["value"] = identifier, ["inline"] = false},
 			{["name"] = "🌍 **Target ID**", ["value"] = IsOnline, ["inline"] = false},
-			{["name"] = "⚙️ **Division Name**", ["value"] = Divisvorodi.name, ["inline"] = false}, 
+			{["name"] = "⚙️ **Division Name**", ["value"] = Divisvorodi.name, ["inline"] = false},
 		}
-	
+
 		JobsLog('Remove Player Division ', false, xPlayer.job.name, 'divisionemploee', messagess)
 
 	end
 end)
 
-
-
 ESX.RegisterServerCallback('esx_society:getEmployeesDivision', function(source, cb, society)
-
 
 	MySQL.Async.fetchAll('SELECT playerName, identifier, job, job_grade FROM users WHERE job = @job ORDER BY job_grade DESC', {
 		['@job'] = society
@@ -582,7 +541,6 @@ ESX.RegisterServerCallback('esx_society:getEmployeesDivision', function(source, 
 	end)
 end)
 
-
 ESX.RegisterServerCallback('esx_society:getJob', function(source, cb, society)
 	local job    = json.decode(json.encode(Jobs[society]))
 	local grades = {}
@@ -600,7 +558,6 @@ ESX.RegisterServerCallback('esx_society:getJob', function(source, cb, society)
 	cb(job)
 end)
 
--- set player job
 ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier, job, grade, type)
 	MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier = @identifier', {
 		['@identifier'] = identifier
@@ -612,9 +569,9 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 		local messagess = {}
 
 		if xTarget then
-			-- Authorization: hiring requires being boss of the job being hired into;
-			-- promoting/firing requires being boss of the employee's CURRENT job
-			-- (job/grade params for 'fire' are 'nojob'/0 and can't be used for the check).
+
+
+
 			local isAuthorized = false
 			if type == 'hire' then
 				isAuthorized = isPlayerBoss(source, job)
@@ -629,7 +586,7 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 			end
 
 			LastGrade = xTarget.job.grade
-			if grade < LastGrade then 
+			if grade < LastGrade then
 				grren  = false
 				titele = "Rank Down"
 			elseif grade > LastGrade then
@@ -658,10 +615,10 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 				}
 
 			elseif type == 'promote' then
-				
+
 				xTarget.setJob(job, grade)
 				TriggerClientEvent('esx:showNotification', xTarget.source, _U('you_have_been_promoted'))
-				
+
 				messagess = {
 					{["name"] = "👤 **Player Name**", ["value"] = xTarget.name, ["inline"] = false},
 					{["name"] = "🎮 **Steam Hex**", ["value"] = identifier, ["inline"] = false},
@@ -672,7 +629,7 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 					{["name"] = "🌍 **Server ID**", ["value"] = xPlayer.source, ["inline"] = false},
 					{["name"] = "🔢 **Data**", ["value"] = 'Az Rank '..LastGrade..' Be Rank '..grade.." Tagir dad", ["inline"] = false},
 				}
-								
+
 			elseif type == 'fire' then
 				xTarget.setJob(job, grade)
 				titele = 'Fire'
@@ -695,7 +652,7 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 					{["name"] = "🎮 **Steam Hex**", ["value"] = xPlayer.identifier, ["inline"] = false},
 					{["name"] = "🌍 **Server ID**", ["value"] = xPlayer.source, ["inline"] = false},
 					{["name"] = "🔢 **Data**", ["value"] = "Fier Shod", ["inline"] = false},
-					
+
 				}
 
 			end
@@ -705,22 +662,20 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 				['@job_grade']  = grade,
 				['@identifier'] = identifier
 			}, function(rowsChanged)
-				
+
 			end)
 
-
 			LastGrade = rowsChanged2[1].job_grade
-			if grade < LastGrade then 
+			if grade < LastGrade then
 				grren  = false
 				titele = "Rank Down"
-			elseif grade > LastGrade then 
+			elseif grade > LastGrade then
 				grren  = true
 				titele = "Rank Up"
 			else
 				grren  = false
 				titele = "Null"
 			end
-
 
 			messagess = {
 				{["name"] = "👤 **Player Name**", ["value"] = rowsChanged2[1].name, ["inline"] = false},
@@ -731,7 +686,7 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 				{["name"] = "🎮 **Steam Hex**", ["value"] = xPlayer.identifier, ["inline"] = false},
 				{["name"] = "🌍 **Server ID**", ["value"] = xPlayer.source, ["inline"] = false},
 				{["name"] = "🔢 **Data**", ["value"] = 'Az Rank '..LastGrade..' Be Rank '..grade.." Tagir dad", ["inline"] = false},
-				
+
 			}
 
 			if type == 'fire' then
@@ -740,7 +695,7 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 					['@divisions'] = '[]',
 					['@identifier'] = identifier
 				})
-			
+
 
 				grren  = false
 				titele = "Fire"
@@ -754,28 +709,19 @@ ESX.RegisterServerCallback('esx_society:setJob', function(source, cb, identifier
 					{["name"] = "🎮 **Steam Hex**", ["value"] = xPlayer.identifier, ["inline"] = false},
 					{["name"] = "🌍 **Server ID**", ["value"] = xPlayer.source, ["inline"] = false},
 					{["name"] = "🔢 **Data**", ["value"] = "Fier Shod", ["inline"] = false},
-					
+
 				}
 
 			end
 		end
-		
+
 		SetTimeout(500, function()
 		JobsLog(titele, grren, xPlayer.job.name, 'manage', messagess)
 		cb()
 		end)
 	end)
 end)
--- ---------------------------------------------------------------------------------
--- Change Job (Branch): a boss (grade >= 10) switches THEIR OWN job to a sibling job
--- in the same Config.JobGroups branch. Server re-validates everything - never trusts
--- the client for which jobs are actually allowed together.
--- ---------------------------------------------------------------------------------
--- ---------------------------------------------------------------------------------
--- esx_society:logAction - generic Discord logger any other resource can call
--- (used by Organ Services for item pickups and vehicle spawns). Reuses each job's
--- existing 'option' webhook slot in Config.LogSystem, no new config needed.
--- ---------------------------------------------------------------------------------
+
 RegisterServerEvent('esx_society:logAction')
 AddEventHandler('esx_society:logAction', function(job, title, fields)
 	JobsLog(title, true, job, 'option', fields)
@@ -823,13 +769,13 @@ AddEventHandler('esx_society:changeBranchJob', function(newJob)
 	local finalGrade
 
 	if memory[1] and memory[1].original_job == newJob then
-		-- switching back to their real/original job: restore exact original grade
+
 		finalGrade = memory[1].original_grade
 		MySQL.Sync.execute('DELETE FROM branch_job_memory WHERE identifier = @identifier', {
 			['@identifier'] = xPlayer.identifier
 		})
 	else
-		-- remember the ORIGINAL home job/grade the first time they ever branch-switch
+
 		if not memory[1] then
 			MySQL.Sync.execute('INSERT INTO branch_job_memory (identifier, original_job, original_grade) VALUES (@identifier, @job, @grade)', {
 				['@identifier'] = xPlayer.identifier,
@@ -838,9 +784,9 @@ AddEventHandler('esx_society:changeBranchJob', function(newJob)
 			})
 		end
 
-		-- scale the rank: keep the same distance-from-the-top of the job you're
-		-- leaving, applied to the job you're moving to, floored so you never
-		-- drop below boss access
+
+
+
 		local maxCurrent = Config.JobMaxGrade[currentJob] or 21
 		local maxNew = Config.JobMaxGrade[newJob] or 21
 		local distanceFromTop = maxCurrent - currentGrade
@@ -860,14 +806,6 @@ AddEventHandler('esx_society:changeBranchJob', function(newJob)
 	})
 end)
 
--- ---------------------------------------------------------------------------------
--- Swap Employee Job: a boss moves ONE OF THEIR EMPLOYEES (not themselves) directly
--- to a sibling job in the same Config.JobGroups branch (e.g. Police -> Sheriff),
--- instead of firing + re-hiring separately. Employee starts at grade 0 in the new
--- job - the boss can promote them from the normal employee list afterward.
--- Server re-validates: caller must be boss of the employee's CURRENT job, and both
--- jobs must be in the same branch group. Never trusts the client for either.
--- ---------------------------------------------------------------------------------
 ESX.RegisterServerCallback('esx_society:swapEmployeeJob', function(source, cb, identifier, fromJob, toJob)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	if not xPlayer then cb(false) return end
@@ -923,7 +861,6 @@ ESX.RegisterServerCallback('esx_society:swapEmployeeJob', function(source, cb, i
 	cb(true)
 end)
 
--- set salar in DB and table
 ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job, grade, salary)
 	local isBoss = isPlayerBoss(source, job)
 	local identifier = GetPlayerIdentifier(source, tonumber(0))
@@ -968,9 +905,6 @@ ESX.RegisterServerCallback('esx_society:setJobSalary', function(source, cb, job,
 	end
 end)
 
-
---- Geting online players and information
-
 ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
 	local xPlayers = ESX.GetPlayers()
 	local players  = {}
@@ -990,7 +924,6 @@ ESX.RegisterServerCallback('esx_society:getOnlinePlayers', function(source, cb)
 	cb(players, ppcoords)
 end)
 
-
 ESX.RegisterServerCallback('esx_society:getOnlinePlayersDivision', function(source, cb, society)
 	MySQL.Async.fetchAll('SELECT playerName, identifier, job, job_grade FROM users WHERE job = @job ORDER BY job_grade DESC', {
 		['@job'] = society
@@ -1006,20 +939,17 @@ ESX.RegisterServerCallback('esx_society:getOnlinePlayersDivision', function(sour
 				identifier = results[i].identifier,
 			})
 		end
-	
+
 		cb(employees)
 	end)
 
-	
+
 end)
 
-
-
---Get boolean for isboss
 ESX.RegisterServerCallback('esx_society:isBoss', function(source, cb, job)
 	cb(isPlayerBoss(source, job))
 end)
---checking player
+
 function isPlayerBoss(playerId, job)
 	local xPlayer = ESX.GetPlayerFromId(playerId)
 
@@ -1030,13 +960,13 @@ function isPlayerBoss(playerId, job)
 		return false
 	end
 end
--- get job garades
+
 ESX.RegisterServerCallback('esx_society:getGrades', function(source, cb, plate)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	cb(ESX.GetJob(xPlayer.job.name).grades)
 
 end)
--- updating Grade names in DB and table
+
 ESX.RegisterServerCallback('esx_society:renameGrade', function(source, cb, grade, name)
 	local _source, grade, name = source, grade, name
 	local xPlayer = ESX.GetPlayerFromId(_source)
@@ -1046,8 +976,8 @@ ESX.RegisterServerCallback('esx_society:renameGrade', function(source, cb, grade
 		print(('esx_society: %s "Tried to rename job label"!'):format(xPlayer.identifier))
 		return
 	end
-	
-	-- if xPlayer.job.grade_name == 'boss' then
+
+
 		if ESX.SetJobGrade(xPlayer.job.name, grade, name) then
 
 			local xPlayers = ESX.GetPlayers()
@@ -1057,9 +987,9 @@ ESX.RegisterServerCallback('esx_society:renameGrade', function(source, cb, grade
 
 				if Member.job.name == xPlayer.job.name and Member.job.grade == grade then
 
-	
+
 					Member.setJob(xPlayer.job.name, grade)
-					
+
 				end
 
 			end
@@ -1076,18 +1006,18 @@ ESX.RegisterServerCallback('esx_society:renameGrade', function(source, cb, grade
 				['@job_name'] = xPlayer.job.name
 			})
 
-			
-				
+
+
 			messagess = {
 				{["name"] = "👤 **Player Name**", ["value"] = xPlayer.name, ["inline"] = false},
 				{["name"] = "🎮 **Steam Hex**", ["value"] = xPlayer.identifier, ["inline"] = false},
 				{["name"] = "🌍 **Server ID**", ["value"] = xPlayer.source, ["inline"] = false},
 				{["name"] = "🔠 **Data**", ["value"] = "Rank ("..result[1].label.." {"..grade.."}) Ra Be ("..name..") Tagir Dad", ["inline"] = false},
 			}
-				
+
 			JobsLog('Change Grade Name', true, xPlayer.job.name, 'option', messagess)
-			
-			
+
+
 
 			cb(true)
 			reloaddatabase()
@@ -1095,14 +1025,13 @@ ESX.RegisterServerCallback('esx_society:renameGrade', function(source, cb, grade
 			cb(false)
 			TriggerClientEvent('chatMessage', _source, "[SYSTEM]", {tonumber(255), tonumber(0), tonumber(0)}, " ^0Khatayi dar avaz kardan esm job grade shoma pish amad be developer etelaa dahid!")
 		end
-	-- else
-	-- 	cb(false)	
 
-	-- end
+
+
+
 
 end)
 
--- geting permissions from tables
 ESX.RegisterServerCallback('esx_society:getUniforms', function(source, cb, rank, job)
 	local fskin = {}
 	local mskin = {}
@@ -1123,8 +1052,6 @@ ESX.RegisterServerCallback('esx_society:getUniforms', function(source, cb, rank,
 	end
 end)
 
-
-
 ESX.RegisterServerCallback('esx_society:getWeapons', function(source, cb, rank, job)
 	local weapon       = (Jobs[job].grades[tostring(rank)].weapons) or '{}'
 	if weapon == nil or weapon == '' then
@@ -1134,7 +1061,7 @@ ESX.RegisterServerCallback('esx_society:getWeapons', function(source, cb, rank, 
 end)
 
 ESX.RegisterServerCallback('esx_society:getWeaponsdivisions', function(source, cb, division, job)
-	if division then 
+	if division then
 		local result = MySQL.Sync.fetchAll("SELECT weapons FROM divisions WHERE owner = @owner And name = @name", {
 			['@owner'] = job,
 			['@name'] = division
@@ -1145,14 +1072,14 @@ ESX.RegisterServerCallback('esx_society:getWeaponsdivisions', function(source, c
 		end
 		weapo = json.decode(result[1].weapons)
 		cb(weapo)
-	else 
+	else
 		cb(false)
 	end
 
 end)
 
 ESX.RegisterServerCallback('esx_society:getDivisionItems', function(source, cb, division, job)
-	if division then 
+	if division then
 		local result = MySQL.Sync.fetchAll("SELECT items FROM divisions WHERE owner = @owner And name = @name", {
 			['@owner'] = job,
 			['@name'] = division
@@ -1163,11 +1090,10 @@ ESX.RegisterServerCallback('esx_society:getDivisionItems', function(source, cb, 
 		end
 		item = json.decode(result[1].items)
 		cb(item)
-	else 
+	else
 		cb(false)
 	end
 end)
-
 
 ESX.RegisterServerCallback('esx_society:setDivisionItemPerm', function(source, cb, job, DIVIName, items, status, choice, ItemLabel)
 	local identifier = GetPlayerIdentifier(source, tonumber(0))
@@ -1203,12 +1129,12 @@ ESX.RegisterServerCallback('esx_society:setDivisionItemPerm', function(source, c
 
 		local green = false
 
-		if status == true then 
+		if status == true then
 			IsNull = {
 				Chekdad = "Dad",
 				ChekAZ  = "Be"
 			}
-			green = true 
+			green = true
 		else
 			IsNull = {
 				Chekdad = "Gereft",
@@ -1221,11 +1147,11 @@ ESX.RegisterServerCallback('esx_society:setDivisionItemPerm', function(source, c
 			{["name"] = "👤 **Player Name**", ["value"] = xPlayer.name, ["inline"] = false},
 			{["name"] = "🎮 **Steam Hex**", ["value"] = xPlayer.identifier, ["inline"] = false},
 			{["name"] = "🌍 **Server ID**", ["value"] = xPlayer.source, ["inline"] = false},
-			{["name"] = "📦 **Item Name**", ["value"] = ItemLabel, ["inline"] = false}, 
+			{["name"] = "📦 **Item Name**", ["value"] = ItemLabel, ["inline"] = false},
 			{["name"] = "🔠 **Data**", ["value"] = IsNull.ChekAZ.." Division ("..DIVIName..") "..IsNull.Chekdad, ["inline"] = false},
 		}
-		
-			
+
+
 		JobsLog('Change Item Perm ', green, xPlayer.job.name, 'divisionoption', messagess)
 
 		cb(true)
@@ -1233,10 +1159,8 @@ ESX.RegisterServerCallback('esx_society:setDivisionItemPerm', function(source, c
 
 end)
 
-
-
 ESX.RegisterServerCallback('esx_society:getVehiclesdivision', function(source, cb, division, job)
-	if division then 
+	if division then
 		local result = MySQL.Sync.fetchAll("SELECT vehicles FROM divisions WHERE owner = @owner And name = @name", {
 			['@owner'] = job,
 			['@name'] = division
@@ -1247,13 +1171,13 @@ ESX.RegisterServerCallback('esx_society:getVehiclesdivision', function(source, c
 		end
 		vehic = json.decode(result[1].vehicles)
 		cb(vehic)
-	else 
+	else
 		cb(false)
 	end
 end)
 
 ESX.RegisterServerCallback('esx_society:getHelisdivision', function(source, cb, division, job)
-	if division then 
+	if division then
 		local result = MySQL.Sync.fetchAll("SELECT helis FROM divisions WHERE owner = @owner And name = @name", {
 			['@owner'] = job,
 			['@name'] = division
@@ -1264,12 +1188,10 @@ ESX.RegisterServerCallback('esx_society:getHelisdivision', function(source, cb, 
 		end
 		vehic = json.decode(result[1].helis)
 		cb(vehic)
-	else 
+	else
 		cb(false)
 	end
 end)
-
-
 
 ESX.RegisterServerCallback('esx_society:setSocietyVehdivisionPerm', function(source, cb, job, divisioname, vehs, status, choice, VehLabels)
 	local identifier = GetPlayerIdentifier(source, tonumber(0))
@@ -1282,7 +1204,7 @@ ESX.RegisterServerCallback('esx_society:setSocietyVehdivisionPerm', function(sou
 		return
 	end
 
-	
+
 	for _, veh in ipairs(vehs) do
 		if veh.model ~= choice then
 			table.insert(vehtable,{
@@ -1312,12 +1234,12 @@ ESX.RegisterServerCallback('esx_society:setSocietyVehdivisionPerm', function(sou
 
 		local green = false
 
-		if status == true then 
+		if status == true then
 			IsNull = {
 				Chekdad = "Dad",
 				ChekAZ  = "Be"
 			}
-			green = true 
+			green = true
 		else
 			IsNull = {
 				Chekdad = "Gereft",
@@ -1330,20 +1252,16 @@ ESX.RegisterServerCallback('esx_society:setSocietyVehdivisionPerm', function(sou
 			{["name"] = "👤 **Player Name**", ["value"] = xPlayer.name, ["inline"] = false},
 			{["name"] = "🎮 **Steam Hex**", ["value"] = xPlayer.identifier, ["inline"] = false},
 			{["name"] = "🌍 **Server ID**", ["value"] = xPlayer.source, ["inline"] = false},
-			{["name"] = "🚗 **Vehicle Name**", ["value"] = VehLabels, ["inline"] = false}, 
+			{["name"] = "🚗 **Vehicle Name**", ["value"] = VehLabels, ["inline"] = false},
 			{["name"] = "🔠 **Data**", ["value"] = IsNull.ChekAZ.." Division ("..divisioname..") "..IsNull.Chekdad, ["inline"] = false},
 		}
-		
-			
+
+
 		JobsLog('Change Vehicle Perm ', green, xPlayer.job.name, 'divisionoption', messagess)
 
 		cb(true)
 	end)
 end)
-
-
-
-
 
 ESX.RegisterServerCallback('esx_society:setSocietyHelidivisionPerm', function(source, cb, job, divisioname, helis, status, choice, VehLabels)
 	local isBoss = isPlayerBoss(source, job)
@@ -1386,12 +1304,12 @@ ESX.RegisterServerCallback('esx_society:setSocietyHelidivisionPerm', function(so
 
 		local green = false
 
-		if status == true then 
+		if status == true then
 			IsNull = {
 				Chekdad = "Dad",
 				ChekAZ  = "Be"
 			}
-			green = true 
+			green = true
 		else
 			IsNull = {
 				Chekdad = "Gereft",
@@ -1404,20 +1322,16 @@ ESX.RegisterServerCallback('esx_society:setSocietyHelidivisionPerm', function(so
 			{["name"] = "👤 **Player Name**", ["value"] = xPlayer.name, ["inline"] = false},
 			{["name"] = "🎮 **Steam Hex**", ["value"] = xPlayer.identifier, ["inline"] = false},
 			{["name"] = "🌍 **Server ID**", ["value"] = xPlayer.source, ["inline"] = false},
-			{["name"] = "🚗 **Heli Name**", ["value"] = VehLabels, ["inline"] = false}, 
+			{["name"] = "🚗 **Heli Name**", ["value"] = VehLabels, ["inline"] = false},
 			{["name"] = "🔠 **Data**", ["value"] = IsNull.ChekAZ.." Division ("..divisioname..") "..IsNull.Chekdad, ["inline"] = false},
 		}
-		
-			
+
+
 		JobsLog('Change Heli Perm ', green, xPlayer.job.name, 'divisionoption', messagess)
 
 		cb(true)
 	end)
 end)
-
-
-
-
 
 ESX.RegisterServerCallback('esx_society:setDivisionWeapPerm', function(source, cb, job, division, weapons, status, choice)
 	local identifier = GetPlayerIdentifier(source, tonumber(0))
@@ -1460,12 +1374,12 @@ ESX.RegisterServerCallback('esx_society:setDivisionWeapPerm', function(source, c
 
 		local green = false
 
-		if status == true then 
+		if status == true then
 			IsNull = {
 				Chekdad = "Dad",
 				ChekAZ  = "Be"
 			}
-			green = true 
+			green = true
 		else
 			IsNull = {
 				Chekdad = "Gereft",
@@ -1478,18 +1392,16 @@ ESX.RegisterServerCallback('esx_society:setDivisionWeapPerm', function(source, c
 			{["name"] = "👤 **Player Name**", ["value"] = xPlayer.name, ["inline"] = false},
 			{["name"] = "🎮 **Steam Hex**", ["value"] = xPlayer.identifier, ["inline"] = false},
 			{["name"] = "🌍 **Server ID**", ["value"] = xPlayer.source, ["inline"] = false},
-			{["name"] = "🔫 **Weapon Name**", ["value"] = ESX.GetWeaponLabel(choice), ["inline"] = false}, 
+			{["name"] = "🔫 **Weapon Name**", ["value"] = ESX.GetWeaponLabel(choice), ["inline"] = false},
 			{["name"] = "🔠 **Data**", ["value"] = IsNull.ChekAZ.." Division ("..division..") "..IsNull.Chekdad, ["inline"] = false},
 		}
-		
-			
+
+
 		JobsLog('Change Weapon Perm ', green, xPlayer.job.name, 'divisionoption', messagess)
 
 		cb(true)
 	end)
 end)
-
-
 
 ESX.RegisterServerCallback('esx_society:getVehicles', function(source, cb, rank, job)
 	local veh       = (Jobs[job].grades[tostring(rank)].vehicles) or '{}'
@@ -1498,10 +1410,6 @@ ESX.RegisterServerCallback('esx_society:getVehicles', function(source, cb, rank,
 	end
 	cb(json.decode(veh))
 end)
-
-
-
-
 
 ESX.RegisterServerCallback('esx_society:getHelis', function(source, cb, rank, job)
 	local heli       = (Jobs[job].grades[tostring(rank)].helis) or '{}'
@@ -1521,7 +1429,7 @@ end)
 
 ESX.RegisterServerCallback('esx_society:getJobItems', function(source, cb, job)
 	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_'..job, function(inventory)
-		
+
 		cb(inventory.items)
 	end)
 end)
@@ -1532,7 +1440,7 @@ ESX.RegisterServerCallback('esx_society:getEmployeclothes', function(source, cb,
 	fskin       = json.decode(Jobs[job].grades[tostring(rank)].skin_female) or '{}'
 	mskin       = json.decode(Jobs[job	].grades[tostring(rank)].skin_male) or '{}'
 	local xPlayers = ESX.GetPlayers()
-	if tonumber(rank) ~= 0 and job ~= 'nojob' then 
+	if tonumber(rank) ~= 0 and job ~= 'nojob' then
 		for i=tonumber(1), #xPlayers, tonumber(1) do
 			local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
 
@@ -1543,28 +1451,26 @@ ESX.RegisterServerCallback('esx_society:getEmployeclothes', function(source, cb,
 
 		if gender == 'male' then
 			cb(mskin)
-		elseif  gender == 'female' then 
+		elseif  gender == 'female' then
 			cb(fskin)
 		end
 	end
 end)
-
-
 
 ESX.RegisterServerCallback('esx_society:getEmployeclothesdivision', function(source, cb, division, gender, job)
 	local fskin = {}
 	local mskin = {}
 	fskin       = json.decode(Divisions[job].names[tostring(division)].skin_female)
 	mskin       = json.decode(Divisions[job].names[tostring(division)].skin_male)
-		
+
 	if gender == 'male' then
 		cb(mskin)
-	elseif  gender == 'female' then 
+	elseif  gender == 'female' then
 		cb(fskin)
 	end
 
 end)
--- updating DB and tables
+
 ESX.RegisterServerCallback('esx_society:setSocietyItemPerm', function(source, cb, job, rank, items, status, choice, ItemLabel)
 	local identifier = GetPlayerIdentifier(source, tonumber(0))
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -1598,12 +1504,12 @@ ESX.RegisterServerCallback('esx_society:setSocietyItemPerm', function(source, cb
 				['@grade'] = rank
 			})
 
-			if status == true then 
+			if status == true then
 				IsNull = {
 					Chekdad = "Dad",
 					ChekAZ  = "Be"
 				}
-				green = true 
+				green = true
 			else
 				IsNull = {
 					Chekdad = "Gereft",
@@ -1616,11 +1522,11 @@ ESX.RegisterServerCallback('esx_society:setSocietyItemPerm', function(source, cb
 				{["name"] = "👤 **Player Name**", ["value"] = xPlayer.name, ["inline"] = false},
 				{["name"] = "🎮 **Steam Hex**", ["value"] = xPlayer.identifier, ["inline"] = false},
 				{["name"] = "🌍 **Server ID**", ["value"] = xPlayer.source, ["inline"] = false},
-				{["name"] = "📦 **Item Name**", ["value"] = ItemLabel, ["inline"] = false}, 
+				{["name"] = "📦 **Item Name**", ["value"] = ItemLabel, ["inline"] = false},
 				{["name"] = "🔠 **Data**", ["value"] = IsNull.ChekAZ.." Rank ("..result[1].label..")-{"..rank.."} "..IsNull.Chekdad, ["inline"] = false},
 			}
-			
-				
+
+
 			JobsLog('Change Item Perm ', green, xPlayer.job.name, 'option', messagess)
 
 			cb(true)
@@ -1671,12 +1577,12 @@ ESX.RegisterServerCallback('esx_society:setSocietyWeapPerm', function(source, cb
 				['@grade'] = rank
 			})
 
-			if status == true then 
+			if status == true then
 				IsNull = {
 					Chekdad = "Dad",
 					ChekAZ  = "Be"
 				}
-				green = true 
+				green = true
 			else
 				IsNull = {
 					Chekdad = "Gereft",
@@ -1689,13 +1595,12 @@ ESX.RegisterServerCallback('esx_society:setSocietyWeapPerm', function(source, cb
 				{["name"] = "👤 **Player Name**", ["value"] = xPlayer.name, ["inline"] = false},
 				{["name"] = "🎮 **Steam Hex**", ["value"] = xPlayer.identifier, ["inline"] = false},
 				{["name"] = "🌍 **Server ID**", ["value"] = xPlayer.source, ["inline"] = false},
-				{["name"] = "🔫 **Weapon Name**", ["value"] = ESX.GetWeaponLabel(choice), ["inline"] = false}, 
+				{["name"] = "🔫 **Weapon Name**", ["value"] = ESX.GetWeaponLabel(choice), ["inline"] = false},
 				{["name"] = "🔠 **Data**", ["value"] = IsNull.ChekAZ.." Rank ("..result[1].label..")-{"..rank.."} "..IsNull.Chekdad, ["inline"] = false},
 			}
-			
-				
-			JobsLog('Change Weapon Perm ', green, xPlayer.job.name, 'option', messagess)
 
+
+			JobsLog('Change Weapon Perm ', green, xPlayer.job.name, 'option', messagess)
 
 			cb(true)
 		end)
@@ -1704,9 +1609,6 @@ ESX.RegisterServerCallback('esx_society:setSocietyWeapPerm', function(source, cb
 		cb()
 	end
 end)
-
-
-
 
 ESX.RegisterServerCallback('esx_society:setSocietyVehPerm', function(source, cb, job, rank, vehs, status, choice, vehlabel)
 	local isBoss = isPlayerBoss(source, job)
@@ -1748,12 +1650,12 @@ ESX.RegisterServerCallback('esx_society:setSocietyVehPerm', function(source, cb,
 				['@grade'] = rank
 			})
 
-			if status == true then 
+			if status == true then
 				IsNull = {
 					Chekdad = "Dad",
 					ChekAZ  = "Be"
 				}
-				green = true 
+				green = true
 			else
 				IsNull = {
 					Chekdad = "Gereft",
@@ -1766,11 +1668,11 @@ ESX.RegisterServerCallback('esx_society:setSocietyVehPerm', function(source, cb,
 				{["name"] = "👤 **Player Name**", ["value"] = xPlayer.name, ["inline"] = false},
 				{["name"] = "🎮 **Steam Hex**", ["value"] = xPlayer.identifier, ["inline"] = false},
 				{["name"] = "🌍 **Server ID**", ["value"] = xPlayer.source, ["inline"] = false},
-				{["name"] = "🚗 **Vehicle Name**", ["value"] = vehlabel, ["inline"] = false}, 
+				{["name"] = "🚗 **Vehicle Name**", ["value"] = vehlabel, ["inline"] = false},
 				{["name"] = "🔠 **Data**", ["value"] = IsNull.ChekAZ.." Rank ("..result[1].label..")-{"..rank.."} "..IsNull.Chekdad, ["inline"] = false},
 			}
-			
-				
+
+
 			JobsLog('Change Vehicle Perm ', green, xPlayer.job.name, 'option', messagess)
 
 			cb(true)
@@ -1814,7 +1716,7 @@ ESX.RegisterServerCallback('esx_society:setSocietyHeliPerm', function(source, cb
 			['@grade']    = rank
 		}, function(rowsChanged)
 
-			
+
 			local green = false
 
 			local result = MySQL.Sync.fetchAll('SELECT label FROM job_grades WHERE job_name = @job_name AND grade = @grade', {
@@ -1822,12 +1724,12 @@ ESX.RegisterServerCallback('esx_society:setSocietyHeliPerm', function(source, cb
 				['@grade'] = rank
 			})
 
-			if status == true then 
+			if status == true then
 				IsNull = {
 					Chekdad = "Dad",
 					ChekAZ  = "Be"
 				}
-				green = true 
+				green = true
 			else
 				IsNull = {
 					Chekdad = "Gereft",
@@ -1840,11 +1742,11 @@ ESX.RegisterServerCallback('esx_society:setSocietyHeliPerm', function(source, cb
 				{["name"] = "👤 **Player Name**", ["value"] = xPlayer.name, ["inline"] = false},
 				{["name"] = "🎮 **Steam Hex**", ["value"] = xPlayer.identifier, ["inline"] = false},
 				{["name"] = "🌍 **Server ID**", ["value"] = xPlayer.source, ["inline"] = false},
-				{["name"] = "🚁 **Heli Name**", ["value"] = heliLabel, ["inline"] = false}, 
+				{["name"] = "🚁 **Heli Name**", ["value"] = heliLabel, ["inline"] = false},
 				{["name"] = "🔠 **Data**", ["value"] = IsNull.ChekAZ.." Rank ("..result[1].label..")-{"..rank.."} "..IsNull.Chekdad, ["inline"] = false},
 			}
-			
-				
+
+
 			JobsLog('Change Heli Perm ', green, xPlayer.job.name, 'option', messagess)
 
 			cb(true)
@@ -1872,10 +1774,10 @@ ESX.RegisterServerCallback('esx_society:setUniform', function(source, cb, job, r
 			['@grade']    = rank
 		}, function(rowsChanged)
 			Jobs[job].grades[tostring(rank)].skin_male = json.encode(model)
-			
+
 			cb()
 		end)
-	elseif  gender == 'female' then 
+	elseif  gender == 'female' then
 		MySQL.Async.execute('UPDATE job_grades SET skin_female = @skin_female WHERE job_name = @job_name AND grade = @grade', {
 			['@skin_female']   = json.encode(model),
 			['@job_name'] = job,
@@ -1898,10 +1800,10 @@ ESX.RegisterServerCallback('esx_society:setUniform', function(source, cb, job, r
 	}
 	if gender == 'female' then
 		names = 'Female'
-	elseif gender == 'male' then 
+	elseif gender == 'male' then
 		names = 'Male'
 	end
-		
+
 	JobsLog('Change OutFit '..names, true, xPlayer.job.name, 'option', messagess)
 end)
 
@@ -1922,10 +1824,10 @@ ESX.RegisterServerCallback('esx_society:setUniformdivision', function(source, cb
 			['@name']    = division
 		}, function(rowsChanged)
 			Divisions[job].names[division].skin_male = json.encode(model)
-			
+
 			cb()
 		end)
-	elseif  gender == 'female' then 
+	elseif  gender == 'female' then
 		MySQL.Async.execute('UPDATE divisions SET skin_female = @skin_female WHERE owner = @owner AND name = @name', {
 			['@skin_female']   = json.encode(model),
 			['@owner'] = job,
@@ -1937,12 +1839,12 @@ ESX.RegisterServerCallback('esx_society:setUniformdivision', function(source, cb
 		end)
 	end
 	local Skins = ''
-	if gender == 'female' then 
+	if gender == 'female' then
 		Skins = 'Female'
-	elseif gender == 'male' then 
+	elseif gender == 'male' then
 		Skins = 'Male'
 	end
-	
+
 	messagess = {
 		{["name"] = "👤 **Player Name**", ["value"] = sPlayer.name, ["inline"] = false},
 		{["name"] = "🎮 **Steam Hex**", ["value"] = sPlayer.identifier, ["inline"] = false},
@@ -1950,15 +1852,8 @@ ESX.RegisterServerCallback('esx_society:setUniformdivision', function(source, cb
 		{["name"] = "🔠 **Data**", ["value"] = "Division Name : "..division.."\nLebase ("..Skins..") Ra Taghir Dad" , ["inline"] = false},
 	}
 	JobsLog('Change OutFit Division ', true, sPlayer.job.name, 'divisionoption', messagess)
-	
+
 end)
-
-
-
-
-
-
-
 
 ESX.RegisterServerCallback('esx_society:CreateDivision', function(source, cb, divisionname, divisionlabel)
 	local source = source
@@ -1976,9 +1871,9 @@ ESX.RegisterServerCallback('esx_society:CreateDivision', function(source, cb, di
 		playerjname,
 
 	}, function(newDivisionCheck)
-		for i=1, #newDivisionCheck, 1 do 
+		for i=1, #newDivisionCheck, 1 do
 			if newDivisionCheck[i].name == divisionname then
-				
+
 				TriggerClientEvent("chatMessage",source,"[SYSTEM]",{255, 0, 0},"Division (^2" .. tostring(divisionname) .."^0) Vojod Darad ")
 				cb(false)
 				creatediv = false
@@ -1986,7 +1881,7 @@ ESX.RegisterServerCallback('esx_society:CreateDivision', function(source, cb, di
 
 			end
 		end
-		
+
 		if creatediv then
 
 			exports.oxmysql:execute('INSERT INTO divisions (owner, name, label, skin_male, skin_female, vehicles, helis, weapons, items) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', {
@@ -2003,15 +1898,14 @@ ESX.RegisterServerCallback('esx_society:CreateDivision', function(source, cb, di
 			reloaddatabase()
 			TriggerClientEvent("chatMessage",source,"[SYSTEM]",{255, 0, 0},"Division Name: ^2" .. tostring(divisionname) .. " ^0Ba Label: ^2"..tostring(divisionlabel).." ^0ba movafaghiat be ^3 "..sPlayer.job.name.." ^0ezafe shod!")
 
-
 			messagess = {
 				{["name"] = "👤 **Player Name**", ["value"] = sPlayer.name, ["inline"] = false},
 				{["name"] = "🎮 **Steam Hex**", ["value"] = sPlayer.identifier, ["inline"] = false},
 				{["name"] = "🌍 **Server ID**", ["value"] = sPlayer.source, ["inline"] = false},
 				{["name"] = "🔠 **Data**", ["value"] = "Division Name : "..divisionname.."\nDivision Label : "..divisionlabel, ["inline"] = false},
 			}
-			
-				
+
+
 			JobsLog('Create Division ', true, sPlayer.job.name, 'divisiondata', messagess)
 
 			cb(true)
@@ -2019,9 +1913,6 @@ ESX.RegisterServerCallback('esx_society:CreateDivision', function(source, cb, di
 	end)
 
 end)
-
-
-
 
 ESX.RegisterServerCallback('esx_society:RemoveDivision', function(source, cb, divisionname, divisionlabel)
     local source = source
@@ -2036,10 +1927,8 @@ ESX.RegisterServerCallback('esx_society:RemoveDivision', function(source, cb, di
 
     local allUsers = MySQL.Sync.fetchAll('SELECT identifier, divisions FROM users')
 
-
     for _, user in ipairs(allUsers) do
         local divisions = json.decode(user.divisions)
-
 
         for i, div in ipairs(divisions) do
             if div.name == divisionname and div.label == divisionlabel then
@@ -2049,7 +1938,6 @@ ESX.RegisterServerCallback('esx_society:RemoveDivision', function(source, cb, di
             end
         end
 
-
         local updatedData = json.encode(divisions)
         MySQL.Sync.execute('UPDATE users SET divisions = @divisions WHERE identifier = @identifier', {
             ['@divisions'] = updatedData,
@@ -2058,14 +1946,11 @@ ESX.RegisterServerCallback('esx_society:RemoveDivision', function(source, cb, di
     end
 
 
-
-	
 	exports.oxmysql:execute('DELETE FROM divisions WHERE owner = ? AND name = ? AND label = ?', {
 		playerjname,
 		divisionname,
 		divisionlabel,
 	})
-
 
 	messagess = {
 		{["name"] = "👤 **Player Name**", ["value"] = sPlayer.name, ["inline"] = false},
@@ -2073,18 +1958,13 @@ ESX.RegisterServerCallback('esx_society:RemoveDivision', function(source, cb, di
 		{["name"] = "🌍 **Server ID**", ["value"] = sPlayer.source, ["inline"] = false},
 		{["name"] = "🔠 **Data**", ["value"] = "Division Name : "..divisionname.."\nDivision Label : "..divisionlabel, ["inline"] = false},
 	}
-	
-		
-	JobsLog('Delete Division ', false, sPlayer.job.name, 'divisiondata', messagess)
 
+
+	JobsLog('Delete Division ', false, sPlayer.job.name, 'divisiondata', messagess)
 
 	TriggerClientEvent("chatMessage", source, "[SYSTEM]", {255, 0, 0}, "Division Name: ^2" .. tostring(divisionname) .. " ^0Ba Label: ^2" .. tostring(divisionlabel) .. " ^0ba movafaghiat Az ^3 " .. sPlayer.job.name .. " ^0Hazf shod!")
 	cb(true)
 end)
-
-
-
-
 
 ESX.RegisterServerCallback('esx_society:getUniformsDivision', function(source, cb, diviname, job)
 	local fskin = {}
@@ -2094,11 +1974,11 @@ ESX.RegisterServerCallback('esx_society:getUniformsDivision', function(source, c
 		job,
 		diviname
 	}, function(division)
-		
+
 		local mskin = json.decode(division[1].skin_male)
 		local fskin = json.decode(division[1].skin_female)
-		
-		
+
+
 		if mskin == nil or mskin == '' or fskin == nil or fskin == '' then
 			TriggerClientEvent('esx:showNotification', source, 'Please set garades options in ~y~boss action')
 		end
@@ -2106,10 +1986,8 @@ ESX.RegisterServerCallback('esx_society:getUniformsDivision', function(source, c
 
 	end)
 
-	
+
 end)
-
-
 
 ESX.RegisterServerCallback('esx_society:ChangeDivision', function(source, cb, society, dvisionid, NewName, typee)
     local source = source
@@ -2178,9 +2056,8 @@ ESX.RegisterServerCallback('esx_society:ChangeDivision', function(source, cb, so
 						cb(true)
 					end)
 				end)
-			
-			elseif typee == 'label' then
 
+			elseif typee == 'label' then
 
 				exports.oxmysql:execute("SELECT label FROM divisions WHERE id = ?", {
 					dvisionid
@@ -2228,7 +2105,6 @@ ESX.RegisterServerCallback('esx_society:ChangeDivision', function(source, cb, so
     end)
 end)
 
-
 ESX.RegisterServerCallback('esx_society:GetPermWashMoney', function(source, cb, JobName)
 
 	exports.oxmysql:execute("SELECT washmoney FROM jobs WHERE name = ?", {
@@ -2236,7 +2112,7 @@ ESX.RegisterServerCallback('esx_society:GetPermWashMoney', function(source, cb, 
 	}, function(result)
 		print(result[1].washmoney)
 		cb(result[1].washmoney)
-	
+
 	end)
 end)
 
@@ -2266,33 +2142,33 @@ AddEventHandler('esx_society:SetPermWash', function(JobName, Status)
 		{["name"] = "🌍 **Server ID**", ["value"] = xPlayer.source, ["inline"] = false},
 		{["name"] = "🔠 **Data**", ["value"] = "Wash Money Ra "..OffOn.." Kard", ["inline"] = false},
 	}
-	
-		
+
+
 	JobsLog('Change Wash Money', green, xPlayer.job.name, 'option', messagess)
 
 end)
 
 Citizen.CreateThread(function()
-	while true do 
+	while true do
 		local count = 50000
-		for k,v in pairs(GetPlayers()) do 
+		for k,v in pairs(GetPlayers()) do
 			local xPlayer = ESX.GetPlayerFromId(v)
-			if xPlayer then 
-				if xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' or xPlayer.job.name == 'sheriff' then 
+			if xPlayer then
+				if xPlayer.job.name == 'police' or xPlayer.job.name == 'mt' or xPlayer.job.name == 'sheriff' then
 					exports.oxmysql:execute("SELECT washmoney FROM jobs WHERE name = ?", {
 						xPlayer.job.name
 					}, function(result)
-						if result[1].washmoney == "true" then 
+						if result[1].washmoney == "true" then
 							TriggerEvent('esx_addoninventory:getSharedInventory', 'society_'..xPlayer.job.name, function(inventory)
 								local inventoryItem = inventory.getItem('eskenas')
 								if count > 0 and inventoryItem.count >= count then
 									inventory.removeItem('eskenas', count)
-									-- Police/sheriff/mt share one money account (society_law) - see
-									-- police_main.lua's note - so washed money goes there, not per-job.
+
+
 									TriggerEvent('esx_addonaccount:getSharedAccount', 'society_law', function(account)
-						
+
 										account.addMoney(30000)
-										
+
 									end)
 								end
 							end)
@@ -2305,16 +2181,13 @@ Citizen.CreateThread(function()
 	end
 end)
 
--------------------------- LOGS ---------------------------
-
-
 function JobsLog(titels, grren, job, logs, messagess)
-	if Config.LogSystem[job] then 
+	if Config.LogSystem[job] then
 		local WebHookLog = ""
 		local WebHookAdmin = ""
 		local jobadmin = "admin"..job
 		local ganglogo
-		local Porof 
+		local Porof
 		if logs == "money" then
 			WebHookLog   = Config.LogSystem[job].money
 			WebHookAdmin = Config.LogSystem[jobadmin].money
@@ -2337,28 +2210,28 @@ function JobsLog(titels, grren, job, logs, messagess)
 
 		Porof = Config.LogSystem[job].img
 		local colors = 0
-			
-		if grren then 
+
+		if grren then
 			colors = 65280
 		else
 			colors = 16711680
 		end
-		
-		
-		
+
+
+
 		local logMessage = {
 			{
 				["color"] = colors,
 				["title"] = titels,
 				["fields"] = messagess,
-		
+
 				["footer"] = {
 					["text"] = os.date("%Y-%m-%d %H:%M:%S"),
 				}
 			}
 		}
 
-		
+
 		PerformHttpRequest(WebHookLog, function(err, text, headers) end, "POST", json.encode({username = string.gsub(job, string.sub(job, 1, 1), string.upper(string.sub(job, 1, 1))) ..' Job', embeds = logMessage, avatar_url = tostring(Porof)}), {['Content-Type'] = 'application/json'})
 		PerformHttpRequest(WebHookAdmin, function(err, text, headers) end, "POST", json.encode({username = string.gsub(job, string.sub(job, 1, 1), string.upper(string.sub(job, 1, 1))) ..' Job', embeds = logMessage, avatar_url = tostring(Porof)}), {['Content-Type'] = 'application/json'})
 	end

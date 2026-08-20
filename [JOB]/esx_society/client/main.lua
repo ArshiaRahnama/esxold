@@ -24,17 +24,17 @@ function OpenBossMenu(society, close, options)
 	local options  = options or {}
 	local elements = {}
 
-	-- ESX.TriggerServerCallback('esx_society:isBoss', function(result)
-	-- 	isBoss = result
-	-- end, society)
 
-	-- while isBoss == nil do
-	-- 	Citizen.Wait(tonumber(100))
-	-- end
 
-	-- if not isBoss then
-	-- 	return
-	-- end
+
+
+
+
+
+
+
+
+
 
 	local defaultOptions = {
 		withdraw  = true,
@@ -53,8 +53,8 @@ function OpenBossMenu(society, close, options)
 	local wait = true
 	ESX.TriggerServerCallback('esx_society:getSocietyMoney', function(money)
 		if ESX.PlayerData.job.grade >= 10 then
-			if ESX.PlayerData.job.name == 'police' or ESX.PlayerData.job.name == 'sheriff' or ESX.PlayerData.job.name == 'mt' then 
-				if ESX.PlayerData.job.grade >= 16 then 
+			if ESX.PlayerData.job.name == 'police' or ESX.PlayerData.job.name == 'sheriff' or ESX.PlayerData.job.name == 'mt' then
+				if ESX.PlayerData.job.grade >= 16 then
 					table.insert(elements ,{label = 'Society Money: <span style="color:green;">$'.. money .. '</span>', value = nil})
 				end
 			else
@@ -70,14 +70,13 @@ function OpenBossMenu(society, close, options)
 		Citizen.Wait(tonumber(5))
 	end
 
-
 	if options.withdraw and ESX.PlayerData.job.grade >= 10 then
-		if ESX.PlayerData.perm >= 15 then 
-			if ESX.PlayerData.job.name == 'police' or ESX.PlayerData.job.name == 'sheriff' or ESX.PlayerData.job.name == 'mt' then 
-				if ESX.PlayerData.job.grade >= 16 then 
+		if ESX.PlayerData.perm >= 15 then
+			if ESX.PlayerData.job.name == 'police' or ESX.PlayerData.job.name == 'sheriff' or ESX.PlayerData.job.name == 'mt' then
+				if ESX.PlayerData.job.grade >= 16 then
 					table.insert(elements, {label = _U('withdraw_society_money'), value = 'withdraw_society_money'})
 				end
-			
+
 
 			else
 				table.insert(elements, {label = _U('withdraw_society_money'), value = 'withdraw_society_money'})
@@ -85,16 +84,13 @@ function OpenBossMenu(society, close, options)
 		end
 	end
 
-
 	if options.deposit then
 		table.insert(elements, {label = _U('deposit_society_money'), value = 'deposit_money'})
 	end
 
-
-
 	if options.employees and ESX.PlayerData.job.grade >= 10 then
-		if ESX.PlayerData.job.name == 'police' or ESX.PlayerData.job.name == 'sheriff' or ESX.PlayerData.job.name == 'mt' then 
-			if ESX.PlayerData.job.grade >= 16 then 
+		if ESX.PlayerData.job.name == 'police' or ESX.PlayerData.job.name == 'sheriff' or ESX.PlayerData.job.name == 'mt' then
+			if ESX.PlayerData.job.grade >= 16 then
 				table.insert(elements, {label = _U('employee_management'), value = 'manage_employees'})
 			end
 		else
@@ -103,8 +99,8 @@ function OpenBossMenu(society, close, options)
 	end
 
 	if options.job and ESX.PlayerData.job.grade >= 10 then
-		if ESX.PlayerData.job.name == 'police' or ESX.PlayerData.job.name == 'sheriff' or ESX.PlayerData.job.name == 'mt' then 
-			if ESX.PlayerData.job.grade >= 16 then 
+		if ESX.PlayerData.job.name == 'police' or ESX.PlayerData.job.name == 'sheriff' or ESX.PlayerData.job.name == 'mt' then
+			if ESX.PlayerData.job.grade >= 16 then
 				table.insert(elements, {label = _U('manage_job'), value = 'manage_job'})
 				table.insert(elements, {label = _U('manage_job_division'), value = 'manage_job_division'})
 			end
@@ -118,10 +114,10 @@ function OpenBossMenu(society, close, options)
 		table.insert(elements, {label = _U('withdraw_society_money'), value = 'withdraw_society_money'})
 		table.insert(elements, {label = _U('employee_management'), value = 'manage_employees'})
 		table.insert(elements, {label = _U('manage_job'), value = 'manage_job'})
-		
+
 	end
 
-	-- Change Job (Branch): only for bosses (grade >= 10) whose job sits in a Config.JobGroups branch
+
 	if ESX.PlayerData.job.grade >= 10 then
 		local siblings = GetBranchSiblings(ESX.PlayerData.job.name)
 		if siblings and #siblings > 0 then
@@ -149,7 +145,7 @@ function OpenBossMenu(society, close, options)
 					else
 						menu.close()
 						TriggerServerEvent('esx_society:withdrawMoney', society, amount)
-						
+
 					end
 
 				end, function(data, menu)
@@ -172,16 +168,13 @@ function OpenBossMenu(society, close, options)
 
 	end, function(data, menu)
 		menu.close(data, menu)
-		-- if close then
-		-- 	close(data, menu)
-		-- end
+
+
+
 	end)
 
 end
 
--- ---------------------------------------------------------------------------------
--- Change Job (Branch): lets a boss move THEMSELVES to a sibling job in their branch
--- ---------------------------------------------------------------------------------
 function GetBranchSiblings(jobName)
 	for i = 1, #Config.JobGroups do
 		local grp = Config.JobGroups[i]
@@ -226,13 +219,11 @@ function OpenChangeBranchJobMenu(society, close, options)
 	end)
 end
 
----------------------------------------- Division Start ----------------------------------------------
-
 function OpenManagedivisionMenu(society)
 	if not InBossMenu then
 		LastPosition = GetEntityCoords(PlayerPedId())
 	end
-	
+
 	local elements = {
 
 		{label = 'Change Data Division', value = 'division_change_data'},
@@ -240,7 +231,7 @@ function OpenManagedivisionMenu(society)
 		{label = _U('divisionmember_management'), value = 'divisionmember_management'},
 
 	}
-		
+
 	ESX.UI.Menu.CloseAll()
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_job_division' .. society, {
 		title    = _U('manage_job_division'),
@@ -259,20 +250,19 @@ function OpenManagedivisionMenu(society)
 		if data.current.value == 'divisionmember_management' then
 			OpenManageDivisionMemberMenu(society)
 		end
-		
+
 	end, function(data, menu)
 		menu.close()
 		OpenBossMenu(society, close, options)
 	end)
 end
 
-
 function OpenMenuDivisionOption(society)
 
 	if not InBossMenu then
 		LastPosition = GetEntityCoords(PlayerPedId())
 	end
-	
+
 	local elements = {
 		{label = _U('manage_division_outfit'), value = 'manage_division_outfit'},
 		{label = _U('manage_division_vehicle'), value = 'manage_division_vehicle'},
@@ -280,14 +270,13 @@ function OpenMenuDivisionOption(society)
 		{label = _U('manage_division_weapon'), value = 'manage_division_weapon'},
 		{label = _U('manage_division_item'), value = 'manage_division_item'},
 	}
-		
+
 	ESX.UI.Menu.CloseAll()
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_division_option' .. society, {
 		title    = _U('manage_division_option'),
 		align    = 'top-left',
 		elements = elements
 	}, function(data, menu)
-
 
 		if data.current.value == 'manage_division_outfit' then
 			OpenSetOutfitdivisionMenu(society)
@@ -315,17 +304,17 @@ function OpenMenuDivisionOption(society)
 end
 
 function OpenDivisionItemsManagment(society)
-	ESX.TriggerServerCallback('esx_society:getdivision', function(DVilist) 
-		
+	ESX.TriggerServerCallback('esx_society:getdivision', function(DVilist)
+
 		local elements = {}
 
 		for i = 1, #DVilist, 1 do
-	
+
 			table.insert(elements, {label = '('..DVilist[i].name..')  | '..DVilist[i].label, value = DVilist[i].name})
-		
-			
+
+
 		end
-		
+
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_grades_' .. society .. '_new', {
 			title = "Manage Division",
 			align = 'top-left',
@@ -341,16 +330,15 @@ function OpenDivisionItemsManagment(society)
 	end, society)
 end
 
-
 function ChangeItemDivisionPerm(society,DIVName)
 	ESX.TriggerServerCallback('esx_society:getJobItems', function(authorizedItems)
 		if authorizedItems then
 			ESX.TriggerServerCallback('esx_society:getDivisionItems', function(items)
 				local rows = {}
-			
+
 				for k, society_items in ipairs(authorizedItems) do
 					local found = false
-					
+
 					if items then
 
 						for k2, item_state in ipairs(items) do
@@ -387,12 +375,11 @@ function ChangeItemDivisionPerm(society,DIVName)
 						end, society, DIVName, rows, false, name, data.current.Itemslabel)
 					else
 						ESX.TriggerServerCallback('esx_society:setDivisionItemPerm', function(result)
-							
+
 							ChangeItemDivisionPerm(society,DIVName)
 
 						end, society, DIVName, rows, true, name, data.current.Itemslabel)
 					end
-
 
 				end, function(data, menu)
 					menu.close()
@@ -406,18 +393,17 @@ function ChangeItemDivisionPerm(society,DIVName)
 	end, society)
 end
 
-
 function OpenDivisionweaponsManagment(society)
-	ESX.TriggerServerCallback('esx_society:getdivision', function(DVilist) 
-		
+	ESX.TriggerServerCallback('esx_society:getdivision', function(DVilist)
+
 		local elements = {}
 
 		for i = 1, #DVilist, 1 do
-	
+
 			table.insert(elements, {label = '('..DVilist[i].name..')  | '..DVilist[i].label, value = DVilist[i].name})
-		
+
 		end
-		
+
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_grades_' .. society .. '_new', {
 			title = "Manage Division",
 			align = 'top-left',
@@ -433,14 +419,13 @@ function OpenDivisionweaponsManagment(society)
 	end, society)
 end
 
-
 function ChangeWeaponDivisionPerm(society,DivisionName)
 
 	local authorizedWeapons = Config.Armory[society]
-	if authorizedWeapons then 
+	if authorizedWeapons then
 		ESX.TriggerServerCallback('esx_society:getWeaponsdivisions', function(weapons)
 			local rows = {}
-		
+
 			for k, society_weapons in ipairs(authorizedWeapons) do
 
 				local found = false
@@ -475,25 +460,23 @@ function ChangeWeaponDivisionPerm(society,DivisionName)
 				local model = data.current.model
 				if state then
 					ESX.TriggerServerCallback('esx_society:setDivisionWeapPerm', function(result)
-						
+
 						ChangeWeaponDivisionPerm(society,DivisionName)
-						
+
 
 					end, society, DivisionName, rows, false, model)
 				else
 					ESX.TriggerServerCallback('esx_society:setDivisionWeapPerm', function(result)
-
 
 						ChangeWeaponDivisionPerm(society,DivisionName)
 
 					end, society, DivisionName, rows, true, model)
 				end
 
-
 			end, function(data, menu)
 				OpenDivisionweaponsManagment(society)
 				menu.close()
-				
+
 			end)
 
 		end, DivisionName, society)
@@ -503,24 +486,18 @@ function ChangeWeaponDivisionPerm(society,DivisionName)
 
 end
 
-
-
-
-
-
-
 function OpenDivisionHelissManagment(society)
-	ESX.TriggerServerCallback('esx_society:getdivision', function(DVilist) 
-		
+	ESX.TriggerServerCallback('esx_society:getdivision', function(DVilist)
+
 		local elements = {}
 
 		for i = 1, #DVilist, 1 do
-		
+
 			table.insert(elements, {label = '('..DVilist[i].name..')  | '..DVilist[i].label, value = DVilist[i].name})
-		
-			
+
+
 		end
-		
+
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_grades_' .. society .. '_new', {
 			title = "Manage Division",
 			align = 'top-left',
@@ -536,17 +513,16 @@ function OpenDivisionHelissManagment(society)
 	end, society)
 end
 
-
 function ChangeHelidivisionPerm(society,DivisionName)
 	local authorizedHelis = Config.Heli[society]
 	if authorizedHelis then
 		ESX.TriggerServerCallback('esx_society:getHelisdivision', function(helis)
 
 			local rows = {}
-		
+
 			for k, society_Helis in ipairs(authorizedHelis) do
 				local found = false
-				
+
 				if helis then
 
 					for k2, Heli_state in ipairs(helis) do
@@ -589,12 +565,11 @@ function ChangeHelidivisionPerm(society,DivisionName)
 					end, society, DivisionName, rows, false, model, data.current.Helilabel)
 				else
 					ESX.TriggerServerCallback('esx_society:setSocietyHelidivisionPerm', function(result)
-						
+
 						ChangeHelidivisionPerm(society,DivisionName)
 
 					end, society, DivisionName, rows, true, model, data.current.Helilabel)
 				end
-
 
 			end, function(data, menu)
 				menu.close()
@@ -606,20 +581,18 @@ function ChangeHelidivisionPerm(society,DivisionName)
 	end
 end
 
-
-
 function OpenDivisionVehiclesManagment(society)
-	ESX.TriggerServerCallback('esx_society:getdivision', function(DVilist) 
-		
+	ESX.TriggerServerCallback('esx_society:getdivision', function(DVilist)
+
 		local elements = {}
 
 		for i = 1, #DVilist, 1 do
-		
+
 			table.insert(elements, {label = '('..DVilist[i].name..')  | '..DVilist[i].label, value = DVilist[i].name})
-			
-			
+
+
 		end
-		
+
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_grades_' .. society .. '_new', {
 			title = "Manage Division",
 			align = 'top-left',
@@ -635,17 +608,16 @@ function OpenDivisionVehiclesManagment(society)
 	end, society)
 end
 
-
 function ChangeVehicledivisionPerm(society,DivisionName)
 	local authorizedVehicles = Config.Garage[society]
 	if authorizedVehicles then
 		ESX.TriggerServerCallback('esx_society:getVehiclesdivision', function(vehs)
 
 			local rows = {}
-		
+
 			for k, society_vehicles in ipairs(authorizedVehicles) do
 				local found = false
-				
+
 				if vehs then
 
 					for k2, vehicle_state in ipairs(vehs) do
@@ -687,12 +659,11 @@ function ChangeVehicledivisionPerm(society,DivisionName)
 					end, society, DivisionName, rows, false, model, data.current.Vehiclelabel)
 				else
 					ESX.TriggerServerCallback('esx_society:setSocietyVehdivisionPerm', function(result)
-						
+
 						ChangeVehicledivisionPerm(society,DivisionName)
 
 					end, society, DivisionName, rows, true, model, data.current.Vehiclelabel)
 				end
-
 
 			end, function(data, menu)
 				menu.close()
@@ -704,28 +675,26 @@ function ChangeVehicledivisionPerm(society,DivisionName)
 	end
 end
 
-
-
 function OpenManageDivisionMemberMenu(society)
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'divisionmember_management' .. society, {
 		title    = 'Division Management',
 		align    = 'top-left',
 		elements = {
-			-- {label = 'List Aaza', value = 'employeedivision_list'},
-			-- {label = 'List A\'aza(Off Duty)', value = 'employee_listoff'},
+
+
 			{label = 'Set Division Employee', value = 'set_division'},
 			{label = 'Remove Division Employee', value = 'remove_division'}
 		}
 	}, function(data, menu)
 
-		-- if data.current.value == 'employeedivision_list' then
-		-- 	OpenEmployeeList(society)
-		-- end
-		
-		-- if data.current.value == 'employeedivision_list' then
-		-- 	OpendivisionEmployeeList(society)
-		-- end
+
+
+
+
+
+
+
 
 		if data.current.value == 'set_division' then
 			OpenSetDivisionMemberMenu(society)
@@ -741,38 +710,29 @@ function OpenManageDivisionMemberMenu(society)
 	end)
 end
 
-
-
-
-
-
-
-
-
-
 function RemoveplayerDivision(society, identifier)
 	local dvelement = {}
 	local elementsender = {}
 	ESX.UI.Menu.CloseAll()
-	ESX.TriggerServerCallback('esx_society:getdivision', function(DVilist) 
-		ESX.TriggerServerCallback('esx_society:GetDivisionsPlayer', function(checks) 
-			
+	ESX.TriggerServerCallback('esx_society:getdivision', function(DVilist)
+		ESX.TriggerServerCallback('esx_society:GetDivisionsPlayer', function(checks)
+
 			local checkss = checks or {}
 			table.insert(dvelement, {label = "Name | Label", division = nil})
 			for i = 1, #DVilist, 1 do
-				local isDuplicate = true 
-			
-				
+				local isDuplicate = true
+
+
 				for k, check in pairs(checkss) do
 					if check.name == DVilist[i].name then
-						isDuplicate = false  
-						break  
+						isDuplicate = false
+						break
 					end
 				end
-			
-			
+
+
 				if not isDuplicate then
-					
+
 					table.insert(dvelement, {
 						label = '(' .. DVilist[i].name .. ')  | ' .. DVilist[i].label,
 						division = DVilist[i].name,
@@ -782,9 +742,9 @@ function RemoveplayerDivision(society, identifier)
 				end
 			end
 
-			
-			
-			
+
+
+
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_division_option' .. society, {
 				title    = _U('manage_division_option'),
 				align    = 'top-left',
@@ -796,9 +756,9 @@ function RemoveplayerDivision(society, identifier)
 					status = false
 
 				}
-				if data.current.division ~= nil then 
+				if data.current.division ~= nil then
 
-					
+
 					ESX.TriggerServerCallback('esx_society:setJobDivision', function(cakk)
 
 					end, data.current.identifier, society, elementsender, 'fire')
@@ -809,19 +769,18 @@ function RemoveplayerDivision(society, identifier)
 				OpenRemoveDivisionMemberMenu(society)
 			end)
 		end, identifier)
-		
+
 	end, society)
 end
-
 
 function OpenRemoveDivisionMemberMenu(society)
 
 	ESX.TriggerServerCallback('esx_society:getOnlinePlayersDivision', function(players)
 
 		local elements = {}
-		
+
 		for i=1, #players, 1 do
-			
+
 
 				table.insert(elements, {
 					label = string.gsub(players[i].name,"_", " "),
@@ -829,7 +788,7 @@ function OpenRemoveDivisionMemberMenu(society)
 					name = players[i].name,
 					identifier = players[i].identifier
 				})
-			
+
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'recruit_confirm_' .. society, {
@@ -839,7 +798,7 @@ function OpenRemoveDivisionMemberMenu(society)
 		}, function(data, menu)
 
 			RemoveplayerDivision(society, data.current.identifier)
-			
+
 		end, function(data, menu)
 			menu.close()
 			OpenManageDivisionMemberMenu(society)
@@ -853,9 +812,9 @@ function OpenSetDivisionMemberMenu(society)
 	ESX.TriggerServerCallback('esx_society:getOnlinePlayersDivision', function(players)
 
 		local elements = {}
-		
+
 		for i=1, #players, 1 do
-			
+
 
 				table.insert(elements, {
 					label = string.gsub(players[i].name,"_", " "),
@@ -863,7 +822,7 @@ function OpenSetDivisionMemberMenu(society)
 					name = players[i].name,
 					identifier = players[i].identifier
 				})
-			
+
 		end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'recruit_confirm_' .. society, {
@@ -873,7 +832,7 @@ function OpenSetDivisionMemberMenu(society)
 		}, function(data, menu)
 
 			SetplayerDivision(society, data.current.identifier)
-			
+
 		end, function(data, menu)
 			menu.close()
 			OpenManageDivisionMemberMenu(society)
@@ -882,30 +841,29 @@ function OpenSetDivisionMemberMenu(society)
 	end, society)
 end
 
-
 function SetplayerDivision(society, identifier)
 	local dvelement = {}
 	local elementsender = {}
 	ESX.UI.Menu.CloseAll()
-	ESX.TriggerServerCallback('esx_society:getdivision', function(DVilist) 
-		ESX.TriggerServerCallback('esx_society:GetDivisionsPlayer', function(checks) 
-			
+	ESX.TriggerServerCallback('esx_society:getdivision', function(DVilist)
+		ESX.TriggerServerCallback('esx_society:GetDivisionsPlayer', function(checks)
+
 			local checkss = checks or {}
 			table.insert(dvelement, {label = "Name | Label", division = nil})
 			for i = 1, #DVilist, 1 do
-				local isDuplicate = false 
-			
-				
+				local isDuplicate = false
+
+
 				for k, check in pairs(checkss) do
 					if check.name == DVilist[i].name then
-						isDuplicate = true  
-						break  
+						isDuplicate = true
+						break
 					end
 				end
-			
-			
+
+
 				if not isDuplicate then
-					
+
 					table.insert(dvelement, {
 						label = '(' .. DVilist[i].name .. ')  | ' .. DVilist[i].label,
 						division = DVilist[i].name,
@@ -915,9 +873,9 @@ function SetplayerDivision(society, identifier)
 				end
 			end
 
-			
-			
-			
+
+
+
 			ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_division_option' .. society, {
 				title    = _U('manage_division_option'),
 				align    = 'top-left',
@@ -930,9 +888,9 @@ function SetplayerDivision(society, identifier)
 					status = false
 
 				}
-				if data.current.division ~= nil then 
+				if data.current.division ~= nil then
 
-					
+
 					ESX.TriggerServerCallback('esx_society:setJobDivision', function(cakk)
 
 					end, data.current.identifier, society, elementsender, 'hire')
@@ -943,32 +901,28 @@ function SetplayerDivision(society, identifier)
 				OpenSetDivisionMemberMenu(society)
 			end)
 		end, identifier)
-		
+
 	end, society)
 end
-
-
-
 
 function OpenMenuDivisionChangeData(society)
 
 	if not InBossMenu then
 		LastPosition = GetEntityCoords(PlayerPedId())
 	end
-	
+
 	local elements = {
 		{label = 'Create Division', value = 'crate_division'},
 		{label = 'Remove Division', value = 'remove_division'},
 		{label = 'Change Name Division', value = 'manage_division_edit'},
 	}
-		
+
 	ESX.UI.Menu.CloseAll()
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'division_change_data' .. society, {
 		title    = _U('edit_division'),
 		align    = 'top-left',
 		elements = elements
 	}, function(data, menu)
-
 
 		if data.current.value == 'crate_division' then
 			OpenMenuCreateDivision(society)
@@ -982,8 +936,8 @@ function OpenMenuDivisionChangeData(society)
 			OpenMenuEditDivision(society)
 		end
 
-		
-		
+
+
 	end, function(data, menu)
 		menu.close()
 		OpenManagedivisionMenu(society)
@@ -991,13 +945,11 @@ function OpenMenuDivisionChangeData(society)
 
 end
 
-
-
 function OpenMenuEditDivision(society)
 
 	ESX.TriggerServerCallback('esx_society:getdivision', function(division)
 		local elements = {}
-		
+
 		for i=tonumber(1), #division, tonumber(1) do
 			local divisionLabel = (division[i].label == '' and division.label or division[i].label)
 			table.insert(elements, {label = '('..division[i].name..')  | '..divisionLabel, division = division[i].name, dvlabel = divisionLabel, dvid = division[i].id})
@@ -1019,31 +971,31 @@ function OpenMenuEditDivision(society)
 							local newName1 = newName[1]
 							if newName1 ~= ""  then
 
-								if newName[1] == "" then 
+								if newName[1] == "" then
 									TriggerEvent('chat:addMessage', {args = {'^1SYSTEM', 'Tedad Vorodi Bayad Bishtar Az ^21^0 Character Bashad'}})
 									lib.showContext('change_menu')
-									return 
-								elseif #newName[1] > 12 then 
+									return
+								elseif #newName[1] > 12 then
 									lib.showContext('change_menu')
 									TriggerEvent('chat:addMessage', {args = {'^1SYSTEM', 'Tedad Vorodi Bayad Kamtar az ^212^0 Character Bashad'}})
 									return
 								elseif checkinputuper(newName[1]) then
 									newName1 = newName[1]:sub(1, 1):lower()..newName[1]:sub(2)
-									
+
 								end
 
-								ESX.TriggerServerCallback('esx_society:ChangeDivision', function(caalback) 
+								ESX.TriggerServerCallback('esx_society:ChangeDivision', function(caalback)
 
 									OpenMenuEditDivision(society)
-									
+
 								end,society, data.current.dvid, newName1, 'name')
-								
+
 							else
 								lib.showContext('change_menu')
 							end
 						end
-						
-						
+
+
 
 					},
 					{
@@ -1052,24 +1004,24 @@ function OpenMenuEditDivision(society)
 							local inputLabel = lib.inputDialog('Enter New Label', {'New Label'})
 							local newLabel = inputLabel[1]
 							if newLabel ~= "" then
-								if newLabel == "" then 
+								if newLabel == "" then
 									TriggerEvent('chat:addMessage', {args = {'^1SYSTEM', 'Tedad Vorodi Bayad Bishtar Az ^21^0 Character Bashad'}})
 									lib.showContext('change_menu')
-									return 
-									
-								elseif #newLabel > 12 then 
+									return
+
+								elseif #newLabel > 12 then
 									lib.showContext('change_menu')
 									TriggerEvent('chat:addMessage', {args = {'^1SYSTEM', 'Tedad Vorodi Bayad Kamtar az ^212^0 Character Bashad'}})
 									return
 								elseif not checkinputuper(newLabel) then
 									newLabel = newLabel:sub(1, 1):upper()..newLabel:sub(2)
-									
+
 								end
 
-								ESX.TriggerServerCallback('esx_society:ChangeDivision', function(caalback) 
+								ESX.TriggerServerCallback('esx_society:ChangeDivision', function(caalback)
 
 									OpenMenuEditDivision(society)
-									
+
 								end,society, data.current.dvid, newLabel, 'label')
 							else
 								lib.showContext('change_menu')
@@ -1080,20 +1032,18 @@ function OpenMenuEditDivision(society)
 				}
 			})
 			lib.showContext('change_menu')
-			
+
 		end, function(data, menu)
 			menu.close()
 		  end)
 	end, society)
 end
 
-
-
 function OpenMenuRemoveDivision(society)
 
 	ESX.TriggerServerCallback('esx_society:getdivision', function(division)
 		local elements = {}
-		
+
 		for i=tonumber(1), #division, tonumber(1) do
 			local divisionLabel = (division[i].label == '' and division.label or division[i].label)
 			table.insert(elements, {label = '('..division[i].name..')  | '..divisionLabel, division = division[i].name, dvlabel = divisionLabel})
@@ -1112,8 +1062,8 @@ function OpenMenuRemoveDivision(society)
 			})
 				if alert == 'confirm' then
 
-					ESX.TriggerServerCallback('esx_society:RemoveDivision', function(caalback) 
-						
+					ESX.TriggerServerCallback('esx_society:RemoveDivision', function(caalback)
+
 						OpenMenuRemoveDivision(society)
 					end, data.current.division, data.current.dvlabel)
 
@@ -1130,43 +1080,40 @@ end
 
 function checkinputuper(str)
     if str and #str > 0 then
-        local firstChar = str:sub(1, 1) 
-        return firstChar:match("%u") ~= nil 
+        local firstChar = str:sub(1, 1)
+        return firstChar:match("%u") ~= nil
     end
     return false
 end
-
-
 
 function OpenMenuCreateDivision(society)
 	local input = lib.inputDialog('Add Division', {'Division Name', 'Division Label'})
 	local input1 = input[1]
 	local input2 = input[2]
-	if input[1] == "" then 
+	if input[1] == "" then
 		TriggerEvent('chat:addMessage', {args = {'^1SYSTEM', 'Tedad Vorodi Bayad Bishtar Az ^21^0 Character Bashad'}})
 		OpenMenuCreateDivision(society)
-		return 
-	elseif input[2] == "" then 
+		return
+	elseif input[2] == "" then
 		TriggerEvent('chat:addMessage', {args = {'^1SYSTEM', 'Tedad Vorodi Bayad Bishtar Az ^21^0 Character Bashad'}})
 		OpenMenuCreateDivision(society)
-		return 
-	elseif #input[1] > 12 or #input[2] > 12 then 
+		return
+	elseif #input[1] > 12 or #input[2] > 12 then
 		TriggerEvent('chat:addMessage', {args = {'^1SYSTEM', 'Tedad Vorodi Bayad Kamtar az ^212^0 Character Bashad'}})
 		return
 	elseif not checkinputuper(input[2]) then
 		input2 = input2:sub(1, 1):upper()..input2:sub(2)
 	elseif checkinputuper(input[1]) then
 		input1 = string.lower(input1)
-		
+
 	end
 
 	ESX.TriggerServerCallback('esx_society:CreateDivision', function(ccalback)
-	
+
 		ccalback = ccalback
-		
+
 	end, input1, input2)
 end
-
 
 function OpenManageJobMenu(society)
 	local elements = {}
@@ -1175,15 +1122,15 @@ function OpenManageJobMenu(society)
 		if not InBossMenu then
 			LastPosition = GetEntityCoords(PlayerPedId())
 		end
-		
-		if ESX.PlayerData.perm >= 9 then 
+
+		if ESX.PlayerData.perm >= 9 then
 			table.insert(elements, {label = _U('salary_management'), value = 'manage_grades'})
 		end
 
 		table.insert(elements, {label = _U('manage_grades_name'), value = 'manage_grades_name'})
 		table.insert(elements, {label = _U('manage_grades_outfit'), value = 'manage_grades_outfit'})
-		
-		if ESX.PlayerData.job.name ~= 'uwucafe' then 
+
+		if ESX.PlayerData.job.name ~= 'uwucafe' then
 			table.insert(elements, {label = _U('manage_weapons'), value = 'manage_weapons'})
 			table.insert(elements, {label = _U('manage_vehicles'), value = 'manage_vehicles'})
 			table.insert(elements, {label = _U('manage_helis'), value = 'manage_helis'})
@@ -1198,10 +1145,10 @@ function OpenManageJobMenu(society)
 			else
 				table.insert(elements, { label = 'wash money' .. " | [<font color=red>❌</font>]", isonoff = true, value = 'wash_money' })
 			end
-				
-			
+
+
 		end
-		
+
 		ESX.UI.Menu.CloseAll()
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_job' .. society, {
 			title    = _U('manage_job'),
@@ -1212,7 +1159,7 @@ function OpenManageJobMenu(society)
 			if data.current.value == 'manage_grades' then
 				OpenManageGradesMenu(society)
 			end
-			
+
 			if data.current.value == 'manage_grades_name' then
 				OpenGradeNames(society)
 			end
@@ -1228,9 +1175,9 @@ function OpenManageJobMenu(society)
 			end
 
 			if data.current.value == 'manage_vehicles' then
-				
+
 				OpenVehiclesManagment(society)
-				
+
 			end
 
 			if data.current.value == 'manage_helis' then
@@ -1246,12 +1193,12 @@ function OpenManageJobMenu(society)
 			end
 
 			if data.current.value == 'wash_money' then
-				
+
 				TriggerServerEvent('esx_society:SetPermWash', ESX.PlayerData.job.name, tostring(data.current.isonoff))
 				Citizen.Wait(300)
 				OpenManageJobMenu(society)
 			end
-			
+
 		end, function(data, menu)
 			OpenBossMenu(society, close, options)
 			menu.close()
@@ -1259,13 +1206,12 @@ function OpenManageJobMenu(society)
 	end, ESX.PlayerData.job.name)
 end
 
-
 function OpenInventoryManagment(society)
 	ESX.TriggerServerCallback('esx_society:getJob', function(job)
 		local elements = {}
 		for i=tonumber(1), #job.grades, tonumber(1) do
 			local gradeLabel = (job.grades[i].label == '' and job.label or job.grades[i].label)
-			if job.grades[i].grade <= ESX.PlayerData.job.grade then 
+			if job.grades[i].grade <= ESX.PlayerData.job.grade then
 				table.insert(elements, {label = '('..job.grades[i].grade..')  | '..gradeLabel, grade = job.grades[i].grade})
 			end
 		end
@@ -1284,15 +1230,15 @@ function OpenInventoryManagment(society)
 end
 
 function ChangeInventoryPerm(society,rank)
-	
+
 	ESX.TriggerServerCallback('esx_society:getJobItems', function(authorizedItems)
 		if authorizedItems then
 			ESX.TriggerServerCallback('esx_society:getItems', function(items)
 				local rows = {}
-			
+
 				for k, society_items in ipairs(authorizedItems) do
 					local found = false
-				
+
 					if items then
 
 						for k2, item_state in ipairs(items) do
@@ -1329,12 +1275,11 @@ function ChangeInventoryPerm(society,rank)
 						end, society, rank, rows, false, name, data.current.Itemlabel)
 					else
 						ESX.TriggerServerCallback('esx_society:setSocietyItemPerm', function(result)
-							
+
 							ChangeInventoryPerm(society,rank)
 
 						end, society, rank, rows, true, name, data.current.Itemlabel)
 					end
-
 
 				end, function(data, menu)
 					menu.close()
@@ -1354,7 +1299,7 @@ function OpenVehiclesManagment(society)
 		Wait(100)
 		for i=tonumber(1), #job.grades, tonumber(1) do
 			local gradeLabel = (job.grades[i].label == '' and job.label or job.grades[i].label)
-			if job.grades[i].grade <= ESX.PlayerData.job.grade then 
+			if job.grades[i].grade <= ESX.PlayerData.job.grade then
 				table.insert(elements, {label = '('..job.grades[i].grade..')  | '..gradeLabel, grade = job.grades[i].grade})
 			end
 		end
@@ -1377,7 +1322,7 @@ function OpenHelisManagment(society)
 		local elements = {}
 		for i=tonumber(1), #job.grades, tonumber(1) do
 			local gradeLabel = (job.grades[i].label == '' and job.label or job.grades[i].label)
-			if job.grades[i].grade <= ESX.PlayerData.job.grade then 
+			if job.grades[i].grade <= ESX.PlayerData.job.grade then
 				table.insert(elements, {label = '('..job.grades[i].grade..')  | '..gradeLabel, grade = job.grades[i].grade})
 			end
 		end
@@ -1390,25 +1335,25 @@ function OpenHelisManagment(society)
 			ChangeHeliPerm(society,gradeNumber)
 		end, function(data, menu)
 			menu.close()
-			
+
 		end)
 	end, society)
 end
 
 function ChangeVehiclePerm(society,rank)
-	
+
 	local authorizedVehicles = Config.Garage[society]
 	if authorizedVehicles then
-		
+
 		if authorizedVehicles then
 			ESX.TriggerServerCallback('esx_society:getVehicles', function(vehs)
 				local rows = {}
-			
+
 				for k, society_vehicles in ipairs(authorizedVehicles) do
 					local found = false
-					
+
 					if vehs then
-	
+
 						for k2, vehicle_state in ipairs(vehs) do
 							if string.lower(society_vehicles.name) == string.lower(vehicle_state.model) then
 								if GetDisplayNameFromVehicleModel(GetHashKey(vehicle_state.model)) then
@@ -1420,13 +1365,13 @@ function ChangeVehiclePerm(society,rank)
 								else
 									table.insert(rows, { label = society_vehicles.label .. " | [<font color=yellow>Unknown</font>]", model = vehicle_state.model, labelVeh = society_vehicles.label , value = vehicle_state.status })
 								end
-	
+
 								found = true
 								break
 							end
 						end
 					end
-	
+
 					if not found then
 						table.insert(rows, { label = society_vehicles.label .. " | [<font color=red>❌</font>]", model = society_vehicles.name, labelVeh = society_vehicles.label, value = false })
 					end
@@ -1447,12 +1392,11 @@ function ChangeVehiclePerm(society,rank)
 						end, society, rank, rows, false, model, data.current.labelVeh)
 					else
 						ESX.TriggerServerCallback('esx_society:setSocietyVehPerm', function(result)
-							
+
 							ChangeVehiclePerm(society,rank)
 
 						end, society, rank, rows, true, model, data.current.labelVeh)
 					end
-
 
 				end, function(data, menu)
 					menu.close()
@@ -1466,18 +1410,18 @@ end
 function ChangeHeliPerm(society,rank)
 
 		local authorizedHelis = Config.Heli[society]
-	
+
 	if authorizedHelis then
 		ESX.TriggerServerCallback('esx_society:getHelis', function(helis)
 			local rows = {}
-		
+
 			for k, society_helis in ipairs(authorizedHelis) do
 				local found = false
-				
+
 				if helis then
 
 					for k2, heli_state in ipairs(helis) do
-						
+
 						if string.lower(society_helis.name) == string.lower(heli_state.model) then
 							if GetDisplayNameFromVehicleModel(GetHashKey(heli_state.model)) then
 								if heli_state.status == true then
@@ -1516,17 +1460,16 @@ function ChangeHeliPerm(society,rank)
 					end, society, rank, rows, false, model, data.current.helimodel)
 				else
 					ESX.TriggerServerCallback('esx_society:setSocietyHeliPerm', function(result)
-						
+
 						ChangeHeliPerm(society,rank)
 
 					end, society, rank, rows, true, model, data.current.helimodel)
 				end
 
-
 			end, function(data, menu)
 				OpenHelisManagment(society)
 				menu.close()
-				
+
 			end)
 
 		end, rank, society)
@@ -1538,11 +1481,11 @@ function OpenWeaponsManagment(society)
 		local elements = {}
 	    for i=tonumber(1), #job.grades, tonumber(1) do
 			local gradeLabel = (job.grades[i].label == '' and job.label or job.grades[i].label)
-			if job.grades[i].grade <= ESX.PlayerData.job.grade then 
+			if job.grades[i].grade <= ESX.PlayerData.job.grade then
 				table.insert(elements, {label = '('..job.grades[i].grade..')  | '..gradeLabel, grade = job.grades[i].grade})
 			end
 		end
-		
+
         ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_grades_' .. society .. '_new', {
             title = "Manage Grades",
             align = 'top-left',
@@ -1556,15 +1499,13 @@ function OpenWeaponsManagment(society)
 	end, society)
 end
 
-
-
 function ChangeWeaponPerm(society,rank)
 
 	local authorizedWeapons = Config.Armory[society]
-	if authorizedWeapons then 
+	if authorizedWeapons then
 		ESX.TriggerServerCallback('esx_society:getWeapons', function(weapons)
 			local rows = {}
-		
+
 			for k, society_weapons in ipairs(authorizedWeapons) do
 
 				local found = false
@@ -1599,25 +1540,23 @@ function ChangeWeaponPerm(society,rank)
 				local model = data.current.model
 				if state then
 					ESX.TriggerServerCallback('esx_society:setSocietyWeapPerm', function(result)
-						
+
 						ChangeWeaponPerm(society,rank)
-						
+
 
 					end, society, rank, rows, false, model)
 				else
 					ESX.TriggerServerCallback('esx_society:setSocietyWeapPerm', function(result)
-
 
 						ChangeWeaponPerm(society,rank)
 
 					end, society, rank, rows, true, model)
 				end
 
-
 			end, function(data, menu)
 				OpenWeaponsManagment(society)
 				menu.close()
-				
+
 			end)
 
 		end, rank, society)
@@ -1627,16 +1566,13 @@ function ChangeWeaponPerm(society,rank)
 
 end
 
-
-
-
 function OpenGradeNames(society)
 	ESX.TriggerServerCallback('esx_society:getJob', function(job)
 		  local elements = {}
-		  
+
 		for i=tonumber(1), #job.grades, tonumber(1) do
 			local gradeLabel = (job.grades[i].label == '' and job.label or job.grades[i].label)
-			if job.grades[i].grade <= ESX.PlayerData.job.grade then 
+			if job.grades[i].grade <= ESX.PlayerData.job.grade then
 				table.insert(elements, {label = '('..job.grades[i].grade..')  | '..gradeLabel, grade = job.grades[i].grade})
 			end
 		end
@@ -1651,16 +1587,16 @@ function OpenGradeNames(society)
                 title    = "Esm jadid rank ra vared konid",
 
 			}, function(data2, menu2)
-				
+
 				if not data2.value then
 					ESX.ShowNotification("Shoma dar ghesmat esm jadid chizi vared nakardid!")
 					return
 				end
-	
-				-- if data2.value:match("[^%w%s]") or data2.value:match("%d") then
-				-- 	ESX.ShowNotification("~h~Shoma mojaz be vared kardan ~r~Special ~o~character ~w~ya ~r~adad ~w~nistid!")
-				-- 	return
-				-- end
+
+
+
+
+
 
 				if string.len(ESX.Math.Trim(data2.value)) >= 3 and string.len(ESX.Math.Trim(data2.value)) <= 25 then
 					menu2.close()
@@ -1677,9 +1613,9 @@ function OpenGradeNames(society)
             end, function (data2, menu2)
                 menu2.close()
             end)
-			
+
 		end, function(data, menu)
-			
+
 			menu.close()
 		end)
 	end, society)
@@ -1698,7 +1634,7 @@ function OpenSetOutfitMenu(society)
 		if data.current.value == 'employee_man' then
 			OpenOutfitM(society)
 		end
-		
+
 		if data.current.value == 'employee_woman' then
 			OpenOutfitF(society)
 		end
@@ -1721,7 +1657,7 @@ function OpenSetOutfitdivisionMenu(society)
 		if data.current.value == 'employee_man_Division' then
 			OpenOutfitMdivision(society)
 		end
-		
+
 		if data.current.value == 'employee_woman_Division' then
 			OpenOutfitFdivision(society)
 		end
@@ -1735,10 +1671,10 @@ function OpenOutfitM(society)
 
 	ESX.TriggerServerCallback('esx_society:getJob', function(job)
 		local elements = {}
-		
+
 		for i=tonumber(1), #job.grades, tonumber(1) do
 			local gradeLabel = (job.grades[i].label == '' and job.label or job.grades[i].label)
-			if job.grades[i].grade <= ESX.PlayerData.job.grade then 
+			if job.grades[i].grade <= ESX.PlayerData.job.grade then
 				table.insert(elements, {label = '('..job.grades[i].grade..')  | '..gradeLabel, grade = job.grades[i].grade})
 			end
 		end
@@ -1748,11 +1684,11 @@ function OpenOutfitM(society)
 			elements = elements
 		}, function(data, menu)
 			Wait(500)
-			-- FastTravel(Config.TpCoords, Config.heading)
+
 			Wait(500)
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(myskin)
 				ESX.TriggerServerCallback('esx_society:getEmployeclothes', function (skinjob)
-					
+
 					if skinjob ~= nil then
 						TriggerEvent('skinchanger:loadClothes', Config.MaleDefault, skinjob)
 					else
@@ -1770,7 +1706,7 @@ function OpenOutfitM(society)
 								end, society, tonumber(data.current.grade), 'male', skin)
 							end)
 							WaitForSave = false
-							-- FastTravel(vector3(tonumber(LastPosition.x), tonumber(LastPosition.y), tonumber(LastPosition.z)))
+
 							TriggerEvent('skinchanger:loadSkin', myskin)
 							Citizen.Wait(tonumber(100))
 							TriggerServerEvent('esx_skin:save', myskin)
@@ -1788,14 +1724,14 @@ function OpenOutfitM(society)
 end
 
 function OpenOutfitF(society)
-	
+
 	ESX.TriggerServerCallback('esx_society:getJob', function(job)
 		local elements = {}
-		
-		
+
+
 		for i=tonumber(1), #job.grades, tonumber(1) do
 			local gradeLabel = (job.grades[i].label == '' and job.label or job.grades[i].label)
-			if job.grades[i].grade <= ESX.PlayerData.job.grade then 
+			if job.grades[i].grade <= ESX.PlayerData.job.grade then
 				table.insert(elements, {label = '('..job.grades[i].grade..')  | '..gradeLabel, grade = job.grades[i].grade})
 			end
 		end
@@ -1805,7 +1741,7 @@ function OpenOutfitF(society)
 			elements = elements
 		}, function(data, menu)
 			Wait(500)
-			-- FastTravel(Config.TpCoords, Config.heading)
+
 			Wait(500)
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(myskin)
 				ESX.TriggerServerCallback('esx_society:getEmployeclothes', function (skinjob)
@@ -1827,7 +1763,7 @@ function OpenOutfitF(society)
 								end, society, tonumber(data.current.grade),'female', skin)
 							end)
 							WaitForSave = false
-							-- FastTravel(vector3(LastPosition.x, LastPosition.y, LastPosition.z))
+
 							TriggerEvent('skinchanger:loadSkin', myskin)
 							Citizen.Wait(tonumber(100))
 							TriggerServerEvent('esx_skin:save', myskin)
@@ -1848,12 +1784,12 @@ function OpenOutfitMdivision(society)
 
 	ESX.TriggerServerCallback('esx_society:getdivision', function(division)
 		local elements = {}
-		
+
 		for i=tonumber(1), #division, tonumber(1) do
 			local divisionLabel = (division[i].label == '' and division.label or division[i].label)
-	
+
 			table.insert(elements, {label = '('..division[i].name..')  | '..divisionLabel, division = division[i].name})
-			
+
 		end
 		  ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_division_outfit', {
 			title    = _U('manage_division_outfit'),
@@ -1861,11 +1797,11 @@ function OpenOutfitMdivision(society)
 			elements = elements
 		}, function(data, menu)
 			Wait(500)
-			-- FastTravel(Config.TpCoords, Config.heading)
+
 			Wait(500)
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(myskin)
 				ESX.TriggerServerCallback('esx_society:getEmployeclothesdivision', function (skinjob)
-					
+
 					if skinjob ~= nil then
 						TriggerEvent('skinchanger:loadClothes', Config.MaleDefault, skinjob)
 					else
@@ -1883,7 +1819,7 @@ function OpenOutfitMdivision(society)
 								end, society, data.current.division, 'male', skin)
 							end)
 							WaitForSave = false
-							-- FastTravel(vector3(tonumber(LastPosition.x), tonumber(LastPosition.y), tonumber(LastPosition.z)))
+
 							TriggerEvent('skinchanger:loadSkin', myskin)
 							Citizen.Wait(tonumber(100))
 							TriggerServerEvent('esx_skin:save', myskin)
@@ -1901,15 +1837,15 @@ function OpenOutfitMdivision(society)
 end
 
 function OpenOutfitFdivision(society)
-	
+
 	ESX.TriggerServerCallback('esx_society:getdivision', function(division)
 		local elements = {}
-		
+
 		for i=tonumber(1), #division, tonumber(1) do
 			local divisionLabel = (division[i].label == '' and division.label or division[i].label)
-			
+
 			table.insert(elements, {label = '('..division[i].name..')  | '..divisionLabel, division = division[i].name})
-			
+
 		end
 		  ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_division_outfit', {
 			title    = _U('manage_division_outfit'),
@@ -1917,16 +1853,16 @@ function OpenOutfitFdivision(society)
 			elements = elements
 		}, function(data, menu)
 			Wait(500)
-			-- FastTravel(Config.TpCoords, Config.heading)
+
 			Wait(500)
 			ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(myskin)
 				ESX.TriggerServerCallback('esx_society:getEmployeclothesdivision', function (skinjob)
-					-- FastTravel(Config.TpCoords, Config.heading)
-					-- if skinjob ~= nil then
-					-- 	TriggerEvent('skinchanger:loadClothes', Config.FemaleDefault, skinjob)
-					-- else
-					-- 	TriggerEvent('skinchanger:loadSkin', Config.FemaleDefault)
-					-- end
+
+
+
+
+
+
 					Citizen.Wait(tonumber(100))
 					TriggerEvent(tostring(Config.MenuSkintrigger), source)
 					local WaitForSave = true
@@ -1939,7 +1875,7 @@ function OpenOutfitFdivision(society)
 								end, society, data.current.division,'female', skin)
 							end)
 							WaitForSave = false
-							-- FastTravel(vector3(LastPosition.x, LastPosition.y, LastPosition.z))
+
 							TriggerEvent('skinchanger:loadSkin', myskin)
 							Citizen.Wait(tonumber(100))
 							TriggerServerEvent('esx_skin:save', myskin)
@@ -1991,7 +1927,7 @@ function OpenManageEmployeesMenu(society)
 		if data.current.value == 'employee_list' then
 			OpenEmployeeList(society)
 		end
-		
+
 		if data.current.value == 'employee_listoff' then
 			OpenEmployeeList('off' .. society)
 		end
@@ -2024,7 +1960,7 @@ function OpenEmployeeList(society)
 			local photoHtml  = '<img src="' .. employees[i].photo .. '">'
 
 			if employees[i].job.grade >= ESX.PlayerData.job.grade then
-				
+
 				table.insert(elements.rows, {data = employees[i], cols = {photoHtml, employees[i].name, gradeLabel, 'DISABLE'}})
 			else
 				local actions = '{{' .. editIcon .. '|promote}} {{' .. kickIcon .. '|fire}}'
@@ -2053,19 +1989,13 @@ function OpenEmployeeList(society)
 			end
 		end, function(data, menu)
 			menu.close()
-			--OpenManageEmployeesMenu(society)
+
 		end)
 
 	end, society)
 
 end
 
--- ---------------------------------------------------------------------------------
--- Swap Employee: move an employee directly to a sibling job in the same
--- Config.JobGroups branch (e.g. Police -> Sheriff), instead of firing + re-hiring.
--- Server re-validates the branch membership and that the caller is boss of the
--- employee's CURRENT job - never trusts the client for either.
--- ---------------------------------------------------------------------------------
 function OpenSwapEmployeeMenu(society, employee, siblings)
 	local elements = {}
 	for i = 1, #siblings do
@@ -2090,8 +2020,6 @@ function OpenSwapEmployeeMenu(society, employee, siblings)
 		OpenEmployeeList(society)
 	end)
 end
-
-
 
 function OpenRecruitMenu(society)
 
@@ -2132,7 +2060,7 @@ function OpenRecruitMenu(society)
 
 				if data2.current.value == 'yes' then
 					ESX.ShowNotification(_U('you_have_hired', data.current.name))
-					
+
 					ESX.TriggerServerCallback('esx_society:setJob', function()
 						OpenRecruitMenu(society)
 					end, data.current.identifier, society, tonumber(1), 'hire')
@@ -2156,9 +2084,9 @@ function OpenPromoteMenu(society, employee)
 		local elements = {}
 
 		for i=tonumber(1), #job.grades, tonumber(1) do
-			
+
 			local gradeLabel = (job.grades[i].label == '' and job.label or job.grades[i].label)
-			if job.grades[i].grade < ESX.PlayerData.job.grade then 
+			if job.grades[i].grade < ESX.PlayerData.job.grade then
 				table.insert(elements, {
 					label = gradeLabel,
 					value = job.grades[i].grade,
@@ -2241,33 +2169,24 @@ AddEventHandler(Config.OpenBossMenu, function(society, close, options)
 	OpenBossMenu(society, close, options)
 end)
 
--- Mechanic/Taxi/Weazel/Ambulance's own scripts call this event to open their boss
--- menu, but nothing was ever listening for it - it silently did nothing. Route it
--- to the same full boss menu (money, employees, job management) everyone else gets.
 RegisterNetEvent('esx_society:openBosscarysMenu')
 AddEventHandler('esx_society:openBosscarysMenu', function(society, cb)
 	OpenBossMenu(society, cb)
 end)
 
-
---use teleport 
 local invis = false
 function FastTravel(coords, heading)
 
 	local playerPed = PlayerPedId()
- 
 
 
 	DoScreenFadeOut(tonumber(800))
-
-
 
 	while not IsScreenFadedOut() do
 
 		Citizen.Wait(tonumber(500))
 
 	end
-
 
 	ESX.Game.Teleport(playerPed, coords, function()
 		local otherPlayerPed = GetPlayerPed(GetPlayerFromServerId(serverId))
@@ -2279,7 +2198,7 @@ function FastTravel(coords, heading)
 
 		end
 
-			  if not invis then 
+			  if not invis then
 				FreezeEntityPosition(playerPed, true)
 				NetworkSetEntityInvisibleToNetwork(playerPed, true)
 				SetEntityNoCollisionEntity(otherPlayerPed, playerPed, true)
@@ -2293,13 +2212,12 @@ function FastTravel(coords, heading)
 	end)
 
 end
--- get weapon label
+
 function GetModelLabel(name)
 	local label = string.upper(string.gsub(name, 'WEAPON_', ''))
 	label = string.gsub(label, '_', '')
 	return label
 end
-
 
 function DoesHaveArmory(job)
     local access = false
@@ -2347,28 +2265,25 @@ function DoesHaveOffDuty(job)
 	return access
 end
 
-
--- 3 showt----
-
 Citizen.CreateThread(function()
 
 	while ESX.GetPlayerData().job == nil do
 		Citizen.Wait(10)
-	
+
 	end
 	Citizen.Wait(500)
 
 	while true do
-	
+
 
 		local kolah = GetPedPropIndex(PlayerPedId(), 0)
 
-		Wait(1)	
-		if kolah == 119 or kolah == 120 or kolah == 121 or kolah == 122 or kolah == 123 then 
+		Wait(1)
+		if kolah == 119 or kolah == 120 or kolah == 121 or kolah == 122 or kolah == 123 then
 			if (ESX.PlayerData.job.name == 'police' or ESX.PlayerData.job.name == 'sheriff' or ESX.PlayerData.job.name == 'mt' or ESX.PlayerData.job.name == 'fbi') and not ESX.GetPlayerData().IsDead then
 				SetPedConfigFlag(PlayerPedId(), 149, false)
 				SetPedConfigFlag(PlayerPedId(), 438, false)
-			
+
 			else
 				SetPedConfigFlag(PlayerPedId(), 149, true)
 				SetPedConfigFlag(PlayerPedId(), 438, true)
@@ -2380,8 +2295,7 @@ Citizen.CreateThread(function()
 			Citizen.Wait(5000)
 		end
 
-		
-	end
 
+	end
 
 end)

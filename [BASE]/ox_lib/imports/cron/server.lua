@@ -1,12 +1,10 @@
 lib.cron = {}
 
----@alias Date { year: number, month: number, day: number, hour: number, min: number, sec: number, wday: number, yday: number, isdst: boolean }
----@type Date
 local currentDate = {}
 
 setmetatable(currentDate, {
     __index = function(self, index)
-        local newDate = os.date('*t') --[[@as Date]]
+        local newDate = os.date('*t')
         for k, v in pairs(newDate) do
             self[k] = v
         end
@@ -15,22 +13,6 @@ setmetatable(currentDate, {
     end
 })
 
----@class OxTaskProperties
----@field minute? number|string|function
----@field hour? number|string|function
----@field day? number|string|function
----@field month? number|string|function
----@field year? number|string|function
----@field weekday? number|string|function
----@field job fun(task: OxTask, date: osdate)
----@field isActive boolean
----@field id number
----@field debug? boolean
----@field lastRun? number
-
----@class OxTask : OxTaskProperties
----@field expression string
----@field private scheduleTask fun(self: OxTask): boolean?
 local OxTask = {}
 OxTask.__index = OxTask
 
@@ -66,26 +48,16 @@ local monthMap = {
     sep = 9, oct = 10, nov = 11, dec = 12
 }
 
----Returns the last day of the specified month
----@param month number
----@param year? number
----@return number
 local function getMaxDaysInMonth(month, year)
-    return os.date('*t', os.time({ year = year or currentDate.year, month = month + 1, day = -1 })).day --[[@as number]]
+    return os.date('*t', os.time({ year = year or currentDate.year, month = month + 1, day = -1 })).day
 end
 
----@param value string|number
----@param unit string
----@return boolean
 local function isValueInRange(value, unit)
     local range = validRanges[unit]
     if not range then return true end
     return value >= range.min and value <= range.max
 end
 
----@param value string
----@param unit string
----@return number|string|function|nil
 local function parseCron(value, unit)
     if not value or value == '*' then return end
 
@@ -161,9 +133,6 @@ local function parseCron(value, unit)
     error(("^1invalid cron expression. '%s' is not supported for %s^0"):format(value, unit), 3)
 end
 
----@param value string|number|function|nil
----@param unit string
----@return number|false|nil
 local function getTimeUnit(value, unit)
     local currentTime = currentDate[unit]
 
@@ -230,13 +199,12 @@ local function getTimeUnit(value, unit)
     end
 
     if unit == 'min' then
-        return value <= currentTime and value + unitMax or value --[[@as number]]
+        return value <= currentTime and value + unitMax or value
     end
 
-    return value < currentTime and value + unitMax or value --[[@as number]]
+    return value < currentTime and value + unitMax or value
 end
 
----@return number?
 function OxTask:getNextTime()
     if not self.isActive then return end
 
@@ -296,7 +264,6 @@ function OxTask:getNextTime()
     return nextTime
 end
 
----@return number
 function OxTask:getAbsoluteNextTime()
     local minute = getTimeUnit(self.minute, 'min')
     local hour = getTimeUnit(self.hour, 'hour')
@@ -321,7 +288,7 @@ function OxTask:getAbsoluteNextTime()
         end
     end
 
-    ---@diagnostic disable-next-line: assign-type-mismatch
+
     if os.time({ year = year, month = month, day = day, hour = hour, min = minute }) < os.time() then
         year = year and year + 1 or currentDate.year + 1
     end
@@ -339,7 +306,6 @@ function OxTask:getTimeAsString(timestamp)
     return os.date('%A %H:%M, %d %B %Y', timestamp or self:getAbsoluteNextTime())
 end
 
----@type OxTask[]
 local tasks = {}
 
 function OxTask:scheduleTask()
@@ -407,19 +373,13 @@ function OxTask:stop(msg)
     end
 end
 
----@param expression string A cron expression such as `* * * * *` representing minute, hour, day, month, and day of the week.
----@param job fun(task: OxTask, date: osdate)
----@param options? { debug?: boolean }
----Creates a new [cronjob](https://en.wikipedia.org/wiki/Cron), scheduling a task to run at fixed times or intervals.
----Supports numbers, any value `*`, lists `1,2,3`, ranges `1-3`, and steps `*/4`.
----Day of the week is a range of `1-7` starting from Sunday and allows short-names (i.e. sun, mon, tue).
 function lib.cron.new(expression, job, options)
     if not job or type(job) ~= 'function' then
         error(("expected job to have type 'function' (received %s)"):format(type(job)))
     end
 
     local minute, hour, day, month, weekday = string.strsplit(' ', string.lower(expression))
-    ---@type OxTask
+
     local task = setmetatable(options or {}, OxTask)
 
     task.expression = expression
@@ -437,7 +397,6 @@ function lib.cron.new(expression, job, options)
     return task
 end
 
--- reschedule any dead tasks on a new day
 lib.cron.new('0 0 * * *', function()
     for i = 1, #tasks do
         local task = tasks[i]

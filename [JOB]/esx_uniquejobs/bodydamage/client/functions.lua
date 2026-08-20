@@ -23,7 +23,7 @@ function GetClosestPlayer()
     local closestplayer = -1
     local ped = PlayerPedId()
     local pos = GetEntityCoords(ped, false)
-    
+
     for Index = 1, #Players do
     	local targetped = GetPlayerPed(Players[Index])
     	if ped ~= targetped then
@@ -36,6 +36,6 @@ function GetClosestPlayer()
     		end
     	end
     end
-    
+
     return closestplayer, closestdist
 end

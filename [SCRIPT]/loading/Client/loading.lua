@@ -77,7 +77,6 @@ local function EndFade()
 	end
 end
 
-
 function ReadToPlay(x, y, z)
 	TriggerServerEvent('asgm_LoadingSystem:ChangeKobs', false)
 	disableAttack = false
@@ -108,17 +107,17 @@ function ReadToPlay(x, y, z)
 	TriggerEvent('esx:playerSpawned')
 	Wait(500)
 	TriggerEvent('es_admin:freezePlayer', false)
-	-- ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(isDead)
-	-- 	if isDead then
-	-- 		ESX.ShowNotification('Shoma Akharin Bar Ke DC Dadid, Morde Boodid!')
-	-- 		Wait(1500)
-	-- 		SetEntityHealth(PlayerPedId(), 0)
-	-- 	end
-	-- end)
+
+
+
+
+
+
+
 	ESX.SetPlayerData('IsPlayerLoaded', 1)
 	TriggerEvent('esx_best:checkVanish')
 	ESX.SetPlayerData('IsLoaded', 1)
-	DisplayRadar(true)	
+	DisplayRadar(true)
 	Wait(2000)
 	FreezeEntityPosition(PlayerPedId(),false)
 	TriggerEvent('es_admin:freezePlayer', false)
@@ -229,24 +228,24 @@ function f(n)
 end
 
 function DisalbeAttack()
-	DisableControlAction(0, 19, true) 
+	DisableControlAction(0, 19, true)
 	DisableControlAction(0, 45, true)
-	DisableControlAction(0, 24, true) 
+	DisableControlAction(0, 24, true)
 	DisableControlAction(0, 257, true)
-	DisableControlAction(0, 25, true) 
+	DisableControlAction(0, 25, true)
 	DisableControlAction(0, 68, true)
 	DisableControlAction(0, 69, true)
-	DisableControlAction(0, 70, true) 
-	DisableControlAction(0, 92, true) 
-	DisableControlAction(0, 346, true) 
-	DisableControlAction(0, 347, true) 
-	DisableControlAction(0, 264, true) 
-	DisableControlAction(0, 257, true) 
-	DisableControlAction(0, 140, true) 
-	DisableControlAction(0, 141, true) 
-	DisableControlAction(0, 142, true) 
-	DisableControlAction(0, 143, true) 
-	DisableControlAction(0, 263, true) 
+	DisableControlAction(0, 70, true)
+	DisableControlAction(0, 92, true)
+	DisableControlAction(0, 346, true)
+	DisableControlAction(0, 347, true)
+	DisableControlAction(0, 264, true)
+	DisableControlAction(0, 257, true)
+	DisableControlAction(0, 140, true)
+	DisableControlAction(0, 141, true)
+	DisableControlAction(0, 142, true)
+	DisableControlAction(0, 143, true)
+	DisableControlAction(0, 263, true)
 	if disableAttack then
 		SetTimeout(0, function ()
 			DisalbeAttack()
@@ -297,8 +296,8 @@ end)
 Citizen.CreateThread(function()
     while true do
         if guiEnabled then
-            DisableControlAction(0, 18, guiEnabled) -- Enter
-            DisableControlAction(0, 322, guiEnabled) -- ESC
+            DisableControlAction(0, 18, guiEnabled)
+            DisableControlAction(0, 322, guiEnabled)
         end
 		Citizen.Wait(1)
 	end

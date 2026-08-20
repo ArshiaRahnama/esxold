@@ -70,7 +70,6 @@ AddEventHandler('esx_ambulancejob:revivexIfDead', function()
 
 		RespawnPed_ambulance(playerPed, GetEntityCoords(PlayerPedId()), 0.0)
 
-
 		DoScreenFadeIn(800)
 		Citizen.Wait(250)
 		StopScreenEffect('DeathFailOut')
@@ -109,7 +108,6 @@ AddEventHandler('esx_ambulancejob:revivexIfDeadx', function()
 
 		RespawnPed_ambulance(playerPed, GetEntityCoords(PlayerPedId()), 0.0)
 
-
 		DoScreenFadeIn(800)
 		Citizen.Wait(250)
 		StopScreenEffect('DeathFailOut')
@@ -123,7 +121,7 @@ AddEventHandler('playerSpawned', function()
 	IsDead = false
 	animations = false
 	if FirstSpawn then
-		exports.spawnmanager:setAutoSpawn(false) -- disable respawn
+		exports.spawnmanager:setAutoSpawn(false)
 		FirstSpawn = false
 
 		ESX.TriggerServerCallback('esx_ambulancejob:getDeathStatus', function(isDead)
@@ -146,7 +144,6 @@ function loadAnimDict_ambulance(dict)
     end
 end
 
--- Create blips
 Citizen.CreateThread(function()
 	for k,v in pairs(Config_ambulance.Hospitals) do
 		local blip = AddBlipForCoord(v.Blip.coords)
@@ -178,11 +175,11 @@ local IsDragged = nil
 function StartDeathAnim_ambulance(ped, coords, heading)
 	local pos = GetEntityCoords(ped)
 	local animDict = 'combat@damage@writhe'
-	local animName = 'writhe_loop'	
+	local animName = 'writhe_loop'
 	SetPlayerInvincible(ped, false)
 	SetPlayerHealthRechargeMultiplier(PlayerId(-1), 0.0)
 	SetEntityHealth(ped, 200)
-	
+
 	if IsPedInAnyVehicle(ped, false) then
 		loadAnimDict_ambulance("veh@low@front_ps@idle_duck")
 		TaskPlayAnim(ped, "veh@low@front_ps@idle_duck", "sit", 1.0, 1.0, -1, 1, 0, 0, 0, 0)
@@ -232,20 +229,20 @@ function OnPlayerDeath_ambulance(deathCause)
 		Wait(2000)
 		StartDeathAnim_ambulance(playerPed, formattedCoords, heading)
 		TriggerServerEvent('esx_ambulancejob:setDeathStatusx', deathCause)
-		--TriggerEvent('esx_status:set', 'hunger', 400000)
-		--TriggerEvent('esx_status:set', 'thirst', 400000)
+
+
 		TriggerEvent("SetDeadTrueMotherFucker")
 		StartDistressSignal_ambulance()
 		StartBleading_ambulance()
 
 		StartScreenEffect('DeathFailOut', 0, true)
 		ESX.UI.Menu.CloseAll()
-		
+
 		Citizen.CreateThread(function()
 			while InJure do
 				Wait(1)
 				DisableControlAction(0, Keys['F1'],true)
-				--DisableControlAction(0, Keys['F2'],true)
+
 				DisableControlAction(0, Keys['F3'],true)
 				DisableControlAction(0, Keys['F5'],true)
 				DisableControlAction(0, Keys['F6'],true)
@@ -262,26 +259,26 @@ function OnPlayerDeath_ambulance(deathCause)
 				DisableControlAction(0, Keys['E'], true)
 				DisableControlAction(0, Keys['F'], true)
 				DisableControlAction(0, Keys['L'], true)
-				DisableControlAction(0, 24, true) -- Attack
-				DisableControlAction(0, 257, true) -- Attack 2
-				DisableControlAction(0, 25, true) -- Right click
-				DisableControlAction(0, 264, true) -- Disable melee
-				DisableControlAction(0, 257, true) -- Disable melee
-				DisableControlAction(0, 140, true) -- Disable melee
-				DisableControlAction(0, 141, true) -- Disable melee
-				DisableControlAction(0, 142, true) -- Disable melee
-				DisableControlAction(0, 143, true) -- Disable melee
-				DisableControlAction(0, 263, true) -- Melee Attack 1
-				DisableControlAction(0, 27, true) -- Arrow up
-				DisableControlAction(0, 23, true) -- Arrow F
-				DisableControlAction(0, 182, true) -- Arrow L
-				DisableControlAction(0, 44, true) -- Arrow F
-				DisableControlAction(0, 75, true)  -- Disable exit vehicle
+				DisableControlAction(0, 24, true)
+				DisableControlAction(0, 257, true)
+				DisableControlAction(0, 25, true)
+				DisableControlAction(0, 264, true)
+				DisableControlAction(0, 257, true)
+				DisableControlAction(0, 140, true)
+				DisableControlAction(0, 141, true)
+				DisableControlAction(0, 142, true)
+				DisableControlAction(0, 143, true)
+				DisableControlAction(0, 263, true)
+				DisableControlAction(0, 27, true)
+				DisableControlAction(0, 23, true)
+				DisableControlAction(0, 182, true)
+				DisableControlAction(0, 44, true)
+				DisableControlAction(0, 75, true)
 				if IsPedInAnyVehicle(PlayerPedId(), false) then
 					SetCurrentPedWeapon(PlayerPedId(), GetHashKey("weapon_unarmed"), true)
 				end
 			end
-			
+
 		end)
 		Citizen.CreateThread(function()
 			local active_timeout = false
@@ -305,9 +302,9 @@ function OnPlayerDeath_ambulance(deathCause)
 			return
 		end)
 
-		
-		--ClearPedTasksImmediately(ped)
-		if IsPedInAnyVehicle(ped, true) then 
+
+
+		if IsPedInAnyVehicle(ped, true) then
 			Wait(1000)
 			plyPos = GetEntityCoords(GetPlayerPed(-1),  true)
 			local xnew = plyPos.x+0.1
@@ -316,9 +313,9 @@ function OnPlayerDeath_ambulance(deathCause)
 			TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, { teleport = true, speed = true })
 			SetEntityCoords(GetPlayerPed(-1), xnew, ynew, plyPos.z)
 		end
-	
+
 	else
-		
+
 		InJure = false
 		IsDead = true
 		TriggerServerEvent('esx_ambulancejob:setDeathStatusx', -1)
@@ -349,7 +346,7 @@ AddEventHandler('esx_ambulancejob:useItem', function(itemName)
 	ESX.UI.Menu.CloseAll()
 
 	if itemName == 'medikit' then
-		local lib, anim = 'anim@heists@narcotics@funding@gang_idle', 'gang_chatting_idle01' -- TODO better animations
+		local lib, anim = 'anim@heists@narcotics@funding@gang_idle', 'gang_chatting_idle01'
 		local playerPed = PlayerPedId()
 
 		ESX.Streaming.RequestAnimDict(lib, function()
@@ -366,13 +363,13 @@ AddEventHandler('esx_ambulancejob:useItem', function(itemName)
 				EnableControlAction(0, 4, true)
 				EnableControlAction(0, 6, true)
 			end
-	
+
 			TriggerEvent('esx_ambulancejob:heal', 'big', true)
 			ESX.ShowNotification(_U('used_medikit'))
 		end)
 
 	elseif itemName == 'bandage' then
-		local lib, anim = 'anim@heists@narcotics@funding@gang_idle', 'gang_chatting_idle01' -- TODO better animations
+		local lib, anim = 'anim@heists@narcotics@funding@gang_idle', 'gang_chatting_idle01'
 		local playerPed = PlayerPedId()
 
 		ESX.Streaming.RequestAnimDict(lib, function()
@@ -416,7 +413,7 @@ function StartDistressSignal_ambulance()
 			EndTextCommandDisplayText(0.175, 0.805)
 
 			if IsControlPressed(0, Keys['G']) then
-				-- SendDistressSignal_ambulance()
+
 				TriggerServerEvent('esx_ambulancejob:addreq', 'Man be Medic Neyaz Daram')
 				Citizen.CreateThread(function()
 					Citizen.Wait(1000 * 60 * 5)
@@ -434,7 +431,7 @@ end
 function SendDistressSignal_ambulance()
 	local playerPed = PlayerPedId()
 	PedPosition		= GetEntityCoords(playerPed)
-	
+
 	local PlayerCoords = { x = PedPosition.x, y = PedPosition.y, z = PedPosition.z }
 
 	ESX.ShowNotification(_U('distress_sent'))
@@ -475,7 +472,7 @@ function StartBleading_ambulance()
 	local bleedingTimer = ESX.Math.Round(Config_ambulance.EarlyRespawnTimer / 1000)
 
 	Citizen.CreateThread(function()
-		-- bleedout timer
+
 		while bleedingTimer > 0 and InJure do
 			Citizen.Wait(1000)
 			bleedingTimer = bleedingTimer - 1
@@ -504,7 +501,7 @@ function StartDeathTimer_ambulance()
 	local DeathTimer = ESX.Math.Round(Config_ambulance.BleedoutTimer / 1000)
 
 	Citizen.CreateThread(function()
-		-- bleedout timer
+
 		while DeathTimer > 0 and IsDead do
 			Citizen.Wait(1000)
 			DeathTimer = DeathTimer - 1
@@ -556,10 +553,6 @@ function RemoveItemsAfterRPDeath_ambulance()
 	end)
 end
 
-
-
-
-
 function RespawnPed_ambulance(ped, coords, heading)
 	TriggerServerEvent('esx_uniquejobs:AntiCheatExempt', 5000, { teleport = true, speed = true })
 	SetEntityCoordsNoOffset(ped, coords.x, coords.y, coords.z, false, false, false, true)
@@ -570,9 +563,8 @@ function RespawnPed_ambulance(ped, coords, heading)
 	ClearPedBloodDamage(ped)
 	setDeathDecor_ambulance(ped, false)
 	ESX.UI.Menu.CloseAll()
-	
-end
 
+end
 
 RegisterNetEvent('esx_phone:loaded')
 AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
@@ -611,7 +603,7 @@ AddEventHandler('esx:onPlayerDeath', function(data)
 
 		TriggerServerEvent('esx:updateLastPosition', formattedCoords)
 		TriggerServerEvent('esx_ambulancejob:revivex', GetPlayerServerId(source))
-		
+
 		StopScreenEffect('DeathFailOut')
 		DoScreenFadeIn(800)
 	else
@@ -620,10 +612,9 @@ AddEventHandler('esx:onPlayerDeath', function(data)
 	end
 end)
 
-
 RegisterNetEvent('esx_ambulancejob:revivex')
 AddEventHandler('esx_ambulancejob:revivex', function()
-	
+
 	local playerPed = PlayerPedId()
 	local coords = GetEntityCoords(PlayerPedId())
 	TriggerServerEvent('esx_ambulancejob:requestfalse', GetPlayerServerId(PlayerId()))
@@ -654,24 +645,18 @@ AddEventHandler('esx_ambulancejob:revivex', function()
 		StopScreenEffect('DeathFailOut')
 		ClearPedTasks(playerPed)
 		coords = nil
-		
+
 	end)
-	
+
 end)
 
-
-
-
-
-
--- Load unloaded IPLs
 if Config_ambulance.LoadIpl then
 	Citizen.CreateThread(function()
-		RequestIpl('Coroner_Int_on') -- Morgue
+		RequestIpl('Coroner_Int_on')
 	end)
 end
 
- 
+
 RegisterNetEvent('esx_ambulancejob:openreqs')
 AddEventHandler('esx_ambulancejob:openreqs', function(source)
 	OpenReqsList_ambulance()
@@ -722,12 +707,11 @@ end)
 RegisterNetEvent('requestambulance')
 AddEventHandler('requestambulance', function()
 
-
 end)
 
 function OpenReqsList_ambulance()
 	ESX.TriggerServerCallback('esx_ambulancejob:getReqs', function(reqs)
-	
+
 	local elements = {}
 	for i=1, #reqs, 1 do
 
@@ -743,51 +727,51 @@ function OpenReqsList_ambulance()
 			accept = reqs[i].accept,
 		})
 	end
-	
+
 
  	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'reqs_lists', {
-		
+
 		title    = "Requests",
 		align    = 'bottom-right',
 		elements = elements
 	}, function(data, menu)
-		
+
 		local elements = {}
 		local id = data.current.reqid
 		ESX.TriggerServerCallback('esx_ambulancejob:acceptername', function(acceptername, accepterID)
 		ESX.TriggerServerCallback('esx_ambulancejob:icname', function(name)
 		table.insert(elements,{label = "RequestId : ".. data.current.reqid.." | PlayerID : "..data.current.id ,value = "nil"})
-		
+
 		table.insert(elements,{label = "Accept status : "..data.current.status ,value = "nil"})
-		
+
 		table.insert(elements,{label = "Request by : ".. data.current.icname.." | "..data.current.id, value = "nil"})
-		
+
 			if data.current.accept == "open" then
 				table.insert(elements,{label = "Accept", value = "yes"})
 			else
-			
+
 				table.insert(elements,{label = "Accepted by : ".. acceptername.." | "..accepterID, value = "nil"})
 				table.insert(elements,{label = "Carry 50m ", value = "carry"})
-				
-			
+
+
 			end
-			
+
 			if acceptername == name then
 				table.insert(elements,{label = "Decline",value = "decline"})
 				table.insert(elements,{label = "Finish",value = "finish"})
 			end
-		
+
 		table.insert(elements,{label = "Pin location",value = "loc"})
 		table.insert(elements,{label = "Call",value = "call"})
-		
-		
+
+
  		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'reqs_list', {
-		
+
 				title    = "Request",
 				align    = 'bottom-right',
 				elements = elements
 				}, function(data2, menu2)
-			
+
 				menu2.close()
  				if data2.current.value == 'yes' then
 					TriggerServerEvent('esx_ambulancejob:areqs', data.current.reqid)
@@ -819,13 +803,11 @@ function OpenReqsList_ambulance()
 			end, id)
  		end, function(data, menu)
 			menu.close()
-			
+
 		end)
-		
+
 	end)
 end
-
-
 
 function setDeathDecor_ambulance(ped, state)
 	DecorSetBool(ped, "isDead", state)

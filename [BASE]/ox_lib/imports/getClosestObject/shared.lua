@@ -1,7 +1,5 @@
----@param coords vector3 The coords to check from.
----@param maxDistance? number The max distance to check.
----@return number? object
----@return vector3? objectCoords
+
+
 function lib.getClosestObject(coords, maxDistance)
 	local objects = GetGamePool('CObject')
 	local closestObject, closestCoords

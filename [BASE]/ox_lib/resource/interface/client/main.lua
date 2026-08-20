@@ -1,4 +1,4 @@
----@alias IconProp 'fas' | 'far' | 'fal' | 'fat' | 'fad' | 'fab' | 'fak' | 'fass'
+
 
 local keepInput = IsNuiFocusKeepingInput()
 

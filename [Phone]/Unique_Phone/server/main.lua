@@ -12,7 +12,7 @@ AddEventHandler('esx:playerLoaded',function(playerId, xPlayer)
     getOrGenerateIBAN(identifier, function(iban)
     end)
 
-    
+
 end)
 
 function GetIranianDateTime()
@@ -20,19 +20,18 @@ function GetIranianDateTime()
     local iranOffset = 3.5 * 60 * 60
     local iranTime = utcTime + iranOffset
     local iranDate = os.date("*t", iranTime)
-    
- 
+
+
     local dateString = string.format("%02d-%02d-%04d", iranDate.day, iranDate.month, iranDate.year)
-    
- 
+
+
     local timeString = string.format("%02d:%02d", iranDate.hour, iranDate.min)
-    
+
     return {
-        dateString = dateString, 
-        timeString = timeString  
+        dateString = dateString,
+        timeString = timeString
     }
 end
-
 
 ESX.RegisterServerCallback('Unique_Phone:server:GetDateTime', function(source, cb)
     local datetime = GetIranianDateTime()
@@ -48,7 +47,6 @@ local Calls = {}
 local Adverts = {}
 local GeneratedPlates = {}
 
--- Number and IBAN Generate Stuff 
 function getPhoneRandomNumber()
     local numBase0  = 0
     local numBase1  = 5
@@ -103,7 +101,7 @@ function getOrGenerateIBAN(identifier, cb)
 
         until id == nil
 
-        MySQL.Async.insert("UPDATE users SET iban = @myIBAN WHERE identifier = @identifier", { 
+        MySQL.Async.insert("UPDATE users SET iban = @myIBAN WHERE identifier = @identifier", {
             ['@myIBAN'] = myIBAN,
             ['@identifier'] = identifier
 
@@ -126,7 +124,7 @@ function getOrGeneratePhoneNumber(identifier, cb)
 
         until id == nil
 
-        MySQL.Async.insert("UPDATE users SET phone = @myPhoneNumber WHERE identifier = @identifier", { 
+        MySQL.Async.insert("UPDATE users SET phone = @myPhoneNumber WHERE identifier = @identifier", {
             ['@myPhoneNumber'] = myPhoneNumber,
             ['@identifier'] = identifier
 
@@ -137,7 +135,6 @@ function getOrGeneratePhoneNumber(identifier, cb)
         cb(myPhoneNumber)
     end
 end
-
 
 RegisterServerEvent('Unique_Phone:saveTwitterToDatabase')
 AddEventHandler('Unique_Phone:saveTwitterToDatabase', function(firstName, lastname, message, url, time, picture)
@@ -158,13 +155,12 @@ end)
 
 ESX.RegisterServerCallback("Unique_Phone:Server:GetPhoneNumber", function(source, cb, id)
     local xPlayer = ESX.GetPlayerFromId(id)
-    if xPlayer then 
+    if xPlayer then
         cb(getNumberPhone(xPlayer.identifier), string.gsub(xPlayer.name, "_", " "))
     else
         cb(false)
     end
 end)
-
 
 RegisterServerEvent('Unique_Phone:server:AddAdvert')
 AddEventHandler('Unique_Phone:server:AddAdvert', function(msg)
@@ -206,7 +202,6 @@ AddEventHandler('Unique_Phone:server:updateidForEveryone', function()
     TriggerClientEvent('Unique_Phone:updateidForEveryone', -1)
 end)
 
-
 ESX.RegisterServerCallback('Unique_Phone:server:GetPhoneData', function(source, cb)
     local src = source
     local Player = ESX.GetPlayerFromId(src)
@@ -234,7 +229,7 @@ ESX.RegisterServerCallback('Unique_Phone:server:GetPhoneData', function(source, 
             if result then
                 PhoneData.MetaData = result[1]
             end
-        
+
 
             ExecuteSql(false, "SELECT * FROM player_contacts WHERE `identifier` = @p1 ORDER BY `name` ASC", {['@p1'] = Player.identifier}, function(result)
                 local Contacts = {}
@@ -242,7 +237,7 @@ ESX.RegisterServerCallback('Unique_Phone:server:GetPhoneData', function(source, 
                     for k, v in pairs(result) do
                         v.status = GetOnlineStatus(v.number)
                     end
-                    
+
                     PhoneData.PlayerContacts = result
                 end
 
@@ -253,19 +248,16 @@ ESX.RegisterServerCallback('Unique_Phone:server:GetPhoneData', function(source, 
                         PhoneData.Tweets = nil
                     end
 
-
                     ExecuteSql(false, "SELECT * FROM twitter_tweets WHERE owner = @p1", {['@p1'] = Player.identifier}, function(result)
                         if result ~= nil then
                             PhoneData.SelfTweets = result
-        
+
                         end
                 ExecuteSql(false, "SELECT * FROM owned_vehicles WHERE `owner` = @p1", {['@p1'] = Player.identifier}, function(garageresult)
 
                     if garageresult[1] ~= nil then
                         PhoneData.Garage = garageresult
                     end
-
-
 
                     ExecuteSql(false, "SELECT * FROM `player_mails` WHERE `identifier` = @p1 ORDER BY `date` ASC", {['@p1'] = Player.identifier}, function(mails)
 
@@ -279,15 +271,15 @@ ESX.RegisterServerCallback('Unique_Phone:server:GetPhoneData', function(source, 
                         end
 
                         ExecuteSql(false, "SELECT * FROM phone_messages WHERE `identifier` = @p1", {['@p1'] = Player.identifier}, function(messages)
-                            if messages ~= nil and next(messages) ~= nil then 
+                            if messages ~= nil and next(messages) ~= nil then
                                 PhoneData.Chats = messages
                             end
 
-                            if AppAlerts[Player.identifier] ~= nil then 
+                            if AppAlerts[Player.identifier] ~= nil then
                                 PhoneData.Applications = AppAlerts[Player.identifier]
                             end
-                        
-                            if MentionedTweets[Player.identifier] ~= nil then 
+
+                            if MentionedTweets[Player.identifier] ~= nil then
                                 PhoneData.MentionedTweets = MentionedTweets[Player.identifier]
                             end
 
@@ -295,13 +287,13 @@ ESX.RegisterServerCallback('Unique_Phone:server:GetPhoneData', function(source, 
                                 PhoneData.Hashtags = Hashtags
                             end
 
-            
+
 
                             PhoneData.charinfo = GetCharacter(src)
 
                             ExecuteSql(false, "SELECT image_url FROM phone_gallery  WHERE `identifier` = @p1", {['@p1'] = Player.identifier}, function(images)
-                                if images[1] ~= nil then 
-                                    
+                                if images[1] ~= nil then
+
                                     PhoneData.Images = images
                                 else
                                     PhoneData.Images = {}
@@ -328,14 +320,14 @@ ESX.RegisterServerCallback('Unique_Phone:server:GetPhoneData', function(source, 
                                         end
                                         cb(PhoneData)
                                     end)
-                                else 
+                                else
                                     PhoneData.Invoices = {}
                                     cb(PhoneData)
                                 end
                             end)
                         end)
                     end)
-                    end) 
+                    end)
                 end)
             end)
             end)
@@ -349,11 +341,10 @@ AddEventHandler('Unique_Phone:deleteTweet', function(id)
     MySQL.Async.execute('DELETE FROM twitter_tweets WHERE owner = @owner AND id = @id', {['@owner'] = xPlayer.identifier, ['@id'] = id})
 end)
 
-
 ESX.RegisterServerCallback('Unique_Phone:server:GetCallState', function(source, cb, ContactData)
 
     local Target = GetPlayerFromPhone(ContactData)
-    
+
     if Target ~= nil then
         if Calls[Target.identifier] ~= nil then
             if Calls[Target.identifier].inCall then
@@ -372,7 +363,7 @@ end)
 ESX.RegisterServerCallback('Unique_Phone:server:GetCallStateAdmin', function(source, cb, ContactData)
 
     local Target = ESX.GetPlayerFromId(ContactData)
-    
+
     if Target ~= nil then
         if Calls[Target.identifier] ~= nil then
             if Calls[Target.identifier].inCall then
@@ -416,7 +407,7 @@ AddEventHandler('Unique_Phone:server:RemoveMail', function(MailId)
                     end
                 end
             end
-    
+
             TriggerClientEvent('Unique_Phone:client:UpdateMails', src, mails)
         end)
     end)
@@ -447,7 +438,7 @@ AddEventHandler('Unique_Phone:server:sendNewMail', function(mailData)
                     end
                 end
             end
-    
+
             TriggerClientEvent('Unique_Phone:client:UpdateMails', src, mails)
         end)
     end)
@@ -477,7 +468,7 @@ AddEventHandler('Unique_Phone:server:sendNewMailToOffline', function(steam, mail
                         end
                     end
                 end
-        
+
                 TriggerClientEvent('Unique_Phone:client:UpdateMails', src, mails)
             end)
         end)
@@ -506,7 +497,7 @@ AddEventHandler('Unique_Phone:server:sendNewEventMail', function(steam, mailData
                     end
                 end
             end
-    
+
             TriggerClientEvent('Unique_Phone:client:UpdateMails', src, mails)
         end)
     end)
@@ -527,7 +518,7 @@ AddEventHandler('Unique_Phone:server:ClearButtonData', function(mailId)
                     end
                 end
             end
-    
+
             TriggerClientEvent('Unique_Phone:client:UpdateMails', src, mails)
         end)
     end)
@@ -542,7 +533,7 @@ AddEventHandler('Unique_Phone:server:MentionedPlayer', function(firstName, lastN
         if Player ~= nil then
             if (character.firstname == firstName and character.lastname == lastName) then
                 MIPhone.SetPhoneAlerts(Player.identifier, "twitter")
-   
+
                 MIPhone.AddMentionedTweet(Player.identifier, TweetMessage)
                 TriggerClientEvent('Unique_Phone:client:GetMentioned', Player.source, TweetMessage, AppAlerts[Player.identifier]["twitter"])
 
@@ -567,7 +558,7 @@ AddEventHandler('Unique_Phone:server:CallContact', function(TargetData, CallId, 
     local Target = GetPlayerFromPhone(TargetData.number)
     local character = GetCharacter(src)
     local PhoneNum
-    if Acall then 
+    if Acall then
         PhoneNum = "(Staff)"
     else
         PhoneNum = character.phone
@@ -578,7 +569,6 @@ AddEventHandler('Unique_Phone:server:CallContact', function(TargetData, CallId, 
     end
 end)
 
--- ESX(V1_Final) Fix
 ESX.RegisterServerCallback('Unique_Phone:server:GetBankData', function(source, cb)
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
@@ -587,7 +577,6 @@ ESX.RegisterServerCallback('Unique_Phone:server:GetBankData', function(source, c
     cb({bank = xPlayer.bank, iban = character.iban})
 end)
 
--- ESX(V1_Final) Fix
 ESX.RegisterServerCallback('Unique_Phone:server:CanPayInvoice', function(source, cb, amount)
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
@@ -661,7 +650,7 @@ MIPhone.SetPhoneAlerts = function(identifier, app, alerts)
             else
                 if alerts == nil then
                     AppAlerts[identifier][app] = AppAlerts[identifier][app] + 1
-               
+
                 else
                     AppAlerts[identifier][app] = AppAlerts[identifier][app] + 0
                 end
@@ -673,7 +662,7 @@ end
 ESX.RegisterServerCallback('Unique_Phone:server:GetContactPictures', function(source, cb, Chats)
     for k, v in pairs(Chats) do
         local Player = ESX.GetPlayerFromIdentifier(v.number)
-        
+
         ExecuteSql(false, "SELECT * FROM `users` WHERE `phone`=@p1", {['@p1'] = v.number}, function(result)
             if result[1] ~= nil then
                 if result[1].profilepicture ~= nil then
@@ -734,20 +723,17 @@ AddEventHandler('Unique_Phone:server:UpdateTweets', function(TweetData, type)
     TriggerClientEvent('Unique_Phone:client:UpdateTweets', -1, src, TwtData, type)
 end)
 
-
-
-
 RegisterServerEvent('Unique_Phone:server:TransferMoney')
 AddEventHandler('Unique_Phone:server:TransferMoney', function(iban, amount)
     local src = source
     local sender = ESX.GetPlayerFromId(src)
     if not sender then return end
 
-    -- SECURITY: `amount` comes straight from the client. It must be a positive
-    -- number and the sender must actually HAVE that much in their bank before
-    -- anything is credited to the receiver. Previously this was never checked,
-    -- which let any player send an arbitrary amount to any account (their bank
-    -- just went negative with no consequence) - i.e. unlimited money duplication.
+
+
+
+
+
     amount = tonumber(amount)
     if not amount or amount <= 0 or amount ~= math.floor(amount) then
         TriggerClientEvent('rp_notify:client:SendAlert', src, { type = 'inform', text = 'Meqdar Eshtebah ast!'})
@@ -768,18 +754,17 @@ AddEventHandler('Unique_Phone:server:TransferMoney', function(iban, amount)
 
         local PhoneItem = Girande.getInventoryItem("phone").count and Girande.getInventoryItem("phone").count > 0
 
-        -- Debit first: if this ever fails/short-circuits, no money is ever created
-        -- out of thin air on the receiver's side.
+
+
         sender.removeBank(amount)
         Girande.addBank(amount)
 
         if PhoneItem ~= nil then
             TriggerClientEvent('Unique_Phone:client:TransferMoney', Girande.source, amount, Girande.bank)
 
-
             TriggerClientEvent('rp_notify:client:SendAlert', sender.source, { type = 'inform', text = 'Para transferi başarılı!'})
             TriggerClientEvent('rp_notify:client:SendAlert',  Girande.source, { type = 'inform', text = 'Hesabına para transferi yapıldı: $' .. amount .. ', yatıran ID: ' .. sender.source .. ''})
-          
+
         end
     else
 
@@ -787,9 +772,9 @@ AddEventHandler('Unique_Phone:server:TransferMoney', function(iban, amount)
             if result[1] ~= nil then
                 local recieverSteam = ESX.GetPlayerFromIdentifier(result[1].identifier)
 
-                -- Re-check the sender's balance: time has passed since the first
-                -- check (this is an async DB callback), so someone could have
-                -- spent/transferred the money in the meantime.
+
+
+
                 if sender.bank < amount then
                     TriggerClientEvent('rp_notify:client:SendAlert', src, { type = 'inform', text = 'Mojodi Shoma Kafi Nist!'})
                     return
@@ -813,12 +798,12 @@ AddEventHandler('Unique_Phone:server:TransferMoney', function(iban, amount)
                             TriggerClientEvent('rp_notify:client:SendAlert',  recieverSteam.source, { type = 'inform', text = 'Hesabına para transferi yapıldı: $' .. amount .. ', yatıran IBAN: ' .. result[1].iban .. ''})
                         end)
                     end
-                
+
                 else
-                    -- Receiver is offline: update their bank row atomically in SQL
-                    -- (bank = bank + amount) instead of reading-then-writing a stale
-                    -- value, which also closes a race where two rapid transfers
-                    -- could overwrite each other and silently drop money.
+
+
+
+
                     sender.removeBank(amount)
                     ExecuteSql(false, "UPDATE `users` SET `bank` = `bank` + @p1 WHERE `identifier` = @p2", {['@p1'] = amount, ['@p2'] = result[1].identifier})
                     exports.ScriptPack:TransferLog({source = sender.source, target = result[1].identifier, type = "transfer_offline", amount = amount})
@@ -829,7 +814,6 @@ AddEventHandler('Unique_Phone:server:TransferMoney', function(iban, amount)
         end)
     end
 end)
-
 
 RegisterServerEvent('Unique_Phone:server:EditContact')
 AddEventHandler('Unique_Phone:server:EditContact', function(newName, newNumber, newIban, oldName, oldNumber, oldIban)
@@ -842,7 +826,7 @@ RegisterServerEvent('Unique_Phone:server:RemoveContact')
 AddEventHandler('Unique_Phone:server:RemoveContact', function(Name, Number)
     local src = source
     local Player = ESX.GetPlayerFromId(src)
-    
+
     ExecuteSql(false, "DELETE FROM `player_contacts` WHERE `name` = @p1 AND `number` = @p2 AND `identifier` = @p3", {['@p1'] = Name, ['@p2'] = Number, ['@p3'] = Player.identifier})
 end)
 
@@ -859,72 +843,72 @@ AddEventHandler('Unique_Phone:server:UpdateMessages', function(ChatMessages, Cha
     local src = source
     local SenderCharacter = GetCharacter(src)
     local SenderData = ESX.GetPlayerFromId(src)
-    
-    ExecuteSql(false, "SELECT * FROM `users` WHERE `phone`=@p1", {['@p1'] = ChatNumber}, function(Player)
-        
 
-        
+    ExecuteSql(false, "SELECT * FROM `users` WHERE `phone`=@p1", {['@p1'] = ChatNumber}, function(Player)
+
+
+
         if Player[1] ~= nil and (ChatNumber ~= "Police Deparment" and ChatNumber ~= "Ambulance Deparment" and ChatNumber ~= "Sheriff Deparment") then
-           
+
             local TargetPhone = getPhoneNumber(Player[1].identifier)
             local TargetData = ESX.GetPlayerFromIdentifier(Player[1].identifier)
             local SenderPhone = getPhoneNumber(SenderData.identifier)
-            
+
 
             if TargetData ~= nil then
                 ExecuteSql(false, "SELECT * FROM `phone_messages` WHERE `identifier` = @p1 AND `number` = @p2", {['@p1'] = SenderData.identifier, ['@p2'] = ChatNumber}, function(Chat)
                     if Chat[1] ~= nil then
-                        -- Update for target
+
                         ExecuteSql(false, "UPDATE `phone_messages` SET `messages` = @p1 WHERE `identifier` = @p2 AND `number` = @p3", {['@p1'] = json.encode(ChatMessages), ['@p2'] = Player[1].identifier, ['@p3'] = SenderPhone})
-                                
-                        -- Update for sender
+
+
                         ExecuteSql(false, "UPDATE `phone_messages` SET `messages` = @p1 WHERE `identifier` = @p2 AND `number` = @p3", {['@p1'] = json.encode(ChatMessages), ['@p2'] = SenderData.identifier, ['@p3'] = TargetPhone})
-                    
-                        -- Send notification & Update messages for target
+
+
                         TriggerClientEvent('Unique_Phone:client:UpdateMessages', TargetData.source, ChatMessages, SenderPhone, false, false)
                     else
-                        -- Insert for target
+
                         ExecuteSql(false, "INSERT INTO `phone_messages` (`identifier`, `number`, `messages`) VALUES (@p1, @p2, @p3)", {['@p1'] = Player[1].identifier, ['@p2'] = SenderPhone, ['@p3'] = json.encode(ChatMessages)})
-                                            
-                        -- Insert for sender
+
+
                         ExecuteSql(false, "INSERT INTO `phone_messages` (`identifier`, `number`, `messages`) VALUES (@p1, @p2, @p3)", {['@p1'] = SenderData.identifier, ['@p2'] = TargetPhone, ['@p3'] = json.encode(ChatMessages)})
 
-                        -- Send notification & Update messages for target
+
                         TriggerClientEvent('Unique_Phone:client:UpdateMessages', TargetData.source, ChatMessages, SenderPhone, true, false)
                     end
                 end)
             else
                 ExecuteSql(false, "SELECT * FROM `phone_messages` WHERE `identifier` = @p1 AND `number` = @p2", {['@p1'] = SenderData.identifier, ['@p2'] = ChatNumber}, function(Chat)
                     if Chat[1] ~= nil then
-                        -- Update for target
+
                         ExecuteSql(false, "UPDATE `phone_messages` SET `messages` = @p1 WHERE `identifier` = @p2 AND `number` = @p3", {['@p1'] = json.encode(ChatMessages), ['@p2'] = Player[1].identifier, ['@p3'] = SenderPhone})
-                                
-                        -- Update for sender
+
+
                         ExecuteSql(false, "UPDATE `phone_messages` SET `messages` = @p1 WHERE `identifier` = @p2 AND `number` = @p3", {['@p1'] = json.encode(ChatMessages), ['@p2'] = SenderData.identifier, ['@p3'] = TargetPhone})
                     else
-                        -- Insert for target
+
                         ExecuteSql(false, "INSERT INTO `phone_messages` (`identifier`, `number`, `messages`) VALUES (@p1, @p2, @p3)", {['@p1'] = Player[1].identifier, ['@p2'] = SenderPhone, ['@p3'] = json.encode(ChatMessages)})
-                        
-                        -- Insert for sender
+
+
                         ExecuteSql(false, "INSERT INTO `phone_messages` (`identifier`, `number`, `messages`) VALUES (@p1, @p2, @p3)", {['@p1'] = SenderData.identifier, ['@p2'] = TargetPhone, ['@p3'] = json.encode(ChatMessages)})
                     end
                 end)
             end
         else
-            
+
             local SenderPhone = getPhoneNumber(SenderData.identifier)
             ExecuteSql(false, "SELECT * FROM `phone_messages` WHERE `identifier` = @p1 AND `number` = @p2", {['@p1'] = SenderData.identifier, ['@p2'] = ChatNumber}, function(Chat)
                 if Chat[1] ~= nil then
-                    -- Update for target
+
                     ExecuteSql(false, "UPDATE `phone_messages` SET `messages` = @p1 WHERE `identifier` = @p2 AND `number` = @p3", {['@p1'] = json.encode(ChatMessages), ['@p2'] = ChatNumber, ['@p3'] = ChatNumber})
-                            
-                    -- Update for sender
+
+
                     ExecuteSql(false, "UPDATE `phone_messages` SET `messages` = @p1 WHERE `identifier` = @p2 AND `number` = @p3", {['@p1'] = json.encode(ChatMessages), ['@p2'] = SenderData.identifier, ['@p3'] = ChatNumber})
                 else
-                    -- Insert for target
+
                     ExecuteSql(false, "INSERT INTO `phone_messages` (`identifier`, `number`, `messages`) VALUES (@p1, @p2, @p3)", {['@p1'] = ChatNumber, ['@p2'] = ChatNumber, ['@p3'] = json.encode(ChatMessages)})
-                    
-                    -- Insert for sender
+
+
                     ExecuteSql(false, "INSERT INTO `phone_messages` (`identifier`, `number`, `messages`) VALUES (@p1, @p2, @p3)", {['@p1'] = SenderData.identifier, ['@p2'] = ChatNumber, ['@p3'] = json.encode(ChatMessages)})
                 end
             end)
@@ -994,10 +978,6 @@ AddEventHandler('Unique_Phone:server:AnswerCall', function(CallData)
     end
 end)
 
--- SECURITY: column names can never be bound as SQL parameters, so a whitelist is
--- mandatory here. Before this fix, `column` came straight from the client and let
--- any player overwrite ANY column of ANY row in `users` (SQL injection / arbitrary
--- column write). Only the columns the client script actually uses are allowed.
 local SaveMetaData_AllowedColumns = {
     ['background']      = true,
     ['profilepicture']  = true,
@@ -1020,15 +1000,15 @@ AddEventHandler('Unique_Phone:server:SaveMetaData', function(column, data)
         value = json.encode(data)
     end
 
-    -- `column` is now guaranteed to be one of the whitelisted, hardcoded-safe names,
-    -- so it's safe to splice into the identifier position; the value itself is still
-    -- bound as a parameter.
+
+
+
     ExecuteSql(false, "UPDATE `users` SET `" .. column .. "` = @p1 WHERE `identifier` = @p2", {['@p1'] = value, ['@p2'] = Player.identifier})
 end)
 
 function escape_sqli(source)
     local replacements = { ['"'] = '\\"', ["'"] = "\\'" }
-    return source:gsub( "['\"]", replacements ) -- or string.gsub( source, "['\"]", replacements )
+    return source:gsub( "['\"]", replacements )
 end
 
 ESX.RegisterServerCallback('Unique_Phone:server:FetchResult', function(source, cb, search)
@@ -1054,7 +1034,7 @@ ESX.RegisterServerCallback('Unique_Phone:server:FetchResult', function(source, c
                             if has then
                                 driverlicense = true
                             end
-                            
+
                             doingSomething = false
                         end)
                     end)
@@ -1062,9 +1042,8 @@ ESX.RegisterServerCallback('Unique_Phone:server:FetchResult', function(source, c
                     doingSomething = false
                 end
 
-
                 while doingSomething do Wait(1) end
-                
+
                 table.insert(searchData, {
                     identifier = v.identifier,
                     firstname = character.firstname,
@@ -1112,9 +1091,9 @@ ESX.RegisterServerCallback('Unique_Phone:server:GetVehicleSearchResults', functi
         if result[1] ~= nil then
             for k, v in pairs(result) do
                 ExecuteSql(true, "SELECT * FROM `users` WHERE `identifier` = @p1", {['@p1'] = result[k].identifier}, function(player)
-                    if player[1] ~= nil then 
+                    if player[1] ~= nil then
                         local vehicleInfo = { ['name'] = json.decode(result[k].vehicle).model }
-                        if vehicleInfo ~= nil then 
+                        if vehicleInfo ~= nil then
                             table.insert(searchData, {
                                 plate = result[k].plate,
                                 status = true,
@@ -1166,7 +1145,7 @@ ESX.RegisterServerCallback('Unique_Phone:server:ScanPlate', function(source, cb,
     local src = source
     local vehicleData = {}
     local character = GetCharacter(src)
-    if plate ~= nil then 
+    if plate ~= nil then
         ExecuteSql(false, "SELECT * FROM `owned_vehicles` WHERE `plate` = @p1", {['@p1'] = plate}, function(result)
             if result[1] ~= nil then
                 ExecuteSql(true, "SELECT * FROM `users` WHERE `identifier` = @p1", {['@p1'] = result[1].identifier}, function(player)
@@ -1177,7 +1156,7 @@ ESX.RegisterServerCallback('Unique_Phone:server:ScanPlate', function(source, cb,
                         identifier = result[1].identifier,
                     }
                 end)
-            elseif GeneratedPlates ~= nil and GeneratedPlates[plate] ~= nil then 
+            elseif GeneratedPlates ~= nil and GeneratedPlates[plate] ~= nil then
                 vehicleData = GeneratedPlates[plate]
             else
                 local ownerInfo = GenerateOwnerName()
@@ -1238,10 +1217,6 @@ function GenerateOwnerName()
     return names[math.random(1, #names)]
 end
 
-
-
-
-
 ESX.RegisterServerCallback('Unique_Phone:server:GetGarageVehicles', function(source, cb)
     local Player = ESX.GetPlayerFromId(source)
     local Vehicles = {}
@@ -1264,15 +1239,13 @@ ESX.RegisterServerCallback('Unique_Phone:server:GetGarageVehicles', function(sou
                     garagenume = v.garagenum
                 end
 
-
-
                 local vehdata = {}
 
-                -- FIX: v.damage can be SQL NULL (Lua nil), not just "". The old
-                -- check only tested against "" so a nil `damage` column slipped
-                -- through to json.decode(nil) -> nil -> pairs(nil) crash. Also
-                -- wrap the decode in pcall in case the JSON is malformed, so one
-                -- bad row can't take down the whole callback for every vehicle.
+
+
+
+
+
                 if VehicleState == "Garage" and v.damage ~= nil and v.damage ~= "" then
                     local ok, damageData = pcall(json.decode, v.damage)
                     if ok and type(damageData) == "table" then
@@ -1310,11 +1283,10 @@ end)
 ESX.RegisterServerCallback('Unique_Phone:server:GetCharacterData', function(source, cb,id)
     local src = source or id
     local xPlayer = ESX.GetPlayerFromId(source)
-    
+
     cb(GetCharacter(src))
 end)
 
--- Inventory Fix
 ESX.RegisterServerCallback('Unique_Phone:server:HasPhone', function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -1360,7 +1332,7 @@ ESX.RegisterServerCallback('Unique_Phone:server:GetCurrentpolices', function(sou
     for k, v in pairs(ESX.GetPlayers()) do
         local Player = ESX.GetPlayerFromId(v)
         local character = GetCharacter(v)
-      
+
         if Player ~= nil then
             if (Player.job.name == "ambulance" or Player.job.name == "taxi" or Player.job.name == "mechanic" or Player.job.name == "weazel" or Player.job.name == "police" or Player.job.name == "sheriff" or Player.job.name == "mt" or Player.job.name == "fbi" or Player.job.name == "cid" or Player.job.name == "cia" or Player.job.name == "marshal" or Player.job.name == "judge" or Player.job.name == "doa" or Player.job.name == "uwucafe") then
                 table.insert(polices, {
@@ -1374,7 +1346,6 @@ ESX.RegisterServerCallback('Unique_Phone:server:GetCurrentpolices', function(sou
     cb(polices)
 end)
 
--- ESX(V1_Final) Fix
 function GetCharacter(source)
     local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -1391,21 +1362,20 @@ function GetPlayerFromPhone(phone)
     local result = MySQL.Sync.fetchAll('SELECT * FROM users WHERE phone = @phone', {
         ['@phone'] = tostring(phone)
     })
-  
+
     if result[1] and result[1].identifier then
-      
+
         return ESX.GetPlayerFromIdentifier(tostring(result[1].identifier))
     end
 
     return nil
 end
 
-
 function getPlayerFromIBAN(iban)
     local result = MySQL.Sync.fetchAll('SELECT * FROM users WHERE iban = @iban', {
 		['@iban'] = iban
     })
-    
+
     if result[1] and result[1].identifier then
         return ESX.GetPlayerFromIdentifier(result[1].identifier)
     end
@@ -1413,10 +1383,6 @@ function getPlayerFromIBAN(iban)
     return nil
 end
 
--- SECURITY: `params` is now a required parameter table of bound values
--- (e.g. {['@p1'] = someValue}). NEVER build `query` by concatenating
--- untrusted values directly into the SQL string - always add a new
--- named placeholder (@pN) and pass the real value through `params`.
 function ExecuteSql(wait, query, params, cb)
 	local rtndata = {}
 	local waiting = true
@@ -1435,7 +1401,7 @@ function ExecuteSql(wait, query, params, cb)
 			cb(rtndata)
 		end
     end
-    
+
 	return rtndata
 end
 
@@ -1449,38 +1415,29 @@ function Lang(item)
     return item
 end
 
-
-
 RegisterServerEvent('Unique_Phone:server:SendJobMessage')
 AddEventHandler('Unique_Phone:server:SendJobMessage', function(data, Pos)
     local src = source
     local players = GetPlayers()
     local sender = string.gsub(ESX.GetPlayerFromId(src).name, "_", " ")
     local xPlayer = ESX.GetPlayerFromId(src)
-  
+
     for _, playerId in ipairs(players) do
         local xPlayer = ESX.GetPlayerFromId(playerId)
         local date = os.date('%Y-%m-%d')
-       
+
         if xPlayer and xPlayer.job.name == string.lower(string.gsub(data.ChatNumber, " Deparment", "")) then
-           
+
             TriggerClientEvent('PX_phone_Clieant:AddMessagetoJobS', playerId, data, sender, Pos, xPlayer.source)
         end
     end
 end)
 
-
-
--- Caamera --
-
-
-
-
 RegisterServerEvent('Unique_Phone:server:addImageToGallery')
 AddEventHandler('Unique_Phone:server:addImageToGallery', function(imageUrl)
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
-    
+
     if not xPlayer then return end
 
     MySQL.Async.execute('INSERT INTO phone_gallery (identifier, image_url) VALUES (@identifier, @image_url)', {
@@ -1488,7 +1445,7 @@ AddEventHandler('Unique_Phone:server:addImageToGallery', function(imageUrl)
         ['@image_url'] = imageUrl
     }, function(rowsChanged)
         if rowsChanged > 0 then
-           
+
         end
     end)
 end)
@@ -1497,25 +1454,25 @@ RegisterServerEvent('Unique_Phone:server:RemoveImageFromGallery')
 AddEventHandler('Unique_Phone:server:RemoveImageFromGallery', function(imageData)
     local src = source
     local player = ESX.GetPlayerFromId(src)
-    
+
     if not player then return end
-    
+
 
     if not imageData or not imageData.image then
 
         return
     end
-    
+
 
     MySQL.Async.execute('DELETE FROM phone_gallery WHERE identifier = @identifier AND image_url = @image_url', {
         ['@identifier'] = player.identifier,
         ['@image_url'] = imageData.image
     }, function(rowsChanged)
         if rowsChanged > 0 then
-          
+
             TriggerClientEvent('Unique_Phone:client:ImageRemoved', src)
         else
-        
+
         end
     end)
 end)
@@ -1523,9 +1480,9 @@ end)
 ESX.RegisterServerCallback('Unique_Phone:server:getImageFromGallery', function(source, cb)
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
-    
+
     if not xPlayer then return cb({}) end
-    
+
     MySQL.Async.fetchAll('SELECT image_url FROM phone_gallery WHERE identifier = @identifier ORDER BY id DESC', {
         ['@identifier'] = xPlayer.identifier
     }, function(result)
@@ -1541,38 +1498,37 @@ RegisterServerEvent('Unique_Phone:server:getImageFromGallery')
 AddEventHandler('Unique_Phone:server:getImageFromGallery', function()
     local src = source
     local player = ESX.GetPlayerFromId(src)
-    
+
     if not player then return end
-    
+
 
     MySQL.Async.fetchAll('SELECT * FROM phone_gallery WHERE identifier = @identifier', {
         ['@identifier'] = player.identifier
     }, function(result)
         local images = {}
-        
+
         for _, row in ipairs(result) do
             table.insert(images, {
                 url = row.image_url,
                 date = row.date
             })
         end
-        
+
         TriggerClientEvent('Unique_Phone:client:refreshImages', src, images)
     end)
 end)
 
-
 ESX.RegisterServerCallback('Unique_Phone:server:GetGalleryImages', function(source, cb)
     local src = source
     local player = ESX.GetPlayerFromId(src)
-    
+
     if not player then return cb({}) end
-    
+
     MySQL.Async.fetchAll('SELECT * FROM phone_gallery WHERE identifier = @identifier', {
         ['@identifier'] = player.identifier
     }, function(result)
         local images = {}
-        
+
         for _, row in ipairs(result) do
             table.insert(images, {
                 url = row.image_url,
@@ -1580,7 +1536,7 @@ ESX.RegisterServerCallback('Unique_Phone:server:GetGalleryImages', function(sour
                 id = row.id
             })
         end
-        
+
         cb(images)
     end)
 end)

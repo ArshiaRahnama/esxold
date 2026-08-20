@@ -38,7 +38,7 @@ function ShowMainMenu(deferrals)
                                     },
                                     {
                                         type = "TextBlock",
-                                        -- text = "به دنیای واقعی خوش آمدید",
+
                                         size = "small",
                                         color = COLORS.Light,
                                         horizontalAlignment = "center",
@@ -65,7 +65,6 @@ function ShowMainMenu(deferrals)
                         color = "Accent",
                         spacing = "medium"
                     },
-
 
                     {
                         type = "TextBlock",
@@ -225,7 +224,7 @@ function ShowLoginForm(deferrals)
 
                     {
                         type = "TextBlock",
-                        -- text = "💡 رمز خود را فراموش کرده‌اید؟",
+
                         color = "Attention",
                         isSubtle = true,
                         horizontalAlignment = "right",
@@ -595,11 +594,11 @@ function ShowRegisterStep2_VerifyCode(deferrals, phone, sentCode)
                 style = "positive",
                 data = { action = "verify_code" }
             },
-            -- {
-            --     type = "Action.Submit",
-            --     title = "🔄  ارسال مجدد کد",
-            --     data = { action = "resend_code" }
-            -- },
+
+
+
+
+
             {
                 type = "Action.Submit",
                 title = "↩️  بازگشت",
@@ -715,7 +714,7 @@ function ShowRegisterStep3_UserPass(deferrals, phone)
                     },
                     {
                         type = "TextBlock",
-                        -- text = "📛 این نام در سرور نمایش داده می‌شود",
+
                         color = COLORS.Light,
                         size = "small",
                         isSubtle = true,
@@ -786,11 +785,11 @@ function ShowRegisterStep3_UserPass(deferrals, phone)
                 style = "positive",
                 data = { action = "do_register" }
             },
-            -- {
-            --     type = "Action.Submit",
-            --     title = "↩️  بازگشت",
-            --     data = { action = "back" }
-            -- }
+
+
+
+
+
         }
     }
 
@@ -857,16 +856,13 @@ function ShowRegisterStep3_UserPass(deferrals, phone)
     end)
 end
 
--- ─────────────────────────────────────────────────────────
---         مرحله: فراموشی رمز عبور - شماره تلفن
--- ─────────────────────────────────────────────────────────
 function ShowForgotPassword_Step1(deferrals)
     local card = {
         type = "AdaptiveCard",
         version = "1.5",
         minHeight = "200px",
         body = {
-            -- هدر
+
             {
                 type = "Container",
                 backgroundColor = COLORS.MID,
@@ -939,7 +935,7 @@ function ShowForgotPassword_Step1(deferrals)
                         spacing = "small"
                     },
 
-                    -- خط جداکننده
+
                     {
                         type = "TextBlock",
                         text = "━━━━━━━━━━━━━━━━━━━━━━━",
@@ -1012,16 +1008,13 @@ function ShowForgotPassword_Step1(deferrals)
     end)
 end
 
--- ─────────────────────────────────────────────────────────
---         مرحله: فراموشی رمز عبور - تأیید کد
--- ─────────────────────────────────────────────────────────
 function ShowForgotPassword_Step2(deferrals, phone, resetCode, username)
     local card = {
         type = "AdaptiveCard",
         version = "1.5",
         minHeight = "200px",
         body = {
-            -- هدر
+
             {
                 type = "Container",
                 backgroundColor = COLORS.MID,
@@ -1068,7 +1061,7 @@ function ShowForgotPassword_Step2(deferrals, phone, resetCode, username)
                 padding = "20px"
             },
 
-            -- اطلاعات کاربر
+
             {
                 type = "Container",
                 backgroundColor = COLORS.LIGHT,
@@ -1228,9 +1221,6 @@ function ShowForgotPassword_Step2(deferrals, phone, resetCode, username)
     end)
 end
 
--- ─────────────────────────────────────────────────────────
---              صفحات پیام (Error / Success)
--- ─────────────────────────────────────────────────────────
 function ShowError(deferrals, message, callback)
     local card = {
         type = "AdaptiveCard",
@@ -1346,8 +1336,6 @@ function ShowSuccess(deferrals, message, callback)
     end)
 end
 
--- OTP ;D
-
 local function SMSHolderTimer(phone)
     Citizen.SetTimeout(1*60*60*1000, function()
         smscodedict[phone] = nil
@@ -1386,86 +1374,58 @@ function SendSMSCode(phone)
             end
         end, 'POST', json.encode(payload), { ['Content-Type'] = 'application/json', ['X-API-KEY'] = Config.SMS.ApiKey })
         return code
-    end 
+    end
     return smscodedict[phone]
 end
-
-
-
-
--- DataBase
 
 local function generateRandomString(length)
     local charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
     local result = {}
-    
+
     for i = 1, length do
         local randomIndex = math.random(1, #charset)
         result[i] = charset:sub(randomIndex, randomIndex)
     end
-    
+
     return table.concat(result)
 end
 
--- تولید لایسنس یکتا با فرمت مشخص
 local function generateUniqueLicense(prefix)
     local prefix = prefix or "steam:"
     local attempts = 0
     local maxAttempts = 100
-    
+
     repeat
         attempts = attempts + 1
-        
-        -- فرمت: LIC-XXXX-XXXX-XXXX (چهار بخش 4 کاراکتری)
+
+
         local part1 = generateRandomString(4)
         local part2 = generateRandomString(4)
         local part3 = generateRandomString(4)
         local license = string.format("%s-%s-%s-%s", prefix, part1, part2, part3)
-        
-        -- بررسی تکراری نبودن در دیتابیس
+
+
         local result = MySQL.query.await(
             "SELECT COUNT(*) as count FROM `login_users` WHERE license = @license",
             { ['@license'] = license }
         )
-        
+
         if result and result[1] and result[1].count == 0 then
             return license
         end
-        
+
     until attempts >= maxAttempts
-    
-    -- اگر بعد از 100 بار نتونست لایسنس یکتا بسازه
-    -- یه لایسنس با timestamp بساز (fallback)
-    return string.format("%s-%s-%s-%s", 
-        prefix, 
-        generateRandomString(4), 
-        os.time(), 
+
+
+
+    return string.format("%s-%s-%s-%s",
+        prefix,
+        generateRandomString(4),
+        os.time(),
         generateRandomString(4)
     )
 end
 
-
-
--- function CheckLicenseLink(def, cb)
-
---     local license
---     for _, v in ipairs(GetPlayerIdentifiers(def.src)) do
---         if string.sub(v, 1, string.len("license:")) == "license:" then
---             license = v
---         end
---     end
-
---     local query = "SELECT * FROM login_users WHERE license = @license"
---     MySQL.Async.fetchAll(query, {
---         ["@license"] = license
---     }, function(result)
---         cb(result and #result > 0)
---     end)
--- end
-
--- SECURITY FIX: was comparing/storing passwords in PLAINTEXT before.
--- Hashing happens inside the SQL itself (SHA2-256) so no plaintext
--- password is ever written to the database or a query log.
 function CheckLogin(username, password, def, cb)
     local query = "SELECT * FROM login_users WHERE (username = @username OR phone = @username) AND password = SHA2(@password, 256)"
     MySQL.Async.fetchAll(query, {
@@ -1478,7 +1438,7 @@ function CheckLogin(username, password, def, cb)
             cb(false, nil)
         end
     end)
-    -- updateLicense(username, def)
+
 end
 
 function CheckPhoneExists(phone, cb)
@@ -1519,16 +1479,16 @@ end
 
 function RegisterUser(username, password, phone, def, cb)
 
-    -- local license ,steam = nil, nil
-    -- for _, v in ipairs(GetPlayerIdentifiers(def.src)) do
-    --     if string.sub(v, 1, string.len("license:")) == "license:" then
-    --         license = v
-    --     end
-    -- end
-    -- steam = "steam".. string.sub(license, string.len("license:"), string.len(license))
+
+
+
+
+
+
+
 
     local license = generateUniqueLicense()
-    -- SECURITY FIX: SHA2-256 the password inside the query, same as CheckLogin
+
     local query = [[
         INSERT INTO login_users (username, password, phone, license)
         VALUES (@username, SHA2(@password, 256), @phone, @license)
@@ -1637,23 +1597,23 @@ function formPassed(deferrals)
     inLoginFormPlayers[deferrals.src] = nil
     deferrals.update("در حال ورود با اکانت ...")
     Wait(1000)
-    -- BUG FIX: deferrals.done() was commented out here, meaning every
-    -- player who successfully logged in would be stuck forever on
-    -- "در حال ورود با اکانت..." and never actually get let into the
-    -- server (nothing else in this resource ever called deferrals.done()
-    -- for them). TriggerEvent is kept in case another resource of yours
-    -- hooks 'playerConnecting2', but the connection itself no longer
-    -- depends on that resource existing.
+
+
+
+
+
+
+
     TriggerEvent('playerConnecting2', deferrals)
     deferrals.done()
 end
 
 exports("isInLoginMenu", function(src)
-    -- return inLoginFormPlayers[src] == true
+
     return true
 end)
 
 exports("getidentifier", function(src)
-    -- return inLoginFormPlayers[src] == true
+
     return playersidentifieronjoin[tostring(src)]
 end)

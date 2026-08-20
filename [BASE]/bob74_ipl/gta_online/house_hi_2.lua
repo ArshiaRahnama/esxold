@@ -1,6 +1,4 @@
 
--- 2044 North Conker Avenue
--- High end house 2: 340.9412 437.1798 149.3925
 
 exports('GetGTAOHouseHi2Object', function()
     return GTAOHouseHi2

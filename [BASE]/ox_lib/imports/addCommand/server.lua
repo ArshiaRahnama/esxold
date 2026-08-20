@@ -1,15 +1,5 @@
----@class OxCommandParams
----@field name string
----@field help? string
----@field type? 'number' | 'playerId' | 'string' | 'longString'
----@field optional? boolean
 
----@class OxCommandProperties
----@field help string?
----@field params OxCommandParams[]?
----@field restricted boolean | string | string[]?
 
----@type OxCommandProperties[]
 local registeredCommands = {}
 local shouldSendCommands = false
 
@@ -22,11 +12,6 @@ AddEventHandler('playerJoining', function()
     TriggerClientEvent('chat:addSuggestions', source, registeredCommands)
 end)
 
----@param source number
----@param args table
----@param raw string
----@param params OxCommandParams[]?
----@return table?
 local function parseArguments(source, args, raw, params)
     if not params then return args end
 
@@ -42,7 +27,7 @@ local function parseArguments(source, args, raw, params)
         elseif param.type == 'playerId' then
             value = arg == 'me' and source or tonumber(arg)
 
-            if not value or not DoesPlayerExist(value--[[@as string]]) then
+            if not value or not DoesPlayerExist(value) then
                 value = false
             end
         elseif param.type == 'longString' and i == paramsNum then
@@ -69,12 +54,8 @@ local function parseArguments(source, args, raw, params)
     return args
 end
 
----@param commandName string | string[]
----@param properties OxCommandProperties | false
----@param cb fun(source: number, args: table, raw: string)
----@param ... any
 function lib.addCommand(commandName, properties, cb, ...)
-    -- Try to handle backwards-compatibility with the old addCommand syntax (prior to v3.0)
+
     local restricted, params
 
     if properties then
@@ -83,7 +64,7 @@ function lib.addCommand(commandName, properties, cb, ...)
             local info = debug.getinfo(2, 'Sl')
 
             warn(("command '%s' is using deprecated syntax for lib.addCommand\nupdate the command or use lib.__addCommand to ignore this warning\n> source ^0(^5%s^0:%d)"):format(_commandName, info.short_src, info.currentline))
-            ---@diagnostic disable-next-line: deprecated
+
             return lib.__addCommand(commandName, properties, cb, ...)
         end
 
@@ -139,7 +120,7 @@ function lib.addCommand(commandName, properties, cb, ...)
         end
 
         if properties then
-            ---@diagnostic disable-next-line: inject-field
+
             properties.name = ('/%s'):format(commandName)
             properties.restricted = nil
             registeredCommands[totalCommands] = properties

@@ -16,7 +16,6 @@ server_scripts {
 	'server/main.lua'
 }
 
-
 client_scripts {
 	'@essentialmode/locale.lua',
 	'locales/br.lua',

@@ -1,5 +1,4 @@
 
--- Counterfeit cash factory: 1121.897, -3195.338, -40.4025
 
 exports('GetBikerCounterfeitObject', function()
     return BikerCounterfeit
@@ -109,9 +108,9 @@ BikerCounterfeit = {
             A = "counterfeit_cashpile100a", B = "counterfeit_cashpile100b",
             C = "counterfeit_cashpile100c", D = "counterfeit_cashpile100d",
         },
-        chairs = "special_chairs",							-- Brown chairs at the end of the room
-        cutter = "money_cutter",							-- Money cutting machine
-        furnitures = "counterfeit_setup",				-- Paper, counting machines, cups
+        chairs = "special_chairs",
+        cutter = "money_cutter",
+        furnitures = "counterfeit_setup",
 
         Enable = function (details, state, refresh)
             SetIplPropState(BikerCounterfeit.interiorId, details, state, refresh)
@@ -130,7 +129,6 @@ BikerCounterfeit = {
         BikerCounterfeit.Details.Enable(BikerCounterfeit.Details.furnitures, true)
 
         BikerCounterfeit.Details.Enable(BikerCounterfeit.Details.Cash100, true)
-
 
         RefreshInterior(BikerCounterfeit.interiorId)
     end

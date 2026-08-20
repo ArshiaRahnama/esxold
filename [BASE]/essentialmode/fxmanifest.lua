@@ -3,7 +3,6 @@ game "gta5"
 
 description "FiveM Base By arshiahub.ir"
 
--- ox_lib is required: ESX.ShowNotification (client/functions.lua) calls lib.notify()
 dependency 'ox_lib'
 
 server_scripts {
@@ -29,7 +28,7 @@ server_scripts {
 }
 
 client_scripts {
-    "@ox_lib/init.lua", -- provides the global `lib` used by ESX.ShowNotification (ox notify)
+    "@ox_lib/init.lua",
     "locale.lua",
     "locales/fr.lua",
     "locales/en.lua",
@@ -78,5 +77,4 @@ server_exports {
     "debugMsg",
     "IcName"
 }
-
 

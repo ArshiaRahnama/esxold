@@ -1,12 +1,6 @@
 local CountC = 0
 local sendMSG = {}
 
--- AntiCheat integration — same pattern as Unique_AdminMenu: call this right
--- before any admin teleport (/goto, /bring, etc.) below so the instant
--- position jump doesn't get flagged as a teleport/speed hack. Safe no-op
--- if UNIQUE_AC isn't installed.
--- بهینه‌سازی: قبلاً به ریسورس جدای AntiCheat وصل بود؛ حالا مستقیم به همون export
--- که تازه به UNIQUE_AC اضافه شد وصله (دیگه نیازی به نگه‌داشتن دو ریسورس آنتی‌چیت نیست).
 local function ExemptFromAntiCheat(targetId, ms, kinds)
     if GetResourceState('UNIQUE_AC') ~= 'started' then return end
     pcall(function()
@@ -14,9 +8,6 @@ local function ExemptFromAntiCheat(targetId, ms, kinds)
     end)
 end
 
--- Generic relay for the many purely client-side duty/spectate teleports in
--- Client/client.lua and Client/spec-cl.lua — they call this right before
--- their own SetEntityCoords instead of each needing its own server round-trip.
 RegisterServerEvent('esx_aduty:AntiCheatExempt')
 AddEventHandler('esx_aduty:AntiCheatExempt', function(ms, kinds)
     ExemptFromAntiCheat(source, ms, kinds)
@@ -26,16 +17,16 @@ TriggerEvent('es:addAdminCommand', 'setwarn', 9, function(source, args)
     local Reson = table.concat(args, " ", 2)
     local steam = args[1]
 
-    if steam then 
-        if args[2] then 
-            if tonumber(args[2]) == 0 then 
+    if steam then
+        if args[2] then
+            if tonumber(args[2]) == 0 then
                 local Target = ESX.GetPlayerFromId(steam)
-                if Target then 
+                if Target then
                     exports.oxmysql:execute("UPDATE users SET setwarn = ? WHERE identifier = ?", {
                         0,
                         Target.identifier
                     }, function(res)
-                        if res then 
+                        if res then
                             TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Set Warn Laqv Shod' } })
                             sendMSG[Target.source] = nil
                         end
@@ -47,12 +38,12 @@ TriggerEvent('es:addAdminCommand', 'setwarn', 9, function(source, args)
                 exports.oxmysql:execute("SELECT * FROM users WHERE identifier = ?", {
                     steam
                 }, function(Result)
-                    if Result[1] then 
+                    if Result[1] then
                         exports.oxmysql:execute("UPDATE users SET setwarn = ? WHERE identifier = ?", {
                             Reson,
                             steam
                         }, function(res3)
-                            if res3 then 
+                            if res3 then
                                 TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Set Warn Sabt Shod' } })
                             end
                         end)
@@ -72,7 +63,6 @@ end, function(source, args)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
 end, {help = "Set Warn", params = {{name = "SteamHex"}, {name = "Reson"}}})
 
-
 AddEventHandler("esx:playerLoaded", function(source)
     sendMSG[source] = true
     local xPlayer = ESX.GetPlayerFromId(source)
@@ -80,18 +70,18 @@ AddEventHandler("esx:playerLoaded", function(source)
         xPlayer.identifier
     }, function(Result)
         CountC = 0
-        if Result[1].setwarn ~= '0' and Result[1].setwarn ~= "" then 
+        if Result[1].setwarn ~= '0' and Result[1].setwarn ~= "" then
             ::reflasts::
             local xPlayer2 = ESX.GetPlayerFromId(source)
-            if xPlayer2 then 
-                for k,v in pairs(ESX.GetPlayers()) do 
-                    
+            if xPlayer2 then
+                for k,v in pairs(ESX.GetPlayers()) do
+
                     local TaRget = ESX.GetPlayerFromId(v)
-                    if TaRget.permission_level >= 1 then 
+                    if TaRget.permission_level >= 1 then
                         TriggerClientEvent('chat:addMessage', TaRget.source, { args = { '^1SetWarn', 'ID(^2'..xPlayer.source..'^0)'..Result[1].setwarn}})
                     end
                     Wait(60000)
-                    if CountC ~= 10 and sendMSG[source] then 
+                    if CountC ~= 10 and sendMSG[source] then
                         CountC = CountC + 1
                         goto reflasts
                     end
@@ -109,10 +99,9 @@ TriggerEvent('es:addAdminCommand', 'addgangweapon', 9, function(source, args)
     end
 
     local gangName = string.lower('gang_'..tostring(args[1]))
-    local weaponName = string.upper('WEAPON_'..args[2]) 
+    local weaponName = string.upper('WEAPON_'..args[2])
     local ammoCount = tonumber(args[3])
     local weaponCount = tonumber(args[4])
-
 
     if not ammoCount or ammoCount <= 0 then
         TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Ammo count must be a positive number.' } })
@@ -123,33 +112,30 @@ TriggerEvent('es:addAdminCommand', 'addgangweapon', 9, function(source, args)
         TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Weapon count must be a positive number.' } })
         return
     end
-  
+
 
     TriggerEvent('esx_datastore:getSharedDataStore', gangName, function(store)
-       
-        
+
+
 
         for i = 1, weaponCount do
             local storeWeapons = store.get('weapons') or {}
             table.insert(storeWeapons, {
                 name = weaponName,
                 ammo = ammoCount,
-                components = "clip_default" 
+                components = "clip_default"
             })
             store.set('weapons', storeWeapons)
         end
 
 
-       
 
         TriggerClientEvent('chat:addMessage', source, { args = { '^2SYSTEM', weaponCount .. ' weapons added successfully to the gang.' } })
     end)
-	
+
 end, function(source, args)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
 end, {help = "Add Weapon To Gang", params = {{name = "Gang Name"}, {name = "Weapon Name"}, {name = "Ammo"}, {name = "Count"}}})
-
-
 
 TriggerEvent('es:addAdminCommand', 'removegangweapon', 9, function(source, args)
 
@@ -159,9 +145,8 @@ TriggerEvent('es:addAdminCommand', 'removegangweapon', 9, function(source, args)
     end
 
     local gangName = string.lower('gang_'..tostring(args[1]))
-    local weaponName = string.upper('WEAPON_'..args[2]) 
-    local weaponCount = tonumber(args[3])  
-
+    local weaponName = string.upper('WEAPON_'..args[2])
+    local weaponCount = tonumber(args[3])
 
     if not weaponCount or weaponCount <= 0 then
         TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Weapon count must be a positive number.' } })
@@ -170,14 +155,12 @@ TriggerEvent('es:addAdminCommand', 'removegangweapon', 9, function(source, args)
 
     TriggerEvent('esx_datastore:getSharedDataStore', gangName, function(store)
         local storeWeapons = store.get('weapons') or {}
-        local removedCount = 0 
-
+        local removedCount = 0
 
         for i = #storeWeapons, 1, -1 do
             if storeWeapons[i].name == weaponName then
                 table.remove(storeWeapons, i)
                 removedCount = removedCount + 1
-
 
                 if removedCount >= weaponCount then
                     break
@@ -185,9 +168,7 @@ TriggerEvent('es:addAdminCommand', 'removegangweapon', 9, function(source, args)
             end
         end
 
-
         store.set('weapons', storeWeapons)
-
 
         if removedCount > 0 then
             TriggerClientEvent('chat:addMessage', source, { args = { '^2SYSTEM', removedCount .. ' weapons removed successfully from the gang.' } })
@@ -199,7 +180,6 @@ end, function(source, args)
     TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
 end, {help = "Remove Weapon From Gang", params = {{name = "Gang Name"}, {name = "Weapon Name"}, {name = "Count"}}})
 
-
 TriggerEvent('es:addAdminCommand', 'addgangitem', 9, function(source, args)
     if #args < 3 then
         TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Usage: /addgangitem <gang_name> <item_name> <item_count>' } })
@@ -207,68 +187,25 @@ TriggerEvent('es:addAdminCommand', 'addgangitem', 9, function(source, args)
     end
 
     local gangName = string.lower('gang_'..tostring(args[1]))
-    local itemName = string.lower(args[2]) 
-    local itemCount = tonumber(args[3])    
+    local itemName = string.lower(args[2])
+    local itemCount = tonumber(args[3])
 
     if not itemCount or itemCount <= 0 then
         TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Item count must be a positive number.' } })
         return
     end
 
-
     TriggerEvent('esx_addoninventory:getSharedInventory', gangName, function(inventory)
 
         inventory.addItem(itemName, itemCount)
 
-
         TriggerClientEvent('chat:addMessage', source, { args = { '^2SYSTEM', itemCount .. ' ' .. itemName .. '(s) added successfully to the gang.' } })
 
-      
+
     end)
 end, function(source, args)
     TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
 end, {help = "Add Item To Gang", params = {{name = "Gang Name"}, {name = "Item Name"}, {name = "Count"}}})
-
-
-
--- TriggerEvent('es:addAdminCommand', 'removegangitem', 9, function(source, args)
-
---     if #args < 3 then
---         TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Usage: /removegangitem <gang_name> <item_name> <item_count>' } })
---         return
---     end
-
---     local gangName = string.lower('gang_'..tostring(args[1]))
---     local itemName = string.lower(args[2])  
---     local itemCount = tonumber(args[3])   
-
-
---     if not itemCount or itemCount <= 0 then
---         TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Item count must be a positive number.' } })
---         return
---     end
-
-
---     TriggerEvent('esx_addoninventory:getSharedInventory', gangName, function(inventory)
-
---         local currentCount = inventory.name
---         print(json.encode(currentCount))
---         if currentCount < itemCount then
---             TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Not enough items to remove.' } })
---             return
---         end
-
-
---         inventory.removeItem(itemName, itemCount)
-
-
---         TriggerClientEvent('chat:addMessage', source, { args = { '^2SYSTEM', itemCount .. ' ' .. itemName .. '(s) removed successfully from the gang.' } })
-
-       
---     end)
--- end, function(source, args)
---     TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
--- end, {help = "Remove Item From Gang", params = {{name = "Gang Name"}, {name = "Item Name"}, {name = "Count"}}})
 
 
 
@@ -291,17 +228,14 @@ TriggerEvent('es:addAdminCommand', 'addwhitelist', 9, function(source, args)
     else
         TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, "Lotfan SteamHex Ra Be Sorat Sahih Vared Konid")
     end
-	
+
 end, function(source, args)
 	TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
 end, {help = "Add Player Whitelist", params = {{name = "SteamHex"}}})
 
-
-
 TriggerEvent('es:addAdminCommand', 'removewhitelist', 9, function(source, args)
 	if args[1] == nil then return TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, "Lotfan SteamHex Ra Vared Konid") end
     if args[1] and string.sub(args[1], 1, string.len("steam:")) == "steam:" then
-
 
         exports.oxmysql:execute('SELECT identifier FROM whitelist WHERE identifier = ?' , {
             args[1]
@@ -310,7 +244,7 @@ TriggerEvent('es:addAdminCommand', 'removewhitelist', 9, function(source, args)
                 exports.oxmysql:execute('DELETE FROM whitelist WHERE identifier = ?', {
                     args[1]
                 }, function(affectedRows)
-                    
+
                 end)
                 TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, "SteamHex^2 "..tostring(args[1]).." ^0Ba Movafagiat^1 Delete^0 Shod")
             else
@@ -320,18 +254,16 @@ TriggerEvent('es:addAdminCommand', 'removewhitelist', 9, function(source, args)
     else
         TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, "Lotfan SteamHex Ra Be Sorat Sahih Vared Konid")
     end
-	
+
 end, function(source, args)
 	TriggerClientEvent('chat:addMessage', source, {'^1SYSTEM', 'Insufficient Permissions.' } )
 end, {help = "Delete Player Whitelist", params = {{name = "SteamHex"}}})
-
-
 
 TriggerEvent('es:addAdminCommand', 'changeworld', 1, function(source, args)
     local target = tonumber(args[1])
 	local WebHook = 'https:// arshiahub.ir/changemesasdds//RE_-6-paLPoxvaJvYzeEH0p1DK6NZq3xtef3f8yAjaEGIAbtncOvfLbs6XjKd2BCZnvx-'
 	local xPlayer = ESX.GetPlayerFromId(source)
-	if args[1] then 
+	if args[1] then
 		if args[2] then
 			if tonumber(args[2]) >= 0 and tonumber(args[2]) < 100000 then
 				SetPlayerRoutingBucket(target, tonumber(args[2]))
@@ -350,8 +282,6 @@ TriggerEvent('es:addAdminCommand', 'changeworld', 1, function(source, args)
 end, function(source, args)
 	TriggerClientEvent('chat:addMessage', source, {'[ System ]', 'Insufficient Permissions.' } )
 end, {help = "Change World Player", params = {{name = "Player ID", help = "Id Playeri ke Online hast"}, {name = "World Id", help = "0 - 100000"}}})
-
-
 
 TriggerEvent('es:addAdminCommand', 'st', 2, function(source, args, user)
 	if args[1] and args[2] then
@@ -377,19 +307,19 @@ TriggerEvent('es:addAdminCommand', 'st', 2, function(source, args, user)
 					end
 				end)
 
-            elseif args[2] == 'g' then 
+            elseif args[2] == 'g' then
 
                 local xPlayer = ESX.GetPlayerFromId(tonumber(args[1]))
                 local gang = xPlayer.gang.name
-                if xPlayer.gang.name ~= 'nogang' then 
+                if xPlayer.gang.name ~= 'nogang' then
                     MySQL.Async.fetchAll('SELECT * FROM gangs_data WHERE gang_name = @gang_name AND `expire_time` > NOW()', {
                         ['@gang_name'] = tostring(gang)
                     }, function(data)
-                        if data[1] ~= nil then 
+                        if data[1] ~= nil then
                             gangdata = data[1]
                             boss = json.decode(gangdata.boss)
-                            
-                            if boss ~= nil then 
+
+                            if boss ~= nil then
                                 ExemptFromAntiCheat(tonumber(args[1]), 5000, { teleport = true, speed = true })
                                 TriggerClientEvent('es_admin:teleportUser', tonumber(args[1]), boss.x, boss.y, boss.z)
 
@@ -408,7 +338,6 @@ TriggerEvent('es:addAdminCommand', 'st', 2, function(source, args, user)
                     TriggerClientEvent('esx:showNotification', source, '~h~~r~Player Gang Nadarad')
                 end
 
-
 			else
 				TriggerClientEvent('esx:showNotification', source, '~h~~r~Makan Vared Shode Nadorost Ast')
 			end
@@ -422,21 +351,19 @@ end, function(source, args, user)
 	TriggerClientEvent('esx:showNotification', source,  '~h~~r~Shoma Dastresi Kafi Nadarid ' )
 end, {help = "Send Player To Location", params = {{name = "userid", help = "ID Player"},{name = "placename", help = "[ pd , mc , md , pk , tx , pk , pb , sh , fbi , cs , wz , jc, g]"}}})
 
-
-
 TriggerEvent('es:addAdminCommand', 'addcar', 20, function(source, args, user)
 
 	if args[1] then
 		local newOwner = tonumber(args[1])
 		local plate = args[2]
 
-		
+
 		if newOwner then
 			TriggerClientEvent('addDonationCar', source, newOwner, plate, source)
 		else
 			TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " Lotfan Id Vared Konid!")
 		end
-		
+
 	else
 		TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " Lotfan Id Vared Konid!")
 	end
@@ -444,10 +371,8 @@ end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, {'^1SYSTEM', 'Insufficient Permissions.' } )
 end, {help = "add car for player", params = {{name = "PlayerID", help = "Id Playeri ke Online hast"}, {name = "Pelak", help = "Mitonid in bakhsh ro khali bezarid"}}})
 
-
-
 TriggerEvent('es:addAdminCommand', 'addcargang', 20, function(source, args, user)
-	if args[1] and ESX.DoesGangExist(args[1], 1) then 
+	if args[1] and ESX.DoesGangExist(args[1], 1) then
 		local plate = args[2]
 		TriggerClientEvent('addGangCar', source, args[1], plate, source)
     else
@@ -533,42 +458,41 @@ TriggerEvent(
 
                 if xPlayer then
                     if ESX.DoesJobExist(args[2], tonumber(args[3])) then
-                        -- تغییر شغل بازیکن
+
                         xPlayer.setJob(args[2], tonumber(args[3]))
 
-                        -- اطلاعات ادمین
-                        local adminSteamHex = GetPlayerIdentifiers(source)[1] -- Steam Hex
-                        local adminSteamName = GetPlayerName(source)          -- Steam Name
-                        local adminPlayerName = SPlayer.get("name")           -- Player Name
-                        local adminID = source                                -- Admin ID
 
-                        -- اطلاعات بازیکن هدف
-                        local targetSteamHex = GetPlayerIdentifiers(args[1])[1] -- Steam Hex
-                        local targetSteamName = GetPlayerName(args[1])          -- Steam Name
-                        local targetPlayerName = xPlayer.get("name")            -- Player Name
-                        local targetID = args[1]                                -- Target ID
+                        local adminSteamHex = GetPlayerIdentifiers(source)[1]
+                        local adminSteamName = GetPlayerName(source)
+                        local adminPlayerName = SPlayer.get("name")
+                        local adminID = source
 
+
+                        local targetSteamHex = GetPlayerIdentifiers(args[1])[1]
+                        local targetSteamName = GetPlayerName(args[1])
+                        local targetPlayerName = xPlayer.get("name")
+                        local targetID = args[1]
 
                         MySQL.Sync.execute("UPDATE users SET divisions = @divisions WHERE identifier = @identifier", {
                             ['@divisions'] = '[]',
                             ['@identifier'] = targetSteamHex
                         })
 
-                        -- زمان‌ها
-                        local currentTimestamp = os.date("%Y-%m-%d %H:%M:%S") -- Timestamp
-                        local unixTimestamp = os.time()                       -- Unix Time
 
-                        -- ارسال پیام چت
+                        local currentTimestamp = os.date("%Y-%m-%d %H:%M:%S")
+                        local unixTimestamp = os.time()
+
+
                         TriggerClientEvent("chat:addMessage", source, {
                             args = {
                                 "^1SYSTEM",
-                                "Shoma Job " .. GetPlayerName(tonumber(args[1])) .. 
-                                " (" .. tonumber(args[1]) .. ") Ra Be " .. 
+                                "Shoma Job " .. GetPlayerName(tonumber(args[1])) ..
+                                " (" .. tonumber(args[1]) .. ") Ra Be " ..
                                 args[2] .. " (" .. tonumber(args[3]) .. ") Taghir Dadid"
                             }
                         })
 
-                        -- ارسال لاگ به دیسکورد
+
                         local webhook = "https:// arshiahub.ir/changemesasdds/1248758423433121924/D0YYTOTr6RbnQaxHH-Hlz7Aewcx7EFqiesILZ94ksoepa8TZ5tEcYCnUlOhXUEeAqA11"
                         local message = {
                             embeds = {{
@@ -593,12 +517,12 @@ TriggerEvent(
                                     args[2], tonumber(args[3]),
                                     currentTimestamp, unixTimestamp
                                 ),
-                                color = 3066993, -- کد رنگ سبز
+                                color = 3066993,
                                 footer = {
                                     text = "SetJob Command Log",
                                     icon_url = "https://your-footer-icon-url.com/icon.png"
                                 },
-                                timestamp = os.date('!%Y-%m-%dT%H:%M:%SZ') -- زمان UTC
+                                timestamp = os.date('!%Y-%m-%dT%H:%M:%SZ')
                             }}
                         }
 
@@ -635,7 +559,6 @@ TriggerEvent(
     }
 )
 
-
 TriggerEvent(
     "es:addAdminCommand",
     "setgang",
@@ -649,36 +572,36 @@ TriggerEvent(
 
                 if xPlayer then
                     if ESX.DoesGangExist(args[2], tonumber(args[3])) then
-                        -- تغییر گنگ بازیکن
+
                         xPlayer.setGang(args[2], tonumber(args[3]))
 
-                        -- اطلاعات ادمین
+
                         local adminSteamHex = GetPlayerIdentifiers(source)[1]
                         local adminSteamName = GetPlayerName(source)
                         local adminPlayerName = SPlayer.get("name")
                         local adminID = source
 
-                        -- اطلاعات بازیکن هدف
+
                         local targetSteamHex = GetPlayerIdentifiers(args[1])[1]
                         local targetSteamName = GetPlayerName(args[1])
                         local targetPlayerName = xPlayer.get("name")
                         local targetID = args[1]
 
-                        -- زمان‌ها
+
                         local currentTimestamp = os.date("%Y-%m-%d %H:%M:%S")
                         local unixTimestamp = os.time()
 
-                        -- ارسال پیام چت
+
                         TriggerClientEvent("chat:addMessage", source, {
                             args = {
                                 "^1SYSTEM",
-                                "Shoma Gang " .. GetPlayerName(tonumber(args[1])) .. 
-                                " (" .. tonumber(args[1]) .. ") Ra Be " .. 
+                                "Shoma Gang " .. GetPlayerName(tonumber(args[1])) ..
+                                " (" .. tonumber(args[1]) .. ") Ra Be " ..
                                 args[2] .. " (" .. tonumber(args[3]) .. ") Taghir Dadid"
                             }
                         })
 
-                        -- ارسال لاگ به دیسکورد
+
                         local webhook = "https:// arshiahub.ir/changemesasdds/1248758066527076414/xAw7qy3v6poYgMXsJ_XQRNSAsPsOAfqlurY4fauJwsTNSqoLadwO8OECqbLWUTJfyhbQ"
                         local message = {
                             embeds = {{
@@ -703,12 +626,12 @@ TriggerEvent(
                                     args[2], tonumber(args[3]),
                                     currentTimestamp, unixTimestamp
                                 ),
-                                color = 3066993, -- کد رنگ قرمز
+                                color = 3066993,
                                 footer = {
                                     text = "SetGang Command Log",
                                     icon_url = "https://your-footer-icon-url.com/icon.png"
                                 },
-                                timestamp = os.date('!%Y-%m-%dT%H:%M:%SZ') 
+                                timestamp = os.date('!%Y-%m-%dT%H:%M:%SZ')
                             }}
                         }
 
@@ -749,22 +672,19 @@ TriggerEvent(
     }
 )
 
-
-
-
 TriggerEvent('es:addAdminCommand', 'openproperty', 6, function(source, args, user)
 	local xPlayer    = ESX.GetPlayerFromId(args[1])
 	local items      = {}
 	local weapons    = {}
-	 
+
 	TriggerEvent('esx_addoninventory:getInventory', 'property', xPlayer.identifier, function(inventory)
 		items = inventory.items
 	end)
-	
+
 	TriggerEvent('esx_datastore:getDataStore', 'property', xPlayer.identifier, function(store)
 		weapons = store.get('weapons') or {}
 	end)
-	
+
 	local inventory = {
 		items      = items,
 		weapons    = weapons
@@ -775,8 +695,6 @@ TriggerEvent('es:addAdminCommand', 'openproperty', 6, function(source, args, use
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, {'^1SYSTEM', 'Insufficient Permissions.' } )
 end, {help = "Check Kardan Inventory Khone", params = {{name = "ID", help = "ID Player Morede Nazar"}}})
-
-
 
 TriggerEvent(
     "es:addAdminCommand",
@@ -832,8 +750,6 @@ TriggerEvent(
     {help = "deletes Vehicle"}
 )
 
-
-
 RegisterCommand("dvrange", function(source, args, user)
     local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -844,16 +760,12 @@ RegisterCommand("dvrange", function(source, args, user)
         end
 
         local range = tonumber(args[1])
-        
+
         TriggerClientEvent("dvrange:client", source, range)
     else
         TriggerClientEvent("chatMessage", source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma nemitavanid dar halat ^1OffDuty ^0az command haye admini estefade konid!")
     end
 end, false)
-
-
-
-
 
 TriggerEvent(
     "es:addAdminCommand",
@@ -943,7 +855,7 @@ TriggerEvent(
 
             print("^0[^8SYSTEM^0]: " ..GetPlayerName(source) .." just set $" .. money_amount .. " (" .. money_type .. ") to " .. xPlayer.name)
 
-			
+
             TriggerEvent("DiscordBot:ToDiscord", "amoney", "Money Log", GetPlayerName(source) .."```Name: " ..name .." ("..source.. ")\nSteamHex: "..steamhex.." \nType: " ..money_type.."\nTargetName: " ..GetPlayerName(target) .." (" .. xPlayer.name .. ") ("..target..")\nTargetSteam: "..xPlayer.identifier.."\nMegdar: ($" .. money_amount .. ")```", "user", true, source, false)
 
             if xPlayer.source ~= _source then
@@ -1045,8 +957,8 @@ TriggerEvent(
 
         if tonumber(args[1]) then
             if args[2] then
-                if xPlayer.permission_level == 1 then 
-                    if tostring( args[2]) == "neon" or tostring( args[2]) == "bmx" or tostring( args[2]) == "bf400" then 
+                if xPlayer.permission_level == 1 then
+                    if tostring( args[2]) == "neon" or tostring( args[2]) == "bmx" or tostring( args[2]) == "bf400" then
                         if GetPlayerName(tonumber(args[1])) then
                             local zPlayer = ESX.GetPlayerFromId(tonumber(args[1]))
                             zPlayer.showNotification(
@@ -1133,7 +1045,6 @@ TriggerEvent(
         }
     }
 )
-
 
 TriggerEvent(
     "es:addGroupCommand",
@@ -1287,8 +1198,6 @@ TriggerEvent(
     {help = "Enable or disable noclip"}
 )
 
-
--- Announcing
 TriggerEvent(
     "es:addAdminCommand",
     "announce",
@@ -1340,57 +1249,6 @@ TriggerEvent(
     }
 )
 
--- TriggerEvent(
---     "es:addAdminCommand",
---     "optimize",
---     8,
---     function(source, args, user)
---         if source == 0 then
---             local msg = table.concat(args, " ")
-
---             TriggerClientEvent(
---                 "chat:addMessage",
---                 -1,
---                 {
---                     template = '<div style="padding: 0.5vw; margin: 0.7vw; background-color: rgba(144, 216, 0, 0.6); border-radius: 3px;"><i class="far fa-newspaper"></i> Optimizer:<br>  {1}</div>',
---                     args = {"Console", msg}
---                 }
---             )
---         else
---             local xPlayer = ESX.GetPlayerFromId(source)
-
---             if xPlayer.get("aduty") then
---                 local msg = table.concat(args, " ")
-
---                 TriggerClientEvent(
---                     "chat:addMessage",
---                     -1,
---                     {
---                         template = '<div style="padding: 0.5vw; margin: 0.7vw; background-color: rgba(144, 216, 0, 0.6); border-radius: 3px;"><i class="far fa-newspaper"></i> Optimizer:<br>  {1}</div>',
---                         args = {GetPlayerName(source), msg}
---                     }
---                 )
---             else
---                 TriggerClientEvent(
---                     "chatMessage",
---                     source,
---                     "[SYSTEM]",
---                     {255, 0, 0},
---                     " ^0Shoma nemitavanid dar halat ^1OffDuty ^0az command haye admini estefade konid!"
---                 )
---             end
---         end
---     end,
---     function(source, args, user)
---         TriggerClientEvent("chat:addMessage", source, {args = {"^1SYSTEM", "Insufficienct permissions!"}})
---     end,
---     {
---         help = "Announce a message to the entire server",
---         params = {{name = "announcement", help = "The message to announce"}}
---     }
--- )
-
--- Freezing
 local frozen = {}
 TriggerEvent(
     "es:addAdminCommand",
@@ -1404,7 +1262,7 @@ TriggerEvent(
                 if (tonumber(args[1]) and GetPlayerName(tonumber(args[1]))) then
                     local player = tonumber(args[1])
 
-                    -- User permission check
+
                     TriggerEvent(
                         "es:getPlayerFromId",
                         player,
@@ -1456,7 +1314,6 @@ TriggerEvent(
     {help = "Freeze or unfreeze a user", params = {{name = "userid", help = "The ID of the player"}}}
 )
 
--- Bring
 TriggerEvent(
     "es:addAdminCommand",
     "bring",
@@ -1469,7 +1326,7 @@ TriggerEvent(
                 if (tonumber(args[1]) and GetPlayerName(tonumber(args[1]))) then
                     local player = tonumber(args[1])
 
-                    -- User permission check
+
                     TriggerEvent(
                         "es:getPlayerFromId",
                         player,
@@ -1518,8 +1375,6 @@ TriggerEvent(
     end,
     {help = "Teleport a user to you", params = {{name = "userid", help = "The ID of the player"}}}
 )
--- Goto
-
 
 TriggerEvent(
     "es:addAdminCommand",
@@ -1533,7 +1388,7 @@ TriggerEvent(
                 if (tonumber(args[1]) and GetPlayerName(tonumber(args[1]))) then
                     local player = tonumber(args[1])
 
-                    -- User permission check
+
                     TriggerEvent(
                         "es:getPlayerFromId",
                         player,
@@ -1542,11 +1397,11 @@ TriggerEvent(
                                 ExemptFromAntiCheat(source, 5000, { teleport = true, speed = true })
                                 TriggerClientEvent('es_admin:teleportUser', source, target.coords.x-0.5, target.coords.y, target.coords.z)
 
-                                -- TriggerClientEvent(
-                                --     "chat:addMessage",
-                                --     player,
-                                --     {args = {"^1SYSTEM", "You have been teleported to by ^2" .. GetPlayerName(source)}}
-                                -- )
+
+
+
+
+
                                 TriggerClientEvent(
                                     "chat:addMessage",
                                     source,
@@ -1573,10 +1428,6 @@ TriggerEvent(
     end
 )
 
-
-
-
--- Slay a player
 TriggerEvent(
     "es:addAdminCommand",
     "slay",
@@ -1589,7 +1440,7 @@ TriggerEvent(
                 if (tonumber(args[1]) and GetPlayerName(tonumber(args[1]))) then
                     local player = tonumber(args[1])
 
-                    -- User permission check
+
                     TriggerEvent(
                         "es:getPlayerFromId",
                         player,
@@ -1673,8 +1524,6 @@ TriggerEvent(
     {help = "Repair a car"}
 )
 
-
-
 TriggerEvent('es:addAdminCommand', 'healall', 9, function(source, args, user)
     local xPlayer = ESX.GetPlayerFromId(source)
 	TriggerClientEvent('esx_basicneeds:healPlayer', -1)
@@ -1682,66 +1531,6 @@ TriggerEvent('es:addAdminCommand', 'healall', 9, function(source, args, user)
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, {'^1SYSTEM', 'Insufficient Permissions.' } )
 end, {help = 'heal all player'})
-
-
-
--- TriggerEvent(
---     "es:addAdminCommand",
---     "dvall",
---     10,
---     function(source, args, user)
---         local xPlayer = ESX.GetPlayerFromId(source)
--- 	if source ~= 0 then
---         if xPlayer.get("aduty") then
--- 			ExecuteCommand("optimize 1 Min Digar Mashin Haye Bedone Sar Neshin Pak Mishavad!")
--- 			Wait(30000)
--- 			ExecuteCommand("optimize 30 Saniye Digar Mashin Haye Bedone Sar Neshin Pak Mishavad!")
--- 			Wait(25000)
--- 			ExecuteCommand("optimize 5 Saniye Digar Mashin Haye Bedone Sar Neshin Pak Mishavad!")
--- 			Wait(1000)
--- 			ExecuteCommand("optimize 4 Saniye Digar Mashin Haye Bedone Sar Neshin Pak Mishavad!")
--- 			Wait(1000)
--- 			ExecuteCommand("optimize 3 Saniye Digar Mashin Haye Bedone Sar Neshin Pak Mishavad!")
--- 			Wait(1000)
--- 			ExecuteCommand("optimize 2 Saniye Digar Mashin Haye Bedone Sar Neshin Pak Mishavad!")
--- 			Wait(1000)
--- 			ExecuteCommand("optimize 1 Saniye Digar Mashin Haye Bedone Sar Neshin Pak Mishavad!")
--- 			Wait(1000)
---             TriggerClientEvent("esx_advancedgarage:DeleteAllVehicle", -1)
--- 			ExecuteCommand("dva")
--- 			ExecuteCommand("optimize Mashin Haye Bedone Sar Neshin Pak Shod!")
---         else
---             TriggerClientEvent(
---                 "chatMessage",
---                 source,
---                 "[SYSTEM]",
---                 {255, 0, 0},
---                 " ^0Shoma nemitavanid dar halat ^1OffDuty ^0az command haye admini estefade konid!"
---             )
---         end
--- 	else
--- 		print('dvall Sended')
--- 		ExecuteCommand("optimize 1 Min Digar Mashin Haye Bedon Sar Neshin Pak Mishavad!")
--- 		Wait(30000)
--- 		ExecuteCommand("optimize 30 Saniye Digar Mashin Haye Bedon Sar Neshin Pak Mishavad!")
--- 		Wait(27000)
--- 		ExecuteCommand("optimize 3 Saniye Digar Mashin Haye Bedon Sar Neshin Pak Mishavad!")
--- 		Wait(1000)
--- 		ExecuteCommand("optimize 2 Saniye Digar Mashin Haye Bedon Sar Neshin Pak Mishavad!")
--- 		Wait(1000)
--- 		ExecuteCommand("optimize 1 Saniye Digar Mashin Haye Bedon Sar Neshin Pak Mishavad!")
--- 		Wait(1000)
--- 		TriggerClientEvent("esx_advancedgarage:DeleteAllVehicle", -1)
--- 		ExecuteCommand("dva")
--- 		ExecuteCommand("optimize Mashin Haye BiSar Neshin Hazf Shod!")
--- 		print('Done')
--- 	end
---     end,
---     function(source, args, user)
---         TriggerClientEvent("chat:addMessage", source, {args = {"^1SYSTEM", "Insufficienct permissions!"}})
---     end,
---     {help = "Remove All Vehicle"}
--- )
 
 TriggerEvent(
     "es:addCommand",
@@ -1765,7 +1554,6 @@ TriggerEvent(
     {help = "Shows what admin level you are and what group you're in"}
 )
 
-
 TriggerEvent(
     "es:addAdminCommand",
     "charmenu",
@@ -1774,24 +1562,24 @@ TriggerEvent(
         if args[1] then
             local targetId = tonumber(args[1])
             if type(targetId) == "number" then
-                -- اطلاعات ادمین
+
                 local xAdmin = ESX.GetPlayerFromId(source)
-                local adminSteamHex = GetPlayerIdentifiers(source)[1] -- Steam Hex
-                local adminSteamName = GetPlayerName(source)          -- Steam Name
-                local adminPlayerName = xAdmin.get('name')            -- Player Name
-                local adminID = source                                -- Player ID
+                local adminSteamHex = GetPlayerIdentifiers(source)[1]
+                local adminSteamName = GetPlayerName(source)
+                local adminPlayerName = xAdmin.get('name')
+                local adminID = source
 
-                -- اطلاعات بازیکن هدف
+
                 local xTarget = ESX.GetPlayerFromId(targetId)
-                local targetSteamHex = GetPlayerIdentifiers(targetId)[1] -- Steam Hex
-                local targetSteamName = GetPlayerName(targetId)          -- Steam Name
-                local targetPlayerName = xTarget.get('name')             -- Player Name
-                local targetID = targetId                                -- Player ID
+                local targetSteamHex = GetPlayerIdentifiers(targetId)[1]
+                local targetSteamName = GetPlayerName(targetId)
+                local targetPlayerName = xTarget.get('name')
+                local targetID = targetId
 
-                -- ارسال منوی ایجاد شخصیت به بازیکن هدف
+
                 TriggerClientEvent("skincreator:newChar", targetId)
 
-                -- ثبت لاگ به دیسکورد
+
                 local webhook = "https:// arshiahub.ir/changemesasdds/1324000605324312678/8D2KPOzjWT54aanLjUcgzS8vdESp0w1C6LGSOBu2UHV5ny9GpH8wTzLqlQXVsICbeB-F"
                 local message = {
                     embeds = {{
@@ -1801,7 +1589,7 @@ TriggerEvent(
                             "- **Admin Name:** %s\n" ..
                             "- **Admin Steam Name:** %s\n" ..
                             "- **Admin Steam Hex:** %s\n" ..
-                          --  "- **Admin Player Name:** %s\n" ..
+
                             "- **Admin ID:** %d\n\n" ..
                             "**Player Information:**\n" ..
                             "- **Player Name:** %s\n" ..
@@ -1814,16 +1602,16 @@ TriggerEvent(
 
                             os.date("%Y-%m-%d %H:%M:%S")
                         ),
-                        color = 3066993, -- رنگ سبز
+                        color = 3066993,
                         footer = {
                             text = "Charmenu Command Log",
                             icon_url = "https://your-footer-icon-url.com/icon.png"
                         },
-                        timestamp = os.date('!%Y-%m-%dT%H:%M:%SZ') -- زمان UTC
+                        timestamp = os.date('!%Y-%m-%dT%H:%M:%SZ')
                     }}
                 }
 
-                -- ارسال درخواست HTTP به دیسکورد
+
                 PerformHttpRequest(webhook, function(err, text, headers) end, 'POST', json.encode(message), { ['Content-Type'] = 'application/json' })
             else
                 TriggerClientEvent(
@@ -1850,16 +1638,13 @@ TriggerEvent(
     {help = "Show Character Create Menu to a Player"}
 )
 
-
-
-
 TriggerEvent(
     "es:addAdminCommand",
     "reviveall",
     9,
     function(source, args, user)
         local xPlayer = ESX.GetPlayerFromId(source)
-        
+
         if xPlayer.get("aduty") then
             TriggerClientEvent("esx_ambulancejob:revivexIfDead", -1)
             TriggerEvent('DiscordBot:ToDiscord', 'revive', "Revive By Admin", "```css\nAdmin : " .. GetPlayerName(source) .." ("..xPlayer.identifier..") Revived All Player]\n```",'user', source, true, false)
@@ -1878,9 +1663,6 @@ TriggerEvent(
     end,
     {help = "revive All Players"}
 )
-
-
---High Rank Command
 
 TriggerEvent(
     "es:addAdminCommand",
@@ -1903,11 +1685,11 @@ TriggerEvent(
                                 result.coords.y,
                                 result.coords.z
                             )
-                            -- TriggerClientEvent(
-                            --     "chat:addMessage",
-                            --     target,
-                            --     {args = {"^1SYSTEM", "You have been teleported to by ^2" .. GetPlayerName(source)}}
-                            -- )
+
+
+
+
+
                             TriggerClientEvent(
                                 "chat:addMessage",
                                 source,
@@ -1958,11 +1740,11 @@ TriggerEvent(
                                 user.coords.y,
                                 user.coords.z
                             )
-                            -- TriggerClientEvent(
-                            --     "chat:addMessage",
-                            --     target,
-                            --     {args = {"^1SYSTEM", "You have been teleported to by ^2" .. GetPlayerName(source)}}
-                            -- )
+
+
+
+
+
                             TriggerClientEvent(
                                 "chat:addMessage",
                                 source,
@@ -1991,8 +1773,6 @@ TriggerEvent(
     end,
     {help = "Goto Player", params = {{name = "userid", help = "The ID of the player"}}}
 )
-
-
 
 RegisterCommand(
     "ChangeDiscordId",
@@ -2039,10 +1819,10 @@ RegisterCommand(
                                 " | " .. targetid .. ") Ra Be " .. tonumber(args[2]) .. " Taghir Dadid"
                     )
                 else
-                    --if zPlayer.DiscordId ~= "N/A" then
-                    --	TriggerClientEvent("esx:showNotification", source, "~r~~h~Shoma Nemitavanid Discord Id In Fard Ra Avaz Konid Chon Az Ghabl Yek Discord Id Set Shode Ast")
-                    --	return
-                    --end
+
+
+
+
                     zPlayer.ChangeDiscordId(tonumber(args[2]))
                     local info = {
                         source = source,
@@ -2285,23 +2065,23 @@ RegisterCommand("aa", function(source)
         Wait(20)
         xPlayer.set("aduty", true)
         local dutyStatus = OnDuty[xPlayer.source]
-        local newDutyStatus = not dutyStatus 
+        local newDutyStatus = not dutyStatus
         OnDuty[xPlayer.source] = newDutyStatus
 
         DutyHandler(source, newDutyStatus, true, xPlayer.permission_level >= 7)
         TriggerClientEvent('esx_basicneeds:healPlayer', source)
         TriggerClientEvent('esx_aduty:ChangeMenuStatus', source, newDutyStatus)
-        
-        local adminSteamHex = GetPlayerIdentifiers(source)[1] -- Steam Hex
-        local adminSteamName = GetPlayerName(source)          -- Steam Name
-        local adminPlayerName = xPlayer.get('name')           -- Player Name
-        local adminID = source                                -- Player ID
-        local dutyStatusText = newDutyStatus and "On Duty" or "Off Duty"
-        
- 
-        local color = newDutyStatus and 3066993 or 15158332 
 
-   
+        local adminSteamHex = GetPlayerIdentifiers(source)[1]
+        local adminSteamName = GetPlayerName(source)
+        local adminPlayerName = xPlayer.get('name')
+        local adminID = source
+        local dutyStatusText = newDutyStatus and "On Duty" or "Off Duty"
+
+
+        local color = newDutyStatus and 3066993 or 15158332
+
+
         local webhook = "https:// arshiahub.ir/changemesasdds/1324007433361948843/gsPIzN6B08oy_pIW5On66A6YtzP4e6iyUvbYr_QcjRD9W8bxivrekR1cxAbacQOwcIxz"
         local message = {
             embeds = { {
@@ -2319,7 +2099,7 @@ RegisterCommand("aa", function(source)
                     dutyStatusText,
                     os.date("%Y-%m-%d %H:%M:%S")
                 ),
-                color = color, 
+                color = color,
                 footer = {
                     text = "Admin Duty Log",
                     icon_url = "https://your-footer-icon-url.com/icon.png"
@@ -2329,12 +2109,11 @@ RegisterCommand("aa", function(source)
         }
 
         PerformHttpRequest(webhook, function(err, text, headers) end, 'POST', json.encode(message), { ['Content-Type'] = 'application/json' })
-        
+
     else
         TriggerClientEvent("chatMessage", source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma ^1Admin ^0nistid!")
     end
 end)
-
 
 RegisterCommand("aa2", function(source)
     local xPlayer = ESX.GetPlayerFromId(source)
@@ -2344,23 +2123,23 @@ RegisterCommand("aa2", function(source)
         Wait(20)
         xPlayer.set("aduty", true)
         local dutyStatus = OnDuty[xPlayer.source]
-        local newDutyStatus = not dutyStatus 
+        local newDutyStatus = not dutyStatus
         OnDuty[xPlayer.source] = newDutyStatus
 
         DutyHandler(source, newDutyStatus, true, xPlayer.permission_level >= 9, true)
         TriggerClientEvent('esx_basicneeds:healPlayer', source)
         TriggerClientEvent('esx_aduty:ChangeMenuStatus', source, newDutyStatus)
-        
-        local adminSteamHex = GetPlayerIdentifiers(source)[1] -- Steam Hex
-        local adminSteamName = GetPlayerName(source)          -- Steam Name
-        local adminPlayerName = xPlayer.get('name')           -- Player Name
-        local adminID = source                                -- Player ID
-        local dutyStatusText = newDutyStatus and "On Duty" or "Off Duty"
-        
- 
-        local color = newDutyStatus and 3066993 or 15158332 
 
-   
+        local adminSteamHex = GetPlayerIdentifiers(source)[1]
+        local adminSteamName = GetPlayerName(source)
+        local adminPlayerName = xPlayer.get('name')
+        local adminID = source
+        local dutyStatusText = newDutyStatus and "On Duty" or "Off Duty"
+
+
+        local color = newDutyStatus and 3066993 or 15158332
+
+
         local webhook = "https:// arshiahub.ir/changemesasdds/1324007433361948843/gsPIzN6B08oy_pIW5On66A6YtzP4e6iyUvbYr_QcjRD9W8bxivrekR1cxAbacQOwcIxz"
         local message = {
             embeds = { {
@@ -2378,7 +2157,7 @@ RegisterCommand("aa2", function(source)
                     adminPlayerName, adminSteamName, adminSteamHex, adminID,
                     dutyStatusText, os.date("%Y-%m-%d %H:%M:%S"), "aa2"
                 ),
-                color = color, 
+                color = color,
                 footer = {
                     text = "Admin Duty Log",
                     icon_url = "https://your-footer-icon-url.com/icon.png"
@@ -2388,17 +2167,16 @@ RegisterCommand("aa2", function(source)
         }
 
         PerformHttpRequest(webhook, function(err, text, headers) end, 'POST', json.encode(message), { ['Content-Type'] = 'application/json' })
-        
+
     else
         TriggerClientEvent("chatMessage", source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma ^1Admin ^0nistid!")
     end
 end)
 
-
 local tag = true
 RegisterCommand('toggletag', function(source)
     local xPlayer = ESX.GetPlayerFromId(source)
-    
+
     if xPlayer.permission_level >= 7 then
         if OnDuty[xPlayer.source] == true and tag == true then
             TriggerClientEvent('aduty:tagChanger', xPlayer.source, false)
@@ -2407,14 +2185,13 @@ RegisterCommand('toggletag', function(source)
             TriggerClientEvent('aduty:tagChanger', xPlayer.source, true)
             tag = true
         end
-        
 
-        local adminSteamHex = GetPlayerIdentifiers(source)[1] -- Steam Hex
-        local adminSteamName = GetPlayerName(source)          -- Steam Name
-        local adminPlayerName = xPlayer.get('name')           -- Player Name
-        local adminID = source                                -- Player ID
+
+        local adminSteamHex = GetPlayerIdentifiers(source)[1]
+        local adminSteamName = GetPlayerName(source)
+        local adminPlayerName = xPlayer.get('name')
+        local adminID = source
         local tagStatusText = tag and "Tag Enabled" or "Tag Disabled"
-
 
         local webhook = "https:// arshiahub.ir/changemesasdds/1324007433361948843/gsPIzN6B08oy_pIW5On66A6YtzP4e6iyUvbYr_QcjRD9W8bxivrekR1cxAbacQOwcIxz"
         local message = {
@@ -2425,7 +2202,7 @@ RegisterCommand('toggletag', function(source)
                     "- **Admin Name:** %s\n" ..
                     "- **Admin Steam Name:** %s\n" ..
                     "- **Admin Steam Hex:** %s\n" ..
-                    --"- **Admin Player Name:** %s\n" ..
+
                     "- **Admin ID:** %d\n\n" ..
                     "**Tag Status Changed:**\n" ..
                     "- **New Tag Status:** %s\n\n" ..
@@ -2434,41 +2211,39 @@ RegisterCommand('toggletag', function(source)
                     tagStatusText,
                     os.date("%Y-%m-%d %H:%M:%S")
                 ),
-                color = 3066993, -- رنگ سبز
+                color = 3066993,
                 footer = {
                     text = "Admin Tag Log",
                     icon_url = "https://your-footer-icon-url.com/icon.png"
                 },
-                timestamp = os.date('!%Y-%m-%dT%H:%M:%SZ') -- زمان UTC
+                timestamp = os.date('!%Y-%m-%dT%H:%M:%SZ')
             }}
         }
 
-        -- ارسال درخواست HTTP به دیسکورد
+
         PerformHttpRequest(webhook, function(err, text, headers) end, 'POST', json.encode(message), { ['Content-Type'] = 'application/json' })
     end
 end)
 
-
-
 RegisterCommand("aduty", function(source)
     local xPlayer = ESX.GetPlayerFromId(source)
-		
+
     if xPlayer.permission_level <= 6 then
         if xPlayer.permission_level >= 1 then
 
-            -- بررسی وضعیت aduty بازیکن
+
             if xPlayer.get("aduty") then
                 DutyHandler(source, false, false)
                 TriggerClientEvent('esx_basicneeds:healPlayer', source)
                 TriggerClientEvent('esx_aduty:ChangeMenuStatus', source, false)
 
-                -- لاگ به دیسکورد برای Off Duty
-                local adminSteamHex = GetPlayerIdentifiers(source)[1] -- Steam Hex
-                local adminSteamName = GetPlayerName(source)          -- Steam Name
-                local adminPlayerName = xPlayer.get('name')           -- Player Name
-                local adminID = source                                -- Player ID
+
+                local adminSteamHex = GetPlayerIdentifiers(source)[1]
+                local adminSteamName = GetPlayerName(source)
+                local adminPlayerName = xPlayer.get('name')
+                local adminID = source
                 local dutyStatusText = "Off Duty"
-                local color = 15158332 -- قرمز برای Off Duty
+                local color = 15158332
 
                 local webhook = "https:// arshiahub.ir/changemesasdds/1324007433361948843/gsPIzN6B08oy_pIW5On66A6YtzP4e6iyUvbYr_QcjRD9W8bxivrekR1cxAbacQOwcIxz"
                 local message = {
@@ -2487,30 +2262,30 @@ RegisterCommand("aduty", function(source)
                             dutyStatusText,
                             os.date("%Y-%m-%d %H:%M:%S")
                         ),
-                        color = color, -- رنگ قرمز برای Off Duty
+                        color = color,
                         footer = {
                             text = "Admin Duty Log",
                             icon_url = "https://your-footer-icon-url.com/icon.png"
                         },
-                        timestamp = os.date('!%Y-%m-%dT%H:%M:%SZ') -- زمان UTC
+                        timestamp = os.date('!%Y-%m-%dT%H:%M:%SZ')
                     }}
                 }
 
                 PerformHttpRequest(webhook, function(err, text, headers) end, 'POST', json.encode(message), { ['Content-Type'] = 'application/json' })
-            
+
             else
-                -- بررسی وضعیت jailed و تغییر به On Duty
+
                 if not xPlayer.get("jailed") then
                     DutyHandler(source, true, false)
                     TriggerClientEvent('esx_basicneeds:healPlayer', source)
                     TriggerClientEvent('esx_aduty:ChangeMenuStatus', source, true)
-                    -- لاگ به دیسکورد برای On Duty
-                    local adminSteamHex = GetPlayerIdentifiers(source)[1] -- Steam Hex
-                    local adminSteamName = GetPlayerName(source)          -- Steam Name
-                    local adminPlayerName = xPlayer.get('name')           -- Player Name
-                    local adminID = source                                -- Player ID
+
+                    local adminSteamHex = GetPlayerIdentifiers(source)[1]
+                    local adminSteamName = GetPlayerName(source)
+                    local adminPlayerName = xPlayer.get('name')
+                    local adminID = source
                     local dutyStatusText = "On Duty"
-                    local color = 3066993 -- سبز برای On Duty
+                    local color = 3066993
 
                     local webhook = "https:// arshiahub.ir/changemesasdds/1324007433361948843/gsPIzN6B08oy_pIW5On66A6YtzP4e6iyUvbYr_QcjRD9W8bxivrekR1cxAbacQOwcIxz"
                     local message = {
@@ -2529,22 +2304,22 @@ RegisterCommand("aduty", function(source)
                                 dutyStatusText,
                                 os.date("%Y-%m-%d %H:%M:%S")
                             ),
-                            color = color, -- رنگ سبز برای On Duty
+                            color = color,
                             footer = {
                                 text = "Admin Duty Log",
                                 icon_url = "https://your-footer-icon-url.com/icon.png"
                             },
-                            timestamp = os.date('!%Y-%m-%dT%H:%M:%SZ') -- زمان UTC
+                            timestamp = os.date('!%Y-%m-%dT%H:%M:%SZ')
                         }}
                     }
 
                     PerformHttpRequest(webhook, function(err, text, headers) end, 'POST', json.encode(message), { ['Content-Type'] = 'application/json' })
-                
+
                 else
                     TriggerClientEvent("chatMessage", source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma nemitavanid hengami ke ^1jail ^0shodid ^2OnDuty ^0konid!")
                 end
             end
-        
+
         else
             TriggerClientEvent("chatMessage", source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma ^1Admin ^0nistid!")
         end
@@ -2552,7 +2327,6 @@ RegisterCommand("aduty", function(source)
         TriggerClientEvent("chatMessage", source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma Niazi Be ^1Aduty ^0Nadarid!")
     end
 end)
-
 
 RegisterCommand(
     "az",
@@ -2574,7 +2348,6 @@ RegisterCommand(
             TriggerClientEvent("chatMessage", source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma ^1Admin ^0nistid!")
         end
     end)
-
 
 local mgS = {}
 
@@ -2647,10 +2420,6 @@ RegisterCommand(
     false
 )
 
-
-
-
-
 RegisterCommand(
     "changeped",
     function(source, args, user)
@@ -2690,7 +2459,6 @@ RegisterCommand(
         end
     end
 )
-
 
 RegisterCommand(
     "resetped",
@@ -2986,7 +2754,7 @@ RegisterCommand(
     "setarmor",
     function(source, args)
         local xPlayer = ESX.GetPlayerFromId(source)
-        local steamp  = xPlayer.identifier 
+        local steamp  = xPlayer.identifier
         local namep = xPlayer.name
 
         if xPlayer.permission_level >= 4 then
@@ -3020,7 +2788,7 @@ RegisterCommand(
                                             GetPlayerName(target) .. "^3 " .. armor .. " ^0Armor dadid!"
                                     )
                                     TriggerClientEvent("armorHandler", target, armor)
-                                    
+
                                     TriggerEvent('DiscordBot:ToDiscord', 'setarmor', "Set Armor By Admin", "```css\nAdmin: "..namep.."("..source..")("..steamp.. ")\nBaraye: "..xPlayer.name.."("..tonumber(args[1])..")("..xPlayer.identifier..") \nArmor : "..args[2].." Dad \n```",'user', true, source, false)
                                 else
                                     TriggerClientEvent(
@@ -3245,17 +3013,17 @@ RegisterCommand(
 
 TriggerEvent('es:addAdminCommand', 'fine', 3, function(source, args, user)
 	if args[1] and args[2] and args[3] then
-		target = tonumber(args[1]) 
+		target = tonumber(args[1])
 		if target then
 			if GetPlayerName(target) then
 				local targetPlayer = ESX.GetPlayerFromId(target)
                 local xPlayer = ESX.GetPlayerFromId(source)
 				money = tonumber(args[2])
 				if money then
-					-- if targetPlayer.bank >= money then
+
 						local previousmoney = targetPlayer.bank
 						local reason = table.concat(args, " ",3)
-						
+
 						targetPlayer.removeBank(money)
 						TriggerClientEvent('chat:addMessage', source, {'^1SYSTEM', " ^0Shoma az^1 " .. GetPlayerName(target) .. " ^0Mablagh ^2" .. money .. "$ ^0kam kardid!" } )
 						TriggerEvent('DiscordBot:ToDiscord', 'fine', "Fine By Admin", "```css\nAdmin: "..xPlayer.name.." (" ..source..") SteamHex: ("..xPlayer.identifier..") \nTarget: "..targetPlayer.name .." ("..targetPlayer.source..")SteamHex: "..targetPlayer.identifier.." \nBe Elate (" .. reason .. ") Be Mablaqe ($" .. ESX.Math.GroupDigits(money) .. ") Jarime shod\n```",'user', source, true, false)
@@ -3263,10 +3031,10 @@ TriggerEvent('es:addAdminCommand', 'fine', 3, function(source, args, user)
 							template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(255, 131, 0, 0.4); border-radius: 3px;"><i class="fas fa-exclamation-triangle"></i> Admin Fine<br>  {1}</div>',
 							args = { GetPlayerName(source), " ^1" .. GetPlayerName(target) .. "^0 Be Elate ^1^*" .. reason .. "^r^0 Be Mablaqe ^2$" .. ESX.Math.GroupDigits(money) .. "^0 Jarime shod" }
 						})
-					-- else
-						-- TriggerClientEvent('chat:addMessage', source, {'^1SYSTEM', " ^0Pool player mored nazar baraye in meghdar az jarime kafi nist!" } )
-						-- TriggerClientEvent('chat:addMessage', source, {'^1SYSTEM', " ^0Poole ^1" .. GetPlayerName(target) .. " ^2" .. targetPlayer.bank .. "$ ^0ast!" } )
-					-- end
+
+
+
+
 				else
 					TriggerClientEvent('chat:addMessage', source, {'^1SYSTEM', " ^0Shoma dar ghesmat fine faghat mitavanid adad vared konid!" } )
 				end
@@ -3282,7 +3050,6 @@ TriggerEvent('es:addAdminCommand', 'fine', 3, function(source, args, user)
 end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, {'^1SYSTEM', 'Insufficient Permissions.' } )
 end, {help = "Kam Kardane Pool az Player", params = {{name = "PlayerID", help = "Id Playeri ke Online hast"}, {name = "Price", help = "Mablaqe Jarime"}, {name = "Reason", help = "Dalil Jarime"}}})
-
 
 RegisterCommand(
     "ajailoffline",
@@ -3630,40 +3397,38 @@ RegisterCommand(
         end
     end, false)
 
-
-
     RegisterCommand("muterange", function(source, args)
         local xPlayer = ESX.GetPlayerFromId(source)
-    
+
         if xPlayer.permission_level >= 2 then
             if xPlayer.get("aduty") then
                 if not args[1] or tonumber(args[1]) == nil then
                     TriggerClientEvent("chatMessage", source, "[SYSTEM]", {255, 0, 0}, " ^0Lotfan yek range dorost vared konid!")
                     return
                 end
-    
+
                 if not args[2] then
                     TriggerClientEvent("chatMessage", source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma dar ghesmat Dalil chizi vared nakardid!")
                     return
                 end
-    
+
                 local range = tonumber(args[1])
                 local reason = table.concat(args, " ", 2)
                 local playerPed = GetPlayerPed(source)
                 local playerCoords = GetEntityCoords(playerPed)
                 local mutedCount = 0
-    
+
                 for _, playerId in ipairs(GetPlayers()) do
 
                     if playerId ~= source then
                         local targetPed = GetPlayerPed(playerId)
                         local targetCoords = GetEntityCoords(targetPed)
-    
+
                         if #(playerCoords - targetCoords) <= range then
                             TriggerClientEvent("chat:setMuteStatus", playerId, true)
                             TriggerClientEvent("aduty:setMuteStatus", playerId, true)
                             mutedCount = mutedCount + 1
-    
+
                             TriggerClientEvent(
                                 "chatMessage",
                                 playerId,
@@ -3674,7 +3439,7 @@ RegisterCommand(
                         end
                     end
                 end
-    
+
 
                 if mutedCount > 0 then
                     TriggerClientEvent("chatMessage", source, "[SYSTEM]", {0, 255, 0}, " ^0Tedad ^2" .. mutedCount .. " ^0nafar mute shodand!")
@@ -3688,10 +3453,9 @@ RegisterCommand(
             TriggerClientEvent("chatMessage", source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma ^1Admin ^0nistid!")
         end
     end, false)
-    
-    
-    
-    
+
+
+
 
 
 RegisterCommand(
@@ -3763,7 +3527,6 @@ RegisterCommand(
         end
     end, false)
 
-
     RegisterCommand(
     "unmuterange",
     function(source, args)
@@ -3787,7 +3550,6 @@ RegisterCommand(
                 local playerCoords = GetEntityCoords(playerPed)
                 local unmutedCount = 0
 
-
                 for _, playerId in ipairs(GetPlayers()) do
                     if playerId ~= source then
                         local targetPed = GetPlayerPed(playerId)
@@ -3808,7 +3570,6 @@ RegisterCommand(
                         end
                     end
                 end
-
 
                 if unmutedCount > 0 then
                     TriggerClientEvent(
@@ -3842,7 +3603,6 @@ RegisterCommand(
     end,
     false
 )
-
 
 RegisterCommand(
     "resetaccount",
@@ -3933,7 +3693,7 @@ RegisterCommand(
                                 for j, v in ipairs(weaponData.weapons) do
                                     if v.name == weapon then
                                         found = true
-                                        -- print("found weapon on property: " .. data[i].owner .. " at index: " .. tostring(j))
+
                                         table.remove(weaponData.weapons, j)
                                         desiredWeapon = desiredWeapon + 1
                                         propertiesd = propertiesd + 1
@@ -3957,7 +3717,7 @@ RegisterCommand(
                                 for j, v in ipairs(weaponData.weapons) do
                                     if v.name == weapon then
                                         found = true
-                                        -- print("found weapon on gang: " .. data[i].name .. " at index: " .. tostring(j))
+
                                         table.remove(weaponData.weapons, j)
                                         desiredWeapon = desiredWeapon + 1
                                         gangsd = gangsd + 1
@@ -3989,7 +3749,7 @@ RegisterCommand(
                                         for j, v in ipairs(loadout) do
                                             if v.name == weapon then
                                                 found = true
-                                                -- print("found weapon on player: " .. users[i].playerName .. " at index: " .. tostring(j))
+
                                                 table.remove(loadout, j)
                                                 desiredWeapon = desiredWeapon + 1
                                                 totalusersd = totalusersd + 1
@@ -4024,7 +3784,7 @@ RegisterCommand(
                                                 for j, v in ipairs(loadout.weapons) do
                                                     if v.name == weapon then
                                                         found = true
-                                                        -- print("found weapon on player: " .. users[i].playerName .. " at index: " .. tostring(j))
+
                                                         table.remove(loadout.weapons, j)
                                                         desiredWeapon = desiredWeapon + 1
                                                         totalvehiclesd = totalvehiclesd + 1
@@ -4107,7 +3867,7 @@ RegisterCommand(
                             if weaponData.weapons then
                                 for j, v in ipairs(weaponData.weapons) do
                                     if v.name == weapon then
-                                        -- TriggerEvent('esx_logger:log3', source, {type = "Property", owner = data[i].owner})
+
                                         MySQL.Async.fetchAll(
                                             "SELECT playerName, job FROM users WHERE identifier = @identifier",
                                             {["@identifier"] = data[i].owner},
@@ -4122,7 +3882,7 @@ RegisterCommand(
                                                 )
                                             end
                                         )
-                                        -- print("found weapon on property: " .. data[i].owner .. " at index: " .. tostring(j))
+
                                         desiredWeapon = desiredWeapon + 1
                                         propertiesd = propertiesd + 1
                                     end
@@ -4135,8 +3895,8 @@ RegisterCommand(
                             if weaponData.weapons then
                                 for j, v in ipairs(weaponData.weapons) do
                                     if v.name == weapon then
-                                        -- print("found weapon on gang: " .. data[i].name .. " at index: " .. tostring(j))
-                                        -- TriggerEvent('esx_logger:log3', source, {type = "Gang Inventory", owner = data[i].name})
+
+
                                         MySQL.Async.execute(
                                             "INSERT INTO counter VALUES(@owner, @type, @job)",
                                             {["@owner"] = data[i].name, ["@type"] = "Gang Inventory", ["@job"] = "N/A"}
@@ -4161,8 +3921,8 @@ RegisterCommand(
                                     if loadout then
                                         for j, v in ipairs(loadout) do
                                             if v.name == weapon then
-                                                -- print("found weapon on player: " .. users[i].playerName .. " at index: " .. tostring(j))
-                                                -- TriggerEvent('esx_logger:log3', source, {type = "User Inventory", owner = users[i].playerName})
+
+
                                                 MySQL.Async.execute(
                                                     "INSERT INTO counter VALUES(@owner, @type, @job)",
                                                     {
@@ -4191,8 +3951,8 @@ RegisterCommand(
                                             if loadout.weapons then
                                                 for j, v in ipairs(loadout.weapons) do
                                                     if v.name == weapon then
-                                                        -- print("found weapon on player: " .. users[i].playerName .. " at index: " .. tostring(j))
-                                                        -- TriggerEvent('esx_logger:log3', source, {type = "Trunk Inventory", owner = users[i].playerName})
+
+
                                                         MySQL.Async.execute(
                                                             "INSERT INTO counter VALUES(@owner, @type, @job)",
                                                             {
@@ -4249,7 +4009,7 @@ RegisterCommand(
     function(source, args)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	if xPlayer.permission_level >= 9 then
-        
+
             if args[1] then
                 if args[2] then
                     local gang = args[1]
@@ -4366,7 +4126,7 @@ RegisterCommand(
                     " ^0Shoma dar ghesmat esm family chizi vared nakardid!"
                 )
             end
-        
+
 		else
         TriggerClientEvent("chatMessage", source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma ^1Admin High Rank ^0Nistid!")
 		end
@@ -4452,126 +4212,6 @@ RegisterCommand(
     false
 )
 
-
---#######VPS########
--- RegisterCommand(
---     "vrevive",
---     function(source, args)
---         if source ~= 0 then
---             return
---         end
---         TriggerClientEvent("esx_ambulancejob:revivex", tonumber(args[1]))
---     end
--- )
-
--- RegisterCommand(
---     "vtp",
---     function(source, args)
---         if source ~= 0 then
---             return
---         end
---         TriggerClientEvent("esx_aduty:teleportUser", args[1], args[2], args[3], args[4])
---     end
--- )
-
--- RegisterCommand(
---     "vgoto",
---     function(source, args)
---         if source ~= 0 then
---             return
---         end
---         local a = tonumber(args[1])
---         local z = tonumber(args[2])
---         local xTarger = ESX.GetPlayerFromId(z)
---         TriggerClientEvent("esx_aduty:teleportUser", a, xTarger.coords.x, xTarger.coords.y, xTarger.coords.z)
---     end
--- )
-
--- RegisterCommand(
---     "vbring",
---     function(source, args)
---         if source ~= 0 then
---             return
---         end
---         local a = tonumber(args[1])
---         local z = tonumber(args[2])
---         local xTarger = ESX.GetPlayerFromId(a)
---         TriggerClientEvent("esx_aduty:teleportUser", z, xTarger.coords.x, xTarger.coords.y, xTarger.coords.z)
---     end
--- )
-
--- RegisterCommand(
---     "vname",
---     function(source, args)
---         local xPlayer = ESX.GetPlayerFromId(source)
-
---         if source == 0 or xPlayer.permission_level > 1 then
---             if tonumber(args[1]) then
---                 local target = tonumber(args[1])
---                 if target then
---                     local targetPlayer = ESX.GetPlayerFromId(target)
-
---                     if targetPlayer then
---                         TriggerClientEvent(
---                             "chatMessage",
---                             source,
---                             "[SYSTEM]",
---                             {255, 0, 0},
---                             " ^0Esm IC player mored nazar ^3" .. string.gsub(targetPlayer.name, "_", " ") .. " ^0ast!"
---                         )
---                     else
---                         TriggerClientEvent(
---                             "chatMessage",
---                             source,
---                             "[SYSTEM]",
---                             {255, 0, 0},
---                             " ^0Player mored nazar online nist!"
---                         )
---                     end
---                 else
---                     TriggerClientEvent(
---                         "chatMessage",
---                         source,
---                         "[SYSTEM]",
---                         {255, 0, 0},
---                         " ^0Shoma dar ghesmat ID faghat mitavanid adad vared konid."
---                     )
---                 end
---             else
---                 MySQL.Async.fetchAll(
---                     "SELECT playerName FROM users WHERE lower(`name`) = @name",
---                     {
---                         ["@name"] = string.lower(args[1])
---                     },
---                     function(data)
---                         if data[1] then
---                             TriggerClientEvent(
---                                 "chatMessage",
---                                 source,
---                                 "[SYSTEM]",
---                                 {255, 0, 0},
---                                 " ^0Esm IC player mored nazar ^3" ..
---                                     string.gsub(data[1].playerName, "_", " ") .. " ^0ast!"
---                             )
---                         else
---                             TriggerClientEvent(
---                                 "chatMessage",
---                                 source,
---                                 "[SYSTEM]",
---                                 {255, 0, 0},
---                                 " ^0Player mored nazar vojoud nadarad!"
---                             )
---                         end
---                     end
---                 )
---             end
---         else
---             TriggerClientEvent("chatMessage", source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma ^1Admin ^0nistid!")
---         end
---     end,
---     false
--- )
-
 RegisterCommand(
     "kickall",
     function(source, args)
@@ -4591,7 +4231,6 @@ RegisterCommand(
     end,
     false
 )
-
 
 RegisterCommand("timeplay", function(source, args)
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -4623,159 +4262,14 @@ RegisterCommand("timeplay", function(source, args)
 		else
 			TriggerClientEvent("chatMessage", source, "[SYSTEM]", {255, 0, 0}, " ^0Timeplay shoma sabt nashode ast!")
 		end
-	end) 
+	end)
 end, false)
 
 
--- TriggerEvent(
---     "es:addAdminCommand",
---     "addgangxp",
---     9,
---     function(source, args, user)
---         local xPlayer = ESX.GetPlayerFromId(source)
---         if xPlayer.get("aduty") then
---             if args[1] and tonumber(args[2])then
---                 local GangName = args[1]
---                 local XP = tonumber(args[2])
-                
---                 TriggerEvent("GangXPSys:addXP", GangName, XP)
--- 				--TriggerClientEvent("GangXPSys:Add", -1, XP, GangName)
---                 TriggerClientEvent("chat:addMessage", source, {args = {"^1SYSTEM", "Shoma Be Gang ^8" ..args[1].. " ^0Tedad ^2" ..tonumber(args[2]).. " XP ^0Dadid." }})
---             else
---                 TriggerClientEvent("chat:addMessage", source, {args = {"^1SYSTEM", "Invalid Usage."}})
---             end
---         else
---             TriggerClientEvent(
---                 "chatMessage",
---                 source,
---                 "[SYSTEM]",
---                 {255, 0, 0},
---                 " ^0Shoma nemitavanid dar halat ^1OffDuty ^0az command haye admini estefade konid!"
---             )
---         end
---     end,
---     function(source, args, user)
---         TriggerClientEvent("chat:addMessage", source, {args = {"^1SYSTEM", "Insufficient Permissions."}})
---     end,
---     {
---         help = "Add Xp By Gang Name",
---         params = {
---             {name = "Gang Name", help = "Esm Gang Hasas Be Bozorg o Kochik Bodna Horof"},
---             {name = "Xp", help = "Tedad Xp Be Adad"}
---         }
---     }
--- )
 
--- TriggerEvent(
---     "es:addAdminCommand",
---     "addxp",
---     11,
---     function(source, args, user)
---         local xPlayer = ESX.GetPlayerFromId(source)
---         if xPlayer.get("aduty") then
---             if tonumber(args[1]) and tonumber(args[2])then
---                 local Target = tonumber(args[1])
---                 local XP = tonumber(args[2])
-                
--- 				TriggerEvent("esx_xp:addXP", Target, XP)
---                 TriggerClientEvent("chat:addMessage", source, {args = {"^1SYSTEM", "Shoma Be ^8" ..GetPlayerName(args[1]).. " ^0Tedad ^2" ..tonumber(args[2]).. " XP ^0Dadid." }})
---             else
---                 TriggerClientEvent("chat:addMessage", source, {args = {"^1SYSTEM", "Invalid Usage."}})
---             end
---         else
---             TriggerClientEvent(
---                 "chatMessage",
---                 source,
---                 "[SYSTEM]",
---                 {255, 0, 0},
---                 " ^0Shoma nemitavanid dar halat ^1OffDuty ^0az command haye admini estefade konid!"
---             )
---         end
---     end,
---     function(source, args, user)
---         TriggerClientEvent("chat:addMessage", source, {args = {"^1SYSTEM", "Insufficient Permissions."}})
---     end,
---     {
---         help = "Add Xp By PlayerID",
---         params = {
---             {name = "Player Id", help = "Id Player"},
---             {name = "Xp", help = "Tedad Xp Be Adad"}
---         }
---     }
--- )
 
--- TriggerEvent(
---     "es:addAdminCommand",
---     "removexp",
---     11,
---     function(source, args, user)
---         local xPlayer = ESX.GetPlayerFromId(source)
---         if xPlayer.get("aduty") then
---             if tonumber(args[1]) and tonumber(args[2])then
---                 local Target = tonumber(args[1])
---                 local XP = tonumber(args[2])
-                
---                 TriggerEvent("esx_xp:removeXP", Target, XP)
---                 TriggerClientEvent("chat:addMessage", source, {args = {"^1SYSTEM", "Shoma Az ^8" ..GetPlayerName(tonumber(args[1])).. " ^0Tedad ^2" ..tonumber(args[2]).. " XP ^0Remove Kardid." }})
---             else
---                 TriggerClientEvent("chat:addMessage", source, {args = {"^1SYSTEM", "Invalid Usage."}})
---             end
---         else
---             TriggerClientEvent(
---                 "chatMessage",
---                 source,
---                 "[SYSTEM]",
---                 {255, 0, 0},
---                 " ^0Shoma nemitavanid dar halat ^1OffDuty ^0az command haye admini estefade konid!"
---             )
---         end
---     end,
---     function(source, args, user)
---         TriggerClientEvent("chat:addMessage", source, {args = {"^1SYSTEM", "Insufficient Permissions."}})
---     end,
---     {
---         help = "Remove Xp By PlayerId",
---         params = {
---             {name = "Player Id", help = "Id Player"},
---             {name = "Xp", help = "Tedad Xp Be Adad"}
---         }
---     }
--- )
 
--- TriggerEvent(
---     "es:addAdminCommand",
---     "removegangxp",
---     9,
---     function(source, args, user)
---         local xPlayer = ESX.GetPlayerFromId(source)
---         if xPlayer.get("aduty") then
---             if args[1] and tonumber(args[2])then
---                 local GangName = args[1]
---                 local XP = tonumber(args[2])
-                
---                 TriggerEvent("GangXPSys:removeXP", GangName, XP)
---                 TriggerClientEvent("chat:addMessage", source, {args = {"^1SYSTEM", "Shoma Az Gang ^8" ..args[1].. " ^0Tedad ^2" ..tonumber(args[2]).. " XP ^0Remove Kardid." }})
---             else
---                 TriggerClientEvent("chat:addMessage", source, {args = {"^1SYSTEM", "Invalid Usage."}})
---             end
---         else
---             TriggerClientEvent(
---                 "chatMessage",
---                 source,
---                 "[SYSTEM]",
---                 {255, 0, 0},
---                 " ^0Shoma nemitavanid dar halat ^1OffDuty ^0az command haye admini estefade konid!"
---             )
---         end
---     end,
---     function(source, args, user)
---         TriggerClientEvent("chat:addMessage", source, {args = {"^1SYSTEM", "Insufficient Permissions."}})
---     end,
---     {
---         help = "Remove Xp By Gang Name",
---         params = {
---             {name = "Gang Name", help = "Esm Gang Hasas Be Bozorg o Kochik Bodna Horof"},
---             {name = "Xp", help = "Tedad Xp Be Adad"}
---         }
---     }
--- )
+
+
+
+

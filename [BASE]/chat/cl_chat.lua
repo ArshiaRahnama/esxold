@@ -12,10 +12,6 @@ local chatInputActivating = false
 local muted  = false
 local AntiSpam = 0
 
--- Auto-routes a message to a tab based on markers already used in its text,
--- so existing scripts (duty, billing, jobs, gangs, reports, ads...) don't
--- need to be edited. Matching is case-insensitive plain-text search.
--- Add/adjust keywords here to match exactly what your other resources send.
 local channelKeywords = {
     { channel = 'system',  keywords = { 'system' } },
     { channel = 'event',   keywords = { 'event' } },
@@ -67,16 +63,14 @@ RegisterNetEvent('chat:removeSuggestion')
 RegisterNetEvent('chat:clear')
 RegisterNetEvent('chat:setPinned')
 
--- internal events
 RegisterNetEvent('__cfx_internal:serverPrint')
 
 RegisterNetEvent('_chat:messageEnteredOps')
 
---deprecated, use chat:addMessage
 AddEventHandler('chatMessage', function(author, color, text)
     if not active then return end
 
-    
+
     local args = { text }
     if author ~= "" then
         table.insert(args, 1, author)
@@ -90,8 +84,8 @@ AddEventHandler('chatMessage', function(author, color, text)
             channel = detectChannel(args) or 'live'
         }
     })
-    
-    
+
+
 end)
 
 AddEventHandler('__cfx_internal:serverPrint', function(msg)
@@ -116,7 +110,7 @@ AddEventHandler('chat:addMessage', function(message)
         type = 'ON_MESSAGE',
         message = message
     })
-   
+
 end)
 
 AddEventHandler('chat:addSuggestion', function(name, help, params)
@@ -155,7 +149,6 @@ AddEventHandler('chat:clear', function(name)
     })
 end)
 
--- pinned.author / pinned.text, e.g. { author = "📌 Mamad Terror" }
 AddEventHandler('chat:setPinned', function(pinned)
     SendNUIMessage({
         type = 'ON_PIN',
@@ -169,14 +162,14 @@ AddEventHandler("chat:setMuteStatus", function(status)
 end)
 
 RegisterNUICallback('chatResult', function(data, cb)
-    
-    
+
+
     chatInputActive = false
     SetNuiFocus(false)
     setChatDecor(false)
     if not data.canceled then
         local id = PlayerId()
-        --deprecated
+
         local r, g, b = 0, 0x99, 255
         data.message = data.message:gsub('^','')
         if data.message:sub(2):len() > 300 and ESX.GetPlayerData().job.name ~= 'weazel' then
@@ -186,8 +179,8 @@ RegisterNUICallback('chatResult', function(data, cb)
         TriggerServerEvent('chat:logMessage', data.message)
         if data.message:sub(1, 1) == '/' then
 
-            -- special case: this one should re-open the chat + settings panel
-            -- instead of running through ExecuteCommand and losing focus
+
+
             if data.message:sub(2) == 'chatsetting' then
                 OpenChatInput()
                 SendNUIMessage({ type = 'ON_OPEN_SETTINGS' })
@@ -195,9 +188,9 @@ RegisterNUICallback('chatResult', function(data, cb)
                 return
             end
 
-           
-            
-            if (GetGameTimer() - AntiSpam) > 2000 then 
+
+
+            if (GetGameTimer() - AntiSpam) > 2000 then
                 AntiSpam = GetGameTimer()
                 if not muted then
                     ExecuteCommand(data.message:sub(2))
@@ -212,8 +205,8 @@ RegisterNUICallback('chatResult', function(data, cb)
                         ExecuteCommand(data.message:sub(2))
                     end
                 end
-            
-           
+
+
 
                 if not muted then
                     TriggerServerEvent('_chat:messageEnteredOps', GetPlayerName(id), { r, g, b }, data.message)
@@ -234,14 +227,14 @@ RegisterNUICallback('chatResult', function(data, cb)
                     args = {"[SYSTEM]", "^1Lotfan Spam Nakonid!"}
                 })
 
-           
+
             end
-      
+
         end
     end
 
     cb('ok')
-    
+
 end)
 
 RegisterNUICallback('loaded', function(data, cb)
@@ -276,13 +269,6 @@ RegisterNUICallback('saveStarred', function(data, cb)
     cb('ok')
 end)
 
--- Generic hook so other resources (e.g. a report/admin system) can attach a
--- clickable button to a chat message without this chat resource needing to
--- know their internal logic. When building the message, include:
---   action = { label = "برو سر صحنه", event = "yourresource:someEvent", args = { ... } }
--- Clicking the button in chat fires that client event with `args` unpacked,
--- and YOUR resource (e.g. your report script) implements the actual
--- teleport/accept logic in a handler for "yourresource:someEvent".
 RegisterNUICallback('action', function(data, cb)
     if data and data.event then
         TriggerEvent(data.event, table.unpack(data.args or {}))
@@ -290,8 +276,6 @@ RegisterNUICallback('action', function(data, cb)
     cb('ok')
 end)
 
--- lets JS (e.g. the "quote" button on a message) open the chat box and grab
--- focus/cursor exactly like pressing T does.
 RegisterNUICallback('openInput', function(data, cb)
     OpenChatInput()
     cb('ok')

@@ -1,13 +1,5 @@
--- ================================================================= --
--- Leaderboard: Top 10 Players (composite score) and Top 10 Gangs (by
--- real gang XP). Read-only, no player input affects the query except
--- which of the two fixed rankings to return.
--- ================================================================= --
 
--- Player "power score" weighting — level is the primary driver (it's
--- the character's core prestige), then hours played, then coin, with
--- in-level xp as a small tiebreaker. Adjust the multipliers here if
--- you want a different balance.
+
 local SCORE_RANK_WEIGHT     = 1000
 local SCORE_HOUR_WEIGHT     = 5
 local SCORE_COIN_WEIGHT     = 2

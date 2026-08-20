@@ -16,7 +16,7 @@ end
 Citizen.CreateThread(function()
     while true do
 		local sleepThread = 250
-		
+
 		if coordsVisible then
 			sleepThread = 5
 

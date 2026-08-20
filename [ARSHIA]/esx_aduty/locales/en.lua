@@ -1,5 +1,5 @@
 Locales["en"] = {
-    -- Inventory
+
     ["guns_label"] = "--- Guns ---",
     ["confiscate"] = "confiscate ",
     ["inventory_label"] = "--- Inventory ---",
@@ -39,7 +39,7 @@ Locales["en"] = {
     ["threw_account"] = "you threw ~r~$%s~s~ ~b~%s~s~",
     ["threw_weapon"] = "you threw ~y~1x~s~ ~b~%s~s~",
     ["threw_weapon_ammo"] = "you threw ~y~1x~s~ ~b~%s~s~ with ~o~%sx~s~ bullets",
-    -- Salary related
+
     ["received_salary"] = "you received your salary: ~g~$%s~s~",
     ["received_help"] = "you recieved your welfare check: ~g~$%s~s~",
     ["company_nomoney"] = "the company you're employeed at is too poor to pay out your salary.",
@@ -49,7 +49,7 @@ Locales["en"] = {
     ["act_imp"] = "action impossible",
     ["in_vehicle"] = "you can't give anything to someone in a vehicle",
     ["cannot_pickup_room"] = "you do not have enough space in your inventory to pick up ~y~%s~s~!",
-    -- Commands
+
     ["setjob"] = "assign a job to a user",
     ["id_param"] = "the ID of the player",
     ["setjob_param2"] = "the job you wish to assign",
@@ -83,10 +83,10 @@ Locales["en"] = {
     ["command_clearinventory"] = "clear all items from inventory",
     ["command_clearloadout"] = "remove all weapons from loadout",
     ["command_playerid_param"] = "specify playerId or leave blank for yourself",
-    -- Locale settings
+
     ["locale_digit_grouping_symbol"] = ",",
     ["locale_currency"] = "$%s",
-    -- Weapons
+
     ["weapon_knife"] = "knife",
     ["weapon_nightstick"] = "nightstick",
     ["weapon_hammer"] = "hammer",
@@ -166,7 +166,7 @@ Locales["en"] = {
     ["gadget_parachute"] = "parachute",
     ["weapon_flare"] = "flare gun",
     ["weapon_doubleaction"] = "double-Action Revolver",
-    -- mk2s
+
     ["weapon_pistol_mk2"] = "Pistol MK2",
     ["weapon_snspistol_mk2"] = "Snspistol MK2",
     ["weapon_revolver_mk2"] = "Revolver MK2",
@@ -179,7 +179,7 @@ Locales["en"] = {
     ["weapon_combatmg_mk2"] = "Combatmg MK2",
     ["weapon_heavysniper_mk2"] = "Heavysniper MK2",
     ["weapon_marksmanrifle_mk2"] = "Marksmanrifle MK2",
-    -- Weapon Components
+
     ["component_clip_default"] = "default Grip",
     ["component_clip_extended"] = "extended Grip",
     ["component_clip_drum"] = "drum Magazine",
@@ -191,4 +191,3 @@ Locales["en"] = {
     ["component_grip"] = "grip",
     ["component_luxary_finish"] = "luxary Weapon Finish"
   }
-  

@@ -8,15 +8,15 @@ Config_cia.MarkerDeletersColor        = { r = 255, g = 0, b = 0 }
 
 Config_cia.EnablePlayerManagement     = true
 Config_cia.EnableArmoryManagement     = true
-Config_cia.EnableESXIdentity          = false -- enable if you're using esx_identity
+Config_cia.EnableESXIdentity          = false
 Config_cia.EnableSocietyOwnedVehicles = false
-Config_cia.EnableLicenses             = true -- enable if you're using esx_license
+Config_cia.EnableLicenses             = true
 
-Config_cia.EnableHandcuffTimer        = false -- enable handcuff timer? will unrestrain player after the time ends
-Config_cia.HandcuffTimer              = 10 * 60000 -- 10 mins
+Config_cia.EnableHandcuffTimer        = false
+Config_cia.HandcuffTimer              = 10 * 60000
 
-Config_cia.EnableJobBlip              = true -- enable blips for colleagues, requires esx_society
-Config_cia.EnablePoliceFine           = true -- enable fine, requires esx_policejob
+Config_cia.EnableJobBlip              = true
+Config_cia.EnablePoliceFine           = true
 
 Config_cia.MaxInService               = -1
 Config_cia.Locale = 'en'
@@ -62,7 +62,7 @@ Config_cia.ciaStations = {
 
 		Armories = {
 			{ x = 144.61, y = -761.63, z = 242.15 }
-			
+
 		},
 
 		Vehicles = {
@@ -70,8 +70,8 @@ Config_cia.ciaStations = {
 			Spawner    = {x = 70.86228, y = -725.832, z = 44.220},
 			SpawnPoints = { x = 64.72499, y = -723.952, z = 44.102, heading = 339.89, radius = 6.0 },
 
-		
-	
+
+
 			},
 		},
 
@@ -104,40 +104,38 @@ Config_cia.ciaStations = {
 }
 
 Config_cia.AuthorizedVehicles = {
-	Shared = {			
-	-- Extra : 0 = true , 1 = false
+	Shared = {
+
 	{ model = 'b2chal', label = 'F.B.I Chal', Extra = {['1'] = 0, ['2'] = 1, ['3'] = 1, ['4'] = 0, ['5'] = 0 } },
 
 	{ model = 'b211vic', label = 'F.B.I Vic', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['5'] = 1, ['6'] = 0, ['10'] = 1} },
-	
+
 	{ model = 'b212caprice', label = 'F.B.I Caprice', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['5'] = 1, ['6'] = 0} },
-	
+
 	{ model = 'b214charger', label = 'F.B.I Charger', Extra = {['1'] = 0, ['2'] = 1, ['3'] = 1, ['5'] = 0, ['6'] = 0, ['7'] = 1, ['8'] = 0 }},
-	
+
 	{ model = 'b216explorer', label = 'F.B.I Explorer',  Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['5'] = 1, ['6'] = 1}},
-	
+
 	{ model = 'b218charger', label = 'F.B.I Charger18', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['5'] = 1, ['6'] = 0}},
-	
+
 	{ model = 'b218tau', label = 'F.B.I Tau', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['6'] = 1, ['7'] = 0}},
-		
+
 	{ model = 'b219tahoe', label = "F.B.I Tahoe", Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['5'] = 1, ['6'] = 1, ['7'] = 0}},
 	{ model = 'fibm5', label = "F.B.I BMWM5", Extra = {['1'] = 0}},
 	{ model = 'polnspeedo', label = "F.B.I Van", Extra = {['11'] = 0}},
 	{ model = 'POLKCH', label = "F.B.I Kamacho", Extra = {['1'] = 0, ['3'] = 0, ['4'] = 0}},
 	{ model = 'swat_dirtbike', label = "F.B.I Motor", Extra = {['1'] = 1}},
-	
+
 	},
 
-	Sharedheli = {			
-	-- Extra : 0 = true , 1 = false
+	Sharedheli = {
+
 	{ model = 'polmav', label = 'Polmav', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 0, ['5'] = 0 } },
 	{ model = 'tx_heli', label = 'h1', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 0, ['5'] = 0 } },
 
-	
-	
+
+
 	},
 
 
-
-	
 }

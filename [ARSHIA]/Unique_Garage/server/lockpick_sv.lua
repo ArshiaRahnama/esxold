@@ -1,18 +1,18 @@
--- ESX is already initialized globally by server.lua; no need to re-fetch it here.
+
 
 ESX.RegisterUsableItem('lockpick', function(source)
-    TriggerClientEvent('esx_inventoryhud:closeHud', source) 
+    TriggerClientEvent('esx_inventoryhud:closeHud', source)
     Wait(500)
-    TriggerClientEvent('esx_lockpick:startlockpick', source) 
+    TriggerClientEvent('esx_lockpick:startlockpick', source)
 end)
 
 RegisterNetEvent('esx_lockpick:unlockVehicleWithAlarm')
 AddEventHandler('esx_lockpick:unlockVehicleWithAlarm', function(vehicleNetId)
-    -- SECURITY NOTE (fixed): this previously trusted whatever netId the
-    -- client sent with no distance check at all, so any exploit could call
-    -- this event directly and instantly unlock (+ alarm) ANY vehicle on the
-    -- server, bypassing the skill-check minigame entirely. Now it verifies
-    -- the requesting player is actually standing near that vehicle.
+
+
+
+
+
     local vehicle = NetworkGetEntityFromNetworkId(vehicleNetId)
     local ped = GetPlayerPed(source)
 
@@ -22,7 +22,7 @@ AddEventHandler('esx_lockpick:unlockVehicleWithAlarm', function(vehicleNetId)
         TriggerClientEvent('esx:showNotification', source, "Dar mashin baz shod.")
 
         SetVehicleAlarm(vehicle, true)
-        
+
         TriggerClientEvent('esx_lockpick:startVehicleAlarm', -1, NetworkGetNetworkIdFromEntity(vehicle), 30000)
     else
         TriggerClientEvent('esx:showNotification', source, "Vasile naghlie yaft nashod.")
@@ -33,5 +33,5 @@ RegisterNetEvent('esx_lockpick:removeitem')
 AddEventHandler('esx_lockpick:removeitem', function()
     local Src = source
     local xPlayer = ESX.GetPlayerFromId(Src)
-    xPlayer.removeInventoryItem('lockpick', 1) 
+    xPlayer.removeInventoryItem('lockpick', 1)
 end)

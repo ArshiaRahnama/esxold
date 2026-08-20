@@ -4,8 +4,6 @@ game 'gta5'
 description 'Unique Punishment (Jail + Community Service)'
 author 'Arshia'
 
--- litesql/mysql-async روی این سرور نیستن؛ oxmysql (که ensure شده) با
--- lib/MySQL.lua خودش همون MySQL.Async/MySQL.Sync/MySQL.ready رو میده
 shared_scripts {
 	'@essentialmode/locale.lua',
 	'locales/en.lua',

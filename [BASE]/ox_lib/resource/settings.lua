@@ -1,14 +1,9 @@
--- Some users have locale set from ox_lib v2
+
 if GetResourceKvpInt('reset_locale') ~= 1 then
     DeleteResourceKvp('locale')
     SetResourceKvpInt('reset_locale', 1)
 end
 
----@generic T
----@param fn fun(key): unknown
----@param key string
----@param default? T
----@return T
 local function safeGetKvp(fn, key, default)
     local ok, result = pcall(fn, key)
 
@@ -92,11 +87,11 @@ RegisterCommand('ox_lib', function()
             })
     end
 
-    local input = lib.inputDialog(locale('settings'), inputSettings) --[[@as table?]]
+    local input = lib.inputDialog(locale('settings'), inputSettings)
 
     if not input then return end
 
-    ---@type boolean, string, string
+
     local notification_audio, notification_position, locale = table.unpack(input)
 
     if set('locale', locale) then lib.setLocale(locale) end

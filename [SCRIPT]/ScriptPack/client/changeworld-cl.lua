@@ -1,5 +1,3 @@
---local inMarker = false
---local markerCoords = vector3(-271.454, -2032.22, 31.145)
 
 
 Citizen.CreateThread(function()
@@ -11,131 +9,11 @@ end)
 
 
 
--- Citizen.CreateThread(function()
---     while true do
---         Citizen.Wait(0)
---         local playerPed = PlayerPedId()
---         local playerCoords = GetEntityCoords(playerPed)
-
- 
---         if #(playerCoords - markerCoords) < 3.0 then
---             inMarker = true
---             DrawMarker(4, markerCoords.x, markerCoords.y, markerCoords.z - 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0, 255, 0, 150, false, true, 2, nil, nil, false)
-
---             if IsControlJustPressed(0, 38) then 
---                 TriggerServerEvent('checkSubscription')
---             end
---         else
---             inMarker = false
---         end
---     end
--- end)
-
-
--- RegisterNetEvent('showMenuBasedOnBucket')
--- AddEventHandler('showMenuBasedOnBucket', function(uses, playerBucket)
---     uses = uses or 0 
-
---     local elements = {}
-
---     if playerBucket == 0 then
---         if uses > 0 then
---             table.insert(elements, {label = "Join to Wolrd90", value = "enter"})
---         else
---             table.insert(elements, {label = "Buy World 90", value = "buy_subscription"})
---         end
---         table.insert(elements, {label = "Eshterak Baghi Mande : " .. uses, value = "subscription_info"})
---     elseif playerBucket == 90 then
---         table.insert(elements, {label = "Exit", value = "exit"})
---     end
-
---     ESX.UI.Menu.CloseAll()
-
---     ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'marker_menu',
---     {
---         title    = "World Menu",
---         align    = 'top-left',
---         elements = elements
---     },
---     function(data, menu)
---         if data.current.value == "enter" then
---             if uses > 0 then
---                 TriggerEvent("mythic_progbar:client:progress", {
---                     name = "enter_progress",
---                     duration = 5000, 
---                     label = "",
---                     useWhileDead = false,
---                     canCancel = false,
---                     controlDisables = { disableMovement = true, disableCarMovement = true, disableMouse = false, disableCombat = true },
---                     animation = { animDict = "mp_common", anim = "", flags = 49 },
---                 }, function(status)
---                     if not status then
---                         TriggerServerEvent('changePlayerBucket', 90)
---                         TriggerServerEvent('decrementSubscription') 
---                     end
---                 end)
---             else
---                 ESX.ShowNotification("Shoma Eshterak World 90 Ra Nadarid")
---             end
---         elseif data.current.value == "buy_subscription" then
---             ESX.UI.Menu.Open('question', GetCurrentResourceName(), 'confirm_buy_subscription', {
---                 title = "Aya Mikhaid Braye Kharid 10x Eshterak ChangeWorld 1Mil Pardakhd Konid?",
---                 align = 'center',
---                 elements = {
---                     { label = "Bale", value = "yes" },
---                     { label = "Kheyr", value = "no" }
---                 }
---             }, function(answerData, questionMenu)
---                 if answerData.current.value == "yes" then
---                     TriggerServerEvent('buySubscription')
---                 else
---                     ESX.ShowNotification("Kharid Namovafagh")
---                 end
---                 questionMenu.close()
---             end, function(answerData, questionMenu)
---                 questionMenu.close()
---             end)
---         elseif data.current.value == "exit" then
---             TriggerEvent("mythic_progbar:client:progress", {
---                 name = "exit_progress",
---                 duration = 5000,
---                 label = "",
---                 useWhileDead = false,
---                 canCancel = false,
---                 controlDisables = { disableMovement = true, disableCarMovement = true, disableMouse = false, disableCombat = true },
---                 animation = { animDict = "mp_common", anim = "", flags = 49 },
---             }, function(status)
---                 if not status then
---                     TriggerServerEvent('changePlayerBucket', 0) 
---                 end
---             end)
---         end
---         menu.close()
---     end,
---     function(data, menu)
---         menu.close()
---     end)
--- end)
-
 RegisterNetEvent('showNotification')
 AddEventHandler('showNotification', function(message)
     ESX.ShowNotification(message)
 end)
 
--- Citizen.CreateThread(function()
-   
---     local blip = AddBlipForCoord(markerCoords.x, markerCoords.y, markerCoords.z)
-
---     SetBlipSprite(blip, 590) 
---     SetBlipDisplay(blip, 4) 
---     SetBlipScale(blip, 0.7) 
---     SetBlipColour(blip, 2) 
---     SetBlipAsShortRange(blip, true) 
-
---     BeginTextCommandSetBlipName("STRING")
---     AddTextComponentString("Change World") 
---     EndTextCommandSetBlipName(blip)
--- end)
 
 
 RegisterNetEvent('spawnVehicle')
@@ -160,13 +38,11 @@ AddEventHandler('deleteVehicle', function()
     end
 end)
 
-
 RegisterNetEvent('teleportPlayer')
 AddEventHandler('teleportPlayer', function(coords)
     local playerPed = PlayerPedId()
     SetEntityCoords(playerPed, coords.x, coords.y, coords.z, false, false, false, true)
 end)
-
 
 RegisterNetEvent('gpstools:tpwaypointt')
 AddEventHandler('gpstools:tpwaypointt', function()
@@ -175,7 +51,7 @@ AddEventHandler('gpstools:tpwaypointt', function()
         playerPed = GetVehiclePedIsUsing(playerPed)
     end
 
-    local waypointHandle = GetFirstBlipInfoId(8)  
+    local waypointHandle = GetFirstBlipInfoId(8)
     if DoesBlipExist(waypointHandle) then
         local waypointCoords = GetBlipInfoIdCoord(waypointHandle)
 
@@ -195,19 +71,15 @@ AddEventHandler('gpstools:tpwaypointt', function()
     end
 end)
 
-
 RegisterNetEvent('setArmorToFull')
 AddEventHandler('setArmorToFull', function()
-    local ped = PlayerPedId()  
-    local armor = 100  
+    local ped = PlayerPedId()
+    local armor = 100
 
-    TriggerEvent('esx_status:set', 'armor', armor)  
+    TriggerEvent('esx_status:set', 'armor', armor)
 
     AddArmourToPed(ped, armor)
 end)
-
-
-
 
 RegisterNetEvent('menu:openMainMenu')
 AddEventHandler('menu:openMainMenu', function()
@@ -353,25 +225,22 @@ function showWeaponOptions()
     end)
 end
 
-
-
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
-        if IsControlJustPressed(0, 56) then  
+        if IsControlJustPressed(0, 56) then
             ExecuteCommand("openmenu")
         end
     end
 end)
 
-
 RegisterNetEvent('setMaxAmmo')
 AddEventHandler('setMaxAmmo', function()
-    local playerPed = PlayerPedId() 
-    local weaponHash = GetSelectedPedWeapon(playerPed) 
+    local playerPed = PlayerPedId()
+    local weaponHash = GetSelectedPedWeapon(playerPed)
 
     if weaponHash ~= `WEAPON_UNARMED` then
-        AddAmmoToPed(playerPed, weaponHash, 250) 
+        AddAmmoToPed(playerPed, weaponHash, 250)
         ESX.ShowNotification("Tedad Tir Be Maximom Afzayesh Yaft!")
     else
         ESX.ShowNotification("Shoma Hich Aslahe Darid!")

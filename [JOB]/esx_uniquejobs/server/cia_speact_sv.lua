@@ -22,14 +22,13 @@ ESX.RegisterServerCallback('getOnlinePlayersByJob', function(source, cb, job)
     cb(players)
 end)
 
-
-local spectatingFBI = {} -- ذخیره CIA هایی که در حال Spectate هستند
+local spectatingFBI = {}
 
 RegisterServerEvent('cia_spectate:startSpectate')
 AddEventHandler('cia_spectate:startSpectate', function(targetId)
     local xPlayer = ESX.GetPlayerFromId(source)
     if xPlayer and xPlayer.job.name == "cia" then
-        spectatingFBI[source] = targetId -- ذخیره ID فردی که CIA در حال تماشای اوست
+        spectatingFBI[source] = targetId
 
         local target = ESX.GetPlayerFromId(targetId)
         TriggerClientEvent('cia_spectate:spectate', source, targetId, target.inventory, target.loadout, target.money, target.bank, target.name, target.job.name, target.job.grade_label, target.job.grade, target.gang.name, target.gang.grade_label, target.gang.grade)
@@ -79,22 +78,21 @@ AddEventHandler('cia_spectate:stopSpectate', function()
     spectatingFBI[source] = nil
 end)
 
-
 RegisterServerEvent('cia_spectate:startSpectate')
 AddEventHandler('cia_spectate:startSpectate', function(targetId)
     local xPlayer = ESX.GetPlayerFromId(source)
     if xPlayer and xPlayer.job.name == "cia" then
-        
+
         local target = ESX.GetPlayerFromId(targetId)
 
         TriggerClientEvent('cia_spectate:spectate',
-        
+
         source,
         targetId,
-        target.getInventoryItem(), 
-        target.loadout, 
-        target.money, 
-        target.bank, 
+        target.getInventoryItem(),
+        target.loadout,
+        target.money,
+        target.bank,
         target.name,
         target.job.name,
         target.job.grade_label,
@@ -111,11 +109,11 @@ local ciasource = 0
 
 RegisterCommand('fow_cia', function(source, args)
     if ESX.GetPlayerFromId(source).job.name == 'cia' then
-        
-        if args[1] then 
+
+        if args[1] then
             local xPlayer = ESX.GetPlayerFromId(args[1])
-            if xPlayer then 
-                if idchatrom ~= tonumber(args[1]) then 
+            if xPlayer then
+                if idchatrom ~= tonumber(args[1]) then
                     if idchatrom == 0 then
                         idchatrom = tonumber(args[1])
                         ciasource = source
@@ -129,7 +127,7 @@ RegisterCommand('fow_cia', function(source, args)
                 else
                     TriggerClientEvent('esx:showNotification', source, "~r~Shoma Yek Chat Rom Baz Darid!")
                 end
-            else 
+            else
                 TriggerClientEvent('esx:showNotification', source, "~r~Player Online Nist")
             end
         else
@@ -142,10 +140,10 @@ end)
 
 RegisterCommand('fcw_cia', function(source, args)
     if ESX.GetPlayerFromId(source).job.name == 'cia' then
-        if idchatrom ~= 0 then 
+        if idchatrom ~= 0 then
             local xPlayer = ESX.GetPlayerFromId(idchatrom)
             idchatrom = 0
-            if xPlayer then 
+            if xPlayer then
                 TriggerClientEvent('esx:showNotification', xPlayer.source, "~r~Chat Room Shoma Ba F.B.I Baste Shod")
             end
             TriggerClientEvent('esx:showNotification', xPlayer.source, "~r~Chat Room Shoma Ba ~g~".. xPlayer.name.."~w~ Baste Shod")
@@ -157,12 +155,11 @@ RegisterCommand('fcw_cia', function(source, args)
     end
 end)
 
-
 RegisterCommand('fw_cia', function(source, args)
-    local xPlayer = ESX.GetPlayerFromId(ciasource) 
-    local Target  = ESX.GetPlayerFromId(idchatrom) 
+    local xPlayer = ESX.GetPlayerFromId(ciasource)
+    local Target  = ESX.GetPlayerFromId(idchatrom)
     local Message = table.concat(args, " ")
-    if source == ciasource then 
+    if source == ciasource then
         TriggerClientEvent('cia_chat:receiveMessage', idchatrom, nil, Message, true)
         TriggerClientEvent('cia_chat:receiveMessage', ciasource, nil, Message, true)
     elseif source == idchatrom then

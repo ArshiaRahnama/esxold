@@ -6,12 +6,6 @@ local PlayerLoadouts = {}
 local LobbyCounter = 0
 local PBPlayers = {}
 
--- ============================================================
--- Per-job paintball access grade
--- Lets a job's boss decide the minimum grade required for their
--- own org to use the job-restricted paintball entrance (see
--- Config.PBS in client.lua). Stored in DB so it survives restarts.
--- ============================================================
 local PBJobAccess = {}
 
 CreateThread(function()
@@ -28,9 +22,6 @@ ESX.RegisterServerCallback('esx_paintball:GetJobAccessGrade', function(source, c
 	cb(PBJobAccess[jobName] or 0)
 end)
 
--- Returns true if xPlayer is a boss of their current job. Tries the
--- grade_name == 'boss' convention this server's job_grades table uses;
--- falls back to grade_label in case a fork names the field differently.
 local function IsJobBoss(xPlayer)
 	if not xPlayer or not xPlayer.job then return false end
 	local job = xPlayer.job
@@ -43,8 +34,8 @@ AddEventHandler('esx_paintball:setJobAccessGrade', function(society, grade)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	if not xPlayer or not xPlayer.job then return end
 
-	-- Never trust the menu click alone: re-check boss status and that
-	-- the society being edited is actually this player's own job.
+
+
 	if xPlayer.job.name ~= society or not IsJobBoss(xPlayer) then
 		TriggerClientEvent('esx_paintball:Notify', source, 'Only your job\'s boss can set this.')
 		return
@@ -64,7 +55,7 @@ AddEventHandler('esx_paintball:setJobAccessGrade', function(society, grade)
 	})
 
 	TriggerClientEvent('esx_paintball:Notify', source, ('Paintball access for %s set to grade %s or higher.'):format(jobName, grade))
-	-- Let everyone currently in that job re-check their access immediately.
+
 	TriggerClientEvent('esx_paintball:RefreshJobAccess', -1, jobName)
 end)
 
@@ -73,23 +64,23 @@ function CreateLobby(xPlayer, data)
 	if not RoundNum or RoundNum < 1 then RoundNum = 1
 	elseif RoundNum > 10 then RoundNum = 10
 	end
-	
+
 	local LobbyName = tostring(data.lobbyName)
 	if #LobbyName < 3 or #LobbyName > 15 then LobbyName = "Just a name" end
-	
+
 	local LobbyPass = tostring(data.Password)
 	if #LobbyPass > 10 then LobbyPass = "" end
 	local BulletProof = tonumber(data.lobbyName)
-	
+
 	local mapName = tostring(data.mapName)
-	
-	table.insert(LobbyList, 
+
+	table.insert(LobbyList,
 	{
 		lobbyOwner = xPlayer,
 		LobbyId = #LobbyList + 1,
 		name = LobbyName,
 		map = mapName,
-		weapon = data.weaponModel,			
+		weapon = data.weaponModel,
 		pass = LobbyPass,
 		armor = data.armor,
 		gunattachs = data.gunattachs,
@@ -104,7 +95,7 @@ function CreateLobby(xPlayer, data)
 		Kills = {}
 	})
 	LobbyCounter = LobbyCounter + 1
-	
+
 	return #LobbyList
 end
 
@@ -119,8 +110,8 @@ end
 
 function DoesOwnerHasLobby(identifier)
 	for k, v in pairs(LobbyList) do
-		if v.lobbyOwner.identifier == identifier then 
-			return true 
+		if v.lobbyOwner.identifier == identifier then
+			return true
 		end
 	end
 	return false
@@ -170,7 +161,7 @@ function JoinLobby(LobbyId, PlayerId)
 			end
 		end
 		return GetTeamsWithHTMLValue(LobbyList[_].teams)
-	end	
+	end
 	return {}
 end
 
@@ -178,10 +169,10 @@ function QuitLobby(LobbyId, TeamID, PlayerId)
 	local _, Lobby = FindLobby(LobbyId)
 	if Lobby then
 		local LastTeamID, PlayerIndex, Player = FindPlayerInLobby(LobbyId, PlayerId)
-		if LastTeamID then 
-			table.remove(LobbyList[_].teams[TeamID + 1], PlayerIndex) 
+		if LastTeamID then
+			table.remove(LobbyList[_].teams[TeamID + 1], PlayerIndex)
 			if LobbyList[_].teams[LastTeamID][PlayerIndex] then
-				table.remove(LobbyList[_].teams[LastTeamID], PlayerIndex) 
+				table.remove(LobbyList[_].teams[LastTeamID], PlayerIndex)
 			end
 		end
 		for teamID, teamData in pairs(LobbyList[_].teams) do
@@ -209,11 +200,11 @@ function ToggleReadyPlayer(LobbyId, TeamID, ReadyState, PlayerId)
 	local _, Lobby = FindLobby(LobbyId)
 	if Lobby then
 		local LastTeamID, PlayerIndex, Player = FindPlayerInLobby(LobbyId, PlayerId)
-		if LastTeamID == (TeamID + 1) then 
+		if LastTeamID == (TeamID + 1) then
 			LobbyList[_].teams[TeamID + 1][PlayerIndex].ready = ReadyState
-			RefreshLobbyPlayers(_)			
+			RefreshLobbyPlayers(_)
 		end
-	end	
+	end
 end
 
 function SwitchTeam(LobbyId, LastTeamID, TeamID, PlayerId)
@@ -226,7 +217,7 @@ function SwitchTeam(LobbyId, LastTeamID, TeamID, PlayerId)
 			RefreshLobbyPlayers(_)
 			return {}
 		end
-	end	
+	end
 	return nil
 end
 
@@ -236,28 +227,28 @@ function StartMatch(LobbyId, PlayerId)
 	if Lobby.lobbyOwner.source ~= PlayerId then return false, "Only the lobby owner can start the match" end
 	if Lobby.started then return false, "Match already started" end
 
-	-- Snapshot anyone still unassigned (teams[1]) before touching
-	-- anything -- QuitLobby below removes entries from this same
-	-- table, and mutating a table while pairs() is iterating it is
-	-- undefined behaviour in Lua.
+
+
+
+
 	local joiners = {}
 	for k, v in pairs(LobbyList[_].teams[1]) do
 		table.insert(joiners, v.source)
 	end
 	for _i, playerSource in ipairs(joiners) do
-		-- Never boot the lobby owner through this path: QuitLobby
-		-- nils out LobbyList[_] when the owner leaves, which used to
-		-- crash the rest of this function (this is exactly what hit
-		-- when starting solo, since the owner sits in teams[1] until
-		-- they join a side).
+
+
+
+
+
 		if playerSource ~= Lobby.lobbyOwner.source then
 			TriggerClientEvent('esx_paintball:ForceExit', playerSource, LobbyId)
 			QuitLobby(LobbyId, 0, playerSource)
 		end
 	end
 
-	-- Defensive re-check: bail out cleanly if the lobby somehow
-	-- stopped existing during the kicks above instead of crashing.
+
+
 	if not LobbyList[_] then return false, "Lobby closed unexpectedly" end
 
 	local tempTeams = {0, 0}
@@ -280,7 +271,7 @@ function StartMatch(LobbyId, PlayerId)
 	for i = 2, 3 do
 		LobbyList[_].winRounds, LobbyList[_].loseRounds = {0, 0}, {0, 0}
 		for k, v in pairs(LobbyList[_].teams[i]) do
-			v.alive, v.kills, v.deaths = true, 0, 0	
+			v.alive, v.kills, v.deaths = true, 0, 0
 			PBPlayers[v.source] = true
 			TriggerClientEvent(
     "esx_paintball:StartMatch",
@@ -307,8 +298,8 @@ ESX.RegisterServerCallback('esx_paintball:CreateLobby', function(source, cb, dat
 	if not xPlayer then return end
 	if DoesOwnerHasLobby(xPlayer.identifier) then cb({}) return end
 
-	-- Turf Wars Inc. integration: if this map is currently rented to a gang,
-	-- only that gang's members can host a lobby on it.
+
+
 	local ok, reservedGang = pcall(function()
 		return exports['uniquecafejobs']:GetMapReservation(tostring(data.mapName))
 	end)
@@ -380,15 +371,7 @@ end
 exports("IsPlayerInPB", function(source)
 	return IsPlayerInPB(source)
 end)
--- local mainloadout = {}
--- --[[ PB Main ]]--
--- RegisterServerEvent('esx_paintball:mainloadout')
--- AddEventHandler('esx_paintball:mainloadout', function()
--- 	if mainloadout[source] == nil then
--- 		local xPlayer = ESX.GetPlayerFromId(source)
--- 			mainloadout[source] = xPlayer.loadout
--- 	end
--- end)
+
 RegisterServerEvent('esx_paintball:SetPlayerReqs')
 AddEventHandler('esx_paintball:SetPlayerReqs', function(LobbyId)
 	local _, Lobby = FindLobby(LobbyId)
@@ -397,7 +380,7 @@ AddEventHandler('esx_paintball:SetPlayerReqs', function(LobbyId)
 		if CurrentTeamID then
 			local xPlayer = ESX.GetPlayerFromId(source)
 			PlayerLoadouts[source] = true
-			-- mainloadout[source] = xPlayer.loadout
+
 			SetPlayerRoutingBucket(source, 100 + LobbyId)
 		end
 	end
@@ -446,7 +429,7 @@ AddEventHandler('esx_paintball:QuitPaintBall', function(LobbyId, winnerTeam)
 	end
 end)
 local mainloadout = {}
---[[ PB Main ]]--
+
 RegisterServerEvent('esx_paintball:mainloadout')
 AddEventHandler('esx_paintball:mainloadout', function()
 	if mainloadout[source] == nil then
@@ -470,11 +453,11 @@ AddEventHandler('esx_paintball:onPBDeath', function(LobbyId, data)
 	local victimPlayer = _source
 	local killerPlayer = nil
 	if data.killerServerId then killerPlayer = data.killerServerId end
-	
+
 	local _, Lobby = FindLobby(LobbyId)
 	if Lobby and Lobby.started then
 		local CurrentTeamID, PlayerIndex, Player = FindPlayerInLobby(LobbyId, _source)
-		if CurrentTeamID then		
+		if CurrentTeamID then
 			LobbyList[_].teams[CurrentTeamID][PlayerIndex].alive = false
 			LobbyList[_].teams[CurrentTeamID][PlayerIndex].deaths = LobbyList[_].teams[CurrentTeamID][PlayerIndex].deaths + 1
 			if killerPlayer then
@@ -482,12 +465,12 @@ AddEventHandler('esx_paintball:onPBDeath', function(LobbyId, data)
 				if KillerTeamID then
 					if not LobbyList[_].Kills[killerPlayer] then LobbyList[_].Kills[killerPlayer] = {source = killerPlayer, name = GetPlayerName(killerPlayer), kills = 0, team = KillerTeamID - 1} end
 					LobbyList[_].Kills[killerPlayer].kills = LobbyList[_].Kills[killerPlayer].kills + 1
-					GetTopKillers(_)				
-					
+					GetTopKillers(_)
+
 					LobbyList[_].teams[KillerTeamID][KillerIndex].kills = LobbyList[_].teams[KillerTeamID][KillerIndex].kills + 1
 				end
-			end			
-			
+			end
+
 			local aliveCount = {0, 0}
 			for i = 2, 3 do
 				for playerKey, playerValue in pairs(LobbyList[_].teams[i]) do
@@ -496,9 +479,9 @@ AddEventHandler('esx_paintball:onPBDeath', function(LobbyId, data)
 					end
 				end
 			end
-			
-			TriggerClientEvent('esx_paintball:onPBDeath', -1, LobbyId, CurrentTeamID - 1, data, _source, aliveCount)			
-			
+
+			TriggerClientEvent('esx_paintball:onPBDeath', -1, LobbyId, CurrentTeamID - 1, data, _source, aliveCount)
+
 			local RoundWinner = nil
 			if aliveCount[1] > aliveCount[2] and aliveCount[2] == 0 then
 				LobbyList[_].winRounds[1] = LobbyList[_].winRounds[1] + 1
@@ -516,7 +499,7 @@ AddEventHandler('esx_paintball:onPBDeath', function(LobbyId, data)
 			if LobbyList[_].winRounds[1] == LobbyList[_].roundNum then PBWinner = 1
 			elseif LobbyList[_].winRounds[2] == LobbyList[_].roundNum then PBWinner = 2
 			end
-			
+
 			if PBWinner then
 				TriggerEvent('esx_paintball:QuitPaintBall', LobbyId, PBWinner)
 			else
@@ -544,33 +527,33 @@ function GetTopKillers(LobbyKey)
 		if v.kills > max[2].kills and v.source ~= max[1].source then
 			max[2].kills, max[2].name, max[2].source, max[2].team = v.kills, v.name, v.source, v.team
 		end
-	end	
+	end
 	for k, v in pairs(LobbyList[LobbyKey].Kills) do
 		if v.kills > max[3].kills and v.source ~= max[1].source and v.source ~= max[2].source then
 			max[3].kills, max[3].name, max[3].source, max[3].team = v.kills, v.name, v.source, v.team
 		end
-	end	
+	end
 	for k, v in pairs(LobbyList[LobbyKey].Kills) do
 		if v.kills > max[4].kills and v.source ~= max[1].source and v.source ~= max[2].source and v.source ~= max[3].source then
 			max[4].kills, max[4].name, max[4].source, max[4].team = v.kills, v.name, v.source, v.team
 		end
-	end	
+	end
 	for k, v in pairs(LobbyList[LobbyKey].Kills) do
 		if v.kills > max[5].kills and v.source ~= max[1].source and v.source ~= max[2].source and v.source ~= max[3].source and v.source ~= max[4].source then
 			max[5].kills, max[5].name, max[5].source, max[5].team = v.kills, v.name, v.source, v.team
 		end
-	end		
-	
+	end
+
 	TriggerClientEvent('esx_paintball:setTopKillers', -1, LobbyList[LobbyKey].LobbyId, max)
 end
 
 function StartRound(PlayerId, LobbyId, RoundWinner, _)
 	local LobbyKey, LobbyValue = FindLobby(LobbyId)
 	if not _ then _ = LobbyKey end
-	
+
 	local TempRound = LobbyList[_].roundCounter
 	local TempLobbyCounter = LobbyList[_].LobbyCounter
-	
+
 	SetTimeout(((7 * 60) + 1) * 1000, function()
 		local LobbyKey2, LobbyValue2 = FindLobby(LobbyId)
 		if LobbyValue2 and LobbyValue2.started then
@@ -591,11 +574,11 @@ function StartRound(PlayerId, LobbyId, RoundWinner, _)
 			end
 		end
 	end)
-	
+
 	if RoundWinner then
 		TriggerClientEvent('esx_paintball:StartRound', PlayerId, LobbyId, RoundWinner)
 		if _ ~= nil then
-			TriggerClientEvent('esx_paintball:UpdateTeams', PlayerId, LobbyId, LobbyList[_].winRounds, LobbyList[_].roundCounter)			
+			TriggerClientEvent('esx_paintball:UpdateTeams', PlayerId, LobbyId, LobbyList[_].winRounds, LobbyList[_].roundCounter)
 		end
 	else
 		TriggerClientEvent('esx_paintball:StartRound', PlayerId, LobbyId)
@@ -612,7 +595,7 @@ AddEventHandler('playerDropped', function()
 					local CurrentTeamID = i
 					local PlayerIndex = playerKey
 					local LobbyId = lobbyValue.LobbyId
-					
+
 					if playerValue.alive then
 						local aliveCount = {0, 0}
 						for i = 2, 3 do
@@ -622,7 +605,7 @@ AddEventHandler('playerDropped', function()
 								end
 							end
 						end
-						
+
 						local RoundWinner = nil
 						if aliveCount[1] > aliveCount[2] and aliveCount[2] == 0 then
 							LobbyList[_].winRounds[1] = LobbyList[_].winRounds[1] + 1
@@ -640,7 +623,7 @@ AddEventHandler('playerDropped', function()
 						if LobbyList[_].winRounds[1] == LobbyList[_].roundNum then PBWinner = 1
 						elseif LobbyList[_].winRounds[2] == LobbyList[_].roundNum then PBWinner = 2
 						end
-						
+
 						if PBWinner then
 							TriggerEvent('esx_paintball:QuitPaintBall', LobbyId, PBWinner)
 						else
@@ -649,20 +632,20 @@ AddEventHandler('playerDropped', function()
 									for playerKey2, playerValue2 in pairs(LobbyList[_].teams[j]) do
 										playerValue2.alive = true
 									end
-								end				
+								end
 								StartRound(-1, LobbyId, RoundWinner, _)
 							end
-						end					
+						end
 					end
-					
+
 					LobbyList[_].teams[CurrentTeamID][PlayerIndex] = nil
 					TriggerClientEvent('esx_paintball:PlayerDisconnected', -1, LobbyId, _source)
-					
+
 					if #LobbyList[_].teams[2] == 0 or #LobbyList[_].teams[3] == 0 then
 						local PBWinner = nil
 						if LobbyList[_].teams[2] == 0 then PBWinner = 2
 						else PBWinner = 1
-						end					
+						end
 						TriggerEvent('esx_paintball:QuitPaintBall', LobbyId, PBWinner)
 					end
 				end

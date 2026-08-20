@@ -1,4 +1,4 @@
-Keys = 
+Keys =
 {
 	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
 	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
@@ -13,7 +13,7 @@ Keys =
 
 local SavedGuns = {}
 
-local PBData = 
+local PBData =
 {
 	LobbyId = -1,
 	InPB = false,
@@ -42,9 +42,9 @@ Citizen.CreateThread(function()
 	if ESX.GetPlayerData() == nil then
 		Citizen.Wait(500)
 	end
-	
+
 	PlayerData = ESX.GetPlayerData()
-	
+
 end)
 
 local MapData =
@@ -55,8 +55,8 @@ local MapData =
 		["team2"] = { x = 254.34, y = 225.39, z = 106.29, h = 163.04 },
 		["eteam1"] = { x = 222.06, y = 210.99, z = 105.55, h = 158.26 },
 		["eteam2"] = { x = 220.76, y = 206.79, z = 105.47, h = 340.43 },
-		["area"] = 
-		{ 
+		["area"] =
+		{
 			["Pos"] = { x = 249.33, y = 217.76, z = 100.29 },
 			["Size"] = { x = 80.0, y = 80.0, z = 10.0 },
 		},
@@ -84,14 +84,14 @@ local MapData =
 			["Pos"] = { x = -1076.06, y = 4912.23, z = 150.97 },
 			["Size"] = { x = 135.0, y = 135.0, z = 200.0 },
 		},
-	},	
+	},
 	["skyscraper"] =
 	{
 		["team1"] = { x = -168.86, y = -1011.97, z = 254.13, h = 341.67 },
 		["team2"] = { x = -139.52, y = -952.93, z = 254.13, h = 159.49 },
 		["eteam1"] = { x = -161.05, y = -995.09, z = 254.13, h = 340.75 },
 		["eteam2"] = { x = -158.08, y = -988.08, z = 254.13, h = 157.8 },
-	},		
+	},
 	["island"] =
 	{
 		["team1"] = { x = 244.43, y = 202.98, z = 105.21, h = 73.86 },
@@ -144,7 +144,7 @@ local MapData =
 			["Pos"] = { x = -2087.34, y = 3118.99, z = 15.71 },
 			["Size"] = { x = 70.0, y = 70.0, z = 60.0 },
 		},
-	},	
+	},
 
 	["jail"] =
 	{
@@ -157,7 +157,7 @@ local MapData =
 			["Pos"] = { x = -2087.34, y = 3118.99, z = 15.71 },
 			["Size"] = { x = 70.0, y = 70.0, z = 60.0 },
 		},
-	},	
+	},
 }
 
 RegisterNetEvent('esx:setJob')
@@ -168,12 +168,10 @@ AddEventHandler('esx:setJob', function(job)
     end)
 end)
 
-
-
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
     PlayerData = xPlayer
-	-- CreateBlip2(vector3(1375.39, -739.92, 67.73), 'Paint Ball')
+
 	RefreshJobAccess(PlayerData.job and PlayerData.job.name)
 end)
 
@@ -189,15 +187,8 @@ local CanPressKey = false
 local MyPos = nil
 local MyHeal = nil
 
--- Grade required per job to use that job's Config.PBS entrance, as set
--- by that job's boss via /pbaccess. Missing entry = grade 0 (everyone
--- in the job), matching the original behaviour before this existed.
 local PBRequiredGrade = {}
 
--- Resolves whether the local player should see a given Config.PBS
--- entry. Supports two entry styles:
---   { Job = "police", ... }              -- simple, respects /pbaccess
---   { Condition = function(PD) ... end }  -- advanced/custom logic
 local function EvaluatePBAccess(entry, PD)
 	if entry.Condition then
 		return entry.Condition(PD)
@@ -225,8 +216,6 @@ function RebuildPBZones()
 	if RunThread then LoadMarkers() end
 end
 
--- Fetches the current /pbaccess grade for `jobName` from the server,
--- caches it, then re-evaluates which zones the player can see.
 function RefreshJobAccess(jobName)
 	if not jobName then RebuildPBZones() return end
 	ESX.TriggerServerCallback('esx_paintball:GetJobAccessGrade', function(grade)
@@ -295,48 +284,40 @@ AddEventHandler("onKeyUP", function(key)
     end
 end)
 
--- Job-restricted paintball entrances.
--- Each entry only shows its marker / lets you press E to open the menu
--- for players whose PlayerData matches `Condition`. This is evaluated
--- entirely client-side per player, so someone who doesn't match never
--- sees the marker or gets the help prompt.
---
--- To add another one (for any job, or a gang, or a custom check), just
--- copy one of these blocks and change Condition/Enter/Label/Color.
 Config.PBS = {
-	-- Simple form: `Job = "..."` — access follows whatever grade that
-	-- job's boss has set in-game with /pbaccess <grade> (default: 0,
-	-- meaning everyone in the job, until a boss changes it).
+
+
+
 	{
 		Job = "police",
-		Enter = { x = -1616.23, y = 5109.02, z = 54.65 }, -- change to wherever you want this entrance to be
+		Enter = { x = -1616.23, y = 5109.02, z = 54.65 },
 		Label = "Police Paintball",
 		Color = { r = 30, g = 100, b = 255 },
 	},
 
-	-- Copy this block for another job (just change Job/Enter/Label/Color):
-	-- {
-	-- 	Job = "ambulance",
-	-- 	Enter = { x = 0.0, y = 0.0, z = 0.0 },
-	-- 	Label = "EMS Paintball",
-	-- 	Color = { r = 60, g = 220, b = 120 },
-	-- },
 
-	-- Advanced form: full custom logic (bypasses /pbaccess entirely —
-	-- use this only if the Job shorthand above doesn't cover your case,
-	-- e.g. gang-based access or a hardcoded grade you don't want a boss
-	-- to be able to change):
-	-- {
-	-- 	Condition = function(PlayerData)
-	-- 		return PlayerData.job ~= nil and PlayerData.job.name == "police" and PlayerData.job.grade >= 2
-	-- 	end,
-	-- 	Enter = { x = 0.0, y = 0.0, z = 0.0 },
-	-- 	Label = "Police Paintball",
-	-- 	Color = { r = 30, g = 100, b = 255 },
-	-- },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
-local PBMarker = 
+local PBMarker =
 {
     DrawDistance = 5,
     Pos = vector3(-1616.23, 5119.020, 54.651),
@@ -350,9 +331,7 @@ local hasGPS = false
 local EquipGun = nil
 local Acs = false
 
-
-
-local TeamColors = 
+local TeamColors =
 {
 	["team1"] = { r = 0, g = 0, b = 200 },
 	["team2"] = { r = 255, g = 165, b = 0 }
@@ -367,7 +346,7 @@ local ClothesData =
 	},
 	["team2"] =
 	{
-		["male"] = '{"bags_1":0,"helmet_1":-1,"face_2":0,"beard_2":10,"arms":5,"torso_1":88,"beard_3":0,"watches_2":-1,"face_3":0,"eyebrows_1":0,"tshirt_1":15,"mask_2":1,"shoes_2":0,"glasses_2":-1,"sex":0,"hair_2":0,"makeup_4":0,"moles_1":0,"makeup_3":0,"chain_1":0,"decals_1":0,"bproof_1":0,"lipstick_2":0,"hair_color_1":0,"decals_2":0,"lipstick_3":0,"arms_2":0,"complexion_2":1,"age_1":0,"watches_1":-1,"face_1":0,"ears_2":-1,"moles_2":1,"ears_1":-1,"hair_color_2":0,"eyebrows_3":0,"pants_2":18,"complexion_1":0,"beard_1":7,"beard_4":0,"age_2":0,"bags_2":0,"bproof_2":0,"eye_color":0,"lipstick_1":0,"tshirt_2":0,"torso_2":1,"hair_1":38,"chain_2":0,"eyebrows_2":0,"lipstick_4":0,"helmet_2":-1,"glasses_1":-1,"pants_1":120,"makeup_2":0,"skin":0,"shoes_1":66,"eyebrows_4":0,"makeup_1":0,"mask_1":31}',		
+		["male"] = '{"bags_1":0,"helmet_1":-1,"face_2":0,"beard_2":10,"arms":5,"torso_1":88,"beard_3":0,"watches_2":-1,"face_3":0,"eyebrows_1":0,"tshirt_1":15,"mask_2":1,"shoes_2":0,"glasses_2":-1,"sex":0,"hair_2":0,"makeup_4":0,"moles_1":0,"makeup_3":0,"chain_1":0,"decals_1":0,"bproof_1":0,"lipstick_2":0,"hair_color_1":0,"decals_2":0,"lipstick_3":0,"arms_2":0,"complexion_2":1,"age_1":0,"watches_1":-1,"face_1":0,"ears_2":-1,"moles_2":1,"ears_1":-1,"hair_color_2":0,"eyebrows_3":0,"pants_2":18,"complexion_1":0,"beard_1":7,"beard_4":0,"age_2":0,"bags_2":0,"bproof_2":0,"eye_color":0,"lipstick_1":0,"tshirt_2":0,"torso_2":1,"hair_1":38,"chain_2":0,"eyebrows_2":0,"lipstick_4":0,"helmet_2":-1,"glasses_1":-1,"pants_1":120,"makeup_2":0,"skin":0,"shoes_1":66,"eyebrows_4":0,"makeup_1":0,"mask_1":31}',
 		["female"] = '{"bags_1":0,"helmet_1":-1,"face_2":0,"beard_2":10,"arms":0,"torso_1":0,"beard_3":0,"watches_2":-1,"face_3":0,"eyebrows_1":0,"tshirt_1":15,"mask_2":0,"shoes_2":0,"glasses_2":-1,"sex":1,"hair_2":0,"makeup_4":0,"moles_1":0,"makeup_3":0,"chain_1":0,"decals_1":0,"bproof_1":-1,"lipstick_2":0,"hair_color_1":0,"decals_2":0,"lipstick_3":0,"arms_2":0,"complexion_2":1,"age_1":0,"watches_1":-1,"face_1":0,"ears_2":0,"moles_2":1,"ears_1":-1,"hair_color_2":0,"eyebrows_3":0,"pants_2":5,"complexion_1":0,"beard_1":7,"beard_4":0,"age_2":0,"bags_2":0,"bproof_2":0,"eye_color":0,"lipstick_1":0,"tshirt_2":0,"torso_2":0,"hair_1":38,"chain_2":0,"eyebrows_2":0,"lipstick_4":0,"helmet_2":0,"glasses_1":-1,"pants_1":4,"makeup_2":0,"skin":0,"shoes_1":4,"eyebrows_4":0,"makeup_1":0,"mask_1":-1}'
 	}
 }
@@ -415,26 +394,26 @@ RegisterNUICallback('GetLobbyPassword', function(data, cb)
 	Acs = false
 	ESX.TriggerServerCallback('esx_paintball:GetLobbyPassword', function(isCorrect)
 		cb(isCorrect)
-	end, data)	
+	end, data)
 end)
 
 RegisterNUICallback('SwitchTeam', function(data, cb)
 	Acs = false
 	ESX.TriggerServerCallback('esx_paintball:SwitchTeam', function(newData)
 		cb(newData)
-	end, data)	
+	end, data)
 end)
 
 RegisterNUICallback('StartMatch', function(data, cb)
 	ESX.TriggerServerCallback('esx_paintball:StartMatch', function(newData)
 		cb(newData)
-	end, data)	
+	end, data)
 end)
 
 RegisterNUICallback('ToggleReadyPlayer', function(data, cb)
 	ESX.TriggerServerCallback('esx_paintball:ToggleReadyPlayer', function(newData)
 		cb(newData)
-	end, data)	
+	end, data)
 end)
 
 local PEDWEAPON = {}
@@ -452,7 +431,6 @@ AddEventHandler('esx:addPBWeapon', function(weaponName, ammo)
 		SetCanPedSelectWeapon(PlayerPedId(), weaponHash, true)
 	end
 end)
-
 
 local timer = 190
 
@@ -488,12 +466,12 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(8)
 		if PBData.InPB then
-			DisableControlAction(2, Keys['F1'])		
+			DisableControlAction(2, Keys['F1'])
 			DisableControlAction(2, Keys['F2'])
-			DisableControlAction(2, Keys['F3'])			
+			DisableControlAction(2, Keys['F3'])
 			DisableControlAction(2, Keys['F5'])
 			DisableControlAction(2, Keys['F6'])
-			DisableControlAction(2, Keys['F7'])			
+			DisableControlAction(2, Keys['F7'])
 			DisableControlAction(2, Keys['F9'])
 			DisableControlAction(2, Keys['K'])
 			DisableControlAction(2, Keys['H'])
@@ -554,7 +532,7 @@ end)
 
 RegisterCommand("pbmsu", function()
 	if PBData.InPB and isDead then
-		if PBData.MouseScroll + 1 > #PBData.Teammates then 
+		if PBData.MouseScroll + 1 > #PBData.Teammates then
 			PBData.MouseScroll = 1
 		else
 			PBData.MouseScroll = PBData.MouseScroll + 1
@@ -565,7 +543,7 @@ end)
 
 RegisterCommand("pbmsd", function()
 	if PBData.InPB and isDead then
-		if PBData.MouseScroll - 1 < 1 then 
+		if PBData.MouseScroll - 1 < 1 then
 			PBData.MouseScroll = #PBData.Teammates
 		else
 			PBData.MouseScroll = PBData.MouseScroll - 1
@@ -578,15 +556,15 @@ RegisterNetEvent('esx_paintball:StartMatch')
 AddEventHandler('esx_paintball:StartMatch', function(LobbyId, mapName, weaponName, teamID, teammates, MaxRounds, Arm, Head, time)
 	if PBData.LobbyId == LobbyId then
 		PBData.InPB = true
-		SendNUIMessage({action = "ShowGameHUD", value = true})	
-		SendNUIMessage({action = "ResetRoundTimer", value = 180, r = 0, g = 200, b = 0})	
-		-- exports.vip_cars:PB(PBData.InPB)
+		SendNUIMessage({action = "ShowGameHUD", value = true})
+		SendNUIMessage({action = "ResetRoundTimer", value = 180, r = 0, g = 200, b = 0})
+
 		PBData.TeamID = teamID
 		PBData.LastPos = teamID
 		PBData.MapName = mapName
 		PBData.WeaponName = weaponName
 		PBData.armor = Arm
-		PBData.TeamPos = MapData[mapName]["team" .. teamID]				
+		PBData.TeamPos = MapData[mapName]["team" .. teamID]
 		PBData.CurrentRound = 0
 		PBData.MaxRounds = MaxRounds
 		for k, v in pairs(ESX.GetPlayerData().loadout) do
@@ -603,8 +581,8 @@ AddEventHandler('esx_paintball:StartMatch', function(LobbyId, mapName, weaponNam
 		MyPos = GetEntityCoords(PlayerPedId())
 		MyHeal = GetEntityHealth(GetPlayerPed(-1))
 		TriggerEvent('esx_paintball:inPaintBall', true)
-		TriggerServerEvent('unique_paintball:inPaintBall', true)				
-		TriggerServerEvent('esx_paintball:SetPlayerReqs', PBData.LobbyId--[[, GetPlayerLoadout()]])
+		TriggerServerEvent('unique_paintball:inPaintBall', true)
+		TriggerServerEvent('esx_paintball:SetPlayerReqs', PBData.LobbyId)
 		TriggerEvent('skinchanger:getSkin', function(skin)
 			if tonumber(skin.sex) == 0 then
 				TriggerEvent('skinchanger:loadClothes', skin, json.decode(ClothesData["team" .. teamID]["male"]))
@@ -612,8 +590,8 @@ AddEventHandler('esx_paintball:StartMatch', function(LobbyId, mapName, weaponNam
 				TriggerEvent('skinchanger:loadClothes', skin, json.decode(ClothesData["team" .. teamID]["female"]))
 			end
 		end)
-		Citizen.Wait(300)						
-		SendNUIMessage({action = "UpdateTeams", team1 = "0", team2 = "0"})		
+		Citizen.Wait(300)
+		SendNUIMessage({action = "UpdateTeams", team1 = "0", team2 = "0"})
 		SendNUIMessage({action = "UpdateTotalRounds", value = "0", maxRounds = PBData.MaxRounds})
 		EquipGun = weaponName
 		TriggerEvent('Paintball', true)
@@ -633,20 +611,20 @@ end)
 RegisterNetEvent('esx_paintball:StartRound')
 AddEventHandler('esx_paintball:StartRound', function(LobbyId, RoundWinner, Arm, Head, time)
 	if PBData.LobbyId == LobbyId then
-		SendNUIMessage({action = "ShowGameHUD", value = true})	
-		SendNUIMessage({action = "ResetRoundTimer", value = 180, r = 0, g = 200, b = 0})		
+		SendNUIMessage({action = "ShowGameHUD", value = true})
+		SendNUIMessage({action = "ResetRoundTimer", value = 180, r = 0, g = 200, b = 0})
 		TriggerEvent('holsterweapon:ResetAll')
 		isDead = false
-		TriggerEvent('es_admin:freezePlayer', true)		
+		TriggerEvent('es_admin:freezePlayer', true)
 		Citizen.Wait(250)
-		TriggerEvent('es_admin:freezePlayer', false)	
+		TriggerEvent('es_admin:freezePlayer', false)
 		ToggleSpec(false)
 		for k, v in pairs(PBData.Teammates) do
 			v.alive = true
 		end
 		if RoundWinner then
-			local tempMsg = "~g~You win this round"		
-			if RoundWinner ~= PBData.TeamID then tempMsg = "~r~Team " .. RoundWinner .. " won round" end		
+			local tempMsg = "~g~You win this round"
+			if RoundWinner ~= PBData.TeamID then tempMsg = "~r~Team " .. RoundWinner .. " won round" end
 			TriggerEvent('esx_paintball:ShowMessage', tempMsg)
 			PBData.CurrentRound = PBData.CurrentRound + 1
 		else
@@ -661,19 +639,19 @@ AddEventHandler('esx_paintball:StartRound', function(LobbyId, RoundWinner, Arm, 
 		end
 
 		PBData.TeamPos = MapData[PBData.MapName]["team" .. PBData.LastPos]
-				
-		RequestCollisionAtCoord(PBData.TeamPos.x, PBData.TeamPos.y, PBData.TeamPos.z + 0.05)		
+
+		RequestCollisionAtCoord(PBData.TeamPos.x, PBData.TeamPos.y, PBData.TeamPos.z + 0.05)
 		while not HasCollisionLoadedAroundEntity(playerPed) do
 			RequestCollisionAtCoord(PBData.TeamPos.x, PBData.TeamPos.y, PBData.TeamPos.z + 0.05)
 			Citizen.Wait(1)
 		end
-		TriggerEvent(tostring(Settings.AmbulanceJob))	
+		TriggerEvent(tostring(Settings.AmbulanceJob))
 		Citizen.Wait(1000)
 		SetEntityCoords(playerPed, PBData.TeamPos.x, PBData.TeamPos.y, PBData.TeamPos.z)
 		RespawnPed(playerPed, PBData.TeamPos.x, PBData.TeamPos.y, PBData.TeamPos.z, PBData.TeamPos.h)
 		TriggerEvent('es_admin:freezePlayer', true)
 		Citizen.Wait(300)
-		TriggerServerEvent('esx_paintball:StartRound', PBData.LobbyId)		
+		TriggerServerEvent('esx_paintball:StartRound', PBData.LobbyId)
 		Citizen.Wait(500)
 		SetPedArmour(GetPlayerPed(-1), tonumber(PBData.armor))
 		Wait(2000)
@@ -718,7 +696,7 @@ AddEventHandler('esx_paintball:QuitPaintBall', function(LobbyId, PBWinner)
 		TriggerServerEvent('unique_paintball:inPaintBall', false)
 		PBData.InPB = false
 		SetPedArmour(GetPlayerPed(-1), 0)
-		-- exports.vip_cars:PB(PBData.InPB)
+
 		PBData.TeamID = 0
 		PBData.Teammates = {}
 		PBData.MouseScroll = 0
@@ -736,42 +714,33 @@ AddEventHandler('esx_paintball:QuitPaintBall', function(LobbyId, PBWinner)
 		TriggerServerEvent('esx_paintball:RestoreLoadout')
 		Wait(3000)
 		resetppd()
-		-- Wait(2000)
-		-- TriggerEvent("esx_ambulancejob:revivex")
+
+
 	end
 end)
-
-
 
 function resetppd()
 	ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
         local isMale = skin.sex == 0
-        --exports.spawnmanager:changeWhiteList(true)
+
 
         TriggerEvent('skinchanger:loadDefaultModel', isMale, function()
 
             ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
                 TriggerEvent('skinchanger:loadSkin', skin)
-                
+
                 Citizen.CreateThread(function()
                     Citizen.Wait(250)
-                    --exports.spawnmanager:changeWhiteList(false)
+
                 end)
 
             end)
-            
+
         end)
 
     end)
 
 end
-
-
-
-
-
-
-
 
 local BreakThatShit = false
 RegisterNetEvent('esx_paintball:BringTogether')
@@ -782,14 +751,14 @@ AddEventHandler('esx_paintball:BringTogether', function(LobbyId, BringRound)
 		SetEntityCoords(playerPed, BringPos.x, BringPos.y, BringPos.z)
 		SetEntityHeading(playerPed, BringPos.h)
 		TriggerEvent('esx_paintball:ShowMessage', "~r~Out Of Time!")
-		TriggerEvent('es_admin:freezePlayer', true)		
+		TriggerEvent('es_admin:freezePlayer', true)
 		Citizen.Wait(3333)
 		TriggerEvent('es_admin:freezePlayer', false)
 		local OFTWait = 10
 		SendNUIMessage({action = "ResetRoundTimer", value = OFTWait, r = 200, g = 0, b = 0})
 		Citizen.Wait(OFTWait * 1000)
 		while true do
-			if BreakThatShit then BreakThatShit = false return end			
+			if BreakThatShit then BreakThatShit = false return end
 			if not PBData.InPB or PBData.LobbyId ~= LobbyId or PBData.CurrentRound ~= BringRound then return end
 			Citizen.Wait(math.random(500, 3000))
 			SetEntityHealth(playerPed, GetEntityHealth(playerPed) - math.random(1, 7))
@@ -808,22 +777,22 @@ function GetWeaponComponents(wName)
 
 			if HasPedGotWeapon(playerPed, weaponHash, false) and weaponName ~= 'WEAPON_UNARMED' then
 				local components = Config.Weapons[i].components
-	
+
 				if #components > 0 then
 					for j=1, #components, 1 do
 						if HasPedGotWeaponComponent(playerPed, weaponHash, components[j].hash) then
 							table.insert(weaponComponents, components[j].hash)
 						end
-					end				
+					end
 				end
-				
+
 				break
-			end			
-			
+			end
+
 			break
 		end
 	end
-	
+
 	return weaponComponents
 end
 
@@ -839,11 +808,11 @@ function GetPlayerLoadout()
 
 		if HasPedGotWeapon(playerPed, weaponHash, false) and weaponName ~= 'WEAPON_UNARMED' then
 			local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
-			
-			weaponComponents = GetWeaponComponents(weaponName)				
+
+			weaponComponents = GetWeaponComponents(weaponName)
 			weaponTint = GetPedWeaponTintIndex(playerPed, weaponHash)
 
-			table.insert(loadout, 
+			table.insert(loadout,
 			{
 				name = weaponName,
 				ammo = ammo,
@@ -852,7 +821,7 @@ function GetPlayerLoadout()
 			})
 		end
 	end
-	
+
 	return loadout
 end
 
@@ -881,7 +850,7 @@ AddEventHandler('esx_paintball:ShowMessage', function(MsgText, setCounter)
 	BeginTextComponent("STRING")
 	AddTextComponentString(MsgText)
 	EndTextComponent()
-	PopScaleformMovieFunctionVoid()	
+	PopScaleformMovieFunctionVoid()
 
 	local counter = 0
 	local maxCounter = (setCounter or 200)
@@ -931,10 +900,6 @@ function GetTeammate(PlayerId)
 	return nil, nil
 end
 
--- Maps a weapon hash (as sent in the death event) to the icon filename
--- shipped in html/assets/weapons/ (e.g. `WEAPON_PISTOL` -> "pistol").
--- Falls back to "unknown" if the hash can't be matched, so the <img>'s
--- onerror in script.js just hides the icon instead of showing a broken image.
 function GetWeaponIconFile(weaponHash)
 	if not weaponHash or not Config.Weapons then return "unknown" end
 	for i = 1, #Config.Weapons do
@@ -945,9 +910,6 @@ function GetWeaponIconFile(weaponHash)
 	return "unknown"
 end
 
--- Best-effort read of the weapon hash / headshot flag out of the death
--- event payload. Field names vary between death/ambulance resources, so
--- we try the common ones and fall back gracefully instead of erroring.
 function GetKillMeta(data)
 	local weaponHash = data.deathCause or data.weapon or data.lastWeapon or data.killerWeapon or nil
 	local isHeadshot = data.isHeadshot or data.headshot or false
@@ -958,9 +920,9 @@ RegisterNetEvent('esx_paintball:onPBDeath')
 AddEventHandler('esx_paintball:onPBDeath', function(LobbyId, TeamID, data, victim, teamsCount)
 	if PBData.InPB then
 		if PBData.LobbyId == LobbyId then
-			-- Kill feed: fires for everyone currently in this match, regardless
-			-- of team. Killer's team is assumed to be the opposite of the
-			-- victim's (this mode has no confirmed friendly-fire team-kill case).
+
+
+
 			if data.killerServerId then
 				local killerPed = GetPlayerFromServerId(data.killerServerId)
 				local killerName = (killerPed ~= -1) and GetPlayerName(killerPed) or "Unknown"
@@ -987,10 +949,10 @@ AddEventHandler('esx_paintball:onPBDeath', function(LobbyId, TeamID, data, victi
 				if victim ~= GetPlayerServerId(PlayerId()) then
 					local _, myTeammate = GetTeammate(victim)
 					if myTeammate then
-						PBData.Teammates[_].alive = false	
+						PBData.Teammates[_].alive = false
 						if PBData.MouseScroll == _ then
 							ToggleSpec(true)
-						end						
+						end
 					end
 					for k, v in pairs(PBData.Teammates) do
 						if v.source == victim and isDead and PBData.MouseScroll ~= victim and v.alive then
@@ -1005,7 +967,7 @@ AddEventHandler('esx_paintball:onPBDeath', function(LobbyId, TeamID, data, victi
 				local tempMsgColor = "~b~"
 				if TeamID == 2 then tempMsgColor = "~y~" end
 				local tempMsg = "~w~Az Teame " .. tempMsgColor .. "(" .. TeamID .. ") ~g~" .. teamsCount[TeamID] .. " ~w~Nafar Zende Ast"
-				lib.notify({ position = 'center-right', title = '', description = tempMsg, type = 'info', duration = 3000 })			
+				lib.notify({ position = 'center-right', title = '', description = tempMsg, type = 'info', duration = 3000 })
 			end
 		end
 	end
@@ -1032,7 +994,7 @@ function ToggleSpec(state, playerId)
 		if nextSpecPlayer then
 			PBData.MouseScroll = _
 			NetworkSetInSpectatorMode(true, GetPlayerPed(nextSpecPlayer))
-			SendNUIMessage({action = "SpectatePlayer", value = PBData.Teammates[_].name})			
+			SendNUIMessage({action = "SpectatePlayer", value = PBData.Teammates[_].name})
 		else
 			ToggleSpec(false)
 		end
@@ -1086,7 +1048,7 @@ function CreateBlip2(coords, name)
 	SetBlipCategory(blip, 3)
 	SetBlipColour  (blip, 46)
 	SetBlipAsShortRange(blip, true)
-  
+
 	BeginTextCommandSetBlipName("STRING")
 	AddTextComponentString(name)
 	EndTextCommandSetBlipName(blip)
@@ -1100,12 +1062,12 @@ function CreateBlip(coords, name)
 	SetBlipCategory(blip, 3)
 	SetBlipColour  (blip, 46)
 	SetBlipAsShortRange(blip, true)
-  
+
 	BeginTextCommandSetBlipName("STRING")
 	AddTextComponentString(name)
 	EndTextCommandSetBlipName(blip)
   end
-  
+
   Citizen.CreateThread(function()
 	CreateBlip(PBMarker.Pos, 'Paint Ball')
 	SetNuiFocus(false,false)
@@ -1130,8 +1092,8 @@ function CreateBlip(coords, name)
 		  OpenLobbyMenu(false)
 		end
 	  else
-		-- بهینه‌سازی: وقتی بازیکن بیشتر از ۱۰۰ متر از مارکر پینت‌بال دوره،
-		-- نیازی به چک هر فریم نیست (قبلاً بدون else-sleep بود).
+
+
 		Wait(1000)
 	  end
 	end

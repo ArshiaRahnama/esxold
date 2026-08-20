@@ -8,7 +8,7 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(PlayerPedId())
 
 		if GetDistanceBetweenCoords(coords, Config.FieldZones.CocaineField.coords, true) < 30 then
-			-- TriggerEvent('esx:showNotification', _U('cocaine_field_close'))
+
 			SpawnCocaPlants()
 			Citizen.Wait(1000)
 		else
@@ -24,7 +24,7 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(playerPed)
 
 		if GetDistanceBetweenCoords(coords, Config.ProcessZones.CocaineProcessing.coords, true) < 15 and GetDistanceBetweenCoords(coords, Config.ProcessZones.CocaineProcessing.coords, true) > 10 then
-			-- ESX.ShowNotification(_U('cocaine_process_close'))
+
 		end
 	end
 end)
@@ -49,7 +49,7 @@ Citizen.CreateThread(function()
 			end
 
 			if IsControlJustReleased(0, 38) and not isPickingUp then
-				
+
 
 				ESX.TriggerServerCallback('esx_jk_drugs:canPickUp', function(canPickUp)
 
@@ -71,24 +71,24 @@ Citizen.CreateThread(function()
 							},
 						}, function(status)
 							if not status then
-		
+
 								table.remove(cocaPlants, nearbyID)
 								spawnedCoca = spawnedCoca - 1
-		
-								ClearPedTasks(playerPed)			
+
+								ClearPedTasks(playerPed)
 								ESX.Game.DeleteObject(nearbyObject)
-		
+
 								TriggerServerEvent('esx_jk_drugs:pickedUpCocaPlant')
-		
+
 								isPickingUp = false
-					
+
 							elseif status then
 
 								ClearPedTasksImmediately(playerPed)
 								isPickingUp = false
 
 							end
-						end)  
+						end)
 
 					else
 						ESX.ShowNotification(_U('cocaine_inventoryfull'))

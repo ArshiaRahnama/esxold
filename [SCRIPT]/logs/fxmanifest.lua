@@ -1,16 +1,15 @@
 fx_version 'bodacious'
 game 'gta5'
 
-description 'Discord Bot' 			-- Resource Description
+description 'Discord Bot'
 
-server_script {						-- Server Scripts
+server_script {
 	'shared/*.lua',
 	'SERVER/Server.lua',
 }
 
-client_script {						-- Client Scripts
+client_script {
 	'shared/*.lua',
 	'CLIENT/*.lua',
 }
-
 

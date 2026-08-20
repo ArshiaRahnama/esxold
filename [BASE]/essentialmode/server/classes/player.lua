@@ -16,7 +16,7 @@ function CreatePlayer(
     name,
     coords,
     status,
-    -- division,
+
     starterpack,
     discordid,
     level,
@@ -39,7 +39,7 @@ function CreatePlayer(
     self.session = {}
     self.inventory = inventory
     self.job = {}
-    -- self.divisions = division
+
     self.gang = {}
     self.angel = 0
     self.IsDead = false
@@ -142,21 +142,21 @@ function CreatePlayer(
 
     if ESX.DoesJobExist(job, jgrade) then
         local jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[tonumber(jgrade)]
-		
+
 		self.job.id = jobObject.id
         self.job.name = jobObject.name
-		if jobObject.name == 'police' or jobObject.name == 'sheriff' or jobObject.name == 'fbi' or jobObject.name == 'mt' then 
-			-- self.setExt = function(division)
-			-- 	self.job.ext = division
-			-- 	TriggerClientEvent('esx:setJob', self.source, self.job)
-			-- end
+		if jobObject.name == 'police' or jobObject.name == 'sheriff' or jobObject.name == 'fbi' or jobObject.name == 'mt' then
+
+
+
+
 			local wai = true
 			exports.ghmattimysql:execute('SELECT * FROM police_ext WHERE identifier = @identifier',{
 				['identifier'] = self.identifier
 			},
 			function(result)
 				if result[1] then
-					-- self.job.ext = result[1].division 
+
 				end
 				wai = false
 			end)
@@ -164,7 +164,7 @@ function CreatePlayer(
 				Citizen.Wait(1)
 			end
 		end
-		
+
         self.job.label = jobObject.label
 
         self.job.grade = tonumber(jgrade)
@@ -208,9 +208,6 @@ function CreatePlayer(
         self.job.skin_male = {}
         self.job.skin_female = {}
     end
-
-
-	
 
 
 
@@ -267,7 +264,7 @@ function CreatePlayer(
 
     self.setCoords = function(x, y, z)
         self.coords = {x = x, y = y, z = z}
-        -- trigerclientevent("SetCoord")
+
     end
 
     self.kick = function(r)
@@ -303,7 +300,7 @@ function CreatePlayer(
             self.bank = newBank
             TriggerClientEvent("gcphone:setUiPhone", self.source, self.bank)
             TriggerClientEvent("bankUpdate", self.source, self.bank)
-        -- triggerclientevent("Bankmoney")
+
         end
     end
 
@@ -312,7 +309,7 @@ function CreatePlayer(
             self.bank = m
             TriggerClientEvent("gcphone:setUiPhone", self.source, self.bank)
             TriggerClientEvent("bankUpdate", self.source, self.bank)
-        -- triggerclientevent("Bankmoney")
+
         end
     end
 
@@ -483,9 +480,9 @@ function CreatePlayer(
             canRemove = ESX.Items[name].canRemove
         }
     end
-    
+
     self.addInventoryItem = function(name, count)
-        count = tonumber(count) or 0 -- guard against a non-number count making item.count NaN (unsafe for net)
+        count = tonumber(count) or 0
         local item, i = self.getInventoryItem(name)
         if not item then
             return
@@ -499,7 +496,7 @@ function CreatePlayer(
     end
 
     self.removeInventoryItem = function(name, count)
-        count = tonumber(count) or 0 -- same guard as addInventoryItem
+        count = tonumber(count) or 0
         local item, i = self.getInventoryItem(name)
         local newCount = item.count - count
         item.count = newCount
@@ -512,12 +509,12 @@ function CreatePlayer(
         end
     end
 
-    -- ============================================================
-    -- Added for sun-inventory-hud: this framework had no weight-limit
-    -- concept at all (self.maxWeight, canCarryItem). Purely additive --
-    -- nothing above this was changed, and nothing else calls any of
-    -- this yet unless sun-inventory-hud (or something else) does.
-    -- ============================================================
+
+
+
+
+
+
     self.maxWeight = Config.DefaultMaxWeight or 24000
 
     self.getMaxWeight = function()
@@ -547,8 +544,8 @@ function CreatePlayer(
         if ESX.Items[name] then
             weight = ESX.getItemWeight(name) * count
         else
-            -- not a registered item -- treat it as a weapon (weapons
-            -- aren't in ESX.Items on this framework)
+
+
             weight = ESX.getWeaponWeight(name)
         end
         return (self.getUsedWeight() + weight) <= self.maxWeight
@@ -577,19 +574,19 @@ function CreatePlayer(
             self.job.id = jobObject.id
             self.job.name = jobObject.name
             self.job.label = jobObject.label
-			
-			if jobObject.name == 'police' or jobObject.name == 'sheriff' or jobObject.name == 'fbi' or jobObject.name == 'mt' and not self.job.ext then 
-				-- self.setExt = function(division)
-				-- 	self.job.ext = division
-				-- 	TriggerClientEvent('esx:setJob', self.source, self.job)
-				-- end
+
+			if jobObject.name == 'police' or jobObject.name == 'sheriff' or jobObject.name == 'fbi' or jobObject.name == 'mt' and not self.job.ext then
+
+
+
+
 				local wai = true
 				exports.ghmattimysql:execute('SELECT * FROM police_ext WHERE identifier = @identifier',{
 					['identifier'] = self.identifier
 				},
 				function(result)
 					if result[1] then
-						-- self.job.ext = result[1].division 
+
 					end
 					wai = false
 				end)
@@ -597,7 +594,7 @@ function CreatePlayer(
 					Citizen.Wait(1)
 				end
 			end
-			
+
             self.job.grade = tonumber(grade)
             self.job.grade_name = gradeObject.name
             self.job.grade_label = gradeObject.label
@@ -703,21 +700,21 @@ function CreatePlayer(
     self.removeWeapon = function(weaponNamex, ammo)
 		weaponName = string.upper(weaponNamex)
         local weaponLabel
-        ammo = tonumber(ammo) or 0 -- guard against a non-number ammo value making the later TriggerClientEvent payload unsafe for net
+        ammo = tonumber(ammo) or 0
 
         for i = 1, #self.loadout, 1 do
             if self.loadout[i].name == weaponName then
                 weaponLabel = self.loadout[i].label
 
-                -- for j = 1, #self.loadout[i].components, 1 do
-                    -- TriggerClientEvent(
-                        -- "esx:removeWeaponComponent",
-                        -- self.source,
-                        -- weaponName,
-                        -- self.loadout[i].components[j]
-                    -- )
-					
-                -- end
+
+
+
+
+
+
+
+
+
 
                 table.remove(self.loadout, i)
                 break
@@ -836,7 +833,7 @@ function CreatePlayer(
     self.Warning = 0
 
     self.ban = function(areason, reason)
-        -- Migrated from BanSql (removed) to UNIQUE_AC. Order is (targetId, reason, issuer).
+
         exports.UNIQUE_AC:BanPlayer(self.source, reason, areason)
     end
 

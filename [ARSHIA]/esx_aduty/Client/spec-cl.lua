@@ -6,11 +6,9 @@ Citizen.CreateThread(function()
 	Wait(1)
 	end
 
-
-
-	while true do 
-		if IsControlJustPressed(0, 243) then 
-			if LastPosition then 
+	while true do
+		if IsControlJustPressed(0, 243) then
+			if LastPosition then
 				ExecuteCommand('csp')
 			elseif spect2s then
 				TriggerEvent('Admin_Menu:spec')
@@ -37,7 +35,7 @@ local ShowInfos			= false
 local group
 
 function polar3DToWorld3D(entityPosition, radius, polarAngleDeg, azimuthAngleDeg)
-	-- convert degrees to radians
+
 	local polarAngleRad   = polarAngleDeg   * math.pi / 180.0
 	local azimuthAngleRad = azimuthAngleDeg * math.pi / 180.0
 
@@ -59,18 +57,17 @@ function spectate(target)
 
 		local playerPed = PlayerPedId()
 
-
 		SetEntityCollision(playerPed, false, false)
 		SetEntityVisible(playerPed, false)
 		SetEntityNoCollisionEntity(playerPed,  playerPed,  true)
-		
+
 
 		PlayerData = player
 		if ShowInfos then
 			SendNUIMessage({
 				type = 'infos',
 				data = PlayerData
-			})	
+			})
 		end
 
 		Citizen.CreateThread(function()
@@ -124,7 +121,6 @@ end
 
 function OpenAdminActionMenu(player)
 
-
     ESX.TriggerServerCallback('esx_spectate:getOtherPlayerData', function(data)
 
       local jobLabel    = nil
@@ -159,13 +155,13 @@ function OpenAdminActionMenu(player)
       else
         sexLabel = 'Sex : Unknown'
 	  end
-	  
+
 	  if data.dob ~= nil then
         dobLabel = 'DOB : ' .. data.dob
       else
         dobLabel = 'DOB : Unknown'
       end
-	  
+
 	  if data.money ~= nil then
 		Money = data.money
 		else
@@ -183,7 +179,7 @@ function OpenAdminActionMenu(player)
       else
         idLabel = 'Steam ID : Unknown'
       end
-	  
+
       local elements = {
         {label = 'Name: ' .. string.gsub(data.name, "_", " "), value = nil},
         {label = 'Money: '.. data.money, value = nil},
@@ -192,7 +188,7 @@ function OpenAdminActionMenu(player)
 		{label = GangLabel,    value = nil},
         {label = idLabel,     value = nil},
     }
-	
+
     table.insert(elements, {label = '--- Inventory ---', value = nil})
 
     for i=1, #data.inventory, 1 do
@@ -205,7 +201,7 @@ function OpenAdminActionMenu(player)
         })
       end
     end
-	
+
     table.insert(elements, {label = '--- Weapons ---', value = nil})
 
     for i=1, #data.weapons, 1 do
@@ -244,23 +240,16 @@ function OpenAdminActionMenu(player)
     end, GetPlayerServerId(player))
 end
 
-
-
-
 RegisterNetEvent('es_admin:setGroup')
 AddEventHandler('es_admin:setGroup', function(g)
 	print('group setted ' .. g)
 	group = g
 end)
 
-
-
 RegisterNetEvent('esx_spectate:spectatexxxx')
 AddEventHandler('esx_spectate:spectatexxxx', function(targ)
 spectate(targ)
 end)
-
-
 
 RegisterNetEvent('esx_spectate:spectateclose')
 AddEventHandler('esx_spectate:spectateclose', function(targ)
@@ -301,8 +290,6 @@ RegisterNUICallback('kick', function(data, cb)
 	TriggerServerEvent('esx_spectate:kick', data.id, data.reason)
 	TriggerEvent('esx_spectate:spectate')
 end)
-
-
 
 Citizen.CreateThread(function()
 
@@ -363,11 +350,11 @@ Citizen.CreateThread(function()
 			if IsControlJustReleased(2, 73) then
 			OpenAdminActionMenu(targetPlayerId)
 			end
-			
+
 
 			local text = {}
-			-- cheat checks
-			
+
+
 			local targetGod = GetPlayerInvincible(targetPlayerId)
 			local vehicle =  GetVehiclePedIsIn(targetPed, false )
 			if targetGod then
@@ -378,7 +365,7 @@ Citizen.CreateThread(function()
 			if not CanPedRagdoll(targetPed) and not IsPedInAnyVehicle(targetPed, false) and (GetPedParachuteState(targetPed) == -1 or GetPedParachuteState(targetPed) == 0) and not IsPedInParachuteFreeFall(targetPed) then
 				table.insert(text,"~r~Anti-Ragdoll~w~")
 			end
-			-- health info
+
 			table.insert(text,"Health"..": "..(GetEntityHealth(targetPed)-100).."/".. 200-100)
 			table.insert(text,"Armor : "..GetPedArmour(targetPed).."/100")
 			if vehicle ~= 0 then

@@ -41,7 +41,7 @@ Citizen.CreateThread(function()
 	for i = #Config.Blacklist, 1, -1 do
 		table.remove(Config.Blacklist, i)
 	end
-	
+
 	while true do
 		Citizen.Wait(1000)
 		local ped = PlayerPedId()
@@ -227,7 +227,7 @@ Citizen.CreateThread(function()
 							stringCoords = vehicleCoords
 							if GetAmmoInPedWeapon(ped, 883325847) < 100 then
 								canFuel = false
-							end 
+							end
 						end
 						if GetVehicleFuelLevel(vehicle) < 95 and canFuel then
 							if currentCash > 0 then

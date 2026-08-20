@@ -1,6 +1,4 @@
-------------------------------------------------------------------
---                          Variables
-------------------------------------------------------------------
+
 
 local AutoSaveHungerThirst = true
 local AutoSaveHungerThirstTimer = 138000
@@ -32,10 +30,6 @@ local PlayerData = {}
 
 local ESX = nil
 
-------------------------------------------------------------------
---                          ESX
-------------------------------------------------------------------
-
 Citizen.CreateThread(function()
 
     while ESX == nil do
@@ -50,10 +44,6 @@ Citizen.CreateThread(function()
 
 end)
 
-------------------------------------------------------------------
---                          Native Notification
-------------------------------------------------------------------
-
 local function Notify(message)
 
     BeginTextCommandThefeedPost("STRING")
@@ -61,10 +51,6 @@ local function Notify(message)
     EndTextCommandThefeedPostTicker(false, false)
 
 end
-
-------------------------------------------------------------------
---                          HUD Toggle
-------------------------------------------------------------------
 
 function ToggleHUD()
 
@@ -87,10 +73,6 @@ end
 
 exports('ToggleHUD', ToggleHUD)
 
-------------------------------------------------------------------
---                          Keyboard
-------------------------------------------------------------------
-
 AddEventHandler('onKeyUP', function(key)
 
     if key == 'oem_3' then
@@ -99,10 +81,6 @@ AddEventHandler('onKeyUP', function(key)
     end
 
 end)
-
-------------------------------------------------------------------
---                          HUD Update
-------------------------------------------------------------------
 
 function updateHUD(currentHealth, currentArmor)
 
@@ -113,10 +91,6 @@ function updateHUD(currentHealth, currentArmor)
     })
 
 end
-
-------------------------------------------------------------------
---                          Money Format
-------------------------------------------------------------------
 
 function MakeDigit(value)
 
@@ -135,10 +109,6 @@ function MakeDigit(value)
         right
 
 end
-
-------------------------------------------------------------------
---                          Reload Data
-------------------------------------------------------------------
 
 function ReloadAllData()
 
@@ -253,10 +223,6 @@ function ReloadAllData()
 
 end
 
-------------------------------------------------------------------
---                          Player Loaded
-------------------------------------------------------------------
-
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
 
@@ -355,10 +321,6 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 
 end)
 
-------------------------------------------------------------------
---                          Money Update
-------------------------------------------------------------------
-
 RegisterNetEvent('moneyUpdate')
 AddEventHandler('moneyUpdate', function(money)
 
@@ -368,10 +330,6 @@ AddEventHandler('moneyUpdate', function(money)
     })
 
 end)
-
-------------------------------------------------------------------
---                          TC Update
-------------------------------------------------------------------
 
 RegisterNetEvent('tcUpdate')
 AddEventHandler('tcUpdate', function(tc, time2)
@@ -390,10 +348,6 @@ AddEventHandler('tcUpdate', function(tc, time2)
 
 end)
 
-------------------------------------------------------------------
---                          TC Time
-------------------------------------------------------------------
-
 RegisterNetEvent('tctimeUpdate')
 AddEventHandler('tctimeUpdate', function(tc)
 
@@ -403,10 +357,6 @@ AddEventHandler('tctimeUpdate', function(tc)
     })
 
 end)
-
-------------------------------------------------------------------
---                          Job Update
-------------------------------------------------------------------
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
@@ -452,10 +402,6 @@ AddEventHandler('esx:setJob', function(job)
 
 end)
 
-------------------------------------------------------------------
---                          Gang Update
-------------------------------------------------------------------
-
 RegisterNetEvent('esx:setGang')
 AddEventHandler('esx:setGang', function(gang)
 
@@ -500,10 +446,6 @@ AddEventHandler('esx:setGang', function(gang)
 
 end)
 
-------------------------------------------------------------------
---                          Reload Command
-------------------------------------------------------------------
-
 RegisterCommand('reload', function()
 
     ReloadAllData()
@@ -511,10 +453,6 @@ RegisterCommand('reload', function()
     Notify("~g~Status دوباره بارگذاری شد")
 
 end, false)
-
-------------------------------------------------------------------
---                          Status Update
-------------------------------------------------------------------
 
 RegisterNetEvent('esx_customui:updateStatus')
 AddEventHandler('esx_customui:updateStatus', function(status)
@@ -526,19 +464,11 @@ AddEventHandler('esx_customui:updateStatus', function(status)
 
 end)
 
-------------------------------------------------------------------
---                          Radio
-------------------------------------------------------------------
-
 AddEventHandler('Status:radio', function(data)
 
     SendNUIMessage(data)
 
 end)
-
-------------------------------------------------------------------
---                          Show Status
-------------------------------------------------------------------
 
 local previousArmor = 0
 local previousHealth = 0
@@ -618,10 +548,6 @@ AddEventHandler('showStatus', function()
 
 end)
 
-------------------------------------------------------------------
---                          Mugshot
-------------------------------------------------------------------
-
 AddEventHandler('skinchanger:modelLoaded', function()
 
     while not PlayerData.name do
@@ -642,10 +568,6 @@ AddEventHandler('skinchanger:modelLoaded', function()
     end
 
 end)
-
-------------------------------------------------------------------
---                          Draw Mugshot
-------------------------------------------------------------------
 
 CreateThread(function()
 
@@ -681,19 +603,11 @@ CreateThread(function()
 
 end)
 
-------------------------------------------------------------------
---                          Toggle Command
-------------------------------------------------------------------
-
 RegisterCommand("togglehud", function()
 
     ToggleHUD()
 
 end, false)
-
-------------------------------------------------------------------
---                          NUI Mug Position
-------------------------------------------------------------------
 
 RegisterNUICallback('setmugpos', function(data)
 
@@ -714,10 +628,6 @@ RegisterNUICallback('setmugpos', function(data)
     end
 
 end)
-
-------------------------------------------------------------------
---                          Indicators
-------------------------------------------------------------------
 
 function updateIndicators(type, data)
 

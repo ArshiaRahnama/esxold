@@ -7,7 +7,7 @@ client_script 'client/main.lua'
 ui_page 'html/ui.html'
 
 files {
-	-- Main Files
+
 	'html/ui.html',
 	'html/assets/css/*.css',
 	'html/assets/js/*.js',

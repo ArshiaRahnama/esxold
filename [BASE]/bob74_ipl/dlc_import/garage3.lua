@@ -1,5 +1,4 @@
 
--- Garage 3: Lom Bank
 
 exports('GetImportCEOGarage3Object', function()
 	return ImportCEOGarage3
@@ -7,10 +6,10 @@ end)
 
 ImportCEOGarage3 = {
     Part = {
-        Garage1 = {interiorId = 255489, ipl = "imp_sm_13_cargarage_a"},  -- -1581.1120, -567.2450, 85.5000
-        Garage2 = {interiorId = 255745, ipl = "imp_sm_13_cargarage_b"},  -- -1568.7390, -562.0455, 85.5000
-        Garage3 = {interiorId = 256001, ipl = "imp_sm_13_cargarage_c"},  -- -1563.5570, -574.4314, 85.5000
-        ModShop = {interiorId = 256257, ipl = "imp_sm_13_modgarage"},    -- -1578.0230, -576.4251, 104.2000
+        Garage1 = {interiorId = 255489, ipl = "imp_sm_13_cargarage_a"},
+        Garage2 = {interiorId = 255745, ipl = "imp_sm_13_cargarage_b"},
+        Garage3 = {interiorId = 256001, ipl = "imp_sm_13_cargarage_c"},
+        ModShop = {interiorId = 256257, ipl = "imp_sm_13_modgarage"},
 
         Load = function(part) EnableIpl(part.ipl, true) end,
         Remove = function(part) EnableIpl(part.ipl, false) end,
@@ -115,8 +114,8 @@ ImportCEOGarage3 = {
         ImportCEOGarage3.Style.Set(ImportCEOGarage3.Part.Garage1, ImportCEOGarage3.Style.concrete, false)
         ImportCEOGarage3.Numbering.Set(ImportCEOGarage3.Part.Garage1, ImportCEOGarage3.Numbering.Level1.style1, false)
         ImportCEOGarage3.Lighting.Set(ImportCEOGarage3.Part.Garage1, ImportCEOGarage3.Lighting.style1, true)
-        
-        -- No mod shop since it overlapses CEO office
+
+
         ImportCEOGarage3.Part.Remove(ImportCEOGarage3.Part.ModShop)
     end
 }

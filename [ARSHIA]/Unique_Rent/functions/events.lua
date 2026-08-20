@@ -7,7 +7,7 @@ end)
 
 RegisterNUICallback("finish",function(data)
     finish()
-    
+
 end)
 
 RegisterNUICallback("CloseUI",function()

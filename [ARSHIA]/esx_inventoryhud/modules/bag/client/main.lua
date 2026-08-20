@@ -124,7 +124,7 @@ CreateThread(function()
     end
     ESX.RegisterClientCallback('bag:getName', function(cb)
         local keyboard, name = exports["input"]:Keyboard({
-            header = 'Name kif ra vared konid', 
+            header = 'Name kif ra vared konid',
             rows = {'Name'}
         })
         if keyboard then

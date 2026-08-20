@@ -145,8 +145,6 @@ function CheckAnimLoop()
     end)
 end
 
-
-
 function PhonePlayAnim (status, freeze, force)
 	if currentStatus == status and force ~= true then
 		return
@@ -202,7 +200,7 @@ function PhonePlayCall (freeze)
 	PhonePlayAnim('call', freeze)
 end
 
-function PhonePlayIn () 
+function PhonePlayIn ()
 	if currentStatus == 'out' then
 		TriggerEvent("status:togglePhone", true)
 		PhonePlayText()

@@ -1,6 +1,4 @@
 
--- 2677 Whispymound Drive
--- High end house 7: 120.5 549.952 184.097
 
 exports('GetGTAOHouseHi7Object', function()
     return GTAOHouseHi7

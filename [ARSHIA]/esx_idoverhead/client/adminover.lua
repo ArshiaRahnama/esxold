@@ -2,7 +2,6 @@
 ESX = nil
 local alias = {}
 
-
 Citizen.CreateThread(function()
     local sleep = 6
     while ESX == nil do
@@ -13,26 +12,26 @@ Citizen.CreateThread(function()
 end)
 
 local vehicles = {
-    [2071877360] = { [3] = "seat_dside_r3", [4] = "seat_pside_r3" },  -- INSURGENT2 PD
-    [610904671] = { [3] = "seat_dside_r3", [4] = "seat_pside_r3" },  -- INSURGENT2 NOOSE
-    [-1775728740] = { [3] = "seat_dside_r1", [4] = "seat_pside_r1", [5] = "seat_dside_r2", [6] = "seat_pside_r2" },  -- GRANGER
-    [-1647941228] = { [3] = "seat_dside_r1", [4] = "seat_pside_r1", [5] = "seat_dside_r2", [6] = "seat_pside_r2" },  -- FBI2
-    [-1237253773] = { [3] = "seat_dside_r2", [4] = "seat_pside_r2" },  -- DUBSTA3
-    [-2107990196] = { [3] = "seat_dside_r2", [4] = "seat_pside_r2" },  -- GUARDIAN
-    [-305727417] = { [3] = "seat_dside_r2", [4] = "seat_pside_r2" },  -- BRICKADE
-    [117401876] = { [3] = "seat_dside_r2", [4] = "seat_pside_r2" },  -- BTYPE
-    [-602287871] = { [3] = "seat_dside_r2", [4] = "seat_pside_r2" },  -- BTYPE3
-    [-1205689942] = { [3] = "seat_dside_r1", [4] = "seat_pside_r1", [5] = "seat_dside_r2", [6] = "seat_pside_r1" },  -- RIOT
-    [-1693015116] = { [3] = "seat_dside_r1", [4] = "seat_pside_r1" },  -- RIOT2
-    [1922257928] = { [3] = "seat_dside_r1", [4] = "seat_pside_r1", [5] = "seat_dside_r2", [6] = "seat_pside_r2" },  -- SHERIFF2
-    [-2007026063] = { [3] = "seat_dside_r1", [4] = "seat_pside_r1", [5] = "seat_dside_r2", [6] = "seat_pside_r2", [7] = "seat_dside_r3", [8] = "seat_pside_r3", [9] = "seat_dside_r4" },  -- PBUS
-    [65352125] = { [3] = "seat_dside_r1", [4] = "seat_pside_r1", [5] = "seat_dside_r2", [6] = "seat_pside_r2", [7] = "seat_dside_r3", [8] = "seat_pside_r3" },  -- PBUS3
-    [-713569950] = { [3] = "seat_dside_r1", [4] = "seat_pside_r1", [5] = "seat_dside_r2", [6] = "seat_pside_r2", [7] = "seat_dside_r3", [8] = "seat_pside_r3", [9] = "seat_dside_r4", [10] = "seat_pside_r4", [11] = "seat_dside_r5", [12] = "seat_pside_r5", [13] = "seat_dside_r6", [14] = "seat_pside_r6" },  -- Bus
-    [-120287622] = { [3] = "seat_dside_r1", [4] = "seat_pside_r1" },  -- journey
-    [-1214293858] = { [3] = "seat_dside_r1", [4] = "seat_pside_r", [5] = "seat_pside_r2", [6] = "seat_pside_r3" },  -- LUXOR2
-    [-50547061] = { [3] = "seat_dside_r1", [4] = "seat_pside_r1", [5] = "seat_dside_r2", [6] = "seat_pside_r2", [7] = "seat_dside_r3", [8] = "seat_pside_r3" },  -- CARGOBOB
-    [-493410377] = { [3] = "seat_dside_r2", [4] = "seat_pside_r2" },  -- RAPTOR150
-    [-1961627517] = { [3] = "seat_dside_r2", [4] = "seat_dside_r3" }  -- STRETCH
+    [2071877360] = { [3] = "seat_dside_r3", [4] = "seat_pside_r3" },
+    [610904671] = { [3] = "seat_dside_r3", [4] = "seat_pside_r3" },
+    [-1775728740] = { [3] = "seat_dside_r1", [4] = "seat_pside_r1", [5] = "seat_dside_r2", [6] = "seat_pside_r2" },
+    [-1647941228] = { [3] = "seat_dside_r1", [4] = "seat_pside_r1", [5] = "seat_dside_r2", [6] = "seat_pside_r2" },
+    [-1237253773] = { [3] = "seat_dside_r2", [4] = "seat_pside_r2" },
+    [-2107990196] = { [3] = "seat_dside_r2", [4] = "seat_pside_r2" },
+    [-305727417] = { [3] = "seat_dside_r2", [4] = "seat_pside_r2" },
+    [117401876] = { [3] = "seat_dside_r2", [4] = "seat_pside_r2" },
+    [-602287871] = { [3] = "seat_dside_r2", [4] = "seat_pside_r2" },
+    [-1205689942] = { [3] = "seat_dside_r1", [4] = "seat_pside_r1", [5] = "seat_dside_r2", [6] = "seat_pside_r1" },
+    [-1693015116] = { [3] = "seat_dside_r1", [4] = "seat_pside_r1" },
+    [1922257928] = { [3] = "seat_dside_r1", [4] = "seat_pside_r1", [5] = "seat_dside_r2", [6] = "seat_pside_r2" },
+    [-2007026063] = { [3] = "seat_dside_r1", [4] = "seat_pside_r1", [5] = "seat_dside_r2", [6] = "seat_pside_r2", [7] = "seat_dside_r3", [8] = "seat_pside_r3", [9] = "seat_dside_r4" },
+    [65352125] = { [3] = "seat_dside_r1", [4] = "seat_pside_r1", [5] = "seat_dside_r2", [6] = "seat_pside_r2", [7] = "seat_dside_r3", [8] = "seat_pside_r3" },
+    [-713569950] = { [3] = "seat_dside_r1", [4] = "seat_pside_r1", [5] = "seat_dside_r2", [6] = "seat_pside_r2", [7] = "seat_dside_r3", [8] = "seat_pside_r3", [9] = "seat_dside_r4", [10] = "seat_pside_r4", [11] = "seat_dside_r5", [12] = "seat_pside_r5", [13] = "seat_dside_r6", [14] = "seat_pside_r6" },
+    [-120287622] = { [3] = "seat_dside_r1", [4] = "seat_pside_r1" },
+    [-1214293858] = { [3] = "seat_dside_r1", [4] = "seat_pside_r", [5] = "seat_pside_r2", [6] = "seat_pside_r3" },
+    [-50547061] = { [3] = "seat_dside_r1", [4] = "seat_pside_r1", [5] = "seat_dside_r2", [6] = "seat_pside_r2", [7] = "seat_dside_r3", [8] = "seat_pside_r3" },
+    [-493410377] = { [3] = "seat_dside_r2", [4] = "seat_pside_r2" },
+    [-1961627517] = { [3] = "seat_dside_r2", [4] = "seat_dside_r3" }
 }
 
 local disPlayerNames = 5
@@ -44,11 +43,6 @@ local playersInfo = {}
 local controlPress = false
 local labels = {}
 
--- FIX: this file used "..v.info.level" in DrawText3Dido below, but
--- v.info.level was NEVER set anywhere in this file — every frame that
--- text was on screen (i.e. whenever the ID overlay was up) this
--- concatenated a nil value and threw a Lua error. Added the same
--- on-demand cached rank lookup used in client.lua.
 local DatPlayerLevel = {}
 local requestedRank = {}
 local function getCachedRank(serverId)
@@ -107,7 +101,7 @@ end)
 
 local myself = PlayerId()
 
-local maxDistance = 10.0 
+local maxDistance = 10.0
 
 Citizen.CreateThread(function()
     local sleep = 5
@@ -120,11 +114,11 @@ Citizen.CreateThread(function()
                         local x2, y2, z2 = table.unpack(GetEntityCoords(targetPed, true))
                         z2 = z2 - 2
 
-                      
+
                         local isVisible = HasEntityClearLosToEntity(PlayerPedId(), targetPed, 17)
                         v.isVisible = isVisible
 
-                       
+
                         if v.isVisible and v.info.distance <= maxDistance then
                             if showidpress then
                                 z2 = z2 + 1.2
@@ -145,7 +139,7 @@ Citizen.CreateThread(function()
                         end
                     end
                 elseif own and ownID == k then
-                
+
                     if v.labels and v.info.hide then
                         local ped = PlayerPedId()
                         local x, y, z = table.unpack(GetEntityCoords(ped, true))
@@ -171,7 +165,7 @@ Citizen.CreateThread(function()
         playersInfo = {}
         local ped = PlayerPedId()
         local coords = GetEntityCoords(ped)
-        
+
         for _, player in ipairs(GetActivePlayers()) do
             local playeridd = GetPlayerServerId(player)
             local tped = GetPlayerPed(player)
@@ -203,7 +197,6 @@ Citizen.CreateThread(function()
         Citizen.Wait(sleep)
     end
 end)
-
 
 local spam = false
 function showId()
@@ -254,13 +247,13 @@ function getVehicleBonePosition(playerPed, pedVehicle)
     end
 
     if GetPedInVehicleSeat(veh, -1) == ped then
-        position = GetWorldPositionOfEntityBone(veh, GetEntityBoneIndexByName(veh, 'seat_dside_f')) -- LEFT FRONT
+        position = GetWorldPositionOfEntityBone(veh, GetEntityBoneIndexByName(veh, 'seat_dside_f'))
     elseif GetPedInVehicleSeat(veh, 0) == ped then
-        position = GetWorldPositionOfEntityBone(veh, GetEntityBoneIndexByName(veh, 'seat_pside_f')) -- RIGHT FRONT
+        position = GetWorldPositionOfEntityBone(veh, GetEntityBoneIndexByName(veh, 'seat_pside_f'))
     elseif GetPedInVehicleSeat(veh, 1) == ped then
-        position = GetWorldPositionOfEntityBone(veh, GetEntityBoneIndexByName(veh, 'seat_dside_r')) -- LEFT BACK
+        position = GetWorldPositionOfEntityBone(veh, GetEntityBoneIndexByName(veh, 'seat_dside_r'))
     elseif GetPedInVehicleSeat(veh, 2) == ped then
-        position = GetWorldPositionOfEntityBone(veh, GetEntityBoneIndexByName(veh, 'seat_pside_r')) -- RIGHT BACK
+        position = GetWorldPositionOfEntityBone(veh, GetEntityBoneIndexByName(veh, 'seat_pside_r'))
     else
         for i = 3, 14 do
             if vehicles[model][i] and GetPedInVehicleSeat(veh, i) == ped then

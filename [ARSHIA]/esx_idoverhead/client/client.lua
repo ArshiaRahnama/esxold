@@ -35,12 +35,8 @@ local gtComponent = {
     MP_TYPING = 16
 }
 
--- Rank lookup: on-demand + cached, instead of a periodic bulk poll.
--- 'XP_System:getRank' is a read-only server callback exposed by the
--- Unique_LevelQuest resource (server/xp.lua) — it must be running
--- alongside this resource for level numbers to show up.
 local DatPlayerLevel = {}
-local requestedRank = {} -- [serverId] = true once asked, avoids re-asking every tick
+local requestedRank = {}
 
 local function getCachedRank(serverId)
     if DatPlayerLevel[serverId] then
@@ -95,7 +91,6 @@ function updatePlayerNames()
                     RemoveMpGamerTag(mpGamerTags[serverId].tag)
                 end
 
-
                 mpGamerTags[serverId] = {
                     tag = CreateFakeMpGamerTag(GetPlayerPed(i), nameTag, false, false, '', 0),
                     ped = ped
@@ -109,7 +104,7 @@ function updatePlayerNames()
                 SetMpGamerTagVisibility(tag, gtComponent.MP_TYPING, isTyping)
                 if ShowPlayersId or NetworkIsPlayerTalking(i) or mpGamerTagSettings[serverId].nameTag then
                     local level = getCachedRank(serverId)
-                    
+
                     SetMpGamerTagVisibility(tag, gtComponent.AUDIO_ICON, NetworkIsPlayerTalking(i))
                     SetMpGamerTagAlpha(tag, gtComponent.AUDIO_ICON, 255)
                     SetMpGamerTagVisibility(tag, gtComponent.GAMER_NAME, true)
@@ -173,8 +168,6 @@ AddEventHandler("esx:playerLoaded", function()
     TriggerServerEvent('esx_idoverhead:checkTimePlay', id)
 end)
 
-
-
 AddEventHandler('onResourceStop', function(name)
     if name == GetCurrentResourceName() then
         for _, v in pairs(mpGamerTags) do
@@ -211,7 +204,6 @@ Citizen.CreateThread(function()
         Citizen.Wait(2000)
     end
 end)
-
 
 ShowPlayersId = false
 

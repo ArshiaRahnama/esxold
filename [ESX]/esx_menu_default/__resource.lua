@@ -5,7 +5,7 @@ description 'ESX Menu Default'
 version '1.0.4'
 
 client_scripts {
-	--'@essentialmode/client/wrapper.lua',
+
 	'client/main.lua'
 }
 

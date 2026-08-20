@@ -63,7 +63,7 @@ function parseBox(zone)
   printout = printout .. "vector3(" .. tostring(round(zone.center.x, 2)) .. ", " .. tostring(round(zone.center.y, 2))  .. ", " .. tostring(round(zone.center.z, 2)) .."), "
   printout = printout .. tostring(zone.length) .. ", "
   printout = printout .. tostring(zone.width) .. ", "
-  
+
   printout = printout .. "{\n  name=\"" .. zone.name .. "\",\n  heading=" .. zone.heading .. ",\n  --debugPoly=true"
   if zone.minZ then
     printout = printout .. ",\n  minZ=" .. tostring(round(zone.minZ, 2))

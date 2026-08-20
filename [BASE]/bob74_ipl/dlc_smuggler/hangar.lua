@@ -1,5 +1,4 @@
 
--- SmugglerHangar: -1267.0 -3013.135 -49.5
 
 exports('GetSmugglerHangarObject', function()
     return SmugglerHangar
@@ -15,15 +14,15 @@ SmugglerHangar = {
         },
     },
     Colors = {
-        colorSet1 = 1, -- sable, red, gray
-        colorSet2 = 2, -- white, blue, gray
-        colorSet3 = 3, -- gray, orange, blue
-        colorSet4 = 4, -- gray, blue, orange
-        colorSet5 = 5, -- gray, light gray, red
-        colorSet6 = 6, -- yellow, gray, light gray
-        colorSet7 = 7, -- light Black and white
-        colorSet8 = 8, -- dark Black and white
-        colorSet9 = 9  -- sable and gray
+        colorSet1 = 1,
+        colorSet2 = 2,
+        colorSet3 = 3,
+        colorSet4 = 4,
+        colorSet5 = 5,
+        colorSet6 = 6,
+        colorSet7 = 7,
+        colorSet8 = 8,
+        colorSet9 = 9
     },
     Walls = {
         default = "set_tint_shell",
@@ -80,7 +79,7 @@ SmugglerHangar = {
         Set = function(mod, color, refresh)
             if color == nil then color = 1 end
             SmugglerHangar.ModArea.Clear(false)
-            if mod ~= "" then 
+            if mod ~= "" then
                 SetIplPropState(SmugglerHangar.interiorId, mod, true, refresh)
                 SetInteriorPropColor(SmugglerHangar.interiorId, mod, color)
             else
@@ -89,7 +88,7 @@ SmugglerHangar = {
         end,
         Clear = function(refresh)
             SetIplPropState(SmugglerHangar.interiorId, SmugglerHangar.ModArea.mod, false, refresh)
-        end	
+        end
     },
     Office = {
         basic = "set_office_basic", modern = "set_office_modern", traditional = "set_office_traditional",
@@ -99,7 +98,7 @@ SmugglerHangar = {
         end,
         Clear = function(refresh)
             SetIplPropState(SmugglerHangar.interiorId, {SmugglerHangar.Office.basic, SmugglerHangar.Office.modern, SmugglerHangar.Office.traditional}, false, refresh)
-        end	
+        end
     },
     Bedroom = {
         Style = {
@@ -116,7 +115,7 @@ SmugglerHangar = {
             end,
             Clear = function(refresh)
                 SetIplPropState(SmugglerHangar.interiorId, {SmugglerHangar.Bedroom.Style.modern, SmugglerHangar.Bedroom.Style.traditional}, false, refresh)
-            end	
+            end
         },
         Blinds = {
             none = "", opened = "set_bedroom_blinds_open", closed = "set_bedroom_blinds_closed",
@@ -130,7 +129,7 @@ SmugglerHangar = {
             end,
             Clear = function(refresh)
                 SetIplPropState(SmugglerHangar.interiorId, {SmugglerHangar.Bedroom.Blinds.opened, SmugglerHangar.Bedroom.Blinds.closed}, false, refresh)
-            end	
+            end
         }
     },
     Lighting = {
@@ -147,7 +146,7 @@ SmugglerHangar = {
             end,
             Clear = function(refresh)
                 SetIplPropState(SmugglerHangar.interiorId, "set_lighting_tint_props", false, refresh)
-            end	
+            end
         },
         Ceiling = {
             none = "", yellow = "set_lighting_hangar_a", blue = "set_lighting_hangar_b", white = "set_lighting_hangar_c",
@@ -161,7 +160,7 @@ SmugglerHangar = {
             end,
             Clear = function(refresh)
                 SetIplPropState(SmugglerHangar.interiorId, {SmugglerHangar.Lighting.Ceiling.yellow, SmugglerHangar.Lighting.Ceiling.blue, SmugglerHangar.Lighting.Ceiling.white}, false, refresh)
-            end	
+            end
         },
         Walls = {
             none = "", neutral = "set_lighting_wall_neutral", blue = "set_lighting_wall_tint01", orange = "set_lighting_wall_tint02",
@@ -181,7 +180,7 @@ SmugglerHangar = {
                     SmugglerHangar.Lighting.Walls.lightYellow, SmugglerHangar.Lighting.Walls.lightYellow2, SmugglerHangar.Lighting.Walls.dimmed,
                     SmugglerHangar.Lighting.Walls.strongYellow, SmugglerHangar.Lighting.Walls.white, SmugglerHangar.Lighting.Walls.lightGreen,
                     SmugglerHangar.Lighting.Walls.yellow}, false, refresh)
-            end	
+            end
         }
     },
     Details = {
@@ -193,7 +192,7 @@ SmugglerHangar = {
 
     LoadDefault = function()
         SmugglerHangar.Ipl.Interior.Load()
-        
+
         SmugglerHangar.Walls.SetColor(SmugglerHangar.Colors.colorSet1)
         SmugglerHangar.Cranes.Set(SmugglerHangar.Cranes.on, SmugglerHangar.Colors.colorSet1)
         SmugglerHangar.Floor.Style.Set(SmugglerHangar.Floor.Style.plain)

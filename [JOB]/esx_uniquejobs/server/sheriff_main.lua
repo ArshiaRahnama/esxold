@@ -11,7 +11,7 @@ if Config_sheriff.MaxInService ~= -1 then
 end
 
 TriggerEvent('esx_phone:registerNumber', 'sheriff', _U('alert_sheriff'), true, true)
--- Boss-action MONEY is shared across the whole Law Enforcement group - see police_main.lua's note.
+
 TriggerEvent('esx_society:registerSociety', 'sheriff', 'sheriff', 'society_law', 'society_sheriff', 'society_sheriff', {type = 'public'})
 
 RegisterServerEvent('esx_sheriffjob:giveWeapon')
@@ -19,11 +19,6 @@ AddEventHandler('esx_sheriffjob:giveWeapon', function(weapon, ammo)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	xPlayer.addWeapon(weapon, ammo)
 end)
-
-
-
-
-
 
 RegisterServerEvent('esx_sheriffjob:getStockItem')
 AddEventHandler('esx_sheriffjob:getStockItem', function(itemName, count)
@@ -35,10 +30,10 @@ AddEventHandler('esx_sheriffjob:getStockItem', function(itemName, count)
 
 		local inventoryItem = inventory.getItem(itemName)
 
-		-- is there enough in the society?
+
 		if count > 0 and inventoryItem.count >= count then
-		
-			-- can the player carry the said amount of x item?
+
+
 			if sourceItem.limit ~= -1 and (sourceItem.count + count) > sourceItem.limit then
 				TriggerClientEvent('esx:showNotification', _source, _U('quantity_invalid'))
 			else
@@ -63,7 +58,7 @@ AddEventHandler('esx_sheriffjob:putStockItems', function(itemName, count)
 
 		local inventoryItem = inventory.getItem(itemName)
 
-		-- does the player have enough of the item?
+
 		if sourceItem.count >= count and count > 0 then
 			xPlayer.removeInventoryItem(itemName, count)
 			inventory.addItem(itemName, count)
@@ -75,7 +70,6 @@ AddEventHandler('esx_sheriffjob:putStockItems', function(itemName, count)
 	end)
 
 end)
-
 
 ESX.RegisterServerCallback('esx_sheriffjob:getVehicleInfos', function(source, cb, plate)
 
@@ -146,12 +140,6 @@ ESX.RegisterServerCallback('esx_sheriffjob:getArmoryWeapons', function(source, c
 
 end)
 
-
-
-
-
-
-
 ESX.RegisterServerCallback('esx_sheriffjob:addArmoryWeapon', function(source, cb, weaponName, removeWeapon)
 
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -191,9 +179,6 @@ ESX.RegisterServerCallback('esx_sheriffjob:addArmoryWeapon', function(source, cb
 
 end)
 
-
-
-
 ESX.RegisterServerCallback('esx_sheriffjob:buyArmoryWeapon', function(source, cb, weaponName, removeWeapon, tedad)
 
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -220,7 +205,7 @@ ESX.RegisterServerCallback('esx_sheriffjob:buyArmoryWeapon', function(source, cb
 				break
 			end
 		end
-		
+
 		if not foundWeapon then
 			table.insert(weapons, {
 				name  = weaponName,
@@ -233,8 +218,6 @@ ESX.RegisterServerCallback('esx_sheriffjob:buyArmoryWeapon', function(source, cb
 	end)
 
 end)
-
-
 
 ESX.RegisterServerCallback('esx_sheriffjob:removeArmoryWeapon', function(source, cb, weaponName)
 
@@ -257,13 +240,13 @@ ESX.RegisterServerCallback('esx_sheriffjob:removeArmoryWeapon', function(source,
 			if weapons[i].name == weaponName then
 
 				weapons[i].count = weapons[i].count - 1
-				
+
 
 				foundWeapon = true
 				break
 			end
 		end
-		
+
 		if not foundWeapon then
 			table.insert(weapons, {
 				name  = weaponName,
@@ -277,10 +260,9 @@ ESX.RegisterServerCallback('esx_sheriffjob:removeArmoryWeapon', function(source,
 
 end)
 
-
 ESX.RegisterServerCallback('esx_sheriffjob:buy', function(source, cb, amount)
 
-	-- Armory purchases spend from the shared Law Enforcement money pool - see registerSociety note above.
+
 	TriggerEvent('esx_addonaccount:getSharedAccount', 'society_law', function(account)
 		if account.money >= amount then
 			account.removeMoney(amount)
@@ -298,7 +280,6 @@ ESX.RegisterServerCallback('esx_sheriffjob:getStockItems', function(source, cb)
 		cb(inventory.items)
 	end)
 end)
-
 
 ESX.RegisterServerCallback('esx_sheriffjob:buyArmoryItem', function(source, cb, weaponName, removeWeapon, tedad)
 
@@ -326,7 +307,7 @@ ESX.RegisterServerCallback('esx_sheriffjob:buyArmoryItem', function(source, cb, 
 				break
 			end
 		end
-		
+
 		if not foundWeapon then
 			table.insert(weapons, {
 				name  = weaponName,
@@ -340,16 +321,12 @@ ESX.RegisterServerCallback('esx_sheriffjob:buyArmoryItem', function(source, cb, 
 
 end)
 
-
-
 ESX.RegisterServerCallback('esx_sheriffjob:getPlayerInventory', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local items   = xPlayer.inventory
 
 	cb( { items = items } )
 end)
-
-
 
 AddEventHandler('onResourceStop', function(resource)
 	if resource == GetCurrentResourceName() then
@@ -359,7 +336,7 @@ end)
 
 RegisterServerEvent('esx_sheriffjob:message')
 AddEventHandler('esx_sheriffjob:message', function(target, msg)
-	-- if exports['Eye-AC']:CheckPlayers(source, target, 25.0) ~= false then return end
+
 	TriggerClientEvent('esx:showNotification', target, msg)
 end)
 
@@ -369,15 +346,13 @@ local panicreqy = {}
 local panicreqname = {}
 local sentreq = {}
 
-
-
 RegisterServerEvent('esx_sheriffjob:playSoundRadio')
 AddEventHandler('esx_sheriffjob:playSoundRadio', function(soundFile, soundVolume)
 	local xPlayers = ESX.GetPlayers()
 
 	for i=1, #xPlayers, 1 do
 
-		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])	
+		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
 
 		if xPlayer.job.name == "sheriff" and xPlayer.job.grade >= 0 then
 
@@ -404,13 +379,6 @@ ESX.RegisterServerCallback('esx_sheriffjob:getIcName', function(source, cb)
 	cb(characterName)
 end)
 
-
-
----------------------------------------------------------------------------------------------------------
------------------------------------------ Dispatch Commands --------------------------------------------
---------------------------------------------------------------------------------------------------------
-
-
 function TableLength_sheriff(table)
 
 	local count = 0
@@ -420,9 +388,6 @@ function TableLength_sheriff(table)
 	return count
 
 end
-
-
-
 
 RegisterServerEvent('logshVehicleSpawn')
 AddEventHandler('logshVehicleSpawn', function(playerName, serverID, steamHex, vehicleModel, plateText, isspawn)
@@ -454,7 +419,6 @@ AddEventHandler('logshVehicleSpawn', function(playerName, serverID, steamHex, ve
 
 end)
 
-
 function DiscordLogs_sheriff(messagess, titelss, grren)
 
 	local discordWebhooks = {
@@ -462,16 +426,15 @@ function DiscordLogs_sheriff(messagess, titelss, grren)
 		"https:// arshiahub.ir/changeme/1357843049677590579/BVrw8-Hb8-I8lDraSGDvd-HJ4WV48x04PVG1xAIp4FGQLUtG9rZrTJxCiCaaulmNk0R8"
 	}
 
-
 	local colors = 0
-	
-	if grren then 
+
+	if grren then
 		colors = 65280
 	else
 		colors = 16711680
 	end
 
-	
+
 
     local logMessage = {
         {
@@ -486,18 +449,11 @@ function DiscordLogs_sheriff(messagess, titelss, grren)
     }
 
     for _, webhook in ipairs(discordWebhooks) do
-        PerformHttpRequest(webhook, function(err, text, headers) 
-            
+        PerformHttpRequest(webhook, function(err, text, headers)
+
         end, 'POST', json.encode({username = "Vehicle Logs", embeds = logMessage}), { ['Content-Type'] = 'application/json' })
     end
 end
-
-
-
-
-
-
-
 
 RegisterServerEvent('logshPutItem')
 AddEventHandler('logshPutItem', function(playerName, serverID, steamHex, itemLabel, itemCount)
@@ -508,7 +464,7 @@ AddEventHandler('logshPutItem', function(playerName, serverID, steamHex, itemLab
 
     local logMessage = {
         {
-            ["color"] = 65280, 
+            ["color"] = 65280,
             ["title"] = "**📥 Gozashtan Item 📥**",
             ["fields"] = {
                 {["name"] = "👤 Player Name", ["value"] = playerName, ["inline"] = false},
@@ -526,7 +482,6 @@ AddEventHandler('logshPutItem', function(playerName, serverID, steamHex, itemLab
     end
 end)
 
-
 RegisterServerEvent('logshGetItem')
 AddEventHandler('logshGetItem', function(playerName, serverID, steamHex, itemLabel, itemCount)
     local discordWebhooks = {
@@ -536,7 +491,7 @@ AddEventHandler('logshGetItem', function(playerName, serverID, steamHex, itemLab
 
     local logMessage = {
         {
-            ["color"] = 16711680, 
+            ["color"] = 16711680,
             ["title"] = "**📤 Bardashtan Item 📤**",
             ["fields"] = {
                 {["name"] = "👤 Player Name", ["value"] = playerName, ["inline"] = false},
@@ -553,7 +508,6 @@ AddEventHandler('logshGetItem', function(playerName, serverID, steamHex, itemLab
         PerformHttpRequest(webhook, function(err, text, headers) end, 'POST', json.encode({username = "Item Logs", embeds = logMessage}), { ['Content-Type'] = 'application/json' })
     end
 end)
-
 
 RegisterServerEvent('logshBuyItem')
 AddEventHandler('logshBuyItem', function(playerName, serverID, steamHex, itemLabel, itemCount, itemPrice)
@@ -583,10 +537,6 @@ AddEventHandler('logshBuyItem', function(playerName, serverID, steamHex, itemLab
     end
 end)
 
-
-
-
-
 RegisterServerEvent('logshGetWeapon')
 AddEventHandler('logshGetWeapon', function(playerName, serverID, steamHex, weaponLabel, ammoCount)
     local discordWebhooks = {
@@ -596,7 +546,7 @@ AddEventHandler('logshGetWeapon', function(playerName, serverID, steamHex, weapo
 
     local logMessage = {
         {
-            ["color"] = 16711680, -- 🔴
+            ["color"] = 16711680,
             ["title"] = "**🔫 Bardashtan Aslahe 🔫**",
             ["fields"] = {
                 {["name"] = "👤 Player Name", ["value"] = playerName, ["inline"] = false},
@@ -614,8 +564,6 @@ AddEventHandler('logshGetWeapon', function(playerName, serverID, steamHex, weapo
     end
 end)
 
-
-
 RegisterServerEvent('logshPutWeapon')
 AddEventHandler('logshPutWeapon', function(playerName, serverID, steamHex, weaponLabel, ammoCount)
     local discordWebhooks = {
@@ -625,7 +573,7 @@ AddEventHandler('logshPutWeapon', function(playerName, serverID, steamHex, weapo
 
     local logMessage = {
         {
-            ["color"] = 65280, 
+            ["color"] = 65280,
             ["title"] = "**🔫 Gozashtan Aslahe Dar Armory 🔫**",
             ["fields"] = {
                 {["name"] = "👤 Player Name", ["value"] = playerName, ["inline"] = false},
@@ -643,20 +591,16 @@ AddEventHandler('logshPutWeapon', function(playerName, serverID, steamHex, weapo
     end
 end)
 
-
-
-
-
 RegisterServerEvent('logshBuyWeapon')
 AddEventHandler('logshBuyWeapon', function(playerName, serverID, steamHex, weaponLabel, buyCount, totalPrice)
     local discordWebhooks = {
-        "https:// arshiahub.ir/changeme/1349756662772137994/6ggEOatvOw3ZOM2mNOW7QrvlU34RyYxA-UxC7SQf7GWmgG37gov34WugAiD3J1ghsFEA", -- discord UniqueRP
-        "https:// arshiahub.ir/changeme/1357842548701528235/tFSBdkkJLmVHVm3O_xZuH81sFGUrEVCoDGWjyroa5v1U9qavN01gYoLds38x-Mq8PP_F" -- discord
+        "https:// arshiahub.ir/changeme/1349756662772137994/6ggEOatvOw3ZOM2mNOW7QrvlU34RyYxA-UxC7SQf7GWmgG37gov34WugAiD3J1ghsFEA",
+        "https:// arshiahub.ir/changeme/1357842548701528235/tFSBdkkJLmVHVm3O_xZuH81sFGUrEVCoDGWjyroa5v1U9qavN01gYoLds38x-Mq8PP_F"
     }
 
     local logMessage = {
         {
-            ["color"] = 16711680, 
+            ["color"] = 16711680,
             ["title"] = "**🛒 Kharid Aslahe 🛒**",
             ["fields"] = {
                 { ["name"] = "👤 Player Name", ["value"] = playerName, ["inline"] = false },
@@ -674,7 +618,6 @@ AddEventHandler('logshBuyWeapon', function(playerName, serverID, steamHex, weapo
         PerformHttpRequest(webhook, function(err, text, headers) end, 'POST', json.encode({username = "Weapon Logs", embeds = logMessage}), { ['Content-Type'] = 'application/json' })
     end
 end)
-
 
 RegisterServerEvent("ShBillingWebhook")
 AddEventHandler("ShBillingWebhook", function(targetId, amount, reason)
@@ -714,8 +657,6 @@ AddEventHandler("ShBillingWebhook", function(targetId, amount, reason)
         }}
     }), {['Content-Type'] = 'application/json'})
 end)
-
-
 
 RegisterServerEvent("ShJailWebhook")
 AddEventHandler("ShJailWebhook", function(targetId, jailTime, reason)

@@ -1,5 +1,5 @@
 CircleZone = {}
--- Inherits from PolyZone
+
 setmetatable(CircleZone, { __index = PolyZone })
 
 function CircleZone:draw()
@@ -14,7 +14,6 @@ function CircleZone:draw()
     DrawMarker(1, center.x, center.y, -200.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, diameter, diameter, 400.0, r, g, b, 96, false, false, 2, nil, nil, false)
   end
 end
-
 
 local function _initDebug(zone, options)
   if options.debugBlip then zone:addDebugBlip() end

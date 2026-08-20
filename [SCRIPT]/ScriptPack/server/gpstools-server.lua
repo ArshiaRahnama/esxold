@@ -41,12 +41,6 @@ ESX.RegisterServerCallback("esx_marker:CheckAduty", function(source, cb)
     cb(player.aduty)
 end)
 
--- قبل:
--- local Cops = {
--- 	"steam:CHANGEME",
--- }
-
--- بعد: به‌جای Steam ID، شغل واقعی بازیکن (ESX Job) رو چک می‌کنیم.
 local PoliceJobs = {
 	["police"] = true,
 	["sheriff"] = true,
@@ -63,14 +57,3 @@ AddEventHandler("PoliceVehicleWeaponDeleter:askDropWeapon", function(wea)
 	end
 end)
 
--- AddEventHandler('esx:onaddInventoryItem', function(source, item, count)
--- 	if item.name == 'gps' then
--- 		TriggerClientEvent('esx_gps:addGPS', source)
--- 	end
--- end)
-
--- AddEventHandler('esx:onRemoveInventoryItem', function(source, item, count)
--- 	if item.name == 'gps' and item.count < 1 then
--- 		TriggerClientEvent('esx_gps:removeGPS', source)
--- 	end
--- end)

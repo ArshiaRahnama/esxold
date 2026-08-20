@@ -1,42 +1,13 @@
--- ================================================================= --
--- XP / Level system (was XP_Level_System)
--- ================================================================= --
--- COMPATIBILITY FIX (important): the original pack assumed ESX player
--- objects already have .xp / .rank fields and :setXP() / :setRank()
--- methods. This server's essentialmode/server/classes/player.lua has
--- NONE of those — every xPlayer.rank / xPlayer.setXP(...) call would
--- have thrown "attempt to index/call a nil value" the first time it
--- ran. Rather than patch essentialmode's core player class (risky —
--- other resources could depend on its current shape), this file tracks
--- xp/rank itself with direct SQL reads/writes, exactly the same
--- pattern CoinSystem already uses successfully for coin/timercoin on
--- this server. A small in-memory cache avoids hitting the DB on every
--- read.
---
--- SECURITY FIX: 'XP_System:AddXP' / 'RemoveXP' used RegisterServerEvent
--- with NO permission check inside the handler at all — the only gate
--- was the /addxp /removexp chat command (via es:addAdminCommand), a
--- SEPARATE code path from the raw network event. Any player could call
--- TriggerServerEvent('XP_System:AddXP', myId, 999999999) directly and
--- max out their own level instantly. Both handlers now re-check
--- permission_level on the server before doing anything.
---
--- GrantXP(...) is the safe internal entry point other files in THIS
--- resource (quest.lua) use to award XP for completing a quest — it's a
--- plain Lua function, never exposed to the network, so it can't be
--- spoofed and needs no permission check of its own.
--- ================================================================= --
 
-local PlayerXP   = {} -- [source] = number, cached
-local PlayerRank = {} -- [source] = number, cached
+
+local PlayerXP   = {}
+local PlayerRank = {}
 
 local function clearCache(source)
     PlayerXP[source] = nil
     PlayerRank[source] = nil
 end
 
--- Always returns via callback(xp, rank). Uses the cache if we already
--- know it for this session; otherwise reads once from `users` and caches.
 local function getXPRank(playerId, cb)
     if PlayerXP[playerId] and PlayerRank[playerId] then
         cb(PlayerXP[playerId], PlayerRank[playerId])
@@ -174,9 +145,6 @@ end, function(source)
     TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', 'Insufficient Permissions.' } })
 end, { help = "Remove Xp From Player", params = { { name = "ID", help = "ID Player" }, { name = "Amount", help = "Meghdare XP" } } })
 
--- Kept as network events ONLY for backward compatibility with anything
--- that still calls them directly — now permission-checked server-side
--- so they can't be exploited even without going through the commands.
 RegisterServerEvent('XP_System:AddXP')
 AddEventHandler('XP_System:AddXP', function(playerId, xp)
     local _source = source
@@ -197,8 +165,6 @@ AddEventHandler('XP_System:RemoveXP', function(playerId, xp)
     RevokeXP(tonumber(playerId), xp, _source)
 end)
 
--- Used on spawn (client/xp.lua in THIS resource) to fetch your OWN rank
--- and push it back down so idoverhead can set your decor.
 RegisterServerEvent("XP_System:setMyDecor")
 AddEventHandler("XP_System:setMyDecor", function()
     local src = source
@@ -209,18 +175,12 @@ AddEventHandler("XP_System:setMyDecor", function()
     end)
 end)
 
--- Used by idoverhead (own resource) to fetch ANOTHER player's rank, to
--- show above their head. Read-only, no permission check needed — it's
--- just their current level, the same thing everyone can already see
--- rendered in-world.
 ESX.RegisterServerCallback('XP_System:getRank', function(_source, cb, targetId)
     getXPRank(tonumber(targetId), function(_, rank)
         cb(rank or -1)
     end)
 end)
 
--- Exposes xp/rank to other files in this resource (menu.lua) without a
--- second, separate SQL round trip.
 function GetXPRankCached(playerId, cb)
     getXPRank(playerId, cb)
 end

@@ -4,7 +4,6 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-
 MySQL.ready(function()
 	local items = MySQL.Sync.fetchAll('SELECT * FROM items')
 
@@ -66,8 +65,8 @@ MySQL.ready(function()
 			SharedInventories[name] = addonInventory
 		end
 	end
-	-- removeFunctions(Inventories)
-	-- print(json.encode(Inventories))
+
+
 end)
 
 function removeFunctions(tbl)
@@ -81,20 +80,18 @@ function removeFunctions(tbl)
 end
 
 function GetInventory(name, owner)
-	if Inventories[name] then 
+	if Inventories[name] then
 		for i=1, #Inventories[name], 1 do
-			
+
 			if Inventories[name][i].owner == owner then
 				return Inventories[name][i]
 			end
 		end
-	else 
+	else
 		return {}
 	end
 
 end
-
-
 
 function GetSharedInventory(name)
 	return SharedInventories[name]
@@ -105,7 +102,7 @@ AddEventHandler('esx_addoninventory:addGang', function(name)
 end)
 
 AddEventHandler('esx_addoninventory:getInventory', function(name, owner, cb)
-	
+
 	cb(GetInventory(name, owner))
 end)
 
@@ -128,8 +125,4 @@ AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
 		table.insert(addonInventories, inventory)
 	end
 end)
-
-
-
-
 

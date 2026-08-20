@@ -15,8 +15,8 @@ Citizen.CreateThread(function()
     end
 end)
 
-RegisterNetEvent("aa:toggle") 
+RegisterNetEvent("aa:toggle")
 AddEventHandler("aa:toggle", function()
-    config.enabled = not config.enabled 
+    config.enabled = not config.enabled
     TriggerEvent("chatMessage", config.name,{255,1,1}, " 📄 Rules" .. config.tfmsg[config.enabled])
 end)

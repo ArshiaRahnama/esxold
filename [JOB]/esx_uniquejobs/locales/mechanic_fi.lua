@@ -35,7 +35,7 @@ for k, v in pairs({
   ['amount_invalid']            = 'virheellinen summa',
   ['no_players_nearby']         = 'ei pelaajia lähettyvillä',
   ['no_vehicle_nearby']         = 'there is no nearby vehicle',
-  ['inside_vehicle']            = 'you can\'t do this from inside the vehicle!', 
+  ['inside_vehicle']            = 'you can\'t do this from inside the vehicle!',
   ['vehicle_unlocked']          = 'ajoneuvo ~g~Avattu',
   ['vehicle_repaired']          = 'ajoneuvo ~g~Korjattu',
   ['vehicle_cleaned']           = 'ajoneuvo ~g~pesty',

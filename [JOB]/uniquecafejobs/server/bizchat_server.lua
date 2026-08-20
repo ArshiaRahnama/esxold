@@ -1,7 +1,4 @@
---[[
-	/biz <message> - internal team chat, scoped to the player's own job.
-	Covers all 17 businesses + the 4 holdings (Meridian/Blacktide/CrateCarry/TurfCo).
-]]
+
 
 local function isUniqueCafeJob(job)
 	return IsCafeJob(job) or IsCorpJob(job) or job == TurfCo.Job

@@ -1,16 +1,16 @@
 Config = {}
 
-Config.DefaultProfilePic = 'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22%23cfcfcf%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2238%22%20r%3D%2218%22%20fill%3D%22%238a8a8a%22/%3E%3Cpath%20d%3D%22M50%2060c-22%200-34%2014-34%2030v10h68V90c0-16-12-30-34-30z%22%20fill%3D%22%238a8a8a%22/%3E%3C/svg%3E' -- fallback avatar when a user has no Profile_Pic set (built-in, no external link needed)
+Config.DefaultProfilePic = 'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22%23cfcfcf%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2238%22%20r%3D%2218%22%20fill%3D%22%238a8a8a%22/%3E%3Cpath%20d%3D%22M50%2060c-22%200-34%2014-34%2030v10h68V90c0-16-12-30-34-30z%22%20fill%3D%22%238a8a8a%22/%3E%3C/svg%3E'
 
 Config.Locale = 'en'
 Config.EnableESXIdentity = true
 Config.ESXtrigger = 'esx:getSharedObject'
 Config.MenuSkintrigger = 'esx_skin:openSaveableMenu'
 Config.MaxSalary = 10000000
-Config.Withdraw = true ---can Withdraw money?if you want ,you can disable it to stop abuse
-Config.WithdrawMsg = '~r~ Be Dalil Abuse Boss Ha Offe' -- if Config.Withdraw is false
-Config.TpCoords = vector3(-811.84393310547, 175.19441223145, 76.745376586914) -- coords for set clothes
-Config.heading = 111.54900360107 -- heading for tp
+Config.Withdraw = true
+Config.WithdrawMsg = '~r~ Be Dalil Abuse Boss Ha Offe'
+Config.TpCoords = vector3(-811.84393310547, 175.19441223145, 76.745376586914)
+Config.heading = 111.54900360107
 Config.OpenBossMenu = 'esx_society:openBosscarysMenu'
 Config.Inventory = {
     'police',
@@ -70,7 +70,7 @@ Config.Armory = {
         'WEAPON_ADVANCEDRIFLE',
         'WEAPON_ASSAULTRIFLE',
         'WEAPON_GUSENBERG',
-        
+
     },
     ['fbi'] = {
         'WEAPON_BZGAS',
@@ -135,7 +135,7 @@ Config.Armory = {
         'WEAPON_ASSAULTRIFLE',
         'WEAPON_GUSENBERG',
     },
-    -- Department of Justice (DOJ) --
+
     ['marshal'] = {
         'WEAPON_BZGAS',
         'WEAPON_STUNGUN',
@@ -231,7 +231,7 @@ Config.Garage = {
         {name = 'polnspeedo', label = 'FBI Van'},
         {name = 'POLKCH', label = 'FBI Kamacho'},
         {name = 'swat_dirtbike', label = 'FBI Motor'},
-  
+
     },
     ['sheriff'] = {
         {name = 'b2chal', label = 'Sheriff Chal'},
@@ -248,7 +248,7 @@ Config.Garage = {
         {name = 'swat_dirtbike', label = 'Sheriff Motor'},
 
     },
-    -- Department of Justice (DOJ) --
+
     ['marshal'] = {
         {name = 'b2chal', label = 'Marshal Chal'},
         {name = 'b211vic', label = 'Marshal VIC'},
@@ -353,15 +353,13 @@ Config.Heli = {
         {name = 'polmav', label = 'FBI Polmav'},
         {name = 'tx_heli', label = 'FBI Heli'},
 
-
     },
     ['sheriff'] = {
         {name = 'polmav', label = 'Sheriff Polmav'},
         {name = 'tx_heli', label = 'Sheriff Heli'},
 
-
     },
-    -- Department of Justice (DOJ) --
+
     ['marshal'] = {
         {name = 'polmav', label = 'Marshal Polmav'},
         {name = 'tx_heli', label = 'Marshal Heli'},
@@ -376,7 +374,6 @@ Config.Heli = {
         {name = 'polmav', label = 'Medic Polmav'},
         {name = 'tx_heli', label = 'Medic Heli'},
 
-
     },
     ['weazel'] = {
         {name = 'polmav', label = 'Weazel Polmav'},
@@ -386,7 +383,6 @@ Config.Heli = {
     ['mechanic'] = {
         {name = 'polmav', label = 'Mechanic Polmav'},
         {name = 'tx_heli', label = 'Mechanic Heli'},
-
 
     },
     ['taxi'] = {
@@ -522,7 +518,6 @@ Config.FemaleDefault = {
     ['shoes_2'] = 0
 }
 
-
 logos = 'nui://scoreboard/html/images/Assets/'
 
 Config.LogSystem = {
@@ -544,10 +539,10 @@ Config.LogSystem = {
         divisiondata    = "",
         divisionoption  = "",
         divisionemploee = "",
-        img             = "change me arshia" 
+        img             = "change me arshia"
     },
 
-    -- Department of Justice (DOJ) -- put your own Discord webhook URLs below, these are intentionally left blank
+
     marshal = {
         money           = "",
         manage          = "",
@@ -601,7 +596,7 @@ Config.LogSystem = {
         divisiondata    = "https:// arshiahub.ir/changeme/1358025384658206921/mCVJq399PR7P57IBzbXyIc2tO9LepBC65VUzwGpvei_ZCdcnRu732Dj7kX4QxCAuXyeO",
         divisionoption  = "https:// arshiahub.ir/changeme/1358025384658206921/mCVJq399PR7P57IBzbXyIc2tO9LepBC65VUzwGpvei_ZCdcnRu732Dj7kX4QxCAuXyeO",
         divisionemploee = "https:// arshiahub.ir/changeme/1358025384658206921/mCVJq399PR7P57IBzbXyIc2tO9LepBC65VUzwGpvei_ZCdcnRu732Dj7kX4QxCAuXyeO",
-        img             = "change me arshia" 
+        img             = "change me arshia"
     },
 
     fbi = {
@@ -611,9 +606,8 @@ Config.LogSystem = {
         divisiondata    = "https:// arshiahub.ir/changeme/1356517849018925157/XXagSzfNXrUcGaoAcjEhF_bSDMo7VxEf4WHiOqjgYoJ-WCX5_wjg4YawGd1Zp_C7-0Ls",
         divisionoption  = "https:// arshiahub.ir/changeme/1356517901892587682/g_3rhW6edryKJTJ_djDEedhAQU0JuIYS4Y1XgbvAzUCD5e1po60ezXBRTJEy8xWOfPYz",
         divisionemploee = "https:// arshiahub.ir/changeme/1356517955105587341/gYNCT24A7aXqEZaGk2ox0JLxujcz9g9DNVJ-pPpXpMwVFN2pamnlQaixk-UmVTri2rXf",
-        img             = "change me arshia" 
+        img             = "change me arshia"
     },
-
 
     ambulance = {
         money           = "https:// arshiahub.ir/changeme/1356345343293395075/4nsWMNrEJaBVO6ilEO7DS9C3skwChNQtL_p-rKJizSOFkmWlcfOnymDpuMXKRQ_Bi6XR",
@@ -622,7 +616,7 @@ Config.LogSystem = {
         divisiondata    = "https:// arshiahub.ir/changeme/1356349235167232100/WjWnBdF5UZxiLvX5XUrj34-e5cKIqeY7pkIq4v61Y0C-6gWek66JuRkjhin7pMbtTW0E",
         divisionoption  = "https:// arshiahub.ir/changeme/1356350047675088986/pQIgm8zA7_NaIFXRX4SgbLU6W7g1tzaAk1EmmX1qIJuISwbA2Q9NqhXL_gQ49GXqdjsV",
         divisionemploee = "https:// arshiahub.ir/changeme/1356349945396985959/-LNM69r5kg44cJVbgVM1VOlVK-a9N8gUr1Muu9_2sxNcRyS5Fh8uUo2YEG_lxTDVZfma",
-        img             = "change me arshia" 
+        img             = "change me arshia"
     },
 
     mechanic = {
@@ -632,7 +626,7 @@ Config.LogSystem = {
         divisiondata    = "https:// arshiahub.ir/changeme/1356519574148743232/ki5Xb-bB3nEeWKksuw_kVWdUD4sM_ToVeDS23UqP0MJ7ms7swHxbtQ8psrBv2QYF-xHS",
         divisionoption  = "https:// arshiahub.ir/changeme/1356519631749255209/EwcuVPck5B__5Kts9BEne1aqr_zG38wkKgcovP1eewcID7KRHRN14YglRFR4zc2j0Cwp",
         divisionemploee = "https:// arshiahub.ir/changeme/1356519674686214184/DBWzzv_oE4p2Ti5IdxLds4iKD6tv9lWm85qU3gjCyUAEJjPnlJ3OMCLRjf3-qTu2vnN3",
-        img             = "change me arshia" 
+        img             = "change me arshia"
     },
 
     taxi = {
@@ -655,7 +649,7 @@ Config.LogSystem = {
         img             = "change me arshia"
     },
 
-    -- Admins --
+
 
     adminpolice = {
         money           = "https:// arshiahub.ir/changeme/1356281646206418984/FKXCrksWv3ekpjN9o8F0j4vFrS03LXhBFtNCQDQwOMghkaWMTly-RMWVP8Psxwv_muJm",
@@ -729,7 +723,7 @@ Config.LogSystem = {
         divisionemploee = "https:// arshiahub.ir/changeme/1356316833925431458/n4cw8W8JpvK1j0cUll1QFJzlLxKxFXQOL_gjs9je36Mu2TH--V3zIaohImeMJzlqTRa3",
     },
 
-    -- Department of Justice admin logs (jobadmin = "admin"..job, required or JobsLog will error) --
+
     adminmarshal = {
         money = "", manage = "", option = "", divisiondata = "", divisionoption = "", divisionemploee = "",
     },
@@ -747,30 +741,18 @@ Config.LogSystem = {
     },
 }
 
--- ---------------------------------------------------------------------------------
--- Config.JobGroups: branches whose bosses (grade >= 10) can move THEMSELVES between
--- the sibling jobs in the same branch, from inside the boss menu ("Change Job").
--- Only jobs listed together in the same {jobs = {...}} table can be switched between.
--- DOJ + Law Enforcement now live in ONE resource (esx_militaryjob) so they're one
--- branch here too.
--- ---------------------------------------------------------------------------------
 Config.JobGroups = {
     { id = 'doj',         label = 'Department Of Justice', jobs = {'cid', 'cia', 'marshal', 'fbi', 'judge', 'doa'} },
     { id = 'policejob',   label = 'Law Enforcement',        jobs = {'police', 'sheriff', 'mt'} },
     { id = 'organserver', label = 'Organ Services',         jobs = {'taxi', 'mechanic', 'ambulance', 'weazel'} },
 }
 
--- Display labels used ONLY for the boss-menu "Change Job" list (client/main.lua).
--- Keep in sync with the `jobs` lists above.
 Config.JobDisplayLabels = {
     cid = 'CID', cia = 'CIA', marshal = 'Marshal', fbi = 'FBI', judge = 'Judge', doa = 'DOA',
     police = 'Police', sheriff = 'Sheriff', mt = 'MT',
     taxi = 'Taxi', mechanic = 'Mechanic', ambulance = 'Medic', weazel = 'Weazel',
 }
 
--- Highest grade that actually exists for each job (needed to scale rank
--- proportionally when switching jobs - see Config.ChangeBranchJobBossFloor below).
--- Keep this in sync with the real max grade in your job_grades table.
 Config.JobMaxGrade = {
     police  = 21,
     sheriff = 22,
@@ -781,12 +763,7 @@ Config.JobMaxGrade = {
     judge   = 21,
     doa     = 21,
     cid     = 21,
-    -- taxi/mechanic/medic/weazel default to 10 if not listed here
+
 }
 
--- Change Job (Branch) scales rank proportionally: it keeps the same DISTANCE FROM
--- THE TOP grade of the job you're leaving, applied to the top grade of the job
--- you're moving to - but never drops you below this floor (so you don't lose
--- boss-menu access). When you switch back to your original job, you get your
--- exact original grade back (remembered in the branch_job_memory table).
 Config.ChangeBranchJobBossFloor = 10

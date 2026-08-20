@@ -4,10 +4,10 @@ games {'gta5'}
 client_scripts {
 	'@essentialmode/locale.lua',
 	'config.lua',
-	-- 'client/*.lua',
+
 	'config.lua',
-	'locales/*.lua',  
-	-- 'client/bastan-r-q-cl.lua'
+	'locales/*.lua',
+
 }
 
 server_scripts {
@@ -42,5 +42,4 @@ exports {
 	'getMaxSpeedInOffroad',
 	'getVar',
 }
-
 

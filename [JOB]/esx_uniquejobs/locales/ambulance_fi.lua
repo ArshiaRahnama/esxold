@@ -1,10 +1,10 @@
 Locales['fi'] = Locales['fi'] or {}
 for k, v in pairs({
-  -- Cloakroom
+
   ['cloakroom'] = 'Vaatelokero',
   ['ems_clothes_civil'] = 'Siviilikamppeet',
   ['ems_clothes_ems'] = 'Työkamppeet',
-  -- Vehicles
+
   ['ambulance'] = 'ambulance',
   ['helicopter_prompt'] = 'press ~INPUT_CONTEXT~ to access the ~y~Helicopter Actions~s~.',
   ['helicopter_buy'] = 'helicopter shop',
@@ -36,7 +36,7 @@ for k, v in pairs({
   ['vehicleshop_awaiting_model'] = 'the vehicle is currently ~g~DOWNLOADING & LOADING~s~ please wait',
   ['confirm_no'] = 'no',
   ['confirm_yes'] = 'yes',
-  -- Action Menu
+
   ['hospital'] = 'sairaala',
   ['revive_inprogress'] = 'elvytys on menossa!',
   ['revive_complete'] = 'sinä elvytit henkilön ~y~%s~s~',
@@ -47,9 +47,9 @@ for k, v in pairs({
   ['no_vehicles'] = 'ei ajoneuvoja lähettyvillä',
   ['player_not_unconscious'] = 'tämä pelaaja ei ole tajuton!',
   ['player_not_conscious'] = 'tämä pelaaja ei ole tajuissaan!',
-  -- Boss Menu
+
   ['boss_actions'] = 'pomovalikko',
-  -- Misc
+
   ['invalid_amount'] = '~r~Virheellinen summa',
   ['actions_prompt'] = 'press ~INPUT_CONTEXT~ access the ~y~Ambulance Actions~s~.',
   ['deposit_amount'] = 'talletettava summa',
@@ -61,16 +61,16 @@ for k, v in pairs({
   ['medikit'] = 'ensiapupakkauksia',
   ['bandage'] = 'sideharsoja',
   ['max_item'] = 'sinulla on jo tarpeeksi mukana',
-  -- F6 Menu
+
   ['ems_menu'] = 'ensihoito menu',
   ['ems_menu_title'] = 'ensihoito - Siviilin kanssakäyminen',
   ['ems_menu_revive'] = 'elvytä',
   ['ems_menu_putincar'] = 'Laita ajoneuvoon',
   ['ems_menu_small'] = 'hoida pieniä haavoja',
   ['ems_menu_big'] = 'hoida isoja haavoja',
-  -- Phone
+
   ['alert_ambulance'] = 'hälyytys Ensihoidolle',
-  -- Death
+
   ['respawn_available_in'] = 'respawn available in ~b~%s minutes %s seconds~s~',
   ['respawn_bleedout_in'] = 'you will bleed out in ~b~%s minutes %s seconds~s~\n',
   ['respawn_bleedout_prompt'] = 'hold [~b~E~s~] to respawn',
@@ -80,9 +80,9 @@ for k, v in pairs({
   ['distress_sent'] = 'distress signal has been sent to available units!',
   ['distress_message'] = 'medical attention required: unconscious citizen!',
   ['combatlog_message'] = 'you have been force-respawned because you\'ve previously left the server when dead.',
-  -- revive
+
   ['revive_help'] = 'elvytä pelaaja',
-  -- Item
+
   ['used_medikit'] = 'sinä käytit ensiapupakkauksen',
   ['used_bandage'] = 'sinä käytit sideharsoja',
   ['not_enough_medikit'] = 'ei tarpeeksi ~b~ensiapupakkauksia~s~.',

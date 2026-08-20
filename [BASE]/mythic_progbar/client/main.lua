@@ -59,10 +59,10 @@ function Progress(action, finish)
                 end
             end)
         else
-            print('Action Already Performing') -- Replace with alert call if you want the player to see this warning on-screen
+            print('Action Already Performing')
         end
     else
-        print('Cannot do action while dead') -- Replace with alert call if you want the player to see this warning on-screen
+        print('Cannot do action while dead')
     end
 end
 
@@ -225,7 +225,6 @@ AddEventHandler("mythic_progbar:client:actionCleanup", function()
     prop_net = nil
 end)
 
--- Disable controls while GUI open
 Citizen.CreateThread(function()
     while true do
         if isDoingAction then
@@ -241,7 +240,7 @@ Citizen.CreateThread(function()
                         local player = PlayerPedId()
                         if ( DoesEntityExist( player ) and not IsEntityDead( player )) then
                             loadAnimDict( mythic_action.animation.animDict )
-                            TaskPlayAnim( player, mythic_action.animation.animDict, mythic_action.animation.anim, 3.0, 1.0, -1, mythic_action.animation.flags, 0, 0, 0, 0 )     
+                            TaskPlayAnim( player, mythic_action.animation.animDict, mythic_action.animation.anim, 3.0, 1.0, -1, mythic_action.animation.flags, 0, 0, 0, 0 )
                         end
                     else
                         TaskStartScenarioInPlace(PlayerPedId(), 'PROP_HUMAN_BUM_BIN', 0, true)
@@ -297,51 +296,51 @@ end
 
 function DisableActions(ped)
     if mythic_action.controlDisables.disableMouse then
-        DisableControlAction(0, 1, true) -- LookLeftRight
-        DisableControlAction(0, 2, true) -- LookUpDown
-        DisableControlAction(0, 106, true) -- VehicleMouseControlOverride
+        DisableControlAction(0, 1, true)
+        DisableControlAction(0, 2, true)
+        DisableControlAction(0, 106, true)
     end
 
     if mythic_action.controlDisables.disableMovement then
-        DisableControlAction(0, 30, true) -- disable left/right
-        DisableControlAction(0, 31, true) -- disable forward/back
-        DisableControlAction(0, 36, true) -- INPUT_DUCK
-        DisableControlAction(0, 21, true) -- disable sprint
+        DisableControlAction(0, 30, true)
+        DisableControlAction(0, 31, true)
+        DisableControlAction(0, 36, true)
+        DisableControlAction(0, 21, true)
     end
 
     if mythic_action.controlDisables.disableCarMovement then
-        DisableControlAction(0, 63, true) -- veh turn left
-        DisableControlAction(0, 64, true) -- veh turn right
-        DisableControlAction(0, 71, true) -- veh forward
-        DisableControlAction(0, 72, true) -- veh backwards
-        DisableControlAction(0, 75, true) -- disable exit vehicle
+        DisableControlAction(0, 63, true)
+        DisableControlAction(0, 64, true)
+        DisableControlAction(0, 71, true)
+        DisableControlAction(0, 72, true)
+        DisableControlAction(0, 75, true)
     end
 
     if mythic_action.controlDisables.disableCombat then
-        DisablePlayerFiring(ped, true) -- Disable weapon firing
-        DisableControlAction(0, 24, true) -- disable attack
-        DisableControlAction(0, 25, true) -- disable aim
-        DisableControlAction(1, 37, true) -- disable weapon select
-        DisableControlAction(0, 47, true) -- disable weapon
-        DisableControlAction(0, 58, true) -- disable weapon
-        DisableControlAction(0, 140, true) -- disable melee
-        DisableControlAction(0, 141, true) -- disable melee
-        DisableControlAction(0, 142, true) -- disable melee
-        DisableControlAction(0, 143, true) -- disable melee
-        DisableControlAction(0, 263, true) -- disable melee
-        DisableControlAction(0, 264, true) -- disable melee
-        DisableControlAction(0, 257, true) -- disable melee
+        DisablePlayerFiring(ped, true)
+        DisableControlAction(0, 24, true)
+        DisableControlAction(0, 25, true)
+        DisableControlAction(1, 37, true)
+        DisableControlAction(0, 47, true)
+        DisableControlAction(0, 58, true)
+        DisableControlAction(0, 140, true)
+        DisableControlAction(0, 141, true)
+        DisableControlAction(0, 142, true)
+        DisableControlAction(0, 143, true)
+        DisableControlAction(0, 263, true)
+        DisableControlAction(0, 264, true)
+        DisableControlAction(0, 257, true)
     end
 end
 
 RegisterNUICallback('actionFinish', function(data, cb)
-    -- Do something here
+
     isDoingAction = false
     TriggerEvent("mythic_progbar:client:actionCleanup")
     cb('ok')
 end)
 
 RegisterNUICallback('actionCancel', function(data, cb)
-    -- Do something here
+
     cb('ok')
 end)

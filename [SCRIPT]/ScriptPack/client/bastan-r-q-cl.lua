@@ -2,7 +2,7 @@ Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
         local ped = PlayerPedId()
-      --  StartAudioScene('CHARACTER_CHANGE_IN_SKY_SCENE')
+
         if IsPedArmed(ped, 6) then
             DisableControlAction(1, 140, true)
             DisableControlAction(1, 141, true)

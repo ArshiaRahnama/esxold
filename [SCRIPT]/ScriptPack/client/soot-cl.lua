@@ -31,7 +31,7 @@ Citizen.CreateThread(function()
 						if not whistle then
 							whistle = true
 							TaskPlayAnim(lPed, "rcmnigel1c", "hailing_whistle_waive_a", 2.7, 2.7, -1, 49, 0, 0, 0, 0)
-						end   
+						end
 					end)
 				end
 			end

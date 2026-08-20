@@ -8,14 +8,12 @@ Citizen.CreateThread(function()
 	end
 end)
 
-
-
-function NajblizszyGracz() --This function send to server closestplayer
+function NajblizszyGracz()
 
 local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 local player = PlayerPedId()
 
-if closestPlayer == -1 or closestDistance > 2.0 then 
+if closestPlayer == -1 or closestDistance > 2.0 then
     ESX.ShowNotification('~r~Hich Playeri Nazdik Shoma Nist!')
 else
   if not HaveBagOnHead then
@@ -43,7 +41,7 @@ AddEventHandler('esx_worek:nalozNa', function(gracz)
     SetNuiFocus(false,false)
     SendNUIMessage({type = 'openGeneral'})
     HaveBagOnHead = true
-end)    
+end)
 
 AddEventHandler('playerSpawned', function()
 DeleteEntity(Worek)
@@ -66,11 +64,11 @@ function OpenBagMenu()
     local elements = {
           {label = 'Gozashtan Guni Roo Sar', value = 'puton'},
           {label = 'Bardashtan Guni Az Sar', value = 'putoff'},
-          
+
         }
-  
+
     ESX.UI.Menu.CloseAll()
-  
+
     ESX.UI.Menu.Open(
       'default', GetCurrentResourceName(), 'headbagging',
       {
@@ -78,19 +76,19 @@ function OpenBagMenu()
         align    = 'top-left',
         elements = elements
         },
-  
+
             function(data2, menu2)
-  
-  
+
+
               local player, distance = ESX.Game.GetClosestPlayer()
-  
+
               if distance ~= -1 and distance <= 2.0 then
-  
+
                 if data2.current.value == 'puton' then
                     NajblizszyGracz()
 					DisplayRadar(false)
                 end
-  
+
                 if data2.current.value == 'putoff' then
                   TriggerServerEvent('esx_worek:zdejmij')
 				  DisplayRadar(true)
@@ -104,6 +102,6 @@ function OpenBagMenu()
         menu2.close()
       end
     )
-  
+
   end
 

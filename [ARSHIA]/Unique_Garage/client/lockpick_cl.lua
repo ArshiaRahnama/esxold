@@ -1,7 +1,7 @@
--- ESX is already initialized globally by client.lua; no need to re-fetch it here.
+
 
 function getClosestVehicle(coords)
-    local vehicles = ESX.Game.GetVehiclesInArea(coords, 5.0) 
+    local vehicles = ESX.Game.GetVehiclesInArea(coords, 5.0)
     local closestVehicle, closestDistance = nil, 1000
 
     for _, vehicle in ipairs(vehicles) do
@@ -41,7 +41,7 @@ AddEventHandler('esx_lockpick:startlockpick', function()
     TaskPlayAnim(playerPed, "anim@heists@prison_heiststation@cop_reactions", "cop_b_idle", 8.0, -8.0, -1, 49, 0, false, false, false)
 
     local success = lib.skillCheck(
-        {'easy', 'easy', {areaSize = 60, speedMultiplier = 2}, 'easy'}, 
+        {'easy', 'easy', {areaSize = 60, speedMultiplier = 2}, 'easy'},
         {'w', 'a', 's', 'd'}
     )
 
@@ -53,7 +53,7 @@ AddEventHandler('esx_lockpick:startlockpick', function()
     else
         local Random = math.random(0, 2)
         SafeNotify("Mini-game movaffagh nashod! Darbe mashin baz nashod.")
-        if Random == 2 then 
+        if Random == 2 then
             TriggerServerEvent('esx_lockpick:removeitem')
         end
     end
@@ -66,7 +66,7 @@ AddEventHandler('esx_lockpick:startVehicleAlarm', function(vehicleNetId, duratio
     local vehicle = NetworkGetEntityFromNetworkId(vehicleNetId)
     if DoesEntityExist(vehicle) then
         SetVehicleAlarm(vehicle, true)
-        
+
         Citizen.CreateThread(function()
             local endTime = GetGameTimer() + duration
             while GetGameTimer() < endTime do

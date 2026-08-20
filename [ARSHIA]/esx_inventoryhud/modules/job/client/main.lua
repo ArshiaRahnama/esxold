@@ -57,7 +57,7 @@ function getJobInventory(jobName)
             items.slots = data.slots
             p:resolve(items)
         end)
-        -- p:resolve(data)
+
     end, jobName)
     return Citizen.Await(p)
 end

@@ -22,8 +22,6 @@ local states = {}
 states.frozen = false
 states.frozenPos = nil
 
-
-
 AddEventHandler('ToggleUpdatePos', function(toggles)
     UpdatePos = toggles
 end)
@@ -38,8 +36,6 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
-
-
 
 local loaded = false
 local oldPos
@@ -58,8 +54,8 @@ end)
 
 Citizen.CreateThread(function()
 	while true do
-		-- بهینه‌سازی: این تنظیم (friendly fire) نیازی به آپدیت هر فریم (Wait(1)) نداره.
-		-- تغییر به 5000ms بار CPU این ترد رو عملاً به صفر می‌رسونه بدون تغییر رفتار گیم‌پلی.
+
+
 		Citizen.Wait(5000)
 
 		for i = 0,255 do
@@ -98,7 +94,7 @@ function SetVehicleMaxMods(vehicle, turbo)
 				modSuspension   =   -1,
 				modTurbo        =   false,
 			}
-			
+
 		end
 		ESX.Game.SetVehicleProperties(vehicle, props)
 
@@ -153,7 +149,7 @@ AddEventHandler("playerSpawned", function()
 	isDead = false
 
 	TriggerServerEvent('playerSpawn')
-	-- ExecuteCommand("reload")
+
 end)
 
 RegisterNetEvent('esx:playerLoaded')
@@ -274,9 +270,6 @@ AddEventHandler('addGangCar', function(newOwner, plate, admin)
 	TriggerServerEvent("CarLock:ToggleKey", false, oldPlate, vehicle)
 end)
 
-
-
-
 RegisterNetEvent('es_admin:heal')
 AddEventHandler('es_admin:heal', function()
 	SetEntityHealth(PlayerPedId(), 200)
@@ -380,7 +373,7 @@ AddEventHandler('skinchanger:modelLoaded', function()
 	TriggerEvent('esx:restoreLoadout')
 end)
 
-AddEventHandler('esx:restoreLoadout', function(loadoutx)	
+AddEventHandler('esx:restoreLoadout', function(loadoutx)
 	LoadoutLoaded = true
 	local playerPed = PlayerPedId()
 	local ammoTypes = {}
@@ -408,11 +401,6 @@ AddEventHandler('esx:restoreLoadout', function(loadoutx)
 
 	LoadoutLoaded = true
 end)
-
--- RegisterNetEvent('es:activateMoney')
--- AddEventHandler('es:activateMoney', function(money)
--- 	ESX.PlayerData.money = money
--- end)
 
 RegisterNetEvent('esx:addInventoryItem')
 AddEventHandler('esx:addInventoryItem', function(item, count)
@@ -461,16 +449,10 @@ AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
 end)
 
--- RegisterNetEvent('esx:setDivision')
--- AddEventHandler('esx:setDivision', function(division)
--- 	ESX.PlayerData.divisions = division
--- end)
-
 RegisterNetEvent('esx:SetStarterPack')
 AddEventHandler('esx:SetStarterPack', function(starter)
 	ESX.PlayerData.StarterPack = starter
 end)
-
 
 RegisterNetEvent('esx:addWeapon')
 AddEventHandler('esx:addWeapon', function(weaponName, ammo)
@@ -478,7 +460,7 @@ AddEventHandler('esx:addWeapon', function(weaponName, ammo)
 	local weaponHash = GetHashKey(weaponName)
 
 	GiveWeaponToPed(playerPed, weaponHash, ammo, false, false)
-	--AddAmmoToPed(playerPed, weaponHash, ammo) possibly not needed
+
 end)
 
 RegisterNetEvent('esx:addWeaponComponent')
@@ -500,7 +482,7 @@ AddEventHandler('esx:removeWeapon', function(weaponName, ammo)
 		local finalAmmo = math.floor(pedAmmo - ammo)
 		SetPedAmmo(playerPed, weaponHash, finalAmmo)
 	else
-		SetPedAmmo(playerPed, weaponHash, 0) -- remove leftover ammo
+		SetPedAmmo(playerPed, weaponHash, 0)
 	end
 
 	RemoveWeaponFromPed(playerPed, weaponHash)
@@ -578,7 +560,7 @@ RegisterNetEvent('esx:spawnVehicle')
 AddEventHandler('esx:spawnVehicle', function(model)
 	local playerPed = PlayerPedId()
 	local coords    = GetEntityCoords(playerPed)
-		
+
 	ESX.Game.SpawnVehicle(model, coords, 90.0, function(vehicle)
 		TaskWarpPedIntoVehicle(playerPed,  vehicle, -1)
 		SetVehicleFuelLevel(vehicle, 100.0)
@@ -616,7 +598,7 @@ AddEventHandler('esx:pickup', function(id, label, model, components, player)
 		SetEntityHeading(obj, GetEntityHeading(ped))
 		PlaceObjectOnGroundProperly(obj)
 		SetEntityAsMissionEntity(obj, true, false)
-		
+
 		Pickups[id] = {
 			id = id,
 			obj = obj,
@@ -635,7 +617,6 @@ end)
 RegisterNetEvent('esx:pickupcrafting')
 AddEventHandler('esx:pickupcrafting', function(id, label, model, components, x, y, z)
 
-
 	ESX.Game.SpawnLocalObject(model, {
 		x = x,
 		y = y,
@@ -644,7 +625,7 @@ AddEventHandler('esx:pickupcrafting', function(id, label, model, components, x, 
 		SetEntityHeading(obj, GetEntityHeading(ped))
 		PlaceObjectOnGroundProperly(obj)
 		SetEntityAsMissionEntity(obj, true, false)
-		
+
 		Pickups[id] = {
 			id = id,
 			obj = obj,
@@ -709,7 +690,7 @@ AddEventHandler('esx:deleteVehicle', function()
     local carName = GetDisplayNameFromVehicleModel(carModel)
 	local carPlate = GetVehicleNumberPlateText(entity)
     NetworkRequestControlOfEntity(entity)
-    
+
     local timeout = 2000
     while timeout > 0 and not NetworkHasControlOfEntity(entity) do
         Wait(100)
@@ -717,14 +698,14 @@ AddEventHandler('esx:deleteVehicle', function()
     end
 
     SetEntityAsMissionEntity(entity, true, true)
-    
+
     local timeout = 2000
     while timeout > 0 and not IsEntityAMissionEntity(entity) do
         Wait(100)
         timeout = timeout - 100
     end
 
-	
+
     if IsVehicleSeatFree(entity, -1) or GetPedInVehicleSeat(entity, -1) == PlayerPedId() then
         if DoesEntityExist(entity) then
             TriggerEvent('chat:addMessage', {
@@ -733,11 +714,11 @@ AddEventHandler('esx:deleteVehicle', function()
                 args = {"[SYSTEM]", "^2 " .. carName .. "^0 ba movafaghiat hazf shod!"}
             })
         end
-        
+
         Citizen.InvokeNative( 0xEA386986E786A54F, Citizen.PointerValueIntInitialized( entity ) )
         TriggerServerEvent("CarLock:ToggleKey", false, carPlate, entity)
 		TriggerServerEvent('unregisterSpawnedVehicle', carPlate)
-        if (DoesEntityExist(entity)) then 
+        if (DoesEntityExist(entity)) then
             ESX.Game.DeleteVehicle(entity)
         end
     else
@@ -771,7 +752,7 @@ end)
 
 RegisterNetEvent('es:bringAll')
 AddEventHandler('es:bringAll', function(target)
-	SetEntityCoords(PlayerPedId(), GetEntityCoords(GetPlayerPed(GetPlayerFromServerId(target)))) 
+	SetEntityCoords(PlayerPedId(), GetEntityCoords(GetPlayerPed(GetPlayerFromServerId(target))))
 end)
 
 RegisterNetEvent('es:adminTalk')
@@ -800,11 +781,6 @@ AddEventHandler('adminExeption', function()
 	adminTalk = false
 end)
 
-
-
-
-
-
 RegisterNetEvent('es:search')
 AddEventHandler('es:search', function()
 	Citizen.CreateThread(function()
@@ -819,8 +795,8 @@ AddEventHandler('es:search', function()
 end)
 
 function OpenPlayerMenu()
-	ESX.UI.Menu.CloseAll()    
-	
+	ESX.UI.Menu.CloseAll()
+
 	local elements = {
 		{label = "دست بند زدن",          value = 'handcuff'},
 		{label = "باز کردن دست بند",     value = 'uncuff'},
@@ -837,11 +813,11 @@ function OpenPlayerMenu()
 	  elements = elements
 	},
 	function(data2, menu2)
-  
+
 	  local player, distance = ESX.Game.GetClosestPlayer()
-  
+
 	  if distance ~= -1 and distance <= 3.0 then
-  
+
 		if data2.current.value == 'handcuff' then
 			local target, distance = ESX.Game.GetClosestPlayer()
 			playerheading = GetEntityHeading(PlayerPedId())
@@ -881,11 +857,11 @@ function OpenPlayerMenu()
 		elseif data2.current.value == "search" then
 		  	OpenBodySearchMenu(player)
 		end
-  
+
 	  else
 		ESX.ShowNotification("Hich kas Nazdike Shoma nist!")
 	  end
-  
+
 	end,
 	function(data2, menu2)
 	  menu2.close()
@@ -895,15 +871,15 @@ end
 function OpenBodySearchMenu(player)
 
 	ESX.TriggerServerCallback('esx:getOtherPlayerDataCard', function(data)
-  
+
 	  local elements = {}
-  
+
 	  table.insert(elements, {label = '--- Money ---', value = nil})
-  
+
 	  table.insert(elements, {label = "$" .. ESX.Math.GroupDigits(data.money), value = nil})
-  
+
 	  table.insert(elements, {label = '--- Armes ---', value = nil})
-  
+
 	  for i=1, #data.weapons, 1 do
 		table.insert(elements, {
 		  label          = _U('confiscate') .. ESX.GetWeaponLabel(data.weapons[i].name),
@@ -912,9 +888,9 @@ function OpenBodySearchMenu(player)
 		  amount         = data.ammo,
 		})
 	  end
-  
+
 	  table.insert(elements, {label = _U('inventory_label'), value = nil})
-  
+
 	  for i=1, #data.inventory, 1 do
 		if data.inventory[i].count > 0 then
 		  table.insert(elements, {
@@ -925,8 +901,8 @@ function OpenBodySearchMenu(player)
 		  })
 		end
 	  end
-  
-  
+
+
 	  ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'body_search',
 		{
@@ -935,11 +911,11 @@ function OpenBodySearchMenu(player)
 		  elements = elements,
 		},
 		function(data, menu)
-  
+
 		  local itemType = data.current.itemType
 		  local itemName = data.current.value
 		  local amount   = data.current.amount
-  
+
 		  if data.current.value ~= nil then
 			local coords = GetEntityCoords(PlayerPedId())
 			local target = GetEntityCoords(GetPlayerPed(player))
@@ -952,7 +928,7 @@ function OpenBodySearchMenu(player)
 			  menu.close()
 			end
 		  end
-  
+
 		end,
 		function(data, menu)
 		  menu.close()
@@ -960,16 +936,12 @@ function OpenBodySearchMenu(player)
 	end, GetPlayerServerId(player))
 end
 
-
--- Save loadout
-
 local LoadOut = true
 
 AddEventHandler('ToggleUpdateLoadOut', function(toggle)
     LoadOut = toggle
 end)
 
--- Save loadout
 Citizen.CreateThread(function()
     while true do
 
@@ -1036,7 +1008,6 @@ AddEventHandler('es:spawnMaxVehicle', function(model, turbo)
 	end)
 end)
 
--- Disable wanted level
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(2000)
@@ -1046,7 +1017,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Pickups
 Citizen.CreateThread(function()
 	while true do
 
@@ -1054,8 +1024,8 @@ Citizen.CreateThread(function()
 
 		local playerPed = PlayerPedId()
 		local coords    = GetEntityCoords(playerPed)
-		
-		-- if there's no nearby pickups we can wait a bit to save performance
+
+
 		if next(Pickups) == nil then
 			Citizen.Wait(500)
 		end
@@ -1063,8 +1033,8 @@ Citizen.CreateThread(function()
 		for k,v in pairs(Pickups) do
 			local targetx = vector3(v.coords.x, v.coords.y, v.coords.z)
 			local distance = #(coords - targetx)
-			
-			-- local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+
+
 
 			if distance <= 5.0 then
 				ESX.Game.Utils.DrawText3D({
@@ -1073,7 +1043,7 @@ Citizen.CreateThread(function()
 					z = v.coords.z + 0.25
 				}, v.label)
 			end
-			-- (closestDistance == -1 or closestDistance > 3) and
+
 			if distance <= 1.0 and not v.inRange and not IsPedSittingInAnyVehicle(playerPed) then
 				ESX.Game.Utils.DrawText3D({
 					x = v.coords.x,
@@ -1085,8 +1055,8 @@ Citizen.CreateThread(function()
 					local dictname = "weapons@first_person@aim_rng@generic@projectile@thermal_charge@"
 					RequestAnimDict(dictname)
 						if not HasAnimDictLoaded(dictname) then
-							RequestAnimDict(dictname) 
-							while not HasAnimDictLoaded(dictname) do 
+							RequestAnimDict(dictname)
+							while not HasAnimDictLoaded(dictname) do
 								Citizen.Wait(1)
 							end
 						end
@@ -1144,12 +1114,12 @@ end)
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
-        -- Not sure which one is needed so you can choose/test which of these is the one you need.
-        HideHudComponentThisFrame(3) -- SP Cash display 
-        HideHudComponentThisFrame(4)  -- MP Cash display
-        HideHudComponentThisFrame(13) -- Cash changes
-        HideHudComponentThisFrame( 7 ) -- Area Name
-		HideHudComponentThisFrame( 9 ) -- Street Name
+
+        HideHudComponentThisFrame(3)
+        HideHudComponentThisFrame(4)
+        HideHudComponentThisFrame(13)
+        HideHudComponentThisFrame( 7 )
+		HideHudComponentThisFrame( 9 )
 		if(states.frozen)then
 			ClearPedTasksImmediately(PlayerPedId())
 			SetEntityCoords(PlayerPedId(), states.frozenPos)

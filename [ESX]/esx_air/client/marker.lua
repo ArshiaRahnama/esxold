@@ -5,7 +5,6 @@ CurrentAction     = nil
 CurrentActionMsg  = ''
 CurrentActionData = {}
 
--- Key controls
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
@@ -17,7 +16,7 @@ Citizen.CreateThread(function()
 				if CurrentAction == 'air_shop' then
 					if not Config.LicenseEnable then
 						OpenAirShop(Config.Zones.AirShops[CurrentActionData.zoneNum])
-					else -- check for license
+					else
 
 						ESX.TriggerServerCallback('esx_license:checkLicense', function(hasAirLicense)
 							if hasAirLicense then
@@ -53,10 +52,10 @@ AddEventHandler('esx_air:hasEnteredMarker', function(zone, zoneNum)
 	elseif zone == 'garage_in' then
 		local playerPed = PlayerPedId()
 		local coords    = GetEntityCoords(playerPed)
-	
+
 		if IsPedInAnyVehicle(playerPed, false) then
 			local vehicle = GetVehiclePedIsIn(playerPed, false)
-	
+
 			if DoesEntityExist(vehicle) and GetPedInVehicleSeat(vehicle, -1) == playerPed then
 				CurrentAction     = 'garage_in'
 				CurrentActionMsg  = _U('garage_store')
@@ -74,7 +73,6 @@ AddEventHandler('esx_air:hasExitedMarker', function()
 	CurrentAction = nil
 end)
 
--- Enter / Exit marker events
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
@@ -154,45 +152,3 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Blips
--- Citizen.CreateThread(function()
--- 	local blipList = {}
-
--- 	for i=1, #Config.Zones.Garages, 1 do
--- 		table.insert(blipList, {
--- 			coords = Config.Zones.Garages[i].GaragePos,
--- 			text   = _U('blip_garage'),
--- 			sprite = 423,
--- 			color  = 26,
--- 			scale  = 0.7
--- 		})
--- 	end
-
--- 	for i=1, #Config.Zones.AirShops, 1 do
--- 		table.insert(blipList, {
--- 			coords = Config.Zones.AirShops[i].Outside,
--- 			text   = _U('blip_shop'),
--- 			sprite = 423,
--- 			color  = 4,
--- 			scale  = 0.7
--- 		})
--- 	end
-
--- 	for i=1, #blipList, 1 do
--- 		CreateBlip(blipList[i].coords, blipList[i].text, blipList[i].sprite, blipList[i].color, blipList[i].scale)
--- 	end
--- end)
-
--- function CreateBlip(coords, text, sprite, color, scale)
--- 	local blip = AddBlipForCoord(coords.x, coords.y)
-
--- 	SetBlipSprite(blip, sprite)
--- 	SetBlipScale(blip, 0.7)
--- 	SetBlipColour(blip, color)
-
--- 	SetBlipAsShortRange(blip, true)
-
--- 	BeginTextCommandSetBlipName('STRING')
--- 	AddTextComponentSubstringPlayerName(text)
--- 	EndTextCommandSetBlipName(blip)
--- end

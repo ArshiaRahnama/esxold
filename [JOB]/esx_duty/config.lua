@@ -3,7 +3,7 @@ Config.Color = { r = 0, g = 255, b = 0 }
 Config.Size = { x = 0.7, y = 0.7, z = 0.7 }
 Config.Zones = {
   police = {Pos = {x = 629.1069, y = -6.22858, z = 82.779}},
- -- police2 = {Pos = { x = 629.1069, y = -6.22858, z = 82.779 }},
+
 
   ambulance = {Pos = { x = 311.5020, y = -594.080, z = 43.284 }},
 
@@ -18,8 +18,8 @@ Config.Zones = {
   fbi = {Pos = { x = 117.45, y = -750.2, z = 45.75 }},
   mt = {Pos = { x = -2345.57, y = 3268.801, z = 32.810 }},
 
-  -- Department Of Justice: placeholder coords near the FBI federal building
-  -- (same building as FBI, offset a few meters apart) - adjust in-game as you like.
+
+
   cid     = {Pos = { x = 121.45, y = -750.2, z = 45.75 }},
   cia     = {Pos = { x = 125.45, y = -750.2, z = 45.75 }},
   marshal = {Pos = { x = 129.45, y = -750.2, z = 45.75 }},
@@ -37,9 +37,9 @@ Config.Webhooks = {
   fbi = "https:// arshiahub.ir/changeme/1351598126384943236/B8I_R_7tTjGgTF3wCFeku8U4pEVpvEFlur73qaG-AsBAWsDRY1uwm1zXky2QFiRADk44",
   mt = "https:// arshiahub.ir/changeme/1354116433759440996/jnAD8JKzeppib0svD6RF1CwfX_WGV3HWRjvVOafY5eCGdu1_9aBAnLiMpqje2VmcSiJw",
 
-  -- Department Of Justice: placeholder webhooks so PerformHttpRequest never gets a nil
-  -- URL (which would error). Swap the "changeme" part for your real Discord webhook
-  -- when you make one for each - until then these just fail silently, no crash.
+
+
+
   cid     = "https:// arshiahub.ir/changeme/CID_WEBHOOK_ID/CID_WEBHOOK_TOKEN",
   cia     = "https:// arshiahub.ir/changeme/CIA_WEBHOOK_ID/CIA_WEBHOOK_TOKEN",
   marshal = "https:// arshiahub.ir/changeme/MARSHAL_WEBHOOK_ID/MARSHAL_WEBHOOK_TOKEN",

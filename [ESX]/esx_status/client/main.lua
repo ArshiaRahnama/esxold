@@ -3,18 +3,18 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 local Status = {}
 local armors = {
 	police = {
-		[0] = {['bproof_1'] = 12,  ['bproof_2'] = 3}, -- MALE
-		[1] = {['bproof_1'] = 11,  ['bproof_2'] = 3} -- female
+		[0] = {['bproof_1'] = 12,  ['bproof_2'] = 3},
+		[1] = {['bproof_1'] = 11,  ['bproof_2'] = 3}
 	},
-	
+
 	doc = {
-		[0] = {['bproof_1'] = 11,  ['bproof_2'] = 0}, -- MALE
-		[1] = {['bproof_1'] = 10,  ['bproof_2'] = 0} -- female
+		[0] = {['bproof_1'] = 11,  ['bproof_2'] = 0},
+		[1] = {['bproof_1'] = 10,  ['bproof_2'] = 0}
 	},
 
 	none = {
-		[0] = {['bproof_1'] = 43,  ['bproof_2'] = 1}, -- MALE
-		[1] = {['bproof_1'] = 37,  ['bproof_2'] = 1} -- female
+		[0] = {['bproof_1'] = 43,  ['bproof_2'] = 1},
+		[1] = {['bproof_1'] = 37,  ['bproof_2'] = 1}
 	}
 }
 local PlayerData
@@ -24,14 +24,14 @@ local Number = { stress = 0, coin = 0 }
 function GetStatusData(minimal)
 	local status = {}
 	local ped = GetPlayerPed(-1)
-	-- ESX.TriggerServerCallback("Stress-System:GetStress", function(stres)
-		-- Number.stress = stres
-	-- end)
-	
+
+
+
+
 	ESX.TriggerServerCallback("Coin-System:GetTimerCoin", function(timer)
 		Number.coin = timer
 	end)
-	
+
 	for i=1, #Status, 1 do
 
 		if minimal then
@@ -72,29 +72,29 @@ function GetStatusData(minimal)
 	})
 
 	local armor = GetPedArmour(ped)
-	
+
 	table.insert(status, {
 		name	= 'armor',
 		val		= armor ,
 		percent	= armor
 	})
-	
+
 	local stress = Number.stress
-	
+
 	table.insert(status, {
 		name	= 'stress',
 		val		= stress ,
 		percent	= stress
 	})
-	
+
 	local timer = Number.coin
-	
+
 	table.insert(status, {
 		name	= 'timer',
 		val		= timer ,
 		percent	= timer
 	})
-	
+
 	return status
 end
 
@@ -127,7 +127,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 	  	for i=1, #Status, 1 do
 	  		Status[i].onTick()
 	  	end
-	
+
 		TriggerEvent('esx_customui:updateStatus', GetStatusData(true))
 	    Citizen.Wait(Config.TickTime)
 	  end
@@ -140,7 +140,7 @@ AddEventHandler('esx_status:setxLastStats', function()
 	SetEntityHealth(ped, health)
 	if armor > 0 then
 		SetPedArmour(ped, armor)
-	
+
 		TriggerEvent('skinchanger:getSkin', function(skin)
 			if armors[PlayerData.job.name] then
 				TriggerEvent('skinchanger:loadClothes', skin, armors[PlayerData.job.name][skin.sex])
@@ -162,7 +162,7 @@ AddEventHandler('esx_status:setxLastStats', function()
 end)
 
 RegisterNetEvent('esx_status:setx')
-AddEventHandler('esx_status:setx', function(name, val)	
+AddEventHandler('esx_status:setx', function(name, val)
 	for i=1, #Status, 1 do
 		if Status[i].name == name then
 			Status[i].set(val)
@@ -186,7 +186,7 @@ AddEventHandler('esx_status:add', function(name, val)
 end)
 
 RegisterNetEvent('esx_status:remove')
-AddEventHandler('esx_status:remove', function(name, val)	
+AddEventHandler('esx_status:remove', function(name, val)
 	for i=1, #Status, 1 do
 		if Status[i].name == name then
 			Status[i].remove(val)
@@ -206,12 +206,10 @@ AddEventHandler('esx_status:getStatus', function(name, cb)
 	end
 end)
 
--- Loaded event
 Citizen.CreateThread(function()
 	TriggerEvent('esx_status:loaded')
 end)
 
--- Update server
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(Config.UpdateInterval)

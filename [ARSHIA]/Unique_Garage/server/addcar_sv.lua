@@ -1,4 +1,4 @@
--- ESX is already initialized globally by server.lua; no need to re-fetch it here.
+
 local ncz = false
 
 RegisterCommand('addcar', function(source, args)

@@ -9,12 +9,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- AddEventHandler("onKeyDown", function(key)
--- 	if key == "f10" and ESX.GetPlayerData()['IsDead'] ~= 1 then
--- 		ToggleScoreBoard()
--- 	end
--- end)
-
 function ToggleScoreBoard()
 	visible = not visible
 	SendNUIMessage({type = 'toggle', action = visible})
@@ -31,7 +25,7 @@ function scoreBoardThread()
 				SendNUIMessage({type = 'updateInfo', data = data})
 			end)
 		end
-		
+
 		local pauseMenuActive = IsPauseMenuActive()
 		if pauseMenuActive and not isPaused then
 			isPaused = true

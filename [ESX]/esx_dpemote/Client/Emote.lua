@@ -69,7 +69,6 @@ AddEventHandler("esx_dpemote:OpenEmoteMenu", function()
   OpenEmoteMenu()
 end)
 
-
 RegisterNetEvent('dpemote:enable')
 AddEventHandler('dpemote:enable', function(state)
 	active = state
@@ -91,8 +90,8 @@ Citizen.CreateThread(function()
 end)
 
 RegisterCommand('e', function(source, args, raw)
-  if not ESX.GetPlayerData().IsDead then 
-    EmoteCommandStart(source, args, raw) 
+  if not ESX.GetPlayerData().IsDead then
+    EmoteCommandStart(source, args, raw)
   else
     TriggerEvent("chatMessage", "[ System ]", {255,0,0}, 'Shoma Dead Hastid')
   end
@@ -100,69 +99,68 @@ end)
 
 RegisterCommand('emote', function(source, args, raw)
 
-  if not ESX.GetPlayerData().IsDead then 
-    EmoteCommandStart(source, args, raw) 
+  if not ESX.GetPlayerData().IsDead then
+    EmoteCommandStart(source, args, raw)
   else
     TriggerEvent("chatMessage", "[ System ]", {255,0,0}, 'Shoma Dead Hastid')
   end
 
 end)
 if Config.SqlKeybinding then
-  RegisterCommand('emotebind', function(source, args, raw) 
+  RegisterCommand('emotebind', function(source, args, raw)
 
-    if not ESX.GetPlayerData().IsDead then 
-      EmoteBindStart(source, args, raw) 
+    if not ESX.GetPlayerData().IsDead then
+      EmoteBindStart(source, args, raw)
     else
       TriggerEvent("chatMessage", "[ System ]", {255,0,0}, 'Shoma Dead Hastid')
     end
   end)
   RegisterCommand('emotebinds', function(source, args, raw)
-    if not ESX.GetPlayerData().IsDead then 
-      EmoteBindsStart(source, args, raw) 
+    if not ESX.GetPlayerData().IsDead then
+      EmoteBindsStart(source, args, raw)
     else
       TriggerEvent("chatMessage", "[ System ]", {255,0,0}, 'Shoma Dead Hastid')
     end
 
   end)
 end
-RegisterCommand('emotemenu', function(source, args, raw) 
+RegisterCommand('emotemenu', function(source, args, raw)
 
-  if not ESX.GetPlayerData().IsDead then 
+  if not ESX.GetPlayerData().IsDead then
     OpenEmoteMenu()
   else
     TriggerEvent("chatMessage", "[ System ]", {255,0,0}, 'Shoma Dead Hastid')
   end
 
-    
-end)
-RegisterCommand('emotes', function(source, args, raw) 
 
-  if not ESX.GetPlayerData().IsDead then 
-    EmotesOnCommand() 
+end)
+RegisterCommand('emotes', function(source, args, raw)
+
+  if not ESX.GetPlayerData().IsDead then
+    EmotesOnCommand()
   else
     TriggerEvent("chatMessage", "[ System ]", {255,0,0}, 'Shoma Dead Hastid')
   end
 
-    
+
 end)
 RegisterCommand('walk', function(source, args, raw)
 
-  if not ESX.GetPlayerData().IsDead then 
+  if not ESX.GetPlayerData().IsDead then
     WalkCommandStart(source, args, raw)
   else
     TriggerEvent("chatMessage", "[ System ]", {255,0,0}, 'Shoma Dead Hastid')
   end
-  
+
 end)
 
 RegisterCommand('walks', function(source, args, raw)
 
-  if not ESX.GetPlayerData().IsDead then 
-    WalksOnCommand() 
+  if not ESX.GetPlayerData().IsDead then
+    WalksOnCommand()
   else
     TriggerEvent("chatMessage", "[ System ]", {255,0,0}, 'Shoma Dead Hastid')
   end
-
 
 end)
 
@@ -173,8 +171,6 @@ AddEventHandler('onResourceStop', function(resource)
     ResetPedMovementClipset(PlayerPedId())
   end
 end)
-
-
 
 function EmoteCancel()
 
@@ -248,8 +244,8 @@ function pairsByKeys (t, f)
         table.insert(a, n)
     end
     table.sort(a, f)
-    local i = 0      -- iterator variable
-    local iter = function ()   -- iterator function
+    local i = 0
+    local iter = function ()
         i = i + 1
         if a[i] == nil then
             return nil
@@ -287,8 +283,8 @@ end
 local cancommand = true
 function EmoteCommandStart(source, args, raw)
     if not active or IsPedInAnyVehicle(GetPlayerPed(-1),true) then return end
-    if not cancommand then 
-      TriggerEvent('esx:showNotification', '~h~~r~Lotfan Spam Emote Nakonid!')  
+    if not cancommand then
+      TriggerEvent('esx:showNotification', '~h~~r~Lotfan Spam Emote Nakonid!')
     else
       cancommand = false
       Citizen.SetTimeout(5000,function()
@@ -306,7 +302,7 @@ function EmoteCommandStart(source, args, raw)
         elseif name == "help" then
           EmotesOnCommand()
         return end
-    
+
         if DP.Emotes[name] ~= nil then
           if OnEmotePlay(DP.Emotes[name]) then end return
         elseif DP.Dances[name] ~= nil then
@@ -387,7 +383,7 @@ end)
 
 function OnEmotePlay(EmoteName)
   if IsPedArmed(GetPlayerPed(-1), 7) then
-    TriggerEvent('esx:showNotification', '~h~~r~Shoma Nmitavanid Hengami Ke Aslahe Darid Az ~w~Emote~r~ Ha Estefade Konid!~s~')  
+    TriggerEvent('esx:showNotification', '~h~~r~Shoma Nmitavanid Hengami Ke Aslahe Darid Az ~w~Emote~r~ Ha Estefade Konid!~s~')
    return
   end
   InVehicle = IsPedInAnyVehicle(PlayerPedId(), true)
@@ -417,7 +413,7 @@ function OnEmotePlay(EmoteName)
     return
   end
 
-  if ChosenDict == "MaleScenario" or "Scenario" then 
+  if ChosenDict == "MaleScenario" or "Scenario" then
     CheckGender()
     if ChosenDict == "MaleScenario" then if InVehicle then return end
       if PlayerGender == "male" then
@@ -440,7 +436,7 @@ function OnEmotePlay(EmoteName)
       TaskStartScenarioInPlace(GetPlayerPed(-1), ChosenAnimation, 0, true)
       DebugPrint("Playing scenario = ("..ChosenAnimation..")")
       IsInAnimation = true
-    return end 
+    return end
   end
 
   LoadAnim(ChosenDict)
@@ -469,7 +465,7 @@ function OnEmotePlay(EmoteName)
   end
 
   if EmoteName.AnimationOptions then
-    if EmoteName.AnimationOptions.EmoteDuration == nil then 
+    if EmoteName.AnimationOptions.EmoteDuration == nil then
       EmoteName.AnimationOptions.EmoteDuration = -1
       AttachWait = 0
     else

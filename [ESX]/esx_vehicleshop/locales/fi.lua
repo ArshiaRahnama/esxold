@@ -1,5 +1,5 @@
 Locales['fi'] = {
-  -- global menus
+
   ['not_enough_in_society']   = 'firman varastossa ei ole enempää ~r~tuota esinettä~s~!',
   ['player_cannot_hold']      = 'sinulla ~r~ei ole~s~ tarpeeksi ~y~vapaata tilaa~s~ repussasi!',
   ['vehicle_belongs']         = 'ajoneuvo kilvellä ~y~%s~s~ on nyt ~b~sinun~s~ omistuksessasi',
@@ -56,7 +56,7 @@ Locales['fi'] = {
   ['have_deposited']          = 'sinä talletit ~y~x%s~s~ ~b~%s~s~',
   ['boss_actions']            = 'Pomo toiminnot',
 
-  -- sold vehicles
+
   ['boss_sold']               = 'list of sold vehicles',
   ['customer_client']         = 'customer name',
   ['customer_model']          = 'car model',

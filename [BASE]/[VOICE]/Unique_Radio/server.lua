@@ -1,12 +1,5 @@
---[[
-	Unique_Radio - server.lua
-	Merged from radio_list/Server/Server.lua (on-screen radio list overlay)
-	and rp-radio/server.lua (handheld radio item, freq-check command).
-]]
 
------------------------------------------------------------
--- PART 1: RADIO LIST OVERLAY (server side)
------------------------------------------------------------
+
 local PMA = exports['pma-voice']
 local Framework = nil
 local Core = nil
@@ -30,17 +23,17 @@ local CurrentResourceName = GetCurrentResourceName()
 
 AddEventHandler("playerDropped", function()
 	local src = source
-	
+
 	local currentRadioChannel = Player(src).state.currentRadioChannel or 0
-	
+
 	local playersInCurrentRadioChannel = CreateFullRadioListOfChannel(currentRadioChannel)
 	for _, player in pairs(playersInCurrentRadioChannel) do
-		--if player.Source ~= src then
+
 			TriggerClientEvent("Brave-RadioList:Client:SyncRadioChannelPlayers", player.Source, src, 0, playersInCurrentRadioChannel)
-		--end
+
 	end
 	playersInCurrentRadioChannel = {}
-	
+
 	if Config.LetPlayersSetTheirOwnNameInRadio and Config.ResetPlayersCustomizedNameOnExit then
 		local playerIdentifier = GetIdentifier(src)
 		if CustomNames[playerIdentifier] and CustomNames[playerIdentifier] ~= nil then
@@ -49,8 +42,7 @@ AddEventHandler("playerDropped", function()
 	end
 end)
 
---This event is located on pma-voice/server/module/radio.lua
-RegisterNetEvent('pma-voice:setPlayerRadio')	
+RegisterNetEvent('pma-voice:setPlayerRadio')
 AddEventHandler('pma-voice:setPlayerRadio', function(channelToJoin)
 	local src = source
 	local radioChannelToJoin = tonumber(channelToJoin)
@@ -65,10 +57,10 @@ AddEventHandler('pma-voice:setPlayerRadio', function(channelToJoin)
 end)
 
 function Connect(src, currentRadioChannel, radioChannelToJoin)
-	if currentRadioChannel > 0 then -- check if src is already in a radioChannel
+	if currentRadioChannel > 0 then
 		Disconnect(src, currentRadioChannel)
 	end
-	Wait(1000) -- Wait for pma-voice to finilize setting the player radio channel
+	Wait(1000)
 
 	local playersInCurrentRadioChannel = CreateFullRadioListOfChannel(radioChannelToJoin)
 	for _, player in pairs(playersInCurrentRadioChannel) do
@@ -77,7 +69,7 @@ function Connect(src, currentRadioChannel, radioChannelToJoin)
 	playersInCurrentRadioChannel = {}
 end
 
-function Disconnect(src, currentRadioChannel) 
+function Disconnect(src, currentRadioChannel)
 	local playersInCurrentRadioChannel = CreateFullRadioListOfChannel(currentRadioChannel)
 	TriggerClientEvent("Brave-RadioList:Client:SyncRadioChannelPlayers", src, src, 0, playersInCurrentRadioChannel)
 	for _, player in pairs(playersInCurrentRadioChannel) do
@@ -90,10 +82,10 @@ function CreateFullRadioListOfChannel(RadioChannel)
 	local playersInRadio = PMA:getPlayersInRadioChannel(RadioChannel)
 	for player, isTalking in pairs(playersInRadio) do
 		playersInRadio[player] = {}
-		playersInRadio[player].Source = player		
+		playersInRadio[player].Source = player
 		playersInRadio[player].Name = GetPlayerNameForRadio(player)
 	end
-	
+
 	return playersInRadio
 end
 
@@ -104,21 +96,21 @@ function GetPlayerNameForRadio(source)
 			return CustomNames[playerIdentifier]
 		end
 	end
-	
-	if Config.UseRPName then	
+
+	if Config.UseRPName then
 		local name = nil
 		if Framework == 'ESX' then
-			local xPlayer = Core.GetPlayerFromId(source)		
+			local xPlayer = Core.GetPlayerFromId(source)
 			if xPlayer then
 				name = xPlayer.getName()
 			end
 		elseif Framework == 'QB' then
 			local xPlayer = Core.Functions.GetPlayer(source)
 			if xPlayer then
-				name = xPlayer.PlayerData.charinfo.firstname..' '..xPlayer.PlayerData.charinfo.lastname 
+				name = xPlayer.PlayerData.charinfo.firstname..' '..xPlayer.PlayerData.charinfo.lastname
 			end
 		elseif Framework == nil then
-			-- Custom "essentialmode" style framework: pull the playerName column directly from the users table
+
 			local candidates = GetAllIdentifierCandidates(source)
 			if #candidates > 0 and GetResourceState('oxmysql') ~= 'missing' then
 				local query = 'SELECT playerName FROM users WHERE identifier = ?'
@@ -134,15 +126,15 @@ function GetPlayerNameForRadio(source)
 					end
 				end
 			end
-		end	
-		if name == nil then --extra check to make sure player sends a name to client
+		end
+		if name == nil then
 			name = GetPlayerName(source)
 		end
-		name = name:gsub("_", " ") -- Show the in-game chosen name with a space instead of an underscore
+		name = name:gsub("_", " ")
 		return name
 	else
 		local name = GetPlayerName(source)
-		return name:gsub("_", " ") -- Show the in-game chosen name with a space instead of an underscore
+		return name:gsub("_", " ")
 	end
 end
 
@@ -154,11 +146,11 @@ if Config.LetPlayersSetTheirOwnNameInRadio then
 		if _source > 0 then
 			local customizedName = rawCommand:sub(argumentStartIndex)
 			if customizedName ~= "" and customizedName ~= " " and customizedName ~= nil then
-				CustomNames[GetIdentifier(_source)] = customizedName			
+				CustomNames[GetIdentifier(_source)] = customizedName
 				local currentRadioChannel = Player(_source).state.currentRadioChannel
 				if currentRadioChannel and currentRadioChannel > 0 then
 					Connect(_source, currentRadioChannel, currentRadioChannel)
-				end				
+				end
 			end
 		end
 	end)
@@ -184,22 +176,20 @@ end
 function GetAllIdentifierCandidates(source)
 	local candidates = {}
 	for _, v in ipairs(GetPlayerIdentifiers(source)) do
-		table.insert(candidates, v) -- e.g. "license:abc123"
+		table.insert(candidates, v)
 		local stripped = string.match(v, '^[%a%d]+:(.+)$')
 		if stripped then
-			table.insert(candidates, stripped) -- e.g. "abc123" (no prefix, in case the DB stores it bare)
+			table.insert(candidates, stripped)
 		end
 	end
 	return candidates
 end
------------------------------------------------------------
--- PART 2: HANDHELD RADIO (server side)
------------------------------------------------------------
-ESX = nil 
+
+ESX = nil
 
 TriggerEvent("esx:getSharedObject", function(obj) ESX = obj end)
 
-ESX.RegisterUsableItem("radio", function(source) 
+ESX.RegisterUsableItem("radio", function(source)
     TriggerClientEvent("radio", source)
 end)
 
@@ -290,7 +280,7 @@ function getDistance(objA, objB)
     local xDist = objB.x - objA.x
     local yDist = objB.y - objA.y
 
-    return math.sqrt( (xDist ^ 2) + (yDist ^ 2) ) 
+    return math.sqrt( (xDist ^ 2) + (yDist ^ 2) )
 end
 
 function requestCheck()

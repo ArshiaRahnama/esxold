@@ -1,5 +1,4 @@
--- ESX.Game.SpawnLocalPed وجود نداره؛ این‌ها جایگزین‌های native هستن که هم
--- client/jail.lua هم client/cs.lua ازشون استفاده می‌کنن
+
 
 function SpawnLocalPed(pedType, model, coords, heading)
 	ESX.Streaming.RequestModel(model)

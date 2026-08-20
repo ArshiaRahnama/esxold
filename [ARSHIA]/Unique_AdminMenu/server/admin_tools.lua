@@ -1,23 +1,7 @@
--- ============================================================================
--- Unique_AdminMenu / server/admin_tools.lua
--- Every feature here follows the same rule as the rest of this resource:
--- the SERVER decides if the action is allowed (IsOnDutyAdmin / permission
--- level from server/main.lua), never the client. All actions go through
--- LogAdminAction so there's a full audit trail (console + optional Discord).
--- ============================================================================
+
 
 local ServerStartTime = os.time()
 
--- ============================================================================
--- AntiCheat integration — call this right before ANY server-authoritative
--- teleport/noclip/spectate action below so the (entirely legit) instant
--- position jump doesn't get flagged as a teleport/speed/noclip hack by
--- UNIQUE_AC. No-ops safely if UNIQUE_AC isn't installed.
--- Deliberately GLOBAL (no `local`) — used from both admin_tools.lua and
--- main.lua, same as IsOnDutyAdmin/LogAdminAction elsewhere in this resource.
--- بهینه‌سازی: قبلاً به ریسورس جدای AntiCheat وصل بود؛ حالا مستقیم به همون export
--- که تازه به UNIQUE_AC اضافه شد وصله (دیگه نیازی به نگه‌داشتن دو ریسورس آنتی‌چیت نیست).
--- ============================================================================
 function ExemptFromAntiCheat(targetId, ms, kinds)
     if GetResourceState('UNIQUE_AC') ~= 'started' then return end
     pcall(function()
@@ -25,11 +9,6 @@ function ExemptFromAntiCheat(targetId, ms, kinds)
     end)
 end
 
--- ============================================================================
--- PLAYER MANAGEMENT
--- ============================================================================
-
--- Freeze / Unfreeze -----------------------------------------------------
 local FrozenPlayers = {}
 
 RegisterServerEvent('Unique_AdminMenu:FreezePlayer')
@@ -44,7 +23,6 @@ AddEventHandler('Unique_AdminMenu:FreezePlayer', function(targetId)
     LogAdminAction(source, "freeze", ("target: %s (id:%s) -> %s"):format(GetPlayerName(targetId), targetId, tostring(FrozenPlayers[targetId])), ESX.GetPlayerFromId(targetId).identifier, GetPlayerName(targetId))
 end)
 
--- Heal / Revive -----------------------------------------------------------
 RegisterServerEvent('Unique_AdminMenu:HealPlayer')
 AddEventHandler('Unique_AdminMenu:HealPlayer', function(targetId)
     local source = source
@@ -67,7 +45,6 @@ AddEventHandler('Unique_AdminMenu:RevivePlayer', function(targetId)
     LogAdminAction(source, "revive", ("target: %s (id:%s)"):format(GetPlayerName(targetId), targetId), ESX.GetPlayerFromId(targetId).identifier, GetPlayerName(targetId))
 end)
 
--- Kick with reason ----------------------------------------------------------
 RegisterCommand('akick', function(source, args)
     if not IsOnDutyAdmin(source) then return end
     local targetId = tonumber(args[1])
@@ -82,9 +59,6 @@ RegisterCommand('akick', function(source, args)
     DropPlayer(targetId, ("You have been kicked by an admin.\nReason: %s"):format(reason))
 end, false)
 
--- Ban (temporary/permanent) -------------------------------------------------
--- Reuses the existing `banlist` / `banlisthistory` tables already in this
--- project's database.sql instead of creating a parallel ban system.
 RegisterCommand('aban', function(source, args)
     if not IsOnDutyAdmin(source) then return end
     local targetId = tonumber(args[1])
@@ -92,7 +66,7 @@ RegisterCommand('aban', function(source, args)
     local Target = ESX.GetPlayerFromId(targetId)
     if not Target then return end
 
-    -- usage: /aban <id> <minutes|perm> <reason...>
+
     local durationArg = args[2]
     local reason = table.concat(args, ' ', 3)
     if reason == '' then reason = 'No reason specified' end
@@ -146,9 +120,6 @@ RegisterCommand('aban', function(source, args)
         or ("You have been banned for %s minutes.\nReason: %s"):format(minutes, reason))
 end, false)
 
--- Warn system -----------------------------------------------------------
--- Needs a small extra table - see sql/unique_adminmenu.sql. After 3 active
--- warnings the player is automatically kicked (configurable below).
 local Config_AutoActionAtWarnCount = 3
 
 RegisterCommand('awarn', function(source, args)
@@ -190,7 +161,6 @@ RegisterCommand('awarn', function(source, args)
     )
 end, false)
 
--- Set Job / Grade -------------------------------------------------------
 RegisterCommand('asetjob', function(source, args)
     if not IsOnDutyAdmin(source) then return end
     local targetId = tonumber(args[1])
@@ -209,8 +179,6 @@ RegisterCommand('asetjob', function(source, args)
     LogAdminAction(source, "setjob", ("target: %s | job: %s grade: %s"):format(GetPlayerName(targetId), job, grade), Target.identifier, GetPlayerName(targetId))
 end, false)
 
--- Give / Remove Money -----------------------------------------------------
--- account: 'money' (cash) or 'bank'
 RegisterCommand('agivemoney', function(source, args)
     if not IsOnDutyAdmin(source) then return end
     local targetId = tonumber(args[1])
@@ -247,9 +215,6 @@ RegisterCommand('aremovemoney', function(source, args)
     LogAdminAction(source, "remove-money", ("target: %s | %s: -%s | reason: %s"):format(GetPlayerName(targetId), account, amount, reason), Target.identifier, GetPlayerName(targetId))
 end, false)
 
--- Player Inspect Panel ----------------------------------------------------
--- Now also returns: recent Action History (from admin_action_log), any
--- Player Notes, and other identifiers seen on the same IP (possible alts).
 ESX.RegisterServerCallback('Unique_AdminMenu:InspectPlayer', function(source, cb, targetId)
     if not IsOnDutyAdmin(source) then cb(nil) return end
     targetId = tonumber(targetId)
@@ -295,9 +260,6 @@ ESX.RegisterServerCallback('Unique_AdminMenu:InspectPlayer', function(source, cb
     )
 end)
 
--- Player Notes ------------------------------------------------------------
--- Persistent, shared between admins (not tied to who wrote it - anyone
--- on-duty can add one, and everyone sees it in the Inspect panel).
 RegisterServerEvent('Unique_AdminMenu:AddNote')
 AddEventHandler('Unique_AdminMenu:AddNote', function(targetId, note)
     local source = source
@@ -319,12 +281,6 @@ AddEventHandler('Unique_AdminMenu:AddNote', function(targetId, note)
     LogAdminAction(source, "add-note", ("target: %s | note: %s"):format(GetPlayerName(targetId), note), Target.identifier, GetPlayerName(targetId))
 end)
 
--- ============================================================================
--- MULTI-ACCOUNT DETECTOR
--- Every time a player finishes loading, their (identifier, IP) pair is
--- logged. If any OTHER identifier has ever logged in from that same IP,
--- every on-duty admin gets a chat warning right away.
--- ============================================================================
 AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
     local ip = GetPlayerEndpoint(playerId)
     if not ip or ip == '' then return end
@@ -367,10 +323,6 @@ AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
     )
 end)
 
--- ============================================================================
--- VEHICLE TOOLS
--- ============================================================================
-
 RegisterServerEvent('Unique_AdminMenu:SpawnVehicle')
 AddEventHandler('Unique_AdminMenu:SpawnVehicle', function(model, plate)
     local source = source
@@ -404,10 +356,6 @@ AddEventHandler('Unique_AdminMenu:ImpoundTarget', function(targetId)
     LogAdminAction(source, "impound", ("target: %s (id:%s)"):format(GetPlayerName(targetId), targetId), ESX.GetPlayerFromId(targetId).identifier, GetPlayerName(targetId))
 end)
 
--- ============================================================================
--- WORLD TOOLS
--- ============================================================================
-
 RegisterServerEvent('Unique_AdminMenu:SetWeather')
 AddEventHandler('Unique_AdminMenu:SetWeather', function(weatherName)
     local source = source
@@ -438,10 +386,6 @@ AddEventHandler('Unique_AdminMenu:TeleportCoords', function(x, y, z)
     LogAdminAction(source, "teleport-coords", ("%.2f, %.2f, %.2f"):format(x, y, z))
 end)
 
--- Generic relay for the purely client-side teleport/noclip/spectate tools
--- below (teleport-to-player, noclip fly, spectate) that don't otherwise
--- make a server round-trip — the admin's own client calls this right
--- before doing its own SetEntityCoords, purely to register the exemption.
 RegisterServerEvent('Unique_AdminMenu:AntiCheatExempt')
 AddEventHandler('Unique_AdminMenu:AntiCheatExempt', function(ms, kinds)
     local source = source
@@ -449,9 +393,6 @@ AddEventHandler('Unique_AdminMenu:AntiCheatExempt', function(ms, kinds)
     ExemptFromAntiCheat(source, ms, kinds)
 end)
 
-
--- Saved locations ---------------------------------------------------------
--- Shared across all admins (INSERT/SELECT off `admin_saved_locations`).
 ESX.RegisterServerCallback('Unique_AdminMenu:GetSavedLocations', function(source, cb)
     if not IsOnDutyAdmin(source) then cb({}) return end
     MySQL.Async.fetchAll("SELECT `id`, `name`, `x`, `y`, `z` FROM `admin_saved_locations` ORDER BY `name` ASC", {}, function(rows)
@@ -474,10 +415,6 @@ AddEventHandler('Unique_AdminMenu:SaveLocation', function(name, x, y, z)
     LogAdminAction(source, "save-location", ("name: %s"):format(name))
 end)
 
--- ============================================================================
--- SERVER TOOLS
--- ============================================================================
-
 RegisterCommand('aannounce', function(source, args)
     if source ~= 0 and not IsOnDutyAdmin(source) then return end
     local message = table.concat(args, ' ')
@@ -488,9 +425,9 @@ RegisterCommand('aannounce', function(source, args)
 end, false)
 
 RegisterCommand('arestart', function(source, args)
-    -- Deliberately ACE-gated on top of the usual aduty check: restarting a
-    -- resource can take down features for everyone, so it needs the
-    -- server's actual ACE permission system, not just an in-game flag.
+
+
+
     if source ~= 0 and not IsAllowed(source, 'command.arestart') then
         TriggerClientEvent('esx:showNotification', source, "~r~Shoma ACE Dastresi Baraye In Dastor Ra Nadarid!")
         return
@@ -527,23 +464,12 @@ ESX.RegisterServerCallback('Unique_AdminMenu:GetServerStats', function(source, c
     })
 end)
 
--- ============================================================================
--- REPORT QUEUE BRIDGE
--- esx_aduty's ReportMenu_sv.lua keeps `reports` as a file-local table with
--- no export, so it's exposed here via a small addition to that file
--- (see esx_aduty/Server/ReportMenu_sv.lua: exports('GetReports', ...)).
--- If that export isn't present (e.g. esx_aduty was reinstalled without the
--- one-line addition), this safely returns an empty list instead of erroring.
--- ============================================================================
 ESX.RegisterServerCallback('Unique_AdminMenu:GetReports', function(source, cb)
     if not IsOnDutyAdmin(source) then cb({}) return end
     local ok, reports = pcall(function() return exports.esx_aduty:GetReports() end)
     cb(ok and reports or {})
 end)
 
--- ============================================================================
--- CHAT LOG (rolling in-memory buffer, searchable from the admin panel)
--- ============================================================================
 local ChatLog = {}
 local ChatLogMax = 500
 

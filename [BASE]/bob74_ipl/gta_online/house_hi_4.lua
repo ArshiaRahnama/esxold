@@ -1,6 +1,4 @@
 
--- 2862 Hillcrest Avenue 
--- High end house 4: -676.127 588.612 145.1698
 
 exports('GetGTAOHouseHi4Object', function()
     return GTAOHouseHi4

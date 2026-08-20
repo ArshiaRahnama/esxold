@@ -28,17 +28,17 @@ AddEventHandler('colorPicker:pick', function(initialR, initialG, initialB, callO
 		saturation = hsv.s * 100
 		value = hsv.v * 100
 		SendNUIMessage({type = 'ON_COLOR_CHANGED', h = hue, s = saturation, v = value})
-	end	
+	end
 
 	SendNUIMessage({type = 'ON_SHOW', show = true})
-	
+
 	onPick = onPickCallback
 	onSelect = onSelectCallback
 	onCancel = onCancelCallback
 
 	Citizen.CreateThread(function()
 		while(true) do
-			if IsControlJustReleased(3, 177) then				
+			if IsControlJustReleased(3, 177) then
 				SendNUIMessage({type = 'ON_SHOW', show = false})
 				if(onCancel)then
 					local rgb = HSVtoRGB(hue/360, saturation/100, value/100)
@@ -49,7 +49,7 @@ AddEventHandler('colorPicker:pick', function(initialR, initialG, initialB, callO
 				onCancel = nil
 				break
 			end
-			if IsControlJustReleased(3, 176) then				
+			if IsControlJustReleased(3, 176) then
 				SendNUIMessage({type = 'ON_SHOW', show = false})
 				if(onSelect)then
 					local rgb = HSVtoRGB(hue/360, saturation/100, value/100)
@@ -126,12 +126,12 @@ end)
 local display = false;
 
 function IncrementFocus()
-	if(focused==0)then 
+	if(focused==0)then
 		hue = (hue+1)%360
-	elseif(focused==1)then 
+	elseif(focused==1)then
 		saturation = saturation+1
 		if(saturation>100)then saturation = 100 end
-	elseif(focused==2)then 
+	elseif(focused==2)then
 		value = value+1
 		if(value>100)then value = 100 end
 	end
@@ -139,12 +139,12 @@ function IncrementFocus()
 end
 
 function DecrementFocus()
-	if(focused==0)then 
+	if(focused==0)then
 		hue = (hue-1)%360
-	elseif(focused==1)then 
+	elseif(focused==1)then
 		saturation = saturation-1
 		if(saturation<0)then saturation = 0 end
-	elseif(focused==2)then 
+	elseif(focused==2)then
 		value = value-1
 		if(value<0)then value = 0 end
 	end
@@ -152,11 +152,11 @@ function DecrementFocus()
 end
 
 function SetHighlight()
-	if(focused==0)then 
+	if(focused==0)then
 		SendNUIMessage({type = 'ON_HIGHLIGHT', marker = 'hue'})
-	elseif(focused==1)then 
+	elseif(focused==1)then
 		SendNUIMessage({type = 'ON_HIGHLIGHT', marker = 'saturation'})
-	elseif(focused==2)then 
+	elseif(focused==2)then
 		SendNUIMessage({type = 'ON_HIGHLIGHT', marker = 'value'})
 	end
 end
@@ -169,23 +169,23 @@ function HSVtoRGB( h, s, v )
     q = v * (1 - f * s)
     t = v * (1 - (1 - f) * s)
 	i = i % 6
-	if(i==0)then 
+	if(i==0)then
 		r = v
 		g = t
 		b = p
-	elseif(i==1)then 
+	elseif(i==1)then
 		r = q
 		g = v
 		b = p
-	elseif(i==2)then 
+	elseif(i==2)then
 		r = p
 		g = v
 		b = t
-	elseif(i==3)then 
+	elseif(i==3)then
 		r = p
 		g = q
 		b = v
-	elseif(i==4)then 
+	elseif(i==4)then
 		r = t
 		g = p
 		b = v
@@ -206,7 +206,7 @@ function RGBtoHSV(r, g, b)
   if max == 0 then s = 0 else s = d / max end
 
   if max == min then
-    h = 0 
+    h = 0
   else
     if max == r then
     h = (g - b) / d

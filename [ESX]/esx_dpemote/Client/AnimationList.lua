@@ -363,81 +363,81 @@ DP.Dances = {
 
 DP.Emotes = {
 
-    -- ["sex"] = {"oddjobs@towing", "m_blow_job_loop", "sex", AnimationOptions =
-    -- {
-    --     EmoteLoop = true,
-    --     EmoteMoving = true,
-    -- }},
-    -- ["sex1"] = {"oddjobs@towing", "f_blow_job_loop", "sex2", AnimationOptions =
-    -- {
-    --     EmoteLoop = true,
-    --     EmoteMoving = true,
-    -- }},
-    -- ["sex2"] = {"mini@prostitutes@sexlow_veh", "low_car_sex_loop_player", "sex2", AnimationOptions =
-    -- {
-    --     EmoteLoop = true,
-    --     EmoteMoving = true,
-    -- }},
-    -- ["sex3"] = {"mini@prostitutes@sexlow_veh", "low_car_sex_loop_female", "sex3", AnimationOptions =
-    -- {
-    --     EmoteLoop = true,
-    --     EmoteMoving = false,
-    -- }},
- 
-    -- ["sex4"] = {"anim@amb@nightclub@lazlow@hi_chair@", "seatedidle_hi_13_sexualadvance_laz", "sex4", AnimationOptions =
-    -- {
-    --     EmoteLoop = true,
-    --     EmoteMoving = false,
-    -- }},
- 
-    -- ["sex5"] = {"anim@amb@nightclub@lazlow@hi_chair@", "seatedidle_hi_13_sexualadvance_laz_face", "sex5", AnimationOptions =
-    -- {
-    --     EmoteLoop = true,
-    --     EmoteMoving = false,
-    -- }},
-    -- ["sex6"] = {"anim@amb@nightclub@lazlow@hi_chair@", "seatedidle_mi_17_sexualadvance_laz", "sex6", AnimationOptions =
-    -- {
-    --     EmoteLoop = true,
-    --     EmoteMoving = false,
-    -- }},
-    -- ["sex7"] = {"anim@amb@nightclub@lazlow@hi_chair@", "seatedidle_mi_17_sexualadvance_laz_face", "sex7", AnimationOptions =
-    -- {
-    --     EmoteLoop = true,
-    --     EmoteMoving = false,
-    -- }},
-    -- ["sex8"] = {"anim@amb@nightclub@lazlow@hi_podium@", "danceidle_li_15_sexygrind_laz", "sex8", AnimationOptions =
-    -- {
-    --     EmoteLoop = true,
-    --     EmoteMoving = false,
-    -- }},
-    -- ["sex9"] = {"anim@amb@nightclub@lazlow@hi_podium@", "danceidle_li_15_sexygrind_laz_face", "sex9", AnimationOptions =
-    -- {
-    --     EmoteLoop = true,
-    --     EmoteMoving = false,
-    -- }},
-    -- ["seex1"] = {"director@character_select_intro@female", "ambclub_13_mi_hi_sexualgriding_glowstick_l", "seex1", AnimationOptions =
-    -- {
-    --     EmoteLoop = true,
-    --     EmoteMoving = false,
-    -- }},
-    -- ["seex2"] = {"misscarsteal2pimpsex", "pimpsex_pimp", "seex2", AnimationOptions =
-    -- {
-    --     EmoteLoop = true,
-    --     EmoteMoving = false,
-    -- }},
-    -- ["seex3"] = {"misscarsteal2pimpsex", "pimpsex_hooker", "seex3", AnimationOptions =
-    -- {
-    --     EmoteLoop = true,
-    --     EmoteMoving = false,
-    -- }},
-    -- ["seex4"] = {"misscarsteal2pimpsex", "pimpsex_punter", "seex4", AnimationOptions =
-    -- {
-    --     EmoteLoop = true,
-    --     EmoteMoving = false,
-    -- }},
- 
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    ["drink"] = {"mp_player_inteat@pnq", "loop", "Drink", AnimationOptions =
    {
        EmoteMoving = true,
@@ -879,19 +879,19 @@ DP.Emotes = {
    {
        EmoteLoop = true,
    }},
-   ["meditate"] = {"rcmcollect_paperleadinout@", "meditiate_idle", "Meditiate", AnimationOptions = -- CHANGE ME
+   ["meditate"] = {"rcmcollect_paperleadinout@", "meditiate_idle", "Meditiate", AnimationOptions =
    {
        EmoteLoop = true,
    }},
-   ["meditate2"] = {"rcmepsilonism3", "ep_3_rcm_marnie_meditating", "Meditiate 2", AnimationOptions = -- CHANGE ME
+   ["meditate2"] = {"rcmepsilonism3", "ep_3_rcm_marnie_meditating", "Meditiate 2", AnimationOptions =
    {
        EmoteLoop = true,
    }},
-   ["meditate3"] = {"rcmepsilonism3", "base_loop", "Meditiate 3", AnimationOptions = -- CHANGE ME
+   ["meditate3"] = {"rcmepsilonism3", "base_loop", "Meditiate 3", AnimationOptions =
    {
        EmoteLoop = true,
    }},
-   ["metal"] = {"anim@mp_player_intincarrockstd@ps@", "idle_a", "Metal", AnimationOptions = -- CHANGE ME
+   ["metal"] = {"anim@mp_player_intincarrockstd@ps@", "idle_a", "Metal", AnimationOptions =
    {
        EmoteLoop = true,
        EmoteMoving = true,
@@ -1618,7 +1618,6 @@ DP.Emotes = {
        PtfxWait = 3000,
    }},
 
-
    ["atm"] = {"Scenario", "PROP_HUMAN_ATM", "ATM"},
    ["bbq"] = {"MaleScenario", "PROP_HUMAN_BBQ", "BBQ"},
    ["bumbin"] = {"Scenario", "PROP_HUMAN_BUM_BIN", "Bum Bin"},
@@ -1706,12 +1705,10 @@ DP.PropEmotes = {
        Prop = "p_amb_brolly_01",
        PropBone = 57005,
        PropPlacement = {0.15, 0.005, 0.0, 87.0, -20.0, 180.0},
-       
+
        EmoteLoop = true,
        EmoteMoving = true,
    }},
-
-
 
    ["notepad"] = {"missheistdockssetup1clipboard@base", "base", "Notepad", AnimationOptions =
    {
@@ -1938,7 +1935,7 @@ DP.PropEmotes = {
    {
        Prop = 'prop_novel_01',
        PropBone = 6286,
-       PropPlacement = {0.15, 0.03, -0.065, 0.0, 180.0, 90.0}, -- This positioning isnt too great, was to much of a hassle
+       PropPlacement = {0.15, 0.03, -0.065, 0.0, 180.0, 90.0},
        EmoteMoving = true,
        EmoteLoop = true
    }},

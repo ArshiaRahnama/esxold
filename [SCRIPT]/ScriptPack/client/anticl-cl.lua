@@ -29,23 +29,23 @@ function Display(id, name, crds, identifier, reason)
         Wait(Config.DrawingTime)
         displaying = false
     end)
-	
-    -- Citizen.CreateThread(function()
-    --     while displaying do
-    --         Wait(1)
+
+
+
+
             local pcoords = GetEntityCoords(PlayerPedId())
-            --local name = GetPlayerName(PlayerId(id))
+
             if #(vector3(crds.x, crds.y, crds.z) - vector3(pcoords.x, pcoords.y, pcoords.z)) < 40.0 then
-                -- DrawText3DSecondAC(crds.x, crds.y, crds.z+0.15, "Player Left Game")
-                -- DrawText3DAC(crds.x, crds.y, crds.z, "Player Name : "..name.."\nID: "..id.." ("..identifier..")\nReason: "..reason)
+
+
 
                 TriggerEvent("chatMessage", "^1[SYSTEM]^0", {0, 0, 0}, "^0Player ^2"..name.." ^0 ID: ^2"..id.. " ^0 Reason: ^1"..reason)
-                
-            -- else
-                -- Citizen.Wait(2000)
+
+
+
             end
-    --     end
-    -- end)
+
+
 end
 
 function DrawText3DSecondAC(x,y,z, text)

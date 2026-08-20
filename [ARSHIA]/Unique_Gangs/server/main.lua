@@ -6,7 +6,6 @@ local RegisteredGangs = {}
 local TempGangs = {}
 local cooldown = {}
 
-
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 function GetGang(gang)
@@ -72,7 +71,7 @@ MySQL.ready(function()
  	for i=1, #result2, 1 do
 		Gangs[result2[i].gang_name].grades[tonumber(result2[i].grade)] = result2[i]
 	end
-	
+
 	local data = MySQL.Sync.fetchAll('SELECT * FROM gangs_data', {})
 	for i=1, #data, 1 do
 		Gangs[data[i].gang_name].webhookboss = data[i].webhookboss
@@ -104,8 +103,6 @@ AddEventHandler('gangs:acceptinv', function(gang, grade)
 
 end)
 
-
-
 RegisterServerEvent('gangs:registerGang')
 AddEventHandler('gangs:registerGang', function(name, expire)
 
@@ -131,9 +128,9 @@ AddEventHandler('gangs:registerGang', function(name, expire)
 		end
 
 	else
-		-- exports.BanSql:BanTarget(xPlayer.source, "Attempted to create a gang", "Cheat Lua Executor")
+
 	end
-	
+
 end)
 
 AddEventHandler('gangs:IsGangRegistered', function(gang, cb)
@@ -175,9 +172,9 @@ AddEventHandler('gangs:saveGangs', function()
 
 		TriggerEvent('esx_addoninventory:addGang', 	GetGang(TempGangs[j].gang).account)
 		TriggerEvent('esx_datastore:addGang', 		GetGang(TempGangs[j].gang).account)
-		
+
 		local ranks = {'Rank1','Rank2','Rank3','Rank4','Rank5','Rank6','Rank7','Rank8','Rank9','Rank10','Rank11','Rank12','Rank13'}
-		
+
 		TriggerEvent('essentialmode:addGang', TempGangs[j].gang, ranks)
 		TriggerEvent('gangaccount:addGang', TempGangs[j].gang)
 
@@ -185,7 +182,7 @@ AddEventHandler('gangs:saveGangs', function()
 			['@name'] 		= TempGangs[j].gang,
 			['@label']    = 'gang',
 		}, function(e)
-		--log here
+
 		end)
 		for i=1, 13, 1 do
 			Gangs[TempGangs[j].gang].grades[i] 				= {}
@@ -202,7 +199,6 @@ AddEventHandler('gangs:saveGangs', function()
 			Gangs[TempGangs[j].gang].grades[i].vehicles 	= '[]'
 			Gangs[TempGangs[j].gang].grades[i].crafting 	= 0
 
-
 			MySQL.Async.execute('INSERT INTO `gang_grades` (`gang_name`, `grade`, `name`, `label`, `salary`, `skin_male`, `skin_female`, `inventorys`, `boats`, `helis`, `vehicles`, `crafting`) VALUES (@gang_name, @grade, @name, @label, @salary, @skin_male, @skin_female, @inventorys, @boats, @helis, @vehicles, @crafting)', {
 				['@gang_name'] 	 = TempGangs[j].gang,
 				['@grade']    	 = i,
@@ -217,16 +213,16 @@ AddEventHandler('gangs:saveGangs', function()
 				['@vehicles']    = '[]',
 				['@crafting']    = 0,
 			}, function(e)
-				-- log here
+
 			end)
 		end
-			
+
 		MySQL.Async.execute('INSERT INTO `gang_account` (`name`, `label`, `shared`) VALUES (@name, @label, @shared)', {
 			['@name'] 	  = 'gang_'..string.lower(TempGangs[j].gang),
 			['@label']    = 'gang',
 			['@shared']   = 1,
 		}, function(e)
-		--log here
+
 		end)
 		MySQL.Async.execute('INSERT INTO `gang_account_data` (`gang_name`, `money`, `dirty_money`, `owner`) VALUES (@gang_name, @money, @dirty_money, @owner)', {
 			['@gang_name'] 	 = 'gang_'..string.lower(TempGangs[j].gang),
@@ -234,28 +230,28 @@ AddEventHandler('gangs:saveGangs', function()
 			['@dirty_money'] = 0,
 			['@owner']   	 = nil,
 		}, function(e)
-		--log here
+
 		end)
 		MySQL.Async.execute('INSERT INTO `datastore_data` (`name`, `owner`, `data`) VALUES (@name, @owner, @data)', {
 			['@name'] 		= 'gang_'..string.lower(TempGangs[j].gang),
 			['@owner']   	= nil,
 			['@data'] 		= '[]'
 		}, function(e)
-		--log here
+
 		end)
 		MySQL.Async.execute('INSERT INTO `datastore` (`name`, `label`, `shared`) VALUES (@name, @label, @shared)', {
 			['@name'] 		= 'gang_'..string.lower(TempGangs[j].gang),
 			['@label']    	= 'gang',
 			['@shared']   	= 1
 		}, function(e)
-		--log here
+
 		end)
 		MySQL.Async.execute('INSERT INTO `addon_inventory` (`name`, `label`, `shared`) VALUES (@name, @label, @shared)', {
 			['@name'] 		= 'gang_'..string.lower(TempGangs[j].gang),
 			['@label']    	= 'gang',
 			['@shared']   	= 1
 		}, function(e)
-		--log here
+
 		end)
 		MySQL.Async.execute('INSERT INTO `gangs_data` (`gang_name`, `vehicles`, `vehprop`, `expire_time`) VALUES (@gang_name, @vehicles, @vehprop, (NOW() + INTERVAL @time DAY))', {
 			['@gang_name'] 		= TempGangs[j].gang,
@@ -263,14 +259,14 @@ AddEventHandler('gangs:saveGangs', function()
 			['@vehprop']		= '[]',
 			['@time']			= TempGangs[j].expire
 		}, function(e)
-		--log here
+
 		end)
-		
+
 		TriggerClientEvent('esx:showNotification', source, '~h~~b~Gang ~y~' .. TempGangs[j].gang .. '~b~ Save Shod!')
 	end
 	TempGangs = {}
 		else
-		-- exports.BanSql:BanTarget(xPlayer.source, "Attempted to save gang data", "Cheat Lua Executor")
+
 	end
 end)
 
@@ -279,17 +275,17 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(source)
 	if xPlayer.permission_level >= 10 then
-	
+
 	local gang = name
 	local data = data
-	
+
 
 	if data == 'blip' then
 		blip(name,pos,function(callback)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma Mahal '..data..' Gange '..gang..' Set Kardid!')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang Blip ]\n[ Gangname : " .. gang .. " ]\n[ Pos : " .. json.encode(pos) .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	elseif data == 'armory' then
@@ -297,7 +293,7 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma Mahal '..data..' Gange '..gang..' Set Kardid!')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang armory ]\n[ Gangname : " .. gang .. " ]\n[ Pos : " .. json.encode(pos) .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	elseif data == 'locker' then
@@ -305,7 +301,7 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma Mahal '..data..' Gange '..gang..' Set Kardid!')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang locker ]\n[ Gangname : " .. gang .. " ]\n[ Pos : " .. json.encode(pos) .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	elseif data == 'boss' then
@@ -313,7 +309,7 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma Mahal '..data..' Gange '..gang..' Set Kardid!')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang boss ]\n[ Gangname : " .. gang .. " ]\n[ Pos : " .. json.encode(pos) .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	elseif data == 'veh' then
@@ -321,7 +317,7 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma Mahal '..data..' Gange '..gang..' Set Kardid!')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang veh ]\n[ Gangname : " .. gang .. " ]\n[ Pos : " .. json.encode(pos) .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	elseif data == 'vehdel' then
@@ -329,7 +325,7 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma Mahal '..data..' Gange '..gang..' Set Kardid!')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang vehdel ]\n[ Gangname : " .. gang .. " ]\n[ Pos : " .. json.encode(pos) .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	elseif data == 'vehspawn' then
@@ -337,7 +333,7 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma Mahal '..data..' Gange '..gang..' Set Kardid!')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang vehspawn ]\n[ Gangname : " .. gang .. " ]\n[ Pos : " .. json.encode(pos) .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	elseif data == 'boat' then
@@ -345,7 +341,7 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma Mahal '..data..' Gange '..gang..' Set Kardid!')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang boat ]\n[ Gangname : " .. gang .. " ]\n[ Pos : " .. json.encode(pos) .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	elseif data == 'boatdel' then
@@ -353,7 +349,7 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma Mahal '..data..' Gange '..gang..' Set Kardid!')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang boatdel ]\n[ Gangname : " .. gang .. " ]\n[ Pos : " .. json.encode(pos) .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	elseif data == 'boatspawn' then
@@ -361,7 +357,7 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma Mahal '..data..' Gange '..gang..' Set Kardid!')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang boatspawn ]\n[ Gangname : " .. gang .. " ]\n[ Pos : " .. json.encode(pos) .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	elseif data == 'heli' then
@@ -369,7 +365,7 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma Mahal '..data..' Gange '..gang..' Set Kardid!')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang heli ]\n[ Gangname : " .. gang .. " ]\n[ heli : " .. json.encode(pos) .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	elseif data == 'helidel' then
@@ -377,7 +373,7 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma Mahal '..data..' Gange '..gang..' Gang!')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang helidel ]\n[ Gangname : " .. gang .. " ]\n[ Pos : " .. json.encode(pos) .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	elseif data == 'helimodel' then
@@ -385,7 +381,7 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma '..data..' Gange '..gang..' Change Kardid Be '..callback.. '!')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang helimodel ]\n[ Gangname : " .. gang .. " ]\n[ helimodel : " .. callback .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	elseif data == 'helispawn' then
@@ -393,7 +389,7 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma Mahal '..data..' Gange '..gang..' Set Kardid!')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang helispawn ]\n[ Gangname : " .. gang .. " ]\n[ Pos : " .. json.encode(pos) .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	elseif data == 'expire' then
@@ -401,7 +397,7 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma Zaman '..data..' Gange '..gang..' Ra Set Kardid Be '..tonumber(pos).. ' Rooz!')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang expire ]\n[ Gangname : " .. gang .. " ]\n[ expire : " .. tonumber(pos) .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	elseif data == 'search' then
@@ -409,7 +405,7 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma Dastresi Search Ra Baraye Gang '..gang..' Be Halat '.. callback .. ' Dar Avardid')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang search ]\n[ Gangname : " .. gang .. " ]\n[ search : " .. callback .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	elseif data == 'lockpick' then
@@ -417,7 +413,7 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma Dastresi LockPick Ra Baraye Gang '..gang..' Be Halat '.. callback .. ' Dar Avardid')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang lockpick ]\n[ Gangname : " .. gang .. " ]\n[ lockpick : " .. callback .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	elseif data == 'bulletproof' then
@@ -425,7 +421,7 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma Meghdar Armor Gang '..gang..' Ra Be Halat %'.. callback .. ' Dar Avardid')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang Bulletproof ]\n[ Gangname : " .. gang .. " ]\n[ Armor : %" .. callback .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	elseif data == 'price' then
@@ -433,7 +429,7 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma Gheymat Armor Gang '..gang..' Ra Be ~g~$'.. callback .. '~w~ Dar Avardid')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang Price Armor ]\n[ Gangname : " .. gang .. " ]\n[ Price :" .. callback .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	elseif data == 'gps' then
@@ -441,7 +437,7 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 		if callback then
 			TriggerClientEvent('esx:showNotification', _source, 'Shoma GPS Ra Baraye Gang '..gang..' Be Halat '.. callback .. ' Dar Avardid')
 			msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang GPS ]\n[ Gangname : " .. gang .. " ]\n[ GPS : " .. callback .. " ]\n```"
-			Send_log(_source, msg)	
+			Send_log(_source, msg)
 			end
 	    end)
 	elseif data == 'log' then
@@ -449,7 +445,7 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma Dastresi Gozashtan Log Ra Baraye Gang '..gang..' Be Halat '.. callback .. ' Dar Avardid')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang Log ]\n[ Gangname : " .. gang .. " ]\n[ Log : " .. callback .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	elseif data == 'vip' then
@@ -457,7 +453,7 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma Dastresi Haye VIP Baraye Gang '..gang..' Be Halat '.. callback .. ' Dar Avardid')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang VIP ]\n[ Gangname : " .. gang .. " ]\n[ Log : " .. callback .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	elseif data == 'slot' then
@@ -465,15 +461,15 @@ AddEventHandler('gangs:changeGangData', function(name, data, pos)
 			if callback then
 				TriggerClientEvent('esx:showNotification', _source, 'Shoma Slot Gange '.. gang .. ' Ra Be '..callback..' Nafare Dar Avardid!')
 				msg = "```css\n[ Name : " ..GetPlayerName(_source).. " | ID : " .. _source .. "]\n[ Change Gang Slot ]\n[ Gangname : " .. gang .. " ]\n[ Slot :" .. callback .. " ]\n```"
-				Send_log(_source, msg)	
+				Send_log(_source, msg)
 			end
 		end)
 	end
-	
+
 	else
-		-- exports.BanSql:BanTarget(xPlayer.source, "Attempted to change gang data", "Cheat Lua Executor")
+
 	end
-	
+
 end)
 
 function heli(gang, pos, callback)
@@ -505,7 +501,6 @@ function helimodel(gang, helimodel, cb)
 	})
 	cb(helimodel)
 end
-
 
 function helispawn(gang, pos, callback)
 	MySQL.Async.execute('UPDATE gangs_data SET helispawn = @pos WHERE gang_name = @gang_name', {
@@ -658,7 +653,6 @@ function search(gang, cb)
 	end)
 end
 
-
 function lockpick(gang, cb)
 	exports.ghmattimysql:scalar("SELECT lockpick FROM gangs_data WHERE gang_name = @gang_name",{
 		["gang_name"] = gang
@@ -679,7 +673,6 @@ function lockpick(gang, cb)
 	end)
 end
 
-
 function tlog(gang, cb)
 	exports.ghmattimysql:scalar("SELECT logpower FROM gangs_data WHERE gang_name = @gang_name",{
 		["gang_name"] = gang
@@ -699,7 +692,6 @@ function tlog(gang, cb)
 		end
 	end)
 end
-
 
 function gps(gang, cb)
 	exports.ghmattimysql:scalar("SELECT gps FROM gangs_data WHERE gang_name = @gang_name",{
@@ -741,7 +733,6 @@ function vip(gang, cb)
 	end)
 end
 
-
 function slot(gang, slot, cb)
 	exports.ghmattimysql:execute("UPDATE gangs_data SET slot = @slot WHERE gang_name = @gang_name",{
 		["@gang_name"]	= gang,
@@ -765,7 +756,6 @@ function price(gang, price, cb)
 	})
 	cb(price)
 end
-
 
 AddEventHandler('gangs:getGangs', function(cb)
 	cb(RegisteredSocieties)
@@ -814,7 +804,7 @@ AddEventHandler('gangs:withdrawMoney', function(gangName, amount)
 					}
 				}
 			TriggerEvent('DiscordBot:ToDiscord', 'gangs', gangName, bardashtArray, 'system', source, false, false)
-	
+
 			if Gangs[xPlayer.gang.name].logpower ~= 0 then
 				sendtodiscord(source, Gangs[xPlayer.gang.name].webhookmoney,'Log '..gangName..' Logger','> Bardasht Bodje','Meghdar : '.. ESX.Math.GroupDigits(amount) .. '$\nEsm IC Player : '..xPlayer.name .. '\nEsm OOC Player : '.. GetPlayerName(xPlayer.source))
 			end
@@ -864,7 +854,7 @@ AddEventHandler('gangs:depositMoney', function(gang, amount)
 					}
 				}
 		TriggerEvent('DiscordBot:ToDiscord', 'gangs', gang.name, gozashtanArray, 'system', source, false, false)
-			
+
 		if Gangs[xPlayer.gang.name].logpower ~= 0 then
 				sendtodiscord(source, Gangs[xPlayer.gang.name].webhookmoney,'log '..gang.name..' Logger','> Gozashtan Bodje','Meghdar : '.. ESX.Math.GroupDigits(amount) .. '$\nEsm IC Player : '..xPlayer.name .. '\nEsm OOC Player : '.. GetPlayerName(xPlayer.source), true)
 			end
@@ -872,37 +862,6 @@ AddEventHandler('gangs:depositMoney', function(gang, amount)
 		TriggerClientEvent('esx:showNotification', xPlayer.source, _U('invalid_amount'))
 	end
 end)
-
--- RegisterServerEvent('gangs:saveOutfit')
--- AddEventHandler('gangs:saveOutfit', function(grade, skin)
--- 	local xPlayer = ESX.GetPlayerFromId(source)
--- 	local xPlayers = ESX.GetPlayers()
--- 	for i=1, #xPlayers, 1 do
--- 		local gangMember = ESX.GetPlayerFromId(xPlayers[i])
-
--- 		if gangMember.gang.name == xPlayer.gang.name and gangMember.gang.grade_label == grade then
--- 			gangMember.changeGangSkin(skin)
--- 		end
--- 	end
-
--- 	if skin.sex == 0 then
--- 		exports.ghmattimysql:execute('UPDATE gang_grades SET skin_male = @skin WHERE (gang_name = @gang AND label = @grade)',{
--- 			['skin']  = json.encode(skin),
--- 			['gang']  = xPlayer.gang.name,
--- 			['grade'] = grade
--- 		})
--- 		TriggerEvent('ChangeGangSkin', xPlayer.gang.name, grade, true, skin)
--- 	else
--- 		exports.ghmattimysql:execute('UPDATE gang_grades SET skin_female = @skin WHERE (gang_name = @gang AND label = @grade)',{
--- 			['skin']  = json.encode(skin),
--- 			['gang']  = xPlayer.gang.name,
--- 			['grade'] = grade
--- 		})
--- 		TriggerEvent('ChangeGangSkin', xPlayer.gang.name, grade, false, skin)
--- 	end
--- end)
-
-
 
 RegisterServerEvent('gangs:saveOutfit')
 AddEventHandler('gangs:saveOutfit', function(grade, skin)
@@ -934,7 +893,6 @@ AddEventHandler('gangs:saveOutfit', function(grade, skin)
 	end
 end)
 
-
 RegisterServerEvent('gangs:getFromInventory')
 AddEventHandler('gangs:getFromInventory', function(type2, item, count)
 	local _source      = source
@@ -948,21 +906,20 @@ AddEventHandler('gangs:getFromInventory', function(type2, item, count)
 		TriggerEvent('esx_addoninventory:getSharedInventory', gangaccount.account, function(inventory)
 			local inventoryItem = inventory.getItem(item)
 
-			-- is there enough in the property?
+
 			if count > 0 and inventoryItem.count >= count then
-			
-				-- can the player carry the said amount of x item?
+
+
 				if sourceItem.limit ~= -1 and (sourceItem.count + count) > sourceItem.limit then
 					TriggerClientEvent('esx:showNotification', _source, _U('player_cannot_hold'))
 				else
 					inventory.removeItem(item, count)
 					xPlayer.addInventoryItem(item, count)
 
-
 			if Gangs[xPlayer.gang.name].logpower ~= 0 then
 				sendtodiscord(source, Gangs[xPlayer.gang.name].webhookinv,'log '..xPlayer.gang.name..' Logger','> Bardasht Item','Item Name : '.. inventoryItem.label .. '\nTedad : '..count..'\nEsm IC Player : '..xPlayer.name .. '\nEsm OOC Player : '.. GetPlayerName(xPlayer.source))
 			end
-			
+
 				local details = {source = source, icname = xPlayer.name, gang = xPlayer.gang.name, type = "Bardasht", name = item, count = count}
 				exports.ScriptPack:GangLog(details)
 					TriggerClientEvent('esx:showNotification', _source, 'Shoma '..count..' '..inventoryItem.label..' Az Gang Bardashtid')
@@ -995,8 +952,8 @@ AddEventHandler('gangs:getFromInventory', function(type2, item, count)
 				store.set('weapons', storeWeapons)
 				xPlayer.addWeapon(weaponName, ammo)
 
-				if type(components) == 'table' then 
-					for k,v in pairs(components) do 
+				if type(components) == 'table' then
+					for k,v in pairs(components) do
 						xPlayer.addWeaponComponent(weaponName, v)
 
 					end
@@ -1006,18 +963,17 @@ AddEventHandler('gangs:getFromInventory', function(type2, item, count)
 			if Gangs[xPlayer.gang.name].logpower ~= 0 then
 				sendtodiscord(source, Gangs[xPlayer.gang.name].webhookinv,'log '..xPlayer.gang.name..' Logger','> Bardasht Weapon','Weapon Name : '.. ESX.GetWeaponLabel(weaponName) .. '\nTedad Tir: '..ammo..'\nEsm IC Player : '..xPlayer.name .. '\nEsm OOC Player : '.. GetPlayerName(xPlayer.source))
 			end
-			
+
 				local details = {source = source, icname = xPlayer.name, gang = xPlayer.gang.name, type = "Bardasht", name = weaponName, count = ammo}
 				exports.ScriptPack:GangLog(details)
 			end)
 		else
-			TriggerClientEvent('esx:showNotification', _source, 'Shoma Dar hale Hazer in Aslahe ro darid')			
+			TriggerClientEvent('esx:showNotification', _source, 'Shoma Dar hale Hazer in Aslahe ro darid')
 		end
 
 	end
 
 end)
-
 
 RegisterServerEvent('gangs:addToInventory')
 AddEventHandler('gangs:addToInventory', function(type, item, count)
@@ -1034,21 +990,20 @@ AddEventHandler('gangs:addToInventory', function(type, item, count)
 	cooldown[_source] = os.time()
 	end
 
-
 	local xPlayer      = ESX.GetPlayerFromId(_source)
 	local gangaccount  = GetGang(xPlayer.gang.name)
-	
+
 	if type == 'item_standard' then
 		local playerItem = xPlayer.getInventoryItem(item)
 		local playerItemCount = playerItem.count
-		local isvorod = false 
+		local isvorod = false
 		if string.sub(playerItem.name, 1, 7) == "CarKey|" and playerItemCount ~= 0 then
-			isvorod = false 
+			isvorod = false
 		else
-			isvorod = true 
+			isvorod = true
 		end
-		
-		if isvorod then 
+
+		if isvorod then
 			if playerItemCount >= count and count > 0 then
 				TriggerEvent('esx_addoninventory:getSharedInventory', gangaccount.account, function(inventory)
 					xPlayer.removeInventoryItem(item, count)
@@ -1056,7 +1011,7 @@ AddEventHandler('gangs:addToInventory', function(type, item, count)
 					if Gangs[xPlayer.gang.name].logpower ~= 0 then
 					sendtodiscord(source, Gangs[xPlayer.gang.name].webhookinv,'log '..xPlayer.gang.name..' Logger','> Gozashtan Item','Item Name : '.. playerItem.label .. '\nTedad : '..count..'\nEsm IC Player : '..xPlayer.name .. '\nEsm OOC Player : '.. GetPlayerName(xPlayer.source), true)
 				end
-				
+
 					local details = {source = source, icname = xPlayer.name, gang = xPlayer.gang.name, type = "Gozasht", name = item, count = count}
 					exports.ScriptPack:GangLog(details)
 					TriggerClientEvent('esx:showNotification', _source, 'Shoma '..count..' ta '.. inventory.getItem(item).label .. ' Dakhel Gang Gozashtid')
@@ -1072,8 +1027,8 @@ AddEventHandler('gangs:addToInventory', function(type, item, count)
 		if weapon then
 			TriggerEvent('esx_datastore:getSharedDataStore', gangaccount.account, function(store)
 				local storeWeapons = store.get('weapons') or {}
-				
-				
+
+
 				table.insert(storeWeapons, {
 					name = item,
 					ammo = weapon.ammo,
@@ -1082,24 +1037,20 @@ AddEventHandler('gangs:addToInventory', function(type, item, count)
 
 				store.set('weapons', storeWeapons)
 				xPlayer.removeWeapon(item)
-	
+
 				if Gangs[xPlayer.gang.name].logpower ~= 0 then
 					sendtodiscord(source, Gangs[xPlayer.gang.name].webhookinv,'log '..xPlayer.gang.name..' Logger','> Gozashtan Weapon','Weapon Name : '.. ESX.GetWeaponLabel(item) .. '\nTedad Tir: '..weapon.ammo..'\nEsm IC Player : '..xPlayer.name .. '\nEsm OOC Player : '.. GetPlayerName(xPlayer.source), true)
 				end
-			
+
 				local details = {source = source, icname = xPlayer.name, gang = xPlayer.gang.name, type = "Gozasht", name = item, count = weapon.ammo}
 				exports.ScriptPack:GangLog(details)
 			end)
 		else
-			
-			-- exports.BanSql:BanTarget(xPlayer.source, "Tried to duplicate guns in gang: "..xPlayer.gang.name.." Duplicate Weapons", "Tried to duplicate guns in gang : "..xPlayer.gang.name.." Duplicate Weapons")
+
+
 		end
 	end
 end)
-
-
-
-
 
 ESX.RegisterServerCallback('gangs:removeArmoryWeapon', function(source, cb, weaponName, station)
 	local gang = GetGang(station)
@@ -1108,7 +1059,7 @@ ESX.RegisterServerCallback('gangs:removeArmoryWeapon', function(source, cb, weap
 		print(('gangs: %s attempted to removeArmoryWeapon!'):format(xPlayer.identifier))
 		return
 	end
-	
+
 	if not xPlayer.hasWeapon(weaponName) then
 		xPlayer.addWeapon(weaponName, 250)
 		TriggerEvent('esx_datastore:getSharedDataStore', gang.account, function(store)
@@ -1136,14 +1087,14 @@ ESX.RegisterServerCallback('gangs:removeArmoryWeapon', function(source, cb, weap
 			end
 
 			store.set('weapons', weapons)
-			
+
 			if Gangs[xPlayer.gang.name].logpower ~= 0 then
 				sendtodiscord(source, Gangs[xPlayer.gang.name].webhookinv,'log '..xPlayer.gang.name..' Logger','> Bardasht Weapon','Weapon Name : '..ESX.GetWeaponLabel(weaponName).. '\nTedad Tir: '..count..'\nEsm IC Player : '..xPlayer.name .. '\nEsm OOC Player : '.. GetPlayerName(xPlayer.source))
 			end
-			
+
 			local details = {source = source, icname = xPlayer.name, gang = xPlayer.gang.name, type = "Bardasht", name = weaponName, count = "1"}
 			exports.ScriptPack:GangLog(details)
-				
+
 
 			cb()
 
@@ -1178,7 +1129,6 @@ ESX.RegisterServerCallback('gangs:getGangMoney', function(source, cb, gang)
 	end
 end)
 
-
 ESX.RegisterServerCallback('gangs:getPropertyInventory', function(source, cb, station)
 	local xPlayer    = ESX.GetPlayerFromId(source)
 	local dirty_money = 0
@@ -1195,9 +1145,9 @@ ESX.RegisterServerCallback('gangs:getPropertyInventory', function(source, cb, st
 
 	local itemgang       = (Gangs[nameg].grades[tonumber(gradeg)].inventorys)
 
-	
+
 	TriggerEvent('esx_addoninventory:getSharedInventory', gang.account, function(inventory)
-		
+
 		items = inventory.items
 
 	end)
@@ -1214,11 +1164,6 @@ ESX.RegisterServerCallback('gangs:getPropertyInventory', function(source, cb, st
 	})
 end)
 
-
-
-
-
-
 ESX.RegisterServerCallback('gangs:getPropertyInventory2', function(source, cb, station)
 	local xPlayer    = ESX.GetPlayerFromId(source)
 	local dirty_money = 0
@@ -1229,7 +1174,6 @@ ESX.RegisterServerCallback('gangs:getPropertyInventory2', function(source, cb, s
 	local nameg = xPlayer.gang.name
 	local gradeg = xPlayer.gang.grade
 
-
 	if nameg ~= gang2.name then
 		print(('gangs: %s attempted to call getStock without permission!'):format(xPlayer.identifier))
 		return
@@ -1238,16 +1182,16 @@ ESX.RegisterServerCallback('gangs:getPropertyInventory2', function(source, cb, s
 	local itemgang       = (Gangs[nameg].grades[tonumber(gradeg)].inventorys)
 	local item = {}
 	local weapons = {}
-	
+
 	TriggerEvent('esx_addoninventory:getSharedInventory', gang2.account, function(inventory)
-		
-		if inventory then 
-			for k,v in pairs(inventory.items) do 
+
+		if inventory then
+			for k,v in pairs(inventory.items) do
 				local invitem = v.name
 				local testd   = v.count
 				local itlab   = v.label
-				for t,item in pairs(json.decode(itemgang)) do 
-					if item.name == invitem and item.state then 
+				for t,item in pairs(json.decode(itemgang)) do
+					if item.name == invitem and item.state then
 						table.insert(items, {
 							count = testd,
 							name = invitem,
@@ -1261,12 +1205,12 @@ ESX.RegisterServerCallback('gangs:getPropertyInventory2', function(source, cb, s
 
 	TriggerEvent('esx_datastore:getSharedDataStore', gang2.account, function(store)
 		weapons2 = store.get('weapons')
-			
-		if weapons2 then 
-			for k,v in pairs(weapons2) do 
+
+		if weapons2 then
+			for k,v in pairs(weapons2) do
 				local invitem = v
-				for t,weapon in pairs(json.decode(itemgang)) do 
-					if weapon.name == invitem.name and weapon.state then 
+				for t,weapon in pairs(json.decode(itemgang)) do
+					if weapon.name == invitem.name and weapon.state then
 						table.insert(weapons, {
 							name = invitem.name,
 							ammo = invitem.ammo,
@@ -1283,11 +1227,6 @@ ESX.RegisterServerCallback('gangs:getPropertyInventory2', function(source, cb, s
 		weapons    = weapons
 	})
 end)
-
-
-
-
-
 
 RegisterNetEvent('gangs:buy')
 AddEventHandler('gangs:buy', function(weaponName, station)
@@ -1321,14 +1260,13 @@ AddEventHandler('gangs:buy', function(weaponName, station)
 
 end)
 
-
 ESX.RegisterServerCallback('gangs:sethook', function(source, cb, webhook, dbname)
 	local _source, hook = source, webhook
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	databasename = dbname
 	if xPlayer.gang.name == "nogang" then
 		cb(false)
-		-- exports.BanSql:BanTarget(_source, "Tried to rename nogang label", "Tried to rename nogang label")
+
 		return
 	end
 
@@ -1337,27 +1275,27 @@ ESX.RegisterServerCallback('gangs:sethook', function(source, cb, webhook, dbname
 		['@gang_name']      = xPlayer.gang.name,
 		['@hook']  			= hook
 	}, function(rowsChanged)
-		if databasename == 'webhookboss' then 
+		if databasename == 'webhookboss' then
 			Gangs[xPlayer.gang.name].webhookboss = hook
 			sendtodiscord(source, hook,'Log '..xPlayer.gang.name ..' Logger','Web Hook Boss Action Gang Set Shod','Enjoy :)')
-		elseif databasename == 'webhookveh' then 
+		elseif databasename == 'webhookveh' then
 			Gangs[xPlayer.gang.name].webhookveh = hook
 			sendtodiscord(source, hook,'Log '..xPlayer.gang.name ..' Logger','Web Hook Mashin Ha Set Shod','Enjoy :)')
-		elseif databasename == 'webhookinv' then 
+		elseif databasename == 'webhookinv' then
 			Gangs[xPlayer.gang.name].webhookinv = hook
 			sendtodiscord(source, hook,'Log '..xPlayer.gang.name ..' Logger','Web Hook Inventory Gang Set Shod','Enjoy :)')
-		elseif databasename == 'webhookmoney' then 
+		elseif databasename == 'webhookmoney' then
 			Gangs[xPlayer.gang.name].webhookmoney = hook
 			sendtodiscord(source, hook,'Log '..xPlayer.gang.name ..' Logger','Web Hook Pool Gang Set Shod','Enjoy :)')
 		end
-		
-		
+
+
 	end)
-	
+
 	cb(true)
 	else
 		cb(false)
-		-- exports.BanSql:BanTarget(_source, "Tried to Set Log", "Tried to set log")
+
 	end
 
 end)
@@ -1368,7 +1306,7 @@ ESX.RegisterServerCallback('gangs:setinvperm', function(source, cb, perm)
 
 	if xPlayer.gang.name == "nogang" then
 		cb(false)
-		-- exports.BanSql:BanTarget(_source, "Tried to rename nogang", "Tried to rename nogang")
+
 		return
 	end
 
@@ -1394,12 +1332,11 @@ ESX.RegisterServerCallback('gangs:setinvperm', function(source, cb, perm)
 	cb(true)
 	else
 		cb(false)
-		
-		-- exports.BanSql:BanTarget(_source, "Tried to rename grade without boss level", "Tried to rename grade without boss level")
+
+
 	end
 
 end)
-
 
 ESX.RegisterServerCallback('gangs:setganglogo', function(source, cb, logo)
 	local _source, logo = source, logo
@@ -1420,7 +1357,7 @@ ESX.RegisterServerCallback('gangs:setganglogo', function(source, cb, logo)
 					end
 
 				end
-			
+
 		end)
 		TriggerClientEvent('gangs:UpdateHudIcon', source)
 		sendtodiscord(source, Gangs[xPlayer.gang.name].webhookboss,'Log Gang Logger','Axs Gang Be '..tostring(logo)..' Taghir Kard','Enjoy :)')
@@ -1431,7 +1368,7 @@ end)
 
 ESX.RegisterServerCallback('gangs:GetGangIcon', function(source, cb)
 	local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)		
+	local xPlayer = ESX.GetPlayerFromId(_source)
 	local logo = MySQL.Sync.fetchAll('SELECT `logo` FROM `gangs_data` WHERE gang_name = @gang_name', {
 		['@gang_name']  = xPlayer.gang.name
 	})
@@ -1440,7 +1377,7 @@ ESX.RegisterServerCallback('gangs:GetGangIcon', function(source, cb)
 end)
 
 ESX.RegisterServerCallback('gangs:getEmployees', function(source, cb, gang)
-	--print('gang')
+
 	MySQL.Async.fetchAll('SELECT playerName, identifier, gang, gang_grade FROM users WHERE gang = @gang ORDER BY gang_grade DESC', {
 		['@gang'] = gang
 	}, function (result)
@@ -1481,20 +1418,19 @@ ESX.RegisterServerCallback('gangs:getGang', function(source, cb, gang)
  	cb(gang)
 end)
 
-
 ESX.RegisterServerCallback('gangs:setGang', function(source, cb, identifier, gang, grade, type)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	local isBoss = xPlayer.gang.grade >= Gangs[xPlayer.gang.name].invite_access
-	
+
  	if xPlayer.gang.grade >= 10 then
 		local xTarget = ESX.GetPlayerFromIdentifier(identifier)
 
  		if xTarget then
-			-- xTarget.setGang(gang, grade)
+
 
  			if type == 'hire' then
-				-- xTarget.set('ganginv', gang)
+
 				TriggerClientEvent('gangs:itemac',xTarget.source,gang)
 			elseif type == 'promote' then
 				if grade ~= 13 then
@@ -1588,7 +1524,6 @@ ESX.RegisterServerCallback('gangs:renameGrade', function(source, cb, grade, name
 
 end)
 
-
 ESX.RegisterServerCallback('gangs:setGangVehiclePerm', function(source, cb, gangname, rank, model, status)
     local xPlayer = ESX.GetPlayerFromId(source)
     local identifier = GetPlayerIdentifier(source, 0)
@@ -1606,13 +1541,13 @@ ESX.RegisterServerCallback('gangs:setGangVehiclePerm', function(source, cb, gang
                     if veh.model == model then
                         veh.status = status
 
-						
-						
+
+
                         found = true
                         break
                     end
                 end
-				if not found then 
+				if not found then
 					table.insert(vehicles, {model = model, status = status})
 				end
                 MySQL.Async.execute('UPDATE gang_grades SET vehicles = @vehicles WHERE gang_name = @gang_name AND grade = @grade', {
@@ -1635,13 +1570,6 @@ ESX.RegisterServerCallback('gangs:setGangVehiclePerm', function(source, cb, gang
         cb(false)
     end
 end)
-
-
-
-
-
-
-
 
 ESX.RegisterServerCallback('gangs:setGangGarageAccess', function(source, cb, gang, garage_access)
 	local isBoss = isPlayerBoss(source, gang)
@@ -1825,7 +1753,7 @@ ESX.RegisterServerCallback('gangs:setGangVestAccess', function(source, cb, gang,
 			['@gang_name'] = gang.name
 		}, function(rowsChanged)
 
-		
+
 			if Gangs[xPlayer.gang.name].logpower ~= 0 then
 				sendtodiscord(source, Gangs[xPlayer.gang.name].webhookboss,'Log '..gang.name..' Logger','Permission Vest Be '..tostring(vest_access)..' Taghir Kard','Enjoy :)')
 			end
@@ -1836,8 +1764,6 @@ ESX.RegisterServerCallback('gangs:setGangVestAccess', function(source, cb, gang,
 		cb()
 	end
 end)
-
-
 
 ESX.RegisterServerCallback('gangs:getOnlinePlayers', function(source, cb)
 	local xPlayers = ESX.GetPlayers()
@@ -1852,7 +1778,7 @@ ESX.RegisterServerCallback('gangs:getOnlinePlayers', function(source, cb)
 			name       = xPlayer.name,
 			gang       = xPlayer.gang,
 			coords     = xPlayer.coords,
-			
+
 		})
 	end
 
@@ -1889,24 +1815,24 @@ function sendtodiscord(source, hook,footer1,footer2,text, green)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local embed = {}
 	local ganglogo
-	local colordis = 0 
+	local colordis = 0
 	gname = xPlayer.gang.name
 
 	local chekganglogo =  Gangs[gname].logo
 
-	if chekganglogo ~= 'defaultlogo' then 
+	if chekganglogo ~= 'defaultlogo' then
 		ganglogo = chekganglogo
-	else 
+	else
 		ganglogo = 'https://s8.uupload.ir/files/newlogo_185.png'
 	end
-	if green then 
+	if green then
 		colordis = 65280
-	else 
+	else
 		colordis = 15548997
 	end
     embed = {
         {
-            ["color"] = colordis, 
+            ["color"] = colordis,
             ["title"] = footer2,
 			["fields"] = {
 					{
@@ -1918,18 +1844,17 @@ function sendtodiscord(source, hook,footer1,footer2,text, green)
                 ["text"] = "Log System",
 				["icon_url"] = "https://s8.uupload.ir/files/newlogo_185.png",
             },
-			
+
         }
     }
-    
-    PerformHttpRequest(hook, 
-    function(err, text, headers) end, 'POST', json.encode({username = "Gang Log", embeds = embed, avatar_url = ganglogo}), { ['Content-Type'] = 'application/json' })					
+
+    PerformHttpRequest(hook,
+    function(err, text, headers) end, 'POST', json.encode({username = "Gang Log", embeds = embed, avatar_url = ganglogo}), { ['Content-Type'] = 'application/json' })
 end
 
 function ban(source, Reason, Reason2)
--- exports.BanSql:BanTarget(source, Reason, Reason2)
-end
 
+end
 
 ESX.RegisterServerCallback('gangs:vehicles', function(source, cb, vehicle)
 	exports.ghmattimysql:execute('SELECT * FROM owned_vehicles WHERE owner = @owner',{
@@ -1941,14 +1866,12 @@ ESX.RegisterServerCallback('gangs:vehicles', function(source, cb, vehicle)
 	end)
 end)
 
-
-
 ESX.RegisterServerCallback('gangs:SetPermData',function(source, cb, gang, grade, sitem, il, plate2, vehllabel)
 	local xp = ESX.GetPlayerFromId(source)
 	local source = source
 	local acctrue
 	if xp.gang.name ~= gang or xp.gang.grade < 10 then
-		-- ban(source,'try to moddify a gang with out being boss gang:'.. gang)
+
 		cb()
 		return
 	end
@@ -1963,7 +1886,7 @@ ESX.RegisterServerCallback('gangs:SetPermData',function(source, cb, gang, grade,
 						table.insert(gitems,{
 							name = item.name,
 							state = true
-							
+
 						})
 						table.remove(gitems, i)
 						found = true
@@ -1973,7 +1896,7 @@ ESX.RegisterServerCallback('gangs:SetPermData',function(source, cb, gang, grade,
 						table.insert(gitems,{
 							name = item.name,
 							state = false
-							
+
 						})
 						table.remove(gitems, i)
 						found = true
@@ -2022,14 +1945,14 @@ ESX.RegisterServerCallback('gangs:SetPermData',function(source, cb, gang, grade,
 				sendtodiscord(source, Gangs[gang].webhookboss,'Log'..gang..' Logger','Permission Inventory', chekdastresi, green)
 			end
 		end)
-	elseif il == 'car' then 
+	elseif il == 'car' then
 		local status = true
 		local gitems = json.decode(Gangs[gang].grades[tonumber(grade)].vehicles)
 		local found = false
 		local carsdastresi = 0
 		if gitems ~= nil then
 			for i, item in ipairs(gitems) do
-				
+
 				if string.lower(item.name) == string.lower(sitem) and string.lower(item.plate) == string.lower(plate2) then
 					if item.state == false then
 						table.insert(gitems,{
@@ -2094,12 +2017,12 @@ ESX.RegisterServerCallback('gangs:SetPermData',function(source, cb, gang, grade,
 				sendtodiscord(source, Gangs[gang].webhookboss, 'Log reven' .. gang .. ' Logger', 'Permission Vehicles', chekdastresi, green)
 			end
 
-			
-			
+
+
 
 		end)
-	
-	elseif il == 'heli' then 
+
+	elseif il == 'heli' then
 		local status = true
 		local helidastresi = 0
 		local gitems2 = json.decode(Gangs[gang].grades[tonumber(grade)].helis)
@@ -2138,7 +2061,7 @@ ESX.RegisterServerCallback('gangs:SetPermData',function(source, cb, gang, grade,
 				name = sitem,
 				state = true,
 				plate = plate2
-				
+
 			})
 			helidastresi = 1
 		end
@@ -2171,10 +2094,9 @@ ESX.RegisterServerCallback('gangs:SetPermData',function(source, cb, gang, grade,
 				sendtodiscord(source, Gangs[gang].webhookboss, 'Log reven' .. gang .. ' Logger', 'Permission Helis', chekdastresi, green)
 			end
 
-
 		end)
 
-	elseif il == 'boat' then 
+	elseif il == 'boat' then
 		local status = true
 		local boatdastresi = 0
 		local gitems2 = json.decode(Gangs[gang].grades[tonumber(grade)].boats)
@@ -2213,7 +2135,7 @@ ESX.RegisterServerCallback('gangs:SetPermData',function(source, cb, gang, grade,
 				name = sitem,
 				state = true,
 				plate = plate2
-				
+
 			})
 			boatdastresi = 1
 		end
@@ -2245,16 +2167,16 @@ ESX.RegisterServerCallback('gangs:SetPermData',function(source, cb, gang, grade,
 				end
 				sendtodiscord(source, Gangs[gang].webhookboss, 'Log reven' .. gang .. ' Logger', 'Permission Boat', chekdastresi, green)
 			end
-		
+
 
 		end)
-	elseif il == 'craft' then 
+	elseif il == 'craft' then
 		local dastresi = nil
 		local craft = json.decode(Gangs[gang].grades[tonumber(grade)].crafting)
 		local found = false
 		if craft ~= nil then
-			
-			
+
+
 			if craft == 0 then
 				dastresi = 1
 				found = true
@@ -2262,7 +2184,7 @@ ESX.RegisterServerCallback('gangs:SetPermData',function(source, cb, gang, grade,
 				dastresi = 0
 				found = true
 			end
-			
+
 
 		else
 			found = false
@@ -2291,14 +2213,9 @@ ESX.RegisterServerCallback('gangs:SetPermData',function(source, cb, gang, grade,
 				sendtodiscord(source, Gangs[gang].webhookboss,'Log reven'..gang..' Logger','Permission Crafting', chekdastresi, green)
 			end
 		end)
-		
+
 	end
 end)
-
-
-
-
-
 
 ESX.RegisterServerCallback('gangs:GetPermData', function(source, cb, gang, grade, type, plate2)
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -2309,19 +2226,19 @@ ESX.RegisterServerCallback('gangs:GetPermData', function(source, cb, gang, grade
 		end
 
 	elseif type == 'car' then
-		local vehicles       = (Gangs[gang].grades[tonumber(grade)].vehicles) 
+		local vehicles       = (Gangs[gang].grades[tonumber(grade)].vehicles)
 		if vehicles ~= nil or vehicles ~= {}  then
 			cb(json.decode(vehicles))
 		end
 
 	elseif type == 'heli' then
-		local helis  = (Gangs[gang].grades[tonumber(grade)].helis) 
+		local helis  = (Gangs[gang].grades[tonumber(grade)].helis)
 		if helis ~= nil or helis ~= {}  then
 			cb(json.decode(helis))
 		end
 
 	elseif type == 'boat' then
-		local boats  = (Gangs[gang].grades[tonumber(grade)].boats) 
+		local boats  = (Gangs[gang].grades[tonumber(grade)].boats)
 		if boats ~= nil or boats ~= {}  then
 			cb(json.decode(boats))
 		end
@@ -2350,13 +2267,12 @@ ESX.RegisterServerCallback('gangs:GetPermDataCrafting', function(source, cb, gan
 	elseif type == 'boat' then
 		local boats  = (Gangs[gang].grades[tonumber(grade)].boats) or "{}"
 		cb(json.decode(boats))
-		
+
 	elseif type == 'craft' then
 		local crt  = (Gangs[gang].grades[tonumber(xPlayer.gang.grade)].crafting) or 0
 		cb(crt)
 	end
 end)
-
 
 RegisterServerEvent('gangs:vehlogs')
 AddEventHandler('gangs:vehlogs', function(nameveh, plateveh, modele, status, healthPercent, Engine)
@@ -2364,60 +2280,58 @@ AddEventHandler('gangs:vehlogs', function(nameveh, plateveh, modele, status, hea
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local gangName = xPlayer.gang.name
 	local Engini = ""
-	if Engine then 
+	if Engine then
 		Engini = "Darad"
 	else
 		Engini = "Nadarad"
 	end
 
-	if status == 'spawn' then 
+	if status == 'spawn' then
 		local roundedHealth = healthPercent and math.floor(healthPercent) or "namoshakhas"
 
-		if modele == 'veh' then 
-			sendtodiscord(source, Gangs[gangName].webhookveh, 'Log '..gangName..' Logger', '> Bardashte Mashin', 
+		if modele == 'veh' then
+			sendtodiscord(source, Gangs[gangName].webhookveh, 'Log '..gangName..' Logger', '> Bardashte Mashin',
 				'Esme Mashin : '..nameveh..'\n'..
 				'Plake Mashin : '..plateveh..'\n'..
-				'Salamate Engine : '..roundedHealth..'%\n'.. 
-				'Engine : '..Engini..'\n'.. 
+				'Salamate Engine : '..roundedHealth..'%\n'..
+				'Engine : '..Engini..'\n'..
 				'Esm IC Player : '..xPlayer.name..'\n'..
 				'Esm OOC Player : '..GetPlayerName(xPlayer.source)..'\n'..
 				'ID : '..xPlayer.source)
-		
-		elseif modele == 'heli' then 
-			sendtodiscord(source, Gangs[gangName].webhookveh, 'Log '..gangName..' Logger', '> Bardashte Heli', 
+
+		elseif modele == 'heli' then
+			sendtodiscord(source, Gangs[gangName].webhookveh, 'Log '..gangName..' Logger', '> Bardashte Heli',
 				'Esme Heli : '..nameveh..'\n'..
 				'Plake Heli : '..plateveh..'\n'..
-				'Salamate Engine : '..roundedHealth..'%\n'.. 
-				'Engine : '..Engini..'\n'.. 
+				'Salamate Engine : '..roundedHealth..'%\n'..
+				'Engine : '..Engini..'\n'..
 				'Esm IC Player : '..xPlayer.name..'\n'..
 				'Esm OOC Player : '..GetPlayerName(xPlayer.source)..'\n'..
 				'ID : '..xPlayer.source)
-		
+
 		elseif modele == 'boat' then
-			sendtodiscord(source, Gangs[gangName].webhookveh, 'Log '..gangName..' Logger', '> Bardashte Boat', 
+			sendtodiscord(source, Gangs[gangName].webhookveh, 'Log '..gangName..' Logger', '> Bardashte Boat',
 				'Esme Boat : '..nameveh..'\n'..
 				'Plake Boat : '..plateveh..'\n'..
-				'Salamate Engine : '..roundedHealth..'%\n'.. 
-				'Engine : '..Engini..'\n'..  
+				'Salamate Engine : '..roundedHealth..'%\n'..
+				'Engine : '..Engini..'\n'..
 				'Esm IC Player : '..xPlayer.name..'\n'..
 				'Esm OOC Player : '..GetPlayerName(xPlayer.source)..'\n'..
 				'ID : '..xPlayer.source)
-		end		
+		end
 	elseif status == 'delete' then
 		local roundedHealth = healthPercent and math.floor(healthPercent) or "namoshakhas"
-		if modele == 'veh' then 
-			sendtodiscord(source, Gangs[gangName].webhookveh, 'Log '..gangName..' Logger', '> Gozashte Mashin', 
+		if modele == 'veh' then
+			sendtodiscord(source, Gangs[gangName].webhookveh, 'Log '..gangName..' Logger', '> Gozashte Mashin',
 				'Esme Mashin : '..nameveh..'\n'..
 				'Plake Mashin : '..plateveh..'\n'..
-				'Salamate Engine : '..roundedHealth..'%\n'.. 
-				'Engine : '..Engini..'\n'.. 
+				'Salamate Engine : '..roundedHealth..'%\n'..
+				'Engine : '..Engini..'\n'..
 				'Esm IC Player : '..xPlayer.name..'\n'..
 				'Esm OOC Player : '..GetPlayerName(xPlayer.source)..'\n'..
-				'ID : '..xPlayer.source, true) 
+				'ID : '..xPlayer.source, true)
 		end
 	end
-	
+
 end)
-
-
 

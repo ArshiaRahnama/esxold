@@ -1,16 +1,6 @@
 ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
---[[
-	Only /mp lives here.
-
-	/f and /dep are ALREADY implemented in [SCRIPT]/ScriptPack/server/dispatch-sv.lua
-	(with a proper organGroups table + off-duty handling) - registering them again
-	here would just create a duplicate RegisterCommand conflict. Only /mp (own job
-	only, e.g. CID -> CID) was missing anywhere in the codebase, so that's the only
-	one added in this file.
-]]
-
 local function sendToSet(jobSet, tag, color, senderName, senderGradeLabel, message)
 	local xPlayers = ESX.GetPlayers()
 	for i = 1, #xPlayers do

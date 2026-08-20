@@ -37,22 +37,22 @@ RegisterNetEvent("NUI_doorlock:client:setUpDoor", function()
     end
     table.insert(elements, {label = "Confirm Creation", value = "conf"})
     ESX.UI.Menu.Open('default',GetCurrentResourceName(),"menu_door",
-    { 
-    title = "Door Menu", 
-    align = "top-right", 
-    elements = elements, 
+    {
+    title = "Door Menu",
+    align = "top-right",
+    elements = elements,
     }, function(data, menu)
         local v = data.current.value
         if v == "doortype" then
             ESX.UI.Menu.Open('default',GetCurrentResourceName(),"menu_door2",
-            { 
-            title = "Type Menu", 
-            align = "top-right", 
+            {
+            title = "Type Menu",
+            align = "top-right",
             elements = {
                 {label = "Slider", value = "slide"},
                 {label = "Normal", value = "normal"},
                 {label = "Double", value = "double"},
-            }, 
+            },
             }, function(data2, menu2)
                 local v = data2.current.value
                 _doorType = v
@@ -90,7 +90,7 @@ RegisterNetEvent("NUI_doorlock:client:setUpDoor", function()
                     table.insert(allowedJobs, job)
                     ESX.UI.Menu.CloseAll()
                     ExecuteCommand(Config.commands.CreateDoor)
-                    
+
                 end
             end, function(data2, menu2)
                 menu2.close()
@@ -147,8 +147,8 @@ RegisterNetEvent("NUI_doorlock:client:setUpDoor", function()
             menu.close()
             ExecuteCommand(Config.commands.CreateDoor)
         end
-    end, function(data, menu) 
-        menu.close() 
+    end, function(data, menu)
+        menu.close()
         _doorType = "normal"
         _distToDoor = 2
         doorPin = ""
@@ -225,14 +225,14 @@ addDoor = function(type, dist, jobs, pin, item)
     if not dist then
         dist = 2
     end
-    if type ~= "double" then 
+    if type ~= "double" then
         Citizen.CreateThread(function()
             while true do
 				if not lazer then break end
                 local _Wait = 5
                 local _ped = PlayerPedId()
                 local _coords = GetEntityCoords(_ped)
-                local hit, coords, entity = RayCastGamePlayCamera(5000.0)   
+                local hit, coords, entity = RayCastGamePlayCamera(5000.0)
                 if IsEntityAnObject(entity) then
                     ESX.ShowHelpNotification("Press ~INPUT_CONTEXT~ To ~g~Add ~w~The Door")
                     DrawLine(_coords, coords, 0, 255, 34, 255)
@@ -268,7 +268,7 @@ addDoor = function(type, dist, jobs, pin, item)
                 local _Wait = 5
                 local _ped = PlayerPedId()
                 local _coords = GetEntityCoords(_ped)
-                local hit, coords, entity = RayCastGamePlayCamera(5000.0)   
+                local hit, coords, entity = RayCastGamePlayCamera(5000.0)
                 if IsEntityAnObject(entity) then
                     for k, v in pairs(entities) do
                         SetEntityDrawOutline(v, true)
@@ -321,7 +321,7 @@ Citizen.CreateThread(function()
             local _doorHash = GetHashKey(v._doorModel)
             local _ped = PlayerPedId()
             local _coords = GetEntityCoords(_ped)
-            
+
             if v._type == "normal" then
                 local _doorCoords = vector3(v.doorCoords.x, v.doorCoords.y, v.doorCoords.z)
                 local _distTo = #(_coords - _doorCoords)
@@ -428,7 +428,7 @@ Citizen.CreateThread(function()
                         _Wait = 120
                     end
                 end
-            else 
+            else
                 local _doorCoords = vector3(v.doorCoords.x, v.doorCoords.y, v.doorCoords.z)
                 local _distTo = #(_coords - _doorCoords)
                 if _distTo < 30 then
@@ -438,7 +438,7 @@ Citizen.CreateThread(function()
                         print(k.. " - Slider Registered")
                     end
                     if _doorState[k] ~= nil then
-                        DoorSystemSetDoorState(v._doorModel.. "door"..k, 0, false, false) 
+                        DoorSystemSetDoorState(v._doorModel.. "door"..k, 0, false, false)
                         DoorSystemSetAutomaticDistance(v._doorModel.. "door"..k, 30.0, false, false)
                     else
                         DoorSystemSetAutomaticDistance(v._doorModel.. "door"..k, 0.0, false, false)
@@ -462,7 +462,7 @@ Citizen.CreateThread(function()
                     end
                     if _doorState[k] ~= nil then
                         text = Config.strings.close
-                        DoorSystemSetDoorState(v._doorModel.. "door"..k, 0, false, false) 
+                        DoorSystemSetDoorState(v._doorModel.. "door"..k, 0, false, false)
                         DoorSystemSetAutomaticDistance(v._doorModel.. "door"..k, 30.0, false, false)
                         if pulsed then
                             TriggerServerEvent("NUI_doorlock:server:updateDoor", k, nil)
@@ -536,7 +536,7 @@ Citizen.CreateThread(function()
     end
 end)
 
-DrawTxt = function(coords, text, size, font) 
+DrawTxt = function(coords, text, size, font)
     local coords = vector3(coords.x, coords.y, coords.z)
 
     local camCoords = GetGameplayCamCoords()
@@ -570,15 +570,14 @@ RegisterNetEvent("NUI_doorlock:client:updateDoorState", function(id, type, h)
     _doorState[id] = type
 end)
 
-
 RegisterNetEvent("esx:setJob")
 AddEventHandler("esx:setJob",function(job)
-	PlayerData.job = job    
+	PlayerData.job = job
 end)
 
 RegisterNetEvent("esx:setGang")
 AddEventHandler("esx:setGang",function(gang)
-	PlayerData.gang = gang    
+	PlayerData.gang = gang
 end)
 
 RegisterCommand("lockdoor", function()
@@ -601,13 +600,13 @@ RegisterCommand("lockdoor", function()
                     local pinIntr = data2.value
                     if pinIntr ~= pin then
                         ESX.ShowNotification('~r~Invalid Pin, Try Again')
-                        
+
                         ESX.UI.Menu.CloseAll()
                     else
-                        pulsed = true 
+                        pulsed = true
                         menu2.close()
-                        ESX.UI.Menu.CloseAll()       
-                        pin = nil            
+                        ESX.UI.Menu.CloseAll()
+                        pin = nil
                     end
                 end, function(data2, menu2)
                     menu2.close()
@@ -644,9 +643,8 @@ RayCastGamePlayCamera = function(distance)
 	return b, c, e
 end
 
-
 replaceColorText = function(text)
-    text = text:gsub("~r~", "<span class='red'>") 
+    text = text:gsub("~r~", "<span class='red'>")
     text = text:gsub("~b~", "<span class='blue'>")
     text = text:gsub("~g~", "<span class='green'>")
     text = text:gsub("~y~", "<span class='yellow'>")

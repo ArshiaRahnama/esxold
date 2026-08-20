@@ -21,14 +21,7 @@ componentIds = {
     ['arms'] = {id = 3, Dict = "nmt_3_rcm-10", Anim = "cs_nigel_dual-10", Move = 51, Dur = 1200},
 }
 
--- ============================================================
--- Local clothing ownership/wearing system (replaces the missing
--- sunset_clothe resource). See server/clothe.lua for the
--- persistence/validation side. Item naming convention:
--- 'clothe_<type>_<drawable>_<texture>', e.g. 'clothe_mask_41_2'.
--- ============================================================
-
-local wornClothes = {} -- type -> itemName, synced from the server
+local wornClothes = {}
 
 local function parseClotheItem(itemName)
     local clotheType, drawable, texture = itemName:match('^clothe_([a-z]+)_(%d+)_(%d+)$')
@@ -60,12 +53,11 @@ local function applyClotheType(clotheType, itemName)
             SetPedComponentVariation(playerPed, compId, 0, 0, 0)
         end
     end
-    -- 'decals' has no real handler here (tattoos use a completely
-    -- separate SetPedDecoration/collection-hash system this framework
-    -- gave no data for) -- it's tracked but has no visual effect.
+
+
+
 end
 
--- fetch + apply whatever was worn last session, once on load
 Citizen.CreateThread(function()
     while ESX == nil do Citizen.Wait(10) end
     local p = promise.new()
@@ -84,8 +76,6 @@ AddEventHandler('sun-clothe:appearanceUpdated', function(worn)
     end
 end)
 
--- character spawn / skin reload can reset ped components, so reapply
--- whatever was worn afterwards
 AddEventHandler('esx:onPlayerSpawn', function()
     Citizen.Wait(1000)
     for clotheType, itemName in pairs(wornClothes) do
@@ -177,11 +167,6 @@ function createPack(label)
     TriggerServerEvent('sun-clothe:createPack', label)
 end
 
--- ============================================================
--- NUI callbacks (unchanged behaviour, now backed by the local
--- functions above instead of the missing sunset_clothe exports)
--- ============================================================
-
 RegisterNUICallback('Select', function(data, cb)
     mode = data.mode
     SendNuiMessage(json.encode({
@@ -202,8 +187,6 @@ RegisterNUICallback('LoadPack', function(_, cb)
     cb('ok')
 end)
 
-
-
 local spam = false
 RegisterNUICallback('ChangeClothe', function(data, cb)
     if spam then cb('ok') return end
@@ -218,7 +201,7 @@ RegisterNUICallback('ChangeClothe', function(data, cb)
         if data.name == 'bproof' and GetPedArmour(PlayerPedId()) > 0 then
             TriggerEvent('esx:spawnObject', 'prop_bodyarmour_03')
             ESX.SetPedArmour(PlayerPedId(),0)
-            -- SetPedComponentVariation(PlayerPedId(), 9, 0,  0, 2)
+
             TriggerEvent('skinchanger:loadStuff',{bproof_1 = 0,bproof_2 = 0})
         end
 	else
@@ -245,10 +228,10 @@ RegisterNUICallback('UsePack', function(data, cb)
         spam = false
     end)
     closeInventory()
-    -- ESX.TriggerServerEvent doesn't exist anywhere in essentialmode
-    -- (same bug already found in Unique_clothe's createPack and
-    -- skincreator's save) -- this silently errored every time, so
-    -- using a pack never actually triggered anything server-side.
+
+
+
+
     TriggerServerEvent("esx:useItem", data.name)
     cb('ok')
 end)
@@ -291,9 +274,6 @@ function playClotheAnim(mode)
     Wait(componentIds[mode].Dur)
 end
 exports('playClotheAnim', playClotheAnim)
---
-
--- Citizen.CreateThread(Camera())
 
 function packAnim()
     playClotheAnim('tshirt')
@@ -306,8 +286,7 @@ function packAnim()
 end
 exports('packAnim', packAnim)
 
-
-function createPedScreen() 
+function createPedScreen()
     if not previewPed then
         CreateThread(function()
             SetFrontendActive(true)
@@ -340,7 +319,6 @@ function deletePedScreen()
     end
 end
 
-
 function refreshPedScreen()
 	deletePedScreen()
 	Wait(200)
@@ -350,7 +328,7 @@ function refreshPedScreen()
 end
 
 RegisterNUICallback('createPed', function(_, cb)
-    createPedScreen() 
+    createPedScreen()
     cb('ok')
 end)
 

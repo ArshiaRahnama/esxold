@@ -24,7 +24,7 @@ CreateThread(function()
 end)
 
 local function getClotheType(itemName)
-    -- 'clothe_<type>_<drawable>_<texture>' -> type
+
     return itemName:match('^clothe_([a-z]+)_%d+_%d+$')
 end
 
@@ -52,16 +52,12 @@ local function saveWorn(identifier, worn)
     })
 end
 
--- fetch what's currently worn (used on inventory open + on spawn to
--- re-apply appearance)
 ESX.RegisterServerCallback('sun-clothe:getWorn', function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
     if not xPlayer then cb({}) return end
     loadWorn(xPlayer.identifier, cb)
 end)
 
--- equip/unequip one type. itemName == nil means "take off this type".
--- Always re-validates ownership server-side before accepting it.
 RegisterServerEvent('sun-clothe:setWorn')
 AddEventHandler('sun-clothe:setWorn', function(clotheType, itemName)
     local src = source
@@ -85,10 +81,6 @@ AddEventHandler('sun-clothe:setWorn', function(clotheType, itemName)
     end)
 end)
 
--- ------------------------------------------------------------
--- Packs: a named preset bundling everything currently worn.
--- Each pack is a real, usable ESX item ('pack_<id>').
--- ------------------------------------------------------------
 RegisterServerEvent('sun-clothe:createPack')
 AddEventHandler('sun-clothe:createPack', function(label)
     local src = source
@@ -123,7 +115,7 @@ AddEventHandler('sun-clothe:createPack', function(label)
 
                     loadWorn(usingPlayer.identifier, function(worn)
                         for clotheType, wornItemName in pairs(contents) do
-                            -- only re-equip pieces the player still actually owns
+
                             local item = usingPlayer.getInventoryItem(wornItemName)
                             if item and item.count > 0 then
                                 worn[clotheType] = wornItemName
@@ -141,8 +133,6 @@ AddEventHandler('sun-clothe:createPack', function(label)
     end)
 end)
 
--- so packs a player already owns from a previous session still work
--- after a resource restart (usable-item registration is in-memory only)
 CreateThread(function()
     Citizen.Wait(2000)
     exports.litesql:fetch('SELECT pack_id, label FROM player_clothe_packs', {}, function(result)

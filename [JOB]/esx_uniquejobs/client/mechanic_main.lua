@@ -1,5 +1,4 @@
 
--- Server Discord : https://discord.gg/3jzScCJZ5C
 
 local Keys = {
   ["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
@@ -68,7 +67,7 @@ function SetVehicleMaxMods2_mechanic(vehicle)
 		color2          = 0,
 		modTurbo        = true,
 	}
-	
+
 
 	ESX.Game.SetVehicleProperties(vehicle, props)
 	SetVehicleDirtLevel(vehicle, 0.0)
@@ -79,15 +78,13 @@ Citizen.CreateThread(function()
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(1)
 	end
-	
+
 	while ESX.GetPlayerData().job == nil do
 		Citizen.Wait(10)
 	end
 
 	PlayerData = ESX.GetPlayerData()
 end)
-
-
 
 function OpenheliSpawnerMenu_mechanic(station)
 	local vehicles = Config_mechanic.Zones.MechanicActions.Helicopters
@@ -101,16 +98,14 @@ function OpenheliSpawnerMenu_mechanic(station)
 	ESX.TriggerServerCallback('esx_society:getHelis', function(authorizedVehicle)
 		ESX.TriggerServerCallback('esx_society:GetDivisionsPlayer', function(getdivision)
 			dvisionName = nil
-			for k,v in pairs(getdivision) do 
-				if v.status and v.job == job then 
-					
+			for k,v in pairs(getdivision) do
+				if v.status and v.job == job then
+
 
 					dvisionName = v.name
 				end
 			end
 			ESX.TriggerServerCallback('esx_society:getHelisdivision', function(authorizedVehicledivision)
-			
-
 
 
 				local found = false
@@ -120,7 +115,7 @@ function OpenheliSpawnerMenu_mechanic(station)
 					for i = 1, #Vehicles, 1 do
 					local found = false
 
-				
+
 					if authorizedVehicle ~= nil then
 						for _,sharedVeh in ipairs(authorizedVehicle) do
 							if found then break end
@@ -129,24 +124,23 @@ function OpenheliSpawnerMenu_mechanic(station)
 									found = true
 
 
-									
 								end
 							end
-							
+
 						end
 					end
 
 				end
 
-				if authorizedVehicledivision then 
+				if authorizedVehicledivision then
 					table.insert(elements, {label = '------ Division ------', model = nil})
 					local nnname = nil
 					local Vehicles2 = Config_mechanic.AuthorizedVehicles.Sharedheli
 					for i = 1, #Vehicles2, 1 do
 						nnname = nil
-						for t,vehs in pairs(authorizedVehicledivision) do 
+						for t,vehs in pairs(authorizedVehicledivision) do
 							for k,v in pairs(elements) do
-								if vehs.status and Vehicles2[i].model == vehs.model then 
+								if vehs.status and Vehicles2[i].model == vehs.model then
 									if v.model == vehs.model then
 										nnname = nil
 										break
@@ -156,7 +150,7 @@ function OpenheliSpawnerMenu_mechanic(station)
 								end
 							end
 							if nnname then
-								
+
 								table.insert(elements, {label = Vehicles2[i].label, model = Vehicles2[i].model})
 								break
 							end
@@ -172,9 +166,8 @@ function OpenheliSpawnerMenu_mechanic(station)
 				}, function(data, menu)
 					menu.close()
 
-
 					local model   = data.current.model
-					
+
 					if model then
 						if not DoesEntityExist(vehicle) then
 
@@ -187,7 +180,7 @@ function OpenheliSpawnerMenu_mechanic(station)
 
 									ESX.TriggerServerCallback('checkPlateInServer', function(plateExists)
 										if plateExists then
-											
+
 											local alert = lib.alertDialog({
 												header = 'Az In Plake Qablan Estefadeh Shode',
 												content = 'Aya Mikhahid Hazf Shavad?',
@@ -204,7 +197,7 @@ function OpenheliSpawnerMenu_mechanic(station)
 
 												Wait(1000)
 												spawnheliss_mechanic(data, plate, vehicle, station, partNum)
-												
+
 											else
 												TriggerEvent('chat:addMessage', {
 													args = {'^1SYSTEM', 'Cancel Shod'}
@@ -223,7 +216,7 @@ function OpenheliSpawnerMenu_mechanic(station)
 												requestPlate()
 											end
 										end
-									end, "MC" .. plate[1]) 
+									end, "MC" .. plate[1])
 								end
 							end
 
@@ -239,13 +232,12 @@ function OpenheliSpawnerMenu_mechanic(station)
 					CurrentAction     = 'menu_heli_spawner'
 					CurrentActionMsg  = _U('heli_spawner')
 					CurrentActionData = {station = station, partNum = partNum}
-					
+
 				end)
 			end, dvisionName, job)
 		end, PlayerData.identifier)
 	end, grade, job)
 end
-
 
 function spawnheliss_mechanic(data, plate, vehicle, station, partNum)
 	plate[1] = string.upper(plate[1])
@@ -281,19 +273,19 @@ function spawnheliss_mechanic(data, plate, vehicle, station, partNum)
 					end
 				end
 			end
-			
 
-			
+
+
 			SetVehicleLivery(vehicle, 3)
 			Citizen.Wait(500)
 			SetVehicleLivery(vehicle, 3)
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 			Citizen.Wait(500)
 			SetVehicleFuelLevel(vehicle, 100.0)
-			SetVehicleMaxMods_mechanic(vehicle) 
+			SetVehicleMaxMods_mechanic(vehicle)
 			SetVehicleNumberPlateText(vehicle, "MC" ..plate[1] )
 
-      local playerIdentifier = ESX.GetPlayerData().identifier 
+      local playerIdentifier = ESX.GetPlayerData().identifier
 			local vehicleModel = GetEntityModel(CurrentActionData.vehicle)
 			local vehicleLabel = GetLabelText(GetDisplayNameFromVehicleModel(vehicleModel))
 			local playerPed = PlayerPedId()
@@ -301,7 +293,7 @@ function spawnheliss_mechanic(data, plate, vehicle, station, partNum)
 
       TriggerServerEvent('logVehicleSpawn', xPlayer.name, GetPlayerServerId(PlayerId()), playerIdentifier, vehicleLabel, "MC" .. plate[1], true)
 
-			
+
 
 			TriggerEvent('chat:addMessage', {
 				args = {'^1SYSTEM', 'Heli Ba Plake^2 MC'..plate[1]..' ^0Spawn Shod'}
@@ -316,9 +308,6 @@ function spawnheliss_mechanic(data, plate, vehicle, station, partNum)
 
 end
 
-
-
-
 function OpenMechanicActionsMenu_mechanic(partNum)
   local vehicles = Config_mechanic.Zones.MechanicActions
   ESX.UI.Menu.CloseAll()
@@ -330,20 +319,18 @@ function OpenMechanicActionsMenu_mechanic(partNum)
   local job = ESX.GetPlayerData().job.name
   local steamhex = ESX.GetPlayerData().identifier
   ESX.TriggerServerCallback('esx_society:getVehicles', function(authorizedVehicle)
-    
+
     ESX.TriggerServerCallback('esx_society:GetDivisionsPlayer', function(getdivision)
       dvisionName = nil
 
-      for k,v in pairs(getdivision) do 
-        if v.status and v.job == job then 
-          
+      for k,v in pairs(getdivision) do
+        if v.status and v.job == job then
+
 
           dvisionName = v.name
         end
       end
       ESX.TriggerServerCallback('esx_society:getVehiclesdivision', function(authorizedVehicledivision)
-      
-
 
 
         local found = false
@@ -353,7 +340,7 @@ function OpenMechanicActionsMenu_mechanic(partNum)
           for i = 1, #Vehicles, 1 do
           local found = false
 
-        
+
           if authorizedVehicle ~= nil then
             for _,sharedVeh in ipairs(authorizedVehicle) do
               if found then break end
@@ -362,24 +349,23 @@ function OpenMechanicActionsMenu_mechanic(partNum)
                   found = true
 
 
-                  
                 end
               end
-              
+
             end
           end
 
         end
 
-        if authorizedVehicledivision then 
+        if authorizedVehicledivision then
           table.insert(elements, {label = '------ Division ------', model = nil})
           local nnname = nil
           local Vehicles2 = Config_mechanic.AuthorizedVehicles.Shared
           for i = 1, #Vehicles2, 1 do
             nnname = nil
-            for t,vehs in pairs(authorizedVehicledivision) do 
+            for t,vehs in pairs(authorizedVehicledivision) do
               for k,v in pairs(elements) do
-                if vehs.status and Vehicles2[i].model == vehs.model then 
+                if vehs.status and Vehicles2[i].model == vehs.model then
                   if v.model == vehs.model then
                     nnname = nil
                     break
@@ -389,7 +375,7 @@ function OpenMechanicActionsMenu_mechanic(partNum)
                 end
               end
               if nnname then
-                
+
                 table.insert(elements, {label = Vehicles2[i].label, model = Vehicles2[i].model})
                 break
               end
@@ -405,9 +391,8 @@ function OpenMechanicActionsMenu_mechanic(partNum)
         }, function(data, menu)
           menu.close()
 
-
           local model   = data.current.model
-          
+
           if model then
             if not DoesEntityExist(vehicle) then
 
@@ -420,7 +405,7 @@ function OpenMechanicActionsMenu_mechanic(partNum)
 
                   ESX.TriggerServerCallback('checkPlateInServer', function(plateExists)
                     if plateExists then
-                      
+
                       local alert = lib.alertDialog({
                         header = 'Az In Plake Qablan Estefadeh Shode',
                         content = 'Aya Mikhahid Hazf Shavad?',
@@ -437,7 +422,7 @@ function OpenMechanicActionsMenu_mechanic(partNum)
 
                         Wait(1000)
                         spawnvehicles_mechanic(data, plate, vehicle)
-                        
+
                       else
                         TriggerEvent('chat:addMessage', {
                           args = {'^1SYSTEM', 'Cancel Shod'}
@@ -456,7 +441,7 @@ function OpenMechanicActionsMenu_mechanic(partNum)
                         requestPlate()
                       end
                     end
-                  end, "MC" .. plate[1]) 
+                  end, "MC" .. plate[1])
                 end
               end
               requestPlate()
@@ -470,14 +455,13 @@ function OpenMechanicActionsMenu_mechanic(partNum)
 
           CurrentAction     = 'menu_vehicle_spawner'
           CurrentActionMsg  = _U('vehicle_spawner')
-          -- CurrentActionData = {station = station, partNum = partNum}
-          
+
+
         end)
       end, dvisionName, job)
     end, steamhex)
   end, grade, job)
 end
-
 
 function spawnvehicles_mechanic(data, plate, vehicle)
 	plate[1] = string.upper(plate[1])
@@ -513,19 +497,19 @@ function spawnvehicles_mechanic(data, plate, vehicle)
 					end
 				end
 			end
-			
 
-			
+
+
 			SetVehicleLivery(vehicle, 3)
 			Citizen.Wait(500)
 			SetVehicleLivery(vehicle, 3)
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 			Citizen.Wait(500)
 			SetVehicleFuelLevel(vehicle, 100.0)
-			SetVehicleMaxMods_mechanic(vehicle) 
+			SetVehicleMaxMods_mechanic(vehicle)
 			SetVehicleNumberPlateText(vehicle, "MC" ..plate[1] )
 
-      local playerIdentifier = ESX.GetPlayerData().identifier 
+      local playerIdentifier = ESX.GetPlayerData().identifier
 			local vehicleModel = GetEntityModel(CurrentActionData.vehicle)
 			local vehicleLabel = GetLabelText(GetDisplayNameFromVehicleModel(vehicleModel))
 			local playerPed = PlayerPedId()
@@ -533,7 +517,7 @@ function spawnvehicles_mechanic(data, plate, vehicle)
 
       TriggerServerEvent('logVehicleSpawn', xPlayer.name, GetPlayerServerId(PlayerId()), playerIdentifier, vehicleLabel, "MC" .. plate[1], true)
 
-			
+
 
 			TriggerEvent('chat:addMessage', {
 				args = {'^1SYSTEM', 'Mashin Ba Plake^2 MC'..plate[1]..' ^0Spawn Shod'}
@@ -548,18 +532,15 @@ function spawnvehicles_mechanic(data, plate, vehicle)
 
 end
 
-
 function OpenCloakroomMenu_mechanic()
   ESX.UI.Menu.CloseAll()
     ESX.TriggerServerCallback('esx_society:divisionsPlayer', function(check)
-
-
 
     local elements = {
       {label = _U('work_wear'),      value = 'cloakroom'},
       {label = _U('civ_wear'),       value = 'cloakroom2'},
     }
-  
+
     for k, v in pairs(check) do
 
       if v.status == true then
@@ -567,12 +548,12 @@ function OpenCloakroomMenu_mechanic()
           label = 'Lebas Division',
           diviname = v.name,
           value = 'division_lebas',
-  
+
         })
       end
 
     end
-    
+
 
     ESX.UI.Menu.Open(
       'default', GetCurrentResourceName(), 'mechanic_actions',
@@ -608,7 +589,7 @@ function OpenCloakroomMenu_mechanic()
       end
 
       if data.current.value == 'division_lebas' then
-				
+
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
 					local job =  PlayerData.job.name
 					ESX.TriggerServerCallback('esx_society:getUniformsDivision', function(SkinMale, SkinFemale)
@@ -618,10 +599,9 @@ function OpenCloakroomMenu_mechanic()
 							TriggerEvent('skinchanger:loadClothes', skin, SkinFemale)
 						end
 					end, data.current.diviname, job)
-					
+
 				end)
 			end
-
 
     end,
     function(data, menu)
@@ -633,8 +613,6 @@ function OpenCloakroomMenu_mechanic()
   end)
 end
 
-
-
 function OpenStockMenu_mechanic()
 
   local elements = {
@@ -642,7 +620,7 @@ function OpenStockMenu_mechanic()
     {label = _U('withdraw_stock'), value = 'get_stock'}
   }
 
-  if ESX.GetPlayerData().job.grade >= 10 then 
+  if ESX.GetPlayerData().job.grade >= 10 then
     table.insert(elements, {label = _U('buy_items'), value = 'buy_items'})
   end
 
@@ -656,7 +634,6 @@ function OpenStockMenu_mechanic()
       elements = elements
     },
     function(data, menu)
-     
 
 
       if data.current.value == 'put_stock' then
@@ -680,7 +657,6 @@ function OpenStockMenu_mechanic()
     end
   )
 end
-
 
 function OpenBuyItemsMenu_mechanic()
 
@@ -740,11 +716,9 @@ function OpenBuyItemsMenu_mechanic()
 	end)
 end
 
-
-
 function OpenBossActionsMenu_mechanic()
 
-  
+
   if Config_mechanic.EnablePlayerManagement and PlayerData.job ~= nil and PlayerData.job.grade_name == 'boss' then
     table.insert(elements, {label = _U('boss_actions'), value = 'boss_actions'})
   end
@@ -772,7 +746,7 @@ function OpenBossActionsMenu_mechanic()
       CurrentAction     = 'mechanic_boss_menu'
       CurrentActionMsg  = _U('open_boss')
       CurrentActionData = {}
-	   
+
     end
   )
 end
@@ -781,19 +755,19 @@ function PlayerBlingMenu_mechanic()
 	ESX.UI.Menu.CloseAll()
 	dataplayer = {}
 	local elements = {}
-	local nearbyPlayers = getNearbyPlayers_mechanic(3) 
+	local nearbyPlayers = getNearbyPlayers_mechanic(3)
 	local elements = {}
 	table.insert(elements, {label = "ID"  , value = " " })
 	local playerId22 = GetPlayerServerId(PlayerId())
 	local names = nil
-	
+
 	for _, player in ipairs(nearbyPlayers) do
-		local playerPed = GetPlayerPed(GetPlayerFromServerId(player.id)) 
-		local health = GetEntityHealth(playerPed) 
+		local playerPed = GetPlayerPed(GetPlayerFromServerId(player.id))
+		local health = GetEntityHealth(playerPed)
 		if player.id ~= playerId22 and health ~= 0 then
-			
+
       table.insert(elements, { label = "Player ID : " .. " [" .. player.id .. "]", value = player.id })
-			
+
 		end
 	end
 
@@ -807,14 +781,14 @@ function PlayerBlingMenu_mechanic()
 			elements = elements
 		}, function(data, menu)
 
-			if data.current.value ~= " " then 
-				
+			if data.current.value ~= " " then
+
 				local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
 				if closestPlayer == -1 or closestDistance > 2.0 then
 					ESX.ShowNotification("No players nearby!")
 				else
-					
+
 					local playerid = data.current.value
 
                     ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'billing', {
@@ -822,7 +796,7 @@ function PlayerBlingMenu_mechanic()
                     }, function(data2, menu2)
                         local amount = tonumber(data2.value)
                         if amount == nil then
-                            
+
                         else
                             menu2.close()
                             if closestPlayer == -1 or closestDistance > 3.0 then
@@ -835,46 +809,45 @@ function PlayerBlingMenu_mechanic()
                     end, function(data2, menu2)
                         menu2.close()
                     end)
-					
+
 					stopActiveMarker_mechanic()
-			
-					-- ESX.UI.Menu.CloseAll()
-						
-					
+
+
+
+
 				end
-				
-			
+
+
 		end
 
 
-        
-			
+
 		end, function(data, menu)
 			menu.close()
 
-			
+
 		end, function(data, menu)
 			local tttrp = true
 			stopActiveMarker_mechanic()
 			Wait(5)
-			
+
 			local targetPlayer = GetPlayerPed(GetPlayerFromServerId(data.current.value))
 			activeMarkerThread = true
-			
+
 			local playerId22 = GetPlayerServerId(PlayerId())
 
 			while activeMarkerThread and tttrp do
 				if DoesEntityExist(targetPlayer) then
 					local coords = GetEntityCoords(targetPlayer)
 					if data.current.value ~= " " then
-						
+
 
 						DrawMarker(23, coords.x, coords.y, coords.z-1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7, 0.7, 0.7, 0, 255, 0, 100, false, true, 2, nil, nil, false)
-						
+
 						if IsControlJustPressed(0, 177) or IsControlJustPressed(0, 322) then
 							tttrp = false
 						end
-					else 
+					else
 
 					end
 				else
@@ -882,7 +855,7 @@ function PlayerBlingMenu_mechanic()
 				end
 				Wait(0)
 			end
-			
+
 		end,function()
 
 		end
@@ -902,18 +875,18 @@ AddEventHandler('esx_mechanicjob:OpenMenuDialog', function(player, target, amoun
                 {label = 'Bale', value = 'yes'},
                 {label = 'Kheir', value = 'no'},
             },
-        }, 
+        },
         function(data, menu)
             if data.current.value == 'yes' then
                 TriggerServerEvent('esx_billing:send2Bill2', target, player, 'society_mechanic', _U('mechanic'), amount)
                 TriggerServerEvent("esx_mechanicjob:ChatMessage",target, player, true)
 
-                ESX.UI.Menu.CloseAll()		
+                ESX.UI.Menu.CloseAll()
             elseif data.current.value == 'no' then
-               
+
                 TriggerServerEvent("esx_mechanicjob:ChatMessage",target, player, false)
                 menu.close()
-                												
+
             end
         end
     )
@@ -940,13 +913,12 @@ function getNearbyPlayers_mechanic(radius)
     return players
 end
 
-local activeMarkerTarget = nil 
+local activeMarkerTarget = nil
 function stopActiveMarker_mechanic()
     if activeMarkerThread then
         activeMarkerThread = nil
     end
 end
-
 
 function OpenMobileMechanicActionsMenu_mechanic()
 ESX.TriggerServerCallback('esx_mechanicjob:list', function(tedad)
@@ -957,36 +929,32 @@ ESX.TriggerServerCallback('esx_mechanicjob:list', function(tedad)
     elements = {
       {label = 'Request List ('..tedad..')',   value = 'requests'},
       {label = _U('billing'),       value = 'billing'},
-      --{label = _U('hijack'),        value = 'hijack_vehicle'},
+
       {label = _U('repair'),        value = 'fix_vehicle'},
       {label = _U('clean'),         value = 'clean_vehicle'},
       {label = "Flip",         value = 'flip_vehicle'},
       {label = _U('imp_veh'),       value = 'del_vehicle'},
       {label = "Flatbed",      value = 'dep_vehicle'},
-      --{label = "Spawn Object", value = 'object_spawner'},
-      
-  
-    }
 
+
+
+    }
 
     local isdivision = false
 		local playerjob =  ESX.GetPlayerData().job.name
 		for k, v in pairs(check) do
 			if v.job == playerjob then
-				if #check >= 1 then 
-					
+				if #check >= 1 then
+
 					isdivision = true
 					break
 				end
 			end
 		end
 
-
-		if isdivision then 
+		if isdivision then
 			table.insert(elements, {label = _U('extra_division'), value = 'extra_division'})
 		end
-
-
 
     ESX.UI.Menu.Open(
       'default', GetCurrentResourceName(), 'mobile_mechanic_actions',
@@ -1005,13 +973,13 @@ ESX.TriggerServerCallback('esx_mechanicjob:list', function(tedad)
           else
             ESX.ShowNotification(_U('no_players_nearby'))
           end
-          
+
         end
 
         if data.current.value == 'extra_division' then
 
           OpendivisionsMenu_mechanic()
-  
+
         end
 
         if data.current.value == 'hijack_vehicle' then
@@ -1019,12 +987,12 @@ ESX.TriggerServerCallback('esx_mechanicjob:list', function(tedad)
       local playerPed = GetPlayerPed(-1)
         local vehicle   = ESX.Game.GetVehicleInDirection()
         local coords    = GetEntityCoords(playerPed)
-    
+
         if IsPedSittingInAnyVehicle(playerPed) then
           ESX.ShowNotification(_U('inside_vehicle'))
           return
         end
-    
+
         if DoesEntityExist(vehicle) then
 
           IsBusy = true
@@ -1047,11 +1015,11 @@ ESX.TriggerServerCallback('esx_mechanicjob:list', function(tedad)
             }
           }, function(status)
             if not status then
-        
+
             SetVehicleDoorsLocked(vehicle, 1)
             SetVehicleDoorsLockedForAllPlayers(vehicle, false)
             ClearPedTasksImmediately(playerPed)
-        
+
             ESX.ShowNotification(_U('vehicle_unlocked'))
             IsBusy = false
             TriggerEvent('esx_customItems:checkVehicleStatus', false)
@@ -1061,13 +1029,13 @@ ESX.TriggerServerCallback('esx_mechanicjob:list', function(tedad)
             TriggerEvent('esx_customItems:checkVehicleStatus', false)
             end
           end)
-          
+
         else
           ESX.ShowNotification(_U('no_vehicle_nearby'))
         end
     elseif data.current.value == 'flip_vehicle' then
 
-      
+
       local vehicle = ESX.Game.GetVehicleInDirection(4)
       if vehicle ~= 0 then
         NetworkRequestControlOfEntity(vehicle)
@@ -1081,7 +1049,7 @@ ESX.TriggerServerCallback('esx_mechanicjob:list', function(tedad)
 
     elseif data.current.value == 'requests' then
       OpenReqsList_mechanic()
-                
+
     elseif data.current.value == 'fix_vehicle' then
 
       local playerPed = GetPlayerPed(-1)
@@ -1094,7 +1062,7 @@ ESX.TriggerServerCallback('esx_mechanicjob:list', function(tedad)
         end
 
       if DoesEntityExist(vehicle) then
-      
+
         IsBusy = true
         TriggerEvent('esx_customItems:checkVehicleDistance', vehicle)
         TriggerEvent("mythic_progbar:client:progress", {
@@ -1128,14 +1096,14 @@ ESX.TriggerServerCallback('esx_mechanicjob:list', function(tedad)
             ESX.ShowNotification(_U('vehicle_repaired'))
             IsBusy = false
             TriggerEvent('esx_customItems:checkVehicleStatus', false)
-            
+
           elseif status then
           IsBusy = false
           TriggerEvent('esx_customItems:checkVehicleStatus', false)
           end
         end)
-      
-        
+
+
       else
         ESX.ShowNotification(_U('no_vehicle_nearby'))
       end
@@ -1173,19 +1141,19 @@ ESX.TriggerServerCallback('esx_mechanicjob:list', function(tedad)
 
             SetVehicleDirtLevel(vehicle, 0)
             ClearPedTasksImmediately(playerPed)
-            
-        
+
+
             ESX.ShowNotification(_U('vehicle_cleaned'))
             IsBusy = false
             TriggerEvent('esx_customItems:checkVehicleStatus', false)
-        
+
             elseif status then
             ClearPedTasksImmediately(playerPed)
             IsBusy = false
             TriggerEvent('esx_customItems:checkVehicleStatus', false)
             end
-          end)  
-            
+          end)
+
         else
           ESX.ShowNotification(_U('no_vehicle_nearby'))
         end
@@ -1198,7 +1166,7 @@ ESX.TriggerServerCallback('esx_mechanicjob:list', function(tedad)
             local de = 0
             for k , v in pairs(ESX.Game.GetVehicles()) do
               if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()),GetEntityCoords(v)) <= 20 then
-                if IsVehicleModel(v, towmodel) then 
+                if IsVehicleModel(v, towmodel) then
                   vehicle = v
                 else
                   if IsEntityAttachedToAnyVehicle(v) then
@@ -1218,32 +1186,32 @@ ESX.TriggerServerCallback('esx_mechanicjob:list', function(tedad)
                 end
               end
         local elements = {}
-        
+
       for k , v in pairs(vehicles) do
         table.insert(elements, {label = v.label, value = "yes" , VEH  = v.vehicle })
-          
+
       ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'plate_lists', {
-        
+
         title    = "Plak Ha",
         align    = 'bottom-right',
         elements = elements
       }, function(data2, menu2)
-        
 
-        
-        
-        
+
+
+
+
         if data2.current.value == 'yes' then
           AttachVeh(data2.current.VEH)
           menu2.close()
-        
+
         end
         end, function(data2, menu2)
           menu2.close()
         end)
-        
+
         end
-        
+
             elseif de ~= 0 then
               if RequestControl(de) and RequestControl(vehicle) then
                 AttachEntityToEntity(de, vehicle, 20, -0.5, -12.0, 1.0, 0.0, 0.0, 0.0, false, false, false, false, 20, true)
@@ -1252,7 +1220,7 @@ ESX.TriggerServerCallback('esx_mechanicjob:list', function(tedad)
                 ESX.ShowNotification('Yek moshkel dar detach kardan be vojoud amade')
               end
             end
-        
+
         elseif data.current.value == 'del_vehicle' then
 
           local ped = GetPlayerPed(-1)
@@ -1296,7 +1264,7 @@ ESX.TriggerServerCallback('esx_mechanicjob:list', function(tedad)
           ESX.ShowNotification(_U('must_seat_driver'))
           end
         else
-          
+
           local vehicle = ESX.Game.GetVehicleInDirection()
 
           if DoesEntityExist(vehicle) then
@@ -1329,14 +1297,14 @@ ESX.TriggerServerCallback('esx_mechanicjob:list', function(tedad)
                 TriggerEvent('esx_customItems:checkVehicleStatus', false)
               end
             end)
-          
+
           else
           ESX.ShowNotification(_U('must_near'))
           end
         end
       end
     end
-    
+
         if data.current.value == 'object_spawner' then
       local playerPed = PlayerPedId()
 
@@ -1396,12 +1364,11 @@ end
 function OpenGetStocksMenu_mechanic()
   ESX.TriggerServerCallback('esx_mechanicjob:getStockItems', function(items)
 
-
 		local grade = PlayerData.job.grade
 		local job = PlayerData.job.name
 		ESX.TriggerServerCallback('esx_society:getItems', function(authorizedItems)
 		local elements = {}
-		
+
 
 		for i = 1, #items, 1 do
 			local found = false
@@ -1460,7 +1427,7 @@ function OpenGetStocksMenu_mechanic()
     function(data, menu)
 		menu.close()
     end)
-	  
+
 end, grade, job)
   end)
 
@@ -1538,7 +1505,6 @@ ESX.TriggerServerCallback('esx_mechanicjob:getPlayerInventory', function(invento
   end)
 
 end
-
 
 RegisterNetEvent('esx_mechanicjob:onHijack')
 AddEventHandler('esx_mechanicjob:onHijack', function()
@@ -1647,8 +1613,8 @@ RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
   PlayerData.job = job
 
-  -- Citizen.Wait(5000)
-	-- TriggerServerEvent('esx_mechanicjob:forceBlip')
+
+
 end)
 
 AddEventHandler('esx_mechanicjob:hasEnteredMarker', function(zone)
@@ -1667,22 +1633,21 @@ AddEventHandler('esx_mechanicjob:hasEnteredMarker', function(zone)
     CurrentAction     = 'heli_actions2_menu'
     CurrentActionMsg  = _U('open_actions_heli')
 
-    
-	
-	
+
+
+
   elseif zone == 'MechanicCloark' or zone == 'MechanicCloark2' then
     CurrentAction     = 'mechanic_cloark_menu'
     CurrentActionMsg  = _U('open_cloark')
 	  CurrentActionData = {}
-	
+
   elseif zone == 'MechanicStock' or zone == 'MechanicStock2' then
     CurrentAction     = 'mechanic_stock_menu'
     CurrentActionMsg  = _U('open_stock')
 	  CurrentActionData = {}
 
-
   elseif zone == 'VehicleDeleter' or zone == 'VehicleDeleter2' then
-  
+
     local ped = PlayerPedId()
     if IsPedInAnyVehicle(ped) then
 
@@ -1698,7 +1663,7 @@ AddEventHandler('esx_mechanicjob:hasEnteredMarker', function(zone)
     CurrentAction     = 'request_gascan'
     CurrentActionMsg  = "Baraye Daryaft Benzin ~INPUT_CONTEXT~ Ra Feshar Dahid"
     CurrentActionData = {}
-  
+
   elseif zone == "BossActions" then
     CurrentAction     = 'mechanic_boss_menu'
     CurrentActionMsg  = _U('open_boss')
@@ -1708,14 +1673,13 @@ AddEventHandler('esx_mechanicjob:hasEnteredMarker', function(zone)
 end)
 
 
-	
 AddEventHandler('esx_mechanicjob:hasExitedMarker', function(zone)
   CurrentAction = nil
   CurrentActionData = nil
   ESX.UI.Menu.CloseAll()
 end)
 
-  
+
 AddEventHandler('esx_mechanicjob:hasEnteredEntityZone', function(entity)
 
   local playerPed = PlayerPedId()
@@ -1746,7 +1710,6 @@ AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
   TriggerEvent('esx_phone:addSpecialContact', specialContact.name, specialContact.number, specialContact.base64Icon)
 end)
 
--- Create Blipss
 Citizen.CreateThread(function()
   for i,v in ipairs(Config_mechanic.Blips) do
     local blip = AddBlipForCoord(v.x, v.y, v.z)
@@ -1761,7 +1724,6 @@ Citizen.CreateThread(function()
   end
 end)
 
--- Display markers
 Citizen.CreateThread(function()
   while true do
     Citizen.Wait(1)
@@ -1770,14 +1732,14 @@ Citizen.CreateThread(function()
       local coords, letSleep = GetEntityCoords(PlayerPedId()), true
 
       for k,v in pairs(Config_mechanic.Zones) do
-	  
+
         if(v.Type ~= -1 and GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true) < Config_mechanic.DrawDistance) then
           DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, true, true, 2, true, false, false, false)
           letSleep = false
         end
       end
-	 
-		
+
+
       if letSleep then
 			Citizen.Wait(500)
       end
@@ -1787,8 +1749,8 @@ Citizen.CreateThread(function()
     end
   end
 end)
-  
--- Enter / Exit marker events
+
+
 Citizen.CreateThread(function()
   while true do
     Citizen.Wait(500)
@@ -1816,7 +1778,7 @@ Citizen.CreateThread(function()
   end
 end)
 
-  
+
 Citizen.CreateThread(function()
 
   local trackedEntities = {
@@ -1873,7 +1835,6 @@ Citizen.CreateThread(function()
   end
 end)
 
--- Key Controls
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(10)
@@ -1899,13 +1860,13 @@ Citizen.CreateThread(function()
 						  CurrentAction     = 'mechanic_boss_menu'
 						  CurrentActionMsg  = _U('open_boss')
 						  CurrentActionData = {}
-					  end, { wash = false }) -- disable washing money
-                --OpenBossActionsMenu_mechanic()
+					  end, { wash = false })
+
             elseif CurrentAction == 'delete_vehicle' then
 
-              local model = GetEntityModel(CurrentActionData.vehicle) 
-            --  if IsAllowedVehicle_mechanic(exports["ScriptPack"]:GetVehicles(PlayerData.job.name), model)  then
-                
+              local model = GetEntityModel(CurrentActionData.vehicle)
+
+
 					local vehicleModel = GetEntityModel(CurrentActionData.vehicle)
 					local vehicleLabel = GetLabelText(GetDisplayNameFromVehicleModel(vehicleModel))
 					local plate = GetVehicleNumberPlateText(CurrentActionData.vehicle)
@@ -1913,18 +1874,18 @@ Citizen.CreateThread(function()
 					local playerPed = PlayerPedId()
                     local xPlayer = ESX.GetPlayerData()
 					ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
-	
+
 				TriggerServerEvent('logVehicleSpawn', xPlayer.name, GetPlayerServerId(PlayerId()), playerIdentifier, vehicleLabel, plate, false)
-            --  else
-                --ESX.ShowNotification("In mashin, mashin mechanici nist")
-             -- end
+
+
+
 
             elseif CurrentAction == 'remove_entity' then
               ESX.Game.DeleteObject(CurrentActionData.entity)
             elseif CurrentAction == 'request_gascan' then
               TriggerServerEvent('esx_mechanicjob:buypetrol')
             end
-                
+
             CurrentAction = nil
           end
 
@@ -1934,7 +1895,6 @@ Citizen.CreateThread(function()
 
   end
 end)
-
 
 AddEventHandler("onKeyDown", function(key)
 	if key == "f6" and (PlayerData.job and PlayerData.job.name == "mechanic") and ESX.GetPlayerData()['IsDead'] ~= 1 then
@@ -1960,7 +1920,7 @@ function IsAllowedVehicle_mechanic(table, val)
 	return false
 end
 
-local vehicleclass = 
+local vehicleclass =
 {
     [0] = "Compact",
     [1] = "Sedan",
@@ -2013,7 +1973,7 @@ RegisterCommand('getclass', function(source, args)
 
 end)
 
- 
+
 RegisterNetEvent('esx_mechanicjob:openreqs')
 AddEventHandler('esx_mechanicjob:openreqs', function(source)
 	OpenReqsList_mechanic()
@@ -2063,7 +2023,7 @@ end)
 
 function OpenReqsList_mechanic()
 	ESX.TriggerServerCallback('esx_mechanicjob:getReqs', function(reqs)
-	
+
 	local elements = {}
 	for i=1, #reqs, 1 do
 
@@ -2079,52 +2039,52 @@ function OpenReqsList_mechanic()
 			accept = reqs[i].accept,
 		})
 	end
-	
+
 
  	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'reqs_lists', {
-		
+
 		title    = "Requests",
 		align    = 'bottom-right',
 		elements = elements
 	}, function(data, menu)
-		
+
 		local elements = {}
 		local id = data.current.reqid
 		ESX.TriggerServerCallback('esx_mechanicjob:acceptername', function(acceptername, accepterID)
 		ESX.TriggerServerCallback('esx_mechanicjob:icname', function(name)
 		table.insert(elements,{label = "RequestId : ".. data.current.reqid ,value = "nil"})
-		
+
 		table.insert(elements,{label = "Accept status : "..data.current.status ,value = "nil"})
 
-		
-		
+
+
     if data.current.accept == "open" then
       table.insert(elements,{label = "Accept", value = "yes"})
       table.insert(elements,{label = "Request by : "..data.current.icname.." ("..data.current.id..")", value = "nil"})
     else
-    
+
       table.insert(elements,{label = "Accepted by : ".. acceptername.." ("..accepterID..")", value = "nil"})
       table.insert(elements,{label = "Request by : "..data.current.icname.." ("..data.current.id..")", value = "nil"})
-    
+
     end
-    
+
     if acceptername == name then
       table.insert(elements,{label = "Decline",value = "decline"})
       table.insert(elements,{label = "Finish",value = "finish"})
     end
-		
+
 		table.insert(elements,{label = "Pin location",value = "loc"})
 		table.insert(elements,{label = "Call", value = "call"})
 		table.insert(elements,{label = "Khandan Payam",value = "matn"})
-		
-		
+
+
  		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'reqs_list', {
-		
+
 				title    = "Request",
 				align    = 'bottom-right',
 				elements = elements
 				}, function(data2, menu2)
-			
+
 				menu2.close()
  				if data2.current.value == 'yes' then
 					TriggerServerEvent('esx_mechanicjob:areqs', data.current.reqid)
@@ -2137,15 +2097,15 @@ function OpenReqsList_mechanic()
 					ESX.UI.Menu.CloseAll()
 				elseif data2.current.value == 'decline' then
 					TriggerServerEvent("esx_mechanicjob:decline", data.current.reqid)
-					
+
 				elseif data2.current.value == 'matn' then
 					TriggerServerEvent("esx_mechanicjob:chat", data.current.text)
-					
+
 				elseif data2.current.value == 'loc' then
 					local Ped = GetPlayerPed(GetPlayerFromServerId(data.current.id))
 					local coords = GetEntityCoords(Ped)
 					SetNewWaypoint(coords)
-					
+
 				end
 			end, function(data2, menu2)
 				menu2.close()
@@ -2154,168 +2114,11 @@ function OpenReqsList_mechanic()
 			end, id)
  		end, function(data, menu)
 			menu.close()
-			
+
 		end)
-		
+
 	end)
 end
-
-
-
-
-------------------------------- Impond --------------------------------
-
--- ESX = nil
-
--- -- دریافت ESX
--- Citizen.CreateThread(function()
---     while ESX == nil do
---         TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
---         Citizen.Wait(0)
---     end
-
---     GetPlayerJob() -- فراخوانی تابع برای دریافت اطلاعات شغل
--- end)
-
--- local mechanicJob = "mechanic" -- نام شغل mechanic
--- local flatbedModel = GetHashKey("flatbed") -- مدل ماشین flatbed
--- local unloadKey = 38 -- کلید E
--- local rewardAmount = 5000 -- مقدار پول پاداش
--- local markerCoords = vector3(-708.388, -1437.81, 6.0585) -- مختصات مارکر ثابت
--- local markerActionDistance = 2.0 -- فاصله برای فعال کردن کلید E
--- local playerJob = nil -- متغیر برای ذخیره اطلاعات شغل بازیکن
-
--- -- دریافت اطلاعات شغل
--- function GetPlayerJob()
---     ESX.TriggerServerCallback('esx:getPlayerData', function(data)
---         if data and data.job then
---             playerJob = data.job.name
---             --print("شغل بازیکن: " .. playerJob) -- چاپ شغل بازیکن
---         else
---            -- print("خطا: Unable to retrieve player job data.")
---         end
---     end)
--- end
-
--- -- بررسی مجوز بازیکن
--- local function isPlayerAllowed()
---     local playerData = ESX.GetPlayerData()
---     if playerData and playerData.job then
---         return playerData.job.name == mechanicJob
---     end
---     return false
--- end
-
--- -- بررسی اینکه بازیکن سوار flatbed است
--- function IsPlayerInFlatbed()
---     local playerPed = PlayerPedId()
---     local vehicle = GetVehiclePedIsIn(playerPed, false)
---     return IsVehicleModel(vehicle, flatbedModel)
--- end
-
--- -- بررسی اینکه flatbed ماشین حمل می‌کند
--- function IsFlatbedCarryingVehicle(flatbed)
---     local offset = GetOffsetFromEntityInWorldCoords(flatbed, 0.0, -5.0, 0.0)
---     local vehicleInFront = GetClosestVehicle(offset.x, offset.y, offset.z, 5.0, 0, 70)
---     return vehicleInFront ~= 0
--- end
-
--- -- حذف (DV) ماشین از flatbed با نوار پیشرفت
--- function DeleteVehicleWithProgress(flatbed)
---     local offset = GetOffsetFromEntityInWorldCoords(flatbed, 0.0, -5.0, 0.0)
---     local attachedVehicle = GetClosestVehicle(offset.x, offset.y, offset.z, 5.0, 0, 70)
-
---     if attachedVehicle ~= 0 then
---         -- نوار پیشرفت 10 ثانیه‌ای
---         TriggerEvent("mythic_progbar:client:progress", {
---             name = "delete_vehicle",
---             duration = 10000, -- مدت زمان نوار پیشرفت به میلی‌ثانیه
---             label = "Dar Hale Impound Mashin",
---             useWhileDead = false,
---             canCancel = true,
---             controlDisables = {
---                 disableMovement = true,
---                 disableCarMovement = true,
---                 disableMouse = false,
---                 disableCombat = true,
---             },
---             animation = {
---                 task = "",
---             },
---             prop = {}
---         }, function(status)
---             if not status then
---                 -- اگر نوار پیشرفت موفق بود، ماشین را حذف کن
---                 DeleteEntity(attachedVehicle)
---                 -- پیام در چت به بازیکن
---                 TriggerEvent('chat:addMessage', {
---                     color = {0, 255, 0},
---                     multiline = true,
---                     args = {"System", "Mashin Impound Shod"}
---                 })
---                 TriggerEvent("esx_mechanicjob:Impond")
-
---                 -- دادن 5000 دلار به بازیکن
---                 TriggerServerEvent('givePlayerReward', rewardAmount)
---             else
---                 -- اگر بازیکن نوار پیشرفت را لغو کرد
---                 TriggerEvent('chat:addMessage', {
---                     color = {255, 0, 0},
---                     multiline = true,
---                     args = {"System", "Impound Mashin Cancel Shod"}
---                 })
---             end
---         end)
---     end
--- end
-
--- -- حلقه اصلی برای بررسی شرایط
--- Citizen.CreateThread(function()
---     while true do
---         Citizen.Wait(0)
-
---         if isPlayerAllowed() then
---             local playerPed = PlayerPedId()
---             local vehicle = GetVehiclePedIsIn(playerPed, false)
-
---             -- رسم مارکر در مختصات ثابت
---             DrawMarker(24, markerCoords.x, markerCoords.y, markerCoords.z - 1.0, 0, 0, 0, 0, 0, 0, 1.5, 1.5, 1.5, 0, 255, 0, 100, false, true, 2, false, nil, nil, false)
-
---             -- بررسی فاصله بازیکن تا مارکر
---             if #(GetEntityCoords(playerPed) - markerCoords) < markerActionDistance then
---                 -- نمایش راهنما برای زدن E
---                 ESX.ShowHelpNotification("flatbed ~INPUT_CONTEXT~ Braye Impound Mashin")
-
---                 -- وقتی کلید E فشرده می‌شود
---                 if IsControlJustPressed(1, unloadKey) then
---                     -- اگر بازیکن سوار flatbed است
---                     if IsPlayerInFlatbed() then
---                         -- اگر flatbed ماشین حمل می‌کند
---                         if IsFlatbedCarryingVehicle(vehicle) then
---                             DeleteVehicleWithProgress(vehicle)
---                         else
---                             -- نمایش پیام خطا در چت
---                             TriggerEvent('chat:addMessage', {
---                                 color = {255, 0, 0},
---                                 multiline = true,
---                                 args = {"System", "Shoma Mashini braye Impound Nadarid"}
---                             })
---                         end
---                     else
---                         -- نمایش پیام خطا اگر سوار flatbed نبود
---                         TriggerEvent('chat:addMessage', {
---                             color = {255, 0, 0},
---                             multiline = true,
---                             args = {"System", "Shoma Savar Flatbed Nistid"}
---                         })
---                     end
---                 end
---             end
---         end
---     end
--- end)
-
-
 
 function OpendivisionsMenu_mechanic()
   ESX.TriggerServerCallback('esx_society:divisionsPlayer', function(check)
@@ -2356,6 +2159,4 @@ function OpendivisionsMenu_mechanic()
       end)
   end)
 end
-
-
 

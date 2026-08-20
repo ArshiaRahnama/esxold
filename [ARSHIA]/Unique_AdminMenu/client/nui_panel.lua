@@ -1,20 +1,10 @@
--- ============================================================================
--- Unique_AdminMenu / client/nui_panel.lua
--- Drives the dark-themed NUI: the always-on stats corner widget and the F7
--- radial quick-actions menu. The Report Queue (F12) uses ox_lib's own
--- context menu (lib.registerContext/lib.showContext) instead of a custom
--- panel, since ox_lib is already a dependency here - see OpenReportsMenu()
--- below.
--- ============================================================================
+
 
 InAdminNui = false
 
 RegisterKeyMapping('adminradial', 'Open Admin Quick Actions Radial Menu', 'keyboard', 'F7')
 RegisterKeyMapping('adminreports', 'Open Admin Report Queue', 'keyboard', 'F12')
 
--- ============================================================================
--- REPORT QUEUE - ox_lib context menu
--- ============================================================================
 function OpenReportsMenu()
     if not aduty then return end
     ESX.TriggerServerCallback('Unique_AdminMenu:GetReports', function(reports)
@@ -25,8 +15,8 @@ function OpenReportsMenu()
             local statusIcon = r.status == 'open' and 'circle-exclamation' or 'clock'
             local statusColor = r.status == 'open' and '#c85450' or '#d6a83a'
 
-            -- Register a tiny per-report submenu with the actual Accept/Close
-            -- actions, wired to the same safe /ar and /cr commands as before.
+
+
             lib.registerContext({
                 id = 'report_actions_' .. id,
                 title = ('Report #%s'):format(id),
@@ -151,10 +141,6 @@ RegisterNUICallback('radialAction', function(payload, cb)
     cb('ok')
 end)
 
--- Stats widget: refreshes every 8s while the player is an on-duty admin.
--- Also watches for the open-report count going UP between polls to fire a
--- sound + on-screen toast, so new reports don't just sit silently in a
--- corner number.
 local lastOpenReports = 0
 Citizen.CreateThread(function()
     while true do

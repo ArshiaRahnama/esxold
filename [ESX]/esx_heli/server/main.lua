@@ -20,7 +20,7 @@ ESX.RegisterServerCallback('esx_heli:buyAir', function(source, cb, vehicleProps)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local price   = getPriceFromModel(vehicleProps.model)
 
-	-- vehicle model not found
+
 	if price == 0 then
 		print(('esx_heli: %s attempted to exploit the shop! (invalid vehicle model)'):format(xPlayer.identifier))
 		cb(false)

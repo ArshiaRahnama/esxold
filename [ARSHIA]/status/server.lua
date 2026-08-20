@@ -13,10 +13,6 @@ Citizen.CreateThread(function()
     end
 end)
 
--- =========================================================
--- Save Hunger / Thirst
--- =========================================================
-
 RegisterServerEvent("saveHungerThirst")
 AddEventHandler("saveHungerThirst", function(hunger, thirst)
     local source = source
@@ -47,10 +43,6 @@ AddEventHandler("saveHungerThirst", function(hunger, thirst)
         }
     )
 end)
-
--- =========================================================
--- Get Player Status
--- =========================================================
 
 RegisterServerEvent("getPlayerStatus")
 AddEventHandler("getPlayerStatus", function()
@@ -96,10 +88,6 @@ AddEventHandler("getPlayerStatus", function()
         end
     )
 end)
-
--- =========================================================
--- Reload Player Data
--- =========================================================
 
 ESX.RegisterServerCallback('reloaddata', function(source, cb)
 

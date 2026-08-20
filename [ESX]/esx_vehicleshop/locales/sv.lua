@@ -1,5 +1,5 @@
 Locales['sv'] = {
-  -- global menus
+
   ['not_enough_in_society']   = 'det finns inte tillräckligt många ~r~ det föremålet~s~ i förrådet!',
   ['player_cannot_hold']      = 'du har ~r~inte~s~ tillräckligt mycket~y~plats~s~ på dig!',
   ['vehicle_belongs']         = 'fordonet med reg numret ~y~%s~s~ tillhör nu ~b~dig~s~',
@@ -56,7 +56,7 @@ Locales['sv'] = {
   ['have_deposited']          = 'du har lagt in ~y~x%s~s~ ~b~%s~s~',
   ['boss_actions']            = 'chef handlingar',
 
-  -- sold vehicles
+
   ['boss_sold']               = 'lista av sålda fordon',
   ['customer_client']         = 'kund',
   ['customer_model']          = 'bil modell',

@@ -5,7 +5,7 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 local Vehicles
 local VehiclesInWatingList = {}
 
-function GetVehicleInList(vehicle) 
+function GetVehicleInList(vehicle)
 	if VehiclesInWatingList[vehicle] then
 		return vehicle
 	end
@@ -15,7 +15,7 @@ end
 RegisterServerEvent('esx_lscustom:buyMod')
 AddEventHandler('esx_lscustom:buyMod', function(price, vehicle)
 	local _source = source
-	local k = GetVehicleInList(vehicle) 
+	local k = GetVehicleInList(vehicle)
 	price = tonumber(price)
 	if k then
 		VehiclesInWatingList[k].price = VehiclesInWatingList[k].price + price
@@ -77,13 +77,11 @@ ESX.RegisterServerCallback('esx_lscustom:checkStatus', function(source, cb, vehi
 	end
 end)
 
-
 RegisterServerEvent('esx_lscustom:NotifyMechanicsChat')
 AddEventHandler('esx_lscustom:NotifyMechanicsChat', function(plate, coords)
     local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	local playerName = xPlayer.get('name')
-
 
     local players = ESX.GetPlayers()
 
@@ -96,10 +94,6 @@ AddEventHandler('esx_lscustom:NotifyMechanicsChat', function(plate, coords)
         end
     end
 end)
-
-
-
-
 
 RegisterServerEvent('esx_lscustom:Removecustomcoupon')
 AddEventHandler('esx_lscustom:Removecustomcoupon', function(plate)
@@ -114,7 +108,6 @@ AddEventHandler('esx_lscustom:Removecustomcoupon', function(plate)
     end
 end)
 
--- تعمیر ماشین و آزادسازی آن
 RegisterNetEvent('esx_lscustom:customVehicleCupon')
 AddEventHandler('esx_lscustom:customVehicleCupon', function(plate)
     local playerPed = GetPlayerPed(-1)
@@ -125,8 +118,6 @@ AddEventHandler('esx_lscustom:customVehicleCupon', function(plate)
     SetVehicleUndriveable(vehicle, false)
     FreezeEntityPosition(vehicle, false)
 end)
-
-
 
 ESX.RegisterServerCallback('esx_lscustom:PayVehicleOrders', function(source, cb, vehicle, payWithBank)
 	xPlayer = ESX.GetPlayerFromId(source)

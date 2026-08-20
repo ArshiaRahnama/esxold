@@ -1,6 +1,4 @@
--- Vehicle status HUD (Benzin / Engine / Salamate Motor) — shows ONLY above the vehicle while
--- it's on display in the garage preview camera (currentVeh). Disappears the instant you spawn
--- it out or close the menu (currentVeh becomes nil), and never shows while driving in the world.
+
 
 local function GetFuelPercent(vehicle)
     local ok, fuel = pcall(function() return exports['LegacyFuel']:GetFuel(vehicle) end)

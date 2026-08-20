@@ -4,13 +4,11 @@ local function exportHandler(exportName, func)
     end)
 end
 
----@param options table
----@return table
 local function convert(options)
     local distance = options.distance
     options = options.options
 
-    -- People may pass options as a hashmap (or mixed, even)
+
     for k, v in pairs(options) do
         if type(k) ~= 'number' then
             table.insert(options, v)

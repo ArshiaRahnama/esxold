@@ -24,11 +24,11 @@ ESX.StartPayCheck = function()
 
 			if gsalary > 0 then
 				TriggerEvent('gangaccount:getGangAccount', 'gang_' .. string.lower(gang), function(account)
-					-- if account.money >= gsalary then 
+
 						xPlayer.addBank(gsalary)
-						-- account.removeMoney(gsalary)
+
 						TriggerClientEvent('esx:showAdvancedNotification', xPlayer.source, 'Gang House', 'Payame Daryafte Hoghogh', 'Mablaqe Daryafti: '.. gsalary, 'CHAR_MP_DETONATEPHONE', 9)
-					-- end
+
 				end)
 			end
 
@@ -41,8 +41,4 @@ ESX.StartPayCheck = function()
 	SetTimeout(Config.PaycheckInterval, payCheck)
 
 end
-
-
-
-
 

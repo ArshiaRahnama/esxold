@@ -1,7 +1,4 @@
 
--- Vehicle warehouse
--- Upper: 994.5925, -3002.594, -39.64699
--- Lower: 969.5376, -3000.411, -48.64689
 
 exports('GetImportVehicleWarehouseObject', function()
     return ImportVehicleWarehouse
@@ -29,7 +26,7 @@ ImportVehicleWarehouse = {
         },
         Details = {
             floorHatch = "car_floor_hatch",
-            doorBlocker = "door_blocker",       -- Invisible wall
+            doorBlocker = "door_blocker",
             Enable = function (details, state, refresh)
                 SetIplPropState(ImportVehicleWarehouse.Upper.interiorId, details, state, refresh)
             end

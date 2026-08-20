@@ -20,7 +20,7 @@ AddEventHandler('mumbleConnected', function(address, isReconnecting)
 		GetConvarInt('voice_hideEndpoints', 1) == 1 and 'HIDDEN' or address, isReconnecting)
 
 	logger.log('Connecting to mumble, setting targets.')
-	-- don't try to set channel instantly, we're still getting data.
+
 	local voiceModeData = Cfg.voiceModes[mode]
 	LocalPlayer.state:set('proximity', {
 		index = mode,
@@ -38,7 +38,6 @@ AddEventHandler('mumbleDisconnected', function(address)
 		GetConvarInt('voice_hideEndpoints', 1) == 1 and 'HIDDEN' or address)
 end)
 
--- TODO: Convert the last Cfg to a Convar, while still keeping it simple.
 AddEventHandler('pma-voice:settingsCallback', function(cb)
 	cb(Cfg)
 end)

@@ -94,7 +94,7 @@ AddEventHandler("cctv:startcamera", function(camNumber)
 	local z = CCTVCamLocations[camNumber]["z"]
 	local h = CCTVCamLocations[camNumber]["h"]
 
-	--print("starting cam")
+
 	inCam = true
 
 	SetTimecycleModifier("heliGunCam")
@@ -106,7 +106,7 @@ AddEventHandler("cctv:startcamera", function(camNumber)
 
 	local lPed = PlayerPedId()
 	cctvCam = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
-	SetCamCoord(cctvCam,x,y,z+1.2)						
+	SetCamCoord(cctvCam,x,y,z+1.2)
 	SetCamRot(cctvCam, -15.0,0.0,h)
 	SetCamFov(cctvCam, 110.0)
 	RenderScriptCams(true, false, 0, 1, 0)
@@ -115,8 +115,8 @@ AddEventHandler("cctv:startcamera", function(camNumber)
 	PopScaleformMovieFunctionVoid()
 
 	while inCam do
-		SetCamCoord(cctvCam,x,y,z+1.2)						
-		-- SetCamRot(cctvCam, -15.0,0.0,h)
+		SetCamCoord(cctvCam,x,y,z+1.2)
+
 		PushScaleformMovieFunction(scaleform, "SET_ALT_FOV_HEADING")
 		PushScaleformMovieFunctionParameterFloat(GetEntityCoords(h).z)
 		PushScaleformMovieFunctionParameterFloat(1.0)
@@ -131,7 +131,7 @@ AddEventHandler("cctv:startcamera", function(camNumber)
 	SetScaleformMovieAsNoLongerNeeded(scaleform)
 	DestroyCam(cctvCam, false)
 	SetNightvision(false)
-	SetSeethrough(false)	
+	SetSeethrough(false)
 
 end)
 

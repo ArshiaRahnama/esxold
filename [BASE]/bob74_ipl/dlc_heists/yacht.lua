@@ -1,5 +1,4 @@
 
--- Heist Yatch: -2043.974,-1031.582, 11.981
 
 exports('GetHeistYachtObject', function()
     return HeistYacht
@@ -29,18 +28,18 @@ HeistYacht = {
             local handle = GetClosestObjectOfType(-2023.773, -1038.0, 5.40, 5.0, HeistYacht.Water.modelHash, false, false, false)
 
             if (state) then
-                -- Enable
+
                 if (handle == 0) then
                     RequestModel(HeistYacht.Water.modelHash)
                     while not HasModelLoaded(HeistYacht.Water.modelHash) do
                         Wait(1)
                     end
-        
+
                     local water = CreateObjectNoOffset(HeistYacht.Water.modelHash, -2023.773, -1038.0, 5.40, true, true, false)
                     SetEntityAsMissionEntity(water, false, false)
                 end
             else
-                -- Disable
+
                 if (handle ~= 0) then
                     SetEntityAsMissionEntity(handle, false, false)
                     DeleteEntity(handle)

@@ -1,13 +1,4 @@
--- ============================================================
--- unique_weaponserial / client / main.lua
---
--- Only job here: let the player drop the weapon currently in their
--- hand. Server-side holsters it into a carried 'wpn_<serial>' item,
--- then this reuses esx_inventoryhud's OWN existing, working ground
--- drop system for that exact item -- so pickup/expiry/weight all
--- keep working exactly like every other dropped item, and the serial
--- survives automatically because it's baked into the item name.
--- ============================================================
+
 
 local ESX = nil
 CreateThread(function()

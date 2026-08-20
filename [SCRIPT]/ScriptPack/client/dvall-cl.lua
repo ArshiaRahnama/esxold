@@ -4,20 +4,19 @@ AddEventHandler("esx:delallscaryveh", function ()
     local notdelvehc = 0
 
     for vehicles in EnumerateVehicles() do
-        if (not IsPedAPlayer(GetPedInVehicleSeat(vehicles, -1))) then 
-			SetVehicleHasBeenOwnedByPlayer(vehicles, false) 
+        if (not IsPedAPlayer(GetPedInVehicleSeat(vehicles, -1))) then
+			SetVehicleHasBeenOwnedByPlayer(vehicles, false)
 			SetEntityAsMissionEntity(vehicles, false, false)
-			-- DeleteVehicle(vehicles)
-			ESX.Game.DeleteVehicle(vehicles)	 
+
+			ESX.Game.DeleteVehicle(vehicles)
             if (DoesEntityExist(vehicles)) then ESX.Game.DeleteVehicle(vehicles) DeleteVehicle(vehicles) end
             if (DoesEntityExist(vehicles)) then notdelvehc = notdelvehc + 1 end
         end
-        totalvehc = totalvehc + 1 
+        totalvehc = totalvehc + 1
     end
     local vehfrac = totalvehc - notdelvehc .. " / " .. totalvehc
     Citizen.Trace("You just deleted "..vehfrac.." vehicles in the server!")
 end)
-
 
 local entityEnumerator = {
   __gc = function(enum)
@@ -36,16 +35,16 @@ local function EnumerateEntities(initFunc, moveFunc, disposeFunc)
       disposeFunc(iter)
       return
     end
-    
+
     local enum = {handle = iter, destructor = disposeFunc}
     setmetatable(enum, entityEnumerator)
-    
+
     local next = true
     repeat
       coroutine.yield(id)
       next, id = moveFunc(iter)
     until not next
-    
+
     enum.destructor, enum.handle = nil, nil
     disposeFunc(iter)
   end)

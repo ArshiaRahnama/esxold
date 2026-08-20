@@ -54,7 +54,6 @@ RegisterNetEvent('esx:removeInventoryItem', function(name, count)
     playerItems[name] = count
 end)
 
----@diagnostic disable-next-line: duplicate-set-field
 function utils.hasPlayerGotGroup(filter)
     local _type = type(filter)
     for i = 1, #groups do

@@ -3,7 +3,6 @@ CheckVehicle = false
 local PlayerHasProp = false
 local drunkMuliplier = 0
 
-
 local PlayerProps = {}
 
 Emotes = {
@@ -123,7 +122,7 @@ Emotes = {
        EmoteLoop = true,
        EmoteMoving = true,
    }},
-   
+
 }
 
 Citizen.CreateThread(function()
@@ -138,7 +137,7 @@ AddEventHandler('esx_basicneeds:playAnim', function(name)
 	local name = name
 
 	OnEmotePlay(Emotes[name])
-	
+
 	if name == "soda" or name == "coffee" or name == "tea" or name == "whiskey" or name == "wine" or name == "beer" then
 		Citizen.Wait(10000)
 		DestroyAllProps()
@@ -197,8 +196,6 @@ AddEventHandler('esx_basicneeds:playAnim', function(name)
 	end
 end)
 
-
-
 RegisterNetEvent('esx_customItems:useArmor')
 AddEventHandler('esx_customItems:useArmor', function()
 
@@ -222,7 +219,7 @@ AddEventHandler('esx_customItems:useArmor', function()
             model = "prop_bodyarmour_03",
         }
 	}, function(status)
-		
+
 		if not status then
 
 			ClearPedTasksImmediately(PlayerPedId())
@@ -241,22 +238,19 @@ AddEventHandler('esx_customItems:useArmor', function()
 					ESX.ShowNotification("~h~Shoma armor nadarid!")
 				end
 			end)
-		
+
 		elseif status then
 		  ClearPedTasksImmediately(PlayerPedId())
 		end
-		
+
 	end)
 
 end)
 
-
-
-
 RegisterNetEvent('esx_customItems:useSianor')
 AddEventHandler('esx_customItems:useSianor', function()
-		
-		
+
+
 		TriggerEvent("mythic_progbar:client:progress", {
 		name = "Sianor",
 		duration = 4500,
@@ -282,7 +276,7 @@ AddEventHandler('esx_customItems:useSianor', function()
 			SetEntityHealth(PlayerPedId(), 0)
 			Citizen.Wait (2700)
 			SetEntityHealth(PlayerPedId(), 0)
-			ESX.ShowNotification("~HUD_COLOUR_RADAR_DAMAGE~Shoma ~y~<C>Sianor</C> ~HUD_COLOUR_RADAR_DAMAGE~Masraf Kardid Va Mordid!")	
+			ESX.ShowNotification("~HUD_COLOUR_RADAR_DAMAGE~Shoma ~y~<C>Sianor</C> ~HUD_COLOUR_RADAR_DAMAGE~Masraf Kardid Va Mordid!")
 			end
 		end)
 			elseif status then
@@ -294,8 +288,8 @@ end)
 
 RegisterNetEvent('esx_customItems:useLSD')
 AddEventHandler('esx_customItems:useLSD', function()
-		
-		
+
+
 		TriggerEvent("mythic_progbar:client:progress", {
 		name = "LSD",
 		duration = 4800,
@@ -317,8 +311,8 @@ AddEventHandler('esx_customItems:useLSD', function()
 			if not status then
 			ESX.TriggerServerCallback('esx_customItems:removeLSD', function(bool)
 			if bool then
-			--StopResource("weaponry")
-			ESX.ShowNotification("~HUD_COLOUR_RADAR_DAMAGE~Shoma ~y~<C>LSD</C> ~HUD_COLOUR_RADAR_DAMAGE~Masraf Kardid Va Mordid!")	
+
+			ESX.ShowNotification("~HUD_COLOUR_RADAR_DAMAGE~Shoma ~y~<C>LSD</C> ~HUD_COLOUR_RADAR_DAMAGE~Masraf Kardid Va Mordid!")
 			end
 		end)
 			elseif status then
@@ -328,12 +322,9 @@ AddEventHandler('esx_customItems:useLSD', function()
 	end)
 end)
 
-
-
-
 RegisterNetEvent('esx_customItems:useNoshab')
 AddEventHandler('esx_customItems:useNoshab', function()
-		
+
 
 		TriggerEvent("mythic_progbar:client:progress", {
 		name = "Energy",
@@ -359,11 +350,11 @@ AddEventHandler('esx_customItems:useNoshab', function()
 			if not status then
 			ESX.TriggerServerCallback('esx_customItems:removeNoshab', function(bool)
 			if bool then
-			--SetPedShootsAtCoord(PlayerPedId(), 0.0, 0.0, 0.0, 0)
+
 			local health = GetEntityHealth(PlayerPedId())
 			SetEntityHealth(PlayerPedId(), health + 20)
-			
-			ESX.ShowNotification("Shoma ~y~<C>Energyza</C>~s~ Masraf Kardid")	
+
+			ESX.ShowNotification("Shoma ~y~<C>Energyza</C>~s~ Masraf Kardid")
 			end
 		end)
 			elseif status then
@@ -375,8 +366,8 @@ end)
 
 RegisterNetEvent('esx_customItems:useSH')
 AddEventHandler('esx_customItems:useSH', function()
-		
-		
+
+
 		TriggerEvent("mythic_progbar:client:progress", {
 		name = "SH",
 		duration = 30000,
@@ -395,7 +386,7 @@ AddEventHandler('esx_customItems:useSH', function()
 			ESX.TriggerServerCallback('esx_customItems:removeSH', function(bool)
 			if bool then
 
-			ESX.ShowNotification("Shoma ~y~<C>Sandewich</C>~s~ Khordid")	
+			ESX.ShowNotification("Shoma ~y~<C>Sandewich</C>~s~ Khordid")
 			end
 		end)
 			elseif status then
@@ -408,7 +399,7 @@ end)
 
 RegisterNetEvent('esx_customItems:useSF')
 AddEventHandler('esx_customItems:useSF', function()
-		
+
 
 		TriggerEvent("mythic_progbar:client:progress", {
 		name = "SF",
@@ -422,14 +413,14 @@ AddEventHandler('esx_customItems:useSF', function()
 			disableMouse = false,
 			disableCombat = true,
 		}
-		
+
 	}, function(status)
 
 			if not status then
 			ESX.TriggerServerCallback('esx_customItems:removeSF', function(bool)
 			if bool then
 
-			ESX.ShowNotification("Shoma ~y~<C>Sandewich</C>~s~ Khordid")	
+			ESX.ShowNotification("Shoma ~y~<C>Sandewich</C>~s~ Khordid")
 			end
 		end)
 			elseif status then
@@ -440,11 +431,9 @@ AddEventHandler('esx_customItems:useSF', function()
 	end)
 end)
 
-
-
 RegisterNetEvent('esx_customItems:useSS')
 AddEventHandler('esx_customItems:useSS', function()
-		
+
 
 		TriggerEvent("mythic_progbar:client:progress", {
 		name = "SS",
@@ -458,14 +447,14 @@ AddEventHandler('esx_customItems:useSS', function()
 			disableMouse = false,
 			disableCombat = true,
 		}
-		
+
 	}, function(status)
 
 			if not status then
 			ESX.TriggerServerCallback('esx_customItems:removeSS', function(bool)
 			if bool then
 
-			ESX.ShowNotification("Shoma ~y~<C>Sandewich</C>~s~ Khordid")	
+			ESX.ShowNotification("Shoma ~y~<C>Sandewich</C>~s~ Khordid")
 			end
 		end)
 			elseif status then
@@ -478,7 +467,7 @@ end)
 
 RegisterNetEvent('esx_customItems:useSibp')
 AddEventHandler('esx_customItems:useSibp', function()
-		
+
 
 		TriggerEvent("mythic_progbar:client:progress", {
 		name = "SP",
@@ -492,14 +481,14 @@ AddEventHandler('esx_customItems:useSibp', function()
 			disableMouse = false,
 			disableCombat = true,
 		}
-		
+
 	}, function(status)
 
 			if not status then
 			ESX.TriggerServerCallback('esx_customItems:removeSibp', function(bool)
 			if bool then
 
-			ESX.ShowNotification("Shoma ~y~<C>Sib Zamini Sorkh Karde</C>~s~ Khordid")	
+			ESX.ShowNotification("Shoma ~y~<C>Sib Zamini Sorkh Karde</C>~s~ Khordid")
 			end
 		end)
 			elseif status then
@@ -512,7 +501,7 @@ end)
 
 RegisterNetEvent('esx_customItems:useSM')
 AddEventHandler('esx_customItems:useSM', function()
-		
+
 
 		TriggerEvent("mythic_progbar:client:progress", {
 		name = "SM",
@@ -532,7 +521,7 @@ AddEventHandler('esx_customItems:useSM', function()
 			ESX.TriggerServerCallback('esx_customItems:removeSM', function(bool)
 			if bool then
 
-			ESX.ShowNotification("Shoma ~y~<C>Sandewich</C>~s~ Khordid")	
+			ESX.ShowNotification("Shoma ~y~<C>Sandewich</C>~s~ Khordid")
 			end
 		end)
 			elseif status then
@@ -545,8 +534,8 @@ end)
 
 RegisterNetEvent('esx_customItems:usePMA')
 AddEventHandler('esx_customItems:usePMA', function()
-		
-		
+
+
 		TriggerEvent("mythic_progbar:client:progress", {
 		name = "PMA",
 		duration = 30000,
@@ -565,22 +554,22 @@ AddEventHandler('esx_customItems:usePMA', function()
 			ESX.TriggerServerCallback('esx_customItems:removePMA', function(bool)
 			if bool then
 
-			ESX.ShowNotification("Shoma ~y~<C>Pitza Makhloot</C>~s~ Khordid")	
+			ESX.ShowNotification("Shoma ~y~<C>Pitza Makhloot</C>~s~ Khordid")
 			end
 		end)
 			elseif status then
 			ESX.ShowNotification("~r~~h~Shoma Ghaza Ra Nakhordid!")
 			DestroyAllProps()
 			ClearPedTasksImmediately(PlayerPedId())
-			
+
 			end
 	end)
 end)
 
 RegisterNetEvent('esx_customItems:usePMO')
 AddEventHandler('esx_customItems:usePMO', function()
-		
-		
+
+
 		TriggerEvent("mythic_progbar:client:progress", {
 		name = "PMO",
 		duration = 30000,
@@ -599,7 +588,7 @@ AddEventHandler('esx_customItems:usePMO', function()
 			ESX.TriggerServerCallback('esx_customItems:removePMO', function(bool)
 			if bool then
 
-			ESX.ShowNotification("Shoma ~y~<C>Pitza Morgh</C>~s~ Khordid")	
+			ESX.ShowNotification("Shoma ~y~<C>Pitza Morgh</C>~s~ Khordid")
 			end
 		end)
 			elseif status then
@@ -612,8 +601,8 @@ end)
 
 RegisterNetEvent('esx_customItems:useKABAB')
 AddEventHandler('esx_customItems:useKABAB', function()
-		
-		
+
+
 		TriggerEvent("mythic_progbar:client:progress", {
 		name = "KABAB",
 		duration = 30000,
@@ -632,7 +621,7 @@ AddEventHandler('esx_customItems:useKABAB', function()
 			ESX.TriggerServerCallback('esx_customItems:removeKABAB', function(bool)
 			if bool then
 
-			ESX.ShowNotification("Shoma ~y~<C>Kabab Khordid</C>~s~ Khordid")	
+			ESX.ShowNotification("Shoma ~y~<C>Kabab Khordid</C>~s~ Khordid")
 			end
 		end)
 			elseif status then
@@ -645,8 +634,8 @@ end)
 
 RegisterNetEvent('esx_customItems:useJOJE')
 AddEventHandler('esx_customItems:useJOJE', function()
-		
-		
+
+
 		TriggerEvent("mythic_progbar:client:progress", {
 		name = "JOJE",
 		duration = 30000,
@@ -665,7 +654,7 @@ AddEventHandler('esx_customItems:useJOJE', function()
 			ESX.TriggerServerCallback('esx_customItems:removeJOJE', function(bool)
 			if bool then
 
-			ESX.ShowNotification("Shoma ~y~<C>Joje</C>~s~ Khordid")	
+			ESX.ShowNotification("Shoma ~y~<C>Joje</C>~s~ Khordid")
 			end
 		end)
 			elseif status then
@@ -678,8 +667,8 @@ end)
 
 RegisterNetEvent('esx_customItems:useMAHIGHEZEL')
 AddEventHandler('esx_customItems:useMAHIGHEZEL', function()
-		
-		
+
+
 		TriggerEvent("mythic_progbar:client:progress", {
 		name = "MAHIGHEZEL",
 		duration = 30000,
@@ -698,7 +687,7 @@ AddEventHandler('esx_customItems:useMAHIGHEZEL', function()
 			ESX.TriggerServerCallback('esx_customItems:removeMAHIGHEZEL', function(bool)
 			if bool then
 
-			ESX.ShowNotification("Shoma ~y~<C>Mahi Ghezelala</C>~s~ Khordid")	
+			ESX.ShowNotification("Shoma ~y~<C>Mahi Ghezelala</C>~s~ Khordid")
 			end
 		end)
 			elseif status then
@@ -711,8 +700,8 @@ end)
 
 RegisterNetEvent('esx_customItems:useMAHIHAMOOR')
 AddEventHandler('esx_customItems:useMAHIHAMOOR', function()
-		
-		
+
+
 		TriggerEvent("mythic_progbar:client:progress", {
 		name = "MAHIHAMOOR",
 		duration = 30000,
@@ -731,7 +720,7 @@ AddEventHandler('esx_customItems:useMAHIHAMOOR', function()
 			ESX.TriggerServerCallback('esx_customItems:removeMAHIHAMOOR', function(bool)
 			if bool then
 
-			ESX.ShowNotification("Shoma ~y~<C>Mahi Ghezelala</C>~s~ Khordid")	
+			ESX.ShowNotification("Shoma ~y~<C>Mahi Ghezelala</C>~s~ Khordid")
 			end
 		end)
 			elseif status then
@@ -742,11 +731,10 @@ AddEventHandler('esx_customItems:useMAHIHAMOOR', function()
 	end)
 end)
 
-
 RegisterNetEvent('esx_customItems:useMAHIGOLIP')
 AddEventHandler('esx_customItems:useMAHIGOLIP', function()
-		
-		
+
+
 		TriggerEvent("mythic_progbar:client:progress", {
 		name = "MAHIGOLIP",
 		duration = 30000,
@@ -765,7 +753,7 @@ AddEventHandler('esx_customItems:useMAHIGOLIP', function()
 			ESX.TriggerServerCallback('esx_customItems:removeMAHIGOLIP', function(bool)
 			if bool then
 
-			ESX.ShowNotification("Shoma ~y~<C>MahiGoli</C>~s~ Khordid")	
+			ESX.ShowNotification("Shoma ~y~<C>MahiGoli</C>~s~ Khordid")
 			end
 		end)
 			elseif status then
@@ -776,11 +764,10 @@ AddEventHandler('esx_customItems:useMAHIGOLIP', function()
 	end)
 end)
 
-
 RegisterNetEvent('esx_customItems:useUNAGIEELROLL')
 AddEventHandler('esx_customItems:useUNAGIEELROLL', function()
-		
-		
+
+
 		TriggerEvent("mythic_progbar:client:progress", {
 		name = "UNAGIEELROLL",
 		duration = 30000,
@@ -799,7 +786,7 @@ AddEventHandler('esx_customItems:useUNAGIEELROLL', function()
 			ESX.TriggerServerCallback('esx_customItems:removeUNAGIEELROLL', function(bool)
 			if bool then
 
-			ESX.ShowNotification("Shoma ~y~<C>Unagi Eel Roll</C>~s~ Khordid")	
+			ESX.ShowNotification("Shoma ~y~<C>Unagi Eel Roll</C>~s~ Khordid")
 			end
 		end)
 			elseif status then
@@ -810,11 +797,10 @@ AddEventHandler('esx_customItems:useUNAGIEELROLL', function()
 	end)
 end)
 
-
 RegisterNetEvent('esx_customItems:useEBITENROL')
 AddEventHandler('esx_customItems:useEBITENROL', function()
-		
-		
+
+
 		TriggerEvent("mythic_progbar:client:progress", {
 		name = "EBITENROL",
 		duration = 30000,
@@ -833,7 +819,7 @@ AddEventHandler('esx_customItems:useEBITENROL', function()
 			ESX.TriggerServerCallback('esx_customItems:removeEBITENROL', function(bool)
 			if bool then
 
-			ESX.ShowNotification("Shoma ~y~<C>Ebi Ten Rol</C>~s~ Khordid")	
+			ESX.ShowNotification("Shoma ~y~<C>Ebi Ten Rol</C>~s~ Khordid")
 			end
 		end)
 			elseif status then
@@ -846,8 +832,8 @@ end)
 
 RegisterNetEvent('esx_customItems:useDOGHGAZDAR')
 AddEventHandler('esx_customItems:useDOGHGAZDAR', function()
-		
-		
+
+
 		TriggerEvent("mythic_progbar:client:progress", {
 		name = "DOGHGAZDAR",
 		duration = 30000,
@@ -866,7 +852,7 @@ AddEventHandler('esx_customItems:useDOGHGAZDAR', function()
 			ESX.TriggerServerCallback('esx_customItems:removeDOGHGAZDAR', function(bool)
 			if bool then
 
-			ESX.ShowNotification("Shoma ~y~<C>Doogh Gaz Dar</C>~s~ Khordid")	
+			ESX.ShowNotification("Shoma ~y~<C>Doogh Gaz Dar</C>~s~ Khordid")
 			end
 		end)
 			elseif status then
@@ -877,11 +863,10 @@ AddEventHandler('esx_customItems:useDOGHGAZDAR', function()
 	end)
 end)
 
-
 RegisterNetEvent('esx_customItems:useDOGHBEDOONGAZ')
 AddEventHandler('esx_customItems:useDOGHBEDOONGAZ', function()
-		
-		
+
+
 		TriggerEvent("mythic_progbar:client:progress", {
 		name = "DOGHBEDOONGAZ",
 		duration = 30000,
@@ -900,7 +885,7 @@ AddEventHandler('esx_customItems:useDOGHBEDOONGAZ', function()
 			ESX.TriggerServerCallback('esx_customItems:removeDOGHBEDOONGAZ', function(bool)
 			if bool then
 
-			ESX.ShowNotification("Shoma ~y~<C>Doogh Bedoon Gaz</C>~s~ Khordid")	
+			ESX.ShowNotification("Shoma ~y~<C>Doogh Bedoon Gaz</C>~s~ Khordid")
 			end
 		end)
 			elseif status then
@@ -913,8 +898,8 @@ end)
 
 RegisterNetEvent('esx_customItems:useDELESTER')
 AddEventHandler('esx_customItems:useDELESTER', function()
-		
-		
+
+
 		TriggerEvent("mythic_progbar:client:progress", {
 		name = "DELESTER",
 		duration = 30000,
@@ -933,7 +918,7 @@ AddEventHandler('esx_customItems:useDELESTER', function()
 			ESX.TriggerServerCallback('esx_customItems:removeDELESTER', function(bool)
 			if bool then
 
-			ESX.ShowNotification("Shoma ~y~<C>Doogh Delester</C>~s~ Khordid")	
+			ESX.ShowNotification("Shoma ~y~<C>Doogh Delester</C>~s~ Khordid")
 			end
 		end)
 			elseif status then
@@ -944,7 +929,6 @@ AddEventHandler('esx_customItems:useDELESTER', function()
 	end)
 end)
 
-
 RegisterNetEvent('esx_customItems:useBlowtorch')
 AddEventHandler('esx_customItems:useBlowtorch', function()
 					local inventory = ESX.GetPlayerData().inventory
@@ -954,7 +938,7 @@ AddEventHandler('esx_customItems:useBlowtorch', function()
 						blowtorch = inventory[i].count
 					  end
 					end
-					
+
 
 			local vehicle = ESX.Game.GetVehicleInDirection(4)
 			if DoesEntityExist(vehicle) then
@@ -981,20 +965,20 @@ AddEventHandler('esx_customItems:useBlowtorch', function()
                         disableCombat = true,
                     }
 				}, function(status)
-					
+
                     if not status then
 
                       SetVehicleDoorsLocked(vehicle, 1)
                       SetVehicleDoorsLockedForAllPlayers(vehicle, false)
                       ClearPedTasksImmediately(playerPed)
-              
+
 					  ESX.ShowNotification("Mashin baz shod")
 					  CheckVehicle = false
                     elseif status then
 					  ClearPedTasksImmediately(playerPed)
 					  CheckVehicle = false
 					end
-					
+
                 end)
 
            else
@@ -1018,7 +1002,6 @@ AddEventHandler('esx_customItems:checkVehicleStatus', function(status)
 
 end)
 
-
 function addDrunk()
 	drunkMuliplier = drunkMuliplier + 1
 	if drunkMuliplier == 5 then
@@ -1031,10 +1014,10 @@ function overdose()
 
 	local playerPed = PlayerPedId()
 
-	RequestAnimSet("move_injured_generic") 
+	RequestAnimSet("move_injured_generic")
 	while not HasAnimSetLoaded("move_injured_generic") do
 	Citizen.Wait(1)
-	end    
+	end
 
 	ClearPedTasksImmediately(playerPed)
 	SetTimecycleModifier("spectator5")
@@ -1043,7 +1026,7 @@ function overdose()
 	SetPedIsDrunk(playerPed, true)
 	Citizen.Wait(30000)
 	clearEffects()
-	
+
 end
 
 function clearEffects()
@@ -1056,7 +1039,7 @@ function clearEffects()
 		ResetPedMovementClipset(playerPed, 0)
 		SetPedIsDrunk(playerPed, false)
 		SetPedMotionBlur(playerPed, false)
-	
+
 	  end)
 end
 
@@ -1064,7 +1047,7 @@ function checkvehicle(vehicle)
 	Citizen.CreateThread(function()
 		while CheckVehicle do
 		  Citizen.Wait(2000)
-		
+
 		  local coords = GetEntityCoords(PlayerPedId())
 		  local NearVehicle = GetClosestVehicle(coords.x,  coords.y,  coords.z,  4.0,  0,  71)
 			if vehicle ~= NearVehicle then
@@ -1082,23 +1065,23 @@ function OnEmotePlay(EmoteName)
 	if not DoesEntityExist(PlayerPedId()) then
 	  return false
 	end
-  
+
 	  if IsPedArmed(PlayerPedId(), 7) then
 		SetCurrentPedWeapon(PlayerPedId(), GetHashKey('WEAPON_UNARMED'), true)
 	  end
-  
+
 	ChosenDict,ChosenAnimation,ename = table.unpack(EmoteName)
 	AnimationDuration = -1
-  
+
 	if PlayerHasProp then
 	  DestroyAllProps()
 	end
-  
+
 	if ChosenDict == "Expression" then
 	  SetFacialIdleAnimOverride(PlayerPedId(), ChosenAnimation, 0)
 	  return
 	end
-  
+
 	if ChosenDict == "MaleScenario" or "Scenario" then
 	  CheckGender()
 	  if ChosenDict == "MaleScenario" then
@@ -1119,14 +1102,14 @@ function OnEmotePlay(EmoteName)
 		ClearPedTasks(PlayerPedId())
 		TaskStartScenarioInPlace(PlayerPedId(), ChosenAnimation, 0, true)
 		IsInAnimation = true
-	  return end 
+	  return end
 	end
 
 	  LoadAnim(ChosenDict)
 	  if EmoteName.AnimationOptions.Drunk == true then
 		addDrunk()
 	  end
-  
+
 	  if EmoteName.AnimationOptions then
 		if EmoteName.AnimationOptions.EmoteLoop then
 		  MovementType = 1
@@ -1139,14 +1122,14 @@ function OnEmotePlay(EmoteName)
 	else
 	  MovementType = 0
 	end
-  
+
 	if EmoteName.AnimationOptions then
-	  if EmoteName.AnimationOptions.EmoteDuration == nil then 
+	  if EmoteName.AnimationOptions.EmoteDuration == nil then
 		EmoteName.AnimationOptions.EmoteDuration = -1
 	  else
 		AnimationDuration = EmoteName.AnimationOptions.EmoteDuration
 	  end
-  
+
 	  if EmoteName.AnimationOptions.Prop then
 		PropName = EmoteName.AnimationOptions.Prop
 		PropBone = EmoteName.AnimationOptions.PropBone
@@ -1159,14 +1142,14 @@ function OnEmotePlay(EmoteName)
 		else
 		  SecondPropEmote = false
 		end
-  
+
 		AddPropToPlayer(PropName, PropBone, PropPl1, PropPl2, PropPl3, PropPl4, PropPl5, PropPl6)
 		if SecondPropEmote then
 		  AddPropToPlayer(SecondPropName, SecondPropBone, SecondPropPl1, SecondPropPl2, SecondPropPl3, SecondPropPl4, SecondPropPl5, SecondPropPl6)
 		end
 	  end
 	end
-  
+
 	TaskPlayAnim(PlayerPedId(), ChosenDict, ChosenAnimation, 2.0, 2.0, AnimationDuration, MovementType, 0, false, false, false)
 	IsInAnimation = true
 	MostRecentDict = ChosenDict
@@ -1177,21 +1160,21 @@ function OnEmotePlay(EmoteName)
   CheckGender = function()
 	local hashSkinMale = GetHashKey("mp_m_freemode_01")
 	local hashSkinFemale = GetHashKey("mp_f_freemode_01")
-  
+
 	if GetEntityModel(PlayerPedId()) == hashSkinMale then
 	  PlayerGender = "male"
 	elseif GetEntityModel(PlayerPedId()) == hashSkinFemale then
 	  PlayerGender = "female"
 	end
   end
-  
+
   LoadAnim = function(dict)
 	while not HasAnimDictLoaded(dict) do
 	  RequestAnimDict(dict)
 	  Citizen.Wait(1)
 	end
   end
-  
+
   LoadPropDict = function(model)
 	RequestModel(GetHashKey(model))
 	while not HasModelLoaded(GetHashKey(model)) do
@@ -1202,11 +1185,11 @@ function OnEmotePlay(EmoteName)
   AddPropToPlayer = function(prop1, bone, off1, off2, off3, rot1, rot2, rot3)
 	local Player = PlayerPedId()
 	local x,y,z = table.unpack(GetEntityCoords(Player))
-  
+
 	if not HasModelLoaded(prop1) then
 	  LoadPropDict(prop1)
 	end
-  
+
 	prop = CreateObject(GetHashKey(prop1), x, y, z+0.2,  true,  true, true)
 	AttachEntityToEntity(prop, Player, GetPedBoneIndex(Player, bone), off1, off2, off3, rot1, rot2, rot3, true, true, false, true, 1, true)
 	table.insert(PlayerProps, prop)
@@ -1219,18 +1202,18 @@ function OnEmotePlay(EmoteName)
 	end
 	PlayerHasProp = false
   end
-  
-  
-  
-  --optenal needs
-  
-  
+
+
+
+
+
+
   ESX                  = nil
 local IsAlreadyDrunk = false
 local DrunkLevel     = -1
 
 function Drunk(level, start)
-  
+
   Citizen.CreateThread(function()
 
     local playerPed = PlayerPedId()
@@ -1243,7 +1226,7 @@ function Drunk(level, start)
     if level == 0 then
 
       RequestAnimSet("move_m@drunk@slightlydrunk")
-      
+
       while not HasAnimSetLoaded("move_m@drunk@slightlydrunk") do
         Citizen.Wait(1)
       end
@@ -1253,7 +1236,7 @@ function Drunk(level, start)
     elseif level == 1 then
 
       RequestAnimSet("move_m@drunk@moderatedrunk")
-      
+
       while not HasAnimSetLoaded("move_m@drunk@moderatedrunk") do
         Citizen.Wait(1)
       end
@@ -1263,7 +1246,7 @@ function Drunk(level, start)
     elseif level == 2 then
 
       RequestAnimSet("move_m@drunk@verydrunk")
-      
+
       while not HasAnimSetLoaded("move_m@drunk@verydrunk") do
         Citizen.Wait(1)
       end
@@ -1307,7 +1290,7 @@ end
 
 AddEventHandler('esx_status:loaded', function(status)
 
-  TriggerEvent('esx_status:registerStatus', 'drunk', 0, '#8F15A5', 
+  TriggerEvent('esx_status:registerStatus', 'drunk', 0, '#8F15A5',
     function(status)
       if status.val > 0 then
         return false
@@ -1327,9 +1310,9 @@ AddEventHandler('esx_status:loaded', function(status)
 			Wait(1000)
 
 			TriggerEvent('esx_status:getStatus', 'drunk', function(status)
-				
+
 				if status.val > 0 then
-					
+
           local start = true
 
           if IsAlreadyDrunk then
@@ -1355,7 +1338,7 @@ AddEventHandler('esx_status:loaded', function(status)
 				end
 
 				if status.val == 0 then
-          
+
           if IsAlreadyDrunk then
             Reality()
           end
@@ -1375,9 +1358,9 @@ end)
 
 RegisterNetEvent('esx_optionalneeds:onDrink')
 AddEventHandler('esx_optionalneeds:onDrink', function()
-  
+
   local playerPed = PlayerPedId()
-  
+
   TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_DRINKING", 0, 1)
   Citizen.Wait(10000)
   ClearPedSecondaryTask(playerPed)

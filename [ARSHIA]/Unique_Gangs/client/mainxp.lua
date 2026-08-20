@@ -8,8 +8,7 @@ Citizen.CreateThread(function()
 end)
 
 local PlayerData = {}
--- XP/Level default to 0 so any XP event that fires before the
--- gangs:GetGangLevel_XP callback returns can't do arithmetic on nil.
+
 local Data = { XP = 0, Level = 0 }
 local GangLevels = {
   1000,
@@ -34,8 +33,8 @@ RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
     PlayerData = xPlayer
     if PlayerData.gang.name ~= 'nogang' then
-        ESX.TriggerServerCallback("gangs:GetGangLevel_XP", function(XP, Level, Pos) 
-            if XP then Data.XP = math.floor(XP) end 
+        ESX.TriggerServerCallback("gangs:GetGangLevel_XP", function(XP, Level, Pos)
+            if XP then Data.XP = math.floor(XP) end
             if Level then Data.Level = math.floor(Level) end
             if Pos then Data.Pos = json.decode(Pos) end
             ShowXPBar()
@@ -49,8 +48,8 @@ RegisterNetEvent('esx:setGang')
 AddEventHandler('esx:setGang', function(data)
     PlayerData.gang = data
     if PlayerData.gang.name ~= 'nogang' then
-      ESX.TriggerServerCallback("gangs:GetGangLevel_XP", function(XP, Level, Pos) 
-            if XP then Data.XP = math.floor(XP) end 
+      ESX.TriggerServerCallback("gangs:GetGangLevel_XP", function(XP, Level, Pos)
+            if XP then Data.XP = math.floor(XP) end
             if Level then Data.Level = math.floor(Level) end
             if Pos then Data.Pos = json.decode(Pos) end
             ShowXPBar()
@@ -106,10 +105,10 @@ end)
 
 RegisterNetEvent('gangs:AddXPtoGang')
 AddEventHandler('gangs:AddXPtoGang', function(AddedXP)
-  -- Guard: bail out if gang data or AddedXP hasn't loaded/arrived yet,
-  -- instead of crashing on nil arithmetic.
+
+
   if not Data.XP or not Data.Level or not AddedXP then return end
-  -- Guard: don't index past the top of the GangLevels table (max level).
+
   if not GangLevels[Data.Level + 1] then return end
 
   if Data.XP + AddedXP >= GangLevels[Data.Level + 1] then
@@ -131,7 +130,7 @@ AddEventHandler('gangs:AddXPtoGang', function(AddedXP)
 end)
 RegisterNetEvent('gangs:RemoveXPtoGang')
 AddEventHandler('gangs:RemoveXPtoGang', function(RemoveXP)
-  -- Same nil/bounds guard as AddXPtoGang above.
+
   if not Data.XP or not Data.Level or not RemoveXP then return end
   if not GangLevels[Data.Level - 1] then return end
 
@@ -191,12 +190,12 @@ AddEventHandler('RankUpMessage', function(MsgText, setCounter)
 	while not HasScaleformMovieLoaded(scaleform) do
 		Citizen.Wait(0)
 	end
-  PlaySoundFrontend(-1, "LOSER", "HUD_AWARDS") 
+  PlaySoundFrontend(-1, "LOSER", "HUD_AWARDS")
 	BeginScaleformMovieMethod(scaleform, "SHOW_SHARD_WASTED_MP_MESSAGE")
 	BeginTextComponent("STRING")
 	AddTextComponentString(MsgText)
 	EndTextComponent()
-	PopScaleformMovieFunctionVoid()	
+	PopScaleformMovieFunctionVoid()
 
 	local counter = 0
 	local maxCounter = (setCounter or 200)

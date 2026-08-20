@@ -1,12 +1,12 @@
 Locales['pl'] = Locales['pl'] or {}
 for k, v in pairs({
-  -- cloakroom
+
   ['cloakroom_menu'] = 'szatnia',
   ['cloakroom_prompt'] = 'naciśnij ~INPUT_CONTEXT~ aby użyć ~y~szatni~s~.',
   ['wear_citizen'] = 'strój cywilny',
   ['wear_work'] = 'strój pracownika taxi',
 
-  -- garage
+
   ['spawner_prompt'] = 'naciśnij ~INPUT_CONTEXT~ aby otworzyć ~y~garaż~s~.',
   ['store_veh'] = 'naciśnij ~INPUT_CONTEXT~ aby zdać pojazd',
   ['spawn_veh'] = 'sprowadź pojazd',

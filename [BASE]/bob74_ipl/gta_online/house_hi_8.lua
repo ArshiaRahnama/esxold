@@ -1,6 +1,4 @@
 
--- 2133 Mad Wayne Thunder 
--- High end house 8: -1288 440.748 97.69459
 
 exports('GetGTAOHouseHi8Object', function()
     return GTAOHouseHi8

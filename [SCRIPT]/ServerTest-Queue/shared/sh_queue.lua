@@ -12,14 +12,12 @@ if not IsDuplicityVersion() then
 end
 
 local Queue = {}
--- EDIT THESE IN SERVER.CFG + OTHER OPTIONS IN CONFIG.LUA
+
 Queue.MaxPlayers = GetConvarInt("sv_maxclients", 48)
 Queue.Debug = GetConvar("sv_debugqueue", "true") == "true" and true or false
 Queue.DisplayQueue = GetConvar("sv_displayqueue", "true") == "true" and true or false
 Queue.InitHostName = GetConvar("sv_hostname")
 
-
--- This is needed because msgpack will break when tables are too large
 local _Queue = {}
 _Queue.QueueList = {}
 _Queue.PlayerList = {}
@@ -74,7 +72,7 @@ function Queue:IsSteamRunning(src)
             return true
         end
     end
-    
+
     return false
 end
 
@@ -328,7 +326,7 @@ function Queue:AddToConnecting(ids, ignorePos, autoRemove, done)
     local connList = Queue:GetConnectingList()
 
     if Queue:ConnectingSize() + Queue:GetPlayerCount() + 1 > Queue.MaxPlayers then remove() return false end
-    
+
     if ids[1] == "debug" then
         table_insert(connList, {source = ids[1], ids = ids, name = ids[1], firstconnect = ids[1], priority = ids[1], timeout = 0})
         return true
@@ -383,11 +381,11 @@ function Queue:AddPriority(id, power, temp)
         local tempPower, tempEnd, tempId = Queue:HasTempPriority({id})
         id = tempId or id
 
-        Queue:GetTempPriorityList()[string_lower(id)] = {power = power, ServerTest = os_time() + temp} 
+        Queue:GetTempPriorityList()[string_lower(id)] = {power = power, ServerTest = os_time() + temp}
     else
         Queue:GetPriorityList()[string_lower(id)] = power
     end
-    
+
     return true
 end
 
@@ -501,7 +499,7 @@ local function playerConnect(name, setKickReason, deferrals)
     end
 
     if not ids then
-        -- prevent joining
+
         done(Config.Language.iderr)
         CancelEvent()
         Queue:DebugPrint("Dropped " .. name .. ", couldn't retrieve any of their id's")
@@ -509,7 +507,7 @@ local function playerConnect(name, setKickReason, deferrals)
     end
 
     if Config.RequireSteam and not Queue:IsSteamRunning(src) then
-        -- prevent joining
+
         done(Config.Language.steam)
         CancelEvent()
         return
@@ -522,7 +520,7 @@ local function playerConnect(name, setKickReason, deferrals)
         if reason == false or #_Queue.JoinCbs <= 0 then allow = true return end
 
         if reason then
-            -- prevent joining
+
             allow = false
             done(reason and tostring(reason) or "You were blocked from joining")
             Queue:RemoveFromQueue(ids)
@@ -533,7 +531,7 @@ local function playerConnect(name, setKickReason, deferrals)
         end
 
         allow = true
-    end) 
+    end)
 
     while allow == nil do Citizen.Wait(1) end
     if not allow then return end
@@ -546,7 +544,7 @@ local function playerConnect(name, setKickReason, deferrals)
         Queue:RemoveFromConnecting(ids)
 
         if Queue:NotFull() then
-            -- let them in the server
+
 
             if not Queue:IsInQueue(ids) then
                 Queue:AddToQueue(ids, connectTime, name, src, deferrals)
@@ -576,7 +574,7 @@ local function playerConnect(name, setKickReason, deferrals)
     end
 
     local pos, data = Queue:IsInQueue(ids, true)
-    
+
     if not pos or not data then
         done(Config.Language.err .. " [1]")
 
@@ -588,7 +586,7 @@ local function playerConnect(name, setKickReason, deferrals)
     end
 
     if Queue:NotFull(true) and _Queue.JoinDelay <= GetGameTimer() then
-        -- let them in the server
+
         local added = Queue:AddToConnecting(ids, true, true, done)
         if not added then CancelEvent() return end
 
@@ -597,7 +595,7 @@ local function playerConnect(name, setKickReason, deferrals)
 
         return
     end
-    
+
     update(string_format(Config.Language.pos .. ((Queue:TempSize() and Config.ShowTemp) and " (" .. Queue:TempSize() .. " temp)" or "00:00:00"), pos, Queue:GetSize(), ""))
 
     if rejoined then return end
@@ -637,7 +635,7 @@ local function playerConnect(name, setKickReason, deferrals)
         end
 
         if pos <= 1 and Queue:NotFull() and _Queue.JoinDelay <= GetGameTimer() then
-            -- let them in the server
+
             local added = Queue:AddToConnecting(ids)
 
             update(Config.Language.joining, data.deferrals)
@@ -679,16 +677,16 @@ Citizen.CreateThread(function()
 
     while true do
         Citizen.Wait(1000)
-    
+
         local i = 1
-    
+
         while i <= Queue:ConnectingSize() do
             local data = Queue:GetConnectingList()[i]
-    
+
             local endPoint = GetPlayerEndpoint(data.source)
-    
+
             data.timeout = data.timeout + 1
-    
+
             if ((data.timeout >= 300 and not endPoint) or data.timeout >= Config.ConnectTimeOut) and data.source ~= "debug" and os_time() - data.firstconnect > 5 then
                 remove(data)
                 Queue:DebugPrint(data.name .. "[" .. data.ids[1] .. "] was removed from the connecting queue because they timed out")
@@ -702,7 +700,7 @@ Citizen.CreateThread(function()
                 Queue:GetTempPriorityList()[id] = nil
             end
         end
-    
+
         Queue.MaxPlayers = GetConvarInt("sv_maxclients", 64)
         Queue.Debug = GetConvar("sv_debugqueue", "true") == "true" and true or false
         Queue.DisplayQueue = GetConvar("sv_displayqueue", "true") == "true" and true or false
@@ -719,12 +717,6 @@ Citizen.CreateThread(function()
         end
     end
 end)
-
---[[local GetSizeEventName = 'Queue:GetQueueSize'
-RegisterNetEvent(GetSizeEventName)
-AddEventHandler(GetSizeEventName, function(callback)
-    callback(Queue:GetSize())
-end)]]
 
 RegisterServerEvent("Queue:playerActivated")
 AddEventHandler("Queue:playerActivated", function()
@@ -754,7 +746,7 @@ end)
 
 AddEventHandler("onResourceStop", function(resource)
     if Queue.DisplayQueue and Queue.InitHostName and resource == GetCurrentResourceName() then SetConvar("sv_hostname", Queue.InitHostName) end
-    
+
     for k, data in ipairs(_Queue.JoinCbs) do
         if data.resource == resource then
             table_remove(_Queue.JoinCbs, k)
@@ -768,7 +760,7 @@ if Config.DisableHardCap then
     AddEventHandler("onResourceStarting", function(resource)
         if resource == "hardcap" then CancelEvent() return end
     end)
-    
+
     StopResource("hardcap")
 end
 

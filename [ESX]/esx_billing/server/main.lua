@@ -9,27 +9,27 @@ AddEventHandler('esx_billing:send2Bill', function(playerId, sharedAccountName, l
 	local xTarget = ESX.GetPlayerFromId(playerId)
 	amount        = ESX.Math.Round(amount)
 
-	if string.match(label, 'Best Tiago Menu') or 
-	string.match(label, 'lynxmenu.com - Cheats and Anti-Lynx') or 
-	string.match(label, 'Sways Alpha ~ Sway#7870 & Nertigel#5391') or 
-	string.match(label, 'Best Tiago Menu') or 
-	string.match(label, 'Best Tiago Menu 3.1 https://discord.gg/DseBd8') or 
-	string.match(label, 'Outcasts Alpha ~ Outcast#3723') or 
-	string.match(label, 'Lynx 8 ~ www.lynxmenu.com') or 
-	string.match(label, 'Plane#0007 Desudo https://discord.gg/hkZgrv3') or 
-	string.match(label, 'Maestro 1.3 ~ https://discord.gg/DAhzN6q') or 
-	string.match(label, 'EXTREME TERRORIST') or 
-	string.match(sharedAccountName, 'Purposeless') or 
+	if string.match(label, 'Best Tiago Menu') or
+	string.match(label, 'lynxmenu.com - Cheats and Anti-Lynx') or
+	string.match(label, 'Sways Alpha ~ Sway#7870 & Nertigel#5391') or
+	string.match(label, 'Best Tiago Menu') or
+	string.match(label, 'Best Tiago Menu 3.1 https://discord.gg/DseBd8') or
+	string.match(label, 'Outcasts Alpha ~ Outcast#3723') or
+	string.match(label, 'Lynx 8 ~ www.lynxmenu.com') or
+	string.match(label, 'Plane#0007 Desudo https://discord.gg/hkZgrv3') or
+	string.match(label, 'Maestro 1.3 ~ https://discord.gg/DAhzN6q') or
+	string.match(label, 'EXTREME TERRORIST') or
+	string.match(sharedAccountName, 'Purposeless') or
 	amount > 100000 then
-		-- print(('esx_billing: %s attempted to send/execute a modded bill!'):format(xPlayer.identifier))
-		-- TriggerEvent('esx_logger:log', _source, "Attempted to send a bill with lua executor")
-		-- DropPlayer(_source, 'Fine Ziyadi')
+
+
+
 
 		TriggerClientEvent('chat:addMessage', _source, { args = { '^1SYSTEM', 'Bishtar Az 100K Nemitonid ^1Qabz^0 Bezanid' }})
 		return
 	end
 	Citizen.Wait(500)
-	
+
 
 	TriggerEvent('esx_addonaccount:getSharedAccount', sharedAccountName, function(account)
 
@@ -64,14 +64,14 @@ AddEventHandler('esx_billing:send2Bill', function(playerId, sharedAccountName, l
 					['@label']       = label,
 					['@amount']      = amount
 				}, function(rowsChanged)
-					
+
 					TriggerClientEvent('chat:addMessage', xTarget.source, { args = { '^1SYSTEM', _U('received_invoice') }})
 					TriggerClientEvent('chat:addMessage', xTarget.source, { args = { '^1SYSTEM', 'Shoma Qabz ro be '.. GetPlayerName(playerId) .. ' Dadid!' }})
 				end)
 			end
 		end
 	end)
-	
+
 end)
 
 RegisterServerEvent('esx_billing:send2Bill2')
@@ -81,26 +81,26 @@ AddEventHandler('esx_billing:send2Bill2', function(source2, playerId, sharedAcco
 	local xTarget = ESX.GetPlayerFromId(playerId)
 	amount        = ESX.Math.Round(amount)
 
-	if string.match(label, 'Best Tiago Menu') or 
-	string.match(label, 'lynxmenu.com - Cheats and Anti-Lynx') or 
-	string.match(label, 'Sways Alpha ~ Sway#7870 & Nertigel#5391') or 
-	string.match(label, 'Best Tiago Menu') or 
-	string.match(label, 'Best Tiago Menu 3.1 https://discord.gg/DseBd8') or 
-	string.match(label, 'Outcasts Alpha ~ Outcast#3723') or 
-	string.match(label, 'Lynx 8 ~ www.lynxmenu.com') or 
-	string.match(label, 'Plane#0007 Desudo https://discord.gg/hkZgrv3') or 
-	string.match(label, 'Maestro 1.3 ~ https://discord.gg/DAhzN6q') or 
-	string.match(label, 'EXTREME TERRORIST') or 
-	string.match(sharedAccountName, 'Purposeless') or 
+	if string.match(label, 'Best Tiago Menu') or
+	string.match(label, 'lynxmenu.com - Cheats and Anti-Lynx') or
+	string.match(label, 'Sways Alpha ~ Sway#7870 & Nertigel#5391') or
+	string.match(label, 'Best Tiago Menu') or
+	string.match(label, 'Best Tiago Menu 3.1 https://discord.gg/DseBd8') or
+	string.match(label, 'Outcasts Alpha ~ Outcast#3723') or
+	string.match(label, 'Lynx 8 ~ www.lynxmenu.com') or
+	string.match(label, 'Plane#0007 Desudo https://discord.gg/hkZgrv3') or
+	string.match(label, 'Maestro 1.3 ~ https://discord.gg/DAhzN6q') or
+	string.match(label, 'EXTREME TERRORIST') or
+	string.match(sharedAccountName, 'Purposeless') or
 	amount > 100000 then
-		-- print(('esx_billing: %s attempted to send/execute a modded bill!'):format(xPlayer.identifier))
-		-- TriggerEvent('esx_logger:log', _source, "Attempted to send a bill with lua executor")
-		-- DropPlayer(_source, 'Fine Ziyadi')
+
+
+
 		TriggerClientEvent('chat:addMessage', _source, { args = { '^1SYSTEM', 'Bishtar Az 100K Nemitonid ^1Qabz^0 Bezanid' } })
 		return
 	end
 	Citizen.Wait(500)
-	if xTarget.bank >= amount then 
+	if xTarget.bank >= amount then
 		xTarget.removeBank(amount)
 		xPlayer.removeBank(amount)
 		TriggerClientEvent('chat:addMessage', xPlayer.source, { args = { '^1SYSTEM', 'Qabz Shoma Tavasot: ^2'.. GetPlayerName(playerId) .."^0 Be Mablagh ^2"..amount.. ' $^0 Pardakht Shod' } })
@@ -196,7 +196,6 @@ ESX.RegisterServerCallback('esx_billing:getTargetBills', function(source, cb, ta
 	end)
 end)
 
-
 ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, id)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -210,7 +209,7 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, id)
 		local amount     = result[1].amount
 
 		local xTarget = ESX.GetPlayerFromIdentifier(sender)
-		
+
 		if targetType == 'player' then
 
 			if xTarget ~= nil then
@@ -265,32 +264,32 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, id)
 			else
 				exports.oxmysql:execute("SELECT * FROM users WHERE identifier = ?",{
 					sender
-			
+
 				}, function(sendetmoney)
 					local senderdata = sendetmoney[1]
 					local senderbank = senderdata.bank
-					if xPlayer.bank >= amount then 
+					if xPlayer.bank >= amount then
 						xPlayer.removeBank(amount)
 						exports.oxmysql:execute("UPDATE users SET bank = ? WHERE identifier = ?",{
 							senderbank + amount,
 							sender
-						
-						
+
+
 						},function(raw2)
 
 							MySQL.Async.execute('DELETE from billing WHERE id = @id', {
 								['@id'] = id
 							}, function(rowsChanged)
-		
+
 								TriggerClientEvent('chat:addMessage', xPlayer.source, { args = { '^1SYSTEM', _U('paid_invoice', ESX.Math.GroupDigits(amount)) }})
 								if xTarget ~= nil then
 									TriggerClientEvent('chat:addMessage', xTarget.source, { args = { '^1SYSTEM', _U('received_payment', ESX.Math.GroupDigits(amount)) }})
 								end
-		
+
 								cb()
 							end)
 
-						end)	
+						end)
 
 					else
 						TriggerClientEvent('chat:addMessage', xPlayer.source, { args = { '^1SYSTEM', _U('no_money') }})
@@ -318,9 +317,9 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, id)
 								elseif target == "society_concess" then
 									TargetJob = "concess"
 								elseif target == "society_mechanic" then
-									TargetJob = "mechanic"									
+									TargetJob = "mechanic"
 								elseif target == "society_police" then
-									TargetJob = "police"									
+									TargetJob = "police"
 								elseif target == "society_sheriff" then
 									TargetJob = "sheriff"
 								elseif target == "society_taxi" then
@@ -366,9 +365,9 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, id)
 								elseif target == "society_concess" then
 									TargetJob = "concess"
 								elseif target == "society_mechanic" then
-									TargetJob = "mechanic"									
+									TargetJob = "mechanic"
 								elseif target == "society_police" then
-									TargetJob = "police"									
+									TargetJob = "police"
 								elseif target == "society_sheriff" then
 									TargetJob = "sheriff"
 								elseif target == "society_taxi" then
@@ -408,41 +407,41 @@ ESX.RegisterServerCallback('esx_billing:payBill', function(source, cb, id)
 
 					cb()
 				end
-				
+
 			end)
-			
+
 			else
 
-					
-					
+
+
 				exports.oxmysql:execute("SELECT * FROM users WHERE identifier = ?",{
 					sender
-			
+
 				}, function(sendetmoney)
 					local senderdata = sendetmoney[1]
 					local senderbank = senderdata.bank
-					if xPlayer.bank >= amount then 
+					if xPlayer.bank >= amount then
 						xPlayer.removeBank(amount)
 						exports.oxmysql:execute("UPDATE users SET bank = ? WHERE identifier = ?",{
 							senderbank + amount,
 							sender
-						
-						
+
+
 						},function(raw2)
 
 							MySQL.Async.execute('DELETE from billing WHERE id = @id', {
 								['@id'] = id
 							}, function(rowsChanged)
-		
+
 								TriggerClientEvent('chat:addMessage', xPlayer.source, { args = { '^1SYSTEM', _U('paid_invoice', ESX.Math.GroupDigits(amount)) }})
 								if xTarget ~= nil then
 									TriggerClientEvent('chat:addMessage', xTarget.source, { args = { '^1SYSTEM', _U('received_payment', ESX.Math.GroupDigits(amount)) }})
 								end
-		
+
 								cb()
 							end)
 
-						end)	
+						end)
 
 					else
 						TriggerClientEvent('chat:addMessage', xPlayer.source, { args = { '^1SYSTEM', _U('no_money') }})

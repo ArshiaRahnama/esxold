@@ -1,5 +1,5 @@
 Locales['fr'] = {
-  -- Inventory
+
   ['cash'] = 'espèces',
   ['inventory'] = 'inventaire',
   ['use'] = 'utiliser',
@@ -35,7 +35,7 @@ Locales['fr'] = {
   ['threw_account'] = 'you threw ~r~$%s~s~ ~b~%s~s~',
   ['threw_weapon'] = 'you threw ~y~1x~s~ ~b~%s~s~',
   ['threw_weapon_ammo'] = 'you threw ~y~1x~s~ ~b~%s~s~ with ~o~%sx~s~ bullets',
-  -- Salary related
+
   ['received_salary'] = 'vous avez reçu votre salaire: ~g~$%s~s~',
   ['received_help'] = 'vous avez reçu une aide de l\'état: ~g~$%s~s~',
   ['company_nomoney'] = 'votre entreprise n\'a plus d\'argent pour vous payer!',
@@ -47,7 +47,7 @@ Locales['fr'] = {
   ['in_vehicle'] = 'Vous ne pouvez rien donner à quelqu\'un dans un véhicule',
   ['cannot_pickup_room'] = 'vous n\'avez plus de place pour ~y~%s~s~!',
 
-  -- Commands
+
   ['setjob'] = 'assigner job',
   ['id_param'] = 'identification du joueur',
   ['setjob_param2'] = 'le travail que vous souhaitez assigner',
@@ -81,11 +81,11 @@ Locales['fr'] = {
   ['command_clearinventory'] = 'clear all items from inventory',
   ['command_clearloadout'] = 'remove all weapons from loadout',
   ['command_playerid_param'] = 'specify playerId or leave blank for yourself',
-  -- Locale settings
+
   ['locale_digit_grouping_symbol'] = ' ',
   ['locale_currency'] = '$%s',
 
-  -- Weapons
+
   ['weapon_knife'] = 'couteau',
   ['weapon_nightstick'] = 'matraque',
   ['weapon_hammer'] = 'marteau',
@@ -166,7 +166,7 @@ Locales['fr'] = {
   ['weapon_flare'] = 'Fusée Détresse',
   ['weapon_doubleaction'] = 'double-Action Revolver',
 
-  -- Weapon Components
+
   ['component_clip_default'] = 'default Grip',
   ['component_clip_extended'] = 'extended Grip',
   ['component_clip_drum'] = 'drum Magazine',

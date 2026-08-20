@@ -1,4 +1,4 @@
--- 2018 Henric 'Kekke' Johansson
+
 
 ESX = nil
 

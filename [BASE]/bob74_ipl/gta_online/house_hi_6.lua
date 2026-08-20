@@ -1,6 +1,4 @@
 
--- 2874 Hillcrest Avenue
--- High end house 6: -857.798 682.563 152.6529
 
 exports('GetGTAOHouseHi6Object', function()
     return GTAOHouseHi6

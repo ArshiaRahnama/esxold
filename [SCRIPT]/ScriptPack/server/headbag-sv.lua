@@ -1,8 +1,6 @@
 ESX						= nil
 
-
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-
 
 RegisterServerEvent('esx_worek:closest')
 AddEventHandler('esx_worek:closest', function()
@@ -21,7 +19,7 @@ AddEventHandler('esx_worek:zdejmij', function()
 end)
 
 ESX.RegisterUsableItem('headbag', function(source)
-	
+
     local xPlayer = ESX.GetPlayerFromId(source)
     TriggerClientEvent('esx_worek:naloz', source)
 end)

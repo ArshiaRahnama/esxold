@@ -1,5 +1,5 @@
 Citizen.CreateThread(function()
-	-- internal variables
+
 	ESX               = nil
 	local Timeouts    = {}
 	local GUI         = {}
@@ -13,9 +13,9 @@ Citizen.CreateThread(function()
 	end
 
 	local openMenu = function(namespace, name, data)
-		-- for i=1, #Timeouts, 1 do
-		-- 	ESX.ClearTimeout(Timeouts[i])
-		-- end
+
+
+
 
 		OpenedMenus[namespace .. '_' .. name] = true
 
@@ -30,7 +30,7 @@ Citizen.CreateThread(function()
 			SetNuiFocus(true, true)
 		end)
 
-		-- table.insert(Timeouts, timeoutId)
+
 	end
 
 	local closeMenu = function(namespace, name)
@@ -64,19 +64,19 @@ Citizen.CreateThread(function()
 
 		if menu.submit ~= nil then
 
-			-- Is the submitted data a number?
+
 			if tonumber(data.value) ~= nil then
 
-				-- Round float values
+
 				data.value = round(tonumber(data.value))
 
-				-- Check for negative value
+
 				if tonumber(data.value) <= 0 then
 					post = false
 				end
 			end
 
-			-- Don't post if the value is negative or if it's 0
+
 			if post then
 				menu.submit(data, menu)
 			else
@@ -118,17 +118,16 @@ Citizen.CreateThread(function()
 				end
 			end
 
-
 			if OpenedMenuCount > 0 then
-				DisableControlAction(0, 1,   true) -- LookLeftRight
-				DisableControlAction(0, 2,   true) -- LookUpDown
-				DisableControlAction(0, 142, true) -- MeleeAttackAlternate
-				DisableControlAction(0, 106, true) -- VehicleMouseControlOverride
-				DisableControlAction(0, 12, true) -- WeaponWheelUpDown
-				DisableControlAction(0, 14, true) -- WeaponWheelNext
-				DisableControlAction(0, 15, true) -- WeaponWheelPrev
-				DisableControlAction(0, 16, true) -- SelectNextWeapon
-				DisableControlAction(0, 17, true) -- SelectPrevWeapon
+				DisableControlAction(0, 1,   true)
+				DisableControlAction(0, 2,   true)
+				DisableControlAction(0, 142, true)
+				DisableControlAction(0, 106, true)
+				DisableControlAction(0, 12, true)
+				DisableControlAction(0, 14, true)
+				DisableControlAction(0, 15, true)
+				DisableControlAction(0, 16, true)
+				DisableControlAction(0, 17, true)
 			else
 				Citizen.Wait(1000)
 			end

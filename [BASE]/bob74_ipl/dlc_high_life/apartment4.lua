@@ -1,5 +1,4 @@
 
--- Apartment 4: -778.50610000, 331.31600000, 210.39720
 
 exports('GetHLApartment4Object', function()
     return HLApartment4
@@ -25,13 +24,13 @@ HLApartment4 = {
         Enable = function (details, state, refresh)
             SetIplPropState(HLApartment4.interiorId, details, state, refresh)
         end
-    },  
+    },
     Smoke = {
         A = "Apart_Hi_Smokes_A", B = "Apart_Hi_Smokes_B", C = "Apart_Hi_Smokes_C",
         Enable = function (details, state, refresh)
             SetIplPropState(HLApartment4.interiorId, details, state, refresh)
         end
-    }, 
+    },
     LoadDefault = function()
         HLApartment4.Ipl.Interior.Load()
         HLApartment4.Strip.Enable({HLApartment4.Strip.A, HLApartment4.Strip.B, HLApartment4.Strip.C}, false)

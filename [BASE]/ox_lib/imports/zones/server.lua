@@ -1,6 +1,5 @@
 local glm = require 'glm'
 
----@type table<number, CZone>
 local Zones = {}
 _ENV.Zones = Zones
 
@@ -33,7 +32,7 @@ local function convertToVector(coords)
 end
 
 lib.zones = {
-    ---@return CZone
+
     poly = function(data)
         data.id = #Zones + 1
         data.thickness = data.thickness or 4
@@ -60,7 +59,7 @@ lib.zones = {
         return data
     end,
 
-    ---@return CZone
+
     box = function(data)
         data.id = #Zones + 1
         data.coords = convertToVector(data.coords)
@@ -86,7 +85,7 @@ lib.zones = {
         return data
     end,
 
-    ---@return CZone
+
     sphere = function(data)
         data.id = #Zones + 1
         data.coords = convertToVector(data.coords)

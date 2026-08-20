@@ -1,5 +1,4 @@
 
--- Clubhouse2: 998.4809, -3164.711, -38.90733
 
 exports('GetBikerClubhouse2Object', function()
     return BikerClubhouse2
@@ -46,12 +45,12 @@ BikerClubhouse2 = {
     },
     Furnitures = {
         A = "furnishings_01", B = "furnishings_02",
-        -- Colors for "furnishings_01" only
+
         Color = {
             turquoise = 0,
             darkBrown = 1,
             brown = 2,
-            -- 3 equal 1
+
             brown2 = 4,
             gray = 5,
             red = 6,
@@ -207,7 +206,7 @@ BikerClubhouse2 = {
 
     LoadDefault = function()
         BikerClubhouse2.Ipl.Interior.Load()
-        
+
         BikerClubhouse2.Walls.Set(BikerClubhouse2.Walls.brick, BikerClubhouse2.Walls.Color.red)
         BikerClubhouse2.LowerWalls.SetColor(BikerClubhouse2.Walls.Color.red)
 
@@ -224,7 +223,7 @@ BikerClubhouse2 = {
         BikerClubhouse2.Weed.Set(BikerClubhouse2.Weed.none)
         BikerClubhouse2.Counterfeit.Set(BikerClubhouse2.Counterfeit.none)
         BikerClubhouse2.Documents.Set(BikerClubhouse2.Documents.none)
-        
+
         RefreshInterior(BikerClubhouse2.interiorId)
     end
 }

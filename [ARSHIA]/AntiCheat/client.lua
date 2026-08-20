@@ -1,8 +1,4 @@
--- AntiCheat/client.lua
--- Samples player state locally and reports ANOMALIES (not verdicts) to the
--- server. The server owns all scoring/decisions — the client only ever says
--- "here's a data point that looked off", never "ban this person" (a cheated
--- client could otherwise just lie about its own verdict).
+
 
 local ESX = nil
 Citizen.CreateThread(function()
@@ -14,18 +10,6 @@ end)
 
 local spawnedAt = GetGameTimer()
 
--- Checks below that compare "now" against "last sample" (position, health,
--- armor, etc) register a reset closure here so esx:playerSpawned can wipe
--- their stale state. Without this, the very first sample taken right after
--- a respawn compares the NEW position/health against wherever the player
--- was an instant before they died -- which reads as an enormous
--- "teleport", a raycast punching through the whole map ("noclip"), and a
--- dead-to-full health/armor jump ("instant refill"), ALL AT ONCE, on every
--- single death. That combination (-40 teleport, -30 noclip) alone drops a
--- clean 100 score to 30 on one respawn -- already past KickAtScore=35.
--- This was almost certainly the actual cause behind "kicks people for no
--- reason" reports: it fires on completely ordinary, frequent gameplay
--- (dying and respawning), not on anything an actual cheater does.
 local spawnResetHooks = {}
 local function registerSpawnReset(fn)
     table.insert(spawnResetHooks, fn)
@@ -50,11 +34,6 @@ local function report(kind, evidence)
     TriggerServerEvent('AntiCheat:flag', kind, evidence)
 end
 
--- ============================================================
--- Online mean/variance per movement state (Welford's algorithm).
--- This is the "learning" part: every player gets their own baseline
--- instead of one fixed number for the whole server.
--- ============================================================
 local Baseline = {
     foot    = { n = 0, mean = 0, m2 = 0 },
     vehicle = { n = 0, mean = 0, m2 = 0 },
@@ -73,9 +52,6 @@ local function welfordStdDev(state)
     return math.sqrt(state.m2 / (state.n - 1))
 end
 
--- ============================================================
--- Speed check
--- ============================================================
 if Config.SpeedCheck.Enable then
     Citizen.CreateThread(function()
         while true do
@@ -91,13 +67,13 @@ if Config.SpeedCheck.Enable then
 
                 if inVehicle and Config.SpeedCheck.IgnoreIfInAircraft then
                     local vClass = GetVehicleClass(entity)
-                    if vClass == 15 or vClass == 16 then -- Helicopters / Planes
+                    if vClass == 15 or vClass == 16 then
                         skip = true
                     end
                 end
 
                 if not skip and entity and entity ~= 0 then
-                    local speed = GetEntitySpeed(entity) -- m/s
+                    local speed = GetEntitySpeed(entity)
 
                     local stateKey = inVehicle and 'vehicle' or 'foot'
                     local state = Baseline[stateKey]
@@ -112,12 +88,12 @@ if Config.SpeedCheck.Enable then
                                 speed = speed, ceiling = ceiling, zscore = z,
                                 mean = state.mean, sd = sd, inVehicle = inVehicle,
                             })
-                            -- don't let the outlier itself poison the learned baseline
+
                         else
                             welfordUpdate(state, speed)
                         end
                     else
-                        -- still learning this player's normal pace — never flag yet
+
                         if speed <= ceiling then
                             welfordUpdate(state, speed)
                         end
@@ -128,9 +104,6 @@ if Config.SpeedCheck.Enable then
     end)
 end
 
--- ============================================================
--- Noclip check — 3 independent signals, require N of them together
--- ============================================================
 if Config.NoclipCheck.Enable then
     local lastPos = nil
     registerSpawnReset(function() lastPos = nil end)
@@ -150,13 +123,13 @@ if Config.NoclipCheck.Enable then
                     local signals = 0
                     local detail = {}
 
-                    -- Signal A: collision explicitly disabled on the entity (classic noclip flag)
+
                     if GetEntityCollisionDisabled(ped) then
                         signals = signals + 1
                         detail.collisionDisabled = true
                     end
 
-                    -- Signal B: sustained mid-air hover with no fall/parachute/ragdoll explanation
+
                     local heightAboveGround = GetEntityHeightAboveGround(ped)
                     if not inVehicle and heightAboveGround and heightAboveGround > 3.0
                         and not IsPedFalling(ped) and not IsPedRagdoll(ped)
@@ -165,13 +138,13 @@ if Config.NoclipCheck.Enable then
                         detail.hovering = heightAboveGround
                     end
 
-                    -- Signal C: the straight path from last sample to now passes through
-                    -- solid world geometry that a normal ped would have collided with.
+
+
                     if Config.NoclipCheck.RaycastThroughWorld and lastPos then
                         local rayHandle = StartShapeTestRay(
                             lastPos.x, lastPos.y, lastPos.z,
                             pos.x, pos.y, pos.z,
-                            1, ped, 0) -- flag 1 = world/map geometry only
+                            1, ped, 0)
                         local _, hit = GetShapeTestResult(rayHandle)
                         if hit == 1 then
                             signals = signals + 1
@@ -190,13 +163,10 @@ if Config.NoclipCheck.Enable then
     end)
 end
 
--- ============================================================
--- God mode check — "should've taken damage" events vs. actual health delta
--- ============================================================
 if Config.GodmodeCheck.Enable then
     Citizen.CreateThread(function()
         local wasDamagedFlag = false
-        local pendingChecks = {} -- { {atHealth=, time=}, ... }
+        local pendingChecks = {}
         local noDamageStreak = 0
         local lastFlagAt = 0
 
@@ -212,7 +182,7 @@ if Config.GodmodeCheck.Enable then
                 end
                 wasDamagedFlag = damagedNow
 
-                -- resolve pending checks after a short grace period
+
                 local now = GetGameTimer()
                 for i = #pendingChecks, 1, -1 do
                     local chk = pendingChecks[i]
@@ -237,9 +207,6 @@ if Config.GodmodeCheck.Enable then
     end)
 end
 
--- ============================================================
--- Teleport / raw position-delta check (independent from Speed above)
--- ============================================================
 if Config.TeleportCheck.Enable then
     local lastPos, lastTime = nil, nil
     registerSpawnReset(function() lastPos, lastTime = nil, nil end)
@@ -277,9 +244,6 @@ if Config.TeleportCheck.Enable then
     end)
 end
 
--- ============================================================
--- Super Jump
--- ============================================================
 if Config.SuperJumpCheck.Enable then
     local occurrences = {}
     Citizen.CreateThread(function()
@@ -308,9 +272,6 @@ if Config.SuperJumpCheck.Enable then
     end)
 end
 
--- ============================================================
--- Invisibility
--- ============================================================
 if Config.InvisibilityCheck.Enable then
     Citizen.CreateThread(function()
         local streak = 0
@@ -332,9 +293,6 @@ if Config.InvisibilityCheck.Enable then
     end)
 end
 
--- ============================================================
--- Infinite Ammo + Fire Rate (share the same "shot fired" edge detector)
--- ============================================================
 if Config.InfiniteAmmoCheck.Enable or Config.FireRateCheck.Enable then
     Citizen.CreateThread(function()
         local wasShooting = false
@@ -353,18 +311,18 @@ if Config.InfiniteAmmoCheck.Enable or Config.FireRateCheck.Enable then
         end
 
         while true do
-            Citizen.Wait(0) -- shooting edges are fast; needs to run every frame
+            Citizen.Wait(0)
             local ped = PlayerPedId()
             if ped and ped ~= 0 and not IsEntityDead(ped) then
                 local shooting = IsPedShooting(ped)
 
                 if shooting and not wasShooting then
-                    -- rising edge: a shot was just fired
+
                     local hasWeapon, weaponHash = GetCurrentPedWeapon(ped, true)
                     local now = GetGameTimer()
 
                     if hasWeapon and weaponHash and weaponHash ~= GetHashKey('WEAPON_UNARMED') then
-                        -- Fire rate
+
                         if Config.FireRateCheck.Enable and lastShotTime and lastWeapon == weaponHash then
                             local gap = now - lastShotTime
                             local minCycle = Config.FireRateCheck.WeaponMinCycleMs[weaponHash] or Config.FireRateCheck.DefaultMinCycleMs
@@ -382,7 +340,7 @@ if Config.InfiniteAmmoCheck.Enable or Config.FireRateCheck.Enable then
                             end
                         end
 
-                        -- Infinite ammo
+
                         if Config.InfiniteAmmoCheck.Enable and not isIgnoredAmmoWeapon(weaponHash) then
                             local ammoNow = GetAmmoInPedWeapon(ped, weaponHash)
                             if lastWeapon == weaponHash and lastAmmo ~= nil and ammoNow >= lastAmmo and lastAmmo > 0 then
@@ -411,22 +369,9 @@ if Config.InfiniteAmmoCheck.Enable or Config.FireRateCheck.Enable then
     end)
 end
 
--- ============================================================
--- Weapon Blacklist
--- FIXED (was a real "kicks for no reason" cause): this used to re-report
--- every single sample (every 3s) for as long as the player merely
--- POSSESSED the weapon, with no occurrence window at all -- unlike every
--- other check in this file. -45 every 3s meant just holding a restricted
--- weapon for ~6-9 seconds alone was enough to hit KickAtScore=35 from a
--- clean 100, regardless of whether anything actually suspicious happened.
--- Now it's edge-triggered like the rest: report once when a given weapon
--- is first detected, then stay silent about that same weapon until the
--- player no longer has it (so a genuinely repeated pickup still flags
--- again, but merely carrying it doesn't drain the score every tick).
--- ============================================================
 if Config.WeaponBlacklistCheck.Enable then
     Citizen.CreateThread(function()
-        local alreadyFlagged = {} -- [weaponHash] = true while still possessed
+        local alreadyFlagged = {}
         while true do
             Citizen.Wait(Config.WeaponBlacklistCheck.SampleIntervalMs)
             local ped = PlayerPedId()
@@ -446,9 +391,6 @@ if Config.WeaponBlacklistCheck.Enable then
     end)
 end
 
--- ============================================================
--- Vehicle Handling Anomaly (acceleration, not top speed)
--- ============================================================
 if Config.VehicleHandlingCheck.Enable then
     local lastSpeed, lastTime = nil, nil
     local occurrences = {}
@@ -489,9 +431,6 @@ if Config.VehicleHandlingCheck.Enable then
     end)
 end
 
--- ============================================================
--- Instant Armor/Health Refill
--- ============================================================
 if Config.InstantRefillCheck.Enable then
     local lastHealth, lastArmor = nil, nil
     local occurrences = {}
@@ -529,17 +468,6 @@ if Config.InstantRefillCheck.Enable then
     end)
 end
 
--- ============================================================
--- Resource Whitelist (see the honest caveat in config.lua)
--- FIXED (same class of bug as WeaponBlacklistCheck above): this used to
--- re-report the SAME unknown resource every single sample (every 60s) for
--- as long as it stayed loaded, with no dedup -- so one false-positive
--- resource name meant a guaranteed kick a few minutes later no matter
--- what it actually was. The dedup itself lives server-side (see
--- AntiCheat:resourceList in server.lua) since the server is the
--- authoritative, stateful side -- this client thread is unchanged from
--- before other than this comment.
--- ============================================================
 if Config.ResourceWhitelistCheck.Enable then
     Citizen.CreateThread(function()
         while true do

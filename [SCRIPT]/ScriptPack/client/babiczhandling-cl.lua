@@ -7,9 +7,6 @@ Citizen.CreateThread(function()
     end
   end)
 
--- min server-side permission_level required (must match server/babiczhandling-sv.lua's
--- BABICZ_REQUIRED_PERM - this client copy is only used for the initial /handling name
--- prompt UX and is never trusted on its own; the server re-checks everything itself)
 local BABICZ_REQUIRED_PERM = 5
 
 local values = {
@@ -21,10 +18,10 @@ local values = {
         type = "float",
         change = 1
     },
-    -- fDownForceModifier = {
-    --     type = "float",
-    --     change = 0.05
-    -- },
+
+
+
+
     fPercentSubmerged = {
         type = "float",
         change = 5.0
@@ -201,9 +198,9 @@ local values = {
 local class = "CHandlingData"
 local accuracy = 10
 local opened = false
-local dirty = false -- BUGFIX/IMPROVEMENT: only re-clone the vehicle on close if a value actually changed
+local dirty = false
 local handling, currentVehicle, handlingName, lastModel = {}, nil, false, nil
-local checkingPermission = false -- prevents spamming the server callback if the key/command is mashed
+local checkingPermission = false
 
 local RoundValue = function(val)
     return tostring(math.floor((val*10^accuracy)+.5)/10^accuracy)
@@ -215,7 +212,6 @@ local ShowNotification = function(text)
     DrawNotification(true, false)
 end
 
--- vehicle properties taken from ESX framework
 local CloneVehicle = function(veh)
     if DoesEntityExist(veh) then
         local model, coords, heading, networked = GetEntityModel(veh), GetEntityCoords(veh), GetEntityHeading(veh), NetworkGetEntityIsNetworked(veh)
@@ -526,9 +522,6 @@ local CloneVehicle = function(veh)
     end
 end
 
--- REFACTOR: both entry points (the /handling command AND the END keybind)
--- used to duplicate this exact block. Pulled out into one function so there's
--- only one place left to maintain/fix.
 local function ReadVehicleHandlingInto(vehicle)
     handling, currentVehicle, dirty = {}, vehicle, false
     for k, v in pairs(values) do
@@ -553,9 +546,9 @@ local function OpenEditor(handlingNameArg)
         return
     end
 
-    -- SECURITY FIX: ask the server whether this player is actually allowed to
-    -- open the editor, instead of only trusting our own local perm value
-    -- (which any mod menu can freely lie about).
+
+
+
     checkingPermission = true
     ESX.TriggerServerCallback('babiczhandling:checkPermission', function(allowed)
         checkingPermission = false
@@ -590,12 +583,6 @@ local function OpenEditor(handlingNameArg)
     end)
 end
 
--- REFACTOR + BUGFIX: closing via the /handling toggle used to skip this
--- clone/bake-in step entirely (only the NUI "X" button did it), so a named
--- handling change wouldn't actually persist if you closed with the command.
--- Also only clones the vehicle if something was actually changed (`dirty`),
--- instead of unconditionally respawning it (which reset engine state/mods
--- on every single close, even ones with zero edits).
 local function CloseEditor()
     SendNUIMessage({ action = "hide" })
     SetNuiFocus(false, false)
@@ -621,7 +608,7 @@ RegisterCommand("handling", function(_, args)
 end, false)
 
 RegisterCommand("*BabiczHandlingEditor", function()
-    OpenEditor(nil) -- nil = keep whatever handlingName was already set, matches original keybind behaviour
+    OpenEditor(nil)
 end)
 RegisterKeyMapping("*BabiczHandlingEditor", "Handling Editor", "keyboard", "END")
 
@@ -642,12 +629,12 @@ local UpdateHandling = function(target, value)
         SetVehicleHandlingFloat(currentVehicle, class, target, value)
     elseif values[target].type == "vector" then
         handling[target] = value
-        -- BUGFIX: original code referenced an undefined global `k` here
-        -- (leftover from the unrelated `for k, v in pairs(values)` loop
-        -- elsewhere in the file) instead of the local `target` it just
-        -- computed below - this threw "attempt to concatenate a nil value"
-        -- and made both vector fields (vecCentreOfMassOffset /
-        -- vecInertiaMultiplier) completely unusable.
+
+
+
+
+
+
         local baseName = target:gsub("_x", ""):gsub("_y", ""):gsub("_z", "")
         local vec = vector3(
             tonumber(handling[baseName.."_x"]) or 0.0,
@@ -687,9 +674,6 @@ RegisterNUICallback("close", function(data, cb)
     cb(true)
 end)
 
--- IMPROVEMENT: previously if you got out of the vehicle (or it got deleted/
--- despawned) while the editor was still open, the UI just stayed open and
--- floating with a dead currentVehicle reference. Now it closes itself.
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(1000)

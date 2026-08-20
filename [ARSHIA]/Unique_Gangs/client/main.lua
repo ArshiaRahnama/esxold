@@ -1,6 +1,5 @@
 
 
-
 ESX = nil
 
 local base64MoneyIcon = ''
@@ -39,23 +38,20 @@ AddEventHandler('gangs:itemac', function(gang)
 			}, function(data, menu)
 				if data.current.value == 'yes' then
 					TriggerServerEvent("gangs:acceptinv", gang, 1)
-					ESX.UI.Menu.CloseAll()		
+					ESX.UI.Menu.CloseAll()
 				elseif data.current.value == 'no' then
 					menu.close()
-                    ESX.UI.Menu.CloseAll()													
+                    ESX.UI.Menu.CloseAll()
 				end
 			end
 			)
 
 end)
 
-
-
-
 function OpenBossMenu(gang, close, options)
 	ESX.TriggerServerCallback('gangs:getGangData', function(data)
 	Data.vip = data.vip
-	
+
 	local isBoss = nil
 	local options  = options or {}
 	local elements = {}
@@ -105,7 +101,7 @@ function OpenBossMenu(gang, close, options)
 			options[k] = v
 		end
 	end
-	
+
 	if options.withdraw then
 		local formattedMoney = _U('locale_currency', ESX.Math.GroupDigits(gangMoney))
 		table.insert(elements, {label = ('%s: <span style="color:green;">%s</span>'):format("Money", formattedMoney), value = 'withdraw_society_money'})
@@ -114,27 +110,27 @@ function OpenBossMenu(gang, close, options)
  	if options.employees and ESX.PlayerData.gang.grade >= 10 then
 		table.insert(elements, {label = "Manage Gang Members", value = 'manage_employees'})
 	end
-	
 
- 	-- if options.grades then
-	-- 	table.insert(elements, {label = "Change Salary", value = 'manage_grades'})
-	-- end
+
+
+
+
 if Data.vip == 1 then
 
 	if options.gradesname and ESX.PlayerData.gang.grade >= 10 then
 		table.insert(elements, {label = "Change Gredes Name", value = 'manage_gradesname'})
 	end
-	
+
 	if options.garage and ESX.PlayerData.gang.grade >= 10 then
 		table.insert(elements, {label = "Manage Access", value = 'manage_accses'})
 	end
-	
-	
+
+
 end
 	if options.logpower and ESX.PlayerData.gang.grade >= 10 then
 		table.insert(elements, {label = "Set Webhook Log", value = 'set_webhook'})
 	end
-	
+
 	if options.logo and ESX.PlayerData.gang.grade >= 10 then
 		table.insert(elements, {label = "Set Icon", value = 'set_logo'})
 	end
@@ -153,7 +149,7 @@ end
 			ManageGrades()
 		elseif data.current.value == 'manage_accses' then
 			OpenManageAccess(gang, rank)
-		
+
 
 		elseif data.current.value == 'set_logo' then
 			SetLogo()
@@ -165,7 +161,7 @@ end
 				ESX.ShowNotification("~h~Gang Shoma Ghabeliyat Log Nadarad, Jahat Kharid Be Shop Morajee Konid")
 			end
 		end
-		
+
 	end, function(data, menu)
 		if close then
 			close(data, menu)
@@ -174,18 +170,17 @@ end
 	end,gang)
 end
 
-
 function ManageGrades()
 	ESX.TriggerServerCallback('gang:getGrades', function(grades)
 		  local elements = {}
 		  local gggrade = ESX.PlayerData.gang.grade
-			
+
 			for k,v in pairs(grades) do
-				if k <= gggrade then 
-				
+				if k <= gggrade then
+
 					table.insert(elements, {label = '(' .. k .. ') | ' .. v.label, grade = k})
 				end
-				
+
 			end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'show_grade_list', {
@@ -198,12 +193,12 @@ function ManageGrades()
                 title    = "Esm jadid rank ra vared konid",
 
 			}, function(data2, menu2)
-				
+
 				if not data2.value then
 					ESX.ShowNotification("Shoma dar ghesmat esm jadid chizi vared nakardid!")
 					return
 				end
-	
+
 				if data2.value:match("[^%w%s]") or data2.value:match("%d") then
 					ESX.ShowNotification("~h~Shoma mojaz be vared kardan ~r~Special ~o~character ~w~ya ~r~adad ~w~nistid!")
 					return
@@ -224,13 +219,12 @@ function ManageGrades()
             end, function (data2, menu2)
                 menu2.close()
             end)
-			
+
 		end, function(data, menu)
 			menu.close()
 		end)
 	end)
 end
-
 
 function SetWebhook()
 	local elements = {}
@@ -244,27 +238,26 @@ function SetWebhook()
 		align    = 'top-left',
 		elements = elements
 	}, function(data, menu)
-	
-		if data.current.value == 'boss' then 
+
+		if data.current.value == 'boss' then
 			WebHookData('boss', 'webhookboss')
-		elseif data.current.value == 'vehicle' then 
+		elseif data.current.value == 'vehicle' then
 			WebHookData('vehicle', 'webhookveh')
-		elseif data.current.value == 'inventory' then 
+		elseif data.current.value == 'inventory' then
 			WebHookData('inventory', 'webhookinv')
-		elseif data.current.value == 'money' then 
+		elseif data.current.value == 'money' then
 			WebHookData('money', 'webhookmoney')
 		end
-	
-	
-	
+
+
+
 	end, function(data, menu)
-	
+
 		menu.close()
 	end)
 
-	
-end
 
+end
 
 function WebHookData(vauename, dbname)
 
@@ -272,7 +265,7 @@ function WebHookData(vauename, dbname)
 		title    = "Link Web Hook Ra Vared Konid",
 
 	}, function(data2, menu2)
-		
+
 		if not data2.value then
 			ESX.ShowNotification("Shoma Linki Vared Nakardid!")
 			return
@@ -292,10 +285,7 @@ function WebHookData(vauename, dbname)
 		menu2.close()
 	end)
 
-
 end
-
-
 
 function SetLogo()
 
@@ -303,7 +293,7 @@ function SetLogo()
 		title    = "Link Axs Ra Vared Konid",
 
 	}, function(data2, menu2)
-		
+
 		if not data2.value then
 			ESX.ShowNotification("Shoma Chizi Vared Nakardid!")
 			return
@@ -324,9 +314,6 @@ function SetLogo()
 	end)
 end
 
-
-
-
 function OpenManageEmployeesMenu(gang)
 	ESX.TriggerServerCallback('gangs:getEmployees', function(employees)
 	ESX.TriggerServerCallback('gangs:getGangData', function(data)
@@ -337,26 +324,26 @@ function OpenManageEmployeesMenu(gang)
 	Data.price  		= data.price
 	Data.garage_limit  	= data.garage_limit
 
-	
+
 	local tedadmember = 0
 	for i=1, #employees, 1 do
 		tedadmember = tedadmember + 1
 	end
-	
+
 	local elements = {
 		{label = "Members List", value = 'employee_list'},
 		{label = _U('recruit'),       value = 'recruit'},
 		{label = "Slot: " .. tedadmember.."/"..Data.slot,       value = 'slotsize'},
 		{label = "Armor: " .. Data.bulletproof.."%",       value = 'vest'},
 		{label = "Gheymat Kharid Armor: $" ..Data.price.. " Mibashad",       value = 'price'},
-		--{label = "Limit Garage: " ..Data.garage_limit.." Mashin",  value = 'garagelimit'}
+
 	}
 	if Data.gps == 1 then
 		table.insert(elements, {label = "GPS: Gang Shoma GPS Darad", value = 'have_gps'})
 	else
 		table.insert(elements, {label = "GPS: Gang Shoma GPS Nadarad", value = 'donthave_gps'})
 	end
-	
+
 	if Data.lockpick == 1 then
 		table.insert(elements, {label = "LockPick: Gang Shoma LockPick Darad", value = 'LockPick_Acced'})
 	else
@@ -368,12 +355,12 @@ function OpenManageEmployeesMenu(gang)
 		align    = 'top-left',
 		elements = elements
 	}, function(data, menu)
-	
-	
+
+
  		if data.current.value == 'employee_list' then
 			OpenEmployeeList(gang)
 		end
-		
+
  		if data.current.value == 'recruit' then
 			if tedadmember <= Data.slot then
 				OpenRecruitMenu(gang)
@@ -393,7 +380,7 @@ function OpenManageEmployeesMenuF5(gang)
 	ESX.TriggerServerCallback('gangs:getEmployees', function(employees)
 	ESX.TriggerServerCallback('gangs:getGangData', function(data)
 	Data.slot  = data.slot
-	
+
 	local tedadmember = 0
 	for i=1, #employees, 1 do
 		tedadmember = tedadmember + 1
@@ -407,8 +394,8 @@ function OpenManageEmployeesMenuF5(gang)
 			{label = "Slot: " .. tedadmember.."/"..Data.slot,       value = 'slotsize'}
 		}
 	}, function(data, menu)
-	
-		
+
+
  		if data.current.value == 'recruit' then
 			if tedadmember <= Data.slot then
 				OpenRecruitMenu(gang)
@@ -428,23 +415,23 @@ function OpenMoneyMenu(gang)
 
 	local elements = {}
 	table.insert(elements, {label = "Deposit Money"	,  	value = 'deposit_money'})
-	if ESX.PlayerData.gang.grade >= 10 then 
+	if ESX.PlayerData.gang.grade >= 10 then
 		table.insert(elements, {label = "Withdraw Money", 	value = 'withdraw_money'})
-		
+
 	end
 
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'money_manage_' .. gang, {
 	   title    = _U('money_management'),
 	   align    = 'top-left',
 	   elements = elements
-	  
 
-	   
+
+
 
    	}, function(data, menu)
 
 		if data.current.value == 'withdraw_money' then
-			
+
 			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'withdraw_society_money_amount_' .. gang, {
 				title = _U('withdraw_money')
 			}, function(data, menu)
@@ -468,9 +455,9 @@ function OpenMoneyMenu(gang)
 			ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'deposit_money_amount_' .. gang, {
 				title = _U('deposit_money')
 			}, function(data, menu)
- 
+
 				 local amount = tonumber(data.value)
- 
+
 				 if amount == nil then
 					ESX.ShowNotification(_U('invalid_amount'))
 				else
@@ -478,7 +465,7 @@ function OpenMoneyMenu(gang)
 					TriggerServerEvent('gangs:depositMoney', gang, amount)
 					OpenBossMenu(gang, close, options)
 				end
- 
+
 			 end, function(data, menu)
 				menu.close()
 			end)
@@ -532,34 +519,30 @@ function OpenEmployeeList(gang)
 
 end
 
-
-
-
 function OpenRecruitMenu(gang)
-	
-	
+
+
  	ESX.TriggerServerCallback('gangs:getOnlinePlayers', function(players, ppcoords2)
 
  		local elements = {}
-	
-		
+
+
 		for i=1, #players, 1 do
 
 			if players[i].gang.name ~= gang then
-				
+
 				targetCoords = players[i].coords
 				local distance = GetDistanceBetweenCoords(targetCoords.x, targetCoords.y, targetCoords.z, ppcoords2.x, ppcoords2.y, ppcoords2.z, true)
 
-				if distance <= 15 then 
+				if distance <= 15 then
 					table.insert(elements, {
 						label = players[i].name,
 						value = players[i].source,
 						name = players[i].name,
 						identifier = players[i].identifier,
-						
+
 					})
 				end
-
 
 			end
 		end
@@ -582,7 +565,7 @@ function OpenRecruitMenu(gang)
  				if data2.current.value == 'yes' then
 					ESX.ShowNotification(_U('you_have_hired', data.current.name))
 
-					
+
  					ESX.TriggerServerCallback('gangs:setGang', function()
 						OpenRecruitMenu(gang)
 					end, data.current.identifier, gang, 1, 'hire')
@@ -605,18 +588,18 @@ function OpenPromoteMenu(gangname, employee)
 
  		local elements = {}
 		local gggrade = ESX.PlayerData.gang.grade
-		 	
+
  		for i=1, #gang.grades, 1 do
 			local gradeLabel = (gang.grades[i].label == '' and gang.label or gang.grades[i].label)
-			
-			if gang.grades[i].grade < gggrade then 
+
+			if gang.grades[i].grade < gggrade then
 				table.insert(elements, {
 					label = gradeLabel,
 					value = gang.grades[i].grade,
 					selected = (employee.gang.grade == gang.grades[i].grade)
 				})
 			end
- 			
+
 		end
 
  		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'promote_employee_' .. gangname, {
@@ -636,7 +619,6 @@ function OpenPromoteMenu(gangname, employee)
  	end, gangname)
 
 end
-
 
 function OpenManageGradesMenu(gangname)
 
@@ -688,27 +670,17 @@ function OpenManageGradesMenu(gangname)
  	end, gangname)
 
 end
---- ---------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
 
 function OpensetPermGarage(gang, rank)
 	ESX.TriggerServerCallback('gangprop:getCars',function(vehicles)
 		ESX.TriggerServerCallback('gangs:GetPermData', function(vyitems)
 			ESX.TriggerServerCallback('gangs:getGangData', function(data)
 				Data.vehspawn = json.decode(data.vehspawn)
-				if vehicles == nil or vehicles == {} then 
+				if vehicles == nil or vehicles == {} then
 					TriggerEvent("chatMessage", "[SYSTEM]", {255, 0, 0}, "^0Gang Shoma Mashin Heli Nadarad!")
-					return 
+					return
 				end
-				
+
 				local elements = {}
 				table.insert(elements, {label = ' Esm Mashin | Access'})
 				for i,v in pairs(vehicles) do
@@ -743,57 +715,57 @@ function OpensetPermGarage(gang, rank)
 						end, gang, rank, item, 'car', plates, vehllabel)
 					end
 
-				-- end, function(data, menu)
 
-				-- 	menu.close()
 
-				-- end, function(data, menu)
 
-				-- 	if localVeh then
-				-- 		DeleteVehicle(localVeh)
-				-- 		localVeh = nil
-				-- 	end
-				-- 	if data.current.value then
-				-- 		-- local foundSpawn, spawnPoint = GetAvailableVehicleSpawnPoint(this_Garage)
-				
-				-- 		local shokol = GetClosestVehicle(-74.8652, -818.950, 326.17,  3.0,  0,  71)
-				-- 		if not DoesEntityExist(shokol) then
-				-- 		  SetCamCoord(camera, -74.8652 + 3.0, -818.950 + 5.0, 326.17+ 4.0)
-				-- 		  SetCamActive(camera, true)
-				-- 		  PointCamAtCoord(camera, -74.8652, -818.950, 326.17)
-				-- 		  RenderScriptCams(true, true, 1000, true, false)
-				
-				-- 		  -- GlobalPerview = ESX.SetTimeout(500, function()
-				-- 			ESX.TriggerServerCallback('esx_advancedgarage:GetVehiclePropsFromPlate', function(vehicle)
-				-- 				local vehicle = data.current.value.vehicle
-				-- 				if not localVeh then
-				-- 					ESX.Game.SpawnLocalVehicle(vehicle.model, vector3(-74.8652, -818.950, 326.17), 331.5, function(callback_vehicle)
-									
-				-- 						if localVeh then
-				-- 							DeleteVehicle(callback_vehicle)
-				-- 						else
-				-- 							localVeh = callback_vehicle
-				-- 							vehicle.plate = data.current.value.plate
-					
-				-- 							SetVehRadioStation(callback_vehicle, "OFF")
-											
-										
-				-- 						end
-										
-				-- 					end)
-				-- 				end
-				-- 			end, data.current.value.plate)
-						
 
-				-- 		else
-				-- 			ESX.ShowNotification('Mahale Spawm Mashin Por Ast!!')
-				-- 		end
-				-- 		end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 					end, function(data, menu)
-						-- if GlobalPerview then
-						-- 	ESX.ClearTimeout(GlobalPerview)
-						-- 	GlobalPerview = nil
-						-- end
+
+
+
+
 						if localVeh then
 						DeleteVehicle(localVeh)
 						localVeh = nil
@@ -803,7 +775,7 @@ function OpensetPermGarage(gang, rank)
 						RenderScriptCams(false, false, 0, true, false)
 						DestroyCam(camera, false)
 						camera = nil
-						
+
 						end
 						SetopAccess(gang, 'mg')
 					end)
@@ -812,18 +784,14 @@ function OpensetPermGarage(gang, rank)
 	end, gang)
 end
 
-
-
-
-
 function OpensetPermheli(gang, rank)
 	ESX.TriggerServerCallback('gangprop:getCars',function(vehicles)
 		ESX.TriggerServerCallback('gangs:GetPermData', function(vyitems)
 			ESX.TriggerServerCallback('gangs:getGangData', function(data)
 				Data.helispawn = json.decode(data.helispawn)
-				if vehicles == nil or vehicles == {} then 
+				if vehicles == nil or vehicles == {} then
 					TriggerEvent("chatMessage", "[SYSTEM]", {255, 0, 0}, "^0Gang Shoma Hich Heli Nadarad!")
-					return 
+					return
 				end
 
 				local elements = {}
@@ -835,7 +803,7 @@ function OpensetPermheli(gang, rank)
 					if classnumber == 15 then
 						local carname = GetDisplayNameFromVehicleModel(v.vehicle.model)
 						local velLabel = GetLabelText(carname)
-					
+
 						if checktable(elements, carname) then
 							if checkas(carname, 'heli', vyitems, plate2) == true then
 								table.insert(elements, {label = velLabel..' | '..v.vehicle.plate .." | <font color=Lime>✅</font>", VehLabel = velLabel, value = v})
@@ -871,45 +839,45 @@ function OpensetPermheli(gang, rank)
 						localVeh = nil
 					end
 					if data.current.value then
-						-- local foundSpawn, spawnPoint = GetAvailableVehicleSpawnPoint(this_Garage)
-				
+
+
 						local shokol = GetClosestVehicle(Data.helispawn.x,  Data.helispawn.y,  Data.helispawn.z,  3.0,  0,  71)
 						if not DoesEntityExist(shokol) then
 						  SetCamCoord(camera, Data.helispawn.x + 3.0, Data.helispawn.y + 5.0, Data.helispawn.z+ 4.0)
 						  SetCamActive(camera, true)
 						  PointCamAtCoord(camera, Data.helispawn.x, Data.helispawn.y, Data.helispawn.z)
 						  RenderScriptCams(true, true, 1000, true, false)
-				
-						  -- GlobalPerview = ESX.SetTimeout(500, function()
+
+
 							ESX.TriggerServerCallback('esx_advancedgarage:GetVehiclePropsFromPlate', function(vehicle)
 								local vehicle = data.current.value.vehicle
 								if not localVeh then
 									ESX.Game.SpawnLocalVehicle(vehicle.model, Data.helispawn, Data.helispawn.a, function(callback_vehicle)
-									
+
 										if localVeh then
 											DeleteVehicle(callback_vehicle)
 										else
 											localVeh = callback_vehicle
 											vehicle.plate = data.current.value.plate
-					
+
 											SetVehRadioStation(callback_vehicle, "OFF")
-										
+
 										end
-										
+
 									end)
 								end
 							end, data.current.value.plate)
-						
+
 
 						else
 							ESX.ShowNotification('Mahale Spawm Mashin Por Ast!!')
 						end
 						end
 					end, function(data, menu)
-						-- if GlobalPerview then
-						-- 	ESX.ClearTimeout(GlobalPerview)
-						-- 	GlobalPerview = nil
-						-- end
+
+
+
+
 						if localVeh then
 						DeleteVehicle(localVeh)
 						localVeh = nil
@@ -919,7 +887,7 @@ function OpensetPermheli(gang, rank)
 						RenderScriptCams(false, false, 0, true, false)
 						DestroyCam(camera, false)
 						camera = nil
-						
+
 						end
 						SetopAccess(gang, 'hl')
 					end)
@@ -928,17 +896,14 @@ function OpensetPermheli(gang, rank)
 	end, gang)
 end
 
-
-
-
 function OpensetPermboat(gang, rank)
 	ESX.TriggerServerCallback('gangprop:getCars',function(vehicles)
 		ESX.TriggerServerCallback('gangs:GetPermData', function(vyitems)
 			ESX.TriggerServerCallback('gangs:getGangData', function(data)
 				Data.boatspawn = json.decode(data.boatspawn)
-				if vehicles == nil or vehicles == {} then 
+				if vehicles == nil or vehicles == {} then
 					TriggerEvent("chatMessage", "[SYSTEM]", {255, 0, 0}, "^0Gang Shoma Boat Heli Nadarad!")
-					return 
+					return
 				end
 
 				local elements = {}
@@ -985,45 +950,45 @@ function OpensetPermboat(gang, rank)
 						localVeh = nil
 					end
 					if data.current.value then
-						-- local foundSpawn, spawnPoint = GetAvailableVehicleSpawnPoint(this_Garage)
-				
+
+
 						local shokol = GetClosestVehicle(Data.boatspawn.x,  Data.boatspawn.y,  Data.boatspawn.z,  3.0,  0,  71)
 						if not DoesEntityExist(shokol) then
 						  SetCamCoord(camera, Data.boatspawn.x + 3.0, Data.boatspawn.y + 5.0, Data.boatspawn.z+ 4.0)
 						  SetCamActive(camera, true)
 						  PointCamAtCoord(camera, Data.boatspawn.x, Data.boatspawn.y, Data.boatspawn.z)
 						  RenderScriptCams(true, true, 1000, true, false)
-				
-						  -- GlobalPerview = ESX.SetTimeout(500, function()
+
+
 							ESX.TriggerServerCallback('esx_advancedgarage:GetVehiclePropsFromPlate', function(vehicle)
 								local vehicle = data.current.value.vehicle
 								if not localVeh then
 									ESX.Game.SpawnLocalVehicle(vehicle.model, Data.boatspawn, Data.boatspawn.a, function(callback_vehicle)
-									
+
 										if localVeh then
 											DeleteVehicle(callback_vehicle)
 										else
 											localVeh = callback_vehicle
 											vehicle.plate = data.current.value.plate
-					
+
 											SetVehRadioStation(callback_vehicle, "OFF")
-										
+
 										end
-										
+
 									end)
 								end
 							end, data.current.value.plate)
-						
+
 
 						else
 							ESX.ShowNotification('Mahale Spawm Mashin Por Ast!!')
 						end
 						end
 					end, function(data, menu)
-						-- if GlobalPerview then
-						-- 	ESX.ClearTimeout(GlobalPerview)
-						-- 	GlobalPerview = nil
-						-- end
+
+
+
+
 						if localVeh then
 						DeleteVehicle(localVeh)
 						localVeh = nil
@@ -1033,7 +998,7 @@ function OpensetPermboat(gang, rank)
 						RenderScriptCams(false, false, 0, true, false)
 						DestroyCam(camera, false)
 						camera = nil
-						
+
 						end
 						SetopAccess(gang, 'bt')
 					end)
@@ -1042,13 +1007,11 @@ function OpensetPermboat(gang, rank)
 	end, gang)
 end
 
-
-
 function OpensetPermitems(gang, rank)
 	ESX.TriggerServerCallback("gangs:getPropertyInventory",function(inventory)
-		ESX.TriggerServerCallback('gangs:GetPermData', function(vyitems) 
+		ESX.TriggerServerCallback('gangs:GetPermData', function(vyitems)
 			local elements = {}
-			
+
 			for k,v in pairs(inventory) do
 				if k == 'items' then
 
@@ -1056,15 +1019,13 @@ function OpensetPermitems(gang, rank)
 						if checktable(elements, v2.name) then
 							if checkas(v2.name, 'inventorys', vyitems) == true then
 
-
-
 								table.insert(elements, {label = v2.label.. " | <font color=Lime>✅</font>", value = v2.name, type = 'item'})
 							else
 								table.insert(elements, {label = v2.label.. " | <font color=red>❌</font>", value = v2.name, type = 'item'})
 							end
 						end
 					end
-				
+
 				end
 			end
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'Weapons_list', {
@@ -1087,12 +1048,11 @@ function OpensetPermitems(gang, rank)
 	end,gang, 'inventorys')
 end
 
-
 function OpensetPermguns(gang, rank)
 	ESX.TriggerServerCallback("gangs:getPropertyInventory",function(inventory)
-		ESX.TriggerServerCallback('gangs:GetPermData', function(vyitems) 
+		ESX.TriggerServerCallback('gangs:GetPermData', function(vyitems)
 			local elements = {}
-			
+
 			for k,v in pairs(inventory) do
 				if k == 'weapons' then
 					for k2,v2 in pairs(v) do
@@ -1104,7 +1064,7 @@ function OpensetPermguns(gang, rank)
 							end
 						end
 					end
-				
+
 				end
 			end
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'Weapons_list', {
@@ -1114,11 +1074,11 @@ function OpensetPermguns(gang, rank)
 			}, function(data, menu)
 				local weapon = data.current.value
 				local itype = data.current.type
-				-- if itype ~= 'lable' then
+
 					ESX.TriggerServerCallback('gangs:SetPermData', function(result)
 						OpensetPermguns(gang, rank)
 					end, gang, rank, weapon, 'inventorys')
-				-- end
+
 			end, function(data, menu)
 				menu.close()
 				SetopAccess(gang, 'wp')
@@ -1126,7 +1086,6 @@ function OpensetPermguns(gang, rank)
 		end, gang, rank, 'inventorys')
 	end,gang, 'inventorys')
 end
-
 
 function OpensetCrafting()
 	local playerdata = ESX.GetPlayerData()
@@ -1138,15 +1097,15 @@ function OpensetCrafting()
 			for k,v in pairs(grades22) do
 				local craftha = v.crafting
 				local gangname = v.gang_name
-				if k <= gggrade then 
-					if craftha == 1 then 
+				if k <= gggrade then
+					if craftha == 1 then
 						table.insert(elements, {label = '(' .. k .. ') | ' .. v.label.." | <font color=Lime>✅</font>", grade = k, gname2 = gangname, value = craftha})
 					else
 						table.insert(elements, {label = '(' .. k .. ') | ' .. v.label.."| <font color=red>❌</font>", grade = k, gname2 = gangname, value = craftha})
 					end
 				end
 			end
-		
+
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'craft', {
 			title    = 'Weapon list',
 			align    = 'top-left',
@@ -1155,11 +1114,11 @@ function OpensetCrafting()
 			local weapon = data.current.value
 			local rank = data.current.grade
 			local gname2 = data.current.gname2
-			-- if itype ~= 'lable' then
+
 				ESX.TriggerServerCallback('gangs:SetPermData', function(result)
 					OpensetCrafting()
 				end, gname2, rank, weapon, 'craft')
-			-- end
+
 		end, function(data, menu)
 			menu.close()
 			OpenManageAccess(gang)
@@ -1168,18 +1127,13 @@ function OpensetCrafting()
 
 end
 
-
-
-
-
-
 function SetopAccess(gang, op)
 	ESX.TriggerServerCallback('gang:getGrades', function(grades)
 		local elements = {}
 		local gggrade = ESX.PlayerData.gang.grade
-		  
+
 		  for k,v in pairs(grades) do
-			if k <= gggrade then 
+			if k <= gggrade then
 				table.insert(elements, {label = '(' .. k .. ') | ' .. v.label, grade = k})
 			end
 		  end
@@ -1202,19 +1156,16 @@ function SetopAccess(gang, op)
 			OpensetPermboat(gang, grade)
 		elseif op == 'wp' then
 			OpensetPermguns(gang, grade)
-		-- elseif op == 'craft' then
-		-- 	OpensetCrafting(gang, grade)
+
+
 		end
-		  
+
 	  end, function(data, menu)
 		  menu.close()
 		  OpenManageAccess(gang)
 	  end)
 	end)
 end
-
-
-
 
 function OpenManageAccess(gang)
 	local elements = {
@@ -1234,7 +1185,7 @@ function OpenManageAccess(gang)
 	  }, function(data, menu)
 		local op = data.current.op
 		if op == 'mvp' then
-			SetVestp() 
+			SetVestp()
 		elseif op == 'set_inv' then
 			SetInv()
 		elseif op == 'set_craft' then
@@ -1251,10 +1202,6 @@ function OpenManageAccess(gang)
 	  end)
 end
 
-
-
-
-
 function checktable(table, item)
 	local can = true
 	for k,v in pairs(table) do
@@ -1264,9 +1211,6 @@ function checktable(table, item)
 	end
 	return can
 end
-
-
-
 
 function checkas(item, type, vyitems, plate2)
 	if vyitems == nil or vyitems == {} then
@@ -1321,18 +1265,11 @@ function checkas(item, type, vyitems, plate2)
 	end
 end
 
-
-
-
-
 function GetModelLabel(name)
 	local label = string.upper(string.gsub(name, 'WEAPON_', ''))
 	label = string.gsub(label, '_', '')
 	return label
 end
-
-
-
 
 AddEventHandler('gangs:openBossMenu', function(gang, close, options)
 	OpenBossMenu(gang, close, options)

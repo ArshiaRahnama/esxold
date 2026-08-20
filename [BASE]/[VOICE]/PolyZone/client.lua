@@ -5,7 +5,6 @@ local defaultColorWalls = {0, 255, 0}
 local defaultColorOutline = {3, 190, 1}
 local defaultColorGrid = {255, 255, 255}
 
--- Utility functions
 local abs = math.abs
 local function _isLeft(p0, p1, p2)
   local p0x = p0.x
@@ -41,7 +40,7 @@ function addBlip(pos)
 end
 
 function clearTbl(tbl)
-  -- Only works with contiguous (array-like) tables
+
   if tbl == nil then return end
   for i=1, #tbl do
     tbl[i] = nil
@@ -50,7 +49,7 @@ function clearTbl(tbl)
 end
 
 function copyTbl(tbl)
-  -- Only a shallow copy, and only works with contiguous (array-like) tables
+
   if tbl == nil then return end
   local ret = {}
   for i=1, #tbl do
@@ -59,24 +58,22 @@ function copyTbl(tbl)
   return ret
 end
 
--- Winding Number Algorithm - http://geomalgorithms.com/a03-_inclusion.html
 local function _windingNumber(point, poly)
-  local wn = 0 -- winding number counter
+  local wn = 0
 
-  -- loop through all edges of the polygon
+
   for i = 1, #poly - 1 do
     wn = _wn_inner_loop(poly[i], poly[i + 1], point, wn)
   end
-  -- test last point to first point, completing the polygon
+
   wn = _wn_inner_loop(poly[#poly], poly[1], point, wn)
 
-  -- the point is outside only when this winding number wn===0, otherwise it's inside
+
   return wn ~= 0
 end
 
--- Detects intersection between two lines
 local function _isIntersecting(a, b, c, d)
-  -- Store calculations in local variables for performance
+
   local ax_minus_cx = a.x - c.x
   local bx_minus_ax = b.x - a.x
   local dx_minus_cx = d.x - c.x
@@ -87,7 +84,7 @@ local function _isIntersecting(a, b, c, d)
   local numerator1 = ((ay_minus_cy) * (dx_minus_cx)) - ((ax_minus_cx) * (dy_minus_cy))
   local numerator2 = ((ay_minus_cy) * (bx_minus_ax)) - ((ax_minus_cx) * (by_minus_ay))
 
-  -- Detect coincident lines
+
   if denominator == 0 then return numerator1 == 0 and numerator2 == 0 end
 
   local r = numerator1 / denominator
@@ -96,7 +93,6 @@ local function _isIntersecting(a, b, c, d)
   return (r >= 0 and r <= 1) and (s >= 0 and s <= 1)
 end
 
--- https://rosettacode.org/wiki/Shoelace_formula_for_polygonal_area#Lua
 local function _calculatePolygonArea(points)
   local function det2(i,j)
     return points[i].x*points[j].y-points[j].x*points[i].y
@@ -106,8 +102,6 @@ local function _calculatePolygonArea(points)
   return abs(0.5 * sum)
 end
 
-
--- Debug drawing functions
 function _drawWall(p1, p2, minZ, maxZ, r, g, b, a)
   local bottomLeft = vector3(p1.x, p1.y, minZ)
   local topLeft = vector3(p1.x, p1.y, maxZ)
@@ -121,7 +115,7 @@ function _drawWall(p1, p2, minZ, maxZ, r, g, b, a)
 end
 
 function PolyZone:TransformPoint(point)
-  -- No point transform necessary for regular PolyZones, unlike zones like Entity Zones, whose points can be rotated and offset
+
   return point
 end
 
@@ -160,7 +154,6 @@ function PolyZone.drawPoly(poly)
   PolyZone.draw(poly)
 end
 
--- Debug drawing all grid cells that are completly within the polygon
 local function _drawGrid(poly)
   local minZ = poly.minZ
   local maxZ = poly.maxZ
@@ -182,7 +175,6 @@ local function _drawGrid(poly)
   end
 end
 
-
 local function _pointInPoly(point, poly)
   local x = point.x
   local y = point.y
@@ -191,7 +183,7 @@ local function _pointInPoly(point, poly)
   local minY = min.y
   local max = poly.max
 
-  -- Checks if point is within the polygon's bounding box
+
   if x < minX or
      x > max.x or
      y < minY or
@@ -199,7 +191,7 @@ local function _pointInPoly(point, poly)
       return false
   end
 
-  -- Checks if point is within the polygon's height bounds
+
   local minZ = poly.minZ
   local maxZ = poly.maxZ
   local z = point.z
@@ -207,7 +199,7 @@ local function _pointInPoly(point, poly)
     return false
   end
 
-  -- Returns true if the grid cell associated with the point is entirely inside the poly
+
   local grid = poly.grid
   if grid then
     local gridDivisions = poly.gridDivisions
@@ -227,14 +219,11 @@ local function _pointInPoly(point, poly)
   return _windingNumber(point, poly.points)
 end
 
-
--- Grid creation functions
--- Calculates the points of the rectangle that make up the grid cell at grid position (cellX, cellY)
 local function _calculateGridCellPoints(cellX, cellY, poly)
   local gridCellWidth = poly.gridCellWidth
   local gridCellHeight = poly.gridCellHeight
   local min = poly.min
-  -- min added to initial point, in order to shift the grid cells to the poly's starting position
+
   local x = cellX * gridCellWidth + min.x
   local y = cellY * gridCellHeight + min.y
   return {
@@ -246,14 +235,13 @@ local function _calculateGridCellPoints(cellX, cellY, poly)
   }
 end
 
-
 function _isGridCellInsidePoly(cellX, cellY, poly)
   gridCellPoints = _calculateGridCellPoints(cellX, cellY, poly)
   local polyPoints = {table.unpack(poly.points)}
-  -- Connect the polygon to its starting point
+
   polyPoints[#polyPoints + 1] = polyPoints[1]
 
-  -- If none of the points of the grid cell are in the polygon, the grid cell can't be in it
+
   local isOnePointInPoly = false
   for i=1, #gridCellPoints - 1 do
     local cellPoint = gridCellPoints[i]
@@ -261,8 +249,8 @@ function _isGridCellInsidePoly(cellX, cellY, poly)
     local y = cellPoint.y
     if _windingNumber(cellPoint, poly.points) then
       isOnePointInPoly = true
-      -- If we are drawing the grid (poly.lines ~= nil), we need to go through all the points,
-      -- and therefore can't break out of the loop early
+
+
       if poly.lines then
         if not poly.gridXPoints[x] then poly.gridXPoints[x] = {} end
         if not poly.gridYPoints[y] then poly.gridYPoints[y] = {} end
@@ -275,8 +263,8 @@ function _isGridCellInsidePoly(cellX, cellY, poly)
     return false
   end
 
-  -- If any of the grid cell's lines intersects with any of the polygon's lines
-  -- then the grid cell is not completely within the poly
+
+
   for i=1, #gridCellPoints - 1 do
     local gridCellP1 = gridCellPoints[i]
     local gridCellP2 = gridCellPoints[i+1]
@@ -290,12 +278,11 @@ function _isGridCellInsidePoly(cellX, cellY, poly)
   return true
 end
 
-
 local function _calculateLinesForDrawingGrid(poly)
   local lines = {}
   for x, tbl in pairs(poly.gridXPoints) do
     local yValues = {}
-    -- Turn dict/set of values into array
+
     for y, _ in pairs(tbl) do yValues[#yValues + 1] = y end
     if #yValues >= 2 then
       table.sort(yValues)
@@ -303,24 +290,24 @@ local function _calculateLinesForDrawingGrid(poly)
       local lastY = yValues[1]
       for i=1, #yValues do
         local y = yValues[i]
-        -- Checks for breaks in the grid. If the distance between the last value and the current one
-        -- is greater than the size of a grid cell, that means the line between them must go outside the polygon.
-        -- Therefore, a line must be created between minY and the lastY, and a new line started at the current y
+
+
+
         if y - lastY > poly.gridCellHeight + 0.01 then
           lines[#lines+1] = {min=vector2(x, minY), max=vector2(x, lastY)}
           minY = y
         elseif i == #yValues then
-          -- If at the last point, create a line between minY and the last point
+
           lines[#lines+1] = {min=vector2(x, minY), max=vector2(x, y)}
         end
         lastY = y
       end
     end
   end
-  -- Setting nil to allow the GC to clear it out of memory, since we no longer need this
+
   poly.gridXPoints = nil
 
-  -- Same as above, but for gridYPoints instead of gridXPoints
+
   for y, tbl in pairs(poly.gridYPoints) do
     local xValues = {}
     for x, _ in pairs(tbl) do xValues[#xValues + 1] = x end
@@ -344,14 +331,12 @@ local function _calculateLinesForDrawingGrid(poly)
   return lines
 end
 
-
--- Calculate for each grid cell whether it is entirely inside the polygon, and store if true
 local function _createGrid(poly, options)
   poly.gridArea = 0.0
   poly.gridCellWidth = poly.size.x / poly.gridDivisions
   poly.gridCellHeight = poly.size.y / poly.gridDivisions
   Citizen.CreateThread(function()
-    -- Calculate all grid cells that are entirely inside the polygon
+
     local isInside = {}
     local gridCellArea = poly.gridCellWidth * poly.gridCellHeight
     for y=1, poly.gridDivisions do
@@ -366,7 +351,7 @@ local function _createGrid(poly, options)
     end
     poly.grid = isInside
     poly.gridCoverage = poly.gridArea / poly.area
-    -- A lot of memory is used by this pre-calc. Force a gc collect after to clear it out
+
     collectgarbage("collect")
 
     if options.debugGrid then
@@ -376,15 +361,13 @@ local function _createGrid(poly, options)
 
       Citizen.CreateThread(function()
         poly.lines = _calculateLinesForDrawingGrid(poly)
-        -- A lot of memory is used by this pre-calc. Force a gc collect after to clear it out
+
         collectgarbage("collect")
       end)
     end
   end)
 end
 
-
--- Initialization functions
 local function _calculatePoly(poly, options)
   if not poly.min or not poly.max or not poly.size or not poly.center or not poly.area then
     local minX, minY = math.maxinteger, math.maxinteger
@@ -421,7 +404,6 @@ local function _calculatePoly(poly, options)
     poly.gridCellHeight = poly.size.y / poly.gridDivisions
   end
 end
-
 
 local function _initDebug(poly, options)
   if options.debugBlip then poly:addDebugBlip() end
@@ -503,7 +485,6 @@ function PolyZone:destroy()
   end
 end
 
--- Helper functions
 function PolyZone.getPlayerPosition()
   return GetEntityCoords(PlayerPedId())
 end
@@ -528,7 +509,7 @@ function PolyZone.ensureMetatable(zone)
 end
 
 function PolyZone:onPointInOut(getPointCb, onPointInOutCb, waitInMS)
-  -- Localize the waitInMS value for performance reasons (default of 500 ms)
+
   local _waitInMS = 500
   if waitInMS ~= nil then _waitInMS = waitInMS end
 

@@ -1,10 +1,10 @@
 function rent_vehicle(model, price, location)
-	for k,v in pairs(Config.Locations) do 
+	for k,v in pairs(Config.Locations) do
 		if k == location then
 			local spawn_coords = v.spawn_coords
 			ESX.TriggerServerCallback('unique_rent:check', function(can)
 				if can then
-					RequestModel(model) 
+					RequestModel(model)
 					while not HasModelLoaded(model) do
 						Citizen.Wait(10)
 					end
@@ -12,7 +12,7 @@ function rent_vehicle(model, price, location)
 						ESX.Game.SpawnVehicle(model, spawn_coords, spawn_coords.h, function(vehicle)
 							SetEntityAsMissionEntity(vehicle, true, true)
 							TaskWarpPedIntoVehicle(GetPlayerPed(-1), vehicle, -1)
-							Options.vehicle.hash = vehicle  
+							Options.vehicle.hash = vehicle
 							Options.have_rented = true
 							set_blip(false)
 						end)
@@ -52,13 +52,13 @@ function set_blip(remove)
 		for k, v in pairs(Config.Locations) do
 			if k == Options.last_location then
 				Options.blips['return'] = AddBlipForCoord(v.return_coords.x, v.return_coords.y, v.return_coords.z)
-						
+
 				SetBlipSprite (Options.blips['return'], v.blips.return_spot.sprite)
 				SetBlipDisplay(Options.blips['return'], 4)
 				SetBlipScale  (Options.blips['return'], v.blips.return_spot.scale)
 				SetBlipAsShortRange(Options.blips['return'], true)
 				SetBlipColour(Options.blips['return'], v.blips.return_spot.color)
-			
+
 				BeginTextCommandSetBlipName("STRING")
 				AddTextComponentSubstringPlayerName(v.blips.return_spot.name)
 				EndTextCommandSetBlipName(Options.blips['return'])
@@ -74,7 +74,7 @@ end
 
 function finish()
     Notification(Config.Options['time_finished'])
-    
+
     if Options.vehicle.hash and DoesEntityExist(Options.vehicle.hash) then
         delete_vehicle(Options.vehicle.hash)
     end
@@ -83,9 +83,6 @@ function finish()
     Options.have_rented = false
     set_blip(true)
 end
-
-
-
 
 function delete_vehicle(vehicle)
 	ESX.Game.DeleteVehicle(vehicle)
@@ -100,7 +97,7 @@ end
 function open_ui(location)
 	local vehicles = {}
 
-	for k,v in pairs(Config.Vehicles) do 
+	for k,v in pairs(Config.Vehicles) do
 		table.insert(vehicles, {location = location, id= k,  model = v.model, label = v.label, description = v.description, price = v.price, type = v.type, image = v.image_name})
 	end
 
@@ -118,31 +115,6 @@ function close_ui()
 
 	InMenu = false
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function DrawText3D(x, y, z, text)
 	local px, py, pz = table.unpack(GetEntityCoords(PlayerPedId()))
@@ -164,5 +136,4 @@ function DrawText3D(x, y, z, text)
 		ClearDrawOrigin()
 	end
 end
-
 

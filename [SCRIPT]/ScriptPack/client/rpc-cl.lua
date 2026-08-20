@@ -7,30 +7,30 @@ Citizen.CreateThread(function ()
         TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
         Citizen.Wait(1)
     end
-    
+
     while ESX.GetPlayerData() == nil do
         Citizen.Wait(10)
     end
 
     while ESX.GetPlayerData().job == nil do
         Citizen.Wait(10)
-    end 
+    end
 
     PlayerData = ESX.GetPlayerData()
-end) 
+end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
- 
+
     PlayerData.job = job
-	
+
 end)
 Citizen.CreateThread(function()
 	while true do
 	local name
 	local ass
 	Citizen.Wait(1000)
-	
+
 	if PlayerData.job ~= nil then
 		if PlayerData.job.name  == "police" then
 		name = "Police"
@@ -52,7 +52,7 @@ Citizen.CreateThread(function()
 		ass = "nightClub"
 		elseif PlayerData.job.name  == "nojob" then
 		name = "logo"
-		-- ass = "https://discord.gg/rwBHcCqzJB"
+
 		ass = "discord.gg/DiscordLink"
 		elseif PlayerData.job.name == "mechanic" then
 		name = "Mechanic"
@@ -71,18 +71,18 @@ Citizen.CreateThread(function()
 		name = "logo"
 		ass = "https://discord.gg/rwBHcCqzJB"
 	end
-	
+
 	if ESX.GetPlayerData()['aduty'] == 1 then
 		name = 'Staff'
 		ass = "admin"
 	end
-	
+
 		SetDiscordAppId(1350257232364961914)
 		SetDiscordRichPresenceAsset('logo')
         SetDiscordRichPresenceAssetText('https://discord.gg/rwBHcCqzJB')
         SetDiscordRichPresenceAssetSmall(ass)
         SetDiscordRichPresenceAssetSmallText(name)
-	
+
 	Citizen.Wait(5000)
 	end
 end)
@@ -99,11 +99,11 @@ Citizen.CreateThread(function()
 			end
 		end
 		SetRichPresence(string.format("%s | %s Players | ID: %s", pName,#players, pId))
-		
-		
+
+
 		SetDiscordRichPresenceAction(0, "🌐 Discord", "https://discord.gg/rwBHcCqzJB")
 		SetDiscordRichPresenceAction(1, "➕ Connect ", "https://game-tools.ir/api/v1/connect/vmp?address=reven.ir:30120")
-		
+
 		Citizen.Wait(5000)
 	end
 end)

@@ -10,16 +10,16 @@ Config_sheriff.MarkerColor                = { r = 193, g = 175, b = 158 }
 
 Config_sheriff.EnablePlayerManagement     = true
 Config_sheriff.EnableArmoryManagement     = true
-Config_sheriff.EnableESXIdentity          = true -- enable if you're using esx_identity
-Config_sheriff.EnableNonFreemodePeds      = false -- turn this on if you want custom peds
+Config_sheriff.EnableESXIdentity          = true
+Config_sheriff.EnableNonFreemodePeds      = false
 Config_sheriff.EnableSocietyOwnedVehicles = false
-Config_sheriff.EnableLicenses             = true -- enable if you're using esx_license
-Config_sheriff.EnableJobLogs              = true -- only turn this on if you are using esx_joblogs
+Config_sheriff.EnableLicenses             = true
+Config_sheriff.EnableJobLogs              = true
 
-Config_sheriff.EnableHandcuffTimer        = false -- enable handcuff timer? will unrestrain player after the time ends
-Config_sheriff.HandcuffTimer              = 10 * 60000 -- 10 mins
+Config_sheriff.EnableHandcuffTimer        = false
+Config_sheriff.HandcuffTimer              = 10 * 60000
 
-Config_sheriff.EnableJobBlip              = true -- enable blips for colleagues, requires esx_society
+Config_sheriff.EnableJobBlip              = true
 
 Config_sheriff.MaxInService               = -1
 Config_sheriff.Locale                     = 'en'
@@ -35,9 +35,9 @@ Config_sheriff.sheriffStations = {
 			    Scale   = 1.2,
 			    Colour  = 31,
 		},
-		
 
-		-- https://wiki.rage.mp/index.php?title=Weapons
+
+
 		AuthorizedWeapons = {
 			{ name = 'WEAPON_BZGAS', price = 5000 },
 			{ name = 'WEAPON_STUNGUN', price = 5000 },
@@ -60,7 +60,6 @@ Config_sheriff.sheriffStations = {
 			{ name = 'WEAPON_GUSENBERG', price = 14000 },
 		},
 
-
 		AuthorizedItems = {
 			{ name = 'water', price = 60 , label = 'Ab'},
 			{ name = 'silencer', price = 5000, label = 'Silencer'},
@@ -69,14 +68,14 @@ Config_sheriff.sheriffStations = {
 			{ name = 'radio', price = 3000, label = 'Bisim' },
 			{ name = 'phone', price = 2000, label = 'Goshi' },
 			{ name = 'bread', price = 60, label = 'Noon' },
-			
+
 		},
 
 		Cloakrooms = {
 			{ x = 1840.233, y = 3691.182, z = 34.286},
 			{x = 619.9525, y = 14.88760, z = 82.782},
 			{x = 461.2001, y = -998.995, z = 30.689},
-			
+
 		},
 
 		Armories = {
@@ -104,7 +103,7 @@ Config_sheriff.sheriffStations = {
 				Heading    = 91.08
 			},
 		},
-		
+
 		Helicopters = {
 			{
 				Spawner    = { x = 1864.269, y = 3663.138, z = 33.929   },
@@ -126,10 +125,10 @@ Config_sheriff.sheriffStations = {
 			{x = 448.9412, y = -981.094, z = 43.691},
 			{x = 451.2926, y = -978.715, z = 25.699},
 		},
-		
+
 		VehicleDeleters2 = {
-			--{ x = 1867.619, y = 3654.004, z = 33.884 },
-			--{ x = -477.33, y = 5989.47, z = 37.39 }
+
+
 		},
 
 		BossActions = {
@@ -145,14 +144,14 @@ Config_sheriff.AuthorizedItems = {
 	Shared = {
 		{ name = 'water', price = 100 },
 		{ name = 'silencer', price = 500 },
-		-- { name = 'WEAPON_FLASHLIGHT', price = 100 },
-		-- { name = 'WEAPON_PISTOL', price = 5000 },
-		-- { name = 'WEAPON_SNSPISTOL', price = 6000 },
-		-- { name = 'WEAPON_COMBATPISTOL', price = 7000 },
-		--{ name = 'WEAPON_HEAVYPISTOL', price = 8000 },
+
+
+
+
+
 	},
 
-	
+
 }
 
 Config_sheriff.AuthorizedWeapons = {
@@ -163,55 +162,51 @@ Config_sheriff.AuthorizedWeapons = {
 		{ name = 'WEAPON_PISTOL', price = 5000 },
 		{ name = 'WEAPON_SNSPISTOL', price = 6000 },
 		{ name = 'WEAPON_COMBATPISTOL', price = 7000 },
-		--{ name = 'WEAPON_HEAVYPISTOL', price = 8000 },
+
 	},
 
-	
-	
+
+
 }
 
-
 Config_sheriff.AuthorizedVehicles = {
-	Shared = {			
-	-- Extra : 0 = true , 1 = false
+	Shared = {
+
 	{ model = 'b2chal', label = 'Sheriff Chal', Extra = {['1'] = 0, ['2'] = 1, ['3'] = 1, ['4'] = 0, ['5'] = 0 } },
 
 	{ model = 'b211vic', label = 'Sheriff Vic', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['5'] = 1, ['6'] = 0, ['10'] = 1} },
-	
+
 	{ model = 'b212caprice', label = 'Sheriff Caprice', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['5'] = 1, ['6'] = 0} },
-	
+
 	{ model = 'b214charger', label = 'Sheriff Charger', Extra = {['1'] = 0, ['2'] = 1, ['3'] = 1, ['5'] = 0, ['6'] = 0, ['7'] = 1, ['8'] = 0 }},
 	{ model = 'b214charger', label = 'Sheriff Charger2', Extra = {['1'] = 1, ['2'] = 1, ['3'] = 1, ['5'] = 0, ['6'] = 0, ['7'] = 1, ['8'] = 1 }},
-	
+
 	{ model = 'b216explorer', label = 'Sheriff Explorer',  Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['5'] = 1, ['6'] = 1}},
-	
+
 	{ model = 'b218charger', label = 'Sheriff Charger18', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['5'] = 1, ['6'] = 0}},
-	
+
 	{ model = 'b218tau', label = 'Sheriff Tau', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['6'] = 1, ['7'] = 0}},
 	{ model = 'b218tau', label = 'Sheriff Tau2', Extra = {['1'] = 1, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['6'] = 1, ['7'] = 0}},
-		
+
 	{ model = 'b219tahoe', label = "Sheriff Tahoe", Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['5'] = 1, ['6'] = 1, ['7'] = 0}},
 	{ model = 'fibm5', label = "Sheriff BMWM5", Extra = {['1'] = 0}},
 	{ model = 'polnspeedo', label = "Sheriff Van", Extra = {['11'] = 0}},
 	{ model = 'POLKCH', label = "Sheriff Kamacho", Extra = {['1'] = 0, ['3'] = 0, ['4'] = 0}},
 	{ model = 'swat_dirtbike', label = "Sheriff Motor", Extra = {['1'] = 1}},
-	
+
 	},
 
-	Sharedheli = {			
-	-- Extra : 0 = true , 1 = false
+	Sharedheli = {
+
 	{ model = 'polmav', label = 'Sheriff Polmav', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 0, ['5'] = 0 } },
 	{ model = 'tx_heli', label = 'Sheriff Heli', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 0, ['5'] = 0 } },
 
-	
-	
+
+
 	},
 
 
-
-	
 }
-
 
 Config_sheriff.Uniforms = {
 
@@ -271,6 +266,6 @@ Config_sheriff.Uniforms = {
 			['bproof_1'] = 2,  ['bproof_2'] = 2
 		}
 	},
-	
+
 
 }

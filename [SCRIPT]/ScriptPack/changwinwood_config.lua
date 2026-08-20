@@ -1,14 +1,14 @@
 VinewoodConfig = {}
 
-VinewoodConfig.Framework = 'standalone' -- esx, qbcore, standalone or autodetect
+VinewoodConfig.Framework = 'standalone'
 
-VinewoodConfig.Command = 'vinewood' -- Command to open the menu
+VinewoodConfig.Command = 'vinewood'
 
 VinewoodConfig.AuthorizedGroups = {
-    group = { -- Only for esx and qbcore
+    group = {
         'user'
     },
-    identifier = { -- Only for standalone
+    identifier = {
         'discord:785018280187920395'
     }
 }

@@ -1,41 +1,4 @@
---[[
-	-- function
-local poly = lib.zones.poly({
-	name = poly,
-	points = {
-		vec(447.9, -998.8, 25.8),
-		vec(450.3, -998.2, 25.8),
-		vec(449.9, -995.5, 25.8),
-		vec(447.2, -995.6, 25.8),
-		vec(446.3, -997.9, 25.8),
-	},
-	thickness = 2,
-})
-	-- array
-{
-	name = poly,
-	points = {
-		vec(447.9, -998.8, 25.8),
-		vec(450.3, -998.2, 25.8),
-		vec(449.9, -995.5, 25.8),
-		vec(447.2, -995.6, 25.8),
-		vec(446.3, -997.9, 25.8),
-	},
-	thickness = 2,
-},
-	-- target
-exports.ox_target:addPolyZone({
-	name = poly,
-	points = {
-		vec(447.9, -998.8, 25.8),
-		vec(450.3, -998.2, 25.8),
-		vec(449.9, -995.5, 25.8),
-		vec(447.2, -995.6, 25.8),
-		vec(446.3, -997.9, 25.8),
-	},
-	thickness = 2,
-})
-]]
+
 
 local parse = {
 	poly = function(data)

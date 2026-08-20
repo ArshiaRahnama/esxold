@@ -8,10 +8,6 @@ end)
 ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
--- ============================================================================
--- Full Discord Logging (isolated - one function, called from many places below,
--- never blocks or affects gameplay if a webhook is missing/misconfigured/down)
--- ============================================================================
 function SendLog(category, embed)
     if not Config.EnableDetailedLogging then return end
     local url = Config.Webhooks and Config.Webhooks[category]
@@ -209,15 +205,12 @@ function UpsertGangStat(gangName, amount)
     )
 end
 
--- ============================================================================
--- Season Reset (isolated - own tables, own thread, only reads capture_player_stats)
--- ============================================================================
-local SeasonWarningsSent = {} -- keyed by season_number, so each season only warns once
+local SeasonWarningsSent = {}
 
 function StartSeasonCheckThread()
     Citizen.CreateThread(function()
         while true do
-            Wait(60 * 60 * 1000) -- check once an hour
+            Wait(60 * 60 * 1000)
             MySQL.Async.fetchAll('SELECT * FROM capture_meta ORDER BY id DESC LIMIT 1', {}, function(results)
                 local meta = results and results[1]
                 if not meta then return end
@@ -248,21 +241,17 @@ function StartSeasonCheckThread()
     end)
 end
 
--- ============================================================================
--- Hall of Fame (isolated - own table, own thread, only reads capture_player_stats)
--- Permanent honor for long-inactive Legends. No score, no expiry, never removed.
--- ============================================================================
 function StartHallOfFameThread()
     if not Config.EnableHallOfFame then return end
     Citizen.CreateThread(function()
         while true do
-            Wait(6 * 60 * 60 * 1000) -- check every 6 hours
+            Wait(6 * 60 * 60 * 1000)
             MySQL.Async.fetchAll(
                 'SELECT identifier, name, kills, gang_points, last_rank FROM capture_player_stats '..
                 'WHERE last_rank = @rank AND last_active IS NOT NULL AND last_active < DATE_SUB(NOW(), INTERVAL @days DAY) '..
                 'AND identifier NOT IN (SELECT identifier FROM capture_hall_of_fame)',
                 {
-                    ['@rank'] = Config.ScarceMedalRank, -- "Legend" by default, reuse the same top tier
+                    ['@rank'] = Config.ScarceMedalRank,
                     ['@days'] = Config.HallOfFameInactivityDays,
                 },
                 function(candidates)
@@ -427,7 +416,7 @@ function PerformSeasonReset(currentSeasonNumber)
                     },
                 })
 
-                -- League Mode: Comeback Of The Season (compares this season's rank vs previous season's rank)
+
                 if Config.EnableLeagueMode then
                     MySQL.Async.fetchAll('SELECT gang_name, rank_position FROM capture_gang_season_archive WHERE season_number = @prev', {
                         ['@prev'] = currentSeasonNumber - 1
@@ -453,7 +442,7 @@ function PerformSeasonReset(currentSeasonNumber)
                         end
                     end)
 
-                    -- League Mode: Playoffs (top 4 gangs, semifinal pairings, admin resolves results manually)
+
                     if Config.EnablePlayoffs and #gangRows >= 4 then
                         local semi1a, semi1b = gangRows[1].gang_name, gangRows[4].gang_name
                         local semi2a, semi2b = gangRows[2].gang_name, gangRows[3].gang_name
@@ -494,7 +483,6 @@ function UpsertPlayerStat(identifier, name, column, amount)
     )
 end
 
--- Gang Logos =========================================================================
 local GangLogosCache = {}
 local GangLogosFetching = {}
 
@@ -517,7 +505,6 @@ function EnsureGangLogoCached(gangName)
     end)
 end
 
--- Player Photos ======================================================================
 local PlayerPhotoCache = {}
 local PlayerPhotoFetching = {}
 
@@ -540,9 +527,6 @@ function EnsurePlayerPhotoCached(identifier)
     end)
 end
 
--- ============================================================================
--- Zone Import/Export (isolated - only affects CapturesInfo.Zones)
--- ============================================================================
 function LoadZonesFromFile(force)
     if not force and not Config.EnableExternalZonesFile then return nil end
     local content = LoadResourceFile(GetCurrentResourceName(), Config.ZonesFileName)
@@ -558,9 +542,8 @@ function LoadZonesFromFile(force)
     return zones
 end
 
--- Variables ========================================================================
 CapturesInfo = {
-    Zones = LoadZonesFromFile() or Config.DefaultZones, -- [name] : {coord}
+    Zones = LoadZonesFromFile() or Config.DefaultZones,
     Active = false,
     Time = Config.DefaultTime,
     CaptureStart = nil,
@@ -572,11 +555,10 @@ CaptureState = {
     Points = {},
 }
 CurrentCapturing = {
-    OnlinePlayers = {}, -- [identifier] : {ZoneName : "xD", Gang : "Admins"}
+    OnlinePlayers = {},
     InMarkerPlayers = {},
     CurrentCaptureHolders = {},
 }
-
 
 function CalcCaptureTimes()
     Citizen.CreateThread(function()
@@ -584,7 +566,7 @@ function CalcCaptureTimes()
             Citizen.Wait(15000)
             for k,v in pairs(CurrentCapturing.CurrentCaptureHolders) do
                 if type(v) == "string" and v ~= "" then
-                -- Time Capture
+
                 if not CaptureState.Captures[k] then
                     CaptureState.Captures[k] = {}
                 end
@@ -593,9 +575,9 @@ function CalcCaptureTimes()
                 else
                     CaptureState.Captures[k][v] = CaptureState.Captures[k][v] + 0.25
                 end
-                -- ============================================================================================
-                -- Point Calculator
-                if not CaptureState.Points[v] then 
+
+
+                if not CaptureState.Points[v] then
                     CaptureState.Points[v] = 1
                 else
                     CaptureState.Points[v] = CaptureState.Points[v] + 1
@@ -611,14 +593,13 @@ function CalcCaptureTimes()
                         end
                     end
                 end
-                -- ============================================================================================
+
                 end
             end
         end
     end)
 end
 
--- Point And Capturing Handle
 RegisterNetEvent("Violet-CaptureSystem:PlayerEnterZone")
 AddEventHandler("Violet-CaptureSystem:PlayerEnterZone", function(Zone)
     local xPlayer = ESX.GetPlayerFromId(source)
@@ -629,7 +610,6 @@ AddEventHandler("Violet-CaptureSystem:PlayerEnterZone", function(Zone)
     CurrentCapturing.OnlinePlayers[xPlayer.identifier].Gang = xPlayer.gang.name
 end)
 
--- Escape Penalty (isolated - own table, own event, only touches CaptureMarkerStatus at one guard point)
 local ZoneLeaveCooldown = {}
 
 RegisterNetEvent("Violet-Capture:PenalizeZoneLeave")
@@ -713,11 +693,6 @@ function ProcCurrentCapHolder()
     TriggerClientEvent("Violet-CaptureSystem:UpdateHolderGang", -1, CurrentCapturing.CurrentCaptureHolders)
 end
 
-
-
--- ============================================================================
--- Academy Badges (isolated - purely cosmetic, based on capture_academy_stats only)
--- ============================================================================
 function GetAcademyBadge(academyKills)
     local badge = nil
     for _, tier in ipairs(Config.AcademyMilestones) do
@@ -728,9 +703,6 @@ function GetAcademyBadge(academyKills)
     return badge
 end
 
--- ============================================================================
--- Rank Badges (isolated - does not touch kills/points/gang_points logic above)
--- ============================================================================
 function GetRankForScore(score)
     local rank = Config.RankThresholds[1].Name
     for _, tier in ipairs(Config.RankThresholds) do
@@ -754,10 +726,6 @@ function GetPlayerRank(identifier, cb)
     end)
 end
 
--- ============================================================================
--- Scarcity Engine (isolated - own table, own functions, only reads capture_player_stats)
--- Limited, numbered, never-reproduced medals. Once a season's pool is gone, it's gone.
--- ============================================================================
 function CheckScarceMedalEligibility(identifier, name)
     if not Config.EnableScarcityEngine then return end
     MySQL.Async.fetchAll('SELECT kills, deaths, gang_points, last_rank FROM capture_player_stats WHERE identifier = @identifier LIMIT 1', {
@@ -789,13 +757,13 @@ function AwardScarceMedal(identifier, name)
         }, function(countResult)
             local mintedCount = countResult and countResult[1] and countResult[1].c or 0
             if mintedCount >= Config.ScarceMedalSupplyPerSeason then
-                return -- sold out for this season - no exceptions
+                return
             end
 
             MySQL.Async.fetchAll('SELECT 1 as x FROM capture_scarce_medals WHERE season_number = @s AND identifier = @id LIMIT 1', {
                 ['@s'] = seasonNumber, ['@id'] = identifier
             }, function(already)
-                if already and already[1] then return end -- already claimed one this season
+                if already and already[1] then return end
 
                 local serial = mintedCount + 1
                 MySQL.Async.execute(
@@ -862,9 +830,6 @@ if Config.EnableScarcityEngine then
     end)
 end
 
--- ============================================================================
--- Full Stats Dashboard (isolated - read-only aggregator, touches nothing else)
--- ============================================================================
 ESX.RegisterServerCallback("Violet-Capture:GetDashboard", function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -936,9 +901,6 @@ ESX.RegisterServerCallback("Violet-Capture:GetDashboard", function(source, cb)
     end)
 end)
 
--- ============================================================================
--- Zone-Under-Attack Early Warning (isolated - separate event, does not touch ProcCurrentCapHolder)
--- ============================================================================
 RegisterNetEvent("Violet-Capture:ZoneUnderAttack")
 AddEventHandler("Violet-Capture:ZoneUnderAttack", function(ZoneName, AttackerGang)
     local ownerGang = CurrentCapturing.CurrentCaptureHolders[ZoneName]
@@ -993,12 +955,8 @@ RegisterCommand(Config.SeasonResetCommand, function(source, args, rawCommand)
     end)
 end)
 
--- Event Theme (isolated - own state, own event, only affects zone marker colors client-side)
 local CurrentThemeName = Config.ActiveTheme
 
--- ============================================================================
--- Admin Command Rate Limiting (isolated - used by any admin command below)
--- ============================================================================
 local AdminCommandCooldowns = {}
 function IsRateLimited(source, commandName)
     if not Config.EnableAdminRateLimit then return false end
@@ -1011,9 +969,6 @@ function IsRateLimited(source, commandName)
     return false
 end
 
--- ============================================================================
--- Dry-Run Config Validator (isolated - read-only, never starts a real round)
--- ============================================================================
 if Config.EnableDryRun then
     RegisterCommand(Config.DryRunCommand, function(source, args, rawCommand)
         local xPlayer = ESX.GetPlayerFromId(source)
@@ -1066,9 +1021,6 @@ if Config.EnableDryRun then
     end)
 end
 
--- ============================================================================
--- Health Check (isolated - read-only diagnostics)
--- ============================================================================
 if Config.EnableHealthCheck then
     RegisterCommand(Config.HealthCheckCommand, function(source, args, rawCommand)
         local xPlayer = ESX.GetPlayerFromId(source)
@@ -1153,9 +1105,6 @@ RegisterCommand(Config.SeasonHistoryCommand, function(source, args, rawCommand)
     end)
 end)
 
--- ============================================================================
--- Zone Import/Export Commands (isolated - only touches CapturesInfo.Zones)
--- ============================================================================
 RegisterCommand(Config.ExportZonesCommand, function(source, args, rawCommand)
     local xPlayer = ESX.GetPlayerFromId(source)
     if xPlayer.permission_level <= Config.CommandPerm then
@@ -1216,9 +1165,6 @@ RegisterCommand(Config.ImportZonesCommand, function(source, args, rawCommand)
     end
 end)
 
--- ============================================================================
--- League Mode Commands (isolated - fully inert unless Config.EnableLeagueMode = true)
--- ============================================================================
 if Config.EnableLeagueMode then
     RegisterCommand(Config.StandingsCommand, function(source, args, rawCommand)
         MySQL.Async.fetchAll('SELECT gang_name, points FROM capture_gang_stats ORDER BY points DESC LIMIT 15', {}, function(rows)
@@ -1306,9 +1252,8 @@ ESX.RegisterServerCallback("Violet-Capture:GetMyStats", function(source, cb)
     end)
 end)
 
--- Commands ========================================================================
 RegisterCommand(Config.StartCaptureCommand, function(source, args, rawCommand)
-    -- check perm
+
     local xPlayer = ESX.GetPlayerFromId(source)
     if xPlayer.permission_level <= Config.CommandPerm then
         TriggerClientEvent("chat:addMessage", source, {args = {"^1Unique-CaptureSystem", "You Don't Have Permissions !"}})
@@ -1369,7 +1314,7 @@ RegisterCommand(Config.JoinCaptureCommand, function(source, args, rawCommand)
     if CapturesInfo.Active and CapturesInfo.Time > 0 then
         if ESX.GetPlayerFromId(source).gang.name ~= "nogang" then
             GetDistanceFromGangBoss(source, function(Distance)
-                if Distance and Distance < 100.0 then 
+                if Distance and Distance < 100.0 then
                     TriggerClientEvent("Violet-Capture:JoinCapture", source)
                     SetPlayerRoutingBucket(source, Config.CaptureWorld)
                 else
@@ -1379,14 +1324,13 @@ RegisterCommand(Config.JoinCaptureCommand, function(source, args, rawCommand)
         else
             TriggerClientEvent("chat:addMessage", source, {args = {"^1Unique-CaptureSystem", "You Must First Join To A Gang !"}})
         end
-        
-        
+
+
     else
         TriggerClientEvent("chat:addMessage", source, {args = {"^1Unique-CaptureSystem", "Capture Not Active !"}})
     end
 end)
 
--- Triggers ========================================================================
 RegisterNetEvent("Violet-Capture:StartCapture")
 AddEventHandler("Violet-Capture:StartCapture", function()
     CapturesInfo.Active = true
@@ -1424,11 +1368,8 @@ AddEventHandler("Violet-Capture:LeaveCapture", function()
         TriggerClientEvent("Violet-CaptureSystem:TpPlayer", _source, Coord.x, Coord.y, Coord.z)
         SetPlayerRoutingBucket(_source, 0)
     end)
-    
+
 end)
-
-
-
 
 RegisterNetEvent("Violet-Capture:CaptureEnd")
 AddEventHandler("Violet-Capture:CaptureEnd", function()
@@ -1461,15 +1402,12 @@ AddEventHandler("Violet-CaptureSystem:SendGroupToClient", function()
     end
 end)
 
--- Functions ========================================================================
 function CreateZonesVar()
     for k,v in pairs(CapturesInfo.Zones) do
         CaptureState.Captures[k] = {}
         CurrentCapturing.CurrentCaptureHolders[k] = {}
     end
 end
-
-
 
 function SendAllTimeTopThread()
     Citizen.CreateThread(function()
@@ -1558,7 +1496,6 @@ function CalculateTime()
     return minutes, seconds
 end
 
-
 function StartTimer()
     Citizen.CreateThread(function()
         while CapturesInfo.Active do
@@ -1572,9 +1509,6 @@ function StartTimer()
     end)
 end
 
-
-
--- Admin Menus
 ESX.RegisterServerCallback("Violet-Capture:GetInfo", function(source, cb)
     cb(CapturesInfo)
 end)
@@ -1594,12 +1528,11 @@ AddEventHandler("Violet-CaptureSystem:ShowMessageToAll", function(text,time)
     TriggerClientEvent("Violet-CaptureSystem:ShowMessage", -1 , text,time)
 end)
 
-
 function GetGangBossCoords(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
-    if not xPlayer then 
+    if not xPlayer then
         cb(nil)
-        return 
+        return
     end
 
     local gangName = xPlayer.gang.name
@@ -1627,7 +1560,6 @@ AddEventHandler('Violet-CaptureSystem:SendPlayerGroupClient', function()
     TriggerClientEvent("Violet-CaptureSystem:ReceiveGroup", xPlayer.source, xPlayer.group)
 end)
 
-
 RegisterNetEvent("Violet-CaptureSystem:SendKillLog")
 AddEventHandler("Violet-CaptureSystem:SendKillLog",function(KillerID,ZoneName)
     local DamagedPlayer = ESX.GetPlayerFromId(source)
@@ -1654,9 +1586,9 @@ AddEventHandler("Violet-CaptureSystem:SendKillLog",function(KillerID,ZoneName)
 end)
 function GetDistanceFromGangBoss(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
-    if not xPlayer then 
+    if not xPlayer then
         cb(nil)
-        return 
+        return
     end
 
     local playerPed = GetPlayerPed(source)
@@ -1815,11 +1747,7 @@ function GetTopGangs()
 
     return topFive
 end
--- ============================================================================
--- Public Read-Only Status API (isolated - fully inert unless Config.EnablePublicAPI = true)
--- WARNING: SetHttpHandler is a single, server-wide handler. Enabling this WILL
--- override any other resource on your server that also uses SetHttpHandler.
--- ============================================================================
+
 if Config.EnablePublicAPI then
     print("^3[Unique-Capture]^7 Public API enabled at " .. Config.PublicAPIPath .. " - NOTE: this takes over the server's HTTP handler, it may conflict with other resources using SetHttpHandler.")
 
@@ -1847,11 +1775,6 @@ if Config.EnablePublicAPI then
     end)
 end
 
--- ============================================================================
--- Training Academy (isolated - server-side ped spawning + its own routing
--- bucket, separate from both the main world and the real capture world.
--- Never touches CaptureState, capture_player_stats, or any real stat table.)
--- ============================================================================
 if Config.EnableAcademy then
     local AcademyPedsBySource = {}
 
@@ -1940,9 +1863,6 @@ if Config.EnableAcademy then
     end)
 end
 
--- ============================================================================
--- Spectator Mode (isolated - only changes routing bucket, never touches stats)
--- ============================================================================
 if Config.EnableSpectate then
     RegisterCommand(Config.SpectateCommand, function(source, args, rawCommand)
         if not CapturesInfo.Active then

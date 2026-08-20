@@ -8,13 +8,13 @@ Citizen.CreateThread(function()
 end)
 
 function GettimeSkill(name, time)
-	-- Unique_Skills is optional; this pack no longer ships it, so guard the call
+
 	local ChekSkills = 0
 	if GetResourceState('Unique_Skills') == 'started' then
 		local ok, result = pcall(function() return exports['Unique_Skills']:CheckSkill(name) end)
 		if ok then ChekSkills = result end
 	end
-	if ChekSkills == 100 then 
+	if ChekSkills == 100 then
 		local time2 = tonumber(time) / 2
 		return time2
 	else
@@ -171,31 +171,31 @@ Config.Jobs.fueler = {
 			Teleport = 0
 		},
 
-		-- Delivery = {
-		-- 	Pos = {x = 491.40, y = -2163.37, z = 4.91},
-		-- 	Color = {r = 204, g = 204, b = 0},
-		-- 	Size = {x = 10.0, y = 10.0, z = 1.0},
-		-- 	Marker = 1,
-		-- 	Blip = true,
-		-- 	Name = _U("f_deliver_gas"),
-		-- 	Type = "delivery",
-		-- 	Spawner = 1,
-		-- 	Item = {
-		-- 		{
-		-- 			name = _U("delivery"),
-		-- 			time = 500,
-		-- 			remove = 1,
-		-- 			max = 100, -- if not present, probably an error at itemQtty >= item.max in esx_jobs_sv.lua
-		-- 			price = 1000,
-		-- 			requires = "essence",
-		-- 			requires_name = _U("f_gas"),
-		-- 			drop = 100
-		-- 		}
-		-- 	},
 
-		-- 	Hint = _U("f_deliver_gas_button"),
-		-- 	GPS = {x = 609.58, y = 2856.74, z = 39.49}
-		-- }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	}
 }

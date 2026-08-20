@@ -1,6 +1,5 @@
---================================================================================================
---==                                VARIABLES - DO NOT EDIT                                     ==
---================================================================================================
+
+
 ESX = nil
 local robbed = {}
 
@@ -9,17 +8,17 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 RegisterServerEvent('bank:depositx')
 AddEventHandler('bank:depositx', function(amount)
 	local _source = source
-	
+
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	amount = tonumber(amount)
 	if amount == nil or amount <= 0 or amount > xPlayer.money then
-		-- advanced notification with bank icon
+
 		TriggerClientEvent('esx:showAdvancedNotification', _source, 'Bank', 'Pardakhte Vajh', 'Meqdare Vorodi Eshtebah ast', 'CHAR_BANK_MAZE', 9)
 	else
 		xPlayer.removeMoney(amount)
 		xPlayer.addBank(tonumber(amount))
 		exports.ScriptPack:TransActionLog({source = xPlayer.source, type = "Variz", amount = amount})
-                -- advanced notification with bank icon
+
 		TriggerClientEvent('esx:showAdvancedNotification', _source, 'Bank', 'Pardakhte Vajh', 'Shoma ~g~$' .. amount .. '~s~ Dakhele Bank Khod Gozashtid', 'CHAR_BANK_MAZE', 9)
 	end
 end)
@@ -53,13 +52,13 @@ AddEventHandler('bank:withdrawx', function(amount)
 	amount = tonumber(amount)
 	base = xPlayer.bank
 	if amount == nil or amount <= 0 or amount > base then
-                 -- advanced notification with bank icon
-		
+
+
 		TriggerClientEvent('esx:showAdvancedNotification', _source, 'Bank', 'Bardashte Vajh', 'Meqdar Eshtebah ast', 'CHAR_BANK_MAZE', 9)
 	else
 		xPlayer.removeBank(amount)
 		xPlayer.addMoney(amount)
-				-- advanced notification with bank icon
+
 		exports.ScriptPack:TransActionLog({source = xPlayer.source, type = "Bardasht", amount = amount})
 		TriggerClientEvent('esx:showAdvancedNotification', _source, 'Bank', 'Bardashte Vajh', 'Shoma ~r~$' .. amount .. '~s~ Az Hesabe Khod Bardashtid', 'CHAR_BANK_MAZE', 9)
 	end
@@ -96,21 +95,20 @@ AddEventHandler('bank:transferx', function(to, amountt)
 	end
 end)
 
-
 RegisterServerEvent('bank:balance')
 AddEventHandler('bank:balance', function()
     local _source = source
     local xPlayer = ESX.GetPlayerFromId(_source)
     local balance = xPlayer.bank
-    
-    -- دریافت IBAN از دیتابیس با استفاده از oxmysql
+
+
     local identifier = xPlayer.identifier
     exports.oxmysql:scalar('SELECT iban FROM users WHERE identifier = ?', {identifier}, function(iban)
         if iban == nil then
-            -- اگر IBAN وجود نداشت، یک IBAN تصادفی ایجاد کنید
-            -- توجه: math.random(1e18, 9.99e18) از سقف عدد صحیح ۶۴بیتی لوا رد میشه و ارور میده،
-            -- به همین خاطر عدد ۱۹ رقمی رو با اتصال ارقام تصادفی می‌سازیم
-            local digits = {tostring(math.random(1, 9))} -- رقم اول نباید صفر باشه
+
+
+
+            local digits = {tostring(math.random(1, 9))}
             for i = 1, 18 do
                 digits[#digits + 1] = tostring(math.random(0, 9))
             end
@@ -121,7 +119,7 @@ AddEventHandler('bank:balance', function()
                 end
             end)
         end
-        
+
         TriggerClientEvent('currentbalance1', _source, balance, iban)
     end)
 end)

@@ -1,6 +1,5 @@
 ESX = nil
 HZ = Citizen
---stored  = 1 ise garagede 0 da dışarıdadır 2 = Inpound
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
@@ -69,12 +68,12 @@ ESX.RegisterServerCallback('Unique_Garage:storeVehicle', function(source, cb, ve
 					["@plate"]  = vehicleProps.plate
 				}, function (rowsChanged)
 					if rowsChanged == 0 then
-						-- print(("Unique_Garage: %s attempted to store an vehicle they don\"t own!"):format(GetPlayerIdentifiers(source)[1]))
+
 					end
 					cb(true)
 				end)
 			else
-			
+
 				local xPlayers = ESX.GetPlayers()
 				for i=1, #xPlayers, 1 do
 					local xP = ESX.GetPlayerFromId(xPlayers[i])
@@ -82,21 +81,21 @@ ESX.RegisterServerCallback('Unique_Garage:storeVehicle', function(source, cb, ve
 						TriggerClientEvent('esx_ChatMessage', xPlayers[i], "🚨 [HZ-AC] ", {255, 0, 0}, "^8"..GetPlayerName(source).."^2 ("..xPlayer.source..")^0 Tried to change vehicle hash ! ")
 					end
 				end
-				-- exports.BanSql:BanTarget(xPlayer.source, "Tried to change vehicle hash", "Cheat vehicle hash changer")
+
 				cb(false)
 			end
 		else
-			
+
 			MySQL.Async.fetchAll("SELECT * FROM vehicle_keys WHERE (identifier = @player) AND plate = @plate", {
 				["@player"] = xPlayer.identifier,
 				["@plate"] = vehicleProps.plate
 			}, function (result)
-				-- print(json.encode(result))
+
 				if result[1] ~= nil then
-					-- BUGFIX: this used to call string.len() on the literal
-					-- text "result[1].plate" instead of the actual plate
-					-- value, so the trimmed comparison below never lined up
-					-- and this whole fallback path silently failed.
+
+
+
+
 					local trimmedKeyPlate = result[1].plate:match("^%s*(.-)%s*$")
 					if trimmedKeyPlate == vehplate then
 						MySQL.Async.execute("UPDATE owned_vehicles SET vehicle = @vehicle WHERE (owner = @player OR LOWER(`owner`) = @gang) AND plate = @plate", {
@@ -106,12 +105,12 @@ ESX.RegisterServerCallback('Unique_Garage:storeVehicle', function(source, cb, ve
 							["@plate"]  = vehicleProps.plate
 						}, function (rowsChanged)
 							if rowsChanged == 0 then
-								-- print(("Unique_Garage: %s attempted to store an vehicle they don\"t own!"):format(GetPlayerIdentifiers(source)[1]))
+
 							end
 							cb(true)
 						end)
 					else
-					
+
 						local xPlayers = ESX.GetPlayers()
 						for i=1, #xPlayers, 1 do
 							local xP = ESX.GetPlayerFromId(xPlayers[i])
@@ -119,15 +118,15 @@ ESX.RegisterServerCallback('Unique_Garage:storeVehicle', function(source, cb, ve
 								TriggerClientEvent('esx_ChatMessage', xPlayers[i], "🚨 [HZ-AC] ", {255, 0, 0}, "^8"..GetPlayerName(source).."^2 ("..xPlayer.source..")^0 Tried to change vehicle hash ! ")
 							end
 						end
-						-- exports.BanSql:BanTarget(xPlayer.source, "Tried to change vehicle hash", "Cheat vehicle hash changer")
+
 						cb(false)
 					end
 				else
-					-- print(("Unique_Garage: %s attempted to store an vehicle they don\"t own!"):format(GetPlayerIdentifiers(source)[1]))
+
 					cb(false)
 				end
 			end)
-			-- cb(false)
+
 		end
 	end)
 end)
@@ -150,7 +149,7 @@ ESX.RegisterServerCallback('GetVehicles', function(source, cb, job, playerjob)
 				['@Type']   = 'car',
 				['@stored'] = 2
 			}, function(result)
-				-- print(result[1])
+
 				if result[1] then cb(result) else cb(nil) end
 			end)
 		end
@@ -198,11 +197,9 @@ ESX.RegisterServerCallback("IsVehOwned", function(source, cb, plate, job, player
 	end
 end)
 
-
-
 ESX.RegisterServerCallback("isPrice", function(source, cb, money)
 	local Player = ESX.GetPlayerFromId(source)
-	if Player.money >= money then 
+	if Player.money >= money then
 		Player.removeMoney(money)
 		cb(true)
 	elseif Player.bank >= money then
@@ -215,14 +212,12 @@ ESX.RegisterServerCallback("isPrice", function(source, cb, money)
 end)
 
 RegisterNetEvent('SetVehImpound', function(plate, body, engine, fuel)
-	-- print(plate, body, engine, fuel, IsVehicleOwned(plate))
+
 	if IsVehicleOwned(plate) then
 		MySQL.Async.fetchAll('UPDATE owned_vehicles SET stored = ?, body = ?, engine = ?, fuel = ? WHERE plate = ?',{2, body, engine, fuel, plate})
 	end
 end)
 
--- Compatibility handlers for other scripts (vehiclecontrol-cl.lua, carp_sv.lua) that still call
--- the old esx_advancedgarage event names directly.
 RegisterNetEvent('esx_advancedgarage:policeImpound', function(plate)
 	if IsVehicleOwned(plate) then
 		MySQL.Async.execute('UPDATE owned_vehicles SET stored = 2 WHERE plate = ?', {plate})
@@ -247,7 +242,6 @@ function IsVehicleOwned(plate)
 			prom:resolve(result)
 		end
 	end)
-	return Citizen.Await(prom) 
+	return Citizen.Await(prom)
 end
-
 

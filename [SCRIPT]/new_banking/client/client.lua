@@ -1,6 +1,5 @@
---================================================================================================
---==                                VARIABLES - DO NOT EDIT                                     ==
---================================================================================================
+
+
 ESX                         = nil
 inMenu                      = false
 local showblips = true
@@ -18,13 +17,7 @@ local banks = {
   {name="Bank", id=106, x=246.40, y=222.99, z=106.29},
   {name="Bank", id=108, x=1175.0643310547, y=2706.6435546875, z=38.094036102295}
 }
---================================================================================================
---==                                THREADING - DO NOT EDIT                                     ==
---================================================================================================
 
---===============================================
---==           Base ESX Threading              ==
---===============================================
 Citizen.CreateThread(function()
   while ESX == nil do
     TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -32,9 +25,6 @@ Citizen.CreateThread(function()
   end
 end)
 
--- یه ATM دزدی شده برای مدتی (پیش‌فرض ۱ ساعت) نزدیکش قفل می‌مونه.
--- این چک بر اساس مختصات ثابت بانک‌ها (لیست banks) هست، نه یه پرآپ خاص،
--- چون همه‌ی ATM های اون بانک باید موقتاً غیرفعال بشن.
 RegisterNetEvent('new_banking:disableforhour')
 AddEventHandler('new_banking:disableforhour', function(pos, time)
   local condition = true
@@ -56,7 +46,6 @@ AddEventHandler('new_banking:disableforhour', function(pos, time)
   end)
 end)
 
-
 RegisterNetEvent('currentbalance1')
 AddEventHandler('currentbalance1', function(balance, iban)
     local id = PlayerId()
@@ -65,13 +54,10 @@ AddEventHandler('currentbalance1', function(balance, iban)
         type = "balanceHUD",
         balance = balance,
         player = playerName,
-        cardnumber = iban -- اضافه کردن IBAN به داده‌های ارسالی به UI
+        cardnumber = iban
     })
 end)
 
---===============================================
---==             Map Blips	                   ==
---===============================================
 Citizen.CreateThread(function()
 	if showblips then
 	  for k,v in ipairs(banks)do
@@ -87,12 +73,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
---===============================================
---==     ox_target: ATM interaction ("خفن")    ==
---===============================================
--- به‌جای وایسادن جلوی خودپرداز و زدن E، حالا کافیه با ox_target
--- روی خودِ مدل ATM (هر جای مپ که باشه) تارگت بگیری و از منوش
--- "Open Bank" رو بزنی. انیمیشن و صداها دقیقاً مثل قبل حفظ شدن.
 exports.ox_target:addModel(modeltypes, {
     {
         name = 'new_banking:open',
@@ -146,11 +126,11 @@ function OpenBankAtm(atmEntity)
 	SendNUIMessage({type = 'openGeneral'})
 	TriggerServerEvent('bank:balance')
 
-	-- تا وقتی منو بازه، بازیکن رو قفل نگه دار (مثل قبل)
+
 	Citizen.CreateThread(function()
 		while inMenu do
 			Wait(0)
-			DisableControlAction(0, 201, true) -- INPUT_FRONTEND_ACCEPT
+			DisableControlAction(0, 201, true)
 			DisableControlAction(1, 201, true)
 			DisableAllControlActions(0)
 			FreezeEntityPosition(PlayerPedId(), true)
@@ -158,23 +138,14 @@ function OpenBankAtm(atmEntity)
 	end)
 end
 
---===============================================
---==           Deposit Event                   ==
---===============================================
 RegisterNUICallback('deposit', function(data)
 	TriggerServerEvent('bank:depositx', tonumber(data.amount))
 end)
 
---===============================================
---==          Withdraw Event                   ==
---===============================================
 RegisterNUICallback('withdrawl', function(data)
 	TriggerServerEvent('bank:withdrawx', tonumber(data.amountw))
 end)
 
---===============================================
---==         Balance Event                     ==
---===============================================
 RegisterNUICallback('balance', function()
 	TriggerServerEvent('bank:balance')
 end)
@@ -186,21 +157,11 @@ AddEventHandler('balance:back', function(balance)
 
 end)
 
-
---===============================================
---==         Transfer Event                    ==
---===============================================
 RegisterNUICallback('transfer', function(data)
 	TriggerServerEvent('bank:transferx', data.to, data.amountt)
-	
+
 end)
 
-
-
-
---===============================================
---==               NUIFocusoff                 ==
---===============================================
 RegisterNUICallback('NUIFocusOff', function()
   FreezeEntityPosition(PlayerPedId(), false)
   PlaySoundFrontend(-1, "ATM_WINDOW", "HUD_FRONTEND_DEFAULT_SOUNDSET", true)

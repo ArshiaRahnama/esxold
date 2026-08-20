@@ -1,6 +1,6 @@
--- GetUserInput function inspired by vMenu (https://github.com/TomGrobbe/vMenu/blob/master/vMenu/CommonFunctions.cs)
+
 function GetUserInput(windowTitle, defaultText, maxInputLength)
-  -- Create the window title string.
+
   local resourceName = string.upper(GetCurrentResourceName())
   local textEntry = resourceName .. "_WINDOW_TITLE"
   if windowTitle == nil then
@@ -8,17 +8,17 @@ function GetUserInput(windowTitle, defaultText, maxInputLength)
   end
   AddTextEntry(textEntry, windowTitle)
 
-  -- Display the input box.
+
   DisplayOnscreenKeyboard(1, textEntry, "", defaultText or "", "", "", "", maxInputLength or 30)
   Wait(0)
-  -- Wait for a result.
+
   while true do
     local keyboardStatus = UpdateOnscreenKeyboard();
-    if keyboardStatus == 3 then -- not displaying input field anymore somehow
+    if keyboardStatus == 3 then
       return nil
-    elseif keyboardStatus == 2 then -- cancelled
+    elseif keyboardStatus == 2 then
       return nil
-    elseif keyboardStatus == 1 then -- finished editing
+    elseif keyboardStatus == 1 then
       return GetOnscreenKeyboardResult()
     else
       Wait(0)
@@ -29,26 +29,26 @@ end
 function handleArrowInput(center, heading)
   delta = 0.05
 
-  if IsDisabledControlPressed(0, 36) then -- ctrl held down
+  if IsDisabledControlPressed(0, 36) then
     delta = 0.01
   end
 
-  if IsDisabledControlPressed(0, 172) then -- arrow up
+  if IsDisabledControlPressed(0, 172) then
     local newCenter =  PolyZone.rotate(center.xy, vector2(center.x, center.y + delta), heading)
     return vector3(newCenter.x, newCenter.y, center.z)
   end
 
-  if IsDisabledControlPressed(0, 173) then -- arrow down
+  if IsDisabledControlPressed(0, 173) then
     local newCenter =  PolyZone.rotate(center.xy, vector2(center.x, center.y - delta), heading)
     return vector3(newCenter.x, newCenter.y, center.z)
   end
 
-  if IsDisabledControlPressed(0, 174) then -- arrow left
+  if IsDisabledControlPressed(0, 174) then
     local newCenter =  PolyZone.rotate(center.xy, vector2(center.x - delta, center.y), heading)
     return vector3(newCenter.x, newCenter.y, center.z)
   end
 
-  if IsDisabledControlPressed(0, 175) then -- arrow right
+  if IsDisabledControlPressed(0, 175) then
     local newCenter =  PolyZone.rotate(center.xy, vector2(center.x + delta, center.y), heading)
     return vector3(newCenter.x, newCenter.y, center.z)
   end
@@ -59,16 +59,16 @@ end
 function disableControlKeyInput()
   Citizen.CreateThread(function()
     while drawZone do
-      DisableControlAction(0, 36, true)   -- Ctrl
-      DisableControlAction(0, 19, true)   -- Alt
-      DisableControlAction(0, 20, true)   -- 'Z'
-      DisableControlAction(0, 21, true)   -- Shift
-      DisableControlAction(0, 81, true)   -- Scroll Wheel Down
-      DisableControlAction(0, 99, true)   -- Scroll Wheel Up
-      DisableControlAction(0, 172, true)  -- Arrow Up
-      DisableControlAction(0, 173, true)  -- Arrow Down
-      DisableControlAction(0, 174, true)  -- Arrow Left
-      DisableControlAction(0, 175, true)  -- Arrow Right
+      DisableControlAction(0, 36, true)
+      DisableControlAction(0, 19, true)
+      DisableControlAction(0, 20, true)
+      DisableControlAction(0, 21, true)
+      DisableControlAction(0, 81, true)
+      DisableControlAction(0, 99, true)
+      DisableControlAction(0, 172, true)
+      DisableControlAction(0, 173, true)
+      DisableControlAction(0, 174, true)
+      DisableControlAction(0, 175, true)
       Wait(0)
     end
   end)

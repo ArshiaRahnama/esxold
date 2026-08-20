@@ -1,6 +1,5 @@
 
 
-
 function isAllowedToReset(player)
     local allowed = false
     for i, id in ipairs(resetaccountAceess) do
@@ -35,46 +34,15 @@ function TableLength(table)
     return count
 end
 
-
-
--- function AutoMessage()
---     if messages[lastmessage] then
---         TriggerClientEvent(
---             "chat:addMessage",
---             -1,
---             {
---                 template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(0,200,0, 0.5); border-radius: 3px;"><i class="far fa-newspaper"></i> ⚠️ Rahnama ⚠️<br>  {1}</div>',
---                 args = {"notimportant", messages[lastmessage]}
---             }
---         )
---         lastmessage = lastmessage + 1
---     else
---         lastmessage = 1
---         TriggerClientEvent(
---             "chat:addMessage",
---             -1,
---             {
---                 template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(0,200,0, 0.5); border-radius: 3px;"><i class="far fa-newspaper"></i> ⚠️ Rahnama ⚠️<br>  {1}</div>',
---                 args = {"notimportant", messages[lastmessage]}
---             }
---         )
---     end
-
---     SetTimeout(1000 * 60 * 10, AutoMessage)
--- end
-
-
-
-
 function DutyHandler(target, state, aa, isOwner, aa2)
     local xPlayer = ESX.GetPlayerFromId(target)
     isOwner = isOwner or false
     if state then
         if aa then
             if isOwner then
-                --TriggerClientEvent("esx_aduty:teleportUser", xPlayer.source, -413.69, 1173.57, 326.20)
-                -- xPlayer.set("aduty", true)
-                if aa2 then 
+
+
+                if aa2 then
                     AdminPlayers[xPlayer.identifier] = {
                         source = xPlayer.source,
                         permission = xPlayer.permission_level,
@@ -86,7 +54,7 @@ function DutyHandler(target, state, aa, isOwner, aa2)
                     if xPlayer.permission_level >= 8 and ItsAA ~= true then
                         xPlayer.set("aduty", true)
                     end
-                    
+
                     ExecuteCommand("add_principal identifier." .. xPlayer.identifier .. " group.admin")
                     TriggerClientEvent("OnDutyHandler", xPlayer.source, true)
                     TriggerClientEvent('esx:ActiveAdminPerks', xPlayer.source, true)
@@ -105,7 +73,7 @@ function DutyHandler(target, state, aa, isOwner, aa2)
                     if xPlayer.permission_level >= 8 and ItsAA ~= true then
                         xPlayer.set("aduty", true)
                     end
-                    
+
                     TriggerClientEvent('aduty:tagChanger', xPlayer.source, true)
                     ExecuteCommand("add_principal identifier." .. xPlayer.identifier .. " group.admin")
                     TriggerClientEvent("OnDutyHandler", xPlayer.source, true)
@@ -115,7 +83,7 @@ function DutyHandler(target, state, aa, isOwner, aa2)
                 end
             end
         else
-            --TriggerClientEvent("esx_aduty:teleportUser", xPlayer.source, -413.69, 1173.57, 326.20)
+
             xPlayer.set("aduty", true)
             AdminPlayers[xPlayer.identifier] = {
                 source = xPlayer.source,
@@ -134,10 +102,10 @@ function DutyHandler(target, state, aa, isOwner, aa2)
     else
         if aa then
             if isOwner then
-			
-				
+
+
                 xPlayer.set("aduty", false)
-                
+
                 AdminPlayers[xPlayer.identifier] = nil
 				OnDuty[xPlayer.source] = false
 				xPlayer.set('OnDuty', false)
@@ -163,7 +131,7 @@ function DutyHandler(target, state, aa, isOwner, aa2)
             AdminPlayers[xPlayer.identifier] = nil
             TriggerClientEvent("aduty:tagChanger", xPlayer.source, false)
             TriggerClientEvent("OffDutyHandler", xPlayer.source, false)
-            --TriggerClientEvent("adutyHandler", xPlayer.source)
+
             TriggerClientEvent("AdminOffDuty", xPlayer.source)
             TriggerClientEvent("aduty:removeSuggestions", xPlayer.source)
 			TriggerClientEvent('esx:ActiveAdminPerks', xPlayer.source, false)
@@ -175,12 +143,12 @@ end
 
 function DutyHandlerForJail(target, state, aa, isOwner)
     local xPlayer = ESX.GetPlayerFromId(target)
-	
+
     isOwner = isOwner or false
     if state then
         if aa then
             if isOwner then
-                --TriggerClientEvent("esx_aduty:teleportUser", xPlayer.source, -413.69, 1173.57, 326.20)
+
                 xPlayer.set("aduty", true)
                 AdminPlayers[xPlayer.identifier] = {
                     source = xPlayer.source,
@@ -202,7 +170,7 @@ function DutyHandlerForJail(target, state, aa, isOwner)
                 )
             end
         else
-            --TriggerClientEvent("esx_aduty:teleportUser", xPlayer.source, -413.69, 1173.57, 326.20)
+
             xPlayer.set("aduty", true)
             AdminPlayers[xPlayer.identifier] = {
                 source = xPlayer.source,
@@ -221,9 +189,9 @@ function DutyHandlerForJail(target, state, aa, isOwner)
     else
         if aa then
             if isOwner then
-			
-				
-                
+
+
+
                 AdminPlayers[xPlayer.identifier] = nil
 				xPlayer.set('OnDuty', false)
                 TriggerClientEvent('aduty:tagChanger', xPlayer.source, false)
@@ -329,7 +297,6 @@ function CK(target, iniator, reason)
     )
 end
 
-
 function GetSecond()
     local date = os.date("*t")
 
@@ -345,5 +312,4 @@ function KickAll()
         DropPlayer(id, "Server dar hale restart shodan ast lotfan shakiba bashid")
     end
 end
-
 

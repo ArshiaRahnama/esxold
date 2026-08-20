@@ -1,10 +1,10 @@
 local Keys = {
-	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57, 
-	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177, 
+	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
+	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177,
 	["TAB"] = 37, ["Q"] = 44, ["W"] = 32, ["E"] = 38, ["R"] = 45, ["T"] = 245, ["Y"] = 246, ["U"] = 303, ["P"] = 199, ["["] = 39, ["]"] = 40, ["ENTER"] = 18,
 	["CAPS"] = 137, ["A"] = 34, ["S"] = 8, ["D"] = 9, ["F"] = 23, ["G"] = 47, ["H"] = 74, ["K"] = 311, ["L"] = 182,
 	["LEFTSHIFT"] = 21, ["Z"] = 20, ["X"] = 73, ["C"] = 26, ["V"] = 0, ["B"] = 29, ["N"] = 249, ["M"] = 244, [","] = 82, ["."] = 81,
-	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70, 
+	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70,
 	["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
 	["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
@@ -36,19 +36,17 @@ _RequestModel = function(hash)
     end
 end
 
-
-
 Citizen.CreateThread(function()
-	-- local blip = AddBlipForCoord(Config.craftcoords.coords)
-	-- SetBlipSprite (blip, 134)
-	-- SetBlipDisplay(blip, 4)
-	-- SetBlipScale  (blip, 0.8)
-	-- SetBlipColour (blip, 1)
-	-- SetBlipAsShortRange(blip, true)
-	-- BeginTextCommandSetBlipName("STRING")
-	-- AddTextComponentString('Craft lockpick')
-	-- EndTextCommandSetBlipName(blip)
-	--
+
+
+
+
+
+
+
+
+
+
 	for k ,v in ipairs(Config.Chopshops) do
 		local blip = AddBlipForCoord(v)
 		SetBlipSprite (blip, 89)
@@ -62,7 +60,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Display markers
 local craft = false
 local chop = false
 Citizen.CreateThread(function()
@@ -76,7 +73,7 @@ Citizen.CreateThread(function()
 					ESX.ShowHelpNotification('Dokme ~INPUT_CONTEXT~ jahat craft lockpick')
 				elseif craft then
 					craft = false
-					ESX.UI.Menu.CloseAll()	
+					ESX.UI.Menu.CloseAll()
 				end
 			elseif near.chie == 'chop' then
 				DrawMarker(near.type, near.coords.x, near.coords.y, near.coords.z, 0.0, 0.0, 0.0, 0, 0.0, 0.0, near.size.x, near.size.y, near.size.z, near.color.r, near.color.g, near.color.b, 100, false, true, 2, false, false, false, false)
@@ -85,7 +82,7 @@ Citizen.CreateThread(function()
 					ESX.ShowHelpNotification('Dokme ~INPUT_CONTEXT~ jahat shoroe chop shop')
 				elseif chop then
 					chop = false
-					ESX.UI.Menu.CloseAll()	
+					ESX.UI.Menu.CloseAll()
 				end
 			end
 		else
@@ -176,7 +173,7 @@ AddEventHandler('onKeyDown',function(key)
 										{label = 'Kheir', value = 'no'},
 									}
 									}, function(data, menu)
-										if data.current.value == 'yes' then		
+										if data.current.value == 'yes' then
 											local near = false
 											local coords = GetEntityCoords(PlayerPedId())
 											for k , v in ipairs(Config.Chopshops) do
@@ -184,17 +181,17 @@ AddEventHandler('onKeyDown',function(key)
 												if distance < 10 then
 													near = true
 												end
-											end			
+											end
 											if not near then
 												return menu.close()
 											end
 
-											ESX.UI.Menu.CloseAll()	
+											ESX.UI.Menu.CloseAll()
 											DecorSetBool(vehicle,"chop",true)
 											FreezeEntityPosition(vehicle,true)
 											TaskLeaveVehicle(GetPlayerPed(-1), vehicle, 0)
-											-- FIX: 'sun-jobs' is not installed on this server. Guard the call so a
-											-- missing resource doesn't throw and break the whole chop flow.
+
+
 											local time = Config.choptime
 											if GetResourceState('sun-jobs') == 'started' then
 												local ok, hasInsurance = pcall(function()
@@ -213,7 +210,7 @@ AddEventHandler('onKeyDown',function(key)
 													if lock == 1 or lock == 0 then
 														local NetId = NetworkGetNetworkIdFromEntity(vehicle)
 														TriggerServerEvent("esx_vehiclecontrol:sync", NetId, true)
-													end							
+													end
 												end
 											end)
 											TriggerServerEvent('startchop',VehToNet(vehicle))
@@ -222,36 +219,36 @@ AddEventHandler('onKeyDown',function(key)
 												time = time - 1
 												if time == 170 then
 													SetVehicleBodyHealth(vehicle,0.0)
-													SmashVehicleWindow(vehicle, 0)	
+													SmashVehicleWindow(vehicle, 0)
 												elseif time == 150 then
-													SmashVehicleWindow(vehicle, 1)		
+													SmashVehicleWindow(vehicle, 1)
 												elseif time == 130 then
-													SmashVehicleWindow(vehicle, 2)		
+													SmashVehicleWindow(vehicle, 2)
 												elseif time == 100 then
-													SmashVehicleWindow(vehicle, 3)				
-													SmashVehicleWindow(vehicle, 4)			
-													SmashVehicleWindow(vehicle, 5)			
-													SmashVehicleWindow(vehicle, 6)			
-													SmashVehicleWindow(vehicle, 7)	
+													SmashVehicleWindow(vehicle, 3)
+													SmashVehicleWindow(vehicle, 4)
+													SmashVehicleWindow(vehicle, 5)
+													SmashVehicleWindow(vehicle, 6)
+													SmashVehicleWindow(vehicle, 7)
 												elseif time == 80 then
-													for i = 0, GetNumberOfVehicleDoors(vehicle) do 
+													for i = 0, GetNumberOfVehicleDoors(vehicle) do
 														Wait(1000)
 														time = time - 1
 														SetVehicleDoorBroken(vehicle, i, false)
 													end
-												elseif time == 20 then				
-													SetVehicleTyreBurst(vehicle, 0, true, 1000.0)											
-												elseif time == 25 then				
+												elseif time == 20 then
+													SetVehicleTyreBurst(vehicle, 0, true, 1000.0)
+												elseif time == 25 then
 													SetVehicleTyreBurst(vehicle,1, true, 1000.0)
-												elseif time == 15 then				
+												elseif time == 15 then
 													SetVehicleTyreBurst(vehicle, 4, true, 1000.0)
-												elseif time == 10 then				
-													SetVehicleTyreBurst(vehicle, 5, true, 1000.0)	
+												elseif time == 10 then
+													SetVehicleTyreBurst(vehicle, 5, true, 1000.0)
 												end
 											end
-											-- FIX: originally nothing happened here — the vehicle was left sitting in
-											-- the world and the player got no reward. Tell the server the chop is
-											-- done (marks the plate as chopped + rewards the player), then clean up.
+
+
+
 											local finishPlate = ESX.Math.Trim(GetVehicleNumberPlateText(vehicle))
 											TriggerServerEvent('chop:finish', VehToNet(vehicle), finishPlate)
 											DecorSetBool(vehicle,"chop",nil)
@@ -260,7 +257,7 @@ AddEventHandler('onKeyDown',function(key)
 											DeleteEntity(vehicle)
 										elseif data.current.value == 'no' then
 											menu.close()
-											ESX.UI.Menu.CloseAll()													
+											ESX.UI.Menu.CloseAll()
 										end
 									end)
 								end
@@ -277,8 +274,7 @@ AddEventHandler('onKeyDown',function(key)
 			end
 		end
 	end
-end)	
-
+end)
 
 function craftmenu()
 	ESX.UI.Menu.Open(
@@ -366,8 +362,6 @@ function craftmenu()
 	end)
 end
 
---
-
 function buymenu()
 	ESX.UI.Menu.Open(
 	'default', GetCurrentResourceName(), 'buy',
@@ -379,7 +373,7 @@ function buymenu()
 		}
 	},
 	function(data, menu)
-		--menu.close()
+
 		if data.current.value == 'pich' then
 			TriggerServerEvent('chop:buypich')
 		end

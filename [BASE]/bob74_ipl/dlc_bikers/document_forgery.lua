@@ -1,5 +1,4 @@
 
--- Document forgery: 1165, -3196.6, -39.01306
 
 exports('GetBikerDocumentForgeryObject', function()
     return BikerDocumentForgery
@@ -53,9 +52,9 @@ BikerDocumentForgery = {
             A = "chair01", B = "chair02", C = "chair03", D = "chair04",
             E = "chair05", F = "chair06", G = "chair07",
         },
-        production = "production",			-- Papers, pencils
-        furnitures = "set_up",				-- Printers, shredders
-        clutter = "clutter",				-- Pizza boxes, cups
+        production = "production",
+        furnitures = "set_up",
+        clutter = "clutter",
 
         Enable = function (details, state, refresh)
             SetIplPropState(BikerDocumentForgery.interiorId, details, state, refresh)

@@ -1,5 +1,5 @@
 Locales['sv'] = {
-  -- Global menus
+
   ['cloakroom']                 = 'omklädningsrum',
   ['cloak_change']              = 'tryck ~INPUT_PICKUP~ för att byta kläder.',
   ['citizen_wear']              = 'civilkläder',
@@ -25,7 +25,7 @@ Locales['sv'] = {
   ['public_enter']              = 'tryck ~INPUT_PICKUP~ för att gå in i byggnaden.',
   ['public_leave']              = 'tryck ~INPUT_PICKUP~ för att lämna byggnaden.',
 
-  -- Lumber Jack job
+
   ['lj_locker_room']            = 'skogshuggare omklädningsrum',
   ['lj_mapblip']                = 'trähög',
   ['lj_wood']                   = 'träd',
@@ -38,7 +38,7 @@ Locales['sv'] = {
   ['lj_pick_boards']            = 'tryck ~INPUT_PICKUP~ för att hämta brädorna.',
   ['lj_deliver_button']         = 'tryck ~INPUT_PICKUP~ för att sälja brädorna.',
 
-  -- Fisherman
+
   ['fm_fish_locker']            = 'fiskarens omklädningsrum',
   ['fm_fish']                   = 'fisk',
   ['fm_fish_area']              = 'fiskeoområde',
@@ -50,7 +50,7 @@ Locales['sv'] = {
   ['fm_boat_return_button']     = 'tryck ~INPUT_PICKUP~ för att återvända båten.',
   ['fm_deliver_fish']           = 'tryck ~INPUT_PICKUP~ för att sälja fisk.',
 
-  -- Fuel
+
   ['f_oil_refiner']             = 'Oljeraffinaderi Omklädningsrum',
   ['f_drill_oil']               = 'borra efter olja',
   ['f_fuel']                    = 'olja',
@@ -63,7 +63,7 @@ Locales['sv'] = {
   ['f_deliver_gas']             = 'leverera gas',
   ['f_deliver_gas_button']      = 'tryck ~INPUT_PICKUP~ för att sälja bensin.',
 
-  -- Miner
+
   ['m_miner_locker']            = 'Gruvarbetarnas Omklädningsrum',
   ['m_rock']                    = 'sten',
   ['m_pickrocks']               = 'tryck ~INPUT_PICKUP~ för att hämta sten.',
@@ -84,11 +84,11 @@ Locales['sv'] = {
   ['m_deliver_diamond']         = 'tryck ~INPUT_PICKUP~ för att sälja diamant.',
   ['m_melt_button']             = 'tryck ~INPUT_PICKUP~ för att smälta sten.',
 
-  -- Reporter
+
   ['reporter_name']             = 'aftonbladet',
   ['reporter_garage']           = 'tryck ~INPUT_PICKUP~ för att gå ner till garaget.',
 
-  -- Slaughterer
+
   ['s_slaughter_locker']        = 'slaktarens omklädningsrum',
   ['s_hen']                     = 'hönshus',
   ['s_alive_chicken']           = 'Levande Kyckling',
@@ -102,7 +102,7 @@ Locales['sv'] = {
   ['s_unpackaged_button']       = 'tryck ~INPUT_PICKUP~ för att packa kycklingen.',
   ['s_deliver']                 = 'tryck ~INPUT_PICKUP~ för att sälja kycklingsförpackningar.',
 
-  -- Dress Designer
+
   ['dd_dress_locker']           = 'Klädesdesigners omklädningsrum',
   ['dd_wool']                   = 'ull',
   ['dd_pickup']                 = 'tryck ~INPUT_PICKUP~ för att skörda ull.',

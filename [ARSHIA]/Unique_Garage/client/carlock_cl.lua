@@ -1,31 +1,26 @@
--- ESX is already initialized globally by client.lua; no need to re-fetch it here.
+
 local DisableOnKey = false
 local hotwireActive = {}
 local showHotwireText = false
 local canHotwireVehicle = false
 local hotwireText = "~r~[H] ~w~Baraye Pich Goshti Kardan"
 
--- Same prefix set as the server (carlock_sv.lua JOB_PLATE_ACCESS) -- the full
--- DOJ / Law Enforcement / Organ Services roster. Kept here purely so the
--- player gets an instant, local "no" instead of waiting on a round trip.
--- The SERVER is the one that actually enforces this now; this client copy
--- is UX-only and is never trusted for security.
 local restrictedPrefixes = {
-    -- Department of Justice
+
     ["CID"] = true,
     ["CIA"] = true,
-    ["MS"]  = true, -- Marshal
+    ["MS"]  = true,
     ["FBI"] = true,
-    ["JD"]  = true, -- Judge
+    ["JD"]  = true,
     ["DOA"] = true,
-    -- Law Enforcement
+
     ["PD"] = true,
     ["SH"] = true,
     ["MT"] = true,
-    -- Organ Services
+
     ["TX"] = true,
     ["MC"] = true,
-    ["MD"] = true, -- ambulance
+    ["MD"] = true,
     ["WZ"] = true,
 }
 
@@ -84,7 +79,6 @@ CreateThread(function()
     end
 end)
 
-
 CreateThread(function()
     while true do
         if showHotwireText then
@@ -100,7 +94,6 @@ CreateThread(function()
         Wait(0)
     end
 end)
-
 
 function UseHotwireKit()
     if not canHotwireVehicle then
@@ -135,9 +128,9 @@ function UseHotwireKit()
         )
 
         if success then
-            -- The plate is sent so the server can independently re-verify
-            -- (a) the player is actually in that vehicle and (b) its plate
-            -- isn't a restricted org prefix, instead of trusting this client.
+
+
+
             TriggerServerEvent('CarLock:useHotwireKit', globalplate)
             SafeNotify("~g~Mashin ba movafaghiat roshan shod!")
         else
@@ -162,7 +155,6 @@ AddEventHandler('CarLock:enableVehicleTemporarily', function()
     SetVehicleEngineOn(vehicle, true, false, false)
 end)
 
-
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
@@ -170,7 +162,7 @@ Citizen.CreateThread(function()
         local vehicle = GetVehiclePedIsIn(ped, false)
 
         if vehicle ~= 0 and GetPedInVehicleSeat(vehicle, -1) == ped then
-            if IsControlJustReleased(0, 74) and showHotwireText then -- فقط وقتی متن نمایش داده می‌شود فعال شود
+            if IsControlJustReleased(0, 74) and showHotwireText then
                 UseHotwireKit()
             end
         else
@@ -179,18 +171,13 @@ Citizen.CreateThread(function()
     end
 end)
 
-
--- Is this plate one of the organizational (job) vehicles? UI-only helper --
--- purely so the lock/unlock notification can call it out; access itself is
--- still decided by the server's CarLock:haskey callback. Same 13-org roster
--- as notejobserver.txt (DOJ / Law Enforcement / Organ Services).
 local function GetOrgLabel(plate)
     local orgNames = {
-        -- Department of Justice
+
         CID = "CID", CIA = "CIA", MS = "Marshal", FBI = "FBI", JD = "Judge", DOA = "DOA",
-        -- Law Enforcement
+
         PD = "Police", SH = "Sheriff", MT = "MT",
-        -- Organ Services
+
         TX = "Taxi", MC = "Mechanic", MD = "Ambulance", WZ = "Weazel",
     }
     local p3 = string.upper(string.sub(plate, 1, 3))
@@ -220,8 +207,6 @@ function unlockVehicle(vehicle)
     end
 end
 
-
-
 function lockVehicle(vehicle)
     local ply = PlayerPedId()
     local vehicleModel = GetEntityModel(vehicle)
@@ -231,8 +216,8 @@ function lockVehicle(vehicle)
     local orgLabel = GetOrgLabel(plate)
     local tag = orgLabel and (" ~b~[" .. orgLabel .. "]~w~") or ""
 
-    -- Make sure the doors are actually shut before locking, same as the
-    -- reference implementation, so the lock doesn't visually clip an open door.
+
+
     SetVehicleDoorShut(vehicle, 0, false)
     SetVehicleDoorShut(vehicle, 1, false)
     SetVehicleDoorShut(vehicle, 2, false)
@@ -248,8 +233,6 @@ function lockVehicle(vehicle)
         playAnimation(true)
     end
 end
-
-
 
 function getVehicleNetId(vehID)
 	return NetToVeh(NetworkGetNetworkIdFromEntity(vehID))
@@ -318,9 +301,8 @@ RegisterCommand("uniquegarage_carlock_toggle", function()
 		end
 	end
 end)
--- Native FiveM key binding (no external "keys"/onKeyDown resource needed; players can rebind this in Settings > Key Bindings > FiveM).
-RegisterKeyMapping("uniquegarage_carlock_toggle", "Lock/Unlock nearby vehicle", "keyboard", Customize.Hotkey or "U")
 
+RegisterKeyMapping("uniquegarage_carlock_toggle", "Lock/Unlock nearby vehicle", "keyboard", Customize.Hotkey or "U")
 
 RegisterCommand("keys", function()
 	TriggerEvent("CarLock:RefreshKeys")
@@ -386,8 +368,8 @@ function GiveCarkey(target)
 	if not vehicle or vehicle == 0 then return SafeNotify('~r~ Mashin Peyda Nashod') end
 	if #(GetEntityCoords(vehicle)  - GetEntityCoords(ped)    ) > 15.0 then return SafeNotify('~r~ Fasle Shoma Ba Akharin Mashin Ke Savar Shodid Besyar Zeyad Ast') end
 	local plate = GetVehicleNumberPlateText(vehicle)
-	-- Server independently re-checks that the SENDER actually has access to
-	-- this plate before honoring the grant (see carlock_sv.lua ToggleKey2) --
-	-- this client can no longer mint keys for arbitrary plates/targets.
+
+
+
 	TriggerServerEvent('CarLock:ToggleKey2', true, plate, target)
 end

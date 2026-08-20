@@ -16,7 +16,7 @@ Options = {
 }
 
 Citizen.CreateThread(function()
-    while true do 
+    while true do
         Citizen.Wait(1)
         sleep = true
 		local playerPed = PlayerPedId()
@@ -24,7 +24,7 @@ Citizen.CreateThread(function()
         for k,v in pairs(Config.Locations) do
             if not InMenu then
                 local distance = #(coords - v.coords)
-                local return_distance = #(coords - v.return_coords) 
+                local return_distance = #(coords - v.return_coords)
 
                     if distance < 1 then
                         sleep = false

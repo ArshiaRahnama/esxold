@@ -1,5 +1,4 @@
 
--- Middle end house 1: 347.2686 -999.2955 -99.19622
 
 exports('GetGTAOHouseMid1Object', function()
     return GTAOHouseMid1

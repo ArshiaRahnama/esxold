@@ -11,9 +11,7 @@ if Config_cid.MaxInService ~= -1 then
 end
 
 TriggerEvent('esx_phone:registerNumber', 'cid', _U('alert_cid'), true, true)
--- Boss-action MONEY is shared across the whole DOJ group (cid/cia/marshal/fbi/judge/doa)
--- via the 'society_doj' account - see [JOB]/esx_society/server/main.lua's GetSociety().
--- Armory/inventory ('society_cid') stays separate per job, unchanged.
+
 TriggerEvent('esx_society:registerSociety', 'cid', 'CID', 'society_doj', 'society_cid', 'society_cid', {type = 'public'})
 
 RegisterServerEvent('esx_cidjob:giveWeapon')
@@ -21,8 +19,6 @@ AddEventHandler('esx_cidjob:giveWeapon', function(weapon, ammo)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	xPlayer.addWeapon(weapon, ammo)
 end)
-
-
 
 RegisterServerEvent('esx_cidjob:getStockItem')
 AddEventHandler('esx_cidjob:getStockItem', function(itemName, count)
@@ -34,10 +30,10 @@ AddEventHandler('esx_cidjob:getStockItem', function(itemName, count)
 
 		local inventoryItem = inventory.getItem(itemName)
 
-		-- is there enough in the society?
+
 		if count > 0 and inventoryItem.count >= count then
-		
-			-- can the player carry the said amount of x item?
+
+
 			if sourceItem.limit ~= -1 and (sourceItem.count + count) > sourceItem.limit then
 				TriggerClientEvent('esx:showNotification', _source, _U('quantity_invalid'))
 			else
@@ -62,7 +58,7 @@ AddEventHandler('esx_cidjob:putStockItems', function(itemName, count)
 
 		local inventoryItem = inventory.getItem(itemName)
 
-		-- does the player have enough of the item?
+
 		if sourceItem.count >= count and count > 0 then
 			xPlayer.removeInventoryItem(itemName, count)
 			inventory.addItem(itemName, count)
@@ -82,7 +78,7 @@ RegisterCommand('findnumber_cid', function(source, args, users)
             if string.len(args[1]) == 10 then
             local number = tonumber(args[1])
                 if number then
-                    MySQL.Async.fetchAll('SELECT playerName FROM users WHERE phone=@number', 
+                    MySQL.Async.fetchAll('SELECT playerName FROM users WHERE phone=@number',
                     {
                         ['@number'] =  number
                     }, function(data)
@@ -105,8 +101,6 @@ RegisterCommand('findnumber_cid', function(source, args, users)
 		TriggerClientEvent('chat:addMessage', source, { args = { '^1SYSTEM', " ^0Shoma cid nistid!"} })
     end
 end)
-
-
 
 ESX.RegisterServerCallback('esx_cidjob:getVehicleInfos', function(source, cb, plate)
 
@@ -177,12 +171,6 @@ ESX.RegisterServerCallback('esx_cidjob:getArmoryWeapons', function(source, cb)
 
 end)
 
-
-
-
-
-
-
 ESX.RegisterServerCallback('esx_cidjob:addArmoryWeapon', function(source, cb, weaponName, removeWeapon)
 
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -222,9 +210,6 @@ ESX.RegisterServerCallback('esx_cidjob:addArmoryWeapon', function(source, cb, we
 
 end)
 
-
-
-
 ESX.RegisterServerCallback('esx_cidjob:buyArmoryWeapon', function(source, cb, weaponName, removeWeapon, tedad)
 
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -251,7 +236,7 @@ ESX.RegisterServerCallback('esx_cidjob:buyArmoryWeapon', function(source, cb, we
 				break
 			end
 		end
-		
+
 		if not foundWeapon then
 			table.insert(weapons, {
 				name  = weaponName,
@@ -264,8 +249,6 @@ ESX.RegisterServerCallback('esx_cidjob:buyArmoryWeapon', function(source, cb, we
 	end)
 
 end)
-
-
 
 ESX.RegisterServerCallback('esx_cidjob:removeArmoryWeapon', function(source, cb, weaponName)
 
@@ -288,13 +271,13 @@ ESX.RegisterServerCallback('esx_cidjob:removeArmoryWeapon', function(source, cb,
 			if weapons[i].name == weaponName then
 
 				weapons[i].count = weapons[i].count - 1
-				
+
 
 				foundWeapon = true
 				break
 			end
 		end
-		
+
 		if not foundWeapon then
 			table.insert(weapons, {
 				name  = weaponName,
@@ -308,10 +291,9 @@ ESX.RegisterServerCallback('esx_cidjob:removeArmoryWeapon', function(source, cb,
 
 end)
 
-
 ESX.RegisterServerCallback('esx_cidjob:buy', function(source, cb, amount)
 
-	-- Armory purchases spend from the shared DOJ money pool - see registerSociety note above.
+
 	TriggerEvent('esx_addonaccount:getSharedAccount', 'society_doj', function(account)
 		if account.money >= amount then
 			account.removeMoney(amount)
@@ -329,7 +311,6 @@ ESX.RegisterServerCallback('esx_cidjob:getStockItems', function(source, cb)
 		cb(inventory.items)
 	end)
 end)
-
 
 ESX.RegisterServerCallback('esx_cidjob:buyArmoryItem', function(source, cb, weaponName, removeWeapon, tedad)
 
@@ -357,7 +338,7 @@ ESX.RegisterServerCallback('esx_cidjob:buyArmoryItem', function(source, cb, weap
 				break
 			end
 		end
-		
+
 		if not foundWeapon then
 			table.insert(weapons, {
 				name  = weaponName,
@@ -371,16 +352,12 @@ ESX.RegisterServerCallback('esx_cidjob:buyArmoryItem', function(source, cb, weap
 
 end)
 
-
-
 ESX.RegisterServerCallback('esx_cidjob:getPlayerInventory', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local items   = xPlayer.inventory
 
 	cb( { items = items } )
 end)
-
-
 
 AddEventHandler('onResourceStop', function(resource)
 	if resource == GetCurrentResourceName() then
@@ -390,7 +367,7 @@ end)
 
 RegisterServerEvent('esx_cidjob:message')
 AddEventHandler('esx_cidjob:message', function(target, msg)
-	-- if exports['Eye-AC']:CheckPlayers(source, target, 25.0) ~= false then return end
+
 	TriggerClientEvent('esx:showNotification', target, msg)
 end)
 
@@ -414,26 +391,25 @@ AddEventHandler('esx_cidjob:saundplay', function(soundFile, soundVolume, x, y, p
         panicreqy[panic] = y
         panicreqname[panic] = unit and unit.get('inunit') or 'Unknown'
 
-
         TriggerClientEvent('InteractSound_SV:PlayOnOne', source, soundFile, soundVolume)
-        
+
         if IsDistress then
             local text = '*'..namesh..' Dastesho Mibare Samte Radio Va Dokme Panic Ro Feshar Mide.*'
 			local xxPlayer = ESX.GetPlayerFromId(source)
             TriggerEvent('InteractSound_SV:PlayWithinDistancemt', xxPlayer, 5.0, 'panic', 0.3)
-            
 
-            TriggerClientEvent('chatMessage', source, "[DISPATCH ("..string.upper(xxPlayer.job.name)..") ]", {50, 150, 200}, 
+
+            TriggerClientEvent('chatMessage', source, "[DISPATCH ("..string.upper(xxPlayer.job.name)..") ]", {50, 150, 200},
                 "^7Shoma Dar Halat ^1Panic ^7Qarar Gereftid -> ^8/resp "..panic)
             TriggerClientEvent('esx_cidjob:sendbackuptext', source, text)
-            
+
 
             for i=1, #xPlayers do
                 local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
                 if xPlayer and xPlayer.source ~= source and (xPlayer.job.name == "cid" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "fbi") then
 
 					TriggerEvent('InteractSound_SV:PlayWithinDistancemt', xPlayer, 5.0, 'panic', 0.3)
-                    TriggerClientEvent('chatMessage', xPlayer.source, "[DISPATCH ("..string.upper(xxPlayer.job.name)..") ]", {50, 150, 200}, 
+                    TriggerClientEvent('chatMessage', xPlayer.source, "[DISPATCH ("..string.upper(xxPlayer.job.name)..") ]", {50, 150, 200},
                         "^7Afsar ^2"..namesh.."^7 Az Vahede  ^7Morede ^1Hamle ^7Gharar Gerefte Ast -> ^8/resp "..panic)
                 end
             end
@@ -441,19 +417,19 @@ AddEventHandler('esx_cidjob:saundplay', function(soundFile, soundVolume, x, y, p
             local text = '*'..namesh..' Dastesho Mibare Samte Radio Va Darkhast 10-70 Mikone.*'
 			local xxPlayer = ESX.GetPlayerFromId(source)
             TriggerEvent('InteractSound_SV:PlayWithinDistancemt', xxPlayer, source, 5.0, 'demo', 1.0)
-            
 
-            TriggerClientEvent('chatMessage', source, "[DISPATCH ("..string.upper(xxPlayer.job.name)..") ]", {50, 150, 200}, 
+
+            TriggerClientEvent('chatMessage', source, "[DISPATCH ("..string.upper(xxPlayer.job.name)..") ]", {50, 150, 200},
                 "^7Shoma Darkhast ^1Backup ^7Dadid -> ^8/resp "..panic)
             TriggerClientEvent('esx_cidjob:sendbackuptext', source, text)
-            
+
 
             for i=1, #xPlayers do
                 local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
                 if xPlayer then
 					if xPlayer and xPlayer.source ~= source and (xPlayer.job.name == "cid" or xPlayer.job.name == "sheriff" or xPlayer.job.name == "fbi") then
 						TriggerEvent('InteractSound_SV:PlayWithinDistancemt', xPlayer, 5.0, 'demo', 1.0)
-                        TriggerClientEvent('chatMessage', xPlayer.source, "[DISPATCH ("..string.upper(xxPlayer.job.name)..") ]", {50, 150, 200}, 
+                        TriggerClientEvent('chatMessage', xPlayer.source, "[DISPATCH ("..string.upper(xxPlayer.job.name)..") ]", {50, 150, 200},
                         "^7Afsar ^2"..namesh.."^7 Az Vahede  ^7Darkhast ^1Backup ^7Darad -> ^8/resp "..panic)
                     end
                 end
@@ -462,7 +438,7 @@ AddEventHandler('esx_cidjob:saundplay', function(soundFile, soundVolume, x, y, p
     else
         TriggerClientEvent('esx:showNotification', source, '~r~Darkhast Backup/Panic Shoma Rooye Cooldown Ast.')
     end
-    
+
     if sentreq[source] then
         SetTimeout(60000, function()
             sentreq[source] = false
@@ -476,7 +452,7 @@ AddEventHandler('esx_cidjob:playSoundRadio', function(soundFile, soundVolume)
 
 	for i=1, #xPlayers, 1 do
 
-		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])	
+		local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
 
 		if xPlayer.job.name == "cid" and xPlayer.job.grade >= 0 then
 
@@ -503,21 +479,15 @@ ESX.RegisterServerCallback('esx_cidjob:getIcName', function(source, cb)
 	cb(characterName)
 end)
 
-
-
 RegisterServerEvent("cid:ShotsAlarm")
 AddEventHandler("cid:ShotsAlarm", function(x,y,z,s)
 	local xPlayers = ESX.GetPlayers()
-	 if GetPlayerRoutingBucket( source )  == 0  then 
+	 if GetPlayerRoutingBucket( source )  == 0  then
 		TriggerClientEvent("cid:ShotsAlarm", -1  , x,y,z,s)
-	 end 
+	 end
 
-	
+
 end)
-
----------------------------------------------------------------------------------------------------------
------------------------------------------ Dispatch Commands --------------------------------------------
---------------------------------------------------------------------------------------------------------
 
 RegisterCommand('createunit_cid', function(source, args)
 	if not args[1] then
@@ -548,7 +518,7 @@ RegisterCommand('createunit_cid', function(source, args)
 				TriggerClientEvent('chatMessage', source, "[ System ] : ", {255, 0, 0}, "Shoma ghablan unit sakhte id")
 			else
 				TriggerClientEvent('chatMessage', source, "[ System ] : ", {255, 0, 0}, "Shoma dar hale hazer unit darid")
-			end	
+			end
 		end
 
 	else
@@ -581,7 +551,7 @@ RegisterCommand('delunit_cid', function(source, args)
 					if xPlayer then
 						TriggerClientEvent('esx:setcallsign', xPlayer.source, nil)
 					end
-					
+
 					if TableLength_cid(units[identifier].members) > 0 then
 						for k,v in pairs(units[identifier].members) do
 							xPlayer = ESX.GetPlayerFromIdentifier(k)
@@ -621,17 +591,17 @@ RegisterCommand('renameunit_cid', function(source, args)
 		local job = xPlayer.job.name
 
 		if units[identifier] ~= nil then
-			
-			local csign = units[identifier].callsign -- previous call sign
+
+			local csign = units[identifier].callsign
 			local uidentifier = string.upper(args[1])
 
-			if csign == uidentifier then 
+			if csign == uidentifier then
 				TriggerClientEvent('chatMessage', source, "[ System ] : ", {255, 0, 0}, "Shoma nemitavanid callsign ghabli khod ra entekhab konid!")
 				return
 			end
 
 			units[identifier].callsign = uidentifier
-			callsigns[csign] = nil 
+			callsigns[csign] = nil
 			callsigns[uidentifier] = {owner = identifier, job = xPlayer.job.name, name = string.gsub(xPlayer.name, "_", " ")}
 			TriggerClientEvent('esx:setcallsign', source, uidentifier)
 			if TableLength_cid(units[identifier].members) > 0 then
@@ -649,7 +619,7 @@ RegisterCommand('renameunit_cid', function(source, args)
 				TriggerClientEvent('chatMessage', source, "[ System ] : ", {255, 0, 0}, "Shoma hich uniti nadarid")
 			else
 				TriggerClientEvent('chatMessage', source, "[ System ] : ", {255, 0, 0}, "Shoma saheb in unit nistid")
-			end	
+			end
 		end
 
 	else
@@ -666,11 +636,11 @@ RegisterCommand('disbanunit_cid', function(source)
 		local identifier = xPlayer.identifier
 
 		if units[identifier] ~= nil then
-			
+
 			local csign = units[identifier].callsign
 			TriggerClientEvent('esx:setcallsign', source, nil, xPlayer.job.name)
 			callsigns[csign] = nil
-			units[identifier] = nil	
+			units[identifier] = nil
 			TriggerClientEvent('esx_cidjob:notifyp', -1, " Vahed ^2" .. csign .. "^0 monhal shod!", xPlayer.job.name)
 
 		else
@@ -678,7 +648,7 @@ RegisterCommand('disbanunit_cid', function(source)
 				TriggerClientEvent('chatMessage', source, "[ System ] : ", {255, 0, 0}, "Shoma hich uniti nadarid")
 			else
 				TriggerClientEvent('chatMessage', source, "[ System ] : ", {255, 0, 0}, "Shoma saheb in unit nistid")
-			end	
+			end
 		end
 
 	else
@@ -769,7 +739,7 @@ RegisterCommand('leaveunit_cid', function(source)
 					v.members[identifier] = nil
 					break
 				end
-			end	
+			end
 
 		else
 			if units[identifier] == nil then
@@ -803,10 +773,6 @@ function IsPlayerInAnyUnit_cid(identifier)
 	return false
 end
 
-
-
-
-
 RegisterServerEvent('logMTVehicleSpawn')
 AddEventHandler('logMTVehicleSpawn', function(playerName, serverID, steamHex, vehicleModel, plateText, isspawn)
 	if isspawn then
@@ -837,7 +803,6 @@ AddEventHandler('logMTVehicleSpawn', function(playerName, serverID, steamHex, ve
 
 end)
 
-
 function DiscordLogs_cid(messagess, titelss, grren)
 
 	local discordWebhooks = {
@@ -845,16 +810,15 @@ function DiscordLogs_cid(messagess, titelss, grren)
 		"https:// arshiahub.ir/changeme/1354115895730896918/pM6Y0IVfTtMsJcHQr_mVIN1VAIllS4Qx51e5tItqqnKvFvWS21cagSSWcCnvM88PyfDZ"
 	}
 
-
 	local colors = 0
-	
-	if grren then 
+
+	if grren then
 		colors = 65280
 	else
 		colors = 16711680
 	end
 
-	
+
 
     local logMessage = {
         {
@@ -869,18 +833,11 @@ function DiscordLogs_cid(messagess, titelss, grren)
     }
 
     for _, webhook in ipairs(discordWebhooks) do
-        PerformHttpRequest(webhook, function(err, text, headers) 
-            
+        PerformHttpRequest(webhook, function(err, text, headers)
+
         end, 'POST', json.encode({username = "Vehicle Logs", embeds = logMessage}), { ['Content-Type'] = 'application/json' })
     end
 end
-
-
-
-
-
-
-
 
 RegisterServerEvent('logMTPutItem')
 AddEventHandler('logMTPutItem', function(playerName, serverID, steamHex, itemLabel, itemCount)
@@ -891,7 +848,7 @@ AddEventHandler('logMTPutItem', function(playerName, serverID, steamHex, itemLab
 
     local logMessage = {
         {
-            ["color"] = 65280, 
+            ["color"] = 65280,
             ["title"] = "**📥 Gozashtan Item 📥**",
             ["fields"] = {
                 {["name"] = "👤 Player Name", ["value"] = playerName, ["inline"] = false},
@@ -909,7 +866,6 @@ AddEventHandler('logMTPutItem', function(playerName, serverID, steamHex, itemLab
     end
 end)
 
-
 RegisterServerEvent('logMTGetItem')
 AddEventHandler('logMTGetItem', function(playerName, serverID, steamHex, itemLabel, itemCount)
     local discordWebhooks = {
@@ -919,7 +875,7 @@ AddEventHandler('logMTGetItem', function(playerName, serverID, steamHex, itemLab
 
     local logMessage = {
         {
-            ["color"] = 16711680, 
+            ["color"] = 16711680,
             ["title"] = "**📤 Bardashtan Item 📤**",
             ["fields"] = {
                 {["name"] = "👤 Player Name", ["value"] = playerName, ["inline"] = false},
@@ -936,7 +892,6 @@ AddEventHandler('logMTGetItem', function(playerName, serverID, steamHex, itemLab
         PerformHttpRequest(webhook, function(err, text, headers) end, 'POST', json.encode({username = "Item Logs", embeds = logMessage}), { ['Content-Type'] = 'application/json' })
     end
 end)
-
 
 RegisterServerEvent('logMTBuyItem')
 AddEventHandler('logMTBuyItem', function(playerName, serverID, steamHex, itemLabel, itemCount, itemPrice)
@@ -966,10 +921,6 @@ AddEventHandler('logMTBuyItem', function(playerName, serverID, steamHex, itemLab
     end
 end)
 
-
-
-
-
 RegisterServerEvent('logMTGetWeapon')
 AddEventHandler('logMTGetWeapon', function(playerName, serverID, steamHex, weaponLabel, ammoCount)
     local discordWebhooks = {
@@ -979,7 +930,7 @@ AddEventHandler('logMTGetWeapon', function(playerName, serverID, steamHex, weapo
 
     local logMessage = {
         {
-            ["color"] = 16711680, -- 🔴
+            ["color"] = 16711680,
             ["title"] = "**🔫 Bardashtan Aslahe 🔫**",
             ["fields"] = {
                 {["name"] = "👤 Player Name", ["value"] = playerName, ["inline"] = false},
@@ -997,8 +948,6 @@ AddEventHandler('logMTGetWeapon', function(playerName, serverID, steamHex, weapo
     end
 end)
 
-
-
 RegisterServerEvent('logMTPutWeapon')
 AddEventHandler('logMTPutWeapon', function(playerName, serverID, steamHex, weaponLabel, ammoCount)
     local discordWebhooks = {
@@ -1008,7 +957,7 @@ AddEventHandler('logMTPutWeapon', function(playerName, serverID, steamHex, weapo
 
     local logMessage = {
         {
-            ["color"] = 65280, 
+            ["color"] = 65280,
             ["title"] = "**🔫 Gozashtan Aslahe Dar Armory 🔫**",
             ["fields"] = {
                 {["name"] = "👤 Player Name", ["value"] = playerName, ["inline"] = false},
@@ -1026,20 +975,16 @@ AddEventHandler('logMTPutWeapon', function(playerName, serverID, steamHex, weapo
     end
 end)
 
-
-
-
-
 RegisterServerEvent('logMTBuyWeapon')
 AddEventHandler('logMTBuyWeapon', function(playerName, serverID, steamHex, weaponLabel, buyCount, totalPrice)
     local discordWebhooks = {
-        "https:// arshiahub.ir/changeme/1345576571213451354/I33wnKXU8kq6_uC89d-eWn3uylFlfGFCQiNrBJpLKAuEgWOoNwzS5qEzB6VTtMlvlKXx", -- discord UniqueRP
-        "https:// arshiahub.ir/changeme/1354115332788322355/B8PS_mhpX64iYIZLfOJUP2GPHxyQsXA88_qciG0SbNq5ayuFgu9O61mFB7gcK3WM3qL9" -- discord
+        "https:// arshiahub.ir/changeme/1345576571213451354/I33wnKXU8kq6_uC89d-eWn3uylFlfGFCQiNrBJpLKAuEgWOoNwzS5qEzB6VTtMlvlKXx",
+        "https:// arshiahub.ir/changeme/1354115332788322355/B8PS_mhpX64iYIZLfOJUP2GPHxyQsXA88_qciG0SbNq5ayuFgu9O61mFB7gcK3WM3qL9"
     }
 
     local logMessage = {
         {
-            ["color"] = 16711680, 
+            ["color"] = 16711680,
             ["title"] = "**🛒 Kharid Aslahe 🛒**",
             ["fields"] = {
                 { ["name"] = "👤 Player Name", ["value"] = playerName, ["inline"] = false },
@@ -1057,8 +1002,6 @@ AddEventHandler('logMTBuyWeapon', function(playerName, serverID, steamHex, weapo
         PerformHttpRequest(webhook, function(err, text, headers) end, 'POST', json.encode({username = "Weapon Logs", embeds = logMessage}), { ['Content-Type'] = 'application/json' })
     end
 end)
-
-
 
 RegisterServerEvent("CidBillingWebhook")
 AddEventHandler("CidBillingWebhook", function(targetId, amount, reason)
@@ -1098,7 +1041,6 @@ AddEventHandler("CidBillingWebhook", function(targetId, amount, reason)
         }}
     }), {['Content-Type'] = 'application/json'})
 end)
-
 
 RegisterServerEvent("CidJailWebhook")
 AddEventHandler("CidJailWebhook", function(targetId, jailTime, reason)

@@ -628,7 +628,7 @@ Config.Weapons = {
 		label = _U('weapon_doubleaction'),
 		components = {}
 	},
-	
+
 	{
 		name = 'WEAPON_MIlITARYRIFLE',
 		label = _U('weapon_militaryrifle'),
@@ -684,15 +684,6 @@ Config.Weapons = {
 		label = _U('weapon_raycarbine'),
 		components = {}
 	},
-	
+
 }
-
-
-
-
-
-
-
-
-
 

@@ -164,7 +164,6 @@ end)
 
 RegisterInstanceType('default')
 
--- Input invites
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
@@ -178,7 +177,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Controls
 Citizen.CreateThread(function()
 	while true do
 
@@ -198,65 +196,6 @@ Citizen.CreateThread(function()
 	end
 
 end)
-
--- Instance players
--- Citizen.CreateThread(function()
--- 	while true do
-
--- 		Citizen.Wait(250)
-
--- 		if Instance.host ~= nil then
-
--- 			local playerPed = PlayerPedId()
-
--- 			for i=0, Config.MaxPlayers, 1 do
-
--- 				local found = false
--- 				for j=1, #Instance.players, 1 do
--- 					instancePlayer = GetPlayerFromServerId(Instance.players[j])
-
--- 					if i == instancePlayer then
--- 						found = true
--- 					end
--- 				end
-
--- 				if not found then
--- 					local otherPlayerPed = GetPlayerPed(i)
-
--- 					SetEntityLocallyInvisible(otherPlayerPed)
--- 					SetEntityNoCollisionEntity(playerPed, otherPlayerPed, true)
--- 				end
-
--- 			end
-
--- 		else
-
--- 			local playerPed = PlayerPedId()
-
--- 			for i=0, Config.MaxPlayers, 1 do
-
--- 				local found = false
--- 				for j=1, #InstancedPlayers, 1 do
--- 					instancePlayer = GetPlayerFromServerId(InstancedPlayers[j])
-
--- 					if i == instancePlayer then
--- 						found = true
--- 					end
--- 				end
-
--- 				if found then
--- 					local otherPlayerPed = GetPlayerPed(i)
-
--- 					SetEntityLocallyInvisible(otherPlayerPed)
--- 					SetEntityNoCollisionEntity(playerPed, otherPlayerPed, true)
--- 				end
-
--- 			end
-
--- 		end
-
--- 	end
--- end)
 
 Citizen.CreateThread(function()
 	TriggerEvent('instance:loaded')

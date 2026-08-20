@@ -9,7 +9,7 @@ ESX.LastPlayerData = {}
 ESX.Pickups = {}
 ESX.PickupId = 0
 ESX.Jobs = {}
--- ESX.Divisions = {}
+
 ESX.Gangs = {}
 
 AddEventHandler(
@@ -45,7 +45,7 @@ MySQL.ready(
         for i = 1, #result do
             ESX.Jobs[result[i].name] = result[i]
             ESX.Jobs[result[i].name].grades = {}
-            -- ESX.Divisions[result[i].name] = {}
+
         end
 
         local result2 = MySQL.Sync.fetchAll("SELECT * FROM job_grades", {})
@@ -89,32 +89,32 @@ MySQL.ready(
             end
         end
 
-        -- local result3 = MySQL.Sync.fetchAll("SELECT * FROM divisions", {})
 
-        -- for i = 1, #result3 do
-        --     local divison = result3[i]
-        --     if ESX.Divisions[divison.owner] then
-        --         ESX.Divisions[divison.owner][divison.name] = divison
-        --         ESX.Divisions[divison.owner][divison.name].grades = {}
-        --     else
-        --         print(('essentialmode: ignoring Division "%s" due to missing job!'):format(result3[i].name))
-        --     end
-        -- end
 
-        -- local result4 = MySQL.Sync.fetchAll("SELECT * FROM division_grades", {})
 
-        -- for i = 1, #result4 do
-        --     local division = result4[i]
-        --     if ESX.Divisions[division.division_owner][division.division] then
-        --         ESX.Divisions[division.division_owner][division.division].grades[tostring(division.grade)] = division
-        --     else
-        --         print(
-        --             ('essentialmode: ignoring Division grades "%s" due to missing Division on ESX.Divisions table!'):format(
-        --                 division.division
-        --             )
-        --         )
-        --     end
-        -- end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     end
 )
 
@@ -165,7 +165,6 @@ AddEventHandler("essentialmode:addGang", function(name, ranks)
         end
     end
 )
-
 
 RegisterServerEvent('esx:CreateItem')
 AddEventHandler('esx:CreateItem', function(name, label, limit, rare, can_remove)

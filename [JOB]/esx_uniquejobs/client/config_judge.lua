@@ -10,16 +10,16 @@ Config_judge.MarkerColor                = { r = 193, g = 175, b = 158 }
 
 Config_judge.EnablePlayerManagement     = true
 Config_judge.EnableArmoryManagement     = true
-Config_judge.EnableESXIdentity          = true -- enable if you're using esx_identity
-Config_judge.EnableNonFreemodePeds      = false -- turn this on if you want custom peds
+Config_judge.EnableESXIdentity          = true
+Config_judge.EnableNonFreemodePeds      = false
 Config_judge.EnableSocietyOwnedVehicles = false
-Config_judge.EnableLicenses             = true -- enable if you're using esx_license
-Config_judge.EnableJobLogs              = true -- only turn this on if you are using esx_joblogs
+Config_judge.EnableLicenses             = true
+Config_judge.EnableJobLogs              = true
 
-Config_judge.EnableHandcuffTimer        = false -- enable handcuff timer? will unrestrain player after the time ends
-Config_judge.HandcuffTimer              = 10 * 60000 -- 10 mins
+Config_judge.EnableHandcuffTimer        = false
+Config_judge.HandcuffTimer              = 10 * 60000
 
-Config_judge.EnableJobBlip              = true -- enable blips for colleagues, requires esx_society
+Config_judge.EnableJobBlip              = true
 
 Config_judge.MaxInService               = -1
 Config_judge.Locale                     = 'en'
@@ -35,9 +35,9 @@ Config_judge.judgeStations = {
 			    Scale   = 1.2,
 			    Colour  = 31,
 		},
-		
 
-		-- https://wiki.rage.mp/index.php?title=Weapons
+
+
 		AuthorizedWeapons = {
 			{ name = 'WEAPON_BZGAS', price = 5000 },
 			{ name = 'WEAPON_STUNGUN', price = 5000 },
@@ -60,7 +60,6 @@ Config_judge.judgeStations = {
 			{ name = 'WEAPON_GUSENBERG', price = 14000 },
 		},
 
-
 		AuthorizedItems = {
 			{ name = 'water', price = 60 , label = 'Ab'},
 			{ name = 'silencer', price = 5000, label = 'Silencer'},
@@ -69,14 +68,14 @@ Config_judge.judgeStations = {
 			{ name = 'radio', price = 3000, label = 'Bisim' },
 			{ name = 'phone', price = 2000, label = 'Goshi' },
 			{ name = 'bread', price = 60, label = 'Noon' },
-			
+
 		},
 
 		Cloakrooms = {
 			{ x = 1840.233, y = 3691.182, z = 34.286},
 			{x = 619.9525, y = 14.88760, z = 82.782},
 			{x = 461.2001, y = -998.995, z = 30.689},
-			
+
 		},
 
 		Armories = {
@@ -104,7 +103,7 @@ Config_judge.judgeStations = {
 				Heading    = 91.08
 			},
 		},
-		
+
 		Helicopters = {
 			{
 				Spawner    = { x = 1864.269, y = 3663.138, z = 33.929   },
@@ -126,10 +125,10 @@ Config_judge.judgeStations = {
 			{x = 448.9412, y = -981.094, z = 43.691},
 			{x = 451.2926, y = -978.715, z = 25.699},
 		},
-		
+
 		VehicleDeleters2 = {
-			--{ x = 1867.619, y = 3654.004, z = 33.884 },
-			--{ x = -477.33, y = 5989.47, z = 37.39 }
+
+
 		},
 
 		BossActions = {
@@ -145,14 +144,14 @@ Config_judge.AuthorizedItems = {
 	Shared = {
 		{ name = 'water', price = 100 },
 		{ name = 'silencer', price = 500 },
-		-- { name = 'WEAPON_FLASHLIGHT', price = 100 },
-		-- { name = 'WEAPON_PISTOL', price = 5000 },
-		-- { name = 'WEAPON_SNSPISTOL', price = 6000 },
-		-- { name = 'WEAPON_COMBATPISTOL', price = 7000 },
-		--{ name = 'WEAPON_HEAVYPISTOL', price = 8000 },
+
+
+
+
+
 	},
 
-	
+
 }
 
 Config_judge.AuthorizedWeapons = {
@@ -163,55 +162,51 @@ Config_judge.AuthorizedWeapons = {
 		{ name = 'WEAPON_PISTOL', price = 5000 },
 		{ name = 'WEAPON_SNSPISTOL', price = 6000 },
 		{ name = 'WEAPON_COMBATPISTOL', price = 7000 },
-		--{ name = 'WEAPON_HEAVYPISTOL', price = 8000 },
+
 	},
 
-	
-	
+
+
 }
 
-
 Config_judge.AuthorizedVehicles = {
-	Shared = {			
-	-- Extra : 0 = true , 1 = false
+	Shared = {
+
 	{ model = 'b2chal', label = 'Judge Chal', Extra = {['1'] = 0, ['2'] = 1, ['3'] = 1, ['4'] = 0, ['5'] = 0 } },
 
 	{ model = 'b211vic', label = 'Judge Vic', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['5'] = 1, ['6'] = 0, ['10'] = 1} },
-	
+
 	{ model = 'b212caprice', label = 'Judge Caprice', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['5'] = 1, ['6'] = 0} },
-	
+
 	{ model = 'b214charger', label = 'Judge Charger', Extra = {['1'] = 0, ['2'] = 1, ['3'] = 1, ['5'] = 0, ['6'] = 0, ['7'] = 1, ['8'] = 0 }},
 	{ model = 'b214charger', label = 'Judge Charger2', Extra = {['1'] = 1, ['2'] = 1, ['3'] = 1, ['5'] = 0, ['6'] = 0, ['7'] = 1, ['8'] = 1 }},
-	
+
 	{ model = 'b216explorer', label = 'Judge Explorer',  Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['5'] = 1, ['6'] = 1}},
-	
+
 	{ model = 'b218charger', label = 'Judge Charger18', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['5'] = 1, ['6'] = 0}},
-	
+
 	{ model = 'b218tau', label = 'Judge Tau', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['6'] = 1, ['7'] = 0}},
 	{ model = 'b218tau', label = 'Judge Tau2', Extra = {['1'] = 1, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['6'] = 1, ['7'] = 0}},
-		
+
 	{ model = 'b219tahoe', label = "Judge Tahoe", Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 1, ['5'] = 1, ['6'] = 1, ['7'] = 0}},
 	{ model = 'fibm5', label = "Judge BMWM5", Extra = {['1'] = 0}},
 	{ model = 'polnspeedo', label = "Judge Van", Extra = {['11'] = 0}},
 	{ model = 'POLKCH', label = "Judge Kamacho", Extra = {['1'] = 0, ['3'] = 0, ['4'] = 0}},
 	{ model = 'swat_dirtbike', label = "Judge Motor", Extra = {['1'] = 1}},
-	
+
 	},
 
-	Sharedheli = {			
-	-- Extra : 0 = true , 1 = false
+	Sharedheli = {
+
 	{ model = 'polmav', label = 'Judge Polmav', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 0, ['5'] = 0 } },
 	{ model = 'tx_heli', label = 'Judge Heli', Extra = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 0, ['5'] = 0 } },
 
-	
-	
+
+
 	},
 
 
-
-	
 }
-
 
 Config_judge.Uniforms = {
 
@@ -271,6 +266,6 @@ Config_judge.Uniforms = {
 			['bproof_1'] = 2,  ['bproof_2'] = 2
 		}
 	},
-	
+
 
 }

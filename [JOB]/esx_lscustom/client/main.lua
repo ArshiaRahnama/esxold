@@ -74,13 +74,13 @@ function CustomColor()
 			break
 		end
 	end
-	if vehiclePrice == 1000000000 then 
+	if vehiclePrice == 1000000000 then
 		vehiclePrice = 10000000
 	end
 	price = math.floor(vehiclePrice * 0.32 / 100)
 	table.insert(elements,{label = 'Primary Color',value = 'primary'})
 	table.insert(elements,{label = 'Secondary Color',value = 'secondary'})
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'C', {title = 'LS CUSTOM', align = 'top-left', elements = elements}, 
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'C', {title = 'LS CUSTOM', align = 'top-left', elements = elements},
 	function(data, menu)
 		local value = data.current.value
 		local elements = {}
@@ -98,7 +98,7 @@ function CustomColor()
 				pr.color1 = 64
 				pr.color2 = 0
 				ESX.Game.SetVehicleProperties(globlalvehicle, pr)
-				myCar = ESX.Game.GetVehicleProperties(globlalvehicle)	
+				myCar = ESX.Game.GetVehicleProperties(globlalvehicle)
 			elseif data2.current.value == 'select' then
 				ESX.UI.Menu.CloseAll()
 				local r1 , g1 , b1 = GetVehicleCustomPrimaryColour(globlalvehicle)
@@ -110,7 +110,7 @@ function CustomColor()
 				orginal.g2 = g2
 				orginal.b2 = b2
 				Wait(300)
-				local r3 , g3 , b3 
+				local r3 , g3 , b3
 				if value == 'primary' then
 					r3 , g3 , b3 = r1 , g1 , b1
 				elseif value == 'secondary' then
@@ -122,9 +122,9 @@ function CustomColor()
 					elseif value == 'secondary' then
 						SetVehicleCustomSecondaryColour(globlalvehicle,r,g,b)
 					end
-					myCar = ESX.Game.GetVehicleProperties(globlalvehicle)	
+					myCar = ESX.Game.GetVehicleProperties(globlalvehicle)
 				end,function()
-					myCar = ESX.Game.GetVehicleProperties(globlalvehicle)	
+					myCar = ESX.Game.GetVehicleProperties(globlalvehicle)
 					TriggerServerEvent('esx_lscustom:buyMod', price, myCar.plate,myCar,true)
 				end,function()
 					if value == 'primary' then
@@ -132,13 +132,13 @@ function CustomColor()
 					elseif value == 'secondary' then
 						SetVehicleCustomSecondaryColour(globlalvehicle,r2,g2,b2)
 					end
-					myCar = ESX.Game.GetVehicleProperties(globlalvehicle)	
+					myCar = ESX.Game.GetVehicleProperties(globlalvehicle)
 				end)
 			end
 		end, function(data2, menu2)
 			menu2.close()
 		end)
-	end, function(data, menu) 
+	end, function(data, menu)
 		menu.close()
 	end)
 end
@@ -166,7 +166,7 @@ function OpenLSMenu(elems, menuName, menuTitle, parent, vehicle)
 								break
 							end
 						end
-						if vehiclePrice == 1000000000 then 
+						if vehiclePrice == 1000000000 then
 							vehiclePrice = 10000000
 						end
 						if isRimMod then
@@ -200,7 +200,7 @@ function OpenLSMenu(elems, menuName, menuTitle, parent, vehicle)
 		if parent == nil  then
 			myCar = {}
 		end
-	end, function(data, menu) 
+	end, function(data, menu)
 		UpdateMods(data.current, vehicle)
 	end, function()
 		lsMenuIsShowed = false
@@ -265,7 +265,7 @@ function GetAction(data, vehicle)
 			break
 		end
 	end
-	if vehiclePrice == 1000000000 then 
+	if vehiclePrice == 1000000000 then
 		vehiclePrice = 10000000
 	end
 	for k,v in pairs(Config.Menus) do
@@ -276,7 +276,7 @@ function GetAction(data, vehicle)
 			if v.modType then
 				if v.modType == 22 then
 					table.insert(elements, {label = " " .. _U('by_default'), modType = k, modNum = false})
-				elseif v.modType == 'neonColor' or v.modType == 'tyreSmokeColor' then 
+				elseif v.modType == 'neonColor' or v.modType == 'tyreSmokeColor' then
 					table.insert(elements, {label = " " ..  _U('by_default'), modType = k, modNum = {0, 0, 0}})
 				elseif v.modType == 'color1' or v.modType == 'color2' or v.modType == 'pearlescentColor' or v.modType == 'wheelColor' then
 					local num = myCar[v.modType]
@@ -284,7 +284,7 @@ function GetAction(data, vehicle)
  				else
 					table.insert(elements, {label = " " .. _U('by_default'), modType = k, modNum = -1})
 				end
-				if v.modType == 14 then 
+				if v.modType == 14 then
 					for j = 0, 51, 1 do
 						local _label = ''
 						if j == currentMods.modHorns then
@@ -295,7 +295,7 @@ function GetAction(data, vehicle)
 						end
 						table.insert(elements, {label = _label, modType = k, modNum = j})
 					end
-				elseif v.modType == 'plateIndex' then 
+				elseif v.modType == 'plateIndex' then
 					for j = 0, 4, 1 do
 						local _label = ''
 						if j == currentMods.plateIndex then
@@ -306,7 +306,7 @@ function GetAction(data, vehicle)
 						end
 						table.insert(elements, {label = _label, modType = k, modNum = j})
 					end
-				elseif v.modType == 22 then 
+				elseif v.modType == 22 then
 					local xl = GetXenon()
 					for i=0, 12, 1 do
 						price = math.floor(vehiclePrice * v.price / 100)
@@ -324,7 +324,7 @@ function GetAction(data, vehicle)
 							})
 						end
 					end
-				elseif v.modType == 'neonColor' or v.modType == 'tyreSmokeColor' then 
+				elseif v.modType == 'neonColor' or v.modType == 'tyreSmokeColor' then
 					local neons = GetNeons()
 					price = math.floor(vehiclePrice * v.price / 100)
 					for i=1, #neons, 1 do
@@ -334,7 +334,7 @@ function GetAction(data, vehicle)
 							modNum = { neons[i].r, neons[i].g, neons[i].b }
 						})
 					end
-				elseif v.modType == 'color1' or v.modType == 'color2' or v.modType == 'pearlescentColor' or v.modType == 'wheelColor' then -- RESPRAYS
+				elseif v.modType == 'color1' or v.modType == 'color2' or v.modType == 'pearlescentColor' or v.modType == 'wheelColor' then
 					local colors = GetColors(data.color)
 					for j = 1, #colors, 1 do
 						local _label = ''
@@ -342,7 +342,7 @@ function GetAction(data, vehicle)
 						_label = colors[j].label .. ' - <span style="color:green;">$' .. price .. ' </span>'
 						table.insert(elements, {label = _label, modType = k, modNum = colors[j].index})
 					end
-				elseif v.modType == 'windowTint' then 
+				elseif v.modType == 'windowTint' then
 					for j = 1, 5, 1 do
 						local _label = ''
 						if j == currentMods.modHorns then
@@ -353,7 +353,7 @@ function GetAction(data, vehicle)
 						end
 						table.insert(elements, {label = _label, modType = k, modNum = j})
 					end
-				elseif v.modType == 23 then 
+				elseif v.modType == 23 then
 					local props = {}
 					props['wheels'] = v.wheelType
 					ESX.Game.SetVehicleProperties(vehicle, props)
@@ -372,7 +372,7 @@ function GetAction(data, vehicle)
 						end
 					end
 				elseif v.modType == 11 or v.modType == 12 or v.modType == 13 or v.modType == 15 or v.modType == 16 then
-					local modCount = GetNumVehicleMods(vehicle, v.modType) 
+					local modCount = GetNumVehicleMods(vehicle, v.modType)
 					for j = 0, modCount, 1 do
 						local _label = ''
 						if j == currentMods[k] then
@@ -386,7 +386,7 @@ function GetAction(data, vehicle)
 							break
 						end
 					end
-				elseif v.modType == 17 then 
+				elseif v.modType == 17 then
 					local _label = ''
 					if currentMods[k] then
 						_label = 'Turbo - <span style="color:cornflowerblue;">'.. _U('installed') ..'</span>'
@@ -395,7 +395,7 @@ function GetAction(data, vehicle)
 					end
 					table.insert(elements, {label = _label, modType = k, modNum = true})
 				else
-					local modCount = GetNumVehicleMods(vehicle, v.modType) 
+					local modCount = GetNumVehicleMods(vehicle, v.modType)
 					for j = 0, modCount, 1 do
 						local modName = GetModTextLabel(vehicle, v.modType, j)
 						if modName then
@@ -467,7 +467,7 @@ RegisterCommand('custom', function()
 				ESX.ShowNotification('Shoma Be Hich Mashini Eshare Nemikonid')
 				return
 			end
-			myCar = ESX.Game.GetVehicleProperties(globlalvehicle)						
+			myCar = ESX.Game.GetVehicleProperties(globlalvehicle)
 			ESX.TriggerServerCallback('esx_lscustom:IsRequstedVehicle', function(bool)
 				if bool then
 					NetworkRequestControlOfEntity(globlalvehicle)
@@ -489,11 +489,11 @@ RegisterCommand('custom', function()
 					lsMenuIsShowed = true
 					threadcontrol()
 				else
-					ESX.ShowNotification('Hich Kas Baray Upgrade In Mashin Darkhast Sabt Nakarde Ast')	
+					ESX.ShowNotification('Hich Kas Baray Upgrade In Mashin Darkhast Sabt Nakarde Ast')
 				end
 			end, ESX.Math.Trim(myCar.plate))
 		else
-			ESX.ShowNotification('Shoma Faqat Dar Parking Mechanici Mitonid Custom Konid')			
+			ESX.ShowNotification('Shoma Faqat Dar Parking Mechanici Mitonid Custom Konid')
 		end
 	else
 		ESX.ShowNotification('Shoma Nemitunid Az In Command Estefade Konid')
@@ -519,11 +519,11 @@ Citizen.CreateThread(function()
 		local playerPed = PlayerPedId()
 		local coords = GetEntityCoords(playerPed)
 		local vehicle = GetVehiclePedIsIn(playerPed)
-		if DoesEntityExist(vehicle) then 
+		if DoesEntityExist(vehicle) then
 			nearAnyGarage = NearAnyGarage(coords, GetVehicleClass(vehicle))
 		else
 			 nearAnyGarage = false
-	    end    
+	    end
 	end
 end)
 
@@ -575,7 +575,7 @@ function requestMechanicAction()
                         FreezeEntityPosition(vehicle, true)
 
                         if GetGameTimer() - lastMessage > 1000 * 60 * 5 then
-                            
+
                             TriggerServerEvent('esx_lscustom:NotifyMechanics', plate, coords)
 
                             TriggerServerEvent('esx_phone:send', 'mechanic', 'سلام، من به یک مکانیک نیاز دارم. در گاراژ مکانیکی منتظرم.', coords, coords)
@@ -596,13 +596,11 @@ function requestMechanicAction()
                                 local tokencount = 0
                                 local PlayerData = ESX.GetPlayerData()
 
-
                                 for i=1, #PlayerData.inventory do
                                     if PlayerData.inventory[i].name == 'customcoupon' then
                                         tokencount = PlayerData.inventory[i].count
                                     end
                                 end
-
 
                                 if tokencount > 0 then
                                     elements = {
@@ -679,9 +677,6 @@ function requestMechanicAction()
     end
 end
 
-
-
-
 RegisterNetEvent('esx_lscustom:Sound')
 AddEventHandler('esx_lscustom:Sound', function()
 	ESX.ShowAdvancedNotification("Phone", "New Message", "New Message From ~y~Mechanici", "CHAR_CHAT_CALL", 1)
@@ -690,9 +685,8 @@ AddEventHandler('esx_lscustom:Sound', function()
 	PlaySound(-1, "Menu_Accept", "Phone_SoundSet_Default", 0, 0, 1)
 	Citizen.Wait(300)
 	PlaySound(-1, "Menu_Accept", "Phone_SoundSet_Default", 0, 0, 1)
-	
-end)
 
+end)
 
 function paySuccess(vehicle)
 	ESX.UI.Menu.CloseAll()

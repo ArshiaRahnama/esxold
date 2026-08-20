@@ -11,20 +11,20 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(100)
-		
+
 		if IsPedBeingStunned(PlayerPedId()) then
-			
+
 			SetPedToRagdoll(PlayerPedId(), 5000, 5000, 0, 0, 0, 0)
 			DisableAction()
-			
+
 		end
-		
+
 		if IsPedBeingStunned(PlayerPedId()) and not isTaz then
-			
+
 			isTaz = true
 			SetTimecycleModifier("REDMIST_blend")
 			ShakeGameplayCam("FAMILY5_DRUG_TRIP_SHAKE", 1.0)
-			
+
 		elseif not IsPedBeingStunned(PlayerPedId()) and isTaz then
 			isTaz = false
 			Wait(5000)
@@ -40,9 +40,9 @@ Citizen.CreateThread(function()
 			end
 
 			SetTimecycleModifier("hud_def_desat_Trevor")
-			
+
 			Wait(10000)
-			
+
      		SetTimecycleModifier("")
 			SetTransitionTimecycleModifier("")
 			StopGameplayCamShaking()
@@ -53,7 +53,6 @@ end)
 AddEventHandler('esx:onPlayerDeath', function(data)
 	DisableAction()
 end)
-
 
 function DisableAction()
 	TriggerEvent("mythic_progbar:client:cancel")

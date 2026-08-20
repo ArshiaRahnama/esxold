@@ -6,8 +6,7 @@ local currentVolume = Config.DefaultVolume
 local currentDistance = Config.MaxDistance * (Config.DefaultVolume / Config.MaxVolume)
 local playerId = nil
 
--- active playlist playback state (nil when nothing is playing from a playlist)
-local activePlaylist = nil -- { name = ..., songs = { ... }, index = 1 }
+local activePlaylist = nil
 
 local ANIM_DICT = 'missfinale_c2mcs_1'
 local ANIM_NAME = 'fin_c2_mcs_1_camman'
@@ -22,10 +21,6 @@ Citizen.CreateThread(function()
     end
     playerId = GetPlayerServerId(PlayerId())
 end)
-
--- ==========================================================
--- Helpers
--- ==========================================================
 
 local function loadAnimDict(dict)
     RequestAnimDict(dict)
@@ -43,7 +38,6 @@ local function loadModel(model)
     return hash
 end
 
--- attaches (or re-attaches) the boombox prop + holding anim to the ped
 local function applyBoomboxHold(playerPed)
     if not IsEntityPlayingAnim(playerPed, ANIM_DICT, ANIM_NAME, 3) then
         loadAnimDict(ANIM_DICT)
@@ -66,7 +60,6 @@ local function shortLink(link, maxLen)
     return link:sub(1, maxLen - 3) .. '...'
 end
 
--- fully stops the boombox and restores the player's normal state
 function StopBoombox()
     if not isBoomboxActive then return end
 
@@ -135,14 +128,6 @@ function showhelp()
     end)
 end
 
--- ==========================================================
--- Bug fix watchdog: re-applies the hold anim / prop attachment
--- after a screen-fade transition (entering an interior / a
--- minigame behind a door, etc.) so the boombox never gets
--- stuck mid-animation. It never fights an unrelated anim that
--- doesn't involve a fade (e.g. short interaction minigames),
--- so it won't interfere with other scripts.
--- ==========================================================
 Citizen.CreateThread(function()
     local wasFadedOut = false
     while true do
@@ -168,8 +153,6 @@ Citizen.CreateThread(function()
     end
 end)
 
--- auto-stop in situations where carrying the boombox no longer makes sense
--- (also prevents the "stuck" object/anim state in those cases)
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(500)
@@ -182,19 +165,12 @@ Citizen.CreateThread(function()
     end
 end)
 
--- cleans everything up if the resource gets stopped/restarted while
--- a player has the boombox active, so they never get left with
--- "canemote/cansoot" permanently disabled or an orphaned prop
 AddEventHandler('onResourceStop', function(resourceName)
     if resourceName ~= GetCurrentResourceName() then return end
     if isBoomboxActive then
         StopBoombox()
     end
 end)
-
--- ==========================================================
--- Playback
--- ==========================================================
 
 local function playLink(link)
     if not link or link == '' then
@@ -224,10 +200,6 @@ local function playlistStep(delta)
     end
     playLink(activePlaylist.songs[activePlaylist.index])
 end
-
--- ==========================================================
--- ox_lib menu
--- ==========================================================
 
 local function openVolumeDialog()
     local input = lib.inputDialog('Set Volume', {
@@ -528,10 +500,6 @@ RegisterCommand('boombox_stop', function()
 end, false)
 RegisterKeyMapping('boombox_stop', 'Khamoosh Kardane Foori Boombox', 'keyboard', Config.StopKey)
 
--- ==========================================================
--- xsound wiring
--- ==========================================================
-
 RegisterNetEvent('Im0ArSaBoom:playMusic')
 AddEventHandler('Im0ArSaBoom:playMusic', function(soundId, link, coords, volume, distance)
     if exports['xsound']:soundExists(soundId) then
@@ -599,10 +567,6 @@ Citizen.CreateThread(function()
     end
 end)
 
--- best-effort playlist auto-advance: when the current track is close to
--- ending, move on to the next song in the active playlist. Wrapped in
--- pcall since the exact xsound export/shape can vary between versions --
--- if it's unavailable, manual Next/Prev in the menu still always works.
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(1000)
@@ -613,7 +577,7 @@ Citizen.CreateThread(function()
             if ok and stamp and stamp.duration and stamp.duration > 0
                 and stamp.currentTime and (stamp.duration - stamp.currentTime) <= 1.2 then
                 playlistStep(1)
-                Citizen.Wait(3000) -- avoid double-advancing while the new track loads
+                Citizen.Wait(3000)
             end
         end
     end

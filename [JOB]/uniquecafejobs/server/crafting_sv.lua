@@ -9,18 +9,18 @@ TriggerEvent(
 
 function setCraftingLevel(identifier, level)
 	local xPlayer = ESX.GetPlayerFromIdentifier(identifier)
-	-- TriggerEvent("GangXPSystem:setXP", xPlayer.gang.name, level)
+
 end
 
-function getCraftingLevel(identifier)	
+function getCraftingLevel(identifier)
 	local xPlayer = ESX.GetPlayerFromIdentifier(identifier)
-    -- return tonumber( MySQL.Sync.fetchScalar( "SELECT `XP` FROM gangs_data WHERE gang_name = @gang_name ", {["@gang_name"] = xPlayer.gang.name} ) )
+
 	return 150
 end
 
-function getCraftingRank(identifier)	
+function getCraftingRank(identifier)
 	local xPlayer = ESX.GetPlayerFromIdentifier(identifier)
-    -- return tonumber( MySQL.Sync.fetchScalar( "SELECT `Level` FROM gangs_data WHERE gang_name = @gang_name ", {["@gang_name"] = xPlayer.gang.name}) )
+
 	return 20
 end
 
@@ -28,29 +28,26 @@ local tx = nil
 local ty = nil
 local tz = nil
 ESX.RegisterServerCallback('coordscraft', function(source, cb, cx, cy, cz)
-    salam = true 
+    salam = true
     cb(salam)
     tx = cx
     ty = cy
     tz = cz
 
-
 end)
 local gangaccses = false
 
-
 RegisterServerEvent('sendPlayerDataToServer')
 AddEventHandler('sendPlayerDataToServer', function(permchek)
-  
-    gangaccses = permchek
-    
-    
-end)
 
+    gangaccses = permchek
+
+
+end)
 
 function craft(src, item, retrying)
 
-  
+
 	local xPlayer = ESX.GetPlayerFromId(src)
 
 	local cancraft = true
@@ -74,8 +71,8 @@ function craft(src, item, retrying)
 
 	if ConfigCrafting.Recipes[item].isGun then
 		if cancraft then
-			
-		
+
+
 			for k, v in pairs(ConfigCrafting.Recipes[item].Ingredients) do
 				if not ConfigCrafting.PermanentItems[k] then
 					xPlayer.removeInventoryItem(k, v)
@@ -83,31 +80,31 @@ function craft(src, item, retrying)
 			end
 
 			TriggerClientEvent("AH_uwucafejob:craftStart", src, item, count)
-			
-			
+
+
 		else
 			TriggerClientEvent('esx:showNotification', src, _U("not_enough_ingredients"))
-			-- TriggerClientEvent('okokNotify:Alert', src, "", _U("you_cant_hold_item"), 5000, 'warning')            
+
 		end
 	else
 		if ConfigCrafting.UseLimitSystem then
 			local xItem = xPlayer.getInventoryItem(item)
 
-			-- if xItem.count + count <= xItem.limit then
+
 				if cancraft then
                     if  saff <= 4 then
                         local Maliat = 2000
                         local RemoveMaliat = false
                         local xBank  = xPlayer.bank
                         local xMoney = xPlayer.money
-                        if xMoney >= Maliat or xBank >= Maliat then 
+                        if xMoney >= Maliat or xBank >= Maliat then
                             TriggerEvent('esx_addonaccount:getSharedAccount', 'society_uwucafe', function(account)
 
-                                if xMoney >= Maliat then 
+                                if xMoney >= Maliat then
                                     xPlayer.removeMoney(Maliat)
                                     account.addMoney(1500)
                                     RemoveMaliat = true
-                                elseif xBank >= Maliat then 
+                                elseif xBank >= Maliat then
                                     xPlayer.removeBank(Maliat)
                                     account.addMoney(1500)
                                     RemoveMaliat = true
@@ -115,7 +112,7 @@ function craft(src, item, retrying)
                                     RemoveMaliat = false
                                 end
 
-                                if RemoveMaliat then 
+                                if RemoveMaliat then
                                     saff = saff + 1
                                     for k, v in pairs(ConfigCrafting.Recipes[item].Ingredients) do
                                         xPlayer.removeInventoryItem(k, v)
@@ -128,17 +125,17 @@ function craft(src, item, retrying)
                             end)
                         else
                             TriggerClientEvent('esx:showNotification', src, 'Shoma Pol Kafi Nadarid')
-                        end   
+                        end
                     else
                         TriggerClientEvent('esx:showNotification', src, 'Shoma Bishtar Az 5 Item Nemitavanid Dar Saaf Bezarid')
-                    end   
+                    end
 				else
 					TriggerClientEvent('esx:showNotification', src, _U("not_enough_ingredients"))
 				end
-			-- else
-				
-			--     TriggerClientEvent("AH_uwucafejob:sendMessage", src, _U("you_cant_hold_item"))
-			-- end
+
+
+
+
 		else
 			local xItem = xPlayer.getInventoryItem(item)
 
@@ -153,11 +150,11 @@ function craft(src, item, retrying)
 					TriggerClientEvent('esx:showNotification', src, _U("not_enough_ingredients"))
 				end
 			else
-				-- TriggerClientEvent('okokNotify:Alert', src, "", _U("you_cant_hold_item"), 5000, 'warning')   
+
 			end
 		end
 	end
-   
+
 end
 
 RegisterServerEvent("AH_uwucafejob:itemCrafted")
@@ -170,25 +167,24 @@ function(item, count)
     if ConfigCrafting.Recipes[item].SuccessRate > math.random(0, ConfigCrafting.Recipes[item].SuccessRate) then
         if ConfigCrafting.UseLimitSystem then
 
-
             if ConfigCrafting.Recipes[item].isGun then
                 local jibgan = true
                 local weapon = xPlayer.loadout
-                for t,r in pairs(weapon) do 
-                    if r.name == item then 
+                for t,r in pairs(weapon) do
+                    if r.name == item then
                         jibgan = false
-                        break 
+                        break
                     else
                         jibgan = true
-                        
+
                     end
-                    
+
                 end
 
-                if jibgan then 
-            
+                if jibgan then
+
                     xPlayer.addWeapon(item, ConfigCrafting.Recipes[item].Amount)
-                    
+
                 else
                     local ammo =  ConfigCrafting.Recipes[item].Amount
                     local components = xPlayer.hasWeapon(item).components
@@ -196,7 +192,6 @@ function(item, count)
                     ESX.CreatePickupCrafting("item_weapon", string.upper(item), {ammo = ammo, components = components}, weaponLabel, tx, ty, tz)
                     TriggerClientEvent('esx:showNotification', src, _U("item_crafted"))
                 end
-
 
             else
 
@@ -209,11 +204,11 @@ function(item, count)
                         saff = saff - 1
                     end
                     TriggerClientEvent('esx:showNotification', src, _U("item_crafted"))
-                    -- giveCraftingLevel(xPlayer.identifier, ConfigCrafting.ExperiancePerCraft)
+
                 else
                     saff = saff - 1
                     ESX.CreatePickup("item_standard", xItem.name, itemcount, xItem.label, source)
-                    -- TriggerEvent("AH_uwucafejob:craft", item, nil, src)
+
                     TriggerClientEvent('esx:showNotification', src, _U("inv_limit_exceed"))
                 end
             end
@@ -224,7 +219,7 @@ function(item, count)
 				if xItem.count + count <= xItem.limit then
 					xPlayer.addWeapon(item, count)
 					TriggerClientEvent('esx:showNotification', src, _U("item_crafted"))
-					
+
 				end
             else
 				local xItem = xPlayer.getInventoryItem(item)
@@ -233,7 +228,7 @@ function(item, count)
 
                     xPlayer.addInventoryItem(item, count)
                     TriggerClientEvent('esx:showNotification', src, _U("item_crafted"))
-                   
+
                 else
                     TriggerClientEvent('esx:showNotification', src, _U("inv_limit_exceed"))
                 end
@@ -254,9 +249,6 @@ AddEventHandler(
     end
 )
 
-
-
-
 ESX.RegisterServerCallback(
     "AH_uwucafejob:getXP",
     function(source, cb)
@@ -274,7 +266,7 @@ ESX.RegisterServerCallback(
             "SELECT * FROM items WHERE 1",
             {},
             function(info)
-                for _, v in ipairs(info) do 
+                for _, v in ipairs(info) do
 					names[v.name] = v.label
                 end
 

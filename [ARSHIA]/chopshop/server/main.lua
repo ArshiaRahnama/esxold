@@ -1,9 +1,6 @@
 ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
--- Session-only tracking (no DB table for this exists on the server, and the vehicle
--- entity is deleted once chopped anyway, so a plate can't realistically be re-chopped
--- within the same uptime). Resets on resource/server restart.
 local choppedPlates     = {}
 local choppingInProgress = {}
 
@@ -11,13 +8,6 @@ local function trim(s)
 	return s and s:gsub('^%s+', ''):gsub('%s+$', '') or s
 end
 
--- ============================================================
--- Eligibility check ("carlock:isVehicleowned")
--- Returns true when the vehicle is safe to chop: either it isn't a
--- registered/owned vehicle at all, or it's registered to someone other than
--- the calling player / their gang. Mirrors the same ownership pattern used
--- in Unique_Pack's chop shop (engine:checkVehicleOwnership).
--- ============================================================
 ESX.RegisterServerCallback('carlock:isVehicleowned', function(source, cb, plate)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	plate = trim(plate)
@@ -29,7 +19,7 @@ ESX.RegisterServerCallback('carlock:isVehicleowned', function(source, cb, plate)
 
 	exports.oxmysql:scalar('SELECT owner FROM owned_vehicles WHERE plate = ?', { plate }, function(owner)
 		if not owner then
-			-- Not in owned_vehicles at all -> treat as eligible
+
 			cb(true)
 			return
 		end
@@ -39,18 +29,11 @@ ESX.RegisterServerCallback('carlock:isVehicleowned', function(source, cb, plate)
 	end)
 end)
 
--- ============================================================
--- Already-chopped check ("choped")
--- ============================================================
 ESX.RegisterServerCallback('choped', function(source, cb, plate)
 	plate = trim(plate)
 	cb(choppedPlates[plate] == true)
 end)
 
--- ============================================================
--- Chop started: mark the plate as "in progress" so it can't be double
--- started by someone else while the timer is running.
--- ============================================================
 RegisterNetEvent('startchop')
 AddEventHandler('startchop', function(vehNetId)
 	local vehicle = NetworkGetEntityFromNetworkId(vehNetId)
@@ -60,13 +43,6 @@ AddEventHandler('startchop', function(vehNetId)
 	choppingInProgress[plate] = true
 end)
 
--- ============================================================
--- Chop finished: called by the client once the timer completes.
--- Marks the plate permanently chopped for this session and rewards the
--- player with a random tiered scrap-engine item (this reward step did not
--- exist in the original client code at all — the vehicle was simply left
--- sitting in the world with nothing given to the player).
--- ============================================================
 RegisterNetEvent('chop:finish')
 AddEventHandler('chop:finish', function(vehNetId, plate)
 	local src = source
@@ -77,7 +53,7 @@ AddEventHandler('chop:finish', function(vehNetId, plate)
 	if not plate or plate == '' then return end
 
 	if not choppingInProgress[plate] then
-		-- Never started server-side (or already finished) — ignore to avoid abuse
+
 		return
 	end
 
@@ -90,12 +66,6 @@ AddEventHandler('chop:finish', function(vehNetId, plate)
 	TriggerClientEvent('esx:showNotification', src, 'Shoma 1x ' .. item .. ' Daryaft Kardid!')
 end)
 
--- ============================================================
--- Craft lockpick ("chop:craft")
--- Requirements shown in the client menu: 1x shahkelid, 1x iron, 1x blowtorch.
--- 'iron' and 'blowtorch' already exist as items on this server; 'shahkelid'
--- does not and needs to be added (see accompanying SQL snippet).
--- ============================================================
 local LOCKPICK_CRAFT_REQUIREMENTS = {
 	{ item = 'shahkelid', count = 1 },
 	{ item = 'iron',      count = 1 },
@@ -124,12 +94,6 @@ AddEventHandler('chop:craft', function()
 	TriggerClientEvent('esx:showNotification', src, 'Shoma 1x Lockpick Craft Kardid!')
 end)
 
--- ============================================================
--- Craft engine ("chop:craftengine") — MECHANIC JOB ONLY. Pay money for a
--- tiered scrap engine item. Uses Config.craftengine[key] as the cost table
--- (only 'money' entries are supported, matching what's actually defined in
--- config.lua).
--- ============================================================
 RegisterNetEvent('chop:craftengine')
 AddEventHandler('chop:craftengine', function(key)
 	local src = source
@@ -151,8 +115,8 @@ AddEventHandler('chop:craftengine', function(key)
 		end
 	end
 
-	-- FIX: essentialmode's xPlayer has no getMoney() method — money is
-	-- the .money property directly.
+
+
 	if xPlayer.money < totalCost then
 		TriggerClientEvent('esx:showNotification', src, 'Pool Kafi Nadarid!')
 		return
@@ -163,18 +127,13 @@ AddEventHandler('chop:craftengine', function(key)
 	TriggerClientEvent('esx:showNotification', src, 'Shoma 1x Engine X' .. key .. ' Craft Kardid!')
 end)
 
--- ============================================================
--- Buy screwdriver ("chop:buypich") — flat price from Config.tokenzero.
--- 'hotwire' ("Pich Goshti") is the existing item on this server matching
--- the "Pich gousti" label shown in the client buy menu.
--- ============================================================
 RegisterNetEvent('chop:buypich')
 AddEventHandler('chop:buypich', function()
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
 	if not xPlayer then return end
 
-	-- FIX: same getMoney() crash as chop:craftengine — use .money property
+
 	if xPlayer.money < Config.tokenzero then
 		TriggerClientEvent('esx:showNotification', src, 'Pool Kafi Nadarid!')
 		return
@@ -185,10 +144,6 @@ AddEventHandler('chop:buypich', function()
 	TriggerClientEvent('esx:showNotification', src, 'Shoma 1x Pich Goshti Kharidid!')
 end)
 
--- ============================================================
--- Sell engine ("chop:sell") — removes the tiered engine item, pays out
--- Config.sell[key] (only 'money' entries are supported).
--- ============================================================
 RegisterNetEvent('chop:sell')
 AddEventHandler('chop:sell', function(key)
 	local src = source

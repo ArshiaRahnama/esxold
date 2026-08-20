@@ -1,5 +1,5 @@
 Locales['fr'] = {
-  -- Global menus
+
   ['cloakroom']                 = 'vestiaire',
   ['cloak_change']              = 'appuyez sur ~INPUT_PICKUP~ pour vous changer.',
   ['citizen_wear']              = 'tenue civile',
@@ -25,7 +25,7 @@ Locales['fr'] = {
   ['public_enter']              = 'appuyez sur ~INPUT_PICKUP~ pour entrer dans l\'immeuble.',
   ['public_leave']              = 'appuyez sur ~INPUT_PICKUP~ pour aller à l\'entrée de l\'immeuble.',
 
-  -- Lumber Jack job
+
   ['lj_locker_room']            = 'vestiaire du bûcheron',
   ['lj_mapblip']                = 'tas de bois',
   ['lj_wood']                   = 'bois',
@@ -38,7 +38,7 @@ Locales['fr'] = {
   ['lj_pick_boards']            = 'appuyez sur ~INPUT_PICKUP~ pour récupérer des planches.',
   ['lj_deliver_button']         = 'appuyez sur ~INPUT_PICKUP~ pour livrer les planches.',
 
-  -- Fisherman
+
   ['fm_fish_locker']            = 'vestiaire du pêcheur',
   ['fm_fish']                   = 'poisson',
   ['fm_fish_area']              = 'zone de pêche',
@@ -50,7 +50,7 @@ Locales['fr'] = {
   ['fm_boat_return_button']     = 'appuyez sur ~INPUT_PICKUP~ pour rendre le bateau.',
   ['fm_deliver_fish']           = 'appuyez sur ~INPUT_PICKUP~ pour livrer le poisson.',
 
-  -- Fuel
+
   ['f_oil_refiner']             = 'vestiaire du raffineur',
   ['f_drill_oil']               = 'extraction le pétrole',
   ['f_fuel']                    = 'pétrole',
@@ -63,7 +63,7 @@ Locales['fr'] = {
   ['f_deliver_gas']             = 'livraison d\'essence.',
   ['f_deliver_gas_button']      = 'appuyez sur ~INPUT_PICKUP~ pour livrer l\'essence.',
 
-  -- Miner
+
   ['m_miner_locker']            = 'vestiaire du mineur',
   ['m_rock']                    = 'rocher',
   ['m_pickrocks']               = 'appuyez sur ~INPUT_PICKUP~ pour récupérer des rochers.',
@@ -84,11 +84,11 @@ Locales['fr'] = {
   ['m_deliver_diamond']         = 'appuyez sur ~INPUT_PICKUP~ pour livrer les diamants.',
   ['m_melt_button']             = 'appuyez sur ~INPUT_PICKUP~ pour fondre les roches.',
 
-  -- Reporter
+
   ['reporter_name']             = 'le Maclerait Libéré',
   ['reporter_garage']           = 'appuyez sur ~INPUT_PICKUP~ pour descendre au garage.',
 
-  -- Slaughterer
+
   ['s_slaughter_locker']        = 'vestiaire de l\'abatteur',
   ['s_hen']                     = 'poulailler',
   ['s_alive_chicken']           = 'poulet vivant',
@@ -102,7 +102,7 @@ Locales['fr'] = {
   ['s_unpackaged_button']       = 'appuyez sur ~INPUT_PICKUP~ pour conditionner le poulet en barquette.',
   ['s_deliver']                 = 'appuyez sur ~INPUT_PICKUP~ pour livrer les barquettes de poulet.',
 
-  -- Dress Designer
+
   ['dd_dress_locker']           = 'vestiaire du couturier',
   ['dd_wool']                   = 'laine',
   ['dd_pickup']                 = 'appuyez sur ~INPUT_PICKUP~ pour récupérer de la laine.',

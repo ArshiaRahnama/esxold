@@ -2,17 +2,17 @@ if Config.Core == "ESX" then
     ESX = nil
     TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-    -- ============================================================
-    -- Itemization: turns bought clothing into real inventory items
-    -- shaped 'clothe_<type>_<drawable>_<texture>'. Every item this
-    -- shop ever gives is ALWAYS paired with ESX.RegisterUsableItem --
-    -- this is what the "attempt to call a nil value" UseItem crash
-    -- was actually caused by: the old clothing shop called
-    -- esx:CreateItem (adds the item to ESX.Items) but never called
-    -- ESX.RegisterUsableItem for it, so ESX.UsableItemsCallbacks[item]
-    -- stayed nil forever and using the item from the inventory crashed
-    -- essentialmode every single time.
-    -- ============================================================
+
+
+
+
+
+
+
+
+
+
+
     local ClotheTypeLabel = {
         tshirt = 'Tishert', torso = 'Lebas', arms = 'Dastkesh', decals = 'Neshan',
         pants = 'Shalvar', shoes = 'Kafsh', mask = 'Mask', bproof = 'Jelighe',
@@ -27,25 +27,25 @@ if Config.Core == "ESX" then
         if ESX.Items[itemName] == nil then
             TriggerEvent('esx:CreateItem', itemName, label, -1, false, true)
         end
-        -- always (re-)pair a usable handler, even if the item already
-        -- existed in ESX.Items -- ESX.UsableItemsCallbacks is a
-        -- SEPARATE table that resets on every resource restart, while
-        -- an item can still be sitting in a player's saved inventory
-        -- from before that restart.
+
+
+
+
+
         ESX.RegisterUsableItem(itemName, function(playerId)
             TriggerClientEvent('unique_clothestore:wearClotheItem', playerId, clotheType, drawable, texture)
         end)
     end
 
-    -- ============================================================
-    -- giveClotheItems is a plain RegisterServerEvent, which any client
-    -- can fire directly (e.g. from a trainer) with an arbitrary
-    -- boughtItems table -- without this guard, that would mint free
-    -- clothing items with no payment involved at all. A token is
-    -- granted for exactly one use, right when payForClothes actually
-    -- charges the player successfully, and is consumed (cleared)
-    -- the instant giveClotheItems runs, so it can never be replayed.
-    -- ============================================================
+
+
+
+
+
+
+
+
+
     local PendingClothePurchase = {}
 
     AddEventHandler('playerDropped', function()
@@ -61,11 +61,11 @@ if Config.Core == "ESX" then
             print(('[unique_clothestore] ^3WARNING^7: player %d tried to claim clothing items with no matching successful purchase -- ignored.'):format(source))
             return
         end
-        PendingClothePurchase[source] = nil -- single-use, consume immediately
+        PendingClothePurchase[source] = nil
 
         local given = 0
         for _, entry in ipairs(boughtItems) do
-            if given >= 20 then break end -- sane ceiling, there are ~15 clothing categories total
+            if given >= 20 then break end
 
             local clotheType = entry.type
             local drawable = tonumber(entry.drawable)
@@ -187,7 +187,7 @@ if Config.Core == "ESX" then
             TriggerClientEvent('unique_clothestore:notification', source, Config.Translate["saved_clothes"]:format(label), 5000, 'success')
         end)
     end)
-    
+
     RegisterServerEvent('unique_clothestore:removeClothe')
     AddEventHandler('unique_clothestore:removeClothe', function(id)
 	    local xPlayer = ESX.GetPlayerFromId(source)
@@ -230,7 +230,7 @@ elseif Config.Core == "QB-Core" then
         TriggerClientEvent('unique_clothestore:notification', source, Config.Translate["enought_money"], 5000, 'error')
         cb(false)
     end)
-    
+
     QBCore.Functions.CreateCallback('unique_clothestore:getPlayerDressing', function(source, cb, price)
         if Config.SkinManager == "illenium-appearance" then
             local Player = QBCore.Functions.GetPlayer(source)

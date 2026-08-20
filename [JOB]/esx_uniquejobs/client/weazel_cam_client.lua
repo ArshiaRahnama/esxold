@@ -16,14 +16,11 @@ local bmicanimName = "mcs2_crew_idle_m_boom"
 local bmic_net = nil
 local mic_net = nil
 local cam_net = nil
-local UI = { 
+local UI = {
 	x =  0.000 ,
 	y = -0.001 ,
 }
 
----------------------------------------------------------------------------
--- Toggling Cam --
----------------------------------------------------------------------------
 RegisterNetEvent("Cam:ToggleCam")
 AddEventHandler("Cam:ToggleCam", function()
 	if not holdingCam then
@@ -31,7 +28,7 @@ AddEventHandler("Cam:ToggleCam", function()
         while not HasModelLoaded(GetHashKey(camModel)) do
             Citizen.Wait(100)
         end
-		
+
         local plyCoords = GetOffsetFromEntityInWorldCoords(GetPlayerPed(PlayerId()), 0.0, 0.0, -5.0)
         local camspawned = CreateObject(GetHashKey(camModel), plyCoords.x, plyCoords.y, plyCoords.z, 1, 1, 1)
         Citizen.Wait(1000)
@@ -40,7 +37,7 @@ AddEventHandler("Cam:ToggleCam", function()
         NetworkSetNetworkIdDynamic(netid, true)
         SetNetworkIdCanMigrate(netid, false)
         AttachEntityToEntity(camspawned, GetPlayerPed(PlayerId()), GetPedBoneIndex(GetPlayerPed(PlayerId()), 28422), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1, 1, 0, 1, 0, 1)
-        TaskPlayAnim(GetPlayerPed(PlayerId()), 1.0, -1, -1, 50, 0, 0, 0, 0) -- 50 = 32 + 16 + 2
+        TaskPlayAnim(GetPlayerPed(PlayerId()), 1.0, -1, -1, 50, 0, 0, 0, 0)
         TaskPlayAnim(GetPlayerPed(PlayerId()), camanimDict, camanimName, 1.0, -1, -1, 50, 0, 0, 0, 0)
         cam_net = netid
         holdingCam = true
@@ -65,22 +62,18 @@ Citizen.CreateThread(function()
 			end
 
 			if not IsEntityPlayingAnim(PlayerPedId(), camanimDict, camanimName, 3) then
-				TaskPlayAnim(GetPlayerPed(PlayerId()), 1.0, -1, -1, 50, 0, 0, 0, 0) -- 50 = 32 + 16 + 2
+				TaskPlayAnim(GetPlayerPed(PlayerId()), 1.0, -1, -1, 50, 0, 0, 0, 0)
 				TaskPlayAnim(GetPlayerPed(PlayerId()), camanimDict, camanimName, 1.0, -1, -1, 50, 0, 0, 0, 0)
 			end
-				
+
 			DisablePlayerFiring(PlayerId(), true)
-			DisableControlAction(0,25,true) -- disable aim
-			DisableControlAction(0, 44,  true) -- INPUT_COVER
-			DisableControlAction(0,37,true) -- INPUT_SELECT_WEAPON
+			DisableControlAction(0,25,true)
+			DisableControlAction(0, 44,  true)
+			DisableControlAction(0,37,true)
 			SetCurrentPedWeapon(GetPlayerPed(-1), GetHashKey("WEAPON_UNARMED"), true)
 		end
 	end
 end)
-
----------------------------------------------------------------------------
--- Cam Functions --
----------------------------------------------------------------------------
 
 local fov_max = 70.0
 local fov_min = 5.0
@@ -90,10 +83,6 @@ local speed_ud = 8.0
 
 local camera = false
 local fov = (fov_max+fov_min)*0.5
-
----------------------------------------------------------------------------
--- Movie Cam --
----------------------------------------------------------------------------
 
 Citizen.CreateThread(function()
 	while true do
@@ -110,13 +99,12 @@ Citizen.CreateThread(function()
 			SetTimecycleModifier("default")
 
 			SetTimecycleModifierStrength(0.3)
-			
+
 			local scaleform = RequestScaleformMovie("security_camera")
 
 			while not HasScaleformMovieLoaded(scaleform) do
 				Citizen.Wait(10)
 			end
-
 
 			local lPed = GetPlayerPed(-1)
 			local vehicle = GetVehiclePedIsIn(lPed)
@@ -135,7 +123,7 @@ Citizen.CreateThread(function()
 					PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", false)
 					movcamera = false
 				end
-				
+
 				SetEntityRotation(lPed, 0, 0, new_z,2, true)
 
 				local zoomvalue = (1.0/(fov_max-fov_min))*(fov-fov_min)
@@ -144,10 +132,10 @@ Citizen.CreateThread(function()
 				HandleZoom_weazelcam(cam1)
 				HideHUDThisFrame_weazelcam()
 
-				drawRct_weazelcam(UI.x + 0.0, 	UI.y + 0.0, 1.0,0.15,0,0,0,255) -- Top Bar
+				drawRct_weazelcam(UI.x + 0.0, 	UI.y + 0.0, 1.0,0.15,0,0,0,255)
 				DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)
-				drawRct_weazelcam(UI.x + 0.0, 	UI.y + 0.85, 1.0,0.16,0,0,0,255) -- Bottom Bar
-				
+				drawRct_weazelcam(UI.x + 0.0, 	UI.y + 0.85, 1.0,0.16,0,0,0,255)
+
 				local camHeading = GetGameplayCamRelativeHeading()
 				local camPitch = GetGameplayCamRelativePitch()
 				if camPitch < -70.0 then
@@ -156,17 +144,17 @@ Citizen.CreateThread(function()
 					camPitch = 42.0
 				end
 				camPitch = (camPitch + 70.0) / 112.0
-				
+
 				if camHeading < -180.0 then
 					camHeading = -180.0
 				elseif camHeading > 180.0 then
 					camHeading = 180.0
 				end
 				camHeading = (camHeading + 180.0) / 360.0
-				
+
 				Citizen.InvokeNative(0xD5BB4025AE449A4E, GetPlayerPed(-1), "Pitch", camPitch)
 				Citizen.InvokeNative(0xD5BB4025AE449A4E, GetPlayerPed(-1), "Heading", camHeading * -1.0 + 1.0)
-				
+
 				Citizen.Wait(1)
 			end
 
@@ -181,10 +169,6 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
-
----------------------------------------------------------------------------
--- News Cam --
----------------------------------------------------------------------------
 
 Citizen.CreateThread(function()
 	while true do
@@ -201,10 +185,9 @@ Citizen.CreateThread(function()
 			SetTimecycleModifier("default")
 
 			SetTimecycleModifierStrength(0.3)
-			
+
 			local scaleform = RequestScaleformMovie("security_camera")
 			local scaleform2 = RequestScaleformMovie("UniqueRP_News")
-
 
 			while not HasScaleformMovieLoaded(scaleform) do
 				Citizen.Wait(1)
@@ -212,7 +195,6 @@ Citizen.CreateThread(function()
 			while not HasScaleformMovieLoaded(scaleform2) do
 				Citizen.Wait(1)
 			end
-
 
 			local lPed = GetPlayerPed(-1)
 			local vehicle = GetVehiclePedIsIn(lPed)
@@ -234,7 +216,7 @@ Citizen.CreateThread(function()
 				end
 
 				SetEntityRotation(lPed, 0, 0, new_z,2, true)
-					
+
 				local zoomvalue = (1.0/(fov_max-fov_min))*(fov-fov_min)
 				CheckInputRotation_weazelcam(cam2, zoomvalue)
 
@@ -244,7 +226,7 @@ Citizen.CreateThread(function()
 				DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)
 				DrawScaleformMovie(scaleform2, 0.5, 0.63, 1.0, 1.0, 255, 255, 255, 255)
 				Breaking_weazelcam("BREAKING NEWS")
-				
+
 				local camHeading = GetGameplayCamRelativeHeading()
 				local camPitch = GetGameplayCamRelativePitch()
 				if camPitch < -70.0 then
@@ -253,17 +235,17 @@ Citizen.CreateThread(function()
 					camPitch = 42.0
 				end
 				camPitch = (camPitch + 70.0) / 112.0
-				
+
 				if camHeading < -180.0 then
 					camHeading = -180.0
 				elseif camHeading > 180.0 then
 					camHeading = 180.0
 				end
 				camHeading = (camHeading + 180.0) / 360.0
-				
+
 				Citizen.InvokeNative(0xD5BB4025AE449A4E, GetPlayerPed(-1), "Pitch", camPitch)
 				Citizen.InvokeNative(0xD5BB4025AE449A4E, GetPlayerPed(-1), "Heading", camHeading * -1.0 + 1.0)
-				
+
 				Citizen.Wait(1)
 			end
 
@@ -279,17 +261,11 @@ Citizen.CreateThread(function()
 	end
 end)
 
----------------------------------------------------------------------------
--- Events --
----------------------------------------------------------------------------
-
--- Activate camera
 RegisterNetEvent('camera:Activate')
 AddEventHandler('camera:Activate', function()
 	camera = not camera
 end)
 
---FUNCTIONS--
 function HideHUDThisFrame_weazelcam()
 	HideHelpTextThisFrame()
 	HideHudAndRadarThisFrame()
@@ -350,10 +326,6 @@ function HandleZoom_weazelcam(cam)
 	end
 end
 
-
----------------------------------------------------------------------------
--- Toggling Mic --
----------------------------------------------------------------------------
 RegisterNetEvent("Mic:ToggleMic")
 AddEventHandler("Mic:ToggleMic", function()
     if not holdingMic then
@@ -361,7 +333,7 @@ AddEventHandler("Mic:ToggleMic", function()
         while not HasModelLoaded(GetHashKey(micModel)) do
             Citizen.Wait(100)
         end
-		
+
 		while not HasAnimDictLoaded(micanimDict) do
 			RequestAnimDict(micanimDict)
 			Citizen.Wait(100)
@@ -375,7 +347,7 @@ AddEventHandler("Mic:ToggleMic", function()
         NetworkSetNetworkIdDynamic(netid, true)
         SetNetworkIdCanMigrate(netid, false)
         AttachEntityToEntity(micspawned, GetPlayerPed(PlayerId()), GetPedBoneIndex(GetPlayerPed(PlayerId()), 60309), 0.055, 0.05, 0.0, 240.0, 0.0, 0.0, 1, 1, 0, 1, 0, 1)
-        TaskPlayAnim(GetPlayerPed(PlayerId()), 1.0, -1, -1, 50, 0, 0, 0, 0) -- 50 = 32 + 16 + 2
+        TaskPlayAnim(GetPlayerPed(PlayerId()), 1.0, -1, -1, 50, 0, 0, 0, 0)
         TaskPlayAnim(GetPlayerPed(PlayerId()), micanimDict, micanimName, 1.0, -1, -1, 50, 0, 0, 0, 0)
         mic_net = netid
         holdingMic = true
@@ -389,9 +361,6 @@ AddEventHandler("Mic:ToggleMic", function()
     end
 end)
 
----------------------------------------------------------------------------
--- Toggling Boom Mic --
----------------------------------------------------------------------------
 RegisterNetEvent("Mic:ToggleBMic")
 AddEventHandler("Mic:ToggleBMic", function()
     if not holdingBmic then
@@ -399,7 +368,7 @@ AddEventHandler("Mic:ToggleBMic", function()
         while not HasModelLoaded(GetHashKey(bmicModel)) do
             Citizen.Wait(100)
         end
-		
+
         local plyCoords = GetOffsetFromEntityInWorldCoords(GetPlayerPed(PlayerId()), 0.0, 0.0, -5.0)
         local bmicspawned = CreateObject(GetHashKey(bmicModel), plyCoords.x, plyCoords.y, plyCoords.z, true, true, false)
         Citizen.Wait(1000)
@@ -408,7 +377,7 @@ AddEventHandler("Mic:ToggleBMic", function()
         NetworkSetNetworkIdDynamic(netid, true)
         SetNetworkIdCanMigrate(netid, false)
         AttachEntityToEntity(bmicspawned, GetPlayerPed(PlayerId()), GetPedBoneIndex(GetPlayerPed(PlayerId()), 28422), -0.08, 0.0, 0.0, 0.0, 0.0, 0.0, 1, 1, 0, 1, 0, 1)
-        TaskPlayAnim(GetPlayerPed(PlayerId()), 1.0, -1, -1, 50, 0, 0, 0, 0) -- 50 = 32 + 16 + 2
+        TaskPlayAnim(GetPlayerPed(PlayerId()), 1.0, -1, -1, 50, 0, 0, 0, 0)
         TaskPlayAnim(GetPlayerPed(PlayerId()), bmicanimDict, bmicanimName, 1.0, -1, -1, 50, 0, 0, 0, 0)
         bmic_net = netid
         holdingBmic = true
@@ -432,16 +401,16 @@ Citizen.CreateThread(function()
 			end
 
 			if not IsEntityPlayingAnim(PlayerPedId(), bmicanimDict, bmicanimName, 3) then
-				TaskPlayAnim(GetPlayerPed(PlayerId()), 1.0, -1, -1, 50, 0, 0, 0, 0) -- 50 = 32 + 16 + 2
+				TaskPlayAnim(GetPlayerPed(PlayerId()), 1.0, -1, -1, 50, 0, 0, 0, 0)
 				TaskPlayAnim(GetPlayerPed(PlayerId()), bmicanimDict, bmicanimName, 1.0, -1, -1, 50, 0, 0, 0, 0)
 			end
-			
+
 			DisablePlayerFiring(PlayerId(), true)
-			DisableControlAction(0,25,true) -- disable aim
-			DisableControlAction(0, 44,  true) -- INPUT_COVER
-			DisableControlAction(0,37,true) -- INPUT_SELECT_WEAPON
+			DisableControlAction(0,25,true)
+			DisableControlAction(0, 44,  true)
+			DisableControlAction(0,37,true)
 			SetCurrentPedWeapon(GetPlayerPed(-1), GetHashKey("WEAPON_UNARMED"), true)
-			
+
 			if (IsPedInAnyVehicle(GetPlayerPed(-1), -1) and GetPedVehicleSeat(GetPlayerPed(-1)) == -1) or IsPedCuffed(GetPlayerPed(-1)) or holdingMic then
 				ClearPedSecondaryTask(GetPlayerPed(-1))
 				DetachEntity(NetToObj(bmic_net), 1, 1)
@@ -453,10 +422,6 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
-
----------------------------------------------------------------------------------------
--- misc functions --
----------------------------------------------------------------------------------------
 
 function drawRct_weazelcam(x,y,width,height,r,g,b,a)
 	DrawRect(x + width/2, y + height/2, width, height, r, g, b, a)
@@ -486,7 +451,6 @@ function DisplayNotification_weazelcam(string)
 	AddTextComponentString(string)
     DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 end
-
 
 function hide_weazelcam()
 	TriggerEvent('status:modifyShowStatus', false)

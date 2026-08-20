@@ -2,11 +2,6 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
--- reloaddata: the only server callback client.lua actually calls.
--- 'coin' is pulled live from the real coin system (Unique_LevelQuest/server/coin.lua,
--- callback 'Coin-System:GetCoin') instead of a fake/placeholder "tc" field.
--- Server-side callbacks call each other directly through ESX.ServerCallbacks
--- (ESX.TriggerServerCallback is the client-side version and isn't usable here).
 ESX.RegisterServerCallback('reloaddata', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -23,6 +18,3 @@ ESX.RegisterServerCallback('reloaddata', function(source, cb)
 	end
 end)
 
--- Note: 'gangs:getGangData' is intentionally NOT redefined here — it's already
--- registered by [ARSHIA]/Unique_Gangs/server/main.lua, and client.lua calls it
--- by that same name, so it's already wired up correctly as-is.

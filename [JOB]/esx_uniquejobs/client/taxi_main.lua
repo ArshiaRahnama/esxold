@@ -53,7 +53,7 @@ function SetVehicleMaxMods_taxi(vehicle)
 		modBrakes       = 10,
 		color1       	= 126,
 		windowTint		= 1,
-	--	plate           = "TAXI",
+
 		color2       	= 73,
 		modTransmission = 10,
 		modSuspension   = 10,
@@ -161,10 +161,6 @@ function OpenCloakroom_taxi()
 			{ label = _U('wear_work'),    value = 'wear_work'}
 		}
 
-
-
-
-
 		for k, v in pairs(check) do
 
             if v.status == true then
@@ -172,10 +168,10 @@ function OpenCloakroom_taxi()
                     label = 'Lebas Division',
 					diviname = v.name,
 					value = 'division_lebas',
-					
+
                 })
             end
-			
+
         end
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'taxi_cloakroom',
@@ -185,9 +181,8 @@ function OpenCloakroom_taxi()
 			elements = elements
 		}, function(data, menu)
 
-
 			if data.current.value == 'division_lebas' then
-				
+
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
 					local job =  ESX.PlayerData.job.name
 					ESX.TriggerServerCallback('esx_society:getUniformsDivision', function(SkinMale, SkinFemale)
@@ -197,10 +192,9 @@ function OpenCloakroom_taxi()
 							TriggerEvent('skinchanger:loadClothes', skin, SkinFemale)
 						end
 					end, data.current.diviname, job)
-					
+
 				end)
 			end
-
 
 			if data.current.value == 'wear_citizen' then
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
@@ -229,9 +223,6 @@ function OpenCloakroom_taxi()
 	end)
 end
 
-
-
-
 function OpenVehicleSpawnerMenu_taxi(station, partNum)
 	local Vehicles = Config_taxi.AuthorizedVehicles.Shared
 	ESX.UI.Menu.CloseAll()
@@ -243,20 +234,18 @@ function OpenVehicleSpawnerMenu_taxi(station, partNum)
 	local job = ESX.GetPlayerData().job.name
 	local steamhex = ESX.GetPlayerData().identifier
 	ESX.TriggerServerCallback('esx_society:getVehicles', function(authorizedVehicle)
-		
+
 		ESX.TriggerServerCallback('esx_society:GetDivisionsPlayer', function(getdivision)
 			dvisionName = nil
 
-			for k,v in pairs(getdivision) do 
-				if v.status and v.job == job then 
-					
+			for k,v in pairs(getdivision) do
+				if v.status and v.job == job then
+
 
 					dvisionName = v.name
 				end
 			end
 			ESX.TriggerServerCallback('esx_society:getVehiclesdivision', function(authorizedVehicledivision)
-			
-
 
 
 				local found = false
@@ -266,7 +255,7 @@ function OpenVehicleSpawnerMenu_taxi(station, partNum)
 					for i = 1, #Vehicles, 1 do
 					local found = false
 
-				
+
 					if authorizedVehicle ~= nil then
 						for _,sharedVeh in ipairs(authorizedVehicle) do
 							if found then break end
@@ -275,24 +264,23 @@ function OpenVehicleSpawnerMenu_taxi(station, partNum)
 									found = true
 
 
-									
 								end
 							end
-							
+
 						end
 					end
 
 				end
 
-				if authorizedVehicledivision then 
+				if authorizedVehicledivision then
 					table.insert(elements, {label = '------ Division ------', model = nil})
 					local nnname = nil
 					local Vehicles2 = Config_taxi.AuthorizedVehicles.Shared
 					for i = 1, #Vehicles2, 1 do
 						nnname = nil
-						for t,vehs in pairs(authorizedVehicledivision) do 
+						for t,vehs in pairs(authorizedVehicledivision) do
 							for k,v in pairs(elements) do
-								if vehs.status and Vehicles2[i].model == vehs.model then 
+								if vehs.status and Vehicles2[i].model == vehs.model then
 									if v.model == vehs.model then
 										nnname = nil
 										break
@@ -302,7 +290,7 @@ function OpenVehicleSpawnerMenu_taxi(station, partNum)
 								end
 							end
 							if nnname then
-								
+
 								table.insert(elements, {label = Vehicles2[i].label, model = Vehicles2[i].model})
 								break
 							end
@@ -318,9 +306,8 @@ function OpenVehicleSpawnerMenu_taxi(station, partNum)
 				}, function(data, menu)
 					menu.close()
 
-
 					local model   = data.current.model
-					
+
 					if model then
 						if not DoesEntityExist(vehicle) then
 
@@ -333,7 +320,7 @@ function OpenVehicleSpawnerMenu_taxi(station, partNum)
 
 									ESX.TriggerServerCallback('checkPlateInServer', function(plateExists)
 										if plateExists then
-											
+
 											local alert = lib.alertDialog({
 												header = 'Az In Plake Qablan Estefadeh Shode',
 												content = 'Aya Mikhahid Hazf Shavad?',
@@ -350,7 +337,7 @@ function OpenVehicleSpawnerMenu_taxi(station, partNum)
 
 												Wait(1000)
 												spawnvehicles_taxi(data, plate, vehicle)
-												
+
 											else
 												TriggerEvent('chat:addMessage', {
 													args = {'^1SYSTEM', 'Cancel Shod'}
@@ -369,7 +356,7 @@ function OpenVehicleSpawnerMenu_taxi(station, partNum)
 												requestPlate()
 											end
 										end
-									end, "TX" .. plate[1]) 
+									end, "TX" .. plate[1])
 								end
 							end
 							requestPlate()
@@ -384,7 +371,7 @@ function OpenVehicleSpawnerMenu_taxi(station, partNum)
 					CurrentAction     = 'menu_vehicle_spawner'
 					CurrentActionMsg  = _U('vehicle_spawner')
 					CurrentActionData = {station = station, partNum = partNum}
-					
+
 				end)
 			end, dvisionName, job)
 		end, steamhex)
@@ -403,16 +390,14 @@ function OpenheliSpawnerMenu_taxi()
 	ESX.TriggerServerCallback('esx_society:getHelis', function(authorizedVehicle)
 		ESX.TriggerServerCallback('esx_society:GetDivisionsPlayer', function(getdivision)
 			dvisionName = nil
-			for k,v in pairs(getdivision) do 
-				if v.status and v.job == job then 
-					
+			for k,v in pairs(getdivision) do
+				if v.status and v.job == job then
+
 
 					dvisionName = v.name
 				end
 			end
 			ESX.TriggerServerCallback('esx_society:getHelisdivision', function(authorizedVehicledivision)
-			
-
 
 
 				local found = false
@@ -422,7 +407,7 @@ function OpenheliSpawnerMenu_taxi()
 					for i = 1, #Vehicles, 1 do
 					local found = false
 
-				
+
 					if authorizedVehicle ~= nil then
 						for _,sharedVeh in ipairs(authorizedVehicle) do
 							if found then break end
@@ -431,24 +416,23 @@ function OpenheliSpawnerMenu_taxi()
 									found = true
 
 
-									
 								end
 							end
-							
+
 						end
 					end
 
 				end
 
-				if authorizedVehicledivision then 
+				if authorizedVehicledivision then
 					table.insert(elements, {label = '------ Division ------', model = nil})
 					local nnname = nil
 					local Vehicles2 = Config_taxi.AuthorizedHelis.Shared
 					for i = 1, #Vehicles2, 1 do
 						nnname = nil
-						for t,vehs in pairs(authorizedVehicledivision) do 
+						for t,vehs in pairs(authorizedVehicledivision) do
 							for k,v in pairs(elements) do
-								if vehs.status and Vehicles2[i].model == vehs.model then 
+								if vehs.status and Vehicles2[i].model == vehs.model then
 									if v.model == vehs.model then
 										nnname = nil
 										break
@@ -458,7 +442,7 @@ function OpenheliSpawnerMenu_taxi()
 								end
 							end
 							if nnname then
-								
+
 								table.insert(elements, {label = Vehicles2[i].label, model = Vehicles2[i].model})
 								break
 							end
@@ -474,9 +458,8 @@ function OpenheliSpawnerMenu_taxi()
 				}, function(data, menu)
 					menu.close()
 
-
 					local model   = data.current.model
-					
+
 					if model then
 						if not DoesEntityExist(vehicle) then
 
@@ -489,7 +472,7 @@ function OpenheliSpawnerMenu_taxi()
 
 									ESX.TriggerServerCallback('checkPlateInServer', function(plateExists)
 										if plateExists then
-											
+
 											local alert = lib.alertDialog({
 												header = 'Az In Plake Qablan Estefadeh Shode',
 												content = 'Aya Mikhahid Hazf Shavad?',
@@ -506,7 +489,7 @@ function OpenheliSpawnerMenu_taxi()
 
 												Wait(1000)
 												spawnheliss_taxi(data, plate, vehicle)
-												
+
 											else
 												TriggerEvent('chat:addMessage', {
 													args = {'^1SYSTEM', 'Cancel Shod'}
@@ -525,7 +508,7 @@ function OpenheliSpawnerMenu_taxi()
 												requestPlate()
 											end
 										end
-									end, "TX" .. plate[1]) 
+									end, "TX" .. plate[1])
 								end
 							end
 
@@ -541,7 +524,7 @@ function OpenheliSpawnerMenu_taxi()
 					CurrentAction     = 'menu_heli_spawner'
 					CurrentActionMsg  = _U('heli_spawner')
 					CurrentActionData = {station = station, partNum = partNum}
-					
+
 				end)
 			end, dvisionName, job)
 		end, ESX.PlayerData.identifier)
@@ -581,19 +564,19 @@ function spawnheliss_taxi(data, plate, vehicle)
 					end
 				end
 			end
-			
 
-			
+
+
 			SetVehicleLivery(vehicle, 4)
 			Citizen.Wait(500)
 			SetVehicleLivery(vehicle, 4)
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
 			Citizen.Wait(500)
 			SetVehicleFuelLevel(vehicle, 100.0)
-			SetVehicleMaxMods_taxi(vehicle) 
+			SetVehicleMaxMods_taxi(vehicle)
 			SetVehicleNumberPlateText(vehicle, "TX" ..plate[1] )
 
-			local playerIdentifier = ESX.GetPlayerData().identifier 
+			local playerIdentifier = ESX.GetPlayerData().identifier
 			local vehicleModel = GetEntityModel(vehicle)
 			local vehicleLabel = GetLabelText(GetDisplayNameFromVehicleModel(vehicleModel))
 			local playerPed = PlayerPedId()
@@ -601,7 +584,7 @@ function spawnheliss_taxi(data, plate, vehicle)
 
             TriggerServerEvent('logVehicleSpawn', xPlayer.name, GetPlayerServerId(PlayerId()), playerIdentifier, vehicleLabel, "TX" .. plate[1], true)
 
-			
+
 
 			TriggerEvent('chat:addMessage', {
 				args = {'^1SYSTEM', 'Heli Ba Plake^2 TX'..plate[1]..' ^0Spawn Shod'}
@@ -616,9 +599,6 @@ function spawnheliss_taxi(data, plate, vehicle)
 
 end
 
-
-
-
 function spawnvehicles_taxi(data, plate, vehicle)
 	plate[1] = string.upper(plate[1])
 	ESX.Game.SpawnVehicleJobs(data.current.model, Config_taxi.Zones.VehicleSpawnPoint.Pos, Config_taxi.Zones.VehicleSpawnPoint.Heading, function(vehicle)
@@ -629,26 +609,23 @@ function spawnvehicles_taxi(data, plate, vehicle)
 			})
 			local playerPed = PlayerPedId()
 			TaskWarpPedIntoVehicle(playerPed, vehicle, -1)
-			SetVehicleMaxMods_taxi(vehicle) 
+			SetVehicleMaxMods_taxi(vehicle)
 			SetVehicleNumberPlateText(vehicle, "TX" ..plate[1] )
 			local vehicleextra = Config_taxi.AuthorizedVehicles.Shared
-				
+
 			for k,v in pairs(vehicleextra) do
 				if v.model == data.current.model and v.Extra then
 					for name,value in pairs(v.Extra) do
-						
+
 						SetVehicleExtra(vehicle, tonumber(name), tonumber(value))
 					end
 				end
 			end
 
-
-
 			Citizen.Wait(500)
 			SetVehicleFuelLevel(vehicle, 100.0)
 			SetVehicleLivery(vehicle, 4)
 			SetVehicleExtra(vehicle, 1, 1)
-
 
 			TriggerEvent('chat:addMessage', {
 				args = {'^1SYSTEM', 'Mashin Ba Plake^2 '..plate[1]..' ^0Spawn Shod'}
@@ -663,13 +640,10 @@ function spawnvehicles_taxi(data, plate, vehicle)
 
 end
 
-
-
 function DeleteJobVehicle_taxi()
-	local plate = GetVehicleNumberPlateText(CurrentActionData.vehicle) -- دریافت پلاک خودرو
-	ESX.Game.DeleteVehicleJobs(CurrentActionData.vehicle) -- حذف خودرو از بازی
+	local plate = GetVehicleNumberPlateText(CurrentActionData.vehicle)
+	ESX.Game.DeleteVehicleJobs(CurrentActionData.vehicle)
 end
-
 
 function OpenTaxiActionsMenu_taxi()
 	local elements = {}
@@ -705,19 +679,19 @@ function PlayerBlingMenu_taxi()
 	ESX.UI.Menu.CloseAll()
 	dataplayer = {}
 	local elements = {}
-	local nearbyPlayers = getNearbyPlayers_taxi(3) 
+	local nearbyPlayers = getNearbyPlayers_taxi(3)
 	local elements = {}
 	table.insert(elements, {label = "ID"  , value = " " })
 	local playerId22 = GetPlayerServerId(PlayerId())
 	local names = nil
-	
+
 	for _, player in ipairs(nearbyPlayers) do
-		local playerPed = GetPlayerPed(GetPlayerFromServerId(player.id)) 
-		local health = GetEntityHealth(playerPed) 
+		local playerPed = GetPlayerPed(GetPlayerFromServerId(player.id))
+		local health = GetEntityHealth(playerPed)
 		if player.id ~= playerId22 and health ~= 0 then
-			
+
             table.insert(elements, { label = "Player ID : " .. " [" .. player.id .. "]", value = player.id })
-			
+
 		end
 	end
 
@@ -731,14 +705,14 @@ function PlayerBlingMenu_taxi()
 			elements = elements
 		}, function(data, menu)
 
-			if data.current.value ~= " " then 
-				
+			if data.current.value ~= " " then
+
 				local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
 				if closestPlayer == -1 or closestDistance > 2.0 then
 					ESX.ShowNotification("No players nearby!")
 				else
-					
+
 					local playerid = data.current.value
 
                     ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'billing', {
@@ -746,7 +720,7 @@ function PlayerBlingMenu_taxi()
                     }, function(data2, menu2)
                         local amount = tonumber(data2.value)
                         if amount == nil then
-                            
+
                         else
                             menu2.close()
                             if closestPlayer == -1 or closestDistance > 2.0 then
@@ -759,46 +733,45 @@ function PlayerBlingMenu_taxi()
                     end, function(data2, menu2)
                         menu2.close()
                     end)
-					
+
 					stopActiveMarker_taxi()
-			
-					-- ESX.UI.Menu.CloseAll()
-						
-					
+
+
+
+
 				end
-				
-			
+
+
 		end
 
 
-        
-			
+
 		end, function(data, menu)
 			menu.close()
 
-			
+
 		end, function(data, menu)
 			local tttrp = true
 			stopActiveMarker_taxi()
 			Wait(5)
-			
+
 			local targetPlayer = GetPlayerPed(GetPlayerFromServerId(data.current.value))
 			activeMarkerThread = true
-			
+
 			local playerId22 = GetPlayerServerId(PlayerId())
 
 			while activeMarkerThread and tttrp do
 				if DoesEntityExist(targetPlayer) then
 					local coords = GetEntityCoords(targetPlayer)
 					if data.current.value ~= " " then
-						
+
 
 						DrawMarker(23, coords.x, coords.y, coords.z-1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7, 0.7, 0.7, 0, 255, 0, 100, false, true, 2, nil, nil, false)
-						
+
 						if IsControlJustPressed(0, 177) or IsControlJustPressed(0, 322) then
 							tttrp = false
 						end
-					else 
+					else
 
 					end
 				else
@@ -806,7 +779,7 @@ function PlayerBlingMenu_taxi()
 				end
 				Wait(0)
 			end
-			
+
 		end,function()
 
 		end
@@ -826,18 +799,18 @@ AddEventHandler('esx_taxijob:OpenMenuDialog', function(player, target, amount)
                 {label = 'Bale', value = 'yes'},
                 {label = 'Kheir', value = 'no'},
             },
-        }, 
+        },
         function(data, menu)
             if data.current.value == 'yes' then
                 TriggerServerEvent('esx_billing:send2Bill2', target, player, 'society_taxi', 'Taxi', amount)
                 TriggerServerEvent("esx_taxijob:ChatMessage",target, player, true)
 
-                ESX.UI.Menu.CloseAll()		
+                ESX.UI.Menu.CloseAll()
             elseif data.current.value == 'no' then
-               
+
                 TriggerServerEvent("esx_taxijob:ChatMessage",target, player, false)
                 menu.close()
-                												
+
             end
         end
     )
@@ -864,7 +837,7 @@ function getNearbyPlayers_taxi(radius)
     return players
 end
 
-local activeMarkerTarget = nil 
+local activeMarkerTarget = nil
 function stopActiveMarker_taxi()
     if activeMarkerThread then
         activeMarkerThread = nil
@@ -880,28 +853,28 @@ function OpenMobileTaxiActionsMenu_taxi()
 			local playerjob =  ESX.GetPlayerData().job.name
 			for k, v in pairs(check) do
 				if v.job == playerjob then
-					if #check >= 1 then 
-						
+					if #check >= 1 then
+
 						isdivision = true
 						break
 					end
 				end
 			end
-		
+
 
 			elements = {
 				{label = 'Request List ('..tedad..')',   value = 'requests'},
 				{label = _U('billing'),   value = 'billing'},
 				{label = 'Dastmal Keshidan',   value = 'clean_vehicle'},
-				
-			
+
+
 			}
-		
-			
-			if isdivision then 
+
+
+			if isdivision then
 				table.insert(elements, {label = _U('extra_division'), value = 'extra_division'})
 			end
-		
+
 		ESX.UI.Menu.CloseAll()
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'mobile_taxi_actions', {
@@ -916,28 +889,28 @@ function OpenMobileTaxiActionsMenu_taxi()
 				local playerPed = GetPlayerPed(-1)
 				local vehicle   = ESX.Game.GetVehicleInDirection()
 				local coords    = GetEntityCoords(playerPed)
-		
+
 				if IsPedSittingInAnyVehicle(playerPed) then
 					ESX.ShowNotification(_U('inside_vehicle'))
 					return
 				end
-		
+
 				if DoesEntityExist(vehicle) then
 					IsBusy = true
 					TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_MAID_CLEAN", 0, true)
 					Citizen.CreateThread(function()
 						Citizen.Wait(10000)
-		
+
 						SetVehicleDirtLevel(vehicle, 0)
 						ClearPedTasksImmediately(playerPed)
-		
+
 						ESX.ShowNotification(_U('vehicle_cleaned'))
 						IsBusy = false
 					end)
 				else
 					ESX.ShowNotification(_U('no_vehicle_nearby'))
 				end
-				
+
 				elseif data.current.value == 'requests' then
 					OpenReqsList_taxi()
 			elseif data.current.value == 'start_job' then
@@ -968,11 +941,11 @@ function OpenMobileTaxiActionsMenu_taxi()
 					end
 				end
 			elseif data.current.value == 'extra_division' then
-				
+
 				OpendivisionsMenu_taxi()
-				
-		
-				
+
+
+
 			end
 		end, function(data, menu)
 			menu.close()
@@ -993,7 +966,7 @@ function IsInAuthorizedVehicle_taxi()
 			return true
 		end
 	end
-	
+
 	return false
 end
 
@@ -1006,7 +979,6 @@ RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
 	ESX.PlayerData.job = job
 end)
-
 
 AddEventHandler('esx_taxijob:hasEnteredMarker', function(zone)
 	if zone == 'VehicleSpawner' then
@@ -1044,8 +1016,8 @@ AddEventHandler('esx_taxijob:hasEnteredMarker', function(zone)
 		CurrentAction     = 'cloakroom'
 		CurrentActionMsg  = _U('cloakroom_prompt')
 		CurrentActionData = {}
-	
-	
+
+
 	elseif zone == 'Armory' then
 		CurrentAction     = 'menu_armory'
 		CurrentActionMsg  = _U('open_armory')
@@ -1070,7 +1042,6 @@ AddEventHandler('esx_phone:loaded', function(phoneNumber, contacts)
 	TriggerEvent('esx_phone:addSpecialContact', specialContact.name, specialContact.number, specialContact.base64Icon)
 end)
 
--- Create Blips
 Citizen.CreateThread(function()
 	local blip = AddBlipForCoord(Config_taxi.Zones.Blip.Pos.x, Config_taxi.Zones.Blip.Pos.y, Config_taxi.Zones.Blip.Pos.z)
 
@@ -1085,10 +1056,8 @@ Citizen.CreateThread(function()
 	EndTextCommandSetBlipName(blip)
 end)
 
- 
 
 
--- Enter / Exit marker events, and draw markers
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
@@ -1103,18 +1072,16 @@ Citizen.CreateThread(function()
 
 			for k,v in pairs(Config_taxi.Zones) do
 				local distance = GetDistanceBetweenCoords(coords, v.Pos.x, v.Pos.y, v.Pos.z, true)
-				
-				
 
 
 
-				
-				
-		  
+
+
+
 				if v.Type ~= -1 and distance < Config_taxi.DrawDistance then
 					letSleep = false
 					DrawMarker(v.Type, v.Pos.x, v.Pos.y, v.Pos.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.Size.x, v.Size.y, v.Size.z, v.Color.r, v.Color.g, v.Color.b, 100, false, false, 2, v.Rotate, nil, nil, false)
-					if v.Type == 24 and v.Isheli then 
+					if v.Type == 24 and v.Isheli then
 						if distance <= v.Size.x+2 and distance <= v.Size.y+2 and distance <= v.Size.z+2 then
 							isInMarker, currentZone = true, k
 						end
@@ -1125,7 +1092,7 @@ Citizen.CreateThread(function()
 					end
 				end
 
-				
+
 			end
 
 			if (isInMarker and not HasAlreadyEnteredMarker) or (isInMarker and LastZone ~= currentZone) then
@@ -1146,22 +1113,22 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
- 
+
 function OpenArmoryMenu_taxi(station)
-  
-  
+
+
 	  local elements = {
 
 		{label = _U('remove_object'),  value = 'get_stock'},
 		{label = _U('deposit_object'), value = 'put_stock'}
 	  }
-  
-	  if ESX.GetPlayerData().job.grade >= 10 then 
+
+	  if ESX.GetPlayerData().job.grade >= 10 then
 		table.insert(elements, {label = _U('buy_items'), value = 'buy_items'})
 	  end
-  
+
 	  ESX.UI.Menu.CloseAll()
-  
+
 	  ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'armory',
 		{
@@ -1170,12 +1137,12 @@ function OpenArmoryMenu_taxi(station)
 		  elements = elements,
 		},
 		function(data, menu)
-  
-  
+
+
 		  if data.current.value == 'put_stock' then
 			OpenPutStocksMenu_taxi()
 		  end
-  
+
 		  if data.current.value == 'get_stock' then
 			OpenGetStocksMenu_taxi()
 		  end
@@ -1183,19 +1150,19 @@ function OpenArmoryMenu_taxi(station)
 		  if data.current.value == 'buy_items' then
 			OpenBuyItemsMenu_taxi()
 		  end
-  
+
 		end,
 		function(data, menu)
-  
+
 		  menu.close()
-  
+
 		  CurrentAction     = 'menu_armory'
 		  CurrentActionMsg  = _U('open_armory')
 		  CurrentActionData = {station = station}
 		end
 	)
 end
- 
+
 
 function OpenBuyItemsMenu_taxi()
 
@@ -1263,7 +1230,7 @@ function GetDivisionName_taxi(getdivision, job)
     end
     return nil
 end
- 
+
 function OpenGetStocksMenu_taxi()
     local grade = ESX.PlayerData.job.grade
     local job = ESX.PlayerData.job.name
@@ -1273,15 +1240,13 @@ function OpenGetStocksMenu_taxi()
             local dvisionName = GetDivisionName_taxi(getdivision, job)
 
             ESX.TriggerServerCallback('esx_society:getDivisionItems', function(authorizedItems)
-               
+
                 if type(authorizedItems) ~= "table" then
                     authorizedItems = {}
                 end
 
-
                 ESX.TriggerServerCallback('esx_society:getItems', function(jobGradeItems)
                     local elements = {}
-
 
                     for _, item in ipairs(items) do
                         for _, sharedItem in ipairs(jobGradeItems) do
@@ -1291,7 +1256,6 @@ function OpenGetStocksMenu_taxi()
                             end
                         end
                     end
-
 
                     for _, item in ipairs(items) do
                         for _, divisionItem in ipairs(authorizedItems) do
@@ -1313,11 +1277,9 @@ function OpenGetStocksMenu_taxi()
                         end
                     end
 
-
                     if #elements == 0 then
                         table.insert(elements, {label = "Not Items", value = nil})
                     end
-
 
                     ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'stocks_menu', {
                         title = _U('police_stock'),
@@ -1344,7 +1306,7 @@ function OpenGetStocksMenu_taxi()
                                 TriggerServerEvent('esx_taxijob:getStockItem', itemName, count)
 
 								local steamHex = ESX.GetPlayerData().identifier
-								
+
 
 								TriggerServerEvent('logGetItem', ESX.GetPlayerData().name, GetPlayerServerId(PlayerId()), steamHex, data.current.label, count)
 
@@ -1363,23 +1325,23 @@ function OpenGetStocksMenu_taxi()
         end, ESX.PlayerData.identifier)
     end)
 end
-  
+
 function OpenPutStocksMenu_taxi()
-  
+
 	ESX.TriggerServerCallback('esx_taxijob:getPlayerInventory', function(inventory)
-  
+
 	  local elements = {}
-  
+
 	  for i=1, #inventory.items, 1 do
-  
+
 		local item = inventory.items[i]
-  
+
 		if item.count > 0 then
 		  table.insert(elements, {label = item.label .. ' x' .. item.count, type = 'item_standard', value = item.name})
 		end
-  
+
 	  end
-  
+
 	  ESX.UI.Menu.Open(
 		'default', GetCurrentResourceName(), 'stocks_menu',
 		{
@@ -1388,46 +1350,46 @@ function OpenPutStocksMenu_taxi()
 		  elements = elements
 		},
 		function(data, menu)
-  
+
 		  local itemName = data.current.value
-  
+
 		  ESX.UI.Menu.Open(
 			'dialog', GetCurrentResourceName(), 'stocks_menu_put_item_count',
 			{
 			  title = _U('quantity')
 			},
 			function(data2, menu2)
-  
+
 			  local count = tonumber(data2.value)
-  
+
 			  if count == nil then
 				ESX.ShowNotification(_U('quantity_invalid'))
 			  else
 				menu2.close()
 				menu.close()
 				TriggerServerEvent('esx_taxijob:putStockItems', itemName, count)
-  
+
 				Citizen.Wait(300)
 				OpenPutStocksMenu_taxi()
 			  end
-  
+
 			end,
 			function(data2, menu2)
 			  menu2.close()
 			end
 		  )
-  
+
 		end,
 		function(data, menu)
 		  menu.close()
 		end
 	  )
-  
+
 	end)
-  
+
   end
-  
--- Taxi Job
+
+
 Citizen.CreateThread(function()
 	while true do
 
@@ -1501,7 +1463,7 @@ Citizen.CreateThread(function()
 
 								TaskGoStraightToCoord(CurrentCustomer, targetCoords.x, targetCoords.y, targetCoords.z, 1.0, -1, 0.0, 0.0)
 								SetEntityAsMissionEntity(CurrentCustomer, false, true)
-								-- TriggerServerEvent('esx_taxijob:success')
+
 								RemoveBlip(DestinationBlip)
 
 								local scope = function(customer)
@@ -1594,7 +1556,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Key Controls
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(1)
@@ -1604,14 +1565,14 @@ Citizen.CreateThread(function()
 
 			if IsControlJustReleased(0, 38) and ESX.PlayerData.job and ESX.PlayerData.job.name == 'taxi' then
 				if CurrentAction == 'taxi_actions_menu' then
-					-- OpenTaxiActionsMenu_taxi()
+
 					TriggerEvent('esx_society:openBosscarysMenu', 'taxi', function(data, menu)
 						menu.close()
 					end)
 				elseif CurrentAction == 'cloakroom' then
 					OpenCloakroom_taxi()
 				elseif CurrentAction == 'menu_armory' then
-					  
+
 					OpenArmoryMenu_taxi(CurrentActionData.station)
 				elseif CurrentAction == 'vehicle_spawner' then
 					OpenVehicleSpawnerMenu_taxi()
@@ -1635,12 +1596,12 @@ Citizen.CreateThread(function()
 end)
 
 AddEventHandler('playerSpawned', function(spawn)
-	-- if not hasAlreadyJoined then
-	-- 	TriggerServerEvent('esx_taxijob:spawned')
-	-- end
+
+
+
 	hasAlreadyJoined = true
 end)
-  
+
 RegisterNetEvent('esx_taxijob:openreqs')
 AddEventHandler('esx_taxijob:openreqs', function(source)
 	OpenReqsList_taxi()
@@ -1690,7 +1651,7 @@ end)
 
 function OpenReqsList_taxi()
 	ESX.TriggerServerCallback('esx_taxijob:getReqs', function(reqs)
-	
+
 	local elements = {}
 	for i=1, #reqs, 1 do
 
@@ -1706,51 +1667,51 @@ function OpenReqsList_taxi()
 			accept = reqs[i].accept,
 		})
 	end
-	
+
 
  	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'reqs_lists', {
-		
+
 		title    = "Requests",
 		align    = 'bottom-right',
 		elements = elements
 	}, function(data, menu)
-		
+
 		local elements = {}
 		local reqid = data.current.reqid
 		local id = data.current.id
 		ESX.TriggerServerCallback('esx_taxijob:acceptername', function(acceptername, accepterID)
 		ESX.TriggerServerCallback('esx_taxijob:icname', function(name)
 		table.insert(elements,{label = "Id : ".. data.current.reqid ,value = "nil"})
-		
+
 		table.insert(elements,{label = "Accept status : "..data.current.status ,value = "nil"})
-		
-		
+
+
 			if data.current.accept == "open" then
 				table.insert(elements,{label = "Accept", value = "yes"})
 				table.insert(elements,{label = "Request by : "..data.current.icname.." ("..data.current.id..")", value = "nil"})
 			else
-			
+
 				table.insert(elements,{label = "Accepted by : ".. acceptername.." ("..accepterID..")", value = "nil"})
 				table.insert(elements,{label = "Request by : "..data.current.icname.." ("..data.current.id..")", value = "nil"})
 			end
-			
+
 			if acceptername == name then
 				table.insert(elements,{label = "Decline",value = "decline"})
 				table.insert(elements,{label = "Finish",value = "finish"})
 			end
-		
+
 		table.insert(elements,{label = "Pin location",value = "loc"})
 		table.insert(elements,{label = "Call",value = "call"})
 		table.insert(elements,{label = "Matn Payam",value = "matn"})
-		
-		
+
+
  		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'reqs_list', {
-		
+
 				title    = "Request",
 				align    = 'bottom-right',
 				elements = elements
 				}, function(data2, menu2)
-			
+
 				menu2.close()
  				if data2.current.value == 'yes' then
 					TriggerServerEvent('esx_taxijob:areqs', data.current.reqid)
@@ -1782,12 +1743,11 @@ function OpenReqsList_taxi()
 			end, reqid)
  		end, function(data, menu)
 			menu.close()
-			
+
 		end)
-		
+
 	end)
 end
-
 
 RegisterNetEvent('esx_taxijob:callTaxi')
 AddEventHandler('esx_taxijob:callTaxi', function(coords)
@@ -1795,7 +1755,7 @@ AddEventHandler('esx_taxijob:callTaxi', function(coords)
 		ESX.ShowHelpNotification('Yek Taxi Dar Hal Omadan Be Samt Shoma Ast!')
 	else
 		customer = coords
-		-- get best spawnpoint
+
 		playerPed = GetPlayerPed(-1)
 		myCoords = GetEntityCoords(playerPed)
 		local heading
@@ -1837,7 +1797,7 @@ AddEventHandler('esx_taxijob:callTaxi', function(coords)
 			SetEntityHeading(callback_vehicle, heading)
 			TaskWarpPedIntoVehicle(ped, callback_vehicle, -1)
 			SetVehicleHasBeenOwnedByPlayer(callback_vehicle, true)
-			--SetVehicleDoorsLocked(callback_vehicle, 2)
+
 			taxiBlip = true
 			globalTaxi = callback_vehicle
 			SetEntityAsMissionEntity(globalTaxi, true, true)
@@ -1862,7 +1822,6 @@ AddEventHandler('esx_taxijob:setTaxiBlip', function(coords)
 	end
 end)
 
--- taxiBlip
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(450)
@@ -1896,9 +1855,9 @@ Citizen.CreateThread(function()
 				if not DoesBlipExist(waypoint) and not onTour then
 					ESX.ShowHelpNotification('Lotfan Maghsad Ra Moshakhas Konid!')
 					Citizen.Wait(2000)
-				else	
+				else
 					tx, ty, tz = table.unpack(Citizen.InvokeNative(0xFA7C7F0AADF25D09, waypoint, Citizen.ResultAsVector()))
-					
+
 					if GetDistanceBetweenCoords(45.45, 2088.04, 151.72, tx, ty, tz) >= 5600.0 then
 						ESX.ShowHelpNotification('Onja Nemitonam Beram Ye jaye dige ro entekhab kon!')
 					else
@@ -1918,7 +1877,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
---distancechecks
 Citizen.CreateThread(function()
 	local playerPed = GetPlayerPed(-1)
 	while true do
@@ -1952,7 +1910,6 @@ Citizen.CreateThread(function()
 	end
 end)
 
---keycontrol
 Citizen.CreateThread(function()
 	local playerPed = GetPlayerPed(-1)
 	while true do
@@ -2008,7 +1965,7 @@ function atTarget_taxi(cancel)
 end
 
 function parking_taxi(x, y ,z)
-	--TaskVehiclePark(ped, globalTaxi, x, y, z, 0.0, 0, 10.0, false)
+
 	StartVehicleHorn(globalTaxi, 3000, 0, false)
 	parkingDone = true
 end
@@ -2029,15 +1986,14 @@ function drive_taxi(x, y , z, delete, status)
 	end
 end
 
-
 function OpendivisionsMenu_taxi()
     ESX.TriggerServerCallback('esx_society:divisionsPlayer', function(check)
         local elements = {}
 		local jobplayer = ESX.GetPlayerData().job.name
-		
+
         for k, v in pairs(check) do
 			print( v.job)
-			if v.job == jobplayer then 
+			if v.job == jobplayer then
 				if v.status then
 					table.insert(elements, {
 						name = v.name,

@@ -1,5 +1,4 @@
--- UNIQUE_AC — customized build by Arshia (https://arshiahub.ir)
--- Licensed under the GNU Affero General Public License v3.0
+
 
 fx_version 'cerulean'
 game 'gta5'

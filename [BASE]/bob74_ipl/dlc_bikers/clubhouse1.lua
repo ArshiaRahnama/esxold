@@ -1,5 +1,4 @@
 
--- Clubhouse1: 1107.04, -3157.399, -37.51859
 
 exports('GetBikerClubhouse1Object', function()
     return BikerClubhouse1
@@ -192,7 +191,7 @@ BikerClubhouse1 = {
 
     LoadDefault = function()
         BikerClubhouse1.Ipl.Interior.Load()
-        
+
         BikerClubhouse1.Walls.Set(BikerClubhouse1.Walls.plain, BikerClubhouse1.Walls.Color.brown)
 
         BikerClubhouse1.Furnitures.Set(BikerClubhouse1.Furnitures.A, 3)

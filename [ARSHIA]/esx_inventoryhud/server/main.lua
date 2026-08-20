@@ -6,16 +6,13 @@ while ESX == nil do
     Citizen.Wait(0)
 end
 
-local droppedItems = {} -- [id] = { name, count, coords, expireAt }
+local droppedItems = {}
 local nextDropId = 1
 
 local function getDistance(a, b)
     return #(vector3(a.x, a.y, a.z) - vector3(b.x, b.y, b.z))
 end
 
--- ------------------------------------------------------------
--- Throw / drop item on the ground
--- ------------------------------------------------------------
 RegisterServerEvent('inventory:core:throwItem')
 AddEventHandler('inventory:core:throwItem', function(itemName, count, coords)
     local src = source
@@ -61,7 +58,6 @@ AddEventHandler('inventory:core:pickupThrown', function(id)
     TriggerClientEvent('inventory:core:removeDrop', -1, id)
 end)
 
--- periodic cleanup of old dropped items
 CreateThread(function()
     while true do
         Wait(60000)
@@ -75,9 +71,6 @@ CreateThread(function()
     end
 end)
 
--- ------------------------------------------------------------
--- Give item to a nearby player (server-validated)
--- ------------------------------------------------------------
 RegisterServerEvent('inventory:core:giveItem')
 AddEventHandler('inventory:core:giveItem', function(targetId, itemName, count)
     local src = source
@@ -136,11 +129,6 @@ AddEventHandler('inventory:core:giveWeapon', function(targetId, weaponName)
     TriggerClientEvent('esx:showNotification', targetId, 'Selah Daryaft Shod !')
 end)
 
--- Admin online/offline inventory viewing helpers (used by
--- modules/admin) live in server/admin.lua, matching the exact
--- event names that module already sends.
-
--- used by client/core.lua's openOtherPlayerInventory (online case)
 ESX.RegisterServerCallback('inventory:core:getPlayerInventory', function(source, cb, targetId)
     if not IsPlayerAceAllowed(source, Config.AdminInventoryAce or 'inventory.admin') then
         cb(nil)
@@ -151,16 +139,7 @@ ESX.RegisterServerCallback('inventory:core:getPlayerInventory', function(source,
     cb({ items = xTarget.inventory, weapons = xTarget.loadout })
 end)
 
--- ============================================================
--- Weapon equip toggle: server-authoritative "which weapons are
--- actually drawable" state, capped at Config.WeaponSlots count.
--- In-memory only per session (mirrors usedClothe's pattern in
--- Unique_clothe) -- on relog/spawn the client re-asks via
--- inventory:getEquippedWeapons and starts clean, so nothing carries
--- over incorrectly, and this never touches essentialmode's own
--- weapon storage/DB at all.
--- ============================================================
-local equippedWeapons = {} -- [source] = { [weaponName] = true }
+local equippedWeapons = {}
 
 local function ownsWeapon(xPlayer, weaponName)
     return xPlayer.getWeapon(weaponName) ~= nil
@@ -187,7 +166,7 @@ AddEventHandler('inventory:toggleWeaponEquip', function(weaponName)
     else
         local maxSlots = (Config.WeaponSlots and #Config.WeaponSlots) or 3
         if equippedCount(set) >= maxSlots then
-            -- unequip whichever one was equipped first (oldest) to make room
+
             local oldest = nil
             for name in pairs(set) do oldest = name break end
             if oldest then set[oldest] = nil end
@@ -205,7 +184,7 @@ ESX.RegisterServerCallback('inventory:getEquippedWeapons', function(source, cb)
     equippedWeapons[source] = equippedWeapons[source] or {}
     local set = equippedWeapons[source]
 
-    -- drop anything the player no longer actually owns (sold/dropped/etc)
+
     for weaponName in pairs(set) do
         if not ownsWeapon(xPlayer, weaponName) then
             set[weaponName] = nil
@@ -218,18 +197,6 @@ end)
 AddEventHandler('playerDropped', function()
     equippedWeapons[source] = nil
 end)
-
--- ============================================================
--- Real slot persistence for both items AND weapons. essentialmode's
--- inventory/loadout entries have no slot field at all by default
--- (confirmed: self.inventory[i]/self.loadout[i] are just flat
--- {name,count,...} tables looked up by name, not by position) --
--- this adds a 'slot' key directly onto each entry's own table.
--- essentialmode saves self.inventory via json.encode(self.inventory)
--- (see server/main.lua's SaveUser), so an extra key on each item just
--- rides along in that same JSON blob -- no schema change, nothing
--- else that only reads .name/.count is affected.
--- ============================================================
 
 local function findEntry(xPlayer, name, isWeapon)
     local list = isWeapon and xPlayer.loadout or xPlayer.inventory

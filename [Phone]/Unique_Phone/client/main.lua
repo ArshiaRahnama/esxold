@@ -18,7 +18,6 @@ Citizen.CreateThread(function()
     test()
 end)
 
--- Code
 local PlayerJob = {}
 
 phoneProp = 0
@@ -112,7 +111,6 @@ AddEventHandler('esx:setJob', function(JobInfo)
     })
 end)
 
-
 RegisterNUICallback('ClearRecentAlerts', function(data, cb)
     TriggerServerEvent('Unique_Phone:server:SetPhoneAlerts', "phone", 0)
     Config.PhoneApplications["phone"].Alerts = 0
@@ -189,9 +187,6 @@ Citizen.CreateThread(function()
     end
 end)
 
-
-
-
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(60000)
@@ -227,7 +222,7 @@ function test()
                 local Lastname = table.concat(Fullname, " ")
 
                 if (Firstname ~= nil and Firstname ~= "") and (Lastname ~= nil and Lastname ~= "") then
-                  
+
                     TriggerServerEvent('Unique_Phone:server:MentionedPlayer', Firstname, Lastname, PhoneData.Tweets[j])
                 end
             end
@@ -236,7 +231,7 @@ function test()
     ESX.TriggerServerCallback('Unique_Phone:server:GetPhoneData', function(pData)
         if pData.MentionedTweets ~= nil and next(pData.MentionedTweets) ~= nil then
             PhoneData.MentionedTweets = pData.MentionedTweets
-        
+
         end
     end)
 
@@ -260,7 +255,7 @@ function LoadPhone()
         PhoneData.PlayerData.identifier = pData ~= nil and pData.identifier or ""
 
         if pData.MetaData.profilepicture == nil then
-            
+
             PhoneData.MetaData.profilepicture = "default"
         else
             PhoneData.MetaData.profilepicture = pData.MetaData.profilepicture
@@ -375,32 +370,30 @@ function OpenPhone()
                     PlayerData = PhoneData.PlayerData,
                 })
 
-
-
                 CreateThread(function()
                     while PhoneData.isOpen do
 
                         DisableControlAction(0, 199, true)
-                        DisableControlAction(0, 1, true) -- disable mouse look
-                        DisableControlAction(0, 2, true) -- disable mouse look
-                        DisableControlAction(0, 3, true) -- disable mouse look
-                        DisableControlAction(0, 4, true) -- disable mouse look
-                        DisableControlAction(0, 5, true) -- disable mouse look
-                        DisableControlAction(0, 6, true) -- disable mouse look
-                        DisableControlAction(0, 263, true) -- disable melee
-                        DisableControlAction(0, 264, true) -- disable melee
-                        DisableControlAction(0, 257, true) -- disable melee
-                        DisableControlAction(0, 140, true) -- disable melee
-                        DisableControlAction(0, 141, true) -- disable melee
-                        DisableControlAction(0, 142, true) -- disable melee
-                        DisableControlAction(0, 143, true) -- disable melee
-                        DisableControlAction(0, 177, true) -- disable escape
-                        DisableControlAction(0, 200, true) -- disable escape
-                        DisableControlAction(0, 202, true) -- disable escape
-                        DisableControlAction(0, 322, true) -- disable escape
-                        DisableControlAction(0, 245, true) -- disable chat
-                        DisableControlAction(0, 245, true)  -- کلید T
-                        DisableControlAction(0, 105, true)  -- کلید J
+                        DisableControlAction(0, 1, true)
+                        DisableControlAction(0, 2, true)
+                        DisableControlAction(0, 3, true)
+                        DisableControlAction(0, 4, true)
+                        DisableControlAction(0, 5, true)
+                        DisableControlAction(0, 6, true)
+                        DisableControlAction(0, 263, true)
+                        DisableControlAction(0, 264, true)
+                        DisableControlAction(0, 257, true)
+                        DisableControlAction(0, 140, true)
+                        DisableControlAction(0, 141, true)
+                        DisableControlAction(0, 142, true)
+                        DisableControlAction(0, 143, true)
+                        DisableControlAction(0, 177, true)
+                        DisableControlAction(0, 200, true)
+                        DisableControlAction(0, 202, true)
+                        DisableControlAction(0, 322, true)
+                        DisableControlAction(0, 245, true)
+                        DisableControlAction(0, 245, true)
+                        DisableControlAction(0, 105, true)
                         if IsControlJustPressed(1, 22) then
                             TriggerEvent('KeyDown:space')
                         end
@@ -420,7 +413,7 @@ function OpenPhone()
                     newPhoneProp()
                 end)
 
-                -- Garage Fix
+
                 ESX.TriggerServerCallback('Unique_Phone:server:GetGarageVehicles', function(vehicles)
 
                     if vehicles ~= nil then
@@ -434,7 +427,7 @@ function OpenPhone()
                 end)
             end)
         else
-            -- exports['mythic_notify']:DoHudText('error', Lang("PHONE_DONT_HAVE"))
+
             ESX.ShowNotification(Lang('PHONE_DONT_HAVE'), 'error')
 
         end
@@ -446,25 +439,25 @@ function InPutLock()
        while threadCreated do
         Citizen.Wait(5)
         DisableAllControlActions(0)
-        EnableControlAction(0, 249, true) -- N  
-        EnableControlAction(0, 32, true) -- W
-        EnableControlAction(0, 34, true) -- A
-        EnableControlAction(0, 31, true) -- S
-        EnableControlAction(0, 30, true) -- D
-        EnableControlAction(0, 59, true) -- Enable steering in vehicle
-        EnableControlAction(0, 71, true) -- Enable driving forward in vehicle
-        EnableControlAction(0, 72, true) -- Enable reversing in vehicle
-        EnableControlAction(0, 21, true) -- LSHIFT
-        EnableControlAction(0, 22, true) -- SPACE
-        EnableControlAction(0, 23, true) -- F
-        EnableControlAction(0, 75, true) -- Exit Vehicle
+        EnableControlAction(0, 249, true)
+        EnableControlAction(0, 32, true)
+        EnableControlAction(0, 34, true)
+        EnableControlAction(0, 31, true)
+        EnableControlAction(0, 30, true)
+        EnableControlAction(0, 59, true)
+        EnableControlAction(0, 71, true)
+        EnableControlAction(0, 72, true)
+        EnableControlAction(0, 21, true)
+        EnableControlAction(0, 22, true)
+        EnableControlAction(0, 23, true)
+        EnableControlAction(0, 75, true)
        end
     end)
 end
-  
+
 
 RegisterNUICallback('SetupGarageVehicles', function(data, cb)
-    
+
     cb(PhoneData.GarageVehicles)
 end)
 
@@ -764,7 +757,7 @@ RegisterNUICallback('SendMessage', function(data, cb)
             chatNumber = ChatNumber,
         })
     end,  PhoneData.Chats[GetKeyByNumber(ChatNumber)])
-    
+
 end)
 
 RegisterNUICallback('SendMessageToJobs', function(data, cb)
@@ -773,17 +766,16 @@ RegisterNUICallback('SendMessageToJobs', function(data, cb)
     TriggerServerEvent('Unique_Phone:server:SendJobMessage', data, Pos)
 end)
 
-
 RegisterNetEvent("PX_phone_Clieant:AddMessageOdther")
 AddEventHandler('PX_phone_Clieant:AddMessageOdther', function(data, ssender, Save, SteamHex, Playerthen)
-    ESX.TriggerServerCallback('PX_phone_Clieant:GetDataMSG', function(DaTa) 
+    ESX.TriggerServerCallback('PX_phone_Clieant:GetDataMSG', function(DaTa)
         local ChatMessage = data.ChatMessage
         local ChatDate = DaTa.date
         local ChatNumber = data.ChatNumber
         local ChatTime = DaTa.time
         local ChatType = data.ChatType
         local Ped = PlayerPedId()
-        
+
         local NumberKey = GetKeyByNumber(ChatNumber)
         local ChatKey = GetKeyByDate(NumberKey, ChatDate)
 
@@ -799,7 +791,7 @@ AddEventHandler('PX_phone_Clieant:AddMessageOdther', function(data, ssender, Sav
                         data = {},
                     })
                 end
-                
+
                 if Save then
                     TriggerServerEvent('Unique_Phone:server:UpdateMessagesOdther', SteamHex, PhoneData.Chats[NumberKey].messages, ChatNumber, false)
                 end
@@ -864,7 +856,7 @@ AddEventHandler('PX_phone_Clieant:AddMessageOdther', function(data, ssender, Sav
                     data = {},
                 })
             end
-        
+
             if Save then
                 TriggerServerEvent('Unique_Phone:server:UpdateMessagesOdther', SteamHex, PhoneData.Chats[NumberKey].messages, ChatNumber, true)
             end
@@ -877,10 +869,10 @@ AddEventHandler('PX_phone_Clieant:AddMessageOdther', function(data, ssender, Sav
             else
                 PhoneData.Chats[NumberKey].Unread = 1
             end
-            
+
         end
 
-        if Playerthen then 
+        if Playerthen then
             SendNUIMessage({
                 action = "Notification",
                 NotifyData = {
@@ -888,18 +880,17 @@ AddEventHandler('PX_phone_Clieant:AddMessageOdther', function(data, ssender, Sav
                     content = Lang("WHATSAPP_MESSAGE_TOYOU"),
                     icon = "fab fa-whatsapp",
                     timeout = 6000,
-                    color = "#007BFF", 
+                    color = "#007BFF",
                 },
             })
 
             Config.PhoneApplications['whatsapp'].Alerts = Config.PhoneApplications['whatsapp'].Alerts + 1
             TriggerServerEvent('Unique_Phone:server:SetPhoneAlerts', "whatsapp")
-            
+
             exports['xsound']:PlayUrl("notification", "./sounds/notification.mp3", 0.3)
         end
     end)
 end)
-
 
 RegisterNetEvent("PX_phone_Clieant:AddMessagetoJobS")
 AddEventHandler('PX_phone_Clieant:AddMessagetoJobS', function(data, ssender, Pos, Playerids)
@@ -910,7 +901,7 @@ AddEventHandler('PX_phone_Clieant:AddMessagetoJobS', function(data, ssender, Pos
     local ChatType = data.ChatType
     local Pos = Pos
     local Ped = PlayerPedId()
-    
+
     local NumberKey = GetKeyByNumber(ChatNumber)
     local ChatKey = GetKeyByDate(NumberKey, ChatDate)
 
@@ -1014,10 +1005,10 @@ AddEventHandler('PX_phone_Clieant:AddMessagetoJobS', function(data, ssender, Pos
                 },
             })
         end
-       
+
         NumberKey = GetKeyByNumber(ChatNumber)
         ReorganizeChats(NumberKey)
-        
+
         if PhoneData.Chats[NumberKey].Unread ~= nil then
             PhoneData.Chats[NumberKey].Unread = PhoneData.Chats[NumberKey].Unread + 1
         else
@@ -1025,15 +1016,15 @@ AddEventHandler('PX_phone_Clieant:AddMessagetoJobS', function(data, ssender, Pos
         end
     end
 
-    local color = "#25D366" 
+    local color = "#25D366"
     if ChatNumber == "Ambulance Deparment" then
-        color = "#FF0000" 
+        color = "#FF0000"
     elseif ChatNumber == "Police Deparment" then
-        color = "#007BFF" 
+        color = "#007BFF"
     elseif ChatNumber == "Sheriff Deparment" then
-        color = "#FFA500" 
+        color = "#FFA500"
     end
-    
+
     SendNUIMessage({
         action = "Notification",
         NotifyData = {
@@ -1041,13 +1032,13 @@ AddEventHandler('PX_phone_Clieant:AddMessagetoJobS', function(data, ssender, Pos
             content = Lang("WHATSAPP_MESSAGE_TOYOU"),
             icon = "fab fa-whatsapp",
             timeout = 6000,
-            color = color, 
+            color = color,
         },
     })
 
     Config.PhoneApplications['whatsapp'].Alerts = Config.PhoneApplications['whatsapp'].Alerts + 1
     TriggerServerEvent('Unique_Phone:server:SetPhoneAlerts', "whatsapp")
-    
+
     exports['xsound']:PlayUrl("notification", "./sounds/notification.mp3", 0.3)
 end)
 
@@ -1068,9 +1059,7 @@ RegisterNUICallback('SharedLocation', function(data)
     })
 end)
 
-
 AddEventHandler("playerSpawned", function()
-
 
     while ESX.GetPlayerData().job == nil do
         Citizen.Wait(10)
@@ -1084,17 +1073,14 @@ AddEventHandler("playerSpawned", function()
     JobInfo = ESX.GetPlayerData().job
 
     LoadPhone()
-    
+
     SendNUIMessage({
         action = "UpdateApplications",
         JobData = JobInfo,
         applications = Config.PhoneApplications
     })
-	
+
 end)
-
-
-
 
 RegisterNetEvent('Unique_Phone:client:UpdateMessages', function(ChatMessages, SenderNumber ,date, trt)
     if FlyMode then return end
@@ -1268,7 +1254,7 @@ RegisterNetEvent('Unique_Phone:client:UpdateMessages', function(ChatMessages, Se
             TriggerServerEvent('Unique_Phone:server:SetPhoneAlerts', "whatsapp")
         end
     end
-    if trt then 
+    if trt then
         LoadPhone()
     end
 end)
@@ -1334,8 +1320,8 @@ RegisterNUICallback('PostAdvert', function(data)
 end)
 
 RegisterNUICallback('GetIranianDateTime', function(daaa, cb)
-    ESX.TriggerServerCallback('Unique_Phone:server:GetDateTime', function(date, time) 
-        
+    ESX.TriggerServerCallback('Unique_Phone:server:GetDateTime', function(date, time)
+
         cb({
             dateString = date,
             timeString = time
@@ -1383,8 +1369,6 @@ RegisterNUICallback('LoadAdverts', function()
         Adverts = PhoneData.Adverts
     })
 end)
-
-
 
 RegisterNUICallback('ClearAlerts', function(data, cb)
     local chat = data.number
@@ -1527,7 +1511,6 @@ RegisterNUICallback('GetSelfTweets', function(data, cb)
     cb(PhoneData.SelfTweets)
 end)
 
-
 RegisterNUICallback('UpdateProfilePicture', function(data)
     local pf = data.profilepicture
 
@@ -1546,8 +1529,6 @@ RegisterNetEvent("Unique_Phone:updateidForEveryone")
 AddEventHandler("Unique_Phone:updateidForEveryone", function()
     PhoneData.id  = PhoneData.id + 1
 end)
-
--- Deobfuscated by XenoS.єχє#2859 | FireLeaf - Anticheat 2020
 
 RegisterNUICallback('PostNewTweet', function(data, cb)
 
@@ -1607,7 +1588,6 @@ RegisterNUICallback('PostNewTweet', function(data, cb)
     end
     Citizen.Wait(1000)
 
-
     table.insert(PhoneData.Tweets, TweetMessage)
     table.insert(PhoneData.SelfTweets, TweetMessage)
     TriggerServerEvent('Unique_Phone:server:updateForEveryone', PhoneData.Tweets)
@@ -1618,7 +1598,6 @@ RegisterNUICallback('PostNewTweet', function(data, cb)
         selftTweets= PhoneData.SelfTweets
     })
 end)
-
 
 RegisterNetEvent('Unique_Phone:client:TransferMoney')
 AddEventHandler('Unique_Phone:client:TransferMoney', function(amount, newmoney)
@@ -1763,12 +1742,10 @@ RegisterNUICallback('CallContact', function(data, cb)
         cb(status)
         if CanCall and not status.InCall and (data.ContactData.number ~= PhoneData.PlayerData.charinfo.phone) then
             CallContact(data.ContactData, data.Anonymous, false)
-            
+
         end
     end, data.ContactData.number)
 end)
-
-
 
 RegisterNUICallback('CallContactJobs', function(data, cb)
     ESX.TriggerServerCallback('Unique_Phone:server:GetCallState', function(CanCall, IsOnline)
@@ -1783,11 +1760,11 @@ RegisterNUICallback('CallContactJobs', function(data, cb)
             IsOnline = IsOnline,
             InCall = PhoneData.CallData.InCall,
         }
-        
+
         cb(status)
         if CanCall and not status.InCall and (data.ContactData.number ~= PhoneData.PlayerData.charinfo.phone) then
             CallContact(data.ContactData, data.Anonymous, false)
-            
+
         end
     end, data.ContactData.number)
 end)
@@ -1805,20 +1782,18 @@ RegisterNUICallback('CallContactAdmins', function(data, cb)
             IsOnline = IsOnline,
             InCall = PhoneData.CallData.InCall,
         }
-        
+
         cb(status)
         if CanCall and not status.InCall and (data.ContactData.number ~= PhoneData.PlayerData.charinfo.phone) then
             CallContact(data.ContactData, data.Anonymous, true)
-            
+
         end
     end, data.ContactData.id)
 end)
 
-
-
 RegisterNetEvent("Unique_Phone:Cleant:CallNumberr")
 AddEventHandler("Unique_Phone:Cleant:CallNumberr", function(ID)
-    ESX.TriggerServerCallback('Unique_Phone:Server:GetPhoneNumber', function(number, namee) 
+    ESX.TriggerServerCallback('Unique_Phone:Server:GetPhoneNumber', function(number, namee)
         if number then
             SendNUIMessage({
                 action      = "calltojobs",
@@ -1830,9 +1805,8 @@ AddEventHandler("Unique_Phone:Cleant:CallNumberr", function(ID)
     end, ID)
 end)
 
-
 function SendCallAdmin(ID)
-    ESX.TriggerServerCallback('Unique_Phone:Server:GetPhoneNumber', function(number, namee) 
+    ESX.TriggerServerCallback('Unique_Phone:Server:GetPhoneNumber', function(number, namee)
         if number then
             SendNUIMessage({
                 action      = "calltoAdmin",
@@ -1845,7 +1819,7 @@ function SendCallAdmin(ID)
 end
 
 RegisterCommand("acall", function(source, args)
-    if ESX.GetPlayerData().perm >= 1 then 
+    if ESX.GetPlayerData().perm >= 1 then
         SendCallAdmin(tonumber(args[1]))
     end
 end)
@@ -1866,19 +1840,18 @@ RegisterNUICallback("Unique_Phone:RequestToJobs", function(data, cb)
     end
 end)
 
-
 local inputox = nil
 
 function MechanicRequests()
     local options = {}
-    ESX.TriggerServerCallback('esx_mechanicjob:ChekRequest', function(ChekReq) 
+    ESX.TriggerServerCallback('esx_mechanicjob:ChekRequest', function(ChekReq)
         ESX.TriggerServerCallback("esx_mechanicjob:GetAccepterID", function(ID)
-    
+
             if ChekReq then
-                table.insert(options, {label = '🛠️ Ersal Darkhast', args = {value = 'Send_request'}}) 
+                table.insert(options, {label = '🛠️ Ersal Darkhast', args = {value = 'Send_request'}})
             else
-                if ID then 
-                    table.insert(options,  {label = '📞 Call', args = {value = 'call'}}) 
+                if ID then
+                    table.insert(options,  {label = '📞 Call', args = {value = 'call'}})
                 end
                 table.insert(options,  {label = '❌ Cancel', args = {value = 'cancel'}})
             end
@@ -1889,13 +1862,13 @@ function MechanicRequests()
                 position = 'top-right',
                 options = options
             }, function(selected, scrollIndex, args)
-                if args.value == "Send_request" then 
+                if args.value == "Send_request" then
                     TriggerServerEvent('esx_mechanicjob:addreq', "I Need Mechanic (Phone)")
                     TriggerEvent('chat:addMessage', {color = {255, 0, 0}, multiline = true ,args = {"[System]", "Darkhast Shoma Be Mechanic ^2Ersal ^0Shod!"}})
-                elseif args.value == "cancel" then 
+                elseif args.value == "cancel" then
                     TriggerServerEvent("esx_mechanincjob:CloseRequest", GetPlayerServerId(PlayerId()))
                     TriggerEvent('chat:addMessage', {color = {255, 0, 0}, multiline = true ,args = {"[System]", "Darkhast Mechanic Shoma ^1Baste ^0Shod!"}})
-                elseif args.value == "call" then 
+                elseif args.value == "call" then
                     TriggerEvent('Unique_Phone:Cleant:CallNumberr', ID)
                 end
                 options = {}
@@ -1908,16 +1881,16 @@ end
 function TaxiRequests()
     local options2 = {}
 
-    ESX.TriggerServerCallback('esx_taxijob:ChekRequest', function(ChekReq) 
+    ESX.TriggerServerCallback('esx_taxijob:ChekRequest', function(ChekReq)
         ESX.TriggerServerCallback("esx_taxijob:GetAccepterID", function(ID)
 
-            if ChekReq then 
-                table.insert(options2, {label = '🚖 Ersal Darkhast', args = {value = 'Send_request'}}) 
+            if ChekReq then
+                table.insert(options2, {label = '🚖 Ersal Darkhast', args = {value = 'Send_request'}})
             else
-                if ID then 
-                    table.insert(options2,  {label = '📞 Call', args = {value = 'call'}}) 
+                if ID then
+                    table.insert(options2,  {label = '📞 Call', args = {value = 'call'}})
                 end
-                table.insert(options2,  {label = '❌ Cancel', args = {value = 'cancel'}}) 
+                table.insert(options2,  {label = '❌ Cancel', args = {value = 'cancel'}})
             end
 
             lib.registerMenu({
@@ -1926,14 +1899,14 @@ function TaxiRequests()
                 position = 'top-right',
                 options = options2
             }, function(selected, scrollIndex, args)
-                if args.value == "Send_request" then 
+                if args.value == "Send_request" then
                     TriggerServerEvent('esx_taxijob:addreq', "I Need Taxi (Phone)")
                     TriggerEvent('chat:addMessage', {color = {255, 0, 0}, multiline = true ,args = {"[System]", "Darkhast Shoma Be Taxi ^2Ersal ^0Shod!"}})
-                elseif args.value == "cancel" then 
+                elseif args.value == "cancel" then
 
                     TriggerServerEvent("esx_taxijob:CloseRequest", GetPlayerServerId(PlayerId()))
                     TriggerEvent('chat:addMessage', {color = {255, 0, 0}, multiline = true ,args = {"[System]", "Darkhast Taxi Shoma ^1Baste ^0Shod!"}})
-                elseif args.value == "call" then 
+                elseif args.value == "call" then
                     TriggerEvent('Unique_Phone:Cleant:CallNumberr', ID)
                 end
                 options2 = {}
@@ -1942,11 +1915,6 @@ function TaxiRequests()
         end)
     end)
 end
-
-
-
-
-
 
 function GenerateCallId(caller, target)
     local CallId = math.ceil(((tonumber(caller) + tonumber(target)) / 100 * 1))
@@ -1961,7 +1929,7 @@ CallContact = function(CallData, AnonymousCall, Admins)
     PhoneData.CallData.AnsweredCall = false
     PhoneData.CallData.CallId = GenerateCallId(PhoneData.PlayerData.charinfo.phone, CallData.number)
 
-   
+
 
     TriggerServerEvent('Unique_Phone:server:CallContact', PhoneData.CallData.TargetData, PhoneData.CallData.CallId, AnonymousCall, Admins)
     TriggerServerEvent('Unique_Phone:server:SetCallState', true)
@@ -1971,13 +1939,13 @@ CallContact = function(CallData, AnonymousCall, Admins)
             if RepeatCount + 1 ~= Config.CallRepeats + 1 then
                 if PhoneData.CallData.InCall then
                     RepeatCount = RepeatCount + 1
-                    
+
                 else
                     exports['xsound']:Destroy("phonecall")
                     exports['xsound']:PlayUrl("phonecall", "./sounds/regect.mp3", 0.5)
                     break
                 end
-                Citizen.Wait(Config.RepeatTimeout) 
+                Citizen.Wait(Config.RepeatTimeout)
             else
                 CancelCall()
                 exports['xsound']:Destroy("phonecall")
@@ -1999,7 +1967,7 @@ CancelCall = function()
             exports['pma-voice']:removePlayerFromCall(PhoneData.CallData.CallId)
         end
     end
-    
+
     PhoneData.CallData.CallType = nil
     PhoneData.CallData.InCall = false
     PhoneData.CallData.AnsweredCall = false
@@ -2125,7 +2093,6 @@ AddEventHandler('Unique_Phone:client:GetCalled', function(CallerNumber, CallId, 
         anonymous = AnonymousCall
     }
 
-
     if AnonymousCall then
         CallData.name = "Anoniem"
     end
@@ -2148,7 +2115,7 @@ AddEventHandler('Unique_Phone:client:GetCalled', function(CallerNumber, CallId, 
             if RepeatCount + 1 ~= Config.CallRepeats + 1 then
                 if PhoneData.CallData.InCall then
                     RepeatCount = RepeatCount + 1
-                    
+
 
                     if not PhoneData.isOpen then
                         SendNUIMessage({
@@ -2396,7 +2363,7 @@ AddEventHandler('Unique_Phone:client:GiveContactDetails', function()
         TriggerServerEvent('Unique_Phone:server:GiveContactDetails', PlayerId)
         ESX.ShowNotification("Shomareye Shoma Be Fard Nazdik Shoma Give Shod", 'success')
     else
-        -- TriggerEvent('notification', Lang("NO_ONE"), 2)
+
         ESX.ShowNotification(Lang("NO_ONE"), 'error')
     end
 end)
@@ -2624,7 +2591,7 @@ end)
 
 RegisterNUICallback('IsInRace', function(data, cb)
     local InRace = exports['PX_lapraces']:IsInRace()
-    
+
     cb(InRace)
 end)
 
@@ -2655,7 +2622,7 @@ RegisterNUICallback('RaceDistanceCheck', function(data, cb)
         local coords = GetEntityCoords(ped)
         local checkpointcoords = RaceData.Checkpoints[1].coords
         local dist = GetDistanceBetweenCoords(coords, checkpointcoords.x, checkpointcoords.y, checkpointcoords.z, true)
-       
+
         if dist <= 115.0 then
             if data.Joined then
                 TriggerEvent('PX_lapraces:client:WaitingDistanceCheck')
@@ -2723,7 +2690,6 @@ RegisterNUICallback('GetCurrentpolices', function(data, cb)
         cb(polices)
     end)
 
-
 end)
 
 Lang = function(item)
@@ -2740,19 +2706,12 @@ RegisterNUICallback('GetLangData', function(data, cb)
     cb({ table = Config.Languages, current = Config.Language })
 end)
 
-
-
-
-
---  Caamera --
-
 RegisterNUICallback('DeleteImage', function(image,cb)
     TriggerServerEvent('Unique_Phone:server:RemoveImageFromGallery',image)
     Wait(1000)
     TriggerServerEvent('Unique_Phone:server:getImageFromGallery')
     cb(true)
 end)
-
 
 RegisterNUICallback("TakePhoto", function(data,cb)
     SetNuiFocus(false, false)
@@ -2761,7 +2720,7 @@ RegisterNUICallback("TakePhoto", function(data,cb)
     CellCamActivate(true, true)
     takePhoto = true
     while takePhoto do
-        if IsControlJustPressed(1, 27) then 
+        if IsControlJustPressed(1, 27) then
             frontCam = not frontCam
             CellFrontCamActivate(frontCam)
         elseif IsControlJustPressed(1, 177) then
@@ -2772,14 +2731,14 @@ RegisterNUICallback("TakePhoto", function(data,cb)
             frontCam = false
             CellFrontCamActivate(frontCam)
             break
-        elseif IsControlJustPressed(1, 176) then 
+        elseif IsControlJustPressed(1, 176) then
             if Config.webhooksscreenshot then
                 Citizen.SetTimeout(500,function()
                     frontCam = false
                     CellFrontCamActivate(frontCam)
                     DestroyMobilePhone()
                     CellCamActivate(false, false)
-                end)  
+                end)
                 exports['screenshot-basic']:requestScreenshotUpload(tostring(Config.webhooksscreenshot), "files[]", function(data)
                     local image = json.decode(data)
                     TriggerServerEvent('Unique_Phone:server:addImageToGallery', image.attachments[1].proxy_url)
@@ -2788,7 +2747,7 @@ RegisterNUICallback("TakePhoto", function(data,cb)
                     cb(json.encode(image.attachments[1].proxy_url))
                 end)
             end
-           
+
             takePhoto = false
         end
         HideHudComponentThisFrame(7)
@@ -2829,15 +2788,13 @@ function CellFrontCamActivate(activate)
 	return Citizen.InvokeNative(0x2491A93618B7D838, activate)
 end
 
-
-
 RegisterNUICallback('GetGalleryData', function(data, cb)
     local data = PhoneData.Images
     cb(data)
 end)
 
 RegisterNetEvent('Unique_Phone:client:refreshImages', function(images)
-    -- table.sort(images, function(a,b) return a.date > b.date end)
+
     PhoneData.Images = images
 end)
 

@@ -1,6 +1,4 @@
--- Unique_Cad → merged into esx_uniquejobs
--- Locals here so this doesn't clash with the other 12 job modules sharing this resource
--- (see the note at the top of fxmanifest.lua about per-job namespacing).
+
 
 local Keys_cad = {
     ['ESC'] = 322, ['F1'] = 288, ['F2'] = 289, ['F3'] = 170, ['F5'] = 166, ['F6'] = 167, ['F7'] = 168, ['F8'] = 169, ['F9'] = 56, ['F10'] = 57,
@@ -13,8 +11,6 @@ local Keys_cad = {
     ['LEFT'] = 174, ['RIGHT'] = 175, ['TOP'] = 27, ['DOWN'] = 173,
 }
 
--- ESX is intentionally global here (same convention every other job file in this
--- resource uses) - it just gets re-populated with the same shared object each time.
 ESX = nil
 local PlayerData_cad = {}
 local MdtDisplay_cad = false
@@ -74,7 +70,6 @@ RegisterCommand(DuckMdt.Command, function()
         SetNuiFocus(MdtDisplay_cad, MdtDisplay_cad)
     end
 end, false)
-
 
 RegisterNUICallback('Login', function()
     if CheckPerm_cad() then return end
@@ -190,8 +185,6 @@ RegisterNUICallback('Exit', function(data)
     SetNuiFocus(MdtDisplay_cad, MdtDisplay_cad)
     ClearPedTasks(PlayerPedId())
 end)
-
---------------------
 
 RegisterNUICallback('LoadTenCodes', function()
     SendNuiMessage(json.encode({

@@ -25,5 +25,3 @@ files {
     'html/colorpicker.js'
 }
 
-
-

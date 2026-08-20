@@ -2,36 +2,35 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-
 TriggerEvent('es:addAdminCommand', 'cs', 1, function(source, args, user)
     if args[1] and GetPlayerName(args[1]) ~= nil and tonumber(args[2]) then
         local targetId = tonumber(args[1])
         local count = tonumber(args[2])
         local reason = table.concat(args, " ", 3)
 
- 
+
         local xAdmin = ESX.GetPlayerFromId(source)
         local adminSteamHex = xAdmin and xAdmin.identifier
-        local adminSteamName = GetPlayerName(source)          
-        local adminPlayerName = xAdmin and xAdmin.get('name')           
-        local adminID = source                                
+        local adminSteamName = GetPlayerName(source)
+        local adminPlayerName = xAdmin and xAdmin.get('name')
+        local adminID = source
 
-       
+
         local xTarget = ESX.GetPlayerFromId(targetId)
         local targetSteamHex = xTarget and xTarget.identifier
-        local targetSteamName = GetPlayerName(targetId)     
-        local targetPlayerName = xTarget and xTarget.get('name')            
-        local targetID = targetId                              
+        local targetSteamName = GetPlayerName(targetId)
+        local targetPlayerName = xTarget and xTarget.get('name')
+        local targetID = targetId
 
-       
-        local currentTimestamp = os.date("%Y-%m-%d %H:%M:%S") 
-        local unixTimestamp = os.time()                      
 
-     
+        local currentTimestamp = os.date("%Y-%m-%d %H:%M:%S")
+        local unixTimestamp = os.time()
+
+
         TriggerEvent('esx_communityGGservice:sendToCommunityService', targetId, count, reason)
 
-      
-        local webhook = "PUT_YOUR_DISCORD_WEBHOOK_URL_HERE" -- TODO: webhook واقعی رو اینجا بذار
+
+        local webhook = "PUT_YOUR_DISCORD_WEBHOOK_URL_HERE"
         local message = {
             embeds = {{
                 title = "Community Service Log",
@@ -44,7 +43,7 @@ TriggerEvent('es:addAdminCommand', 'cs', 1, function(source, args, user)
                     text = "Community Service Log",
                     icon_url = "https://your-footer-icon-url.com/icon.png"
                 },
-                timestamp = os.date('!%Y-%m-%dT%H:%M:%SZ') 
+                timestamp = os.date('!%Y-%m-%dT%H:%M:%SZ')
             }}
         }
 
@@ -58,38 +57,34 @@ end, function(source, args, user)
     TriggerClientEvent('chat:addMessage', source, { args = { _U('system_msn'), _U('insufficient_permissions') } })
 end, {help = "Comserv Zadan Player", params = {{name = "id/hex", help = "ID Ya SteamHex"}, {name = "count", help = "Tedad"}, {name = "Reason", help = "Dalil"}}})
 
-
-
-
-
 TriggerEvent('es:addAdminCommand', 'uncs', 8, function(source, args, user)
     if args[1] then
         if GetPlayerName(args[1]) ~= nil then
             local targetId = tonumber(args[1])
 
-            
+
             local xAdmin = ESX.GetPlayerFromId(source)
             local adminSteamHex = xAdmin and xAdmin.identifier
-            local adminSteamName = GetPlayerName(source)       
-            local adminPlayerName = xAdmin and xAdmin.get('name')            
-            local adminID = source                                
+            local adminSteamName = GetPlayerName(source)
+            local adminPlayerName = xAdmin and xAdmin.get('name')
+            local adminID = source
 
-         
+
             local xTarget = ESX.GetPlayerFromId(targetId)
             local targetSteamHex = xTarget and xTarget.identifier
-            local targetSteamName = GetPlayerName(targetId)          
-            local targetPlayerName = xTarget and xTarget.get('name')             
-            local targetID = targetId                                
+            local targetSteamName = GetPlayerName(targetId)
+            local targetPlayerName = xTarget and xTarget.get('name')
+            local targetID = targetId
 
-           
+
             local currentTimestamp = os.date("%Y-%m-%d %H:%M:%S")
             local unixTimestamp = os.time()
 
-       
+
             TriggerEvent('esx_communityGGservice:endCommunityServiceCommand', targetId)
 			TriggerClientEvent('esx_dpemote:DisableEmotes', target, false)
-           
-            local webhook = "PUT_YOUR_DISCORD_WEBHOOK_URL_HERE" -- TODO: webhook واقعی رو اینجا بذار
+
+            local webhook = "PUT_YOUR_DISCORD_WEBHOOK_URL_HERE"
             local message = {
                 embeds = {{
                     title = "Community Service End Log",
@@ -117,8 +112,6 @@ end, function(source, args, user)
     TriggerClientEvent('chat:addMessage', source, { args = { "System", "Dastresi Nadarid" } })
 end, {help = "Payan Dadan Be Comserv", params = {{name = "id", help = "ID"}}})
 
-
-
 RegisterServerEvent('esx_communityGGservice:endCommunityServiceCommand')
 AddEventHandler('esx_communityGGservice:endCommunityServiceCommand', function(source)
 	if source ~= nil then
@@ -126,7 +119,6 @@ AddEventHandler('esx_communityGGservice:endCommunityServiceCommand', function(so
 	end
 end)
 
--- unjail after time served
 RegisterServerEvent('esx_communityGGservice:finishCommunityService')
 AddEventHandler('esx_communityGGservice:finishCommunityService', function()
 	releaseFromCommunityService(source)
@@ -149,7 +141,7 @@ AddEventHandler('esx_communityGGservice:completeService', function()
 				['@identifier'] = identifier
 			})
 		else
-			--print ("esx_communityGGservice :: Problem matching player identifier in database to reduce actions.")
+
 		end
 	end)
 end)
@@ -172,7 +164,7 @@ AddEventHandler('esx_communityGGservice:extendService', function()
 				['@extension_value'] = Config.ServiceExtensionOnEscape
 			})
 		else
-			--print ("esx_communityGGservice :: Problem matching player identifier in database to reduce actions.")
+
 		end
 	end)
 end)
@@ -211,22 +203,20 @@ AddEventHandler('esx_communityGGservice:sendToCommunityService', function(target
 			template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(255, 131, 0, 0.4); border-radius: 3px;"><i class="fas fa-exclamation-triangle"></i> Comserv<br>  {1}</div>',
 			args = { _U('judge'), "^2"..(result2[1] and result2[1].playerName or xTarget.getName()).."^0 Be Elate ^2" ..reason.."^0 Be Anjam Tedad ^1"..actions_count.."^0 Community Service Mahkum Shod" }
 		})
-		
+
 	end)
 
-	-- TriggerClientEvent('chat:addMessage', -1, { args = { _U('judge'), _U('comserv_msg', GetPlayerName(target), actions_count) }, color = { 0, 0, 0 } })
-	-- esx_dpemote:DisableEmotes هیچ‌جا هندل نمیشه، حذف شد
+
+
 	TriggerClientEvent('esx_policejob:unrestrain', target)
 	TriggerClientEvent('esx_communityGGservice:inCommunityService', target, actions_count)
 	TriggerClientEvent('esx_communityGGservice:inCommunityService_reason', target, reason)
 end)
 
-
 local playerNameVariable
 
 RegisterServerEvent('esx_communityGGservice:sendToCommunityServiceoffline')
 AddEventHandler('esx_communityGGservice:sendToCommunityServiceoffline', function(steamhex, actions_count, reason)
-
 
 	MySQL.Async.fetchAll('SELECT * FROM communityservice WHERE identifier = @identifier', {
 		['@identifier'] = steamhex,
@@ -247,10 +237,6 @@ AddEventHandler('esx_communityGGservice:sendToCommunityServiceoffline', function
 		end
 	end)
 
-
-
-
-
 	MySQL.Async.fetchAll('SELECT playerName FROM users WHERE identifier = @identifier',  {
 		['@identifier'] = steamhex
 	}, function(result2)
@@ -259,15 +245,14 @@ AddEventHandler('esx_communityGGservice:sendToCommunityServiceoffline', function
 			template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(255, 131, 0, 0.4); border-radius: 3px;"><i class="fas fa-exclamation-triangle"></i> Comserv<br>  {1}</div>',
 			args = { _U('judge'), "^2"..result2[1].playerName.."^0 Be Elate ^2" ..reason.."^0 Be Anjam Tedad ^1"..actions_count.."^0 Community Service Mahkum Shod" }
 		})
-		
+
 	end)
 
 
-	-- TriggerClientEvent('chat:addMessage', -1, { args = { _U('judge'), _U('comserv_msg', GetPlayerName(target), actions_count) }, color = { 0, 0, 0 } })
-	
-	-- TriggerClientEvent('esx_policejob:unrestrain', target)
-	-- TriggerClientEvent('esx_communityGGservice:inCommunityService', target, actions_count)
-	-- TriggerClientEvent('esx_communityGGservice:inCommunityService_reason', target, reason)
+
+
+
+
 end)
 
 RegisterServerEvent('esx_communityGGservice:checkIfSentenced')
@@ -289,8 +274,8 @@ AddEventHandler('esx_communityGGservice:checkIfSentenced', function()
 
 					local currentJob = xPlayer.job.name
 					if currentJob ~= "nojob"  then
-						
-						xPlayer.setJob("off"..currentJob, xPlayer.job.grade)  
+
+						xPlayer.setJob("off"..currentJob, xPlayer.job.grade)
 						TriggerClientEvent('esx:showNotification', _source, "Shoma Off Duty Shodid")
 					end
 				end
@@ -313,11 +298,11 @@ function releaseFromCommunityService(target)
 				['@identifier'] = identifier
 			})
 
-			-- TriggerClientEvent('chat:addMessage', -1, { args = { _U('judge'), _U('comserv_finished', GetPlayerName(target)) }, color = { 147, 196, 109 } })
-			-- TriggerClientEvent('chat:addMessage', -1, {
-			-- 	template = '<div style="padding: 0.5vw; margin: 0.5vw; background-color: rgba(255, 131, 0, 0.4); border-radius: 3px;"><i class="fas fa-exclamation-triangle"></i> Comserv<br>  {1}</div>',
-			-- 	args = { _U('judge'), _U('comserv_finished', GetPlayerName(target)) } 
-			-- })
+
+
+
+
+
 		end
 	end)
 	TriggerClientEvent('esx_dpemote:DisableEmotes', target, false)
@@ -328,7 +313,7 @@ RegisterServerEvent("checkCommunityService")
 AddEventHandler("checkCommunityService", function()
     local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
-	if xPlayer then 
+	if xPlayer then
 		local steamhex = xPlayer.identifier
 
 		if steamhex then

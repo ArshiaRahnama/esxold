@@ -1,26 +1,11 @@
----@class DuiProperties
----@field url string
----@field width number
----@field height number
----@field debug? boolean
 
----@class Dui : OxClass
----@field private private { id: string, debug: boolean }
----@field url string
----@field duiObject number
----@field duiHandle string
----@field runtimeTxd number
----@field txdObject number
----@field dictName string
----@field txtName string
+
 lib.dui = lib.class('Dui')
 
----@type table<string, Dui>
 local duis = {}
 
 local currentId = 0
 
----@param data DuiProperties
 function lib.dui:constructor(data)
 	local time = GetGameTimer()
 	local id = ("%s_%s_%s"):format(cache.resource, time, currentId)
@@ -57,7 +42,6 @@ function lib.dui:remove()
 	end
 end
 
----@param url string
 function lib.dui:setUrl(url)
 	self.url = url
 	SetDuiUrl(self.duiObject, url)
@@ -67,7 +51,6 @@ function lib.dui:setUrl(url)
 	end
 end
 
----@param message table
 function lib.dui:sendMessage(message)
 	SendDuiMessage(self.duiObject, json.encode(message))
 

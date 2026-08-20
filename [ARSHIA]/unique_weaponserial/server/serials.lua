@@ -1,12 +1,4 @@
--- ============================================================
--- unique_weaponserial / server / serials.lua
---
--- Every weapon anyone ever receives through the normal ESX API
--- (xPlayer.addWeapon -- what every weapon shop / starter pack / admin
--- give command already calls) gets a unique serial minted for it here.
--- This file owns the DB table and the in-memory cache; server/main.lua
--- builds the inventory-item / equip-swap / drop layer on top of it.
--- ============================================================
+
 
 ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -25,11 +17,10 @@ MySQL.Async.execute([[
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ]])
 
--- serial -> { weapon, owner_identifier, registered_identifier, ammo, components, status }
 WeaponSerials = {}
 
 CreateThread(function()
-    Wait(500) -- give the CREATE TABLE above time to finish on a fresh DB
+    Wait(500)
     local rows = MySQL.Sync.fetchAll('SELECT * FROM weapon_serials', {})
     for _, row in ipairs(rows or {}) do
         WeaponSerials[row.serial] = {
@@ -44,7 +35,7 @@ CreateThread(function()
     print(('[unique_weaponserial] loaded %d known weapon serials'):format(#rows))
 end)
 
-local SERIAL_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789' -- no 0/O/1/I, avoids confusion when read aloud/typed by police
+local SERIAL_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
 
 local function GenerateSerial()
     local serial
@@ -59,11 +50,6 @@ local function GenerateSerial()
     return serial
 end
 
--- Creates a brand new serial for a weapon that's about to be handed to
--- identifier for the first time. legal=true tags identifier as the
--- weapon's permanent "registered_identifier" (who it was legally issued
--- to), which -- unlike owner_identifier -- never changes even if the
--- weapon later ends up with someone else.
 function MintWeaponSerial(weaponName, identifier, ammo, components, legal)
     local serial = GenerateSerial()
     WeaponSerials[serial] = {
@@ -108,29 +94,7 @@ function GetWeaponSerial(serial)
     return WeaponSerials[serial]
 end
 
--- ============================================================
--- The actual patch: every xPlayer gets its OWN addWeapon/removeWeapon
--- wrapped the moment it's created. essentialmode fires 'esx:playerLoaded'
--- as a plain server-side TriggerEvent carrying the live player object
--- (server/player/login.lua), so this runs once per player, before
--- anything else has a chance to call addWeapon on them.
--- ============================================================
--- ============================================================
--- essentialmode's OWN client loop re-sends the ENTIRE loadout array
--- (rebuilt from live ped state) any time ammo changes -- i.e. on
--- basically every shot fired -- and its server handler for
--- 'updateLoadout' does a wholesale 'Users[Source].set("loadout", ...)'
--- overwrite. That fresh array has no idea .serial fields exist, so
--- without this, every gunshot would silently erase which serial is
--- equipped. EquippedSerialCache is the durable source of truth this
--- resource keeps for "this player's currently equipped weapon of type
--- X is serial Y" -- both the addWeapon patch above and
--- server/main.lua's EquipWeaponSerial update it, and the handler below
--- re-applies it every time essentialmode's own handler has already run
--- (this resource is ensured after essentialmode, so registration -- and
--- therefore execution -- order is guaranteed).
--- ============================================================
-EquippedSerialCache = {} -- identifier -> { [weaponName] = serial }
+EquippedSerialCache = {}
 
 function SetEquippedSerial(identifier, weaponName, serial)
     EquippedSerialCache[identifier] = EquippedSerialCache[identifier] or {}
@@ -154,7 +118,7 @@ AddEventHandler('updateLoadout', function(loadout)
         if serial then
             weapon.serial = serial
             if WeaponSerials[serial] then
-                WeaponSerials[serial].ammo = weapon.ammo -- keep the live ammo count fresh in memory; persisted on the next real status change (equip/holster/drop)
+                WeaponSerials[serial].ammo = weapon.ammo
             end
         end
     end
@@ -164,12 +128,12 @@ AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
     if not xPlayer or not xPlayer.addWeapon or xPlayer.__weaponSerialPatched then return end
     xPlayer.__weaponSerialPatched = true
 
-    -- the player's loadout was just loaded from the DB and may already
-    -- carry .serial fields from a previous session (they get persisted
-    -- for free since essentialmode just json.encodes the whole loadout
-    -- table on logout/save) -- seed the cache from them NOW, before the
-    -- very first ammo-triggered updateLoadout sync has a chance to wipe
-    -- them out again.
+
+
+
+
+
+
     for _, weapon in ipairs(xPlayer.loadout or {}) do
         if weapon.serial then
             SetEquippedSerial(xPlayer.identifier, weapon.name, weapon.serial)
@@ -183,8 +147,8 @@ AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
     local originalAddWeapon = xPlayer.addWeapon
     local originalRemoveWeapon = xPlayer.removeWeapon
 
-    -- exposed so server/main.lua's holster/equip-swap logic can call the
-    -- REAL native give/remove without re-triggering serial minting/clearing
+
+
     xPlayer.__originalAddWeapon = originalAddWeapon
     xPlayer.__originalRemoveWeapon = originalRemoveWeapon
 
@@ -193,7 +157,7 @@ AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
         local alreadyEquipped = xPlayer.hasWeapon(weaponName)
 
         if not alreadyEquipped then
-            -- same as vanilla: becomes the equipped weapon of this type
+
             originalAddWeapon(weaponName, ammo)
             local loadoutNum = xPlayer.getWeapon(weaponName)
             if loadoutNum then
@@ -204,9 +168,9 @@ AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
                 SaveWeaponSerial(serial)
             end
         else
-            -- a weapon of this type is already equipped -- this is a NEW
-            -- copy, so it becomes a separate carried spare instead of
-            -- silently doing nothing (the old behaviour)
+
+
+
             local serial = MintWeaponSerial(weaponName, xPlayer.identifier, ammo, {}, true)
             GiveCarriedWeaponSerial(xPlayer, serial)
         end
@@ -219,10 +183,10 @@ AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
 
         originalRemoveWeapon(weaponName, ammo)
 
-        -- generic removal (sold back, taken by admin, death penalty, ...)
-        -- -- keep the serial's history but free it up; NOT the same as
-        -- 'destroyed', which only unique_weaponserial's own drop/pickup
-        -- and any future evidence-locker feature should set explicitly
+
+
+
+
         if serial and WeaponSerials[serial] then
             WeaponSerials[serial].status = 'unowned'
             WeaponSerials[serial].owner_identifier = nil

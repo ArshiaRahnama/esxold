@@ -8,7 +8,6 @@ client_scripts {
     'lib/*.lua'
 }
 
-
 files {
     'html/index.html',
     'html/css/*.css',
@@ -17,5 +16,5 @@ files {
     'html/img/*.png',
     'html/img/*.jpg',
     'html/img/*.gif',
-    -- 'html/_sounds/*.mp3',
+
 }

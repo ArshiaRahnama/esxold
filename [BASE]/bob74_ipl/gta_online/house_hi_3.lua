@@ -1,6 +1,4 @@
 
--- 2045 North Conker Avenue
--- High end house 3: 373.023 416.105 145.7006
 
 exports('GetGTAOHouseHi3Object', function()
     return GTAOHouseHi3

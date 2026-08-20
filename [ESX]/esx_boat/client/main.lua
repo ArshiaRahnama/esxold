@@ -99,7 +99,7 @@ function OpenBoatShop(shop)
 		end)
 	end)
 
-	-- spawn first vehicle
+
 	DeleteSpawnedVehicles()
 
 	ESX.Game.SpawnLocalVehicle(Config.Vehicles[1].model, shop.Inside, shop.Inside.w, function (vehicle)
@@ -118,7 +118,7 @@ function OpenBoatGarage(garage)
 		if #ownedBoats == 0 then
 			ESX.ShowNotification(_U('garage_noboats'))
 		else
-			-- get all available boats
+
 			local elements = {}
 			for i=1, #ownedBoats, 1 do
 				ownedBoats[i] = json.decode(ownedBoats[i])
@@ -134,7 +134,7 @@ function OpenBoatGarage(garage)
 				align    = 'left',
 				elements = elements
 			}, function (data, menu)
-				-- make sure the spawn point isn't blocked
+
 				local playerPed = PlayerPedId()
 				local vehicleProps = data.current.vehicleProps
 
@@ -175,7 +175,7 @@ function OpenLicenceMenu(shop)
 					ESX.ShowNotification(_U('license_bought', ESX.Math.GroupDigits(Config.LicensePrice)))
 					menu.close()
 
-					OpenBoatShop(shop) -- parse current shop
+					OpenBoatShop(shop)
 				else
 					ESX.ShowNotification(_U('license_nomoney'))
 				end
@@ -210,14 +210,13 @@ function StoreBoatInGarage(vehicle, teleportCoords)
 	end, vehicleProps.plate)
 end
 
--- Key controls
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
 
 		if isInShopMenu then
-			DisableControlAction(0, 75, true)  -- Disable exit vehicle
-			DisableControlAction(27, 75, true) -- Disable exit vehicle
+			DisableControlAction(0, 75, true)
+			DisableControlAction(27, 75, true)
 		else
 			Citizen.Wait(500)
 		end

@@ -14,7 +14,7 @@ function LoadUser(identifier, source, licenseNotRequired)
                     user.inventory = {}
                 end
 
-                -- user inventory
+
                 for i = 1, #user.inventory do
                     local item = ESX.Items[user.inventory[i].item]
                     if item then
@@ -36,36 +36,36 @@ function LoadUser(identifier, source, licenseNotRequired)
                     end
                 end
 
-                -- local userData = {
-                --     divisions = {}
-                -- }
 
-                -- Divisions
-                -- if user.divisions ~= nil then
-                --     local divisions = json.decode(user.divisions)
-                --     userData.divisions = {}
 
-                --     -- Do you know tha way?
-                --     for k, v in pairs(divisions) do
-                --         userData.divisions[k] = {}
-                --         for k2, v2 in pairs(v) do
-                --             if ESX.DoesDivisionExist(k, k2, v2) then
-                --                 userData.divisions[k][k2] = v2
-                --             else
-                --                 print(
-                --                     ("essentialmode: ignoring adding division %s in %s with grade %s to %s because does not exist"):format(
-                --                         k2,
-                --                         k,
-                --                         v2,
-                --                         GetPlayerName(source)
-                --                     )
-                --                 )
-                --             end
-                --         end
-                --     end
-                -- else
-                --     userData.divisions = {}
-                -- end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 if user.license or licenseNotRequired then
                     Users[source] =
@@ -87,12 +87,12 @@ function LoadUser(identifier, source, licenseNotRequired)
                         user.playerName,
                         user.position,
                         user.status,
-                        -- userData.divisions,
+
                         user.starterpack,
                         user.discordid,
                         user.level,
                         user.R
-						
+
                     )
                     Identifiers[user.identifier] = source
 
@@ -103,7 +103,7 @@ function LoadUser(identifier, source, licenseNotRequired)
                             identifier = Users[Source].identifier,
                             inventory = Users[Source].inventory,
                             job = Users[Source].job,
-                            -- divisions = Users[Source].divisions,
+
                             StarterPack = Users[Source].StarterPack,
                             DiscordId = Users[Source].DiscordId,
                             gang = Users[Source].gang,
@@ -243,12 +243,10 @@ function LoadUser(identifier, source, licenseNotRequired)
     )
 end
 
--- Exported function
 ESX.getPlayerFromId = function(id)
     return Users[tonumber(id)]
 end
 
--- Returns all EssentialMode user objects
 AddEventHandler(
     "es:getPlayers",
     function(cb)
@@ -256,7 +254,6 @@ AddEventHandler(
     end
 )
 
--- Same as above just easier was we know the ID already now.
 AddEventHandler(
     "es:setPlayerDataId",
     function(user, k, v, cb)
@@ -275,7 +272,6 @@ AddEventHandler("es:newName", function(newName)
 	Users[source].set("name", newName)
 end)
 
--- Returns the user if all checks completed, if the first if check fails then you're in a bit of trouble
 AddEventHandler(
     "es:getPlayerFromId",
     function(user, cb)
@@ -291,7 +287,6 @@ AddEventHandler(
     end
 )
 
--- Same as above but uses the DB to get a user instead of memory.
 AddEventHandler(
     "es:getPlayerFromIdentifier",
     function(identifier, cb)
@@ -304,7 +299,6 @@ AddEventHandler(
     end
 )
 
--- Function to save player money to the database every 60 seconds.
 ESX.savePlayerMoney = function()
     for k, v in pairs(Users) do
         if Users[k] ~= nil then

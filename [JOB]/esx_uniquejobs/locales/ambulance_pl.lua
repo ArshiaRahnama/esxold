@@ -1,10 +1,10 @@
 Locales['pl'] = Locales['pl'] or {}
 for k, v in pairs({
-  -- Cloakroom
+
   ['cloakroom'] = 'szatnia',
   ['ems_clothes_civil'] = 'ubrania cywilne',
   ['ems_clothes_ems'] = 'ubrania EMS',
-  -- Vehicles
+
   ['ambulance'] = 'ambulance',
   ['helicopter_prompt'] = 'press ~INPUT_CONTEXT~ to access the ~y~Helicopter Actions~s~.',
   ['helicopter_buy'] = 'helicopter shop',
@@ -36,7 +36,7 @@ for k, v in pairs({
   ['vehicleshop_awaiting_model'] = 'the vehicle is currently ~g~DOWNLOADING & LOADING~s~ please wait',
   ['confirm_no'] = 'no',
   ['confirm_yes'] = 'yes',
-  -- Action Menu
+
   ['hospital'] = 'szpital',
   ['revive_inprogress'] = 'trwa wskrzeszenie',
   ['revive_complete'] = 'zostałeś wskrzeszony ~y~%s~s~',
@@ -47,9 +47,9 @@ for k, v in pairs({
   ['no_vehicles'] = 'brak pojazdów w pobliżu',
   ['player_not_unconscious'] = 'ten gracz nie jest nieprzytomny!',
   ['player_not_conscious'] = 'ten gracz nie jest świadomy!',
-  -- Boss Menu
+
   ['boss_actions'] = 'akcje szefa',
-  -- Misc
+
   ['invalid_amount'] = '~r~Nieprawidłowa kwota',
   ['actions_prompt'] = 'press ~INPUT_CONTEXT~ access the ~y~Ambulance Actions~s~.',
   ['deposit_amount'] = 'kwota depozytu',
@@ -61,16 +61,16 @@ for k, v in pairs({
   ['medikit'] = 'apteczka',
   ['bandage'] = 'bandaż',
   ['max_item'] = 'już masz na sobie dość.',
-  -- F6 Menu
+
   ['ems_menu'] = 'menu EMS',
   ['ems_menu_title'] = 'eMS Menu - Ambulans',
   ['ems_menu_revive'] = 'ożyw gracza',
   ['ems_menu_putincar'] = 'umieścić w pojeździe',
   ['ems_menu_small'] = 'ulecz małe rany',
   ['ems_menu_big'] = 'ulecz poważne obrażenia',
-  -- Phone
+
   ['alert_ambulance'] = 'wezwij ambulans',
-  -- Death
+
   ['respawn_available_in'] = 'respawn available in ~b~%s minutes %s seconds~s~',
   ['respawn_bleedout_in'] = 'you will bleed out in ~b~%s minutes %s seconds~s~\n',
   ['respawn_bleedout_prompt'] = 'hold [~b~E~s~] to respawn',
@@ -80,9 +80,9 @@ for k, v in pairs({
   ['distress_sent'] = 'distress signal has been sent to available units!',
   ['distress_message'] = 'medical attention required: unconscious citizen!',
   ['combatlog_message'] = 'you have been force-respawned because you\'ve previously left the server when dead.',
-  -- revive
+
   ['revive_help'] = 'ożyw gracza',
-  -- Item
+
   ['used_medikit'] = 'użyłeś 1x Apteczki',
   ['used_bandage'] = 'użyłeś 1x Bandaża',
   ['not_enough_medikit'] = 'nie posiadasz ~b~apteczki~s~.',

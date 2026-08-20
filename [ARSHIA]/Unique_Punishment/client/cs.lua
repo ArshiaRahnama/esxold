@@ -27,14 +27,13 @@ Citizen.CreateThread(function()
 end)
 
 function dpemote(state)
-	-- هیچ ریسورسی 'dpemote:enable' رو هندل نمی‌کنه؛ no-op امن
+
 end
 
 RegisterNetEvent("esx:playerLoaded")
 AddEventHandler("esx:playerLoaded", function(newData)
 	PlayerData = newData
 end)
-
 
 AddEventHandler('loading:Loaded', function()
     TriggerServerEvent('esx_communityGGservice:checkIfSentenced')
@@ -105,7 +104,7 @@ AddEventHandler('esx_communityGGservice:inCommunityService', function(actions_re
     startThread()
     ESX.SetPlayerData('jailed', true)
     ESX.SetPlayerData('inCS', true)
-    -- exports.essentialmode:disablecontrol وجود نداره؛ DisableViolentActions() کنترل‌های مهم رو خودش می‌بنده
+
 end)
 
 RegisterNetEvent('esx_communityGGservice:finishCommunityService')
@@ -119,15 +118,15 @@ AddEventHandler('esx_communityGGservice:finishCommunityService', function(source
     actionsRemaining = 0
     TriggerServerEvent('Unique_Punishment:AntiCheatExempt', 5000, { teleport = true, speed = true })
     ESX.Game.Teleport(PlayerPedId(), Config.ReleaseLocation)
-    -- ریسورس 'sunset_clothe' وجود نداره؛ به‌جاش با esx_skin لباس واقعی برمی‌گرده
+
     ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
         TriggerEvent('skinchanger:loadSkin', skin)
     end)
-    -- exports.essentialmode:disablecontrol وجود نداره
+
     SetTimeout(10000,function()
         dpemote(true)
-        -- exports.essentialmode:disablecontrol وجود نداره
-        -- exports.essentialmode:disableallControl وجود نداره
+
+
     end)
     deleteCSped()
 end)
@@ -159,7 +158,7 @@ function startThread()
                                         Wait(0)
                                     end
                                 end)
-                                if true then -- ESX.playMiniGame وجود نداره؛ همیشه موفق در نظر گرفته میشه
+                                if true then
                                     tmp_action = availableActions[i]
                                     RemoveAction(tmp_action)
                                     FillActionTable(tmp_action)
@@ -179,13 +178,13 @@ function startThread()
                                             DeleteEntity(NetToObj(vassour_net))
                                             vassour_net = nil
                                             ClearPedTasks(PlayerPedId())
-                                            if true then -- ESX.playMiniGame وجود نداره؛ همیشه موفق در نظر گرفته میشه
+                                            if true then
                                                 actionsRemaining = actionsRemaining - 1
                                                 TriggerServerEvent('esx_communityGGservice:completeService')
                                             end
                                             SetEntityHeading(PlayerPedId(), math.random(0,360))
                                         end)
-                                        end)     
+                                        end)
                                     end
                                     if (tmp_action.type == "gardening") then
                                         SetEntityHeading(PlayerPedId(), math.random(0,360))
@@ -218,16 +217,6 @@ function startThread()
     end
 end
 
--- Marker
--- Citizen.CreateThread(function()
---     while true do
---         Citizen.Wait(0)
---         if (actionsRemaining > 0 and communityServiceFinished ~= true) then
---             DrawMarker(1, Config.ServiceLocation.x, Config.ServiceLocation.y, Config.ServiceLocation.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Config.DistanceExtension*2, Config.DistanceExtension*2, 50.0, 255, 0, 0, 100, false, true, 2, false, false, false, false)
---         end
---     end
--- end)
-
 function RemoveAction(action)
     local action_pos = -1
 
@@ -259,7 +248,6 @@ function DrawAvailableActions()
         DrawMarker(21, coords.x + 1, coords.y, coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.5, 1.5, 1.5, 50, 50, 204, 100, false, true, 2, true, false, false, false)
         DrawMarker(21, coords.x, coords.y + 1, coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.5, 1.5, 1.5, 50, 50, 204, 100, false, true, 2, true, false, false, false)
     end
-
 
     for k, v in pairs(Config.pedLocation) do
         local coords = v
@@ -294,10 +282,9 @@ function DisableViolentActions()
     if IsDisabledControlJustPressed(0, 106) then
         SetCurrentPedWeapon(playerPed,GetHashKey("WEAPON_UNARMED"),true)
     end
-    -- exports.essentialmode:disablecontrol وجود نداره؛ DisableViolentActions() کنترل‌های مهم رو خودش می‌بنده
-    -- exports.essentialmode:disableallControl وجود نداره
-end
 
+
+end
 
 function ApplyPrisonerSkin()
     local playerPed = PlayerPedId()
@@ -347,6 +334,6 @@ function spawnCSped()
             FreezeEntityPosition(ped, true)
             SetEntityInvincible(ped, true)
             table.insert(peds, ped)
-        end)    
+        end)
     end
 end

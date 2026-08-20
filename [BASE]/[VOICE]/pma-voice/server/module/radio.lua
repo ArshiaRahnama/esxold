@@ -1,9 +1,5 @@
 local radioChecks = {}
 
---- checks if the player can join the channel specified
---- @param source number the source of the player
---- @param radioChannel number the channel they're trying to join
---- @return boolean if the user can join the channel
 function canJoinChannel(source, radioChannel)
 	if radioChecks[radioChannel] then
 		return radioChecks[radioChannel](source)
@@ -11,9 +7,6 @@ function canJoinChannel(source, radioChannel)
 	return true
 end
 
---- adds a check to the channel, function is expected to return a boolean of true or false
----@param channel number the channel to add a check to
----@param cb function the function to execute the check on
 function addChannelCheck(channel, cb)
 	local channelType = type(channel)
 	local cbType = type(cb)
@@ -34,8 +27,6 @@ local function radioNameGetter_orig(source)
 end
 local radioNameGetter = radioNameGetter_orig
 
---- adds a check to the channel, function is expected to return a boolean of true or false
----@param cb function the function to execute the check on
 function overrideRadioNameGetter(channel, cb)
 	local cbType = type(cb)
 	if cbType == 'table' and not cb.__cfx_functionReference then
@@ -47,21 +38,17 @@ end
 
 exports('overrideRadioNameGetter', overrideRadioNameGetter)
 
---- adds a player to the specified radion channel
----@param source number the player to add to the channel
----@param radioChannel number the channel to set them to
----@return boolean wasAdded if the player was successfuly added to the radio channel, or if it failed.
 function addPlayerToRadio(source, radioChannel)
 	if not canJoinChannel(source, radioChannel) then
-		-- remove the player from the radio client side
+
 		TriggerClientEvent("pma-voice:radioChangeRejected", source)
 		TriggerClientEvent('pma-voice:removePlayerFromRadio', source, source)
 		return false
 	end
 	logger.verbose('[radio] Added %s to radio %s', source, radioChannel)
 
-	-- check if the channel exists, if it does set the varaible to it
-	-- if not create it (basically if not radiodata make radiodata)
+
+
 	radioData[radioChannel] = radioData[radioChannel] or {}
 	local plyName = radioNameGetter(source)
 	for player, _ in pairs(radioData[radioChannel]) do
@@ -75,9 +62,6 @@ function addPlayerToRadio(source, radioChannel)
 	return true
 end
 
---- removes a player from the specified channel
----@param source number the player to remove
----@param radioChannel number the current channel to remove them from
 function removePlayerFromRadio(source, radioChannel)
 	logger.verbose('[radio] Removed %s from radio %s', source, radioChannel)
 	radioData[radioChannel] = radioData[radioChannel] or {}
@@ -89,10 +73,6 @@ function removePlayerFromRadio(source, radioChannel)
 	voiceData[source].radio = 0
 end
 
--- TODO: Implement this in a way that allows players to be on multiple channels
---- sets the players current radio channel
----@param source number the player to set the channel of
----@param _radioChannel number the radio channel to set them to (or 0 to remove them from radios)
 function setPlayerRadio(source, _radioChannel)
 	if GetConvarInt('voice_enableRadios', 1) ~= 1 then return end
 	voiceData[source] = voiceData[source] or defaultTable(source)
@@ -100,7 +80,7 @@ function setPlayerRadio(source, _radioChannel)
 	local plyVoice = voiceData[source]
 	local radioChannel = tonumber(_radioChannel)
 	if not radioChannel then
-		-- only full error if its sent from another server-side resource
+
 		if isResource then
 			error(("'radioChannel' expected 'number', got: %s"):format(type(_radioChannel)))
 		else
@@ -109,8 +89,8 @@ function setPlayerRadio(source, _radioChannel)
 		end
 	end
 	if isResource then
-		-- got set in a export, need to update the client to tell them that their radio
-		-- changed
+
+
 		TriggerClientEvent('pma-voice:clSetPlayerRadio', source, radioChannel)
 	end
 	if radioChannel ~= 0 then
@@ -131,8 +111,6 @@ RegisterNetEvent('pma-voice:setPlayerRadio', function(radioChannel)
 	setPlayerRadio(source, radioChannel)
 end)
 
---- syncs the player talking across all radio members
----@param talking boolean sets if the palyer is talking.
 function setTalkingOnRadio(talking)
 	if GetConvarInt('voice_enableRadios', 1) ~= 1 then return end
 	voiceData[source] = voiceData[source] or defaultTable(source)

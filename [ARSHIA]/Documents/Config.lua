@@ -1,8 +1,5 @@
 logo = "img/LegendaryBanner.png"
 
--- NOTE: everyone can open the F9 menu and browse/view now. This list is
--- no longer used to gate opening it — access to each action (create,
--- edit, close, copy, give, delete) is controlled below individually.
 jobs_OpenMenu = {
      "police", "sheriff", "mt", "fbi", "cid", "cia", "marshal", "judge", "doa",
 }
@@ -75,9 +72,9 @@ translate = {
     TR_NOONE            = "فردی نزدیک به شما نیست.",
     TR_SEARCH           = "جستجو",
     TR_SEARCH2          = "جستجوی سند",
-    -- the native on-screen keyboard title can't render Persian glyphs
-    -- (shows garbled boxes) — same reason TR_CREATE4 above is
-    -- transliterated instead of written in Persian script.
+
+
+
     TR_SEARCH_KEYBOARD  = "Esm ya bakhshi az esm sanad ra vared konid",
 
     TR_NOT_DOCUMENTS    = "شما سندی ندارید",
