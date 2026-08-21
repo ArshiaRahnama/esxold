@@ -24,3 +24,12 @@ Config.LoginLockout = {
     MaxAttempts  = 5,   -- failed attempts before locking
     LockMinutes  = 15,  -- how long the username stays locked
 }
+
+-- EXPANSION: Discord webhook for security-relevant events (new device
+-- login, password reset). Leave SecurityAlerts empty ("") to disable —
+-- everything still gets written to the login_audit table either way.
+-- Create your own webhook in a private admin channel; don't reuse a
+-- webhook from another resource here.
+Config.DiscordWebhook = {
+    SecurityAlerts = "",
+}

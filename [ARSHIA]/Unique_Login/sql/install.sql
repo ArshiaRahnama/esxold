@@ -40,3 +40,22 @@ CREATE TABLE IF NOT EXISTS `login_reset_throttle` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uq_bucket_key` (`bucket_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- EXPANSION: audit trail — every login attempt (success/fail), registration,
+-- password reset, and new-device event gets a row here. Nothing in this
+-- resource reads it back yet; it's there so an admin panel (or a plain
+-- SELECT ... WHERE username = ?) can show "recent activity" on an account,
+-- and so patterns like many failed logins across many IPs are visible.
+CREATE TABLE IF NOT EXISTS `login_audit` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(64) DEFAULT NULL,
+  `license` varchar(128) DEFAULT NULL,        -- this resource's own account id
+  `device_license` varchar(128) DEFAULT NULL, -- real FiveM license: of the connecting device
+  `ip` varchar(64) DEFAULT NULL,
+  `action` enum('login_success','login_fail','register','password_reset','new_device') NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_login_audit_username` (`username`),
+  KEY `idx_login_audit_device_license` (`device_license`),
+  KEY `idx_login_audit_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;

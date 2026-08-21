@@ -67,6 +67,43 @@ local function clearLoginFailures(username)
     loginFailures[username:lower()] = nil
 end
 
+-- ─────────────────────────────────────────────────────────
+-- EXPANSION: audit log + new-device / password-reset Discord alerts.
+--
+-- Every login attempt, registration, and password reset gets written to
+-- `login_audit` — this is what an admin panel would later read to show
+-- "recent activity" on an account, or to spot a suspicious pattern (e.g.
+-- 50 failed logins on one username from 50 different IPs). Separately, a
+-- Discord webhook fires for the two events a player would actually want
+-- to know about immediately: their account being used from a brand new
+-- device, and their password being reset.
+-- ─────────────────────────────────────────────────────────
+local function logAudit(action, username, license, src)
+    local ip = src and getIdentifierPrefix(src, "ip:") or nil
+    local realLicense = src and getIdentifierPrefix(src, "license:") or nil
+    MySQL.Async.execute(
+        "INSERT INTO login_audit (username, license, device_license, ip, action) VALUES (@u, @l, @dl, @ip, @a)",
+        { ["@u"] = username, ["@l"] = license, ["@dl"] = realLicense, ["@ip"] = ip, ["@a"] = action }
+    )
+end
+
+local function sendDiscordAlert(title, description, color)
+    if not Config.DiscordWebhook or not Config.DiscordWebhook.SecurityAlerts
+        or Config.DiscordWebhook.SecurityAlerts == "" then
+        return -- not configured, silently skip
+    end
+    PerformHttpRequest(Config.DiscordWebhook.SecurityAlerts, function() end, "POST",
+        json.encode({
+            embeds = {{
+                title = title,
+                description = description,
+                color = color or 15158332, -- red-ish default
+            }}
+        }),
+        { ["Content-Type"] = "application/json" }
+    )
+end
+
 local smscodedict = {}
 function ShowMainMenu(deferrals)
     local card = {
@@ -304,6 +341,11 @@ function ShowLoginForm(deferrals)
             },
             {
                 type = "Action.Submit",
+                title = "📝  حساب ندارم، می‌خواهم ثبت‌نام کنم",
+                data = { action = "register" }
+            },
+            {
+                type = "Action.Submit",
                 title = "❓ فراموشی رمز عبور",
                 data = { action = "forgot_password" }
             },
@@ -318,6 +360,13 @@ function ShowLoginForm(deferrals)
     deferrals.presentCard(json.encode(card), function(data)
         if data.action == "back" then
             ShowMainMenu(deferrals)
+        elseif data.action == "register" then
+            -- EXPANSION: a player who has no account and hits "ورود" first
+            -- (instead of "ثبت‌نام" on the main menu) used to get stuck in
+            -- this form with no direct way to register — only "forgot
+            -- password" and "back". Now they can jump straight into
+            -- registration from here too.
+            ShowRegisterStep1_Phone(deferrals)
         elseif data.action == "forgot_password" then
             ShowForgotPassword_Step1(deferrals)
         elseif data.action == "do_login" then
@@ -342,15 +391,29 @@ function ShowLoginForm(deferrals)
                 return
             end
 
-            CheckLogin(username, password, deferrals, function(isValid,license)
+            CheckLogin(username, password, deferrals, function(isValid,license,accountExists)
                 if isValid then
                     clearLoginFailures(username)
+                    logAudit("login_success", username, license, deferrals.src)
                     ShowSuccess(deferrals, "ورود موفق! خوش آمدید " .. username, function()
                         deferrals.identifier = license
                         formPassed(deferrals)
                     end)
+                elseif not accountExists then
+                    -- EXPANSION: this username/phone has no account at all —
+                    -- point them at registration directly instead of a
+                    -- generic "wrong password" message that gives no clue
+                    -- what to do next. (Doesn't reveal WHICH of username/
+                    -- password was wrong when an account DOES exist, only
+                    -- that no account matches at all — no security info
+                    -- leaked beyond "this identity isn't registered".)
+                    logAudit("login_fail", username, nil, deferrals.src)
+                    ShowError(deferrals, "حسابی با این مشخصات پیدا نشد. اگر تازه‌واردید، اول باید ثبت‌نام کنید!", function()
+                        ShowRegisterStep1_Phone(deferrals)
+                    end)
                 else
                     registerLoginFailure(username)
+                    logAudit("login_fail", username, nil, deferrals.src)
                     ShowError(deferrals, "نام کاربری یا رمز عبور اشتباه است!", function()
                         ShowLoginForm(deferrals)
                     end)
@@ -925,6 +988,7 @@ function ShowRegisterStep3_UserPass(deferrals, phone)
 
                 RegisterUser(username, password, phone, deferrals, function(success,license)
                     if success then
+                        logAudit("register", username, license, deferrals.src)
                         ShowSuccess(deferrals, "ثبت‌نام موفق! خوش آمدید " .. username, function()
                             deferrals.identifier = license
                             formPassed(deferrals)
@@ -1302,6 +1366,30 @@ function ShowForgotPassword_Step2(deferrals, phone, resetCode, username)
 
             UpdatePassword(phone, newPassword, function(success)
                 if success then
+                    logAudit("password_reset", username, nil, deferrals.src)
+                    sendDiscordAlert(
+                        "🔑 رمز عبور تغییر کرد",
+                        "اکانت **" .. username .. "** (شماره: " .. phone .. ") رمز عبورش عوض شد.",
+                        3066993 -- green
+                    )
+                    -- EXPANSION: if this account has an active session right
+                    -- now (e.g. someone else is logged in as them), reset via
+                    -- forgot-password should immediately drop that session —
+                    -- otherwise a hijacker who's already connected just stays
+                    -- connected until they happen to disconnect on their own.
+                    for lic, sessionSrc in pairs(activeLicenseSessions) do
+                        if lic and GetPlayerName(sessionSrc) then
+                            MySQL.Async.fetchAll(
+                                "SELECT id FROM login_users WHERE license = @lic AND phone = @phone LIMIT 1",
+                                { ["@lic"] = lic, ["@phone"] = phone },
+                                function(rows)
+                                    if rows and rows[1] then
+                                        DropPlayer(sessionSrc, "رمز عبور این اکانت از طریق بازیابی تغییر کرد.")
+                                    end
+                                end
+                            )
+                        end
+                    end
                     ShowSuccess(deferrals, "رمز عبور با موفقیت تغییر کرد!", function()
                         ShowLoginForm(deferrals)
                     end)
@@ -1575,16 +1663,31 @@ end
 -- Hashing happens inside the SQL itself (SHA2-256) so no plaintext
 -- password is ever written to the database or a query log.
 function CheckLogin(username, password, def, cb)
-    local query = "SELECT * FROM login_users WHERE (username = @username OR phone = @username) AND password = SHA2(@password, 256)"
-    MySQL.Async.fetchAll(query, {
-        ["@username"] = username,
-        ["@password"] = password
-    }, function(result)
-        if result and #result > 0 then
-            cb(true, result[1].license)
-        else
-            cb(false, nil)
+    -- EXPANSION: separated into two queries so the caller can tell "no
+    -- account with this username/phone exists at all" apart from "account
+    -- exists but password was wrong" — used to point brand-new players
+    -- straight at registration instead of a dead-end "wrong password".
+    local existsQuery = "SELECT id FROM login_users WHERE (username = @username OR phone = @username) LIMIT 1"
+    MySQL.Async.fetchAll(existsQuery, {
+        ["@username"] = username
+    }, function(existsResult)
+        local accountExists = existsResult and #existsResult > 0
+        if not accountExists then
+            cb(false, nil, false)
+            return
         end
+
+        local query = "SELECT * FROM login_users WHERE (username = @username OR phone = @username) AND password = SHA2(@password, 256)"
+        MySQL.Async.fetchAll(query, {
+            ["@username"] = username,
+            ["@password"] = password
+        }, function(result)
+            if result and #result > 0 then
+                cb(true, result[1].license, true)
+            else
+                cb(false, nil, true)
+            end
+        end)
     end)
     -- updateLicense(username, def)
 end
@@ -1790,12 +1893,37 @@ function formPassed(deferrals)
 
     -- EXPANSION: remember this device (real license) against the account so
     -- next time they connect from the same PC/device, playerConnecting's
-    -- auto-login check above skips the panel entirely.
+    -- auto-login check above skips the panel entirely. Also detects when an
+    -- account that already HAD a remembered device logs in from a
+    -- DIFFERENT device — that's either the player on a new PC, or someone
+    -- else with their password — so it's worth an alert.
     local realLicense = getIdentifierPrefix(deferrals.src, "license:")
     if realLicense and deferrals.identifier then
-        MySQL.Async.execute(
-            "UPDATE login_users SET device_license = @dl WHERE license = @lic",
-            { ["@dl"] = realLicense, ["@lic"] = deferrals.identifier }
+        MySQL.Async.fetchAll(
+            "SELECT username, device_license FROM login_users WHERE license = @lic LIMIT 1",
+            { ["@lic"] = deferrals.identifier },
+            function(rows)
+                if rows and rows[1] then
+                    local row = rows[1]
+                    -- Only alert when there WAS a previously-known device and
+                    -- it's different — a null device_license just means this
+                    -- is their very first login ever, which isn't suspicious.
+                    if row.device_license and row.device_license ~= realLicense then
+                        logAudit("new_device", row.username, deferrals.identifier, deferrals.src)
+                        sendDiscordAlert(
+                            "📱 ورود از دستگاه جدید",
+                            "اکانت **" .. row.username .. "** از یک دستگاه شناخته‌نشده وارد سرور شد.\nIP: "
+                                .. (getIdentifierPrefix(deferrals.src, "ip:") or "نامشخص")
+                                .. "\nاگر خودتون نبودید، سریعاً رمز عبور رو از پنل بازیابی عوض کنید.",
+                            16776960 -- yellow
+                        )
+                    end
+                end
+                MySQL.Async.execute(
+                    "UPDATE login_users SET device_license = @dl WHERE license = @lic",
+                    { ["@dl"] = realLicense, ["@lic"] = deferrals.identifier }
+                )
+            end
         )
     end
 
