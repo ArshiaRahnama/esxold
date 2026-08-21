@@ -7,7 +7,7 @@ if ESX == nil then
 end
 
 CreateThread(function()
-    exports.litesql:execute([[
+    exports.oxmysql:execute([[
         CREATE TABLE IF NOT EXISTS `job_inventories` (
             `job_name` VARCHAR(64) NOT NULL PRIMARY KEY,
             `items` LONGTEXT NOT NULL DEFAULT ('[]'),
@@ -18,7 +18,7 @@ CreateThread(function()
 end)
 
 local function loadJob(jobName, cb)
-    exports.litesql:fetch('SELECT items, weapons, slots FROM job_inventories WHERE job_name = @job', {
+    exports.oxmysql:fetch('SELECT items, weapons, slots FROM job_inventories WHERE job_name = @job', {
         ['@job'] = jobName
     }, function(result)
         if result and result[1] then
@@ -26,7 +26,7 @@ local function loadJob(jobName, cb)
             local ok2, weapons = pcall(json.decode, result[1].weapons or '[]')
             cb(ok1 and items or {}, ok2 and weapons or {}, result[1].slots or 50)
         else
-            exports.litesql:execute('INSERT INTO job_inventories (job_name, items, weapons, slots) VALUES (@job, @items, @weapons, @slots)', {
+            exports.oxmysql:execute('INSERT INTO job_inventories (job_name, items, weapons, slots) VALUES (@job, @items, @weapons, @slots)', {
                 ['@job'] = jobName,
                 ['@items'] = '[]',
                 ['@weapons'] = '[]',
@@ -38,7 +38,7 @@ local function loadJob(jobName, cb)
 end
 
 local function saveJob(jobName, items, weapons)
-    exports.litesql:execute('UPDATE job_inventories SET items = @items, weapons = @weapons WHERE job_name = @job', {
+    exports.oxmysql:execute('UPDATE job_inventories SET items = @items, weapons = @weapons WHERE job_name = @job', {
         ['@job'] = jobName,
         ['@items'] = json.encode(items),
         ['@weapons'] = json.encode(weapons)

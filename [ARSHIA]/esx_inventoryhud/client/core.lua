@@ -1,4 +1,5 @@
 
+-- ============================================================
 
 ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -10,9 +11,14 @@ local isOpen = false
 local secondActive = false
 local secondCallback = nil
 local activeDrops = {}
-local blurEnabled = true
-local equippedWeaponsCache = {}
+local blurEnabled = true -- toggled via the NUI 'blurState' callback (Settings)
 
+-- ------------------------------------------------------------
+-- ESX helpers other modules call but which may not exist on
+-- every ESX build. Each is only added if genuinely missing, so a
+-- real existing implementation (if this server's ESX has one) is
+-- never clobbered.
+-- ------------------------------------------------------------
 if not ESX.getItem then
     function ESX.getItem(name)
         if not name then return nil end
@@ -46,6 +52,9 @@ if not ESX.getWeaponWeight then
     end
 end
 
+-- another non-vanilla ESX extension some modules call (modules/bag
+-- uses it to ask the player for a bag name via a keyboard dialog).
+-- Simple named client-side callback registry.
 if not ESX.RegisterClientCallback then
     local registeredClientCallbacks = {}
 
@@ -62,6 +71,10 @@ if not ESX.RegisterClientCallback then
     end
 end
 
+-- more non-vanilla ESX extensions the modules call unconditionally in
+-- normal gameplay (opening trunks/bags, job wardrobe checks, etc.) --
+-- found by auditing every ESX.* call across all six modules, plus
+-- client/clothe.lua and client/setting.lua.
 if not ESX.isDead then
     function ESX.isDead()
         return IsEntityDead(PlayerPedId())
@@ -74,6 +87,9 @@ if not ESX.GetDistance then
     end
 end
 
+-- no custom alert/dialog UI here, so this degrades gracefully to the
+-- standard ESX notification (loses the timeout/type styling, but the
+-- message always gets shown instead of crashing)
 if not ESX.Alert then
     function ESX.Alert(header, text, timeout, alertType)
         local prefix = (header and header ~= '') and (header .. ': ') or ''
@@ -81,39 +97,50 @@ if not ESX.Alert then
     end
 end
 
+-- maps to FiveM's own player statebag, which is the natural
+-- (and replicated-to-others) equivalent of a per-player state flag
 if not ESX.SetPlayerState then
     function ESX.SetPlayerState(key, value)
         LocalPlayer.state:set(key, value, true)
     end
 end
 
+-- used by client/clothe.lua; thin wrapper around the native in case
+-- this ESX build doesn't already have its own accounting version
 if not ESX.SetPedArmour then
     function ESX.SetPedArmour(ped, armour)
         SetPedArmour(ped, armour)
     end
 end
 
-function ESX.GetItemImagePath(name)
-    local clotheType = name:match('^clothe_([a-z]+)_%d+_%d+$')
-    if clotheType then
-        return 'img/items/clothe_' .. clotheType .. '.png'
-    end
-    if name:match('^wpn_[a-z0-9]+_[A-Za-z0-9]+$') then
-        return 'img/items/wpn_generic.png'
-    end
-    return 'img/items/' .. name .. '.png'
-end
-
+-- ------------------------------------------------------------
+-- sortItems: normalizes whatever shape a module hands us into
+-- the flat slot list the NUI (ui/js/app.js) expects to render.
+-- Accepts either a flat array of {name,count,...} rows, or a
+-- richer {items=[], weapons=[], slots=N} structure (job/trunk).
+-- ------------------------------------------------------------
 function sortItems(raw, isTrunk)
     local rows = {}
+
+    local function itemImagePath(name)
+        -- unique_weaponserial's carried spare weapons are named
+        -- 'wpn_<weaponname>_<serial>' (server/main.lua there) -- there's
+        -- no per-serial icon file, so point at the real weapon's own
+        -- WEAPON_X.png instead of a guaranteed-missing image
+        local weaponPart = name:match('^wpn_(.+)_[A-Z0-9]+$')
+        if weaponPart then
+            return 'img/items/WEAPON_' .. weaponPart:upper() .. '.png'
+        end
+        return 'img/items/' .. name .. '.png'
+    end
 
     local function addItem(entry)
         local item = ESX.getItem(entry.name)
         table.insert(rows, {
             unique = entry.name,
-            name = entry.name,
+            name = entry.name, -- the NUI's own JS reads item.name (use/throw/drag/give), not just .unique
             label = entry.label or (item and item.label) or entry.name,
-            image = ESX.GetItemImagePath(entry.name),
+            image = itemImagePath(entry.name),
             count = entry.count or 1,
             weight = ESX.getItemWeight(entry.name, isTrunk),
             limit = entry.limit,
@@ -127,12 +154,11 @@ function sortItems(raw, isTrunk)
     end
 
     local function addWeapon(entry)
-        local isEquipped = equippedWeaponsCache[entry.name] == true
         table.insert(rows, {
             unique = entry.name,
             name = entry.name,
-            label = (entry.label or entry.name) .. (isEquipped and ' [Kashide Shode]' or ''),
-            image = 'img/items/' .. entry.name .. '.png',
+            label = entry.label or entry.name,
+            image = 'img/items/' .. entry.name .. '.png', -- icons are stored uppercase (WEAPON_PISTOL.png); lowercasing broke the match
             count = 1,
             ammo = entry.ammo or 0,
             weight = ESX.getWeaponWeight(entry.name, isTrunk),
@@ -140,8 +166,7 @@ function sortItems(raw, isTrunk)
             locked = entry.locked or false,
             itemdata = { description = entry.label or entry.name },
             visible = true,
-            weapon = true,
-            equipped = isEquipped
+            weapon = true
         })
     end
 
@@ -197,6 +222,13 @@ local function currentWeight(rows)
     return total
 end
 
+-- NOTE: plain `x or default` is broken for numeric fallbacks here because
+-- 0 is truthy in Lua -- `0 or 24000` evaluates to 0, not 24000. That's
+-- exactly what caused maxweight to show as "0 kg" in-game: ESX briefly
+-- reports maxWeight as 0 before player data has fully synced, and the
+-- old `playerData.maxWeight or 24000` never caught that since 0 is
+-- truthy. A real weight limit is always a positive number, so treat
+-- anything <= 0 the same as unset.
 local function positiveOrDefault(value, default)
     if type(value) ~= 'number' or value <= 0 then
         return default
@@ -204,6 +236,9 @@ local function positiveOrDefault(value, default)
     return value
 end
 
+-- ------------------------------------------------------------
+-- Main inventory (the player's own panel)
+-- ------------------------------------------------------------
 function openMainInventory()
     if isOpen or secondActive then return end
     isOpen = true
@@ -213,9 +248,9 @@ function openMainInventory()
     SetNuiFocus(true, true)
     if blurEnabled then TriggerScreenblurFadeIn(0.3) end
 
-
-
-
+    -- verified against the real app.js: these are three separate
+    -- messages, each read as FLAT top-level fields (no nesting), not
+    -- one combined payload
     SendNUIMessage({ action = 'openInventory', data = {} })
     SendNUIMessage({
         action = 'setPlayerStaticData',
@@ -229,6 +264,20 @@ function openMainInventory()
     })
 end
 
+-- always clears NUI focus AND the native screen blur, unconditionally --
+-- this is the one place that MUST leave the player in a clean state no
+-- matter what was open or what state got confused beforehand.
+--
+-- skipNuiMessage=true is used by the 'close' NUI callback below: the
+-- NUI already knows it's closing (it's the one that asked), so
+-- echoing SendNUIMessage({action='close'}) back to it would trigger
+-- its OWN message handler's `action=='close' -> close()` branch,
+-- which POSTs /close back to Lua again, which calls this function
+-- again, forever -- an infinite Lua<->NUI ping-pong, roughly one
+-- round-trip (~20ms) per cycle, with no error on either side because
+-- both sides are doing exactly what they're written to do. That
+-- loop, once started by the first-ever close, is why every open
+-- after the first one immediately flashed and closed again.
 function closeInventory(skipNuiMessage)
 
     if secondActive and secondCallback then
@@ -244,26 +293,38 @@ function closeInventory(skipNuiMessage)
     end
 end
 
+-- safety net: if the resource restarts while the inventory was open,
+-- don't leave the player's screen permanently blurred/focus-locked
 AddEventHandler('onResourceStop', function(resourceName)
     if resourceName ~= GetCurrentResourceName() then return end
     SetNuiFocus(false, false)
     TriggerScreenblurFadeOut(0.1)
 end)
 
+-- F2 toggles open/close again. The earlier open-only restriction was
+-- a workaround for the ping-pong bug now fixed in closeInventory()/
+-- the 'close' NUI callback above -- with that fixed, F2 closing is
+-- safe again (it just calls the same closeInventory(true) path ESC
+-- already used).
 local lastToggleAt = 0
 RegisterCommand('inventory_toggle', function()
     local now = GetGameTimer()
-    if now - lastToggleAt < 250 then return end
+    if now - lastToggleAt < 250 then return end -- debounce against double-fire
     lastToggleAt = now
 
     if isOpen or secondActive then
-        closeInventory()
+        closeInventory() -- Lua-initiated (F2): NUI doesn't know yet, must send the close message
     else
         openMainInventory()
     end
 end, false)
 RegisterKeyMapping('inventory_toggle', 'Baz/Baste Kardan Inventory', 'keyboard', Config.OpenInventoryKey)
 
+-- keep the NUI in sync with real inventory/weapon changes. This
+-- framework's ESX.SetPlayerData() is a plain assignment with no
+-- event of its own (confirmed against the real client/functions.lua),
+-- so 'esx:setPlayerData' never actually fires here -- these four
+-- events are what genuinely change inventory/loadout on this build.
 function refreshMainInventoryIfOpen()
     if not isOpen then return end
     local playerData = ESX.GetPlayerData()
@@ -274,72 +335,30 @@ function refreshMainInventoryIfOpen()
     })
 end
 
-RegisterNetEvent('esx:addInventoryItem')
 AddEventHandler('esx:addInventoryItem', function(item, count) refreshMainInventoryIfOpen() end)
-RegisterNetEvent('esx:removeInventoryItem')
 AddEventHandler('esx:removeInventoryItem', function(item, count) refreshMainInventoryIfOpen() end)
-
-local currentlyGiven = {}
-
-RegisterNetEvent('inventory:weaponEquipChanged')
-AddEventHandler('inventory:weaponEquipChanged', function(equippedSet)
-    local ped = PlayerPedId()
-    equippedSet = equippedSet or {}
-
-    for weaponName in pairs(currentlyGiven) do
-        if not equippedSet[weaponName] then
-            RemoveWeaponFromPed(ped, GetHashKey(weaponName))
-            currentlyGiven[weaponName] = nil
-        end
-    end
-
-    for weaponName in pairs(equippedSet) do
-        if not currentlyGiven[weaponName] then
-            local weapon = nil
-            for _, w in ipairs((ESX.GetPlayerData() or {}).loadout or {}) do
-                if w.name == weaponName then weapon = w break end
-            end
-            GiveWeaponToPed(ped, GetHashKey(weaponName), (weapon and weapon.ammo) or 0, false, false)
-            currentlyGiven[weaponName] = true
-        end
-    end
-
-    equippedWeaponsCache = equippedSet
-    refreshMainInventoryIfOpen()
-end)
-
-AddEventHandler('esx:addWeapon', function(weaponName, ammo)
-    refreshMainInventoryIfOpen()
-
-
-
-
-    ESX.TriggerServerCallback('inventory:getEquippedWeapons', function(equippedSet)
-        TriggerEvent('inventory:weaponEquipChanged', equippedSet)
-    end)
-end)
-AddEventHandler('esx:removeWeapon', function(weaponName, ammo)
-    refreshMainInventoryIfOpen()
-    currentlyGiven[weaponName] = nil
-end)
+AddEventHandler('esx:addWeapon', function(weaponName, ammo) refreshMainInventoryIfOpen() end)
+AddEventHandler('esx:removeWeapon', function(weaponName, ammo) refreshMainInventoryIfOpen() end)
 
 RegisterNetEvent('inventory:core:refreshInventory')
 AddEventHandler('inventory:core:refreshInventory', function()
     refreshMainInventoryIfOpen()
 end)
 
-RegisterNetEvent('esx:playerLoaded')
-AddEventHandler('esx:playerLoaded', function()
-    ESX.TriggerServerCallback('inventory:getEquippedWeapons', function(equippedSet)
-        TriggerEvent('inventory:weaponEquipChanged', equippedSet)
-    end)
-end)
-
+-- client/clothe.lua's ChangeClothe callback (kept from the original
+-- code) calls this exact name after equipping/unequipping something;
+-- it was never actually defined anywhere, causing a NUI callback
+-- crash every time a clothing item was toggled.
 function loadPlayerInventory()
     refreshMainInventoryIfOpen()
 end
-exports('loadPlayerInventory', loadPlayerInventory)
+exports('loadPlayerInventory', loadPlayerInventory) -- called by Unique_clothe after equipping/using clothes
 
+-- ------------------------------------------------------------
+-- Generic second inventory (bag / trunk / job / public / admin)
+-- config: { items, timeout, maxWeight, label, type, disableExitCheck }
+-- callback receives { type = 'close'|'update'|'moveInside'|'moveToOther'|'moveToMain', data = {...} }
+-- ------------------------------------------------------------
 function openOtherInventory(cfg, callback)
     if isOpen or secondActive then return end
     secondActive = true
@@ -368,6 +387,8 @@ function openOtherInventory(cfg, callback)
     })
 end
 
+-- reflects a completed move back into the currently visible NUI
+-- state (both modules call this after a successful moveToMain)
 function moveInsideHandler(data)
     if not data then return end
     if data.inventoryType == 'main' then
@@ -378,6 +399,8 @@ function moveInsideHandler(data)
     end
 end
 
+-- online admin inventory search (modules/admin calls this indirectly
+-- via inventory:admin:openInventory -> openOtherPlayerInventory)
 function openOtherPlayerInventory(target, isAdmin)
     local function fetchItems()
         local p = promise.new()
@@ -410,6 +433,20 @@ function openOtherPlayerInventory(target, isAdmin)
     end)
 end
 
+-- NOTE: modules/admin/client/main.lua already registers
+-- 'inventory:admin:openInventory' itself and calls
+-- openOtherPlayerInventory(target, true) directly -- so it is NOT
+-- registered again here to avoid firing it twice.
+
+-- ------------------------------------------------------------
+-- NUI callbacks (the UI -> Lua side of things)
+-- ------------------------------------------------------------
+-- useItem()/throwItem() are called with NO arguments in the actual
+-- NUI template (@mouseup="useItem()") -- whatever item they act on
+-- comes from internal Vue state we can't read (app.js is obfuscated).
+-- Our own item rows use 'unique' as the identifier (matching the
+-- template's :key="a.unique"), so accept either that or 'name' (or
+-- a nested .item), rather than gambling on exactly one.
 local function getNuiItemName(data)
     if not data then return nil end
     return data.name or data.unique
@@ -420,7 +457,7 @@ local function getNuiItemName(data)
 end
 
 RegisterNUICallback('close', function(_, cb)
-    closeInventory(true)
+    closeInventory(true) -- NUI already knows it's closing; don't echo the message back
     cb('ok')
 end)
 
@@ -428,31 +465,19 @@ RegisterNUICallback('inventory:mounted', function(_, cb)
     cb('ok')
 end)
 
-local weaponNameSet = {}
-CreateThread(function()
-    for _, w in ipairs(ESX.GetWeaponList() or {}) do
-        weaponNameSet[w.name] = true
-    end
-end)
-
+-- inventory:useItem's payload is the item name as a plain STRING
+-- (JS does sendEvent('inventory:useItem', itemName), not an object) --
+-- confirmed by reading html/js/app.js directly, not guessed.
 RegisterNUICallback('inventory:useItem', function(data, cb)
-
-
-
+    -- confirmed via console: JS sends a raw item-name string here, but
+    -- can send [] (empty) if item.name was undefined client-side (now
+    -- fixed by adding a name field alongside unique in sortItems())
     local itemName = (type(data) == 'string' and data) or getNuiItemName(data)
     if type(itemName) == 'string' then
-        itemName = itemName:gsub('^"(.*)"$', '%1')
+        itemName = itemName:gsub('^"(.*)"$', '%1') -- defensive: strip stray JSON quotes if not fully decoded
     end
     if itemName then
-        if weaponNameSet[itemName] then
-
-
-
-
-            TriggerServerEvent('inventory:toggleWeaponEquip', itemName)
-        else
-            TriggerServerEvent('esx:useItem', itemName)
-        end
+        TriggerServerEvent('esx:useItem', itemName)
     end
     cb('ok')
 end)
@@ -496,6 +521,11 @@ RegisterNUICallback('inventory:giveItemToTarget', function(data, cb)
     cb('ok')
 end)
 
+-- moveInside / moveToSecond / moveToMain / instantToMain / instantToSecond:
+-- when a second inventory is active these all forward to whichever
+-- module opened it; when only the main inventory is open, 'moveInside'
+-- is purely a cosmetic reorder (ESX's own inventory has no slot concept)
+-- so there's nothing to tell the server.
 local function forwardToSecond(kind, data)
     if secondActive and secondCallback then
         local result = secondCallback({ type = kind, data = data })
@@ -509,16 +539,23 @@ RegisterNUICallback('inventory:moveInside', function(data, cb)
     if secondActive then
         forwardToSecond('moveInside', data)
     elseif data and data.index and data.droppedTo then
-
-
-
+        -- reordering within the main inventory itself: swap the slot
+        -- numbers of whatever's currently at these two UI positions
+        -- (confirmed via app.js: index/droppedTo are 1-based)
         local current = buildMainInventoryItems()
-        local fromItem = current[tonumber(data.index)]
-        local toItem = current[tonumber(data.droppedTo)]
-        if fromItem and fromItem.unique then
+        local fromIndex = tonumber(data.index)
+        local toIndex = tonumber(data.droppedTo)
+        local fromItem = current[fromIndex]
+        local toItem = current[toIndex]
+        if fromItem and fromItem.unique and fromIndex ~= toIndex then
+            -- if the dragged item never had a real slot yet, fall back
+            -- to the UI position it was actually sitting at -- otherwise
+            -- swapping with it would leave the other item's slot
+            -- untouched (nil) instead of a real swap
+            local fromSlot = fromItem.slot or fromIndex
             TriggerServerEvent('inventory:core:swapItemSlots', fromItem.unique, fromItem.weapon or false,
                 toItem and toItem.unique or nil, toItem and toItem.weapon or false,
-                tonumber(data.droppedTo))
+                toIndex, fromSlot)
         end
     end
     cb('ok')
@@ -545,17 +582,20 @@ RegisterNUICallback('inventory:instantToSecond', function(data, cb)
 end)
 
 RegisterNUICallback('onSearch', function(data, cb)
-
-
+    -- purely a client-side filter concern in the UI itself; nothing
+    -- for Lua to do, just acknowledge
     cb('ok')
 end)
 
 RegisterNUICallback('inventory:swapMoney', function(data, cb)
-
-
+    -- money handling is entirely ESX's own account system; if you want
+    -- this to do something specific (e.g. cash<->bank), wire it here
     cb('ok')
 end)
 
+-- Settings-menu toggle for the background blur effect. Respected by
+-- openMainInventory/openOtherInventory (blurEnabled), and applied
+-- immediately if toggled while already open.
 RegisterNUICallback('inventory:blurState', function(data, cb)
     if data and data.value ~= nil then
         blurEnabled = data.value
@@ -568,10 +608,13 @@ RegisterNUICallback('inventory:blurState', function(data, cb)
     cb('ok')
 end)
 
-local activeDropObjects = {}
+-- ------------------------------------------------------------
+-- Dropped items (thrown from the inventory)
+-- ------------------------------------------------------------
+local activeDropObjects = {} -- [id] = object handle
 
 local function spawnDropProp(id, coords)
-    local model = GetHashKey('prop_cs_package_01')
+    local model = GetHashKey('prop_cs_package_01') -- generic small pickup-able package prop
     RequestModel(model)
     local timeout = GetGameTimer() + 3000
     while not HasModelLoaded(model) and GetGameTimer() < timeout do Citizen.Wait(0) end
@@ -616,13 +659,48 @@ Citizen.CreateThread(function()
         for id, coords in pairs(activeDrops) do
             if #(playerCoords - vector3(coords.x, coords.y, coords.z)) <= 3.0 then
                 ESX.ShowHelpNotification('Baraye Bardashtan ~INPUT_CONTEXT~ Bezanid')
-                if IsControlJustReleased(0, 51) then
+                if IsControlJustReleased(0, 51) then -- INPUT_CONTEXT (E)
                     TriggerServerEvent('inventory:core:pickupThrown', id)
                 end
             end
         end
     end
 end)
+
+--[[
+    NUI CONTRACT (for reference / for anyone touching ui/js/app.js later)
+
+    Lua -> NUI (SendNUIMessage action):
+        openInventory          { mainInventory, playerStaticData, money }
+        secondOpen              { mainInventory, playerStaticData, secondInventory, secondInventoryStaticData, showLimitInSecondInventory }
+        updatePlayerInventory   { mainInventory, money? }
+        updateSecondInventory   { secondInventory }
+        close                   {}
+
+    NUI -> Lua (RegisterNUICallback):
+        mounted, close, useItem{name}, throwItem{name,count},
+        getNearbyPlayers -> [{src,name}], giveItemToTarget{src,name,count,isWeapon},
+        moveInside/moveToOther/moveToMain/instantToMain/instantToSecond
+            { name, count, slot, droppedTo, ammo? },
+        onSearch, swapMoney, blurState
+]]
+
+-- ============================================================
+-- Backwards-compatibility layer: this resource is now literally
+-- named 'esx_inventoryhud', which several OTHER resources on this
+-- server already fire events at directly (mining, uwucafejob,
+-- gangprop, gangs, esx_lockpick, the 'openproperty' admin command).
+-- These make sure those keep showing something real instead of
+-- silently doing nothing now that a different implementation is
+-- the one actually named esx_inventoryhud.
+--
+-- These are read/display-oriented: whatever put the items there in
+-- the first place (its own external datastore) still owns storing
+-- them. Moving items around inside these panels is forwarded back
+-- generically via 'esx_inventoryhud:put' / ':get' -- if a specific
+-- one of these needs to reach a particular external system's own
+-- event instead, tell me which one and I'll wire that exact path.
+-- ============================================================
 
 RegisterNetEvent('esx_inventoryhud:closeHud')
 AddEventHandler('esx_inventoryhud:closeHud', function()
@@ -691,6 +769,11 @@ AddEventHandler('esx_inventoryhud:openPropertyInventory', function(inventory)
     end)
 end)
 
+-- 'incuffhas' toggles whether the player is currently in cuffs --
+-- not really an inventory display concern, but registered so the
+-- TriggerEvent call always finds a handler. Force-close the
+-- inventory when cuffed, matching how most cuff systems expect
+-- menus to behave.
 RegisterNetEvent('esx_inventoryhud:incuffhas')
 AddEventHandler('esx_inventoryhud:incuffhas', function(isCuffed)
     if isCuffed then

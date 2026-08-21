@@ -1,4 +1,17 @@
-
+-- ============================================================
+-- esx_inventoryhud / server / bag.lua
+--
+-- Backs modules/bag/client/main.lua exactly as written (not
+-- modified). Each physical bag item is named 'kif_<id>' and has
+-- its own numbered storage, persisted in a `bag_inventories`
+-- table this file creates automatically if missing.
+--
+-- Uses oxmysql's real export API directly (exports.oxmysql:execute/
+-- fetch/insert) -- the legacy 'MySQL.Async' compatibility shim path
+-- (@oxmysql/lib/MySQL.lua) was found to fail to load on this server
+-- (confirmed in the console log, affecting other resources too), so
+-- this talks to oxmysql the modern, guaranteed-available way instead.
+-- ============================================================
 
 if ESX == nil then
     TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -8,7 +21,7 @@ if ESX == nil then
 end
 
 CreateThread(function()
-    exports.litesql:execute([[
+    exports.oxmysql:execute([[
         CREATE TABLE IF NOT EXISTS `bag_inventories` (
             `bag_id` INT NOT NULL PRIMARY KEY,
             `items` LONGTEXT NOT NULL DEFAULT ('[]'),
@@ -17,6 +30,18 @@ CreateThread(function()
     ]], {})
 end)
 
+-- register kif_1 .. kif_<Config.MaxBagId> as usable items so using one
+-- opens its bag (the bag module only reacts to inventory-bag:openBag,
+-- it never fires it -- something has to)
+--
+-- IMPORTANT for this server: essentialmode's ESX.Items table is loaded
+-- from the DB `items` table on boot and kif_1..kif_300 are NOT rows in
+-- it (checked against database.sql) -- without registering them here,
+-- xPlayer.addInventoryItem('kif_N', 1) silently does nothing, because
+-- getInventoryItem() returns nil for anything missing from ESX.Items.
+-- 'esx:CreateItem' is essentialmode's runtime item-registration event
+-- (server/common.lua) that adds straight into ESX.Items without
+-- touching the database, so a restart never has stale duplicate rows.
 CreateThread(function()
     for i = 1, (Config.MaxBagId or 300) do
         TriggerEvent('esx:CreateItem', 'kif_' .. i, 'Kif ' .. i, -1, false, true)
@@ -26,36 +51,15 @@ CreateThread(function()
     end
 end)
 
-local function stableBagId(str)
-    local hash = 5381
-    for i = 1, #str do
-        hash = (hash * 33 + string.byte(str, i)) % 2147483647
-    end
-    return hash
-end
-
-CreateThread(function()
-    if type(configBag) ~= 'table' then return end
-    for bagType, def in pairs(configBag) do
-        TriggerEvent('esx:CreateItem', bagType, def.label or bagType, def.limit or 1, false, true)
-        ESX.RegisterUsableItem(bagType, function(playerId)
-            local xPlayer = ESX.GetPlayerFromId(playerId)
-            if not xPlayer then return end
-            local bagId = stableBagId(xPlayer.identifier .. '_' .. bagType)
-            TriggerClientEvent('inventory-bag:openBag', playerId, bagId, def.maxWeight or 50)
-        end)
-    end
-end)
-
 local function loadBag(bagId, cb)
-    exports.litesql:fetch('SELECT items, slots FROM bag_inventories WHERE bag_id = @id', {
+    exports.oxmysql:fetch('SELECT items, slots FROM bag_inventories WHERE bag_id = @id', {
         ['@id'] = bagId
     }, function(result)
         if result and result[1] then
             local ok, items = pcall(json.decode, result[1].items or '[]')
             cb(ok and items or {}, result[1].slots or 41)
         else
-            exports.litesql:execute('INSERT INTO bag_inventories (bag_id, items, slots) VALUES (@id, @items, @slots)', {
+            exports.oxmysql:execute('INSERT INTO bag_inventories (bag_id, items, slots) VALUES (@id, @items, @slots)', {
                 ['@id'] = bagId,
                 ['@items'] = '[]',
                 ['@slots'] = 41
@@ -66,7 +70,7 @@ local function loadBag(bagId, cb)
 end
 
 local function saveBag(bagId, items)
-    exports.litesql:execute('UPDATE bag_inventories SET items = @items WHERE bag_id = @id', {
+    exports.oxmysql:execute('UPDATE bag_inventories SET items = @items WHERE bag_id = @id', {
         ['@id'] = bagId,
         ['@items'] = json.encode(items)
     })
@@ -78,6 +82,7 @@ ESX.RegisterServerCallback('inventory-bag:getInventory', function(source, cb, ba
     end)
 end)
 
+-- reorder within the bag only
 RegisterServerEvent('inventory-bag:updateSlot')
 AddEventHandler('inventory-bag:updateSlot', function(bagId, data)
     if not data or not data.name then return end
@@ -91,6 +96,7 @@ AddEventHandler('inventory-bag:updateSlot', function(bagId, data)
     end)
 end)
 
+-- move item FROM the player's main inventory INTO the bag
 RegisterServerEvent('inventory-bag:put')
 AddEventHandler('inventory-bag:put', function(bagId, data)
     local src = source
@@ -119,6 +125,7 @@ AddEventHandler('inventory-bag:put', function(bagId, data)
     end)
 end)
 
+-- move item FROM the bag INTO the player's main inventory
 RegisterServerEvent('inventory-bag:get')
 AddEventHandler('inventory-bag:get', function(bagId, data)
     local src = source

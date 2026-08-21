@@ -26,7 +26,7 @@
     /> 
 </head>
 
-<body oncontextmenu="return false;">
+<body>
     <template id="app">
         <div>
             <div class="notiparent">
@@ -139,7 +139,7 @@
                         <div class="content">
                             <div @mouseleave="hoveredItemMain = null"
                                 @mouseenter="isEmpty(a) == false ? hoveredItemMain = a : null"
-                                @mousedown.left="startDrag('main', index)" @mouseup="endDrag('main', index)"
+                                @mousedown.left="startDrag('main', index)" @mousedown.right="instantDrag('main', index)" @mouseup="endDrag('main', index)"
                                 :style="{ 'backgroundImage': itembgcoloring }" class="itementry"
                                 :id="'main-' + index" v-for="(a,index) in mainInventory">
                                 <div v-if="settings_enabled('itemnames') && isEmpty(a) == false && a.locked != true" class="name">
@@ -222,7 +222,7 @@
                         <div class="content">
                             <div @mouseleave="hoveredItemSecond = null"
                                 @mouseenter="isEmpty(a) == false ? hoveredItemSecond = a : null"
-                                @mousedown.left="startDrag('second', index)"  @mouseup="endDrag('second', index)"
+                                @mousedown.left="startDrag('second', index)" @mousedown.right="instantDrag('second', index)"  @mouseup="endDrag('second', index)"
                                 :style="{ 'backgroundImage': itembgcoloring }" class="itementry"
                                 :id="'second-' + index" v-for="(a,index) in secondInventory">
                                 <div v-if="isEmpty(a) == false && a.locked != true" class="name">

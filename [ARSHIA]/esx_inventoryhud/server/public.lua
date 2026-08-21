@@ -8,7 +8,7 @@ if ESX == nil then
 end
 
 CreateThread(function()
-    exports.litesql:execute([[
+    exports.oxmysql:execute([[
         CREATE TABLE IF NOT EXISTS `public_inventories` (
             `name` VARCHAR(64) NOT NULL PRIMARY KEY,
             `items` LONGTEXT NOT NULL DEFAULT ('[]')
@@ -17,14 +17,14 @@ CreateThread(function()
 end)
 
 local function loadPublic(name, cb)
-    exports.litesql:fetch('SELECT items FROM public_inventories WHERE name = @name', {
+    exports.oxmysql:fetch('SELECT items FROM public_inventories WHERE name = @name', {
         ['@name'] = name
     }, function(result)
         if result and result[1] then
             local ok, items = pcall(json.decode, result[1].items or '[]')
             cb(ok and items or {})
         else
-            exports.litesql:execute('INSERT INTO public_inventories (name, items) VALUES (@name, @items)', {
+            exports.oxmysql:execute('INSERT INTO public_inventories (name, items) VALUES (@name, @items)', {
                 ['@name'] = name,
                 ['@items'] = '[]'
             })
@@ -34,7 +34,7 @@ local function loadPublic(name, cb)
 end
 
 local function savePublic(name, items)
-    exports.litesql:execute('UPDATE public_inventories SET items = @items WHERE name = @name', {
+    exports.oxmysql:execute('UPDATE public_inventories SET items = @items WHERE name = @name', {
         ['@name'] = name,
         ['@items'] = json.encode(items)
     })
@@ -61,6 +61,8 @@ AddEventHandler('inventory-public:updateSlot', function(name, data)
     end)
 end)
 
+-- move item FROM the player's main inventory INTO the public inventory
+-- ('delete' mode = recycle bin: just destroy it, nothing is stored)
 RegisterServerEvent('inventory-public:put')
 AddEventHandler('inventory-public:put', function(name, data)
     local src = source
@@ -74,7 +76,7 @@ AddEventHandler('inventory-public:put', function(name, data)
     xPlayer.removeInventoryItem(data.name, count)
 
     if name:find('^recycle:') then
-
+        -- recycle bin: item is destroyed, nothing to persist
         return
     end
 
@@ -94,12 +96,13 @@ AddEventHandler('inventory-public:put', function(name, data)
     end)
 end)
 
+-- move item FROM the public inventory INTO the player's main inventory
 RegisterServerEvent('inventory-public:get')
 AddEventHandler('inventory-public:get', function(name, data)
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
     if not xPlayer or not data or not data.name then return end
-    if name:find('^recycle:') then return end
+    if name:find('^recycle:') then return end -- nothing to withdraw from a recycle bin
 
     loadPublic(name, function(items)
         for i, entry in ipairs(items) do

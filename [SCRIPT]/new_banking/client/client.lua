@@ -36,7 +36,7 @@ AddEventHandler('new_banking:disableforhour', function(pos, time)
     while condition do
       Citizen.Wait(5000)
       local playerloc = GetEntityCoords(PlayerPedId())
-      local distance = GetDistanceBetweenCoords(pos.x, pos.y, pos.z, playerloc, false)
+      local distance = GetDistanceBetweenCoords(pos.x, pos.y, pos.z, playerloc.x, playerloc.y, playerloc.z, false)
       if distance <= 20.0 then
         blocked = true
       else
@@ -100,7 +100,8 @@ function OpenBankAtm(atmEntity)
 	DisableAllControlActions(0)
 	SetCurrentPedWeapon(playerPed, GetHashKey("weapon_unarmed"), true)
 
-	local atmX, atmY, atmZ = table.unpack(GetOffsetFromEntityInWorldCoords(atmEntity, 0.0, -0.65, 0.0))
+	local atmOffset = GetOffsetFromEntityInWorldCoords(atmEntity, 0.0, -0.65, 0.0)
+	local atmX, atmY, atmZ = atmOffset.x, atmOffset.y, atmOffset.z
 
 	RequestAnimDict("mini@atmbase")
 	RequestAnimDict(anim)

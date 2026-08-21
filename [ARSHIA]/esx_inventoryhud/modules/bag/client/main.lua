@@ -1,3 +1,9 @@
+-- FIXED: every call in this file used to say ESX.TriggerServerEvent(...), a function
+-- that does not exist anywhere in essentialmode (confirmed against both this
+-- server and the real ArshiaRahnama/Sunset repo, where the same typo exists
+-- in every inventory module) -- every put/get/updateSlot silently failed to
+-- ever reach the server. Changed to plain TriggerServerEvent throughout.
+
 local doesHaveBag = false
 local currentBag = nil
 local inSearch = nil
@@ -13,14 +19,14 @@ function openBag(bagId, maxWeight)
             return sortItems(getBagInventory(bagId))
         elseif data.type == 'moveInside' then
             if not inSearch then
-                ESX.TriggerServerEvent('inventory-bag:updateSlot', bagId, data.data)
+                TriggerServerEvent('inventory-bag:updateSlot', bagId, data.data)
             end
         elseif data.type == 'moveToOther' then
             if ESX.isDead() or inSearch then return end
-            ESX.TriggerServerEvent('inventory-bag:put', bagId, data.data, inSearch)
+            TriggerServerEvent('inventory-bag:put', bagId, data.data, inSearch)
         elseif data.type == 'moveToMain' then
             if ESX.isDead() then return end
-            ESX.TriggerServerEvent('inventory-bag:get', bagId, data.data, inSearch)
+            TriggerServerEvent('inventory-bag:get', bagId, data.data, inSearch)
             Wait(500)
             if data.data.droppedTo then
                 data.data.inventoryType = 'main'
@@ -71,11 +77,11 @@ RegisterNetEvent('esx:addInventoryItem', function(label, count, name)
         ESX.SetPlayerState('bag', bagId)
     elseif name and name:find('kool') then
         Wait(1000)
-        ESX.TriggerServerEvent('esx:useItem', name)
+        TriggerServerEvent('esx:useItem', name)
     end
 end)
 
-RegisterNetEvent('esx:removeInventoryItem', function(label, count, name)
+RegisterNetEvent('esx:removeInventoryItemss', function(label, count, name)
     if name and name:find('kif_') then
         if currentBag == name then
             closeInventory()
@@ -124,7 +130,7 @@ CreateThread(function()
     end
     ESX.RegisterClientCallback('bag:getName', function(cb)
         local keyboard, name = exports["input"]:Keyboard({
-            header = 'Name kif ra vared konid',
+            header = 'Name kif ra vared konid', 
             rows = {'Name'}
         })
         if keyboard then

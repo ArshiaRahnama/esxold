@@ -1,4 +1,9 @@
 config = {}
+-- Synced against the real `jobs` table in database.sql (essentialmode base).
+-- Server has no 'justice' or 'detective' jobs -- those were leftover
+-- placeholders and have been swapped for the actual law-enforcement /
+-- intelligence jobs that exist on this server: police, sheriff, fbi,
+-- mt (Metropolitan), cia, cid, doa, marshal (each with an off-duty pair).
 blackListJob = {
     ['police'] = true,
     ['sheriff'] = true,
@@ -8,10 +13,14 @@ blackListJob = {
     ['offmt'] = true,
     ['fbi'] = true,
     ['offfbi'] = true,
-    ['justice'] = true,
-    ['offjustice'] = true,
-    ['detective'] = true,
-    ['offdetective'] = true,
+    ['cia'] = true,
+    ['offcia'] = true,
+    ['cid'] = true,
+    ['offcid'] = true,
+    ['doa'] = true,
+    ['offdoa'] = true,
+    ['marshal'] = true,
+    ['offmarshal'] = true,
 }
 
 militaryJobs = {
@@ -23,10 +32,14 @@ militaryJobs = {
     ['offmt'] = true,
     ['fbi'] = true,
     ['offfbi'] = true,
-    ['justice'] = true,
-    ['offjustice'] = true,
-    ['detective'] = true,
-    ['offdetective'] = true,
+    ['cia'] = true,
+    ['offcia'] = true,
+    ['cid'] = true,
+    ['offcid'] = true,
+    ['doa'] = true,
+    ['offdoa'] = true,
+    ['marshal'] = true,
+    ['offmarshal'] = true,
 }
 
 blackListedItems = {
@@ -49,8 +62,10 @@ canSearchJob = {
     fbi = true,
     sheriff = true,
     mt = true,
-    justice = true,
-    detective = true,
+    cia = true,
+    cid = true,
+    doa = true,
+    marshal = true,
 }
 
 blackListWorldSearch = {
