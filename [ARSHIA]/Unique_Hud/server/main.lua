@@ -1,3 +1,7 @@
+-- ============================================================
+-- Unique_Hud / server / main.lua  (status ادغام شد)
+-- ============================================================
+
 ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -17,4 +21,3 @@ ESX.RegisterServerCallback('reloaddata', function(source, cb)
 		end
 	end
 end)
-
