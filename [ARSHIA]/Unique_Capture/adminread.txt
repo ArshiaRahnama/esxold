@@ -259,6 +259,10 @@ Turn off with Config.EnableHallOfFame = false.
   ⚠️ Config.AcademyEntryPoints is a placeholder — fill it in with
   real, safe coordinates before enabling this, or nobody can enter.
 
+  Each entry point also gets its own map blip (Config.AcademyBlip —
+  sprite, color, scale) so players can actually see where to go
+  instead of needing to be told the coordinates.
+
   NPCs can hurt you but can never actually kill you (health is
   floored at 12% while training) — this is a sandbox, not a death
   trap. If you do go down some other way, you get an on-screen
@@ -332,8 +336,14 @@ A missing or broken webhook NEVER breaks gameplay — at worst it
 prints a one-line warning to console.
 
 ────────────────────────────────────────────────────────────────
-  14. SPECTATOR MODE (on by default)
+  14. SPECTATOR MODE (on by default — now permission-gated)
 ────────────────────────────────────────────────────────────────
+
+⚠️ REQUIRES PERMISSION: xPlayer.permission_level must be ABOVE
+Config.SpectatePermLevel (defaults to Config.CommandPerm, the same
+threshold as the other admin commands) to run /captureSpectate at
+all. Set Config.SpectatePermLevel = 0 in Config.lua if you want to
+open spectating back up to every player.
 
 /captureSpectate
   Only works while a round is active. Drops you into a free-flying
@@ -342,6 +352,16 @@ prints a one-line warning to console.
   invisible, and invincible for the entire time — you cannot be
   seen, hurt, or interfere with the round in any way, and you don't
   need to be in a gang to use it.
+
+  Press TAB at any time to open a live list of every player
+  currently in the round. Click a name to lock the camera onto
+  them — it orbits around that player instead of flying freely
+  (mouse still rotates the view), and a Health/Armor panel tracks
+  them live. Hit "Free Camera" in the list (or press TAB again) to
+  unlock and go back to flying wherever you like. If the player you
+  locked onto disconnects or leaves the capture world, you're
+  automatically dropped back to free camera with a notification —
+  spectating never gets stuck watching nobody.
 
 /leaveSpectate (or press ESC)
   Exits and puts you back exactly where you were standing.

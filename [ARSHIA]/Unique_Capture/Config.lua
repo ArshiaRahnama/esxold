@@ -219,6 +219,15 @@ Config.AcademyEntryPoints = {
 Config.AcademyEntryRadius = 10.0
 Config.AcademyInstructorPedModel = "s_m_y_cop_01"
 
+Config.AcademyBlip = {
+    Sprite = 267,       -- shooting range icon
+    Color = 5,          -- yellow
+    Scale = 0.85,
+    Display = 4,
+    ShortRange = true,
+    Label = "Training Academy",
+}
+
 Config.AcademyTutorialPointOffset = vector3(10.0, 10.0, 0.0)
 
 Config.AcademySafeZoneOffset = vector3(-8.0, -8.0, 0.0)
@@ -237,3 +246,12 @@ Config.EnableSpectate = true
 Config.SpectateCommand = "captureSpectate"
 Config.SpectateLeaveCommand = "leaveSpectate"
 Config.SpectateSpeed = 1.0
+-- xPlayer.permission_level must be ABOVE this to use /captureSpectate.
+-- Defaults to the same threshold as the other admin commands (Config.CommandPerm).
+-- Set it lower (e.g. 0) to let everyone spectate again.
+Config.SpectatePermLevel = Config.CommandPerm
+
+-- Locked-on ("watch this player") chase-cam settings for Spectator Mode.
+Config.SpectateLockDistance = 4.5
+Config.SpectateLockHeight = 0.7
+Config.SpectateVitalsRefreshMs = 300

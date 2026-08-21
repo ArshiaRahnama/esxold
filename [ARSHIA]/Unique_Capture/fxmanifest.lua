@@ -6,7 +6,7 @@ game 'gta5'
 author 'Arshia | arshiahub.ir | Unique RP'
 description 'Unique Capture System'
 
-version '1.8'
+version '1.9'
 
 shared_script '@ox_lib/init.lua'
 dependency 'ox_lib'

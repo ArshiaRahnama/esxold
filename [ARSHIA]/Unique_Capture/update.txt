@@ -426,4 +426,27 @@
     Automatically exits cleanly if the round ends while you're 
     watching. Toggle: Config.EnableSpectate.
 
+64- Feature: Academy Map Blip — every Config.AcademyEntryPoints 
+    location now gets a proper map blip (Config.AcademyBlip: sprite, 
+    color, scale, short-range) so players can actually find the 
+    Training Academy instead of stumbling into it.
+
+65- Feature: Spectate Mode is now permission-gated — 
+    Config.SpectatePermLevel (defaults to Config.CommandPerm, same 
+    threshold as the other admin commands) controls who is allowed 
+    to run /captureSpectate at all. Set it to 0 to open it back up 
+    to everyone.
+
+66- Feature: Spectate Mode overhaul — pressing TAB while spectating 
+    opens a live player list of everyone actually in the capture 
+    round (spectators themselves are excluded from their own list). 
+    Click a name to lock the camera onto that player: it orbits them 
+    (mouse to rotate around, matching the free-cam controls) instead 
+    of flying freely, and a dedicated vitals panel shows their live 
+    Health and Armor, refreshed every Config.SpectateVitalsRefreshMs 
+    (default 300ms). Hit "Free Camera" in the list to unlock and go 
+    back to flying freely. If the locked player disconnects or 
+    leaves the capture world, spectating automatically falls back to 
+    free camera with a heads-up notification — it never gets stuck.
+
 ========================================================

@@ -191,6 +191,21 @@ if Config.EnableAcademy then
         end
     end)
 
+    -- Map blips for every Academy entry point, so players can actually find it.
+    Citizen.CreateThread(function()
+        for _, point in ipairs(Config.AcademyEntryPoints) do
+            local blip = AddBlipForCoord(point.x, point.y, point.z)
+            SetBlipSprite(blip, Config.AcademyBlip.Sprite)
+            SetBlipDisplay(blip, Config.AcademyBlip.Display)
+            SetBlipScale(blip, Config.AcademyBlip.Scale)
+            SetBlipColour(blip, Config.AcademyBlip.Color)
+            SetBlipAsShortRange(blip, Config.AcademyBlip.ShortRange)
+            BeginTextCommandSetBlipName("STRING")
+            AddTextComponentString(Config.AcademyBlip.Label)
+            EndTextCommandSetBlipName(blip)
+        end
+    end)
+
 
     function GetAcademyDifficulty()
         local tier = math.floor(AcademyTotalKills / Config.AcademyDifficultyStep)
@@ -1436,6 +1451,83 @@ if Config.EnableSpectate then
     local SpectateOriginalCoords = nil
     local SpectateHeading = 0.0
     local SpectatePitch = -25.0
+    local SpectateListOpen = false
+    local SpectateLockedSource = nil
+    local VitalsThreadRunning = false
+
+    local function ExitFreeLook()
+        SpectateListOpen = false
+        SetNuiFocus(false, false)
+        SendNUIMessage({action = "spectateListClose"})
+    end
+
+    -- Releases the lock and drops back into the plain free-flying camera,
+    -- starting from wherever the target currently is.
+    local function ReturnToFreeCam()
+        if not SpectateLockedSource then return end
+        SpectateLockedSource = nil
+        SendNUIMessage({action = "spectateVitalsClose"})
+        local camCoord = GetCamCoord(SpectateCam)
+        SpectateHeading = GetCamRot(SpectateCam, 2).z
+        SpectatePitch = -15.0
+        SetCamRot(SpectateCam, SpectatePitch, 0.0, SpectateHeading, 2)
+    end
+
+    local function LockOntoTarget(targetSource)
+        local targetPlayer = GetPlayerFromServerId(targetSource)
+        if targetPlayer == -1 then
+            Notify("That Player Is No Longer Available To Spectate !", 'error')
+            return
+        end
+        SpectateLockedSource = targetSource
+        ExitFreeLook()
+        SendNUIMessage({action = "spectateVitalsOpen", name = GetPlayerName(targetSource)})
+
+        if not VitalsThreadRunning then
+            VitalsThreadRunning = true
+            Citizen.CreateThread(function()
+                while SpectateActive do
+                    Citizen.Wait(Config.SpectateVitalsRefreshMs)
+                    if SpectateLockedSource then
+                        local tp = GetPlayerFromServerId(SpectateLockedSource)
+                        local tPed = tp ~= -1 and GetPlayerPed(tp) or nil
+                        if tPed and tPed ~= 0 and DoesEntityExist(tPed) then
+                            local health = math.max(0, math.min(100, GetEntityHealth(tPed) - 100))
+                            local armor = math.max(0, math.min(100, GetPedArmour(tPed)))
+                            SendNUIMessage({action = "spectateVitalsUpdate", health = health, armor = armor})
+                        else
+                            Notify("Lost Track Of That Player — Back To Free Camera.", 'info')
+                            ReturnToFreeCam()
+                        end
+                    end
+                end
+                VitalsThreadRunning = false
+            end)
+        end
+    end
+
+    local function RequestSpectateList()
+        ESX.TriggerServerCallback('Violet-Capture:GetSpectateTargets', function(list)
+            SendNUIMessage({action = "spectateListOpen", players = list})
+        end)
+    end
+
+    RegisterNUICallback('spectateSelectTarget', function(data, cb)
+        if data and data.source then
+            LockOntoTarget(tonumber(data.source))
+        end
+        cb('ok')
+    end)
+
+    RegisterNUICallback('spectateFreeCam', function(data, cb)
+        ReturnToFreeCam()
+        cb('ok')
+    end)
+
+    RegisterNUICallback('spectateCloseList', function(data, cb)
+        ExitFreeLook()
+        cb('ok')
+    end)
 
     RegisterCommand(Config.SpectateCommand, function()
         if SpectateActive then
@@ -1472,6 +1564,7 @@ if Config.EnableSpectate then
 
         SpectateHeading = 0.0
         SpectatePitch = -25.0
+        SpectateLockedSource = nil
         SpectateCam = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
         SetCamCoord(SpectateCam, startCoord.x, startCoord.y, startCoord.z)
         SetCamRot(SpectateCam, SpectatePitch, 0.0, SpectateHeading, 2)
@@ -1480,45 +1573,92 @@ if Config.EnableSpectate then
         RenderScriptCams(true, true, 800, true, true)
 
         SendNUIMessage({action = "spectateOpen"})
-        Notify("Spectator Mode ON — WASD to move, mouse to look, SPACE/CTRL for up/down, /"..Config.SpectateLeaveCommand.." or ESC to exit.", 'success')
+        Notify("Spectator Mode ON — WASD to move, mouse to look, TAB for the player list, ESC to exit.", 'success')
 
         Citizen.CreateThread(function()
             while SpectateActive do
                 Citizen.Wait(0)
+
+                if SpectateListOpen then
+                    DisableControlAction(0, 1, true)
+                    DisableControlAction(0, 2, true)
+                    EnableControlAction(0, 200, true)
+                    if IsControlJustPressed(0, 200) or IsControlJustPressed(0, 37) then
+                        ExitFreeLook()
+                    end
+                    goto continueSpectateLoop
+                end
+
                 DisableAllControlActions(0)
                 EnableControlAction(0, 1, true)
                 EnableControlAction(0, 2, true)
                 EnableControlAction(0, 200, true)
+                EnableControlAction(0, 37, true)
 
                 if IsControlJustPressed(0, 200) then
                     ExecuteCommand(Config.SpectateLeaveCommand)
                     return
                 end
 
+                if IsControlJustPressed(0, 37) then -- TAB
+                    SpectateListOpen = true
+                    SetNuiFocus(true, false)
+                    RequestSpectateList()
+                    goto continueSpectateLoop
+                end
+
                 local mx = GetDisabledControlNormal(0, 1)
                 local my = GetDisabledControlNormal(0, 2)
+
+                if SpectateLockedSource then
+                    -- Locked on: orbit around the target instead of free-flying.
+                    local tp = GetPlayerFromServerId(SpectateLockedSource)
+                    local tPed = tp ~= -1 and GetPlayerPed(tp) or nil
+                    if tPed and tPed ~= 0 and DoesEntityExist(tPed) then
+                        SpectateHeading = SpectateHeading - (mx * 6.0)
+                        SpectatePitch = math.max(-85.0, math.min(30.0, SpectatePitch - (my * 6.0)))
+
+                        local targetCoord = GetEntityCoords(tPed) + vector3(0.0, 0.0, Config.SpectateLockHeight)
+                        local rh = math.rad(SpectateHeading)
+                        local rp = math.rad(SpectatePitch)
+                        local dist = Config.SpectateLockDistance
+                        local offset = vector3(
+                            math.sin(rh) * math.cos(rp) * dist,
+                            math.cos(rh) * math.cos(rp) * dist,
+                            math.sin(-rp) * dist
+                        )
+                        SetCamCoord(SpectateCam, targetCoord.x - offset.x, targetCoord.y - offset.y, targetCoord.z - offset.z)
+                        PointCamAtEntity(SpectateCam, tPed, 0.0, 0.0, 0.5, true)
+                    end
+                    goto continueSpectateLoop
+                end
+
                 SpectateHeading = SpectateHeading - (mx * 6.0)
                 SpectatePitch = math.max(-89.0, math.min(89.0, SpectatePitch - (my * 6.0)))
                 SetCamRot(SpectateCam, SpectatePitch, 0.0, SpectateHeading, 2)
 
-                local camCoord = GetCamCoord(SpectateCam)
-                local speed = Config.SpectateSpeed
-                if IsControlPressed(0, 21) then speed = speed * 3.0 end
+                do
+                    local camCoord = GetCamCoord(SpectateCam)
+                    local speed = Config.SpectateSpeed
+                    if IsControlPressed(0, 21) then speed = speed * 3.0 end
 
-                local forward, right, up = 0.0, 0.0, 0.0
-                if IsControlPressed(0, 32) then forward = forward + speed end
-                if IsControlPressed(0, 33) then forward = forward - speed end
-                if IsControlPressed(0, 34) then right = right - speed end
-                if IsControlPressed(0, 35) then right = right + speed end
-                if IsControlPressed(0, 22) then up = up + speed end
-                if IsControlPressed(0, 36) then up = up - speed end
+                    local forward, right, up = 0.0, 0.0, 0.0
+                    if IsControlPressed(0, 32) then forward = forward + speed end
+                    if IsControlPressed(0, 33) then forward = forward - speed end
+                    if IsControlPressed(0, 34) then right = right - speed end
+                    if IsControlPressed(0, 35) then right = right + speed end
+                    if IsControlPressed(0, 22) then up = up + speed end
+                    if IsControlPressed(0, 36) then up = up - speed end
 
-                if forward ~= 0.0 or right ~= 0.0 or up ~= 0.0 then
-                    local rad = math.rad(SpectateHeading)
-                    local dx = (math.sin(-rad) * forward) + (math.cos(-rad) * right)
-                    local dy = (math.cos(-rad) * forward) - (math.sin(-rad) * right)
-                    SetCamCoord(SpectateCam, camCoord.x + dx, camCoord.y + dy, camCoord.z + up)
+                    if forward ~= 0.0 or right ~= 0.0 or up ~= 0.0 then
+                        local rad = math.rad(SpectateHeading)
+                        local dx = (math.sin(-rad) * forward) + (math.cos(-rad) * right)
+                        local dy = (math.cos(-rad) * forward) - (math.sin(-rad) * right)
+                        SetCamCoord(SpectateCam, camCoord.x + dx, camCoord.y + dy, camCoord.z + up)
+                    end
                 end
+
+                ::continueSpectateLoop::
             end
         end)
     end)
@@ -1526,6 +1666,9 @@ if Config.EnableSpectate then
     RegisterCommand(Config.SpectateLeaveCommand, function()
         if not SpectateActive then return end
         SpectateActive = false
+        SpectateListOpen = false
+        SpectateLockedSource = nil
+        SetNuiFocus(false, false)
         RenderScriptCams(false, true, 800, true, true)
         if SpectateCam then
             DestroyCam(SpectateCam, false)
@@ -1542,6 +1685,8 @@ if Config.EnableSpectate then
         SpectateOriginalCoords = nil
         TriggerServerEvent("Violet-Capture:LeaveSpectateWorld")
         SendNUIMessage({action = "spectateClose"})
+        SendNUIMessage({action = "spectateListClose"})
+        SendNUIMessage({action = "spectateVitalsClose"})
         Notify("Spectator Mode OFF.", 'info')
     end, false)
 
@@ -1552,3 +1697,4 @@ if Config.EnableSpectate then
         end
     end)
 end
+

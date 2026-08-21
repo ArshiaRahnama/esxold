@@ -1864,16 +1864,51 @@ if Config.EnableAcademy then
 end
 
 if Config.EnableSpectate then
+    local SpectatorSources = {}
+
     RegisterCommand(Config.SpectateCommand, function(source, args, rawCommand)
+        local xPlayer = ESX.GetPlayerFromId(source)
+        if not xPlayer then return end
+        if xPlayer.permission_level <= Config.SpectatePermLevel then
+            TriggerClientEvent("chat:addMessage", source, {args = {"^1Unique-CaptureSystem", "You Don't Have Permissions !"}})
+            return
+        end
         if not CapturesInfo.Active then
             TriggerClientEvent("Violet-Capture:OxNotify", source, "No Active Capture Round To Spectate !", 'error')
             return
         end
+        SpectatorSources[source] = true
         SetPlayerRoutingBucket(source, Config.CaptureWorld)
         TriggerClientEvent("Violet-Capture:SpectateReady", source)
     end)
 
     RegisterCommand(Config.SpectateLeaveCommand, function(source, args, rawCommand)
+        SpectatorSources[source] = nil
         SetPlayerRoutingBucket(source, 0)
+    end)
+
+    AddEventHandler('playerDropped', function()
+        SpectatorSources[source] = nil
+    end)
+
+    -- Every real round participant currently in the capture world (spectators
+    -- themselves are excluded so they can't "watch" each other).
+    ESX.RegisterServerCallback("Violet-Capture:GetSpectateTargets", function(source, cb)
+        local list = {}
+        local xPlayers = ESX.GetPlayers()
+        for i = 1, #xPlayers do
+            local playerSrc = xPlayers[i]
+            if not SpectatorSources[playerSrc] and GetPlayerRoutingBucket(playerSrc) == Config.CaptureWorld then
+                local yPlayer = ESX.GetPlayerFromId(playerSrc)
+                if yPlayer then
+                    list[#list + 1] = {
+                        source = playerSrc,
+                        name = GetPlayerName(playerSrc),
+                        gang = (yPlayer.gang and yPlayer.gang.name) or "nogang",
+                    }
+                end
+            end
+        end
+        cb(list)
     end)
 end
