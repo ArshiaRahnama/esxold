@@ -1,4 +1,4 @@
-
+--------------- Drink  ------------
 ESX.RegisterUsableItem('abporteghal', function(source)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -7,7 +7,7 @@ ESX.RegisterUsableItem('abporteghal', function(source)
 	TriggerClientEvent('esx_status:add', source, 'thirst', 333333)
 	TriggerClientEvent('AH_uwucafejob:onDrinkabporteghal', source)
 	TriggerClientEvent('esx:ShowNotification', source, "Shoma Yek ~y~Ab Porteghal~w~ Noshidid")
-end)
+end) 
 
 ESX.RegisterUsableItem('bubbletetotfarangi', function(source)
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -163,6 +163,7 @@ ESX.RegisterUsableItem('milk_shake_shokolati', function(source)
 	TriggerClientEvent('esx:ShowNotification', source, "Shoma Yek ~y~Milkshake~w~ Noshidid")
 end)
 
+--------------------------------------- Eat --------------------------------------  
 ESX.RegisterUsableItem('nodel', function(source)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -234,6 +235,7 @@ ESX.RegisterUsableItem('muffin_tamshak', function(source)
 	TriggerClientEvent('esx:ShowNotification', source, "Shoma Yek ~y~muffin_tamshak~w~ Khordid")
 end)
 
+
 ESX.RegisterUsableItem('cupcake_shokolati', function(source)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -274,6 +276,7 @@ ESX.RegisterUsableItem('cakebastani', function(source)
 	TriggerClientEvent('esx:ShowNotification', source, "Shoma Yek ~y~Cake Bastani~w~ Khordid")
 end)
 
+
 ESX.RegisterUsableItem('cakebastanivanili', function(source)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -293,6 +296,7 @@ ESX.RegisterUsableItem('cake_bastani_vanili', function(source)
 	TriggerClientEvent('AH_uwucafejob:onEatcakebastanivanili', source)
 	TriggerClientEvent('esx:ShowNotification', source, "Shoma Yek ~y~Cake Bastani vanili~w~ Khordid")
 end)
+
 
 ESX.RegisterUsableItem('caketotfarangi', function(source)
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -337,8 +341,8 @@ end)
 RegisterCommand('th2', function(source, args)
 	xPlayer = ESX.GetPlayerFromId(source)
 	if xPlayer.permission_level >= 1 then
-		if not args[2] then
-			if args[1] == 'a' then
+		if not args[2] then 
+			if args[1] == 'a' then 
 				TriggerClientEvent('esx_status:add', source, 'thirst', -1000000)
 				TriggerClientEvent('esx_status:add', source, 'hunger', -1000000)
 			elseif args[1] == 'b' then
@@ -348,8 +352,8 @@ RegisterCommand('th2', function(source, args)
 		else
 			local xTarget = ESX.GetPlayerFromId(tonumber(args[1]))
 			local targetsource = tonumber(args[1])
-
-			if tostring(args[2]) == 'a' then
+			
+			if tostring(args[2]) == 'a' then 
 				TriggerClientEvent('esx_status:add', targetsource, 'thirst', -1000000)
 				TriggerClientEvent('esx_status:add', targetsource, 'hunger', -1000000)
 			elseif tostring(args[2]) == 'b' then

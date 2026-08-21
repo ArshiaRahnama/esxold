@@ -1,34 +1,36 @@
 local TargetNumber = {}
 ESX = nil
-
+-- PlayerData is a genuine global, declared in client/main.lua (loaded first)
 Citizen.CreateThread(function()
     while ESX == nil do
         TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
         Citizen.Wait(0)
     end
 
-    while ESX.GetPlayerData().job == nil do
+
+
+    while ESX.GetPlayerData().job == nil do 
         Wait(10)
     end
     PlayerData = ESX.GetPlayerData()
     PlayerData.job = ESX.GetPlayerData().job
 
-    while true do
+    while true do 
         Wait(1)
-
-        if IsControlJustPressed(0, 167) and IsCafeJob(PlayerData.job.name) then
+ 
+        if IsControlJustPressed(0, 167) and IsCafeJob(PlayerData.job.name) then 
             OpenMobileuwueActionsMenu()
         end
     end
-
-
+    
+    
 end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
     PlayerData.job = job
     UwUCafeMenuAction()
-
+    
 end)
 
 Citizen.CreateThread(function()
@@ -49,13 +51,14 @@ Citizen.CreateThread(function()
     end
 end)
 
+
 function RemoveTarget()
     local zoneName = nil
     local zoneNum  = nil
     local Ncount = #TargetNumber
-    while Ncount ~= 0 do
-        for k,v in pairs(TargetNumber) do
-
+    while Ncount ~= 0 do 
+        for k,v in pairs(TargetNumber) do 
+            
             exports.ox_target:removeZone(v.num)
             table.remove(TargetNumber, k)
             Citizen.Wait(20)
@@ -64,8 +67,10 @@ function RemoveTarget()
     end
 end
 
-function CreateOXTarget(coord, name, event, icon)
 
+-- Target --
+function CreateOXTarget(coord, name, event, icon)
+    -- freezer
     local numt = exports.ox_target:addBoxZone({
         coords = vec3(coord.x, coord.y, coord.z),
         size = vec3(1.5, 1.5, 1.5),
@@ -85,7 +90,7 @@ function CreateOXTarget(coord, name, event, icon)
 end
 
 function CreateOXTargetNotJob(coord, name, event, icon)
-
+    -- freezer
     local numt = exports.ox_target:addBoxZone({
         coords = vec3(coord.x, coord.y, coord.z),
         size = vec3(1.5, 1.5, 1.5),
@@ -102,61 +107,63 @@ function CreateOXTargetNotJob(coord, name, event, icon)
     })
 end
 
-function FreezerTarget()
+-- Freezer --
 
+function FreezerTarget()
+    -- freezer -- (only the ONE station matching the player's own cafe)
     local myCafe = GetCafeForJob(PlayerData.job.name)
     if myCafe then
         CreateOXTarget(myCafe.Freezer.Pos, myCafe.Freezer.Name, 'AH_uwucafejob:OpenInventory', myCafe.Freezer.Icon)
     end
-
+    -- ped --
     local myCafeShop = GetCafeForJob(PlayerData.job.name)
     if myCafeShop then
         CreateOXTarget(myCafeShop.PedShop.Pos, myCafeShop.PedShop.Name, 'AH_uwucafejob:OpenShopMenus', myCafeShop.PedShop.Icon)
     end
-
+    -- Boss Action --
     local myCafeBoss = GetCafeForJob(PlayerData.job.name)
     if myCafeBoss then
         CreateOXTarget(myCafeBoss.BossAction.Pos, myCafeBoss.BossAction.Name, 'AH_uwucafejob:OpenBossMenus', myCafeBoss.BossAction.Icon)
     end
-
+    -- Cloack Room --
     local myCafeCR = GetCafeForJob(PlayerData.job.name)
     if myCafeCR then
         CreateOXTarget(myCafeCR.CloackRoom.Pos, myCafeCR.CloackRoom.Name, 'AH_uwucafejob:OpenCloakroomMenu', myCafeCR.CloackRoom.Icon)
     end
-
+    -- Crafting Ham Zan--
     local myCafeHZ = GetCafeForJob(PlayerData.job.name)
     if myCafeHZ then
         CreateOXTarget(myCafeHZ.Crafting_Hamzan.Pos, myCafeHZ.Crafting_Hamzan.Name, 'AH_uwucafejob:OpenCraftingHamzan', myCafeHZ.Crafting_Hamzan.Icon)
     end
-
+    -- Crafting Ghahve Saz--
     local myCafeGS = GetCafeForJob(PlayerData.job.name)
     if myCafeGS then
         CreateOXTarget(myCafeGS.Crafting_Ghahvesaz.Pos, myCafeGS.Crafting_Ghahvesaz.Name, 'AH_uwucafejob:OpenCraftingGhahvesaz', myCafeGS.Crafting_Ghahvesaz.Icon)
     end
-
+    -- Crafting Zarf Shoe--
     local myCafeZS = GetCafeForJob(PlayerData.job.name)
     if myCafeZS then
         CreateOXTarget(myCafeZS.Crafting_ZarfShoe.Pos, myCafeZS.Crafting_ZarfShoe.Name, 'AH_uwucafejob:OpenCraftingZarfShoe', myCafeZS.Crafting_ZarfShoe.Icon)
     end
-
+    -- Crafting Gaz--
     local myCafeGZ = GetCafeForJob(PlayerData.job.name)
     if myCafeGZ then
         CreateOXTarget(myCafeGZ.Crafting_Gaz.Pos, myCafeGZ.Crafting_Gaz.Name, 'AH_uwucafejob:OpenCraftingGaz', myCafeGZ.Crafting_Gaz.Icon)
     end
-
+  
 end
 
 Citizen.CreateThread(function()
     local options = {}
     local input   = nil
+    -- for k,v in pairs(Config.uwustasion) do 
+    --     local ped = CreatePed(v.PedShop.Model, GetHashKey(v.PedShop.Model), v.PedShop.Pos.x,v.PedShop.Pos.y, v.PedShop.Pos.z-1, v.PedShop.Pos.h, true, true)
+    --     FreezeEntityPosition(ped, true)
+    --     SetEntityInvincible(ped, true)
+    --     SetBlockingOfNonTemporaryEvents(ped, true)
+    -- end
 
-
-
-
-
-
-
-    for k,v in pairs(Config.UwUShopItem) do
+    for k,v in pairs(Config.UwUShopItem) do 
 
         table.insert(options, {label = v.label.."      "..v.price.." $", icon = v.icon, args = {item = v.args,  price = v.price,}})
     end
@@ -165,28 +172,28 @@ Citizen.CreateThread(function()
         id = 'shop_menu_uwu',
         title = 'Foroshgah',
         position = 'top-right',
+        -- onSideScroll = function(selected, scrollIndex, args)
 
-
-
+        -- end,
         onSelected = function(selected, secondary, args)
             if args.item then
-
-
+             
+          
             end
         end,
         onClose = function(keyPressed)
-
+          
             if keyPressed then
-
+          
             end
         end,
 
         options = options
-
+        
     }, function(selected, scrollIndex, args)
         ::relog::
         input = lib.inputDialog('Buy Item', {'Tedad'})
-
+       
         if input[1] and tonumber(input[1]) then
             TriggerServerEvent('AH_uwucafejob:BuyItems', args.item, input[1], args.price)
             Wait(300)
@@ -201,6 +208,7 @@ end)
 function OpendMenuShops()
     lib.showMenu('shop_menu_uwu')
 end
+
 
 function OpenCloakroomMenu()
     local elements = {}
@@ -234,26 +242,27 @@ function OpenCloakroomMenu()
         if data.current.value == 'work_wear' then
             local job =  PlayerData.job.name
             local gradenum =  PlayerData.job.grade
-
+            
             ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
-                ESX.TriggerServerCallback('esx_society:getUniforms', function(SkinMale, SkinFemale)
-
+                ESX.TriggerServerCallback('esx_society:getUniforms', function(SkinMale, SkinFemale)-- get uniform from esx_society
+                
                     if skin.sex == 0 then
                         TriggerEvent('skinchanger:loadClothes', skin, SkinMale)
                     else
                         TriggerEvent('skinchanger:loadClothes', skin, SkinFemale)
                     end
-
+                    
                 end,gradenum, job)
-
+                
             end)
-
+                
         end
     end, function(data, menu)
         menu.close()
     end)
 
 end
+
 
 function cleanPlayer(playerPed)
 	SetPedArmour(playerPed, 0)
@@ -265,14 +274,16 @@ end
 
 RegisterNetEvent('AH_uwucafejob:OpenMenuSefaresh')
 AddEventHandler('AH_uwucafejob:OpenMenuSefaresh', function()
-    ESX.TriggerServerCallback('AH_uwucafejob:GetOnDutyJob', function(tojob)
-        if tojob then
+    ESX.TriggerServerCallback('AH_uwucafejob:GetOnDutyJob', function(tojob) 
+        if tojob then 
             lib.showContext('uwu_menu')
         else
             ExecuteCommand('asdfghjkl;sfsdfsdfzxcvnads23adfghuwu')
         end
     end)
 end)
+
+
 
 Citizen.CreateThread(function()
 
@@ -287,11 +298,11 @@ end)
 
 function UwUCafeMenuAction()
     local options = {}
-
-    if IsCafeJob(PlayerData.job.name) then
+    
+    if IsCafeJob(PlayerData.job.name) then 
         table.insert(options, {
-            title = 'Action House',
-            value = 'menu_Action',
+            title = 'Action House', 
+            value = 'menu_Action', 
             onSelect = function()
                 ExecuteCommand('asdfghjkl;sfsdfsdfzxcvnads23adfghuwu')
             end
@@ -307,13 +318,14 @@ function UwUCafeMenuAction()
         title = 'UwU Menu',
         icon = 'fa-brands fa-shopify',
         options = options
-
+        
     })
 end
 
+
 Citizen.CreateThread(function()
     local options1 = {}
-
+    
     for i, item in ipairs(Config.UwUMenu_Cake_Item) do
       table.insert(options1, {
             title = item.title,
@@ -321,25 +333,25 @@ Citizen.CreateThread(function()
             icon = item.image,
             image = item.image,
             onSelect = function()
-
+             
               lib.showContext('cake_menu')
             end
       })
     end
-
+ 
     lib.registerContext({
         id = 'cake_menu',
         title = 'Cake Items',
         menu = 'uwu_menu',
         onBack = function()
-
-
+          
+         
         end,
         options = options1
     })
 
     local options2 = {}
-
+    
     for i, item in ipairs(Config.UwUMenu_Noshidani_Item) do
       table.insert(options2, {
             title = item.title,
@@ -347,30 +359,30 @@ Citizen.CreateThread(function()
             icon = item.image,
             image = item.image,
             onSelect = function()
-
+              
               lib.showContext('noshidani_menu')
             end
       })
     end
-
+ 
     lib.registerContext({
         id = 'noshidani_menu',
         title = 'Noshidani Items',
         menu = 'uwu_menu',
         onBack = function()
-
+        
         end,
         options = options2
     })
 
-
+    
 end)
-
-
+  
+    
 local prop = nil
 function OpenMobileuwueActionsMenu()
     ESX.UI.Menu.CloseAll()
-
+		
 
     elements = {
         {label = 'Ghabz ',   value = 'bling'},
@@ -381,34 +393,34 @@ function OpenMobileuwueActionsMenu()
         align    = 'bottom-right',
         elements = elements
     }, function(data, menu)
-        if data.current.value == 'bling' then
+        if data.current.value == 'bling' then 
             PlayerBlingMenu()
         end
-
+       
 
     end, function(data, menu)
         menu.close()
     end)
-
+	
 end
 
 function PlayerBlingMenu()
 	ESX.UI.Menu.CloseAll()
 	dataplayer = {}
 	local elements = {}
-	local nearbyPlayers = getNearbyPlayers(3)
+	local nearbyPlayers = getNearbyPlayers(3) 
 	local elements = {}
 	table.insert(elements, {label = "ID"  , value = " " })
 	local playerId22 = GetPlayerServerId(PlayerId())
 	local names = nil
-
+	
 	for _, player in ipairs(nearbyPlayers) do
-		local playerPed = GetPlayerPed(GetPlayerFromServerId(player.id))
-		local health = GetEntityHealth(playerPed)
+		local playerPed = GetPlayerPed(GetPlayerFromServerId(player.id)) 
+		local health = GetEntityHealth(playerPed) 
 		if player.id ~= playerId22 and health ~= 0 then
-
+			
             table.insert(elements, { label = "Player ID : " .. " [" .. player.id .. "]", value = player.id })
-
+			
 		end
 	end
 
@@ -422,14 +434,14 @@ function PlayerBlingMenu()
 			elements = elements
 		}, function(data, menu)
 
-			if data.current.value ~= " " then
-
+			if data.current.value ~= " " then 
+				
 				local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
 				if closestPlayer == -1 or closestDistance > 2.0 then
 					ESX.ShowNotification("No players nearby!")
 				else
-
+					
 					local playerid = data.current.value
 
                     ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'billing', {
@@ -437,7 +449,7 @@ function PlayerBlingMenu()
                     }, function(data2, menu2)
                         local amount = tonumber(data2.value)
                         if amount == nil then
-
+                            
                         else
                             menu2.close()
                             if closestPlayer == -1 or closestDistance > 2.0 then
@@ -450,45 +462,46 @@ function PlayerBlingMenu()
                     end, function(data2, menu2)
                         menu2.close()
                     end)
-
+					
 					stopActiveMarker()
-
-
-
-
+			
+					-- ESX.UI.Menu.CloseAll()
+						
+					
 				end
-
-
+				
+			
 		end
 
 
-
+        
+			
 		end, function(data, menu)
 			menu.close()
 
-
+			
 		end, function(data, menu)
 			local tttrp = true
 			stopActiveMarker()
 			Wait(5)
-
+			
 			local targetPlayer = GetPlayerPed(GetPlayerFromServerId(data.current.value))
 			activeMarkerThread = true
-
+			
 			local playerId22 = GetPlayerServerId(PlayerId())
 
 			while activeMarkerThread and tttrp do
 				if DoesEntityExist(targetPlayer) then
 					local coords = GetEntityCoords(targetPlayer)
 					if data.current.value ~= " " then
-
+						
 
 						DrawMarker(23, coords.x, coords.y, coords.z-1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.7, 0.7, 0.7, 0, 255, 0, 100, false, true, 2, nil, nil, false)
-
+						
 						if IsControlJustPressed(0, 177) or IsControlJustPressed(0, 322) then
 							tttrp = false
 						end
-					else
+					else 
 
 					end
 				else
@@ -496,7 +509,7 @@ function PlayerBlingMenu()
 				end
 				Wait(0)
 			end
-
+			
 		end,function()
 
 		end
@@ -516,18 +529,18 @@ AddEventHandler('AH_uwucafejob:OpenMenuDialog', function(player, target, amount)
                 {label = 'Bale', value = 'yes'},
                 {label = 'Kheir', value = 'no'},
             },
-        },
+        }, 
         function(data, menu)
             if data.current.value == 'yes' then
                 TriggerServerEvent('esx_billing:send2Bill2', target, player, 'society_' .. PlayerData.job.name, PlayerData.job.name, amount)
                 TriggerServerEvent("AH_uwucafejob:ChatMessage",target, player, true)
 
-                ESX.UI.Menu.CloseAll()
+                ESX.UI.Menu.CloseAll()		
             elseif data.current.value == 'no' then
-
+               
                 TriggerServerEvent("AH_uwucafejob:ChatMessage",target, player, false)
                 menu.close()
-
+                												
             end
         end
     )
@@ -554,7 +567,7 @@ function getNearbyPlayers(radius)
     return players
 end
 
-local activeMarkerTarget = nil
+local activeMarkerTarget = nil 
 function stopActiveMarker()
     if activeMarkerThread then
         activeMarkerThread = nil

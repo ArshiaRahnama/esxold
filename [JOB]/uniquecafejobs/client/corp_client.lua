@@ -1,4 +1,9 @@
-
+--[[
+	Client side for the 3 corp jobs. Reuses OpenCloakroomMenu() (from
+	functions.lua) and esx_society's boss menu event - only the physical
+	zones + a couple of bespoke menus (Portfolio / Launder / Wholesale) are
+	new here.
+]]
 
 local function myCorpJob()
 	if not PlayerData or not PlayerData.job then return nil end
@@ -8,6 +13,7 @@ local function myCorpJob()
 	return nil
 end
 
+-- ── Blips ──
 local CorpBlips = {}
 CreateThread(function()
 	for _, corp in pairs({ Corp.Meridian, Corp.Blacktide, Corp.CrateCarry }) do
@@ -38,56 +44,94 @@ AddEventHandler('uniquecafejobs:corp:businessRenamed', function(job, newName)
 	CustomNames[job] = newName
 end)
 
-local function addSimpleZone(coord, name, icon, job, event)
-	exports.ox_target:addBoxZone({
-		coords = vec3(coord.x, coord.y, coord.z),
-		size = vec3(1.5, 1.5, 1.5),
-		rotation = 45,
-		debug = false,
-		options = {
-			{
-				name = name,
-				icon = icon,
-				label = name,
-				canInteract = function()
-					return PlayerData and PlayerData.job and PlayerData.job.name == job
-				end,
-				onSelect = function()
-					TriggerEvent(event)
-				end,
-			},
-		},
-	})
-end
+-- ── Meridian: physical Boss Action access at EVERY business it owns ──
+-- Whoever holds Meridian (Director+) can walk up to any acquired/partnered
+-- business's own Boss Action marker and manage it directly, on top of the
+-- remote "Manage Business Staff" menu at Meridian's own HQ.
+local MeridianOwnedJobs = {}
 
 CreateThread(function()
-	addSimpleZone(Corp.Meridian.BossAction.Pos, Corp.Meridian.BossAction.Name, Corp.Meridian.BossAction.Icon, Corp.Meridian.Job, 'uniquecafejobs:corp:openMeridianBoss')
-	addSimpleZone(Corp.Meridian.CloackRoom.Pos, Corp.Meridian.CloackRoom.Name, Corp.Meridian.CloackRoom.Icon, Corp.Meridian.Job, 'uniquecafejobs:corp:openCloakroom')
+	Citizen.Wait(2000)
+	TriggerServerEvent('uniquecafejobs:corp:requestMeridianOwnedJobs')
+end)
 
-	addSimpleZone(Corp.Blacktide.BossAction.Pos, Corp.Blacktide.BossAction.Name, Corp.Blacktide.BossAction.Icon, Corp.Blacktide.Job, 'uniquecafejobs:corp:openBlacktideBoss')
-	addSimpleZone(Corp.Blacktide.CloackRoom.Pos, Corp.Blacktide.CloackRoom.Name, Corp.Blacktide.CloackRoom.Icon, Corp.Blacktide.Job, 'uniquecafejobs:corp:openCloakroom')
+RegisterNetEvent('uniquecafejobs:corp:syncMeridianOwnedJobs')
+AddEventHandler('uniquecafejobs:corp:syncMeridianOwnedJobs', function(owned)
+	MeridianOwnedJobs = owned
+end)
 
-	addSimpleZone(Corp.CrateCarry.Freezer.Pos, Corp.CrateCarry.Freezer.Name, Corp.CrateCarry.Freezer.Icon, Corp.CrateCarry.Job, 'AH_uwucafejob:OpenInventory')
-	addSimpleZone(Corp.CrateCarry.BossAction.Pos, Corp.CrateCarry.BossAction.Name, Corp.CrateCarry.BossAction.Icon, Corp.CrateCarry.Job, 'uniquecafejobs:corp:openCrateCarryBoss')
-	addSimpleZone(Corp.CrateCarry.CloackRoom.Pos, Corp.CrateCarry.CloackRoom.Name, Corp.CrateCarry.CloackRoom.Icon, Corp.CrateCarry.Job, 'uniquecafejobs:corp:openCloakroom')
+CreateThread(function()
+	while true do
+		Citizen.Wait(0)
+		if PlayerData and PlayerData.job and PlayerData.job.name == Corp.Meridian.Job and PlayerData.job.grade >= 2 then
+			local playerCoords = GetEntityCoords(PlayerPedId())
 
+			for _, cafe in pairs(Cafes) do
+				if MeridianOwnedJobs[cafe.Job] then
+					local dist = #(playerCoords - vector3(cafe.BossAction.Pos.x, cafe.BossAction.Pos.y, cafe.BossAction.Pos.z))
+					if dist < 10.0 then
+						DrawMarker(29, cafe.BossAction.Pos.x, cafe.BossAction.Pos.y, cafe.BossAction.Pos.z - 0.9, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.6, 0.6, 0, 255, 120, 100, false, true, 2, false, nil, nil, false)
+						if dist < 1.5 then
+							ESX.ShowHelpNotification(("~INPUT_CONTEXT~ Manage %s (as Meridian)"):format(GetDisplayLabel(cafe.Job, cafe.Label)))
+							if IsControlJustPressed(0, 38) then
+								TriggerServerEvent('uniquecafejobs:corp:openBusinessBossMenuAsMeridian', cafe.Job)
+							end
+						end
+					end
+				end
+			end
+		else
+			Citizen.Wait(1000)
+		end
+	end
+end)
 
-	exports.ox_target:addBoxZone({
-		coords = vec3(Corp.CrateCarry.ResaleShop.Pos.x, Corp.CrateCarry.ResaleShop.Pos.y, Corp.CrateCarry.ResaleShop.Pos.z),
-		size = vec3(1.5, 1.5, 1.5),
-		rotation = 45,
-		debug = false,
-		options = {
-			{
-				name = Corp.CrateCarry.ResaleShop.Name,
-				icon = Corp.CrateCarry.ResaleShop.Icon,
-				label = Corp.CrateCarry.ResaleShop.Name,
-				onSelect = function()
+-- ── Boss Action / Cloakroom markers (Meridian + Blacktide + CrateCarry) ──
+-- Classic DrawMarker + proximity style, same convention as esx_uniquejobs
+-- (police_main.lua etc.) uses for its own Boss Action / Cloakroom markers -
+-- no ox_target here on purpose.
+local SimpleMarkers = {
+	{ pos = Corp.Meridian.BossAction.Pos,   job = Corp.Meridian.Job,   help = Corp.Meridian.BossAction.Name,   event = 'uniquecafejobs:corp:openMeridianBoss' },
+	{ pos = Corp.Meridian.CloackRoom.Pos,   job = Corp.Meridian.Job,   help = Corp.Meridian.CloackRoom.Name,   event = 'uniquecafejobs:corp:openCloakroom' },
+	{ pos = Corp.Blacktide.BossAction.Pos,  job = Corp.Blacktide.Job,  help = Corp.Blacktide.BossAction.Name,  event = 'uniquecafejobs:corp:openBlacktideBoss' },
+	{ pos = Corp.Blacktide.CloackRoom.Pos,  job = Corp.Blacktide.Job,  help = Corp.Blacktide.CloackRoom.Name,  event = 'uniquecafejobs:corp:openCloakroom' },
+	{ pos = Corp.CrateCarry.Freezer.Pos,    job = Corp.CrateCarry.Job, help = Corp.CrateCarry.Freezer.Name,    event = 'AH_uwucafejob:OpenInventory' },
+	{ pos = Corp.CrateCarry.BossAction.Pos, job = Corp.CrateCarry.Job, help = Corp.CrateCarry.BossAction.Name, event = 'uniquecafejobs:corp:openCrateCarryBoss' },
+	{ pos = Corp.CrateCarry.CloackRoom.Pos, job = Corp.CrateCarry.Job, help = Corp.CrateCarry.CloackRoom.Name, event = 'uniquecafejobs:corp:openCloakroom' },
+}
+
+CreateThread(function()
+	while true do
+		Citizen.Wait(0)
+		local playerCoords = GetEntityCoords(PlayerPedId())
+
+		for _, m in ipairs(SimpleMarkers) do
+			if PlayerData and PlayerData.job and PlayerData.job.name == m.job then
+				local dist = #(playerCoords - vector3(m.pos.x, m.pos.y, m.pos.z))
+				if dist < 10.0 then
+					DrawMarker(29, m.pos.x, m.pos.y, m.pos.z - 0.9, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.6, 0.6, 255, 255, 255, 100, false, true, 2, false, nil, nil, false)
+					if dist < 1.5 then
+						ESX.ShowHelpNotification("~INPUT_CONTEXT~ " .. m.help)
+						if IsControlJustPressed(0, 38) then
+							TriggerEvent(m.event)
+						end
+					end
+				end
+			end
+		end
+
+		-- Resale counter - open to EVERYONE (public customers), not job gated
+		local resaleDist = #(playerCoords - vector3(Corp.CrateCarry.ResaleShop.Pos.x, Corp.CrateCarry.ResaleShop.Pos.y, Corp.CrateCarry.ResaleShop.Pos.z))
+		if resaleDist < 10.0 then
+			DrawMarker(29, Corp.CrateCarry.ResaleShop.Pos.x, Corp.CrateCarry.ResaleShop.Pos.y, Corp.CrateCarry.ResaleShop.Pos.z - 0.9, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.6, 0.6, 0, 200, 255, 100, false, true, 2, false, nil, nil, false)
+			if resaleDist < 1.5 then
+				ESX.ShowHelpNotification("~INPUT_CONTEXT~ " .. Corp.CrateCarry.ResaleShop.Name)
+				if IsControlJustPressed(0, 38) then
 					TriggerServerEvent('uniquecafejobs:corp:openResaleShop')
-				end,
-			},
-		},
-	})
+				end
+			end
+		end
+	end
 end)
 
 RegisterNetEvent('uniquecafejobs:corp:openCloakroom')
@@ -307,51 +351,44 @@ AddEventHandler('uniquecafejobs:corp:openCrateCarryBoss', function()
 	openRenamableBossMenu(Corp.CrateCarry.Job, Corp.CrateCarry.Label)
 end)
 
+-- ── Blacktide (launder) + CrateCarry (wholesale) markers at all 17 businesses ──
+-- Same DrawMarker + proximity convention as the rest of this file.
 CreateThread(function()
-	for _, cafe in pairs(Cafes) do
-		exports.ox_target:addBoxZone({
-			coords = vec3(cafe.PedShop.Pos.x, cafe.PedShop.Pos.y, cafe.PedShop.Pos.z),
-			size = vec3(2.0, 2.0, 2.0),
-			rotation = 45,
-			debug = false,
-			options = {
-				{
-					name = 'launder_' .. cafe.Job,
-					icon = 'fa-solid fa-money-bill-transfer',
-					label = 'Launder Cash Through ' .. cafe.Label,
-					canInteract = function()
-						return PlayerData and PlayerData.job and PlayerData.job.name == Corp.Blacktide.Job
-					end,
-					onSelect = function()
-						TriggerServerEvent('uniquecafejobs:corp:launder', cafe.Job)
-					end,
-				},
-			},
-		})
-	end
-end)
+	while true do
+		Citizen.Wait(0)
+		if PlayerData and PlayerData.job and (PlayerData.job.name == Corp.Blacktide.Job or PlayerData.job.name == Corp.CrateCarry.Job) then
+			local playerCoords = GetEntityCoords(PlayerPedId())
 
-CreateThread(function()
-	for _, cafe in pairs(Cafes) do
-		exports.ox_target:addBoxZone({
-			coords = vec3(cafe.Freezer.Pos.x, cafe.Freezer.Pos.y, cafe.Freezer.Pos.z),
-			size = vec3(2.0, 2.0, 2.0),
-			rotation = 45,
-			debug = false,
-			options = {
-				{
-					name = 'wholesale_' .. cafe.Job,
-					icon = 'fa-solid fa-truck-ramp-box',
-					label = 'Buy Wholesale From ' .. cafe.Label,
-					canInteract = function()
-						return PlayerData and PlayerData.job and PlayerData.job.name == Corp.CrateCarry.Job
-					end,
-					onSelect = function()
-						TriggerServerEvent('uniquecafejobs:corp:openWholesaleMenu', cafe.Job)
-					end,
-				},
-			},
-		})
+			for _, cafe in pairs(Cafes) do
+				if PlayerData.job.name == Corp.Blacktide.Job then
+					local dist = #(playerCoords - vector3(cafe.PedShop.Pos.x, cafe.PedShop.Pos.y, cafe.PedShop.Pos.z))
+					if dist < 10.0 then
+						DrawMarker(29, cafe.PedShop.Pos.x, cafe.PedShop.Pos.y, cafe.PedShop.Pos.z - 0.9, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.6, 0.6, 40, 40, 40, 100, false, true, 2, false, nil, nil, false)
+						if dist < 1.5 then
+							ESX.ShowHelpNotification("~INPUT_CONTEXT~ Launder Cash Through " .. GetDisplayLabel(cafe.Job, cafe.Label))
+							if IsControlJustPressed(0, 38) then
+								TriggerServerEvent('uniquecafejobs:corp:launder', cafe.Job)
+							end
+						end
+					end
+				end
+
+				if PlayerData.job.name == Corp.CrateCarry.Job then
+					local dist2 = #(playerCoords - vector3(cafe.Freezer.Pos.x, cafe.Freezer.Pos.y, cafe.Freezer.Pos.z))
+					if dist2 < 10.0 then
+						DrawMarker(29, cafe.Freezer.Pos.x, cafe.Freezer.Pos.y, cafe.Freezer.Pos.z - 0.9, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.6, 0.6, 0.6, 255, 170, 0, 100, false, true, 2, false, nil, nil, false)
+						if dist2 < 1.5 then
+							ESX.ShowHelpNotification("~INPUT_CONTEXT~ Buy Wholesale From " .. GetDisplayLabel(cafe.Job, cafe.Label))
+							if IsControlJustPressed(0, 38) then
+								TriggerServerEvent('uniquecafejobs:corp:openWholesaleMenu', cafe.Job)
+							end
+						end
+					end
+				end
+			end
+		else
+			Citizen.Wait(1000)
+		end
 	end
 end)
 
@@ -406,6 +443,7 @@ AddEventHandler('uniquecafejobs:corp:showResaleShop', function(stock)
 	end)
 end)
 
+-- ── Vehicle spawn/delete for the 3 corp jobs (same pattern as the 17 businesses) ──
 CreateThread(function()
 	while true do
 		Citizen.Wait(0)

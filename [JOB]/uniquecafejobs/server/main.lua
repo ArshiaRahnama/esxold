@@ -14,24 +14,25 @@ ESX.RegisterServerCallback('AH_uwucafejob:getPropertyInventory', function(source
 	local item = {}
 	local weapons = {}
 
-
+	
 	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_'..xPlayer.job.name, function(inventory)
-
-		if inventory then
-			for k,v in pairs(inventory.items) do
+		
+		if inventory then 
+			for k,v in pairs(inventory.items) do 
 				local invitem = v.name
 				local testd   = v.count
 				local itlab   = v.label
-
+				
 				table.insert(items, {
 					count = testd,
 					name = invitem,
 					label = itlab
 				})
-
+					
 			end
 		end
 	end)
+	
 
 
 	cb({
@@ -51,34 +52,37 @@ AddEventHandler('playerDropped', function()
 
 end)
 
+
 RegisterServerEvent('minijob:getFromInventory')
 AddEventHandler('minijob:getFromInventory', function(type2, item, count)
 	local _source      = source
 	local xPlayer      = ESX.GetPlayerFromId(_source)
 
+
 	if type2 == 'item_standard' then
 
 		local sourceItem = xPlayer.getInventoryItem(item)
 
+
         TriggerEvent('esx_addoninventory:getSharedInventory', 'society_'..xPlayer.job.name, function(inventory)
             local inventoryItem = inventory.getItem(item)
 
-
+            -- is there enough in the property?
             if count > 0 and inventoryItem.count >= count then
-
-
+            
+                -- can the player carry the said amount of x item?
                 if sourceItem.limit ~= -1 and (sourceItem.count + count) > sourceItem.limit then
-
+                    -- TriggerClientEvent('esx:showNotification', _source, _U('player_cannot_hold'))
                 else
                     inventory.removeItem(item, count)
                     xPlayer.addInventoryItem(item, count)
 
                 end
             else
-
+                -- TriggerClientEvent('esx:showNotification', _source, _U('not_enough_in_property'))
             end
         end)
-
+            
 
 	elseif type2 == 'item_weapon' then
 		local weapon = xPlayer.hasWeapon(item)
@@ -103,24 +107,25 @@ AddEventHandler('minijob:getFromInventory', function(type2, item, count)
 				store.set('weapons', storeWeapons)
 				xPlayer.addWeapon(weaponName, ammo)
 
-				if type(components) == 'table' then
-					for k,v in pairs(components) do
+				if type(components) == 'table' then 
+					for k,v in pairs(components) do 
 						xPlayer.addWeaponComponent(weaponName, v)
 
 					end
 				else
 					xPlayer.addWeaponComponent(weaponName, components)
 				end
-
-
+			
+		
 			end)
 		else
-			TriggerClientEvent('esx:showNotification', _source, 'Shoma Dar hale Hazer in Aslahe ro darid')
+			TriggerClientEvent('esx:showNotification', _source, 'Shoma Dar hale Hazer in Aslahe ro darid')			
 		end
 
 	end
 
 end)
+
 
 RegisterServerEvent('minijob:addToInventory')
 AddEventHandler('minijob:addToInventory', function(type, item, count)
@@ -137,56 +142,57 @@ AddEventHandler('minijob:addToInventory', function(type, item, count)
 	cooldown[_source] = os.time()
 	end
 
+
 	local xPlayer      = ESX.GetPlayerFromId(_source)
 
-
+	
 	if type == 'item_standard' then
 		local playerItem = xPlayer.getInventoryItem(item)
 		local playerItemCount = playerItem.count
-		local isvorod = false
+		local isvorod = false 
         local itemwahite = false
 		if string.sub(playerItem.name, 1, 7) == "CarKey|" and playerItemCount ~= 0 then
-			isvorod = false
+			isvorod = false 
 		else
-			isvorod = true
+			isvorod = true 
 		end
-
-		if isvorod then
-            for i,items2 in pairs(Config.UwUItems) do
-                if item == items2 then
+		
+		if isvorod then 
+            for i,items2 in pairs(Config.UwUItems) do 
+                if item == items2 then 
                     itemwahite = true
                     break
                 else
-                    itemwahite = false
+                    itemwahite = false 
                 end
             end
             if itemwahite then
                 if playerItemCount >= count and count > 0 then
                     TriggerEvent('esx_addoninventory:getSharedInventory', 'society_'..xPlayer.job.name, function(inventory)
-
+                        
                         xPlayer.removeInventoryItem(item, count)
                         inventory.addItem(item, count)
-
+                        
                     end)
                 else
-
+                    -- TriggerClientEvent('esx:showNotification', _source, _U('invalid_quantity'))
                 end
             else
                 TriggerClientEvent('esx:showNotification', _source, "Shoma Fagat Item Haye In Cafe Ro Mitavanid Dakhel Freezr Bezarid!!")
             end
-
+            
 		end
 
 	elseif type == 'item_weapon' then
         local amir = false
-        if amir then
+        if amir then 
             local weapon = xPlayer. hasWeapon(item)
 
             if weapon then
                 TriggerEvent('esx_datastore:getSharedDataStore', 'society_'..xPlayer.job.name, function(store)
                     local storeWeapons = store.get('weapons') or {}
-
-
+                    
+                    
                     table.insert(storeWeapons, {
                         name = item,
                         ammo = weapon.ammo,
@@ -195,8 +201,8 @@ AddEventHandler('minijob:addToInventory', function(type, item, count)
 
                     store.set('weapons', storeWeapons)
                     xPlayer.removeWeapon(item)
-
-
+        
+                
                 end)
             else
             end
@@ -208,7 +214,7 @@ RegisterNetEvent('AH_uwucafejob:BuyItems')
 AddEventHandler('AH_uwucafejob:BuyItems', function(items, counts, prises)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	if xPlayer.getInventoryItem(items).limit >= (xPlayer.getInventoryItem(items).count + counts) then
-		if xPlayer.bank >= (prises*counts) then
+		if xPlayer.bank >= (prises*counts) then 
 			xPlayer.removeBank(prises*counts)
 			xPlayer.addInventoryItem(items, counts)
 
@@ -221,10 +227,13 @@ AddEventHandler('AH_uwucafejob:BuyItems', function(items, counts, prises)
 	end
 end)
 
+
+
+
 RegisterServerEvent("spawnCarOnMarker")
 AddEventHandler("spawnCarOnMarker", function(vehicleName)
     local xPlayer = ESX.GetPlayerFromId(source)
-
+    
     if not xPlayer then return end
 
     local myCafe = GetCafeForJob(xPlayer.job.name)
@@ -248,17 +257,18 @@ end)
 RegisterNetEvent('AH_uwucafejob:ChatMessage')
 AddEventHandler('AH_uwucafejob:ChatMessage', function(target, player, Chek)
 
-	if Chek then
+	if Chek then 
 		TriggerClientEvent('chat:addMessage', target, { args = { '^1SYSTEM', 'Darkhast Ghabz Tavasot ID: ^2'..tonumber(player)..' ^0| ^2Ghabol ^0Shod' } })
 	else
 		TriggerClientEvent('chat:addMessage', target, { args = { '^1SYSTEM', 'Darkhast Ghabz Tavasot ID: ^1'..tonumber(player)..' ^0|^1Rad ^0Shod' } })
 	end
 end)
 
+
 ESX.RegisterServerCallback("AH_uwucafejob:GetOnDutyJob", function(source, cb)
-	for k,v in pairs(GetPlayers()) do
+	for k,v in pairs(GetPlayers()) do 
 		local Target = ESX.GetPlayerFromId(v)
-		if IsCafeJob(Target.job.name) then
+		if IsCafeJob(Target.job.name) then 
 			cb(true)
 			return
 		end

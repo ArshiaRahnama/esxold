@@ -1,4 +1,8 @@
-
+--[[
+	One generic handler for all 30 new bakery/bar/pizza/icecream/sushi items,
+	instead of 30 duplicated blocks. Same prop-attach + idle animation the
+	original AH_uwucafejob items already used - only the prop model changes.
+]]
 
 local IsAnimatedNewBiz = false
 

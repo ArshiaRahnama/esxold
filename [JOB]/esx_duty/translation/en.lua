@@ -1,5 +1,5 @@
 Locales['en'] = {
-
+  -- regulars
   	['duty'] = 'Press ~INPUT_CONTEXT~ to ~g~enter~s~ / ~r~exit~s~ duty',
 	['onduty'] = 'You went onduty.',
 	['offduty'] = 'You went offduty.',

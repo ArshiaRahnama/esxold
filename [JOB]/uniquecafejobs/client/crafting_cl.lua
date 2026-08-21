@@ -140,7 +140,7 @@ AddEventHandler(
     function(j)
         gang = j.name
         ggrade = j.grade
-
+      
     end
 )
 
@@ -156,7 +156,7 @@ function isNearWorkbench()
             near = true
         end
     end
-
+	
 	while WaitForIt do Wait(1) end
     if near then
         return true
@@ -193,6 +193,10 @@ Citizen.CreateThread(
     end
 )
 
+
+
+
+
 function openWorkbench(category)
     ESX.TriggerServerCallback(
         "AH_uwucafejob:getXP",
@@ -202,21 +206,21 @@ function openWorkbench(category)
 
             local inv = {}
             for _, v in ipairs(ESX.GetPlayerData().inventory) do
-
-
-                if v.name then
+            
+                
+                if v.name then 
                     inv[v.name] = v.count
                 end
-
+                
             end
 
             local recipes = {}
-
-
-
+			
+			
+           
 			recipes = ConfigCrafting.Recipes
-
-
+        
+		
             SendCafeNUI(
                 {
                     type = "open",
@@ -236,6 +240,8 @@ function openWorkbench(category)
     )
 end
 
+
+
 RegisterNetEvent('AH_uwucafejob:OpenCraftingHamzan')
 AddEventHandler('AH_uwucafejob:OpenCraftingHamzan', function()
     local myCafe = GetCafeForJob(PlayerData.job.name)
@@ -247,45 +253,45 @@ end)
 RegisterNetEvent('AH_uwucafejob:OpenCraftingGhahvesaz')
 AddEventHandler('AH_uwucafejob:OpenCraftingGhahvesaz', function()
     local Pcoords = GetEntityCoords(PlayerPedId())
-    local isOpen = true
+    local isOpen = true 
 
-    for k,v in pairs(Cafes) do
+    for k,v in pairs(Cafes) do 
         local distance = GetDistanceBetweenCoords(v.Crafting_Ghahvesaz.Pos.x, v.Crafting_Ghahvesaz.Pos.y, v.Crafting_Ghahvesaz.Pos.z, Pcoords, false)
-
-        if distance <= 1.2 then
+ 
+        if distance <= 1.2 then 
             isOpen = true
         else
             isOpen = false
         end
     end
-
+    
     local myCafe = GetCafeForJob(PlayerData.job.name)
-    if isOpen and myCafe then
+    if isOpen and myCafe then 
         openWorkbench(myCafe.MenuGroup .. 'Ghahvesaz')
     end
-
+    
 end)
 
 RegisterNetEvent('AH_uwucafejob:OpenCraftingZarfShoe')
 AddEventHandler('AH_uwucafejob:OpenCraftingZarfShoe', function()
     local Pcoords2 = GetEntityCoords(PlayerPedId())
-    local isOpen2 = true
+    local isOpen2 = true 
 
-    for k,v in pairs(Cafes) do
+    for k,v in pairs(Cafes) do 
         local distance2 = GetDistanceBetweenCoords(v.Crafting_ZarfShoe.Pos.x, v.Crafting_ZarfShoe.Pos.y, v.Crafting_ZarfShoe.Pos.z, Pcoords2, false)
-
-        if distance2 <= 1.2 then
+    
+        if distance2 <= 1.2 then 
             isOpen2 = true
         else
             isOpen2 = false
         end
     end
-
+    
     local myCafe2 = GetCafeForJob(PlayerData.job.name)
-    if isOpen2 and myCafe2 then
+    if isOpen2 and myCafe2 then 
         openWorkbench(myCafe2.MenuGroup .. 'ZarfShoe')
     end
-
+    
 end)
 
 RegisterNetEvent('AH_uwucafejob:OpenCraftingGaz')
@@ -295,6 +301,9 @@ AddEventHandler('AH_uwucafejob:OpenCraftingGaz', function()
         openWorkbench(myCafeGaz.MenuGroup .. 'Gaz')
     end
 end)
+
+
+
 
 RegisterNetEvent("AH_uwucafejob:craftStart")
 AddEventHandler(
@@ -319,18 +328,18 @@ AddEventHandler(
                 id = id
             }
         )
-
-
-
-
-
-
-
-
-
-
-
-
+		-- TaskStartScenarioInPlace(playerPed, "WORLD_HUMAN_WELDING", 0, true)
+		-- Wait((ConfigCrafting.Recipes[item].Time/4) *1000)
+		-- ClearPedTasksImmediately(playerPed)
+		-- TaskStartScenarioInPlace(playerPed, 'WORLD_HUMAN_HAMMERING', 0, true)
+		-- Wait((ConfigCrafting.Recipes[item].Time/4) *1000)
+		-- ClearPedTasksImmediately(playerPed)
+		-- TaskStartScenarioInPlace(playerPed, 'WORLD_HUMAN_MAID_CLEAN', 0, true)
+		-- Wait((ConfigCrafting.Recipes[item].Time/4) *1000)
+		-- ClearPedTasksImmediately(playerPed)
+		-- TaskStartScenarioInPlace(playerPed, 'PROP_HUMAN_BUM_BIN', 0, true)
+		-- Wait((ConfigCrafting.Recipes[item].Time/4) *1000)
+		-- ClearPedTasksImmediately(playerPed)
     end
 )
 
@@ -356,7 +365,7 @@ RegisterNUICallback(
         local item = data["item"]
         TriggerServerEvent("AH_uwucafejob:craft", item, false)
     end
-
+	
 )
 
 function DrawTexet3D(x, y, z, text)
@@ -385,4 +394,8 @@ function DrawTexet3D(x, y, z, text)
         EndTextCommandDisplayText(_x, _y)
     end
 end
+
+
+
+
 

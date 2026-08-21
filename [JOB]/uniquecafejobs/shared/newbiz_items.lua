@@ -1,4 +1,11 @@
-
+--[[
+	The 30 new items for the 5 new business types (bakery/bar/pizza/icecream/sushi),
+	confirmed with you. Each one is consumable via a single GENERIC eat/drink
+	handler (server/newbiz_items.lua + client/newbiz_items.lua) instead of 30
+	hand-written duplicate blocks like the original cafe items - same visual
+	result (prop attaches to hand, plays the same idle-drink/eat animation),
+	just far less code to maintain. Add a 31st item by adding one line here.
+]]
 
 NewBizItems = {
 	{ name = 'croissant_kareii', label = 'Croissant Kareii', prop = 'prop_cs_burger_01' },

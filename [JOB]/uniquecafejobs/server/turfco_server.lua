@@ -1,7 +1,13 @@
-
+--[[
+	Server side for Turf Wars Inc. Reservation state lives here; the actual
+	paintball MATCH is entirely handled by the existing [ARSHIA]/paintball
+	resource - this just gates who's allowed to host a lobby on a reserved
+	map, via an export that resource calls from its own CreateLobby.
+]]
 
 TriggerEvent('esx_society:registerSociety', TurfCo.Job, TurfCo.Label, 'society_' .. TurfCo.Job, 'society_' .. TurfCo.Job, 'society_' .. TurfCo.Job, { type = 'public' })
 
+-- mapName -> { gang = 'thegangname', expiresAt = os.time() }
 local Reservations = {}
 
 local function getReservation(mapName)
@@ -13,6 +19,9 @@ local function getReservation(mapName)
 	return nil
 end
 
+-- Called by [ARSHIA]/paintball's server.lua (see the 2-line patch in its
+-- CreateLobby function) before letting anyone host a lobby on a map.
+-- Returns nil if the map is free, or the reserving gang's name if not.
 exports('GetMapReservation', function(mapName)
 	local r = getReservation(mapName)
 	return r and r.gang or nil

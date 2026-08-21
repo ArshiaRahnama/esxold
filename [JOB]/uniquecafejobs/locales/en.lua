@@ -3,7 +3,7 @@ Locales['en'] = {
   ['citizen_wear'] = 'Civilian Outfit',
   ['cloakroom'] = 'locker room',
 
-
+  -- Crafting 
 
   ['not_enough_ingredients'] = 'shoma mavad avalie lazem ra nadarid',
 	['you_cant_hold_item'] = 'shoma nemitvanid item digari negah darid',

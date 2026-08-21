@@ -14,21 +14,64 @@ local dictonary = {
     ["fbi"] = "FBI",
     ["judge"] = "Judges",
     ["doa"] = "DOA",
-    ["weazel"] = "Weazel"
+    ["weazel"] = "Weazel",
+
+    -- Holding 1 (uniquecafejobs)
+    ["meridian"] = "Holding 1 Staff",
+    ["uwucafe"] = "Cafe UwU Staff",
+    ["obsidian"] = "Cafe Obsidian Staff",
+    ["voltage"] = "Cafe Voltage Staff",
+    ["ember"] = "Restaurant Ember Staff",
+    ["anchor"] = "Restaurant Anchor Staff",
+    ["crimson"] = "Restaurant Crimson Staff",
+    ["flourish"] = "Bakery Flourish Staff",
+    ["goldcrust"] = "Bakery GoldCrust Staff",
+    ["static"] = "Bar Static Staff",
+    ["nightjar"] = "Bar Nightjar Staff",
+    ["firebrick"] = "Pizza Firebrick Staff",
+    ["slice"] = "Pizza Slice Staff",
+    ["frostbite"] = "Bastani Frostbite Staff",
+    ["sundae"] = "Bastani Sundae Staff",
+    ["koi"] = "Sushi Koi Staff",
+    ["wasabi"] = "Sushi Wasabi Staff",
+    ["carwash"] = "Carwash Suds Staff",
 }
 
+-- ================= ORGAN (Department) grouping =================
+-- Used by /f (faction chat: only same-organ jobs see it) and
+-- /dep (department chat: every organ member, across all 3 groups, sees it).
+-- Add a job's short name here (NOT the "off" variant, that's handled
+-- automatically below) if it should belong to one of these organs.
 local organGroups = {
-    doj = { "cid", "cia", "marshal", "fbi", "judge", "doa" },
-    le = { "police", "sheriff", "mt" },
-    services = { "taxi", "mechanic", "ambulance", "weazel" },
+    doj = { "cid", "cia", "marshal", "fbi", "judge", "doa" },        -- Department Of Justice
+    le = { "police", "sheriff", "mt" },                              -- Law Enforcement
+    services = { "taxi", "mechanic", "ambulance", "weazel" },        -- Organ Services
+
+    -- Holding 1 (uniquecafejobs): all 17 businesses + the holding job itself.
+    -- /f reaches everyone in this whole group; /dep reaches every group above too.
+    holding1 = {
+        "meridian",
+        "uwucafe", "obsidian", "voltage",
+        "ember", "anchor", "crimson",
+        "flourish", "goldcrust",
+        "static", "nightjar",
+        "firebrick", "slice",
+        "frostbite", "sundae",
+        "koi", "wasabi",
+        "carwash",
+    },
 }
 
 local organLabel = {
     doj = "Department Of Justice",
     le = "Law Enforcement",
     services = "Organ Services",
+    holding1 = "Holding 1",
 }
 
+-- jobToOrgan["police"] = "le", jobToOrgan["offpolice"] = "le", etc.
+-- Built automatically from organGroups so adding a job above is the only
+-- thing needed to plug a new job into /f and /dep.
 local jobToOrgan = {}
 for organKey, jobs in pairs(organGroups) do
     for _, jobName in ipairs(jobs) do
@@ -59,7 +102,7 @@ local rankdict = {
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 RegisterCommand('flist', function(source, args)
-
+    
         local xPlayer = ESX.GetPlayerFromId(source)
         local onduties = 0
         local offduties = 0
@@ -71,7 +114,7 @@ RegisterCommand('flist', function(source, args)
             local xPlayers = ESX.GetPlayers()
             for i=1, #xPlayers, 1 do
                 xPlayer = ESX.GetPlayerFromId(xPlayers[i])
-
+                
                 if xPlayer.job.name == job then
                     onduties = onduties + 1
                     TriggerClientEvent('chat:addMessage', source, {color = { 255, 0, 0}, multiline = true, args = {"^4[^2^*On-Duty^4] ^3" .. string.gsub(xPlayer.name, "_", " ") }})
@@ -82,7 +125,7 @@ RegisterCommand('flist', function(source, args)
 
             end
             total1 = onduties + offduties
-            TriggerClientEvent('esx:showNotification', source, '~h~~g~' .. total1 .. '~w~ '.. dictonary[job] .. ' Online' .. '~n~On Duty: ~g~' .. onduties .. '~w~~n~Off Duty: ~r~' .. offduties)
+            TriggerClientEvent('esx:showNotification', source, '~h~~g~' .. total1 .. '~w~ '.. dictonary[job] .. ' Online' .. '~n~On Duty: ~g~' .. onduties .. '~w~~n~Off Duty: ~r~' .. offduties)   
 
         else
             TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma dastresi kafi baraye estefade az in dastor ra nadarid!")
@@ -91,14 +134,14 @@ RegisterCommand('flist', function(source, args)
     end)
 
     RegisterCommand('admins', function(source, args)
-
+    
         local xPlayer = ESX.GetPlayerFromId(source)
         local onduties = 0
         local offduties = 0
         local total1 = 0
-        local color
+        local color 
         local admins = exports.esx_playerinfo:GetAdmins()
-
+        
         if TableLengthx(admins) == 0 then
             TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Hich admini baraye namayesh vojod nadarad!")
             return
@@ -111,11 +154,11 @@ RegisterCommand('flist', function(source, args)
                 if aduty then
                     color = "^2"
                     onduties = onduties + 1
-
+                    --TriggerClientEvent('chat:addMessage', source, {color = { 255, 0, 0}, multiline = true, args = {"^4[" .. color.. rankdict[v.perm] .."^4] ^3" .. GetPlayerName(v.id) }})
                 else
                     color = "^1"
                     offduties = offduties + 1
-
+                    --TriggerClientEvent('chat:addMessage', source, {color = { 255, 0, 0}, multiline = true, args = {"^4[" .. color.. rankdict[v.perm] .."^4] ^3" .. GetPlayerName(v.id) }})
                 end
             else
                 local zPlayer = ESX.GetPlayerFromId(v.id)
@@ -123,18 +166,18 @@ RegisterCommand('flist', function(source, args)
                 if aduty then
                     color = "^2"
                     onduties = onduties + 1
-
+                    --TriggerClientEvent('chat:addMessage', source, {color = { 255, 0, 0}, multiline = true, args = {"^4[" .. color.. rankdict[v.perm] .."^4] ^3(" .. GetPlayerName(v.id).." | "..v.id..")" }})
                 else
                     color = "^1"
                     offduties = offduties + 1
-
+                   -- TriggerClientEvent('chat:addMessage', source, {color = { 255, 0, 0}, multiline = true, args = {"^4[" .. color.. rankdict[v.perm] .."^4] ^3(" .. GetPlayerName(v.id).." | "..v.id..")" }})
                 end
             end
         end
 
         total1 = onduties + offduties
-        TriggerClientEvent('esx:showNotification', source,'~h~~g~' .. total1 .. '~w~ Staff Online.' .. '~n~On Duty: ~g~' .. onduties .. '~w~~n~Off Duty: ~r~' .. offduties)
-
+        TriggerClientEvent('esx:showNotification', source,'~h~~g~' .. total1 .. '~w~ Staff Online.' .. '~n~On Duty: ~g~' .. onduties .. '~w~~n~Off Duty: ~r~' .. offduties)   
+      
       end)
 
     RegisterCommand('f', function(source, args)
@@ -163,28 +206,29 @@ RegisterCommand('flist', function(source, args)
                 local xPlayers = ESX.GetPlayers()
                 for i=1, #xPlayers do
                     local tplayer = ESX.GetPlayerFromId(xPlayers[i])
-
+                    -- same ORGAN (DOJ / Law Enforcement / Organ Services), not just same exact job
                     if jobToOrgan[tplayer.job.name] == organ then
                         TriggerClientEvent('chatMessage', xPlayers[i], "", {255, 0, 0}, dutytext .. "^1" ..jobGrade .. "^4]: ^3" .. name .. " ^4(( " .. "^0^*" .. message .. "^4 ))")
                     end
                 end
-
-
+            
+    
         else
             TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma dastresi kafi baraye estefade az in dastor ra nadarid!")
         end
-
+    
     end)
 
-    RegisterCommand("r", function(source, args)
 
+    RegisterCommand("r", function(source, args)
+        --local freq = exports.pma-voice:GetRadioChannel(source)
         local freq = exports["pma-voice"]:GetRadioChannel(source)
         if freq ~= 0 then
             if not args[1] then
                 TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma dar ghesmat message chizi vared nakardid!")
                 return
             end
-
+            
             local message = table.concat(args, " ", 1)
             TriggerClientEvent("sendProximityMessageradio",-1, source, "^4[^2^*Radio^4] ^3" .. source .." ^8^*: ^r", "^0^* " .. message , false)
             TriggerClientEvent('rp_radio:recieveMessage', -1, {id = source, freq = freq, message = message})
@@ -207,14 +251,14 @@ RegisterCommand('flist', function(source, args)
                 local job = xPlayer.job.name
                 local jobGrade = xPlayer.job.grade_label
                 local message = table.concat(args, " ", 1)
-
+    
                 TriggerClientEvent("sendProximityMessageradio",-1, source, "^4[^2^*Radio^4] ^3" .. name.." ^8^*: ^r", "^0^* " .. message , false)
-
+    
                 local xPlayers = ESX.GetPlayers()
                 for i=1, #xPlayers do
                     local tplayer = ESX.GetPlayerFromId(xPlayers[i])
                     if tplayer.job.name == job then
-
+                        --TriggerClientEvent('InteractSound_CL:PlayOnOne', tplayer.source, 'pager', 1.0)
                         TriggerClientEvent('chatMessage', tplayer.source, "", {255, 0, 0}, "^4[^2^*Radio ^4| ^1^*".. jobGrade .. "^4] ^3" .. name.." ^8^*^~>>^r" .. "^2^* " .. message)
                     end
                 end
@@ -246,8 +290,8 @@ RegisterCommand('flist', function(source, args)
             local xPlayers = ESX.GetPlayers()
             for i=1, #xPlayers do
                 local tplayer = ESX.GetPlayerFromId(xPlayers[i])
-
-
+                -- /dep is department-wide: EVERY organ member sees it, regardless of
+                -- which of the 3 organs (DOJ / Law Enforcement / Organ Services) they're in
                 if jobToOrgan[tplayer.job.name] then
                     TriggerClientEvent('chatMessage', tplayer.source, "", {255, 0, 0}, "^4[^2^*Department ^4| ^1^*".. job .. "^4] ^3" .. name.." ^8^*:^r" .. "^0^* " .. message)
                 end
@@ -257,6 +301,7 @@ RegisterCommand('flist', function(source, args)
             TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma Ozv hich organ dolati nistid!")
         end
     end, false)
+
 
     RegisterCommand('badge', function(source)
         local xPlayer = ESX.GetPlayerFromId(source)
@@ -303,26 +348,26 @@ RegisterCommand('flist', function(source, args)
                 end
             end
 
-            if not args[1] then
+            if not args[1] then 
                 TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma dar ghesmat ID chizi vared nakardid!")
                 return
             end
-
-            if not tonumber(args[1]) then
+    
+            if not tonumber(args[1]) then 
                 TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma dar ghesmat ID faghat mitavanid adad vared konid!")
                 return
             end
-
-            if not args[2] then
+    
+            if not args[2] then 
                 TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma dar ghesmat badge chizi vared nakardid!")
                 return
             end
-
-            if not tonumber(args[2]) then
+    
+            if not tonumber(args[2]) then 
                 TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma dar ghesmat badge faghat mitavanid adad vared konid!")
                 return
             end
-
+    
             if string.len(args[2]) > 4 then
                 TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Badge nemitavanad bishtar az 4 ragham bashad!")
                 return
@@ -330,7 +375,7 @@ RegisterCommand('flist', function(source, args)
 
             local target = tonumber(args[1])
             local zPlayer = ESX.GetPlayerFromId(target)
-
+        
             if not zPlayer then
                 TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0ID playe rmored nazar sahih nist!")
                 return
@@ -349,11 +394,11 @@ RegisterCommand('flist', function(source, args)
             else
                 TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Fard mored nazar ham shoghl shoma nist!")
             end
-
+            
         else
             TriggerClientEvent('chatMessage', source, "[SYSTEM]", {255, 0, 0}, " ^0Shoma Ozv hich organ dolati nistid!")
         end
-
+        
     end, false)
 
     AddEventHandler('esx:playerLoaded', function(source)
@@ -365,23 +410,23 @@ RegisterCommand('flist', function(source, args)
             MySQL.Async.fetchAll("SELECT badge FROM users WHERE identifier = @identifier", { ["@identifier"] = xPlayer.identifier }, function(result)
 
                 if result then
-
+        
                     local badge = result[1].badge
                     badges[xPlayer.identifier] = {badge = badge, hide = false, isOn = false}
 
-
+        
                 else
                     print('Moshkeli dar gereftan badge ' .. GetPlayerName(_source) .. ' pish amad lotfan peygiri konid!')
                 end
-
+        
             end)
-
+        
         end
-
+    
     end)
 
     AddEventHandler('playerDropped', function()
-
+	
         local _source = source
 
             if _source ~= nil then
@@ -390,29 +435,29 @@ RegisterCommand('flist', function(source, args)
                 if badges[identifier] then
                     local badgeN = badges[identifier].badge
 
-                    MySQL.Async.execute('UPDATE users SET badge = @badge WHERE identifier=@identifier',
+                    MySQL.Async.execute('UPDATE users SET badge = @badge WHERE identifier=@identifier', 
                     {
                         ['@identifier'] = identifier,
                         ['@badge'] = badgeN
-
+                        
                     }, function(rowsChanged)
-
+    
                         if rowsChanged == 0 then
                             print('Moshkeli dar save kardan badge ' .. GetPlayerName(_source) .. ' pish amad lotfan peygiri konid!')
                             return
                         end
 
                         badges[identifier] = nil
-
+    
                     end)
 
-
+                    
                 end
-
+    
             end
-
+    
     end)
-
+    
 
     RegisterCommand("invite", function(source, args)
         local xPlayer = ESX.GetPlayerFromId(source)
@@ -433,7 +478,7 @@ RegisterCommand('flist', function(source, args)
                     local target = tonumber(args[1])
 
                     local zPlayer = ESX.GetPlayerFromId(target)
-
+                    
                     if zPlayer then
                         if zPlayer.job.name == "nojob" then
                             zPlayer.setJob(job, 0)
@@ -463,7 +508,7 @@ RegisterCommand('flist', function(source, args)
                     local target = tonumber(args[1])
 
                     local zPlayer = ESX.GetPlayerFromId(target)
-
+                    
                     if zPlayer then
                         if zPlayer.job.name == "nojob" then
                             zPlayer.setJob(job, 0)

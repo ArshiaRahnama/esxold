@@ -6,6 +6,10 @@ author 'Arshia | arshiahub.ir'
 description 'Unique Cafe Jobs - multi-cafe crafting job (UwU Café / Obsidian Brew / Voltage Coffee Co.) + the uwumarket player marketplace, bundled into one resource'
 version '1.0.0'
 
+-- shared/cafes.lua is the single source of truth for the 3 cafes (job name,
+-- society, station coordinates). Add a 4th cafe by copying a block in there -
+-- nothing else needs to change, every file below already loops over `Cafes`.
+
 shared_scripts {
 	'@essentialmode/locale.lua',
 	'@ox_lib/init.lua',
@@ -30,7 +34,6 @@ client_scripts {
 	'client/market_client.lua',
 	'client/corp_client.lua',
 	'client/turfco_client.lua',
-	'client/bizchat_client.lua',
 }
 
 server_scripts {
@@ -43,7 +46,6 @@ server_scripts {
 	'server/market_server.lua',
 	'server/corp_server.lua',
 	'server/turfco_server.lua',
-	'server/bizchat_server.lua',
 }
 
 ui_page 'html/index.html'
@@ -75,3 +77,9 @@ dependencies {
 	'esx_inventoryhud',
 }
 
+-- NOTE: the gang-account resource (Unique_Gangs, event 'gangaccount:getGangAccount')
+-- is used by Turf Wars' map-rental payment, but is intentionally NOT a hard
+-- dependency above - a missing/late-loading gang resource would otherwise
+-- block this ENTIRE resource (all 17 businesses) from starting. Turf Wars
+-- checks for it at runtime instead (GetResourceState('Unique_Gangs')) and
+-- just shows a clear error if it's not running.
