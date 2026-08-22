@@ -37,6 +37,14 @@ document.addEventListener('DOMContentLoaded', () => {
         <span class="boardName">${entry.name}</span>
         <div class="boardStats">${statsHtml}</div>
       `;
+
+      if (data.board === 'players') {
+        row.classList.add('clickable');
+        row.addEventListener('click', () => {
+          if (typeof requestCompare === 'function') requestCompare(entry.name);
+        });
+      }
+
       list.appendChild(row);
     });
   });

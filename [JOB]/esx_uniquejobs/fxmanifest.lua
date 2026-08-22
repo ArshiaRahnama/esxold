@@ -12,6 +12,7 @@ shared_scripts {
 	'locales/*.lua',
 	'shared/departments.lua',
 	'cad/config_cad.lua',
+	'crimescene/config.lua',
 }
 
 client_scripts {
@@ -78,6 +79,7 @@ client_scripts {
 
 
 	'cad/client/main.lua',
+	'crimescene/client/main.lua',
 }
 
 server_scripts {
@@ -123,6 +125,7 @@ server_scripts {
 
 
 	'cad/server/main.lua',
+	'crimescene/server/main.lua',
 }
 
 ui_page 'ui.html'
@@ -161,4 +164,5 @@ dependencies {
 	'esx_society',
 	'mysql-async',
 	'ox_lib',
+	'ox_target',
 }

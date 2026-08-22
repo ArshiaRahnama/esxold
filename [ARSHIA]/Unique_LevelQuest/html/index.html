@@ -11,12 +11,45 @@
   <link rel="stylesheet" href="styles/skill.css" />
   <link rel="stylesheet" href="styles/collections.css" />
   <link rel="stylesheet" href="styles/leaderboard.css" />
+  <link rel="stylesheet" href="styles/compare.css" />
+  <link rel="stylesheet" href="styles/confetti.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 
 <body>
   <div class="container">
     <div class="window">
+      <button class="exportCardBtn" id="exportCardBtn" title="Export profile card as image">
+        <i class="fa-solid fa-camera"></i>
+      </button>
+
+      <div class="compareOverlay hidden" id="compareOverlay">
+        <div class="compareCard">
+          <button class="compareClose" id="compareCloseBtn"><i class="fa-solid fa-xmark"></i></button>
+          <h2 class="compareTitle">Player Comparison</h2>
+          <div class="compareGrid">
+            <div class="compareCol compareCol-you">
+              <div class="compareColLabel">YOU</div>
+              <div class="compareName" id="compareYouName">-</div>
+              <div class="compareStat"><span>Level</span><span id="compareYouLevel">-</span></div>
+              <div class="compareStat"><span>XP</span><span id="compareYouXp">-</span></div>
+              <div class="compareStat"><span>Coin</span><span id="compareYouCoin">-</span></div>
+              <div class="compareStat"><span>Hours</span><span id="compareYouHours">-</span></div>
+            </div>
+            <div class="compareVs">VS</div>
+            <div class="compareCol compareCol-them">
+              <div class="compareColLabel">THEM</div>
+              <div class="compareName" id="compareThemName">-</div>
+              <div class="compareStat"><span>Level</span><span id="compareThemLevel">-</span></div>
+              <div class="compareStat"><span>XP</span><span id="compareThemXp">-</span></div>
+              <div class="compareStat"><span>Coin</span><span id="compareThemCoin">-</span></div>
+              <div class="compareStat"><span>Hours</span><span id="compareThemHours">-</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
 
       <div class="topbar">
         <!-- explicit physical order (topbar forces direction:ltr) -->
@@ -26,8 +59,22 @@
             <div class="pnameBlock">
               <div class="pname name_span">PlayerName</div>
               <div class="memberSince">Member since <span class="memberSince_span">-</span></div>
-              <div class="pline"><i class="fa-solid fa-money-bill"></i> <span class="cash_span">-</span></div>
-              <div class="pline"><i class="fa-solid fa-landmark"></i> <span class="bank_span">-</span> &middot; <i class="fa-solid fa-coins"></i> <span class="coin_span">-</span></div>
+
+              <div class="wealthRow">
+                <div class="wealthChip">
+                  <i class="fa-solid fa-money-bill"></i>
+                  <span class="cash_span">-</span>
+                </div>
+                <div class="wealthChip">
+                  <i class="fa-solid fa-landmark"></i>
+                  <span class="bank_span">-</span>
+                </div>
+                <div class="wealthChip">
+                  <i class="fa-solid fa-coins"></i>
+                  <span class="coin_span">-</span>
+                </div>
+              </div>
+
               <div class="bankCard">
                 <i class="fa-solid fa-credit-card"></i>
                 <div class="bankCardText">
@@ -138,11 +185,15 @@
     </div>
   </div>
 
+  <script src="scripts/sound.js"></script>
+  <script src="scripts/confetti.js"></script>
   <script src="scripts/script.js"></script>
   <script src="scripts/personal.js"></script>
   <script src="scripts/quest.js"></script>
   <script src="scripts/skill.js"></script>
   <script src="scripts/collections.js"></script>
   <script src="scripts/leaderboard.js"></script>
+  <script src="scripts/compare.js"></script>
+  <script src="scripts/export.js"></script>
 </body>
 </html>

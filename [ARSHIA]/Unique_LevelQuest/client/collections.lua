@@ -25,7 +25,7 @@ function UpdateCollections()
                     end
                 end
             end
-            table.insert(resolved, { plate = v.plate, name = label, slug = slug })
+            table.insert(resolved, { plate = v.plate, name = label, slug = slug, stored = v.stored, fuel = v.fuel })
         end
         SendNUIMessage({ type = "loadVehicles", vehicles = resolved })
     end)

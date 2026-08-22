@@ -1,20 +1,28 @@
-
+-- ================================================================= --
+-- HUD menu callbacks (was Interaction_Menu/server.lua)
+-- ================================================================= --
+-- FIX: GetAcc used to hand back the ENTIRE raw xPlayer object over the
+-- network. It's always for the requesting player's own data (source is
+-- fixed server-side, can't be spoofed to fetch someone else's), so it
+-- wasn't a cross-player leak — but it was still sending internal fields
+-- the UI never uses. Trimmed to just what the HUD needs.
+-- ================================================================= --
 
 ESX.RegisterServerCallback("HUD_Menu:GetAcc", function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
     if not xPlayer then return cb(nil) end
 
     GetXPRankCached(source, function(xp, rank)
-        MySQL.Async.fetchAll('SELECT Profile_Pic, divisions, iban, account_num, DATE_FORMAT(created_at, "%Y-%m-%d") AS memberSince FROM users WHERE identifier = @identifier', {
+        MySQL.Async.fetchAll('SELECT Profile_Pic, divisions, iban, account_num, timePlay, DATE_FORMAT(created_at, "%Y-%m-%d") AS memberSince FROM users WHERE identifier = @identifier', {
             ['@identifier'] = xPlayer.identifier
         }, function(result)
             local row = result[1] or {}
             local profilePic = row.Profile_Pic
 
-
-
-
-
+            -- Real division system already used by esx_society: users.divisions
+            -- is a JSON array of {label, status, job, name}. We only care
+            -- about one that's active (status == true) for the player's
+            -- CURRENT job.
             local divisionLabel = nil
             if row.divisions and row.divisions ~= '' then
                 local ok, divisions = pcall(json.decode, row.divisions)
@@ -45,6 +53,7 @@ ESX.RegisterServerCallback("HUD_Menu:GetAcc", function(source, cb)
                     iban             = row.iban,
                     accountNum       = row.account_num,
                     memberSince      = row.memberSince,
+                    hours            = math.floor((row.timePlay or 0) / 3600),
                 })
             end
 

@@ -46,6 +46,8 @@ function UpdateProfile()
                 iban       = data.iban,
                 accountNum = data.accountNum,
                 memberSince= data.memberSince,
+                hours      = data.hours,
+                coinRaw    = Coin,
             })
         end)
     end)
@@ -98,20 +100,41 @@ function UpdateProfile()
     end)
 end
 
+local menuIsOpen = false
+
 RegisterCommand('menu', function()
     SetNuiFocus(true, true)
+    menuIsOpen = true
     UpdateProfile()
     UpdateSkills()
     UpdateCollections()
     UpdateLeaderboard()
     UiShow()
 
-
-
+    -- esx_dpemote is a real resource on this server. Wrapped in pcall so
+    -- if it's ever missing/renamed, the menu still opens fine either way.
     pcall(function()
         exports['esx_dpemote']:PlayEmote('think3')
     end)
 end, false)
+
+-- Live refresh while the menu stays open — level/XP, quest progress,
+-- skill hours, and the leaderboard can all change while you're looking
+-- at them (someone else finishing a quest, your own onduty tick firing
+-- in the background, etc.). Collections is deliberately left out here:
+-- vehicle/house ownership rarely changes mid-session, and re-fetching
+-- would mean repeatedly re-requesting every vehicle image for no
+-- reason.
+Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(30000)
+        if menuIsOpen then
+            UpdateProfile()
+            UpdateSkills()
+            UpdateLeaderboard()
+        end
+    end
+end)
 
 AddEventHandler('onKeyDown', function(key)
     if key == "i" then
@@ -121,6 +144,7 @@ end)
 
 RegisterNUICallback('menuClosed', function(_, cb)
     SetNuiFocus(false, false)
+    menuIsOpen = false
 
     local ped = PlayerPedId()
     ClearPedTasks(ped)

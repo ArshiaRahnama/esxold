@@ -1,8 +1,20 @@
-
+-- ================================================================= --
+-- Skill tracking (drives the Skill tab)
+-- ================================================================= --
+-- Same anti-spam pattern already used for quest triggers: a raw
+-- RegisterServerEvent with no rate limit would let a client fire it in
+-- a tight loop and max out a skill in seconds. Cooldown here matches
+-- the real cadence (essentialmode's 15-minute paycheck interval).
+--
+-- Milestone rewards: paid once per threshold per job, via the same
+-- safe GrantCoin function used by the quest system (coin.lua, same
+-- resource) — never a network event, so a client can never trigger
+-- this directly.
+-- ================================================================= --
 
 local SKILL_TICK_MINUTES  = 15
-local SKILL_TICK_COOLDOWN = 14 * 60
-local lastSkillTick = {}
+local SKILL_TICK_COOLDOWN = 14 * 60 -- seconds; slightly under 15 min, small slack
+local lastSkillTick = {} -- [source] = os.time()
 
 local function checkMilestones(xPlayer, job, minutes, paidCsv)
     local paid = {}

@@ -98,6 +98,36 @@
   font-size: 10.5px;
 }
 
+.garageStatus {
+  display: block;
+  margin: 6px auto 0;
+  width: fit-content;
+  font-size: 8.5px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+
+.status-garage { color: #4ee08a; background: rgba(31, 211, 75, 0.12); }
+.status-out { color: var(--steel); background: rgba(255, 255, 255, 0.06); }
+.status-impound { color: #ff6b6b; background: rgba(226, 85, 78, 0.14); }
+
+.fuelBar {
+  margin: 8px auto 0;
+  width: 80%;
+  height: 5px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.fuelFill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #ff6b6b, var(--orange2), #4ee08a);
+}
+
 .emptyState {
   display: flex;
   flex-direction: column;

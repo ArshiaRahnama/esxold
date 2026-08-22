@@ -70,7 +70,7 @@
 
         // Don't relay until BOTH iframes have actually finished loading and
         // attached their own message listeners - otherwise a message that
-        // arrives right after SetNuiFocus (e.g. the very first /mdt press)
+        // arrives right after SetNuiFocus (e.g. the very first /cad press)
         // can be sent before the cad iframe's app.js is ready to catch it,
         // and is lost for good (postMessage is not queued for late listeners).
         frameBodydamage.addEventListener('load', function () {

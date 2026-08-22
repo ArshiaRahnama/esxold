@@ -27,6 +27,10 @@ function setSkillIcon(el, jobName) {
   test.src = path;
 }
 
+// Same dedup approach as quest.js — skill rows re-render every menu
+// open, so this stops an already-mastered skill from chiming again.
+const chimedMasteredJobs = new Set();
+
 document.addEventListener('DOMContentLoaded', () => {
   const skillList = document.querySelector('.skill-list');
   const skillSummary = document.querySelector('.skill-summary');
@@ -53,7 +57,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const row = document.createElement('div');
         row.className = 'skillRow';
         if (s.isCurrent) row.classList.add('current');
-        if (pct >= 100) row.classList.add('mastered');
+        if (pct >= 100) {
+          row.classList.add('mastered');
+          if (!chimedMasteredJobs.has(s.jobName)) {
+            chimedMasteredJobs.add(s.jobName);
+            if (typeof playChime === 'function') playChime();
+          }
+        }
 
         row.innerHTML = `
           <div class="skillTop">

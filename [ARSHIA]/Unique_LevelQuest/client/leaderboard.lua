@@ -15,3 +15,10 @@ function UpdateLeaderboard()
         SendNUIMessage({ type = "loadLeaderboard", board = "gangs", entries = entries })
     end, 'gangs')
 end
+
+RegisterNUICallback('compareRequest', function(data, cb)
+    ESX.TriggerServerCallback('HUD_Menu:GetPlayerStats', function(stats)
+        SendNUIMessage({ type = "compareResult", stats = stats })
+    end, data.playerName)
+    cb('ok')
+end)

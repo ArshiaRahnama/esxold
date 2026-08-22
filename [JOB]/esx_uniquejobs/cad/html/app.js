@@ -58,6 +58,17 @@ DuckMdt.TabSelected = function(NewTab) {
     if (!inswitchpage) {
         if (NewTab === 'MainPanel') {
             $.post('https://esx_uniquejobs/Login', JSON.stringify({}));  
+        } else if (NewTab === 'CS_Cases') {
+            $.post('https://esx_uniquejobs/CS_GetCases', JSON.stringify({}));
+        } else if (NewTab === 'CS_Wanted') {
+            $.post('https://esx_uniquejobs/CS_GetWanted', JSON.stringify({}));
+        } else if (NewTab === 'CS_Bolo') {
+            $('#CS_BoloResult').text('');
+            $.post('https://esx_uniquejobs/CS_GetBolos', JSON.stringify({}));
+        } else if (NewTab === 'CS_Records') {
+            $.post('https://esx_uniquejobs/CS_GetRecords', JSON.stringify({}));
+        } else if (NewTab === 'CS_Leaderboard') {
+            $.post('https://esx_uniquejobs/CS_GetLeaderboard', JSON.stringify({}));
         }
         DuckMdt.PageSwitch(currenttab, NewTab, 500)
         currenttab = NewTab
@@ -166,6 +177,91 @@ function ExitTablet() {
     $.post('https://esx_uniquejobs/Exit', JSON.stringify({}));
 }
 
+// ===================== Crime Scene Investigation (crimescene/) =====================
+// Bridges this NUI to crimescene/server/main.lua's callbacks/events through
+// cad/client/main.lua. See CS_* RegisterNUICallback entries there.
+
+let CS_currentCaseId = null
+let CS_playerJob = null
+const CS_ReferralJobs = ['judge', 'cia', 'fbi']
+const CS_StatusLabels = {
+    open: 'Open', cold: 'Cold', closed: 'Closed',
+    referred_judge: 'Referred: Judge', referred_cia: 'Referred: CIA', referred_fbi: 'Referred: FBI',
+}
+const CS_WarrantLabels = { requested: 'Warrant: Requested', approved: 'Warrant: Approved', denied: 'Warrant: Denied' }
+const CS_TypeLabels = { hint: 'Hint', vehicle: 'Vehicle', strong_lead: 'Strong Lead' }
+
+function CS_ApplyJobVisibility(job) {
+    CS_playerJob = job
+    let isDoj = ['cid', 'cia', 'marshal', 'fbi', 'judge', 'doa'].indexOf(job) !== -1
+    let isLaw = ['police', 'sheriff', 'mt'].indexOf(job) !== -1
+    $('.doj-tab').css('display', isDoj ? 'inline-block' : 'none')
+    $('.law-tab').css('display', isLaw ? 'inline-block' : 'none')
+    $('.cs-tab').css('display', (isDoj || isLaw) ? 'inline-block' : 'none')
+}
+
+function CS_OpenCase(id) {
+    CS_currentCaseId = id
+    $.post('https://esx_uniquejobs/CS_GetCaseDetail', JSON.stringify({ id: id }))
+}
+
+function CS_AddNote() {
+    let note = $('#CS_NewNote').val()
+    if (note && CS_currentCaseId) {
+        $.post('https://esx_uniquejobs/CS_AddNote', JSON.stringify({ id: CS_currentCaseId, note: note }))
+        $('#CS_NewNote').val('')
+    }
+}
+
+function CS_ReferCase(job) {
+    if (CS_currentCaseId) $.post('https://esx_uniquejobs/CS_ReferCase', JSON.stringify({ id: CS_currentCaseId, job: job }))
+}
+
+function CS_RunMatch() {
+    if (CS_currentCaseId) $.post('https://esx_uniquejobs/CS_RunMatch', JSON.stringify({ id: CS_currentCaseId }))
+}
+
+function CS_IssueBOLO() {
+    if (CS_currentCaseId) $.post('https://esx_uniquejobs/CS_IssueBOLO', JSON.stringify({ id: CS_currentCaseId }))
+}
+
+function CS_RequestWarrant() {
+    if (CS_currentCaseId) $.post('https://esx_uniquejobs/CS_RequestWarrant', JSON.stringify({ id: CS_currentCaseId }))
+}
+
+function CS_DecideWarrant(approved) {
+    if (CS_currentCaseId) $.post('https://esx_uniquejobs/CS_DecideWarrant', JSON.stringify({ id: CS_currentCaseId, approved: approved }))
+}
+
+function CS_CloseCase() {
+    if (!CS_currentCaseId) return
+    let verdict = prompt('Verdict / outcome:') || ''
+    $.post('https://esx_uniquejobs/CS_CloseCase', JSON.stringify({ id: CS_currentCaseId, verdict: verdict }))
+}
+
+function CS_CheckNearestVehicle() {
+    $('#CS_BoloResult').text('Checking...')
+    $.post('https://esx_uniquejobs/CS_CheckNearestVehicle', JSON.stringify({}))
+}
+
+function CS_SubmitBooking() {
+    let suspectName = $('#CS_BookSuspect').val()
+    let charges = $('#CS_BookCharges').val()
+    if (!suspectName || !charges) {
+        alert('Suspect name and charges are required')
+        return
+    }
+    $.post('https://esx_uniquejobs/CS_SubmitBooking', JSON.stringify({
+        targetServerId: $('#CS_BookTarget').val() || null,
+        caseId: $('#CS_BookCase').val() || null,
+        suspectName: suspectName,
+        charges: charges,
+        fine: $('#CS_BookFine').val() || 0,
+        jailMinutes: $('#CS_BookJail').val() || 0,
+    }))
+    $('#CS_BookTarget, #CS_BookCase, #CS_BookSuspect, #CS_BookCharges, #CS_BookFine, #CS_BookJail').val('')
+}
+
 
 
 
@@ -270,6 +366,7 @@ window.addEventListener('message', function(event) {
         $('#Main_Page_CarsWanted_List').empty()
           $('#username_mdt').text(data.name)
           $('#Rank_mdt').text(data.rank)
+          CS_ApplyJobVisibility(data.job)
           data.PeopleWanteds.forEach(element =>
                 // $('#Main_Page_PeopleWanted_List').append('<div class="List_Row" style="border-top: 9px solid rgb(196, 0, 0);"><p>' + element['playerName'] + '</p><p>' + element['phone'] + '</p></div>')
                 $('#Main_Page_PeopleWanted_List').append('<div class="List_Row" onclick="Open_Citizen_Profile(`' + element['identifier'] + '`)"><p>' + element['playerName'] + '</p><p>' + element['phone'] + '</p></div>')
@@ -422,6 +519,104 @@ window.addEventListener('message', function(event) {
         $('#Page_TenCodes').empty()
         data.Codes.forEach(element => {
             $('#Page_TenCodes').append('<span style="font-size: 1.5vw;">' + element + '</span><br>')
+        })
+
+    } else if (data.type === 'CS_Cases') {
+        $('#CS_CasesList').empty()
+        if (!data.list.length) $('#CS_CasesList').append('<p style="color: var(--text-dim);">No cases</p>')
+        data.list.forEach(c => {
+            $('#CS_CasesList').append('<div class="List_Row" onclick="CS_OpenCase(' + c.id + ')"><p>#' + c.id + '</p><p>' + c.rob_name + '</p><p>' + (CS_StatusLabels[c.status] || c.status) + '</p></div>')
+        })
+
+    } else if (data.type === 'CS_CaseDetail') {
+        let c = data.data
+        if (!c) return
+        let caseRow = c.case
+        $('#CS_CaseTitle_P').text('Case #' + caseRow.id + ' - ' + caseRow.rob_name)
+        let statusText = CS_StatusLabels[caseRow.status] || caseRow.status
+        if (caseRow.warrant_status && caseRow.warrant_status !== 'none') {
+            statusText += ' | ' + (CS_WarrantLabels[caseRow.warrant_status] || caseRow.warrant_status)
+        }
+        $('#CS_CaseStatus_P').text(statusText)
+
+        $('#CS_EvidenceList').empty()
+        if (!c.evidence.length) $('#CS_EvidenceList').append('<div class="data_Row"><p>-</p><p>No evidence yet</p><p>-</p></div>')
+        c.evidence.forEach(ev => {
+            $('#CS_EvidenceList').append('<div class="data_Row"><p>' + (CS_TypeLabels[ev.type] || ev.type) + '</p><p>' + ev.content + '</p><p>' + (ev.found_by_name || '?') + '</p></div>')
+        })
+
+        $('#CS_NotesList').empty()
+        if (!c.notes.length) $('#CS_NotesList').append('<div class="data_Row"><p>-</p><p>No notes yet</p></div>')
+        c.notes.forEach(n => {
+            $('#CS_NotesList').append('<div class="data_Row"><p>' + (n.author_name || '?') + '</p><p>' + n.note + '</p></div>')
+        })
+
+        let actionsHtml = ''
+        let openLike = caseRow.status === 'open' || caseRow.status === 'cold'
+        if (openLike) {
+            CS_ReferralJobs.forEach(job => {
+                actionsHtml += '<button class="ExitButton" style="margin-right:6px;margin-bottom:6px;" onclick="CS_ReferCase(\'' + job + '\')">Refer: ' + job.toUpperCase() + '</button>'
+            })
+            actionsHtml += '<button class="ExitButton" style="margin-right:6px;margin-bottom:6px;" onclick="CS_RunMatch()">Run Fingerprint Match</button>'
+            if (c.evidence.some(ev => ev.type === 'vehicle')) {
+                actionsHtml += '<button class="ExitButton" style="margin-right:6px;margin-bottom:6px;" onclick="CS_IssueBOLO()">Issue BOLO</button>'
+            }
+            if (!caseRow.warrant_status || caseRow.warrant_status === 'none' || caseRow.warrant_status === 'denied') {
+                actionsHtml += '<button class="ExitButton" style="margin-right:6px;margin-bottom:6px;" onclick="CS_RequestWarrant()">Request Warrant</button>'
+            }
+        }
+        if (CS_playerJob === 'judge' && caseRow.warrant_status === 'requested') {
+            actionsHtml += '<button class="ExitButton" style="margin-right:6px;margin-bottom:6px;" onclick="CS_DecideWarrant(true)">Approve Warrant</button>'
+            actionsHtml += '<button class="DiscardButton" style="margin-right:6px;margin-bottom:6px;" onclick="CS_DecideWarrant(false)">Deny Warrant</button>'
+        }
+        if (CS_ReferralJobs.indexOf(CS_playerJob) !== -1 && caseRow.status === ('referred_' + CS_playerJob)) {
+            actionsHtml += '<button class="ExitButton" onclick="CS_CloseCase()">Close Case + Verdict</button>'
+        }
+        $('#CS_CaseActions').html(actionsHtml)
+
+        if (currenttab !== 'CS_CaseDetail') {
+            DuckMdt.PageSwitch('CS_Cases', 'CS_CaseDetail', 300)
+            currenttab = 'CS_CaseDetail'
+        }
+
+    } else if (data.type === 'CS_Wanted') {
+        $('#CS_WantedList').empty()
+        if (!data.list.length) $('#CS_WantedList').append('<p style="color: var(--text-dim);">No repeat codes yet</p>')
+        data.list.forEach(row => {
+            $('#CS_WantedList').append('<div class="List_Row List_Row_Wanted"><p>#' + row.suspect_hint_id + '</p><p>Hits: ' + row.hits + '</p><p>' + (row.last_seen || '') + '</p></div>')
+        })
+
+    } else if (data.type === 'CS_Bolos') {
+        $('#CS_BoloList').empty()
+        if (!data.list.length) $('#CS_BoloList').append('<p style="color: var(--text-dim);">No active BOLOs</p>')
+        data.list.forEach(row => {
+            $('#CS_BoloList').append('<div class="List_Row List_Row_Wanted"><p>' + row.plate + '</p><p>Case #' + row.caseId + '</p><p>' + (row.issuedBy || '') + '</p></div>')
+        })
+
+    } else if (data.type === 'CS_PlateCheckResult') {
+        if (data.noVehicle) {
+            $('#CS_BoloResult').css('color', 'var(--text-dim)').text('No vehicle nearby')
+        } else if (data.found) {
+            $('#CS_BoloResult').css('color', 'var(--danger)').text('MATCH! Plate ' + data.plate + ' is wanted (Case #' + data.caseId + ')')
+        } else {
+            $('#CS_BoloResult').css('color', 'var(--ok)').text('Clean - no BOLO for this plate')
+        }
+
+    } else if (data.type === 'CS_Records') {
+        $('#CS_RecordsList').empty()
+        if (!data.list.length) $('#CS_RecordsList').append('<p style="color: var(--text-dim);">No records yet</p>')
+        data.list.forEach(row => {
+            $('#CS_RecordsList').append('<div class="List_Row"><p>' + row.suspect_name + '</p><p>' + row.charges + '</p><p>$' + row.fine + ' / ' + row.jail_minutes + 'm</p></div>')
+        })
+
+    } else if (data.type === 'CS_Leaderboard') {
+        $('#CS_LeaderInvestigators').empty()
+        (data.data.investigators || []).forEach((row, i) => {
+            $('#CS_LeaderInvestigators').append('<div class="List_Row"><p>#' + (i + 1) + '</p><p>' + row.name + '</p><p>' + row.score + '</p></div>')
+        })
+        $('#CS_LeaderOfficers').empty()
+        ;(data.data.officers || []).forEach((row, i) => {
+            $('#CS_LeaderOfficers').append('<div class="List_Row"><p>#' + (i + 1) + '</p><p>' + row.name + '</p><p>' + row.score + '</p></div>')
         })
     }
 

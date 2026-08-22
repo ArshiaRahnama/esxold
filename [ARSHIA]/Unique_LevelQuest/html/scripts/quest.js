@@ -5,7 +5,13 @@ function ringColorFor(percentage) {
   return '#6b6b72';                        // muted - just started
 }
 
-function animateQuestRing(ringElement, fracElement, current, required, duration = 900) {
+// Cards re-render every time the menu opens, so without this an
+// already-completed quest would chime again on every open — this Set
+// persists for the life of the NUI page (i.e. across open/close) and
+// only allows one chime per quest id.
+const chimedQuestIds = new Set();
+
+function animateQuestRing(ringElement, fracElement, questId, current, required, duration = 900) {
   if (!ringElement) return;
 
   const targetPercentage = required > 0 ? Math.min(100, (current / required) * 100) : 0;
@@ -20,7 +26,13 @@ function animateQuestRing(ringElement, fracElement, current, required, duration 
     ringElement.style.setProperty('--ringColor', ringColorFor(percent));
 
     if (progress < 1) requestAnimationFrame(updateFrame);
-    else if (percent >= 100) ringElement.classList.add('complete');
+    else if (percent >= 100) {
+      ringElement.classList.add('complete');
+      if (!chimedQuestIds.has(questId)) {
+        chimedQuestIds.add(questId);
+        if (typeof playChime === 'function') playChime();
+      }
+    }
   };
 
   requestAnimationFrame(updateFrame);
@@ -57,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const ring = card.querySelector(`#ring-${quest.id}`);
         const frac = card.querySelector(`#frac-${quest.id}`);
-        animateQuestRing(ring, frac, current, required);
+        animateQuestRing(ring, frac, quest.id, current, required);
       });
     }
   });

@@ -1,0 +1,101 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap");
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: transparent;
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+#speedo {
+  position: fixed;
+  right: 3vh;
+  bottom: -20vh;
+  width: 190px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: rgba(24, 27, 32, 0.55);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-sizing: border-box;
+  opacity: 0;
+  transition: bottom 0.4s ease, opacity 0.4s ease;
+}
+
+#speedo.speedo-visible {
+  bottom: 4vh;
+  opacity: 1;
+}
+
+.speedo-main {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+#speedo-value {
+  font-size: 42px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.speedo-unit {
+  font-size: 12px;
+  color: #9ca3af;
+  letter-spacing: 1px;
+}
+
+.speedo-sub {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.speedo-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.speedo-label {
+  font-size: 10px;
+  color: #9ca3af;
+  letter-spacing: 0.5px;
+}
+
+#speedo-gear {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.speedo-bar-item {
+  flex: 1;
+}
+
+.speedo-bar-track {
+  width: 100%;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.speedo-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+.speedo-bar-fuel {
+  background: linear-gradient(90deg, #fcbf49, #ffc315);
+}
+
+.speedo-bar-engine {
+  background: #33cccc;
+}

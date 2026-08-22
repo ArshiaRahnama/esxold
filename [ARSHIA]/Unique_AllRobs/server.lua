@@ -566,7 +566,15 @@ AddEventHandler('Morphy_RobSystem:robberySuccess', function(robname,RobberyCode)
     local _source = source
     RobsInProgress[_source] = nil
     local xPlayer  = ESX.GetPlayerFromId(_source)
-    local accepted = exports["esx_policejob"]:CheckRob(RobberyCode)
+    -- TEMP FIX (was crashing: exports["esx_policejob"] doesn't exist, that
+    -- resource is esx_uniquejobs now, and its real export is
+    -- CheckRob_police/CheckRob_marshal not CheckRob). Always giving full
+    -- reward for now until the final "who approves a rob" design is
+    -- decided (police-tier escalation vs PartySystem/TeamSystem -- this
+    -- file already uses exports["PartySystem"]:IsInTeam(...) elsewhere,
+    -- around line 461, for the teammatesrequired check at robbery start,
+    -- so a team-based accept flow here would follow the same pattern).
+    local accepted = true
     if accepted then
         for itemname,amount in pairs(Config.Rob.RobTypes[Config.Rob.Robs[robname].type].reward) do
             if type(amount) == "table" then

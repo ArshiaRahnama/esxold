@@ -13,6 +13,11 @@ function animateXpBar(fillElement, targetPercentage, duration = 800) {
   requestAnimationFrame(updateFrame);
 }
 
+// Tracks the last known level so we can tell a genuine level-up (while
+// the menu is open, live-refreshed every 30s) apart from just loading
+// the current value for the first time.
+let lastKnownLevel = undefined;
+
 window.addEventListener('message', (event) => {
   const data = event.data;
 
@@ -42,6 +47,18 @@ window.addEventListener('message', (event) => {
 
     if (levelElem && data.level !== undefined) {
       levelElem.textContent = data.level;
+
+      const newLevel = Number(data.level);
+      if (lastKnownLevel !== undefined && newLevel > lastKnownLevel) {
+        const lvBox = document.querySelector('.lvBox');
+        if (typeof spawnConfetti === 'function') spawnConfetti(lvBox);
+        if (typeof playChime === 'function') playChime();
+        if (lvBox) {
+          lvBox.classList.add('levelUpFlash');
+          setTimeout(() => lvBox.classList.remove('levelUpFlash'), 900);
+        }
+      }
+      lastKnownLevel = newLevel;
     }
 
     if (xpFractionElem && data.xpCurrent !== undefined && data.xpNeeded !== undefined) {
@@ -56,6 +73,16 @@ window.addEventListener('message', (event) => {
     setImageOrFallback(document.getElementById('avatarImg'), data.avatarUrl);
     setImageOrFallback(document.getElementById('gangIcon'), data.gangLogoUrl);
     setLocalJobIcon(document.getElementById('jobIcon'), data.jobName);
+
+    // Cached for the compare-players feature (compare.js) — no extra
+    // server round trip needed for "your own" side of the comparison.
+    window.__ownStats = {
+      name: data.name,
+      level: data.level,
+      xp: data.xpCurrent,
+      coin: data.coinRaw,
+      hours: data.hours,
+    };
   }
 });
 

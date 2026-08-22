@@ -14,7 +14,22 @@ document.addEventListener('DOMContentLoaded', () => {
       data.vehicles.forEach(v => {
         const card = document.createElement('div');
         card.className = 'imgCard';
-        card.innerHTML = `<div class="cap">${v.name}<br><small>${v.plate}</small></div>`;
+
+        const statusMap = {
+          0: { label: 'OUT', cls: 'status-out' },
+          1: { label: 'IN GARAGE', cls: 'status-garage' },
+          2: { label: 'IMPOUNDED', cls: 'status-impound' },
+        };
+        const status = statusMap[v.stored] ?? statusMap[0];
+        const fuelPct = Math.max(0, Math.min(100, Number(v.fuel) || 0));
+
+        card.innerHTML = `
+          <div class="cap">
+            ${v.name}<br><small>${v.plate}</small>
+            <span class="garageStatus ${status.cls}">${status.label}</span>
+            <div class="fuelBar"><div class="fuelFill" style="width:${fuelPct}%"></div></div>
+          </div>
+        `;
 
         // Real preview images from FiveM's public vehicle database, using
         // a native <img loading="lazy"> instead of preloading everything

@@ -2,7 +2,7 @@
 
 DuckMdt = {}
 
-DuckMdt.Command = 'mdt'
+DuckMdt.Command = 'cad'
 
 DuckMdt.PoliceJob = 'police'
 

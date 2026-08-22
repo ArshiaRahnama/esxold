@@ -53,6 +53,14 @@
                       <button class="MainPageTabButton" id="Page_Button_CitizensList" onclick="DuckMdt.TabSelected('CitizensList')">List of citizens</button>
                       <button class="MainPageTabButton" id="Page_Button_VehiclesList" onclick="DuckMdt.TabSelected('VehiclesList')">List of vehicles</button>
                       <button class="MainPageTabButton" id="Page_Button_TenCodes" onclick="DuckMdt.TabSelected('TenCodes')">10-codes</button>
+                      <!-- CrimeScene (Unique_CrimeScene) tabs -- hidden by default, CS_ApplyJobVisibility()
+                           shows/hides the doj-tab / law-tab ones once we know the player's job group -->
+                      <button class="MainPageTabButton doj-tab" style="display:none;" id="Page_Button_CS_Cases" onclick="DuckMdt.TabSelected('CS_Cases')">Cases</button>
+                      <button class="MainPageTabButton doj-tab" style="display:none;" id="Page_Button_CS_Wanted" onclick="DuckMdt.TabSelected('CS_Wanted')">Wanted Board</button>
+                      <button class="MainPageTabButton law-tab" style="display:none;" id="Page_Button_CS_Bolo" onclick="DuckMdt.TabSelected('CS_Bolo')">BOLO</button>
+                      <button class="MainPageTabButton law-tab" style="display:none;" id="Page_Button_CS_Booking" onclick="DuckMdt.TabSelected('CS_Booking')">Booking</button>
+                      <button class="MainPageTabButton cs-tab" style="display:none;" id="Page_Button_CS_Records" onclick="DuckMdt.TabSelected('CS_Records')">Records</button>
+                      <button class="MainPageTabButton cs-tab" style="display:none;" id="Page_Button_CS_Leaderboard" onclick="DuckMdt.TabSelected('CS_Leaderboard')">Leaderboard</button>
                     </div>
                 </div>
 
@@ -308,6 +316,110 @@
                       </div>
 
                       <!--  -->
+
+                      <!-- ===================== CrimeScene: Cases (DOJ) ===================== -->
+                      <div id="Page_CS_Cases" style="display: none;">
+                        <div class="MainPage_Header">
+                          <p style="font-size: 2vw;">DOJ Cases</p>
+                        </div>
+                        <div id="CS_CasesList" class="MDT_List"></div>
+                      </div>
+
+                      <div id="Page_CS_CaseDetail" style="display: none;">
+                        <div class="MainPage_Header">
+                          <button class="ExitButton" style="width: 120px;" onclick="DuckMdt.PageSwitch('CS_CaseDetail', 'CS_Cases', 500); currenttab = 'CS_Cases';">Back</button>
+                          <p style="font-size: 2vw;" id="CS_CaseTitle_P">Case</p>
+                        </div>
+                        <p id="CS_CaseStatus_P" style="color: var(--gold); font-weight: 700; margin-bottom: 14px;"></p>
+
+                        <div class="Data_List">
+                          <div class="Data_List_Content">
+                            <div class="data_Row" style="color: blanchedalmond;">
+                              <p>Type</p><p>Content</p><p>Found By</p>
+                            </div>
+                            <hr style="color: rgb(49, 49, 49); margin-top: 2px;">
+                            <div id="CS_EvidenceList"></div>
+                          </div>
+                        </div>
+
+                        <div class="Data_List">
+                          <div class="Data_List_Content">
+                            <div class="data_Row" style="color: blanchedalmond;">
+                              <p>Author</p><p>Note</p>
+                            </div>
+                            <hr style="color: rgb(49, 49, 49); margin-top: 2px;">
+                            <div id="CS_NotesList"></div>
+                          </div>
+                        </div>
+
+                        <div style="margin-top: 14px;">
+                          <input id="CS_NewNote" type="text" placeholder="New note" style="width: 55%;">
+                          <button class="ExitButton" onclick="CS_AddNote()">Add Note</button>
+                        </div>
+
+                        <div id="CS_CaseActions" style="margin-top: 14px;"></div>
+                      </div>
+
+                      <!-- ===================== CrimeScene: Wanted Board (DOJ) ===================== -->
+                      <div id="Page_CS_Wanted" style="display: none;">
+                        <div class="MainPage_Header">
+                          <p style="font-size: 2vw;">Wanted Board</p>
+                        </div>
+                        <div id="CS_WantedList" class="MDT_List"></div>
+                      </div>
+
+                      <!-- ===================== CrimeScene: BOLO (Law) ===================== -->
+                      <div id="Page_CS_Bolo" style="display: none;">
+                        <div class="MainPage_Header">
+                          <p style="font-size: 2vw;">Active BOLOs</p>
+                          <button class="ExitButton" onclick="CS_CheckNearestVehicle()">Check Nearest Vehicle</button>
+                        </div>
+                        <p id="CS_BoloResult" style="color: var(--danger); font-weight: 700; margin-bottom: 10px;"></p>
+                        <div id="CS_BoloList" class="MDT_List"></div>
+                      </div>
+
+                      <!-- ===================== CrimeScene: Booking (Law) ===================== -->
+                      <div id="Page_CS_Booking" style="display: none;">
+                        <div class="MainPage_Header">
+                          <p style="font-size: 2vw;">New Booking</p>
+                        </div>
+                        <div style="max-width: 480px;">
+                          <input id="CS_BookTarget" type="number" placeholder="Player ID (optional, links to CAD)" style="width: 100%; margin-bottom: 10px;">
+                          <input id="CS_BookCase" type="number" placeholder="Case ID (optional, needs approved warrant)" style="width: 100%; margin-bottom: 10px;">
+                          <input id="CS_BookSuspect" type="text" placeholder="Suspect name" style="width: 100%; margin-bottom: 10px;">
+                          <input id="CS_BookCharges" type="text" placeholder="Charges" style="width: 100%; margin-bottom: 10px;">
+                          <div style="display: flex; gap: 10px; margin-bottom: 14px;">
+                            <input id="CS_BookFine" type="number" placeholder="Fine ($)" style="flex: 1;">
+                            <input id="CS_BookJail" type="number" placeholder="Jail (minutes)" style="flex: 1;">
+                          </div>
+                          <button class="ExitButton" onclick="CS_SubmitBooking()">Submit Booking</button>
+                        </div>
+                      </div>
+
+                      <!-- ===================== CrimeScene: Records (DOJ + Law) ===================== -->
+                      <div id="Page_CS_Records" style="display: none;">
+                        <div class="MainPage_Header">
+                          <p style="font-size: 2vw;">Criminal Records</p>
+                        </div>
+                        <div id="CS_RecordsList" class="MDT_List"></div>
+                      </div>
+
+                      <!-- ===================== CrimeScene: Leaderboard (DOJ + Law) ===================== -->
+                      <div id="Page_CS_Leaderboard" style="display: none;">
+                        <div class="MainPage_Header">
+                          <p style="font-size: 2vw;">Leaderboard</p>
+                        </div>
+                        <div style="display: flex; gap: 24px;">
+                          <div style="flex: 1;">
+                            <p style="color: var(--text-dim); font-weight: 600; font-size: 13px; margin-bottom: 10px;">Top Investigators (DOJ)</p>
+                            <div id="CS_LeaderInvestigators" class="MDT_List"></div>
+                          </div>
+                          <div style="flex: 1;">
+                            <p style="color: var(--text-dim); font-weight: 600; font-size: 13px; margin-bottom: 10px;">Top Officers (Law)</p>
+                            <div id="CS_LeaderOfficers" class="MDT_List"></div>
+                          </div>
+                        </div>
+                      </div>
 
                       <div id="Page_TenCodes" style="display: none;">
                           <span style="font-size: 1.5vw;">10-3 | Sooot Radio</span><br>

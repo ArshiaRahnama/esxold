@@ -184,6 +184,12 @@ AddEventHandler('DiscordBot:ToDiscord', function(WebHook, Name, Message, Image, 
 			WebHook = DiscordCuffAll
 		elseif WebHook:lower() == "fine" then
 			WebHook = DiscordFine
+		elseif WebHook:lower() == "vdm" then
+			WebHook = DiscordWebhookVDM
+		elseif WebHook:lower() == "tirelog" then
+			WebHook = DiscordWebhookTireLog
+		elseif WebHook:lower() == "entervehicle" then
+			WebHook = DiscordWebhookVehicleEntry
 		end
 
 		if Image:lower() == 'steam' then

@@ -79,6 +79,7 @@ RegisterNUICallback('Login', function()
             type = 'LoginUpdate',
             name = string.gsub(xPlayer.name, "_", " "),
             rank = PlayerData_cad.job.grade_label,
+            job = PlayerData_cad.job.name,
             PeopleWanteds = obj.peoples,
             WantedCars = obj.cars
         }))
@@ -191,4 +192,135 @@ RegisterNUICallback('LoadTenCodes', function()
         type = 'LoadTenCodes',
         Codes = DuckMdt.TenCodes
     }))
+end)
+
+-- Crime Scene Investigation bridge -- crimescene/server/main.lua owns the
+-- actual logic/DB/permission checks, this just relays the CS_ tab UI calls
+-- to it by event/callback name.
+
+local function GetClosestVehicle_cad(coords, maxDist)
+    local vehicles = GetGamePool('CVehicle')
+    local closest, closestDist = 0, maxDist
+    for i = 1, #vehicles do
+        local dist = #(GetEntityCoords(vehicles[i]) - coords)
+        if dist < closestDist then
+            closest = vehicles[i]
+            closestDist = dist
+        end
+    end
+    return closest
+end
+
+RegisterNUICallback('CS_GetCases', function()
+    ESX.TriggerServerCallback('CrimeScene:getCases', function(cases)
+        SendNuiMessage(json.encode({ type = 'CS_Cases', list = cases }))
+    end)
+end)
+
+RegisterNUICallback('CS_GetCaseDetail', function(data)
+    ESX.TriggerServerCallback('CrimeScene:getCaseDetail', function(detail)
+        SendNuiMessage(json.encode({ type = 'CS_CaseDetail', data = detail }))
+    end, tonumber(data.id))
+end)
+
+RegisterNUICallback('CS_AddNote', function(data)
+    TriggerServerEvent('CrimeScene:addNote', tonumber(data.id), data.note)
+end)
+
+RegisterNUICallback('CS_ReferCase', function(data)
+    TriggerServerEvent('CrimeScene:referCase', tonumber(data.id), data.job)
+end)
+
+RegisterNUICallback('CS_RunMatch', function(data)
+    TriggerServerEvent('CrimeScene:runFingerprintMatch', tonumber(data.id))
+end)
+
+RegisterNUICallback('CS_IssueBOLO', function(data)
+    TriggerServerEvent('CrimeScene:issueBOLO', tonumber(data.id))
+end)
+
+RegisterNUICallback('CS_RequestWarrant', function(data)
+    TriggerServerEvent('CrimeScene:requestWarrant', tonumber(data.id))
+end)
+
+RegisterNUICallback('CS_DecideWarrant', function(data)
+    TriggerServerEvent('CrimeScene:decideWarrant', tonumber(data.id), data.approved and true or false)
+end)
+
+RegisterNUICallback('CS_CloseCase', function(data)
+    TriggerServerEvent('CrimeScene:closeCase', tonumber(data.id), data.verdict)
+end)
+
+RegisterNUICallback('CS_GetWanted', function()
+    ESX.TriggerServerCallback('CrimeScene:getWantedBoard', function(list)
+        SendNuiMessage(json.encode({ type = 'CS_Wanted', list = list }))
+    end)
+end)
+
+RegisterNUICallback('CS_GetBolos', function()
+    ESX.TriggerServerCallback('CrimeScene:getActiveBOLOs', function(list)
+        SendNuiMessage(json.encode({ type = 'CS_Bolos', list = list }))
+    end)
+end)
+
+RegisterNUICallback('CS_CheckNearestVehicle', function()
+    local ped = PlayerPedId()
+    local veh = GetVehiclePedIsIn(ped, false)
+    if veh == 0 then
+        veh = GetClosestVehicle_cad(GetEntityCoords(ped), 5.0)
+    end
+
+    if veh == 0 then
+        SendNuiMessage(json.encode({ type = 'CS_PlateCheckResult', found = false, noVehicle = true }))
+        return
+    end
+
+    TriggerServerEvent('CrimeScene:checkPlate', GetVehicleNumberPlateText(veh))
+end)
+
+RegisterNetEvent('CrimeScene:plateCheckResult')
+AddEventHandler('CrimeScene:plateCheckResult', function(matched, plate, caseId)
+    SendNuiMessage(json.encode({ type = 'CS_PlateCheckResult', found = matched, plate = plate, caseId = caseId }))
+end)
+
+RegisterNUICallback('CS_SubmitBooking', function(data)
+    TriggerServerEvent(
+        'CrimeScene:createBooking',
+        data.caseId and tonumber(data.caseId) or nil,
+        data.suspectName,
+        data.charges,
+        data.fine and tonumber(data.fine) or 0,
+        data.jailMinutes and tonumber(data.jailMinutes) or 0,
+        data.targetServerId and tonumber(data.targetServerId) or nil
+    )
+end)
+
+RegisterNUICallback('CS_GetRecords', function()
+    ESX.TriggerServerCallback('CrimeScene:getRecords', function(list)
+        SendNuiMessage(json.encode({ type = 'CS_Records', list = list }))
+    end)
+end)
+
+RegisterNUICallback('CS_GetLeaderboard', function()
+    ESX.TriggerServerCallback('CrimeScene:getLeaderboard', function(lb)
+        SendNuiMessage(json.encode({ type = 'CS_Leaderboard', data = lb }))
+    end)
+end)
+
+-- Live refresh: if the currently open case gets updated by someone else
+-- (or from a rob elsewhere), re-pull it so the CS_ tabs stay in sync.
+RegisterNetEvent('CrimeScene:refreshCase')
+AddEventHandler('CrimeScene:refreshCase', function(caseId)
+    if not MdtDisplay_cad then return end
+    ESX.TriggerServerCallback('CrimeScene:getCaseDetail', function(detail)
+        SendNuiMessage(json.encode({ type = 'CS_CaseDetail', data = detail }))
+    end, caseId)
+end)
+
+RegisterNetEvent('CrimeScene:boloListUpdated')
+AddEventHandler('CrimeScene:boloListUpdated', function()
+    if not MdtDisplay_cad then return end
+    ESX.TriggerServerCallback('CrimeScene:getActiveBOLOs', function(list)
+        SendNuiMessage(json.encode({ type = 'CS_Bolos', list = list }))
+    end)
 end)

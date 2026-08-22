@@ -1,4 +1,9 @@
-
+-- ================================================================= --
+-- Bridges: client-side. These listen to events that OTHER resources
+-- already fire (essentialmode's paycheck, esx_organserver's ambulance/
+-- mechanic jobs) and forward the matching quest trigger to the server.
+-- None of those other resources' files were modified.
+-- ================================================================= --
 
 local ESX = nil
 Citizen.CreateThread(function()
@@ -17,6 +22,9 @@ local onDutyJobs = {
     taxi         = 'quest-taxi:onduty',
 }
 
+-- essentialmode's paycheck.lua fires this client event on every salary
+-- tick, for any player with a job (grade >= 0). We just filter it down
+-- to the jobs our quest system tracks.
 RegisterNetEvent('esx:givesalary')
 AddEventHandler('esx:givesalary', function()
     if not ESX then return end
@@ -31,6 +39,8 @@ AddEventHandler('esx:givesalary', function()
     end
 end)
 
+-- esx_organserver's ambulance/mechanic job scripts fire these on the
+-- responder's client only when a request is genuinely accepted.
 RegisterNetEvent('esx_ambulancejob:acceptreq')
 AddEventHandler('esx_ambulancejob:acceptreq', function()
     TriggerServerEvent('quest-ambulance:acceptreq')

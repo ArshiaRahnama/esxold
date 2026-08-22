@@ -1,5 +1,13 @@
+-- ================================================================= --
+-- Leaderboard: Top 10 Players (composite score) and Top 10 Gangs (by
+-- real gang XP). Read-only, no player input affects the query except
+-- which of the two fixed rankings to return.
+-- ================================================================= --
 
-
+-- Player "power score" weighting — level is the primary driver (it's
+-- the character's core prestige), then hours played, then coin, with
+-- in-level xp as a small tiebreaker. Adjust the multipliers here if
+-- you want a different balance.
 local SCORE_RANK_WEIGHT     = 1000
 local SCORE_HOUR_WEIGHT     = 5
 local SCORE_COIN_WEIGHT     = 2
@@ -46,5 +54,25 @@ ESX.RegisterServerCallback('HUD_Menu:GetLeaderboard', function(source, cb, kind)
             })
         end
         cb(entries)
+    end)
+end)
+
+-- Compare Players: read-only lookup by player name (already shown on
+-- the leaderboard, nothing sensitive exposed beyond the same stats
+-- everyone already sees listed there).
+ESX.RegisterServerCallback('HUD_Menu:GetPlayerStats', function(source, cb, playerName)
+    if not playerName then return cb(nil) end
+
+    MySQL.Async.fetchAll('SELECT playerName, rank, xp, coin, timePlay FROM users WHERE playerName = @name LIMIT 1', {
+        ['@name'] = playerName
+    }, function(result)
+        if not result[1] then return cb(nil) end
+        cb({
+            name  = result[1].playerName,
+            rank  = result[1].rank or 1,
+            xp    = result[1].xp or 0,
+            coin  = result[1].coin or 0,
+            hours = math.floor((result[1].timePlay or 0) / 3600),
+        })
     end)
 end)

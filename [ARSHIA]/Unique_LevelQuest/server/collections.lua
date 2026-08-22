@@ -1,18 +1,27 @@
-
+-- ================================================================= --
+-- Collections: vehicles + houses, both backed by real tables already
+-- on this server (owned_vehicles, owned_properties + properties).
+-- There is no pet system anywhere on this server, so there's no
+-- 'GetPets' here — adding one would just be an empty/fake tab.
+-- ================================================================= --
 
 ESX.RegisterServerCallback("HUD_Menu:GetVehicles", function(source, cb)
     local xPlayer = ESX.GetPlayerFromId(source)
     if not xPlayer then return cb({}) end
 
-    MySQL.Async.fetchAll('SELECT plate, vehicle FROM owned_vehicles WHERE owner = @owner', {
+    MySQL.Async.fetchAll('SELECT plate, vehicle, stored, fuel FROM owned_vehicles WHERE owner = @owner', {
         ['@owner'] = xPlayer.identifier
     }, function(result)
         local vehicles = {}
         for i = 1, #result do
             local ok, decoded = pcall(json.decode, result[i].vehicle)
             table.insert(vehicles, {
-                plate = result[i].plate,
-                model = ok and decoded and decoded.model or nil,
+                plate  = result[i].plate,
+                model  = ok and decoded and decoded.model or nil,
+                -- Matches Unique_Garage's own semantics exactly:
+                -- 0 = out in the world, 1 = stored in garage, 2 = impounded
+                stored = result[i].stored,
+                fuel   = result[i].fuel,
             })
         end
         cb(vehicles)

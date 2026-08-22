@@ -3,7 +3,8 @@ game 'gta5'
 
 -- ============================================================
 -- Unique_Hud
--- status + sun-streetlabel با هم یکی شدن تو یه ریسورس واحد.
+-- status + sun-streetlabel + combat mode + speedometer با هم یکی شدن تو یه
+-- ریسورس واحد.
 -- ============================================================
 
 -- oxmysql's MySQL.* compatibility lib. لازمه چون global هر ریسورس جدا هست؛
@@ -18,6 +19,8 @@ server_scripts {
 client_scripts {
     'client/main.lua',
     'client/streetlabel.lua',
+    'client/combat.lua',
+    'client/speedometer.lua',
 }
 
 ui_page 'ui/index.html'
@@ -40,8 +43,17 @@ files {
     'ui/streetlabel/index.html',
     'ui/streetlabel/listener.js',
     'ui/streetlabel/style.css',
+    'ui/combat/index.html',
+    'ui/combat/app.js',
+    'ui/combat/style.css',
+    'ui/speedometer/index.html',
+    'ui/speedometer/app.js',
+    'ui/speedometer/style.css',
 }
 
+-- speedometer.lua از exports['LegacyFuel']:GetFuel استفاده می‌کنه (همون
+-- الگویی که تو Unique_Garage/client/vehiclehud_cl.lua خودتون هم هست).
 dependencies {
-    'oxmysql'
+    'oxmysql',
+    'LegacyFuel'
 }
