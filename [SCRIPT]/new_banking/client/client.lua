@@ -61,14 +61,14 @@ end)
 Citizen.CreateThread(function()
 	if showblips then
 	  for k,v in ipairs(banks)do
-		local blip = AddBlipForCoord(v.x, v.y, v.z)
-		SetBlipSprite(blip, v.id)
-		SetBlipScale(blip, 0.7)
-		SetBlipColour(blip, 2)
-		SetBlipAsShortRange(blip, true)
-		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentString(tostring(v.name))
-		EndTextCommandSetBlipName(blip)
+		-- local blip = AddBlipForCoord(v.x, v.y, v.z)
+		-- SetBlipSprite(blip, v.id)
+		-- SetBlipScale(blip, 0.7)
+		-- SetBlipColour(blip, 2)
+		-- SetBlipAsShortRange(blip, true)
+		-- BeginTextCommandSetBlipName("STRING")
+		-- AddTextComponentString(tostring(v.name))
+		-- EndTextCommandSetBlipName(blip)
 	  end
 	end
 end)

@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `login_audit` (
   `license` varchar(128) DEFAULT NULL,        -- this resource's own account id
   `device_license` varchar(128) DEFAULT NULL, -- real FiveM license: of the connecting device
   `ip` varchar(64) DEFAULT NULL,
-  `action` enum('login_success','login_fail','register','password_reset','new_device','logout_all','password_change','security_hold') NOT NULL,
+  `action` enum('login_success','login_fail','register','password_reset','new_device','logout_all','password_change','security_hold','security_hold_cleared') NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_login_audit_username` (`username`),
@@ -75,4 +75,4 @@ CREATE TABLE IF NOT EXISTS `login_audit` (
 -- to add the new enum value instead of the CREATE TABLE above:
 --
 -- ALTER TABLE `login_audit`
---   MODIFY COLUMN `action` enum('login_success','login_fail','register','password_reset','new_device','logout_all','password_change','security_hold') NOT NULL;
+--   MODIFY COLUMN `action` enum('login_success','login_fail','register','password_reset','new_device','logout_all','password_change','security_hold','security_hold_cleared') NOT NULL;

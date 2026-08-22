@@ -449,4 +449,49 @@
     leaves the capture world, spectating automatically falls back to 
     free camera with a heads-up notification — it never gets stuck.
 
+67- Bugfix: Academy entry point was sitting at (0,0,72) — the ocean 
+    void near the map's origin, not anywhere a player could actually 
+    walk to. Config.AcademyEntryPoints now defaults to a real spot 
+    (outside Mission Row PD) so the entry ped/blip/interaction 
+    actually works out of the box. Still just an example — change 
+    it to fit your own map.
+
+68- Bugfix: Safe Zone on Academy entry didn't actually cover the 
+    spawn point — it was centered ~11 units away from where you 
+    land, so NPCs would start shooting the instant you walked in, 
+    before the safe-zone check even had a chance to run. 
+    Config.AcademySafeZoneOffset is now (0,0,0) so the safe zone is 
+    centered exactly on Config.AcademyCoord (your actual spawn), and 
+    the radius is bumped to 8.0. You now genuinely start protected, 
+    NPCs leave you alone while you're inside it, and they engage the 
+    moment you step out.
+
+69- Bugfix/Feature: Safe Zone is now airtight — you're made fully 
+    invincible while standing in it (on top of the existing distance 
+    check), and every NPC's relationship group is switched to 
+    neutral + stood down while you're inside, instead of just 
+    clearing their current task. Old behavior could let an NPC that 
+    was already mid-engagement re-acquire you almost instantly; now 
+    it genuinely can't target you at all until you leave. Applies on 
+    initial entry, on every zone crossing, and on death-respawn.
+
+70- Feature: Academy difficulty now ramps NPC count, not just 
+    accuracy/armor. You start with Config.AcademyStartNPCCount 
+    (default 1) active NPC instead of the old fixed 4-at-once rush, 
+    gain +1 every Config.AcademyNPCCountStep kills (default 8), and 
+    it's hard-capped at Config.AcademyMaxNPCCount (default 4) so it 
+    never gets out of hand. New NPCs trickle in one at a time with a 
+    short random delay instead of spawning together.
+
+71- Bugfix: NPCs could actually kill you in the Academy despite the
+    health floor. The floor was only re-checked every 150ms, but a
+    single rifle burst can zero your health well within that window
+    — the fix-up landed one tick too late. Now: (1) your max health
+    is boosted to Config.AcademyPlayerMaxHealth (default 500, real
+    max restored on exit) so any single hit is a much smaller slice
+    of your health bar, and (2) the floor is enforced the instant
+    damage lands via the game's own damage event, not just a poll —
+    a tight per-frame poll still runs underneath as a backup net.
+    NPCs genuinely cannot finish you off anymore.
+
 ========================================================

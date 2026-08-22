@@ -20,6 +20,7 @@ client_scripts {
     'client/main.lua',
     'client/streetlabel.lua',
     'client/combat.lua',
+    'client/speedometer_config.lua',
     'client/speedometer.lua',
 }
 
@@ -47,7 +48,7 @@ files {
     'ui/combat/app.js',
     'ui/combat/style.css',
     'ui/speedometer/index.html',
-    'ui/speedometer/app.js',
+    'ui/speedometer/script.js',
     'ui/speedometer/style.css',
 }
 

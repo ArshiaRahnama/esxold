@@ -214,14 +214,38 @@ if Config.EnableAcademy then
         return accuracy, armor
     end
 
+    -- How many NPCs SHOULD be alive/active right now, based on total kills.
+    -- Starts at Config.AcademyStartNPCCount and climbs by 1 every
+    -- Config.AcademyNPCCountStep kills, never exceeding Config.AcademyMaxNPCCount.
+    function GetAcademyActiveNPCCount()
+        local extra = math.floor(AcademyTotalKills / Config.AcademyNPCCountStep)
+        return math.min(Config.AcademyMaxNPCCount, Config.AcademyStartNPCCount + extra)
+    end
+
+    function CountAliveAcademyPeds()
+        local count = 0
+        for _, npc in ipairs(AcademyPeds) do
+            if DoesEntityExist(npc) and not IsEntityDead(npc) then
+                count = count + 1
+            end
+        end
+        return count
+    end
+
+    -- Fully arms/disarms an NPC against the player: while the Safe Zone is
+    -- active they're switched to a neutral relationship group and stood
+    -- down, so they can't re-acquire the player as a target at all — not
+    -- just "stop shooting for a moment".
     function ApplyAcademyPedSettings(npc)
         local accuracy, armor = GetAcademyDifficulty()
-        SetPedRelationshipGroupHash(npc, GetHashKey("ACADEMY_ENEMY"))
         SetPedAccuracy(npc, accuracy)
         SetPedArmour(npc, armor)
         if AcademyInSafeZone then
+            SetPedRelationshipGroupHash(npc, GetHashKey("PLAYER"))
+            SetPedCombatAttributes(npc, 46, false)
             ClearPedTasksImmediately(npc)
         else
+            SetPedRelationshipGroupHash(npc, GetHashKey("ACADEMY_ENEMY"))
             SetPedCombatAttributes(npc, 46, true)
             TaskCombatPed(npc, PlayerPedId(), 0, 16)
         end
@@ -243,9 +267,19 @@ if Config.EnableAcademy then
                     SetTimeout(3000, function()
                         if DoesEntityExist(npc) then DeleteEntity(npc) end
                     end)
+
+                    -- Always replace the one that just died, then trickle in
+                    -- any extra NPCs the new kill count has unlocked — one
+                    -- at a time, spaced out, never as a sudden swarm.
                     SetTimeout(4000, function()
-                        if AcademyActive then
-                            SpawnOneAcademyPed()
+                        if not AcademyActive then return end
+                        SpawnOneAcademyPed()
+                        local desired = GetAcademyActiveNPCCount()
+                        local toAdd = desired - CountAliveAcademyPeds()
+                        for i = 1, toAdd do
+                            SetTimeout((2000 * i) + math.random(500, 1500), function()
+                                if AcademyActive then SpawnOneAcademyPed() end
+                            end)
                         end
                     end)
                     return
@@ -273,18 +307,35 @@ if Config.EnableAcademy then
     end
 
 
+    -- Clamps health back up to the floor. Called both reactively (the instant
+    -- damage lands) and from a tight backup poll, so a rifle burst can't slip
+    -- health past zero in the gap between checks.
+    local function EnforceAcademyHealthFloor()
+        local ped = PlayerPedId()
+        if IsEntityDead(ped) then return end
+        local maxHealth = GetEntityMaxHealth(ped)
+        local floorHealth = math.floor(maxHealth * Config.AcademyHealthFloorPercent)
+        if GetEntityHealth(ped) < floorHealth then
+            SetEntityHealth(ped, floorHealth)
+        end
+    end
+
+    -- Reacts to damage the same frame it happens — far faster than any poll
+    -- interval, so health almost never gets a chance to dip below the floor
+    -- in the first place.
+    AddEventHandler('gameEventTriggered', function(name, args)
+        if not AcademyActive or name ~= 'CEventNetworkEntityDamage' then return end
+        local victim = args[1]
+        if victim == PlayerPedId() then
+            EnforceAcademyHealthFloor()
+        end
+    end)
+
     function StartAcademyHealthFloor()
         Citizen.CreateThread(function()
             while AcademyActive do
-                Citizen.Wait(150)
-                local ped = PlayerPedId()
-                if not IsEntityDead(ped) then
-                    local maxHealth = GetEntityMaxHealth(ped)
-                    local floorHealth = math.floor(maxHealth * 0.12)
-                    if GetEntityHealth(ped) < floorHealth then
-                        SetEntityHealth(ped, floorHealth)
-                    end
-                end
+                Citizen.Wait(0)
+                EnforceAcademyHealthFloor()
             end
         end)
     end
@@ -311,10 +362,17 @@ if Config.EnableAcademy then
                         Citizen.Wait(800)
                         SetEntityCoords(ped, Config.AcademyCoord.x, Config.AcademyCoord.y, Config.AcademyCoord.z, false, false, false, false)
                         SetEntityVisible(ped, true, false)
-                        SetEntityHealth(ped, GetEntityMaxHealth(ped))
+                        -- The external revive trigger may reset max health back to
+                        -- default — reapply the training boost after it runs.
+                        SetEntityMaxHealth(ped, Config.AcademyPlayerMaxHealth)
+                        SetEntityHealth(ped, Config.AcademyPlayerMaxHealth)
                         SetPedArmour(ped, 100)
                         ClearPedBloodDamage(ped)
                         GiveWeaponToPed(ped, GetHashKey(Config.AcademyWeapon), 250, false, true)
+                        -- You respawn right on the safe-zone center, so guarantee that
+                        -- state immediately instead of waiting for the next zone tick.
+                        AcademyInSafeZone = true
+                        SetEntityInvincible(ped, true)
                         Notify("Respawned ! Keep training.", 'success')
                         AcademyDead = false
                         AcademyReviveBusy = false
@@ -329,30 +387,36 @@ if Config.EnableAcademy then
         Citizen.CreateThread(function()
             local safePoint = Config.AcademyCoord + Config.AcademySafeZoneOffset
             while AcademyActive do
-
-
-
                 Citizen.Wait(100)
                 local dist = #(GetEntityCoords(PlayerPedId()) - safePoint)
                 local nowInSafeZone = dist <= Config.AcademySafeZoneRadius
                 if nowInSafeZone ~= AcademyInSafeZone then
                     AcademyInSafeZone = nowInSafeZone
+                    SetEntityInvincible(PlayerPedId(), AcademyInSafeZone)
                     for _, npc in ipairs(AcademyPeds) do
                         if DoesEntityExist(npc) then
                             if AcademyInSafeZone then
+                                SetPedRelationshipGroupHash(npc, GetHashKey("PLAYER"))
+                                SetPedCombatAttributes(npc, 46, false)
                                 ClearPedTasksImmediately(npc)
                             else
+                                SetPedRelationshipGroupHash(npc, GetHashKey("ACADEMY_ENEMY"))
+                                SetPedCombatAttributes(npc, 46, true)
                                 TaskCombatPed(npc, PlayerPedId(), 0, 16)
                             end
                         end
                     end
                     if AcademyInSafeZone then
-                        Notify("You're in the Safe Zone — NPCs won't attack you here.", 'info')
+                        Notify("You're in the Safe Zone — NPCs can't touch you here.", 'info')
+                    else
+                        Notify("You left the Safe Zone — NPCs are coming for you !", 'error')
                     end
                 end
                 if dist <= 25.0 then
-                    DrawMarker(1, safePoint.x, safePoint.y, safePoint.z - 1.0, 0.0,0.0,0.0, 0.0,0.0,0.0,
-                        Config.AcademySafeZoneRadius*2, Config.AcademySafeZoneRadius*2, 2.0, 0,150,255,100, false,false,2,false,nil,nil,false)
+                    DrawMarker(1, safePoint.x, safePoint.y, safePoint.z - 0.9, 0.0,0.0,0.0, 0.0,0.0,0.0,
+                        Config.AcademySafeZoneRadius*2, Config.AcademySafeZoneRadius*2, 0.6,
+                        AcademyInSafeZone and 0 or 255, AcademyInSafeZone and 200 or 60, AcademyInSafeZone and 255 or 0,
+                        60, false,false,2,false,nil,nil,false)
                 else
                     Citizen.Wait(400)
                 end
@@ -384,7 +448,12 @@ if Config.EnableAcademy then
         local ped = PlayerPedId()
         AcademyDead = false
         AcademyReviveBusy = false
-        AcademyInSafeZone = false
+        -- You spawn exactly on Config.AcademyCoord, which is now the safe-zone center,
+        -- so you start inside it — NPCs only engage once you actually walk out.
+        AcademyInSafeZone = true
+        SetEntityInvincible(ped, true)
+        SetEntityMaxHealth(ped, Config.AcademyPlayerMaxHealth)
+        SetEntityHealth(ped, Config.AcademyPlayerMaxHealth)
         SetEntityCoords(ped, Config.AcademyCoord.x, Config.AcademyCoord.y, Config.AcademyCoord.z, false, false, false, false)
         GiveWeaponToPed(ped, GetHashKey(Config.AcademyWeapon), 250, false, true)
         SetPedArmour(ped, 100)
@@ -503,6 +572,15 @@ if Config.EnableAcademy then
         AcademyActive = false
         AcademyDead = false
         AcademyReviveBusy = false
+        AcademyInSafeZone = false
+        SetEntityInvincible(PlayerPedId(), false)
+        do
+            local ped = PlayerPedId()
+            SetEntityMaxHealth(ped, Config.AcademyDefaultPlayerMaxHealth)
+            if GetEntityHealth(ped) > Config.AcademyDefaultPlayerMaxHealth then
+                SetEntityHealth(ped, Config.AcademyDefaultPlayerMaxHealth)
+            end
+        end
         TriggerServerEvent("Violet-Capture:LeaveAcademyWorld")
         AcademyPeds = {}
         if AcademyLeavePed and DoesEntityExist(AcademyLeavePed) then

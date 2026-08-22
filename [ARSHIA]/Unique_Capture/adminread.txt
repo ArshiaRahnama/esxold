@@ -256,19 +256,46 @@ Turn off with Config.EnableHallOfFame = false.
   created server-side and networked to you, to fight. Never
   touches real kills, points, or any leaderboard table.
 
-  ⚠️ Config.AcademyEntryPoints is a placeholder — fill it in with
-  real, safe coordinates before enabling this, or nobody can enter.
+  ⚠️ Config.AcademyEntryPoints now defaults to a real spot (outside
+  Mission Row PD) so it works out of the box — but it's still just
+  an example. Change it to wherever fits your server.
 
   Each entry point also gets its own map blip (Config.AcademyBlip —
   sprite, color, scale) so players can actually see where to go
   instead of needing to be told the coordinates.
 
-  NPCs can hurt you but can never actually kill you (health is
-  floored at 12% while training) — this is a sandbox, not a death
-  trap. If you do go down some other way, you get an on-screen
-  "Press E to respawn" prompt and revive right there through this
-  server's real revive trigger (Config.ReviveTrigger) — dying does
-  NOT kick you out of the Academy.
+  The moment you walk in, you land inside a Safe Zone centered
+  exactly on your spawn point (Config.AcademySafeZoneRadius, default
+  8.0 units). Inside it you're genuinely untouchable — you're made
+  invincible AND every NPC is switched to a neutral relationship
+  group and stood down, so nothing can re-target you by accident.
+  Step outside that radius and every NPC in the academy switches to
+  hunting you immediately; step back in and they immediately back
+  off again, with a heads-up notification either way.
+  (Config.AcademySafeZoneOffset lets you shift the safe zone
+  off-center if you ever want the spawn and the safe area to be two
+  different spots.)
+
+  NPC count now ramps up instead of swarming you from second one:
+  you start with just Config.AcademyStartNPCCount (default 1) NPC
+  actively hunting you, and gain one more every
+  Config.AcademyNPCCountStep total kills (default every 8), capped
+  at Config.AcademyMaxNPCCount (default 4) so it never spirals out
+  of control. New NPCs trickle in one at a time with a short random
+  delay between them rather than all appearing at once. Accuracy and
+  armor still scale up separately via Config.AcademyDifficultyStep.
+
+  NPCs can hurt you but can never actually kill you. Your max health
+  is boosted to Config.AcademyPlayerMaxHealth (default 500, restored
+  to normal the moment you leave) and clamped so it can never drop
+  below Config.AcademyHealthFloorPercent of that (default 12%). This
+  is enforced the instant damage lands — not on a delay — so even a
+  full rifle burst can't slip through and drop you. This is a
+  sandbox, not a death trap. If you do somehow go down another way,
+  you get an on-screen "Press E to respawn" prompt and revive right
+  there through this server's real revive trigger
+  (Config.ReviveTrigger) — dying does NOT kick you out of the
+  Academy.
 
   A second instructor NPC spawns inside the Academy itself — target
   it (or use the dashboard's Leave button / /leaveAcademy) to exit.

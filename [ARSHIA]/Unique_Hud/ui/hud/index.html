@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Voice / Needs HUD</title>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* استایل تکمیلی برای ساختار ۳ حلقه (میکروفون/گرسنگی/تشنگی) - CSS اصلی
+       فقط .hudWrapper/.progressplayer/فونت رو تعریف کرده بود، بقیه‌ی
+       چیدمان اینجا اضافه شد. */
+    .mainHud {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 60px;
+    }
+    .mainHud svg {
+      width: 50px;
+      height: 50px;
+      overflow: visible;
+    }
+    .circle-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.15);
+      stroke-width: 4;
+    }
+    .icon-img {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      top: 15px;
+      left: 15px;
+    }
+    .mainHud span {
+      color: #fff;
+      font-family: Kum, sans-serif;
+      font-size: 11px;
+      margin-top: 2px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    }
+    .ring-wrap { position: relative; }
+  </style>
+</head>
+<body>
+  <div class="hudWrapper">
+
+    <div class="mainHud">
+      <div class="ring-wrap">
+        <svg viewBox="0 0 50 50">
+          <circle class="circle-bg" cx="25" cy="25" r="20"></circle>
+          <circle id="microphone-circle" class="progressplayer microphone" cx="25" cy="25" r="20"
+            fill="none" stroke="#696969" stroke-width="4"></circle>
+        </svg>
+        <img class="icon-img" src="img/logos/microphone.png">
+      </div>
+      <span>0</span>
+    </div>
+
+    <div class="mainHud">
+      <div class="ring-wrap">
+        <svg viewBox="0 0 50 50">
+          <circle class="circle-bg" cx="25" cy="25" r="20"></circle>
+          <circle class="progressplayer hunger" cx="25" cy="25" r="20"
+            fill="none" stroke="#CFAD0F" stroke-width="4"></circle>
+        </svg>
+        <img class="icon-img" src="img/logos/hunger.png">
+      </div>
+      <span>100</span>
+    </div>
+
+    <div class="mainHud">
+      <div class="ring-wrap">
+        <svg viewBox="0 0 50 50">
+          <circle class="circle-bg" cx="25" cy="25" r="20"></circle>
+          <circle class="progressplayer thirst" cx="25" cy="25" r="20"
+            fill="none" stroke="#0C98F1" stroke-width="4"></circle>
+        </svg>
+        <img class="icon-img" src="img/logos/thirst.png">
+      </div>
+      <span>100</span>
+    </div>
+
+  </div>
+  <script src="main.js"></script>
+</body>
+</html>

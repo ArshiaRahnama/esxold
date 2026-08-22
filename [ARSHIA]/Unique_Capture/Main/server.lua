@@ -1802,7 +1802,7 @@ if Config.EnableAcademy then
         end
 
         local peds = {}
-        for i = 1, Config.AcademyNPCCount do
+        for i = 1, Config.AcademyStartNPCCount do
             local offsetX = math.random(-15, 15)
             local offsetY = math.random(-15, 15)
             local ped = CreatePed(4, GetHashKey(Config.AcademyNPCModel), Config.AcademyCoord.x + offsetX, Config.AcademyCoord.y + offsetY, Config.AcademyCoord.z, 0.0, true, true)

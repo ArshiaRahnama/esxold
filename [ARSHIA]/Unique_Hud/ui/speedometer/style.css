@@ -1,101 +1,181 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap");
-
-html, body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background: transparent;
-  font-family: "Roboto Condensed", sans-serif;
+/* Racing HUD */
+:root {
+    --neon-blue: #00ffff;
+    --neon-orange: #ff6600;
+    --bg-dark: rgba(0, 0, 0, 0.8);
+    --accent-color: #ff3300;
 }
 
-#speedo {
-  position: fixed;
-  right: 3vh;
-  bottom: -20vh;
-  width: 190px;
-  padding: 14px 18px;
-  border-radius: 14px;
-  background: rgba(24, 27, 32, 0.55);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-sizing: border-box;
-  opacity: 0;
-  transition: bottom 0.4s ease, opacity 0.4s ease;
+/* Modern Vehicle HUD */
+#vehicle-hud {
+    position: fixed;
+    font-family: 'Rajdhani', sans-serif;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-#speedo.speedo-visible {
-  bottom: 4vh;
-  opacity: 1;
+/* Right position (default) */
+.hud-right {
+    bottom: 40px;
+    right: 40px;
 }
 
-.speedo-main {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: 6px;
-  margin-bottom: 10px;
+/* Left position (near map) */
+.hud-left {
+    bottom: 40px;
+    left: 340px; /* Moved slightly to the right (was 300px) */
 }
 
-#speedo-value {
-  font-size: 42px;
-  font-weight: 700;
-  color: #fff;
-  line-height: 1;
+.hud-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
-.speedo-unit {
-  font-size: 12px;
-  color: #9ca3af;
-  letter-spacing: 1px;
+.main-section {
+    text-align: center;
+    position: relative;
+    padding-right: 20px;
 }
 
-.speedo-sub {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.speed-value {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.speedo-item {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
+.speed-value .number {
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 1;
+    color: white;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
 }
 
-.speedo-label {
-  font-size: 10px;
-  color: #9ca3af;
-  letter-spacing: 0.5px;
+.speed-value .unit {
+    font-size: 16px;
+    font-weight: 500;
+    opacity: 0.7;
+    margin-top: -5px;
 }
 
-#speedo-gear {
-  font-size: 16px;
-  font-weight: 700;
-  color: #fff;
+.unit-toggle {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: white;
+    padding: 4px 8px;
+    cursor: pointer;
+    margin-top: 5px;
+    transition: background 0.2s ease;
 }
 
-.speedo-bar-item {
-  flex: 1;
+.unit-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
-.speedo-bar-track {
-  width: 100%;
-  height: 5px;
-  border-radius: 3px;
-  background: rgba(255, 255, 255, 0.12);
-  overflow: hidden;
+.gear-info {
+    position: absolute;
+    top: 35%;
+    right: 0;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 12px;
 }
 
-.speedo-bar-fill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.3s ease, background 0.3s ease;
+.stats-container {
+    padding-left: 20px;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.speedo-bar-fuel {
-  background: linear-gradient(90deg, #fcbf49, #ffc315);
+.stat-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.speedo-bar-engine {
-  background: #33cccc;
+.bar-progress {
+    width: 3px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+}
+
+.bar-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #3498db;
+    transition: height 0.3s ease;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.stat-info i {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.stat-info .value {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.rpm-bar {
+    width: 120px;
+    height: 3px;
+    position: relative;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    margin: 8px auto 0;
+}
+
+.rpm-segments {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    gap: 1px;
+}
+
+.segment {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    transition: background-color 0.2s ease;
+}
+
+.rpm-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg,
+        rgba(255, 255, 255, 0.8) 0%,
+        rgba(255, 255, 255, 0.8) 75%,
+        rgba(231, 76, 60, 0.8) 75%
+    );
+    transition: width 0.1s ease;
+}
+
+.hidden {
+    display: none;
 }

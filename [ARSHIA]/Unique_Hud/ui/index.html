@@ -229,7 +229,7 @@
         if (cbFrame && cbFrame.contentWindow) {
           cbFrame.contentWindow.postMessage(item, '*');
         }
-      } else if (typeof item.action === 'string' && item.action.indexOf('speedo:') === 0) {
+      } else if (item.type === 'updateVehicleHud' || item.type === 'initSpeedUnit') {
         var spFrame = document.getElementById('speedometer-frame');
         if (spFrame && spFrame.contentWindow) {
           spFrame.contentWindow.postMessage(item, '*');

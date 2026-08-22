@@ -1,35 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Speedometer</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="speedo" class="speedo-hidden">
-    <div class="speedo-main">
-      <span id="speedo-value">0</span>
-      <span class="speedo-unit">KM/H</span>
-    </div>
-    <div class="speedo-sub">
-      <div class="speedo-item">
-        <span class="speedo-label">دنده</span>
-        <span id="speedo-gear">N</span>
-      </div>
-      <div class="speedo-item speedo-bar-item">
-        <span class="speedo-label">بنزین</span>
-        <div class="speedo-bar-track">
-          <div id="speedo-fuel-bar" class="speedo-bar-fill speedo-bar-fuel" style="width:100%"></div>
+    <div id="vehicle-hud" class="hidden">
+        <div class="hud-container">
+            <div class="main-section">
+                <div class="speed-value">
+                    <span class="number">0</span>
+                    <span class="unit">KM/H</span>
+                </div>
+                <div class="gear-info">
+                    <span class="gear">N</span>
+                </div>
+                <div class="rpm-bar">
+                    <div class="rpm-segments">
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                        <div class="segment"></div>
+                    </div>
+                    <div class="rpm-fill"></div>
+                </div>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-bar fuel">
+                    <div class="bar-progress">
+                        <div class="bar-fill"></div>
+                    </div>
+                    <div class="stat-info">
+                        <i class="fas fa-gas-pump"></i>
+                        <span class="value">100%</span>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="speedo-item speedo-bar-item">
-        <span class="speedo-label">موتور</span>
-        <div class="speedo-bar-track">
-          <div id="speedo-engine-bar" class="speedo-bar-fill speedo-bar-engine" style="width:100%"></div>
-        </div>
-      </div>
     </div>
-  </div>
-  <script src="app.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

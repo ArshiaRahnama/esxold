@@ -202,7 +202,11 @@ Config.AcademyCommand = "captureAcademy"
 Config.AcademyLeaveCommand = "leaveAcademy"
 Config.AcademyWorld = 51
 Config.AcademyCoord = vector3(0.0, 0.0, 72.0)
-Config.AcademyNPCCount = 4
+-- How many NPCs are actively hunting you scales with total kills — starts
+-- small (no instant swarm) and ramps up the more you clear, but is hard-capped.
+Config.AcademyStartNPCCount = 1   -- active NPCs when you first walk in
+Config.AcademyMaxNPCCount = 4     -- absolute cap, no matter how many kills you rack up
+Config.AcademyNPCCountStep = 8    -- +1 active NPC every this many total kills
 Config.AcademyNPCModel = "g_m_y_lost_01"
 Config.AcademyWeapon = "WEAPON_CARBINERIFLE"
 Config.AcademyKillCheckInterval = 500
@@ -213,8 +217,15 @@ Config.AcademyMaxAccuracy = 80
 Config.AcademyBaseArmor = 0
 Config.AcademyMaxArmor = 100
 
+-- Your max health is boosted while training (restored to normal on exit) and
+-- never allowed to drop below this % of it — NPCs can genuinely never finish
+-- you off, no matter how much they land on you.
+Config.AcademyPlayerMaxHealth = 500
+Config.AcademyDefaultPlayerMaxHealth = 200 -- vanilla GTA default, restored when you leave
+Config.AcademyHealthFloorPercent = 0.12
+
 Config.AcademyEntryPoints = {
-    vector4(0.0, 0.0, 72.0, 0.0),
+    vector4(441.9, -981.4, 30.69, 90.0), -- outside Mission Row PD — real, solid ground, easy to find
 }
 Config.AcademyEntryRadius = 10.0
 Config.AcademyInstructorPedModel = "s_m_y_cop_01"
@@ -230,8 +241,10 @@ Config.AcademyBlip = {
 
 Config.AcademyTutorialPointOffset = vector3(10.0, 10.0, 0.0)
 
-Config.AcademySafeZoneOffset = vector3(-8.0, -8.0, 0.0)
-Config.AcademySafeZoneRadius = 5.0
+-- Safe zone is centered on the exact spot you spawn at when you enter (Config.AcademyCoord),
+-- so you land inside it and NPCs leave you alone until you actually walk out of it.
+Config.AcademySafeZoneOffset = vector3(0.0, 0.0, 0.0)
+Config.AcademySafeZoneRadius = 8.0
 
 Config.AcademyMilestones = {
     {Kills = 100,  Title = "Sharpshooter"},

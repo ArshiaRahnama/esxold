@@ -4,6 +4,7 @@ game 'gta5'
 dependency 'oxmysql'
 
 server_scripts {
+    '@oxmysql/lib/MySQL.lua',
     'server/**.lua',
     'modules/**/server/**.lua'
 }

@@ -1880,11 +1880,44 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
 
     local realLicense = getIdentifierPrefix(src, "license:")
 
+    -- FIX: previously, if either MySQL query below ever errored (bad
+    -- migration state, DB hiccup, table/column missing) oxmysql logs the
+    -- error and never calls the callback — so neither ShowMainMenu nor
+    -- formPassed nor deferrals.done() would ever run, and the connecting
+    -- player got stuck on "در حال بررسی اطلاعات..." forever with no way
+    -- out except a client-side timeout/retry. `settled` + the watchdog
+    -- below guarantee this resource always resolves the connection one
+    -- way or another within a few seconds, even on a DB failure.
+    --
+    -- NOTE: a real hang was tracked down (Aug 2026) to a DIFFERENT resource
+    -- — [SCRIPT]/ServerTest-Queue — independently calling deferrals.defer()/
+    -- update() on this same shared deferrals object and never releasing the
+    -- player from its queue. server.cfg now stops that resource; see the
+    -- comment above `stop ServerTest-Queue` in [BASE]/server.cfg before
+    -- re-enabling it.
+    local settled = false
+
+    local function settle(fn)
+        if settled then return end
+        settled = true
+        fn()
+    end
+
+    CreateThread(function()
+        Wait(8000)
+        settle(function()
+            print("[Unique_Login] WARNING: playerConnecting timed out for " .. tostring(name)
+                .. " (a DB query likely errored, or another resource is holding the shared deferrals object"
+                .. " — see the ServerTest-Queue note in this function). Falling back to login panel.")
+            ShowMainMenu(deferrals)
+        end)
+    end)
+
     local function afterBanCheck()
         if not realLicense then
             -- Extremely rare (FiveM always assigns a license: identifier),
             -- but fail safe by just showing the normal panel.
-            ShowMainMenu(deferrals)
+            settle(function() ShowMainMenu(deferrals) end)
             return
         end
 
@@ -1898,9 +1931,9 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
                 -- re-verification; see CheckLogin).
                 if rows and rows[1] and rows[1].security_hold ~= 1 then
                     deferrals.identifier = rows[1].license
-                    formPassed(deferrals)
+                    settle(function() formPassed(deferrals) end)
                 else
-                    ShowMainMenu(deferrals)
+                    settle(function() ShowMainMenu(deferrals) end)
                 end
             end
         )
@@ -1917,7 +1950,9 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
             { ["@license"] = realLicense },
             function(rows)
                 if rows and rows[1] then
-                    deferrals.done("⛔ اکانت شما بن شده است.\nدلیل: " .. (rows[1].REASON or "نامشخص"))
+                    settle(function()
+                        deferrals.done("⛔ اکانت شما بن شده است.\nدلیل: " .. (rows[1].REASON or "نامشخص"))
+                    end)
                 else
                     afterBanCheck()
                 end
@@ -2077,10 +2112,11 @@ exports("getDevicesForPlayer", function(src, cb)
     local currentDeviceLicense = getIdentifierPrefix(src, "license:")
 
     MySQL.Async.fetchAll(
-        "SELECT username, device_license FROM login_users WHERE license = @lic LIMIT 1",
+        "SELECT username, device_license, security_hold FROM login_users WHERE license = @lic LIMIT 1",
         { ["@lic"] = license },
         function(userRows)
             local username = (userRows and userRows[1] and userRows[1].username) or nil
+            local securityHold = (userRows and userRows[1] and userRows[1].security_hold == 1) or false
 
             MySQL.Async.fetchAll(
                 "SELECT device_license, action, created_at FROM login_audit "
@@ -2102,6 +2138,7 @@ exports("getDevicesForPlayer", function(src, cb)
                     cb({
                         username = username,
                         currentDeviceLicense = currentDeviceLicense,
+                        securityHold = securityHold,
                         devices = devices,
                     })
                 end
@@ -2209,4 +2246,45 @@ CreateThread(function()
         )
         Wait(24 * 60 * 60 * 1000)
     end
+end)
+
+-- EXPANSION: admin override for the suspicious-device auto-lock
+-- (security_hold). Called from UNIQUE_AC's player-profile "Security" tab —
+-- for when a locked player's SMS never arrives and "forgot password" isn't
+-- an option for them. Only lifts the flag; doesn't touch the password.
+-- adminName is purely for the Discord alert text, so the log clearly shows
+-- this was a manual override, not the player clearing it themselves.
+exports("clearSecurityHold", function(targetSrc, adminName, cb)
+    local license = nil
+    for lic, s in pairs(activeLicenseSessions) do
+        if s == targetSrc then
+            license = lic
+            break
+        end
+    end
+    if not license then
+        if cb then cb(false) end
+        return
+    end
+
+    MySQL.Async.fetchAll(
+        "SELECT username FROM login_users WHERE license = @lic LIMIT 1",
+        { ["@lic"] = license },
+        function(rows)
+            local username = (rows and rows[1] and rows[1].username) or nil
+
+            MySQL.Async.execute(
+                "UPDATE login_users SET security_hold = 0 WHERE license = @lic",
+                { ["@lic"] = license }
+            )
+            logAudit("security_hold_cleared", username, license, targetSrc)
+            sendDiscordAlert(
+                "🔓 قفل امنیتی دستی باز شد",
+                "اکانت **" .. (username or "?") .. "** توسط ادمین **" .. (adminName or "?")
+                    .. "** از توی پنل ادمین از حالت قفل درآمد.",
+                3447003 -- blue
+            )
+            if cb then cb(true, username) end
+        end
+    )
 end)

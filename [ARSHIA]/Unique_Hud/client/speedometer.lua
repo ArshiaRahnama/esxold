@@ -1,63 +1,98 @@
 -- ============================================================
 -- Unique_Hud / client / speedometer.lua
 -- ============================================================
--- توضیح: چیزی که تو Sunset اسمش "carhud" بود، فقط کمربند بود (SimpleCarHUD_cl.lua
--- که واقعاً سرعت/بنزین/دنده رو نشون می‌داد اصلاً تو ریپازیتوری پابلیکشون نبود
--- - دقیقاً مثل باگ status). پس این ماژول کاملاً از صفر نوشته شده، با همون
--- الگوی خوندن بنزین که قبلاً تو Unique_Garage/client/vehiclehud_cl.lua خودتون
--- تأیید شده بود (exports['LegacyFuel']:GetFuel).
+-- منبع: ریسورس "vehicle-hud" که خودتون فرستادید. کاملاً مستقل از ESX هست
+-- (هیچ‌جا ESX.* صدا نمی‌زنه)، پس صفر ریسک سازگاری داشت - فقط اسم متغیر
+-- سراسری Config به SpeedoConfig تغییر کرد تا با بقیه‌ی ماژول‌های ادغام‌شده تو
+-- همین ریسورس (که هر کدوم global خودشون رو دارن) تداخل نداشته باشه.
 
-local UH_SPEEDO_isUiOpen = false
+local isMetric = SpeedoConfig.SpeedUnit == 'kmh'
+local hudPosition = SpeedoConfig.HudPosition
+local conversionFactor = isMetric and 3.6 or 2.236936 -- 3.6 for km/h, 2.236936 for direct mph conversion
 
-local function UH_GetFuelPercent(vehicle)
-    local ok, fuel = pcall(function() return exports['LegacyFuel']:GetFuel(vehicle) end)
-    if ok and fuel then
-        return math.floor(fuel + 0.5)
+-- Cache fuel resource state
+local fuelResource = nil
+CreateThread(function()
+    if GetResourceState("ox_fuel") == "started" then
+        fuelResource = "ox_fuel"
+    elseif GetResourceState("LegacyFuel") == "started" then
+        fuelResource = "LegacyFuel"
     end
-    return math.floor(GetVehicleFuelLevel(vehicle) + 0.5)
+end)
+
+-- Create function to get the fuel level
+local function getFuel(vehicle)
+    if not fuelResource then return 0 end
+
+    if fuelResource == "ox_fuel" then
+        return math.floor(GetVehicleFuelLevel(vehicle))
+    else
+        return math.floor(exports[fuelResource]:GetFuel(vehicle))
+    end
 end
 
-Citizen.CreateThread(function()
-    while true do
-        local sleep = 500
+-- Cache for previous values to avoid unnecessary updates
+local lastData = {
+    speed = 0,
+    fuel = 0,
+    gear = 0,
+    rpm = 0
+}
+
+local function startVehicleUI(isInVehicle)
+    while isInVehicle do
+        Wait(150) -- Reduced update frequency for better performance
+
         local ped = PlayerPedId()
-
-        if IsPedInAnyVehicle(ped, false) then
-            local veh = GetVehiclePedIsIn(ped, false)
-            local driverSeat = GetPedInVehicleSeat(veh, -1) == ped
-
-            if driverSeat then
-                sleep = 0
-
-                if not UH_SPEEDO_isUiOpen then
-                    SendNUIMessage({ action = 'speedo:show' })
-                    UH_SPEEDO_isUiOpen = true
-                end
-
-                local speedMs = GetEntitySpeed(veh)
-                local speedKmh = math.floor((speedMs * 3.6) + 0.5)
-                local gear = GetVehicleCurrentGear(veh)
-                local fuelPercent = UH_GetFuelPercent(veh)
-                local engineHealth = math.floor((GetVehicleEngineHealth(veh) / 1000.0) * 100)
-                if engineHealth < 0 then engineHealth = 0 end
-                if engineHealth > 100 then engineHealth = 100 end
-
-                SendNUIMessage({
-                    action = 'speedo:update',
-                    speed = speedKmh,
-                    gear = gear,
-                    fuel = fuelPercent,
-                    engine = engineHealth,
-                })
-            elseif UH_SPEEDO_isUiOpen then
-                SendNUIMessage({ action = 'speedo:hide' })
-                UH_SPEEDO_isUiOpen = false
-            end
-        elseif UH_SPEEDO_isUiOpen then
-            SendNUIMessage({ action = 'speedo:hide' })
-            UH_SPEEDO_isUiOpen = false
+        local vehicle = GetVehiclePedIsIn(ped, false)
+        if not vehicle or not DoesEntityExist(vehicle) then
+            SendNUIMessage({
+                type = 'updateVehicleHud',
+                show = false
+            })
+            break
         end
 
-        Citizen.Wait(sleep)
+        -- Get current values
+        local speedRaw = GetEntitySpeed(vehicle) * conversionFactor
+        local speed = math.floor(speedRaw)
+        local fuel = getFuel(vehicle)
+        local gear = GetVehicleCurrentGear(vehicle)
+        local rpm = GetVehicleCurrentRpm(vehicle)
+
+        -- Only send update if values changed
+        if speed ~= lastData.speed or
+           fuel ~= lastData.fuel or
+           gear ~= lastData.gear or
+           rpm ~= lastData.rpm then
+
+            -- Update cache
+            lastData.speed = speed
+            lastData.fuel = fuel
+            lastData.gear = gear
+            lastData.rpm = rpm
+
+            -- Send data to the HUD
+            SendNUIMessage({
+                type = 'updateVehicleHud',
+                speed = speed,
+                unit = SpeedoConfig.SpeedUnit,
+                position = hudPosition,
+                fuel = fuel,
+                gear = gear,
+                rpm = rpm,
+                show = true
+            })
+        end
+    end
+end
+
+-- Use an event to start the HUD loop when the player enters a vehicle
+AddEventHandler('gameEventTriggered', function(name, args)
+    if name == "CEventNetworkPlayerEnteredVehicle" then
+        local vehicle = args[2]
+        local ped = PlayerPedId()
+        local isInVehicle = IsPedInAnyVehicle(ped, false) or IsPedInVehicle(ped, vehicle, false)
+        startVehicleUI(isInVehicle)
     end
 end)
