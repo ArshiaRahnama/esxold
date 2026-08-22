@@ -176,6 +176,18 @@ Config.PhoneApplications = {
         Alerts = 0,
     },
 
+    ["security"] = {
+        app = "security",
+        color = "#00c9a7",
+        icon = "fas fa-shield-alt",
+        tooltipText = "Security",
+        tooltipPos = "top",
+        job = false,
+        blockedjobs = {},
+        slot = 9,
+        Alerts = 0,
+    },
+
 
 
 

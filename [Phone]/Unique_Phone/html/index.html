@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="./css/bank.css">
     <link rel="stylesheet" href="./css/whatsapp.css">
     <link rel="stylesheet" href="./css/garage.css">
+    <link rel="stylesheet" href="./css/security.css">
     <link rel="stylesheet" href="./css/mail.css">
     <link rel="stylesheet" href="./css/meos.css">
     <link rel="stylesheet" href="./css/crypto.css">
@@ -460,6 +461,45 @@
     
                                 <div class="garage-cardetails-footer">
                                     BACK
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="security-app">
+                        <div class="security-app-header">
+                            Security
+                        </div>
+                        <div class="security-homescreen">
+                            <div class="security-scroll">
+                                <div class="security-section-title">🔑 تغییر رمز عبور</div>
+                                <input type="password" class="security-input" id="security-old-password" placeholder="رمز عبور فعلی">
+                                <input type="password" class="security-input" id="security-new-password" placeholder="رمز عبور جدید (حداقل ۶ کاراکتر)">
+                                <input type="password" class="security-input" id="security-confirm-password" placeholder="تکرار رمز عبور جدید">
+                                <div class="security-change-password-btn" id="security-change-password-btn">تغییر رمز</div>
+                                <div class="security-change-msg" id="security-change-msg"></div>
+
+                                <div class="security-divider"></div>
+
+                                <div class="security-section-title">📱 دستگاه‌های اخیر</div>
+                                <div class="security-account-summary" id="security-account-summary"></div>
+                                <div id="security-devices">
+                                    <!-- filled by security.js -->
+                                </div>
+                                <div class="security-logout-all" id="security-logout-all">
+                                    <i class="fas fa-power-off"></i> خروج از همه‌ی دستگاه‌ها
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="security-confirm-overlay" id="security-confirm-overlay">
+                            <div class="security-confirm-box">
+                                <div class="security-confirm-text">
+                                    با این کار از همه‌ی دستگاه‌ها (از جمله همین دستگاه) خارج می‌شی و باید دوباره وارد بشی. مطمئنی؟
+                                </div>
+                                <div class="security-confirm-buttons">
+                                    <div class="security-confirm-cancel" id="security-confirm-cancel">انصراف</div>
+                                    <div class="security-confirm-yes" id="security-confirm-yes">بله، خارج شو</div>
                                 </div>
                             </div>
                         </div>
@@ -1231,6 +1271,7 @@
         <script src="./js/bank.js"></script>
         <script src="./js/whatsapp.js"></script>
         <script src="./js/garage.js"></script>
+        <script src="./js/security.js"></script>
         <script src="./js/mail.js"></script>
         <script src="./js/meos.js"></script>
         <script src="./js/crypto.js"></script>

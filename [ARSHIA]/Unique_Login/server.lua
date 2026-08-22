@@ -26,6 +26,7 @@ end
 local smsAttemptsByPhone = {} -- phone -> { count = n, windowStart = os.time() }
 local smsAttemptsByIp    = {} -- ip    -> { count = n, windowStart = os.time() }
 local loginFailures      = {} -- lowercased username -> { count = n, lockUntil = os.time() }
+local newDeviceEvents    = {} -- account license -> { timestamp, timestamp, ... } (see Config.SuspiciousDeviceLock)
 
 -- Returns true and bumps the counter if under the limit, false if the
 -- caller should be blocked. windowSeconds is the rolling window length.
@@ -65,6 +66,17 @@ end
 
 local function clearLoginFailures(username)
     loginFailures[username:lower()] = nil
+end
+
+-- EXPANSION: username blacklist check (see Config.UsernameBlacklist).
+local function isUsernameBlacklisted(username)
+    local lower = username:lower()
+    for _, banned in ipairs(Config.UsernameBlacklist or {}) do
+        if lower:find(banned, 1, true) then
+            return true
+        end
+    end
+    return false
 end
 
 -- ─────────────────────────────────────────────────────────
@@ -391,7 +403,7 @@ function ShowLoginForm(deferrals)
                 return
             end
 
-            CheckLogin(username, password, deferrals, function(isValid,license,accountExists)
+            CheckLogin(username, password, deferrals, function(isValid,license,accountExists,securityHeld)
                 if isValid then
                     clearLoginFailures(username)
                     logAudit("login_success", username, license, deferrals.src)
@@ -410,6 +422,16 @@ function ShowLoginForm(deferrals)
                     logAudit("login_fail", username, nil, deferrals.src)
                     ShowError(deferrals, "حسابی با این مشخصات پیدا نشد. اگر تازه‌واردید، اول باید ثبت‌نام کنید!", function()
                         ShowRegisterStep1_Phone(deferrals)
+                    end)
+                elseif securityHeld then
+                    -- EXPANSION: password was correct, but this account was
+                    -- flagged by Config.SuspiciousDeviceLock (too many new
+                    -- devices too fast). Don't reveal that the password was
+                    -- right — same message either way — but route straight
+                    -- to phone re-verification instead of a dead-end retry.
+                    logAudit("login_fail", username, nil, deferrals.src)
+                    ShowError(deferrals, "به‌دلیل فعالیت مشکوک، این اکانت قفل شده. برای باز شدن، از «فراموشی رمز عبور» استفاده کن تا هویتت با پیامک تأیید بشه.", function()
+                        ShowForgotPassword_Step1(deferrals)
                     end)
                 else
                     registerLoginFailure(username)
@@ -964,8 +986,30 @@ function ShowRegisterStep3_UserPass(deferrals, phone)
                 return
             end
 
+            -- EXPANSION: block usernames that impersonate staff or read as
+            -- slurs/obvious abuse. Case-insensitive substring match on
+            -- purpose — "xAdminx", "Owner123" should also be caught, not
+            -- just an exact match.
+            if isUsernameBlacklisted(username) then
+                ShowError(deferrals, "این نام کاربری مجاز نیست (شبیه نام‌های ادمین/تیم سرور یا نامناسب است).", function()
+                    ShowRegisterStep3_UserPass(deferrals, phone)
+                end)
+                return
+            end
+
             if #password < 6 then
                 ShowError(deferrals, "رمز عبور باید حداقل ۶ کاراکتر باشد!", function()
+                    ShowRegisterStep3_UserPass(deferrals, phone)
+                end)
+                return
+            end
+
+            -- EXPANSION: require at least one letter AND one digit — still
+            -- easy to satisfy (doesn't force symbols/case-mixing, which
+            -- Iranian players tend to abandon registration over), but rules
+            -- out the weakest patterns like "111111" or "aaaaaa".
+            if not (password:match("%d") and password:match("%a")) then
+                ShowError(deferrals, "رمز عبور باید شامل حداقل یک حرف و یک عدد باشد!", function()
                     ShowRegisterStep3_UserPass(deferrals, phone)
                 end)
                 return
@@ -1683,9 +1727,17 @@ function CheckLogin(username, password, def, cb)
             ["@password"] = password
         }, function(result)
             if result and #result > 0 then
-                cb(true, result[1].license, true)
+                -- EXPANSION: correct password, but the account is on
+                -- security_hold (see Config.SuspiciousDeviceLock) — refuse
+                -- normal login even though the password matched. Only a
+                -- successful SMS-OTP "forgot password" reset clears the hold.
+                if result[1].security_hold == 1 then
+                    cb(false, nil, true, true)
+                    return
+                end
+                cb(true, result[1].license, true, false)
             else
-                cb(false, nil, true)
+                cb(false, nil, true, false)
             end
         end)
     end)
@@ -1756,7 +1808,11 @@ function RegisterUser(username, password, phone, def, cb)
 end
 
 function UpdatePassword(phone, newPassword, cb)
-    local query = "UPDATE login_users SET password = SHA2(@password, 256) WHERE phone = @phone"
+    -- EXPANSION: also clears device_license (kills auto-login for any old
+    -- device — already relied on elsewhere) and security_hold. A completed
+    -- SMS-OTP reset is exactly the "prove you own the phone" step that's
+    -- supposed to lift a suspicious-activity hold.
+    local query = "UPDATE login_users SET password = SHA2(@password, 256), device_license = NULL, security_hold = 0 WHERE phone = @phone"
     MySQL.Async.execute(query, {
         ["@password"] = newPassword,
         ["@phone"]    = phone
@@ -1833,10 +1889,14 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
         end
 
         MySQL.Async.fetchAll(
-            "SELECT license FROM login_users WHERE device_license = @dl LIMIT 1",
+            "SELECT license, security_hold FROM login_users WHERE device_license = @dl LIMIT 1",
             { ["@dl"] = realLicense },
             function(rows)
-                if rows and rows[1] then
+                -- EXPANSION: don't auto-login an account on security_hold —
+                -- force it through the normal panel (which will also refuse
+                -- plain login and push toward "forgot password" SMS-OTP
+                -- re-verification; see CheckLogin).
+                if rows and rows[1] and rows[1].security_hold ~= 1 then
                     deferrals.identifier = rows[1].license
                     formPassed(deferrals)
                 else
@@ -1917,6 +1977,42 @@ function formPassed(deferrals)
                                 .. "\nاگر خودتون نبودید، سریعاً رمز عبور رو از پنل بازیابی عوض کنید.",
                             16776960 -- yellow
                         )
+
+                        -- EXPANSION: rapid-fire new devices (several
+                        -- distinct devices logging into the SAME account
+                        -- within a short window) is a much stronger signal
+                        -- than just "one new device" — it's what a leaked
+                        -- password being tried from multiple places looks
+                        -- like. This session still gets in (the hold only
+                        -- blocks FUTURE logins), but the account is locked
+                        -- until the real owner proves phone ownership via
+                        -- the SMS-OTP "forgot password" flow.
+                        local now = os.time()
+                        local events = newDeviceEvents[deferrals.identifier] or {}
+                        local kept = {}
+                        for _, ts in ipairs(events) do
+                            if (now - ts) < Config.SuspiciousDeviceLock.WindowSeconds then
+                                table.insert(kept, ts)
+                            end
+                        end
+                        table.insert(kept, now)
+                        newDeviceEvents[deferrals.identifier] = kept
+
+                        if #kept >= Config.SuspiciousDeviceLock.MaxNewDevices then
+                            MySQL.Async.execute(
+                                "UPDATE login_users SET security_hold = 1 WHERE license = @lic",
+                                { ["@lic"] = deferrals.identifier }
+                            )
+                            logAudit("security_hold", row.username, deferrals.identifier, deferrals.src)
+                            sendDiscordAlert(
+                                "⚠️ فعالیت مشکوک — اکانت قفل شد",
+                                "اکانت **" .. row.username .. "** توی ۱۰ دقیقه‌ی اخیر از " .. #kept
+                                    .. " دستگاه متفاوت وارد شده. اکانت قفل شد؛ فقط با «فراموشی رمز» "
+                                    .. "(تأیید پیامکی) دوباره باز میشه.",
+                                15158332 -- red
+                            )
+                            newDeviceEvents[deferrals.identifier] = nil
+                        end
                     end
                 end
                 MySQL.Async.execute(
@@ -1952,4 +2048,165 @@ exports("getidentifier", function(src)
         end
     end
     return nil
+end)
+
+-- ─────────────────────────────────────────────────────────
+-- EXPANSION: exports for the phone's "Security" app
+-- ([Phone]/Unique_Phone/html/js/security.js). Kept here (not duplicated in
+-- Unique_Phone) so login_users/login_audit are only ever touched from this
+-- one resource.
+-- ─────────────────────────────────────────────────────────
+
+-- Returns { username, currentDeviceLicense, devices = {...} } to `cb`.
+-- `devices` is deduplicated by device_license, newest first, capped at 5 —
+-- someone reconnecting from the same PC 40 times shouldn't show as 40 rows.
+exports("getDevicesForPlayer", function(src, cb)
+    local license = nil
+    for lic, s in pairs(activeLicenseSessions) do
+        if s == src then
+            license = lic
+            break
+        end
+    end
+
+    if not license then
+        cb({ username = nil, currentDeviceLicense = nil, devices = {} })
+        return
+    end
+
+    local currentDeviceLicense = getIdentifierPrefix(src, "license:")
+
+    MySQL.Async.fetchAll(
+        "SELECT username, device_license FROM login_users WHERE license = @lic LIMIT 1",
+        { ["@lic"] = license },
+        function(userRows)
+            local username = (userRows and userRows[1] and userRows[1].username) or nil
+
+            MySQL.Async.fetchAll(
+                "SELECT device_license, action, created_at FROM login_audit "
+                    .. "WHERE license = @lic AND device_license IS NOT NULL "
+                    .. "ORDER BY created_at DESC LIMIT 50",
+                { ["@lic"] = license },
+                function(rows)
+                    local seen = {}
+                    local devices = {}
+                    if rows then
+                        for _, row in ipairs(rows) do
+                            if not seen[row.device_license] then
+                                seen[row.device_license] = true
+                                table.insert(devices, row)
+                                if #devices >= 5 then break end
+                            end
+                        end
+                    end
+                    cb({
+                        username = username,
+                        currentDeviceLicense = currentDeviceLicense,
+                        devices = devices,
+                    })
+                end
+            )
+        end
+    )
+end)
+
+-- Force-logout everywhere: clears the account's remembered device (so
+-- auto-login stops working for it), logs the action, and drops the
+-- requesting session too — a full "log out everywhere" reset, matching
+-- what the player was told in the confirmation dialog.
+exports("logoutAllDevices", function(src)
+    local license = nil
+    for lic, s in pairs(activeLicenseSessions) do
+        if s == src then
+            license = lic
+            break
+        end
+    end
+    if not license then return end
+
+    MySQL.Async.fetchAll(
+        "SELECT username FROM login_users WHERE license = @lic LIMIT 1",
+        { ["@lic"] = license },
+        function(rows)
+            local username = (rows and rows[1] and rows[1].username) or nil
+
+            MySQL.Async.execute(
+                "UPDATE login_users SET device_license = NULL WHERE license = @lic",
+                { ["@lic"] = license }
+            )
+            logAudit("logout_all", username, license, src)
+            sendDiscordAlert(
+                "🚪 خروج از همه‌ی دستگاه‌ها",
+                "اکانت **" .. (username or "?") .. "** از توی گوشی درخواست «خروج از همه‌ی دستگاه‌ها» داد.",
+                3447003 -- blue
+            )
+
+            activeLicenseSessions[license] = nil
+            DropPlayer(src, "از همه‌ی دستگاه‌ها خارج شدید. لطفاً دوباره با یوزرنیم/رمز وارد شوید.")
+        end
+    )
+end)
+
+-- In-game password change (Security app "🔑 تغییر رمز عبور" section).
+-- Requires the CURRENT password so a hijacked-but-still-connected session
+-- can't be used to lock the real owner out further — same principle as
+-- "current password" fields on any real account settings page.
+-- cb(true) on success, cb(false, "wrong_old_password") or cb(false, "error")
+-- on failure.
+exports("changePassword", function(src, oldPassword, newPassword, cb)
+    local license = nil
+    for lic, s in pairs(activeLicenseSessions) do
+        if s == src then
+            license = lic
+            break
+        end
+    end
+    if not license then
+        cb(false, "error")
+        return
+    end
+
+    if type(newPassword) ~= "string" or #newPassword < 6 then
+        cb(false, "error")
+        return
+    end
+
+    MySQL.Async.fetchAll(
+        "SELECT username FROM login_users WHERE license = @lic AND password = SHA2(@old, 256) LIMIT 1",
+        { ["@lic"] = license, ["@old"] = oldPassword },
+        function(rows)
+            if not rows or not rows[1] then
+                cb(false, "wrong_old_password")
+                return
+            end
+
+            local username = rows[1].username
+            MySQL.Async.execute(
+                "UPDATE login_users SET password = SHA2(@new, 256) WHERE license = @lic",
+                { ["@new"] = newPassword, ["@lic"] = license }
+            )
+            logAudit("password_change", username, license, src)
+            sendDiscordAlert(
+                "🔑 تغییر رمز از داخل بازی",
+                "اکانت **" .. username .. "** رمز عبورش رو از توی گوشی عوض کرد.",
+                3066993 -- green
+            )
+            cb(true)
+        end
+    )
+end)
+
+-- EXPANSION: daily cleanup of old login_audit rows (Config.AuditLogRetentionDays).
+-- Runs once shortly after resource start, then every 24h.
+CreateThread(function()
+    if not Config.AuditLogRetentionDays or Config.AuditLogRetentionDays <= 0 then
+        return
+    end
+    while true do
+        MySQL.Async.execute(
+            "DELETE FROM login_audit WHERE created_at < (NOW() - INTERVAL @days DAY)",
+            { ["@days"] = Config.AuditLogRetentionDays }
+        )
+        Wait(24 * 60 * 60 * 1000)
+    end
 end)

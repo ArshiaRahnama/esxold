@@ -546,6 +546,22 @@ RegisterNUICallback('GetBankData', function(data, cb)
     ESX.TriggerServerCallback('Unique_Phone:server:GetBankData', cb)
 end)
 
+-- EXPANSION: Security app — recent-devices list + force-logout-everywhere.
+RegisterNUICallback('GetSecurityDevices', function(data, cb)
+    ESX.TriggerServerCallback('Unique_Phone:server:GetSecurityDevices', cb)
+end)
+
+RegisterNUICallback('LogoutAllDevices', function(data, cb)
+    TriggerServerEvent('Unique_Phone:server:LogoutAllDevices')
+    cb('ok')
+end)
+
+RegisterNUICallback('ChangePassword', function(data, cb)
+    ESX.TriggerServerCallback('Unique_Phone:server:ChangePassword', function(result)
+        cb(result)
+    end, data.oldPassword, data.newPassword)
+end)
+
 RegisterNUICallback('GetInvoices', function(data, cb)
     if PhoneData.Invoices ~= nil and next(PhoneData.Invoices) ~= nil then
         cb(PhoneData.Invoices)

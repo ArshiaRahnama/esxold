@@ -4,6 +4,10 @@ game 'gta5'
 
 lua54 'yes'
 
+-- EXPANSION: Security app calls exports['Unique_Login'], so make sure that
+-- resource is guaranteed to start first.
+dependency 'Unique_Login'
+
 client_scripts {
     '@ox_lib/init.lua',
     'client/*.lua',
@@ -11,7 +15,11 @@ client_scripts {
 }
 
 server_scripts {
-    '@mysql-async/lib/MySQL.lua',
+    -- FIX: pointed at '@mysql-async/lib/MySQL.lua', but mysql-async isn't
+    -- installed on this server (only oxmysql is ensured) — this resource
+    -- would fail to start at all. oxmysql's compatibility shim exposes the
+    -- same MySQL.Async/MySQL.Sync API, so no query anywhere had to change.
+    '@oxmysql/lib/MySQL.lua',
     'server/main.lua',
     'config.lua',
 }

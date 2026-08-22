@@ -219,6 +219,10 @@ $(document).on('click', '.phone-application', function(e){
                         setUpCameraApp(url)
                     })
                     MI.Phone.Functions.Close();
+                } else if (PressedApplication == "security") {
+                    $.post('http://Unique_Phone/GetSecurityDevices', JSON.stringify({}), function(data){
+                        SetupSecurityDevices(data);
+                    })
                 }
             }
         }

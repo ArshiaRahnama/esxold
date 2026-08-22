@@ -577,6 +577,28 @@ ESX.RegisterServerCallback('Unique_Phone:server:GetBankData', function(source, c
     cb({bank = xPlayer.bank, iban = character.iban})
 end)
 
+-- EXPANSION: Security app — recent-devices list + force-logout-everywhere +
+-- in-game password change. All the actual DB work lives in Unique_Login;
+-- this resource just forwards to its exports so login_users/login_audit
+-- are only ever touched from one place.
+ESX.RegisterServerCallback('Unique_Phone:server:GetSecurityDevices', function(source, cb)
+    exports['Unique_Login']:getDevicesForPlayer(source, function(data)
+        cb(data)
+    end)
+end)
+
+ESX.RegisterServerCallback('Unique_Phone:server:ChangePassword', function(source, cb, oldPassword, newPassword)
+    exports['Unique_Login']:changePassword(source, oldPassword, newPassword, function(success, reason)
+        cb({ success = success, reason = reason })
+    end)
+end)
+
+RegisterServerEvent('Unique_Phone:server:LogoutAllDevices')
+AddEventHandler('Unique_Phone:server:LogoutAllDevices', function()
+    local src = source
+    exports['Unique_Login']:logoutAllDevices(src)
+end)
+
 ESX.RegisterServerCallback('Unique_Phone:server:CanPayInvoice', function(source, cb, amount)
     local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
